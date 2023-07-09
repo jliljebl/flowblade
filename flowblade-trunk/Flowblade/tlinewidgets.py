@@ -370,58 +370,43 @@ def load_icons_and_set_colors():
 
     global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
             TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR
-                
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
 
-        FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
-        FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
-        BG_COLOR = (0.44, 0.44, 0.46)
+    FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
+    FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
+    BG_COLOR = (0.44, 0.44, 0.46)
 
-        FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.DARK_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
-            TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
-            TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
-            TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
-            TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
-            TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
-            TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
-            MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png", True)
-            MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png", True)
-            MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
-            MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
-            INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
-            BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
-            BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
-            if editorpersistance.prefs.theme == appconsts.DARK_THEME \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+    FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
-                if editorpersistance.prefs.theme == appconsts.DARK_THEME:
-                    r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
-                else: # editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL
-                    r = g = b = 0.215
-                    
-                BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
-                BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
-                            
-                TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
-                TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
-                rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
-                TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
-                TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
-            
-                COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
+    TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
+    TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
+    TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
+    TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
+    TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
+    TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
+    TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
+    MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png", True)
+    MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png", True)
+    MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
+    MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
+    INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
+    BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
+    BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
+
+    r = g = b = 0.215
         
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+    BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
+    BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
                 
-    else:
-        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
-        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
+    TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
+    TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
+    rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
+    TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
+    TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
 
-        TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
-        TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
+    COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
+
+    FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+
 
 def set_tracks_double_height_consts():
     global ID_PAD_Y_HIGH, ID_PAD_Y, ID_PAD_Y_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, \
@@ -443,9 +428,6 @@ def set_tracks_double_height_consts():
     WAVEFORM_PAD_SMALL = 33
 
 def set_dark_bg_color():
-    if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-        return
-    
     global BG_COLOR
     
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
@@ -2645,11 +2627,10 @@ class TimeLineFrameScale:
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
-            FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
-            FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            MARK_COLOR = DARK_MARK_COLOR
+        global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
+        FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
+        FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
+        MARK_COLOR = DARK_MARK_COLOR
 
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
@@ -2684,13 +2665,8 @@ class TimeLineFrameScale:
         x, y, w, h = allocation
 
         # Draw grad bg
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            grad = self._get_dark_theme_grad(h)
-        else:
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
-            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
+        grad = self._get_dark_theme_grad(h)
+
         cr.set_source(grad)
         cr.rectangle(0,0,w,h)
         cr.fill()
@@ -2707,13 +2683,7 @@ class TimeLineFrameScale:
         if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
             in_x = (seq.tractor.mark_in - pos) * pix_per_frame
             out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
-            if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-                cr.set_source_rgba(*SELECTED_RANGE_COLOR)
-            else:
-                grad = cairo.LinearGradient (0, 0, 0, h)
-                grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
-                cr.set_source(grad)
-
+            cr.set_source_rgba(*SELECTED_RANGE_COLOR)
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 

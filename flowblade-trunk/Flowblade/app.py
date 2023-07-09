@@ -246,8 +246,7 @@ class FlowbladeApplication(Gtk.Application):
         gui.apply_theme(editorpersistance.prefs.theme)
 
         try:
-            if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-                Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
         except:
             print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEME NOT AVAILABLE!")
 

@@ -373,12 +373,8 @@ class ToolDockItem:
     def set_item_color(self, selected):
         if selected == True:
             self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
-            if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-                self.widget.override_color(Gtk.StateType.NORMAL, WHITE_TEXT)
         else:
             self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
-            if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-                self.widget.override_color(Gtk.StateType.NORMAL, DARK_TEXT)
 
 
 # ------------------------------------------------------------- keyboard shortcuts

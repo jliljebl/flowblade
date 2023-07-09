@@ -107,9 +107,9 @@ class AbstractGlassButtons:
 
         # Dark theme comes with flat buttons
         self.dark_theme = False
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            self.glass_style = False
-            self.dark_theme = True
+
+        self.glass_style = False
+        self.dark_theme = True
 
         self.draw_button_gradients = True # old code artifact, remove (set False at object creation site to kill all gradients)
 

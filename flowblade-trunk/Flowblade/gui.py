@@ -126,7 +126,6 @@ def capture_references(new_editor_window):
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
-    # tline_render_strip = editor_window.tline_render_strip
     tline_scroll = editor_window.tline_scroller
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
@@ -174,50 +173,15 @@ def set_theme_colors():
     # this is first called.
     global _selected_bg_color, _bg_color, _button_colors, _bg_unmodified_normal
 
+    # THEMECOLORS
+
     theme_colors = _FLOWBLADE_COLORS
+    c = theme_colors[3]
+    _selected_bg_color = Gdk.RGBA(*c)
+    c = theme_colors[1]
+    _bg_color = Gdk.RGBA(*c)
+    _button_colors = Gdk.RGBA(*c)
 
-    # Try to detect selected color and set from fallback if fails
-    style = editor_window.bin_list_view.get_style_context()
-    sel_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
-
-    r, g, b, a = unpack_gdk_color(sel_bg_color)
-    if r == 0.0 and g == 0.0 and b == 0.0:
-        print("Selected color NOT detected")
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            c = theme_colors[2]
-        else:
-            c = theme_colors[3]
-        _selected_bg_color = Gdk.RGBA(*c)
-    else:
-        print("Selected color detected")
-        _selected_bg_color = sel_bg_color
-
-    # Try to detect bg color and set frow fallback if fails
-    style = editor_window.window.get_style_context()
-    bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-
-    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probably not necessary anymore
-
-    r, g, b, a = unpack_gdk_color(bg_color)
-
-    if r == 0.0 and g == 0.0 and b == 0.0:
-        print("BG color NOT detected")
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            c = theme_colors[0]
-        else:
-            c = theme_colors[1]
-        _bg_color = Gdk.RGBA(*c)
-        _button_colors = Gdk.RGBA(*c)
-    else:
-        print("BG color detected")
-        _bg_color = bg_color
-        _button_colors = bg_color
-
-    # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
-    editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
@@ -253,28 +217,18 @@ def _print_widget(widget): # debug
     print(path_str)
 
 def apply_theme(theme):
-    if theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        
-        # We dropped these themes and need to force change the pref for them.
-        if theme == appconsts.FLOWBLADE_THEME or theme == appconsts.FLOWBLADE_THEME_GRAY:
-            editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-            theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-            editorpersistance.save()
-            
-        if theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            apply_gtk_css()
-            
-def apply_gtk_css():
-    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
-        print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
-    else:
-        print("Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22")
-        editorpersistance.prefs.theme = appconsts.LIGHT_THEME
+    Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+    
+    # We dropped these themes and need to force change the pref for them.
+    if theme == appconsts.FLOWBLADE_THEME or theme == appconsts.FLOWBLADE_THEME_GRAY:
+        editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+        theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         editorpersistance.save()
-        return False
         
+    if theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        apply_gtk_css()
+            
+def apply_gtk_css():        
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()

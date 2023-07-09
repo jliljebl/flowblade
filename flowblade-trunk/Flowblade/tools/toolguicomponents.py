@@ -38,10 +38,7 @@ class PressLaunch:
         cr.line_to(12, 18)
         cr.line_to(17, 13)
         cr.close_path()
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0, 0, 0)
-        else:
-            cr.set_source_rgb(0.66, 0.66, 0.66)
+        cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
         
     def _press_event(self, event):

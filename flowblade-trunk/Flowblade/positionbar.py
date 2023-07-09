@@ -92,14 +92,13 @@ class PositionBar:
 
         self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
         self.MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker_yellow.png")
-        
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
-            LINE_COLOR = DARK_LINE_COLOR
-            DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
-            SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
-            MARK_COLOR = DARK_MARK_COLOR
-            SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
+
+        global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
+        LINE_COLOR = DARK_LINE_COLOR
+        DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
+        SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
+        MARK_COLOR = DARK_MARK_COLOR
+        SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
     
     def set_listener(self, listener):
         self.position_listener = listener
@@ -157,9 +156,6 @@ class PositionBar:
         self.widget.queue_draw()
         
     def set_dark_bg_color(self):
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            return
-
         global BG_COLOR
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             BG_COLOR = DARK_BG_COLOR

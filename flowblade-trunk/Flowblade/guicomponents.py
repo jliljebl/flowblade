@@ -2730,9 +2730,8 @@ class BigTCDisplay:
         self.TEXT_X = 18
         self.TEXT_Y = 1
 
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            global TC_COLOR
-            TC_COLOR = (0.55, 0.55, 0.55)
+        global TC_COLOR
+        TC_COLOR = (0.55, 0.55, 0.55)
 
         self.widget.connect("button-press-event", self._button_press)
 
@@ -2745,18 +2744,8 @@ class BigTCDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0.2, 0.2, 0.2)
-        else:
-            cr.set_source_rgb(0.1, 0.1, 0.1)
+        cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
-
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            for stop in BIG_TC_GRAD_STOPS:
-                grad.add_color_stop_rgba(*stop)
-            cr.set_source(grad)
-            cr.fill_preserve()
 
         grad = cairo.LinearGradient (0, 0, 0, h)
         for stop in BIG_TC_FRAME_GRAD_STOPS:
@@ -2885,18 +2874,8 @@ class MonitorTCDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0.2, 0.2, 0.2)
-        else:
-            cr.set_source_rgb(0.1, 0.1, 0.1)
+        cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
-        
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            for stop in BIG_TC_GRAD_STOPS:
-                grad.add_color_stop_rgba(*stop)
-            cr.set_source(grad)
-            cr.fill_preserve()
 
         grad = cairo.LinearGradient (0, 0, 0, h)
         for stop in BIG_TC_FRAME_GRAD_STOPS:
@@ -3033,18 +3012,8 @@ class MonitorInfoDisplay:
 
         # Draw round rect with gradient and stroke around for thin bezel
         self._round_rect_path(cr)
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0.2, 0.2, 0.2)
-        else:
-            cr.set_source_rgb(0.1, 0.1, 0.1)
+        cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
-        
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            for stop in BIG_TC_GRAD_STOPS:
-                grad.add_color_stop_rgba(*stop)
-            cr.set_source(grad)
-            cr.fill_preserve()
 
         grad = cairo.LinearGradient (0, 0, 0, h)
         for stop in BIG_TC_FRAME_GRAD_STOPS:
@@ -3586,10 +3555,7 @@ class PressLaunch:
         cr.line_to(12, 18)
         cr.line_to(17, 13)
         cr.close_path()
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0, 0, 0)
-        else:
-            cr.set_source_rgb(0.66, 0.66, 0.66)
+        cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
         
     def _press_event(self, event):
@@ -3707,10 +3673,7 @@ class ToolSelector(ImageMenuLaunch):
         cr.line_to(x_pos[1], y_pos[1])
         cr.line_to(x_pos[2], y_pos[2])
         cr.close_path()
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(0, 0, 0)
-        else:
-            cr.set_source_rgb(0.66, 0.66, 0.66)
+        cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
 
     
