@@ -323,7 +323,7 @@ class EditorWindow:
         self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed, projectaction.bin_popup_menu)
         self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
-        self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
+        self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_popover_mouse_right_pressed,
                                                         projectaction.media_panel_double_click,
                                                         projectaction.media_panel_popup_requested)
         view = Gtk.Viewport()
@@ -603,7 +603,7 @@ class EditorWindow:
 
         # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height
         marker_surface =  guiutils.get_cairo_image("marker")
-        markers_launcher = guipopover.markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
+        markers_launcher =  guicomponents.PressLaunchPopover(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
         
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
         tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)

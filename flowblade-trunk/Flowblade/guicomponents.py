@@ -1240,9 +1240,10 @@ class MediaPanel():
 
         elif event.button == 3:
             self.clear_selection()
-            display_media_file_popup_menu(media_object.media_file,
-                                          self.media_file_popup_cb,
-                                          event)
+            print(type(media_object.widget))
+            self.media_file_popup_cb(media_object.widget,
+                                     media_object.media_file,
+                                     event)
 
         self.widget.queue_draw()
 
@@ -2489,58 +2490,7 @@ def _get_clip_markers_menu_item(event, clip, track, callback):
 def _set_non_sensitive_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
         item.set_sensitive(False)
-
-def display_media_file_popup_menu(media_file, callback, event):
-    media_file_menu = media_file_popup_menu
-    guiutils.remove_children(media_file_menu)
-
-    # "Open in Clip Monitor" is sent as event id, same for all below
-    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
-    media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event)))
-    _add_separetor(media_file_menu)
     
-    if hasattr(media_file, "container_data"): # Why are we guarding against non-existing "container_data" in this method, should be fixed in persistancecompat.py?
-        if media_file.container_data == None:
-            monitor_item_active = True
-        else:
-            monitor_item_active = False
-    else:
-            monitor_item_active = True
-    open_in_monitor_item = _get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))
-    open_in_monitor_item.set_sensitive(monitor_item_active)
-    media_file_menu.add(open_in_monitor_item)
-            
-    if media_file.type != appconsts.PATTERN_PRODUCER:
-        media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
-
-    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
-        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
-            _add_separetor(media_file_menu)
-            media_file_menu.add(_get_menu_item(_("Recreate Icon"), callback,("Recreate Icon", media_file, event)))
-            
-    if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
-        _add_separetor(media_file_menu)
-        if media_file.type != appconsts.IMAGE_SEQUENCE:
-            media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
-        if media_file.type != appconsts.IMAGE_SEQUENCE:
-            media_file_menu.add(_get_menu_item(_("Render Reverse Motion File"), callback, ("Render Reverse Motion File", media_file, event)))
-    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
-        item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
-        media_file_menu.add(item)
-    
-    if hasattr(media_file, "container_data"):
-        if media_file.container_data != None:
-            if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-                _add_separetor(media_file_menu)
-                item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
-                media_file_menu.add(item)
-                item = _get_menu_item(_("Load Container Program Edit Data"), callback, ("Load Container Data", media_file, event))
-                media_file_menu.add(item)
-                item = _get_menu_item(_("Save Container Program Edit Data"), callback, ("Save Container Data", media_file, event))
-                media_file_menu.add(item)
-
-    media_file_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_media_log_event_popup_menu(row, treeview, callback, event):
     log_event_menu = log_event_popup_menu
     guiutils.remove_children(log_event_menu)

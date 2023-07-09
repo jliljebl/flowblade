@@ -27,7 +27,6 @@ from editorstate import PROJECT
 import editorpersistance
 import editorstate
 import gui
-import guicomponents
 import snapping
 import utils
 
@@ -62,14 +61,16 @@ _columns_popover = None
 _columns_menu = None
 _file_filter_popover = None
 _file_filter_menu = None
+_media_file_popover = None
+_media_file_menu = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
-def add_menu_action(menu, label, item_id, msg_str, callback):
+def add_menu_action(menu, label, item_id, data, callback):
     menu.append(label, "app." + item_id) 
     
     action = Gio.SimpleAction(name=item_id)
-    action.connect("activate", callback, msg_str)
+    action.connect("activate", callback, data)
     APP().add_action(action)
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
@@ -138,10 +139,6 @@ def create_rect(x, y):
     return rect
 
 # --------------------------------------------------- popover builder functions
-def markers_menu_launcher(callback, pixbuf, w=22, h=22):
-    launch = guicomponents.PressLaunchPopover(callback, pixbuf, w, h)
-    return launch
-
 def markers_menu_show(launcher, widget, callback):
     global _markers_popover, _markers_menu
 
@@ -459,3 +456,106 @@ def file_filter_popover_show(launcher, widget, callback):
 
     _file_filter_popover = new_popover(widget, _file_filter_menu, launcher)
 
+def media_file_popover_show(media_file, widget, x, y, callback):
+    global _media_file_popover, _media_file_menu
+
+    _media_file_menu = menu_clear_or_create(_media_file_menu)
+
+    file_action_section = Gio.Menu.new()
+    add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", media_file), callback)
+    add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", media_file), callback)
+    _media_file_menu.append_section(None, file_action_section)
+
+    if hasattr(media_file, "container_data"): 
+        if media_file.container_data == None:
+            monitor_item_active = True
+        else:
+            monitor_item_active = False
+    else:
+            monitor_item_active = True
+
+    if monitor_item_active == True:
+        monitor_section = Gio.Menu.new()
+        add_menu_action(monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", media_file), callback)
+        _media_file_menu.append_section(None, monitor_section)
+
+    if media_file.type != appconsts.PATTERN_PRODUCER:
+        properties_section = Gio.Menu.new()
+        add_menu_action(properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", media_file), callback)
+        _media_file_menu.append_section(None, properties_section)
+
+    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
+        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
+            icon_section = Gio.Menu.new()
+            add_menu_action(icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", media_file), callback)
+            _media_file_menu.append_section(None, icon_section)
+
+    if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
+        render_section = Gio.Menu.new()
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            add_menu_action(render_section, _("Render Slow/Fast Motion File"), "mediapanel.mediafile.slow", ("Render Slow/Fast Motion File", media_file), callback)
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            add_menu_action(render_section, _("Render Reverse Motion File"), "mediapanel.mediafile.reverse", ("Render Reverse Motion File", media_file), callback)
+        _media_file_menu.append_section(None, render_section)
+            
+    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+        proxy_section = Gio.Menu.new()
+        add_menu_action(proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", media_file), callback)
+        _media_file_menu.append_section(None, proxy_section)
+
+    rect = create_rect(x, y)
+    _media_file_popover = new_mouse_popover(widget, _media_file_menu, rect)
+            
+            
+"""
+def display_media_file_popup_menu(media_file, callback, event):
+    media_file_menu = media_file_popup_menu
+    guiutils.remove_children(media_file_menu)
+
+    # "Open in Clip Monitor" is sent as event id, same for all below
+    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
+    media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event)))
+    _add_separetor(media_file_menu)
+    
+    if hasattr(media_file, "container_data"): # Why are we guarding against non-existing "container_data" in this method, should be fixed in persistancecompat.py?
+        if media_file.container_data == None:
+            monitor_item_active = True
+        else:
+            monitor_item_active = False
+    else:
+            monitor_item_active = True
+    open_in_monitor_item = _get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))
+    open_in_monitor_item.set_sensitive(monitor_item_active)
+    media_file_menu.add(open_in_monitor_item)
+            
+    if media_file.type != appconsts.PATTERN_PRODUCER:
+        media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
+
+    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
+        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
+            _add_separetor(media_file_menu)
+            media_file_menu.add(_get_menu_item(_("Recreate Icon"), callback,("Recreate Icon", media_file, event)))
+            
+    if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
+        _add_separetor(media_file_menu)
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
+        if media_file.type != appconsts.IMAGE_SEQUENCE:
+            media_file_menu.add(_get_menu_item(_("Render Reverse Motion File"), callback, ("Render Reverse Motion File", media_file, event)))
+    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+        item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
+        media_file_menu.add(item)
+    
+    if hasattr(media_file, "container_data"):
+        if media_file.container_data != None:
+            if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+                _add_separetor(media_file_menu)
+                item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
+                media_file_menu.add(item)
+                item = _get_menu_item(_("Load Container Program Edit Data"), callback, ("Load Container Data", media_file, event))
+                media_file_menu.add(item)
+                item = _get_menu_item(_("Save Container Program Edit Data"), callback, ("Save Container Data", media_file, event))
+                media_file_menu.add(item)
+
+    media_file_menu.popup(None, None, None, None, event.button, event.time)
+"""
