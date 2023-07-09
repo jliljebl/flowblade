@@ -39,6 +39,7 @@ import gui
 import guicomponents
 import guiutils
 import mltprofiles
+import positionbar
 import respaths
 import simpleeditors
 import toolsencoding
@@ -259,6 +260,9 @@ def get_plugin_script_path(plugin_folder_and_script):
 class AddMediaPluginWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
+        
+        self.producer = PosBarProducer()
+        
         self.set_modal(True)
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Add Generator"))
@@ -293,11 +297,31 @@ class AddMediaPluginWindow(Gtk.Window):
         
         self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: self._show_preview())
-                            
+
+        # Control row
+        self.tc_display = guicomponents.MonitorTCDisplay(56)
+        self.tc_display.use_internal_frame = True
+        self.tc_display.widget.set_valign(Gtk.Align.CENTER)
+        self.tc_display.use_internal_fps = True
+        self.tc_display.display_tc = False
+        
+        self.pos_bar = positionbar.PositionBar(False)
+        self.pos_bar.set_listener(self.position_listener)
+        self.pos_bar.mouse_press_listener = self.pos_bar_press_listener
+        self.pos_bar.update_display_with_data(self.producer, -1, -1)
+
+        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame.add(self.pos_bar.widget)
+        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        pos_bar_frame.set_margin_top(10)
+        pos_bar_frame.set_margin_bottom(9)
+        pos_bar_frame.set_margin_left(6)
+        pos_bar_frame.set_margin_right(2)
+                                                 
+                                                 
         control_panel = Gtk.HBox(False, 2)
-        control_panel.pack_start(self.frame_display, False, False, 0)
-        control_panel.pack_start(self.frame_select, False, False, 0)
-        control_panel.pack_start(Gtk.Label(), True, True, 0)
+        control_panel.pack_start(self.tc_display.widget, False, False, 0)
+        control_panel.pack_start(pos_bar_frame, True, True, 0)
         control_panel.pack_start(self.preview_button, False, False, 0)
         guiutils.set_margins(control_panel, 0, 24, 0, 0)
         
@@ -312,6 +336,8 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(import_row,8,0,0,0)
         self.length_spin = Gtk.SpinButton.new_with_range (25, 100000, 1)
         self.length_spin.set_value(200)
+        self.length_spin.connect("value-changed", self.lenght_value_changed)
+
         length_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Generator Length:")), guiutils.pad_label(12,12), self.length_spin])
 
         self.encoding_button = Gtk.Button(label=_("Encode settings"))
@@ -426,7 +452,14 @@ class AddMediaPluginWindow(Gtk.Window):
         _selected_plugin = new_selected_plugin
         _current_plugin_data_object = script_data_object
         _current_screenshot_surface = new_selected_plugin.get_screenshot_surface()
-        
+        self.length_spin.set_value(_current_plugin_data_object["length"])
+
+        self.producer.set_frame(0)
+        self.tc_display.set_frame(0)
+        self.producer.set_length(_current_plugin_data_object["length"])
+        self.pos_bar.update_display_with_data(self.producer, -1, -1)
+
+        self.pos_bar.widget.queue_draw()
         self.screenshot_canvas.queue_draw()
     
     def _show_plugin_editors_panel(self, script_data_object):
@@ -459,10 +492,24 @@ class AddMediaPluginWindow(Gtk.Window):
         
         return (x, y, w, h)
 
+    def position_listener(self, normalized_pos, length):
+        frame = int(normalized_pos * length)
+        self.producer.set_frame(frame)
+        self.tc_display.set_frame(frame)
+        self.pos_bar.widget.queue_draw()
+
+    def pos_bar_press_listener(self):
+        pass #_player.stop_playback()
+
+    def lenght_value_changed(self, adjustment):
+        self.producer.set_length(adjustment.get_value())
+        self.pos_bar.update_display_with_data(self.producer, -1, -1)
+
+        self.pos_bar.widget.queue_draw()
+
     def _show_preview(self):
         global _selected_plugin, _current_screenshot_surface
-
-        fctx = self._render_preview(int(self.frame_select.get_value()))
+        fctx = self._render_preview(int(self.producer.frame()))
         _current_screenshot_surface = fctx.priv_context.frame_surface
 
         self.screenshot_canvas.queue_draw()
@@ -507,7 +554,7 @@ class AddMediaPluginWindow(Gtk.Window):
         container_data = containerclip.ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, _selected_plugin.get_plugin_script_file(), None)
         container_data.data_slots["icon_file"] = None
         container_data.data_slots["fluxity_plugin_edit_data"] = _current_plugin_data_object
-        
+        #self.length_spin.set_value(_current_plugin_data_object["length"])
         containerclip.set_render_settings_from_create_window(container_data, self._encode_settings_done)
     
     def _encode_settings_done(self, render_data):
@@ -525,8 +572,28 @@ class AddMediaPluginWindow(Gtk.Window):
         else:
             self.encoding_info.set_markup("<small>" + _("Image Sequence") + "</small>")
             self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
-        
 
+
+class PosBarProducer:
+    
+    def __init__(self):
+        self.length = 200
+        self.mark_in = -1
+        self.mark_out = -1
+        self.plugin_frame = 0
+        
+    def get_length(self):
+        return self.length
+
+    def set_length(self, length):
+        self.length = length
+        
+    def frame(self):
+        return self.plugin_frame
+
+    def set_frame(self, plugin_frame):
+        self.plugin_frame = plugin_frame
+        
 # ---------------------------------------------------------------------edit panel 
 def create_widgets():
     """
