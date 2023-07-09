@@ -447,7 +447,7 @@ def file_filter_popover_show(launcher, widget, callback):
     _file_filter_menu = menu_clear_or_create(_file_filter_menu)
     items_data =[( _("All Files"), "0"), (_("Video Files"), "1"), \
                 ( _("Audio Files"), "2"), (_("Graphics Files"), "3"), ( _("Image Sequences"), "4"), \
-                (_("Pattern Producers"), "6"), (_("Unused Files"), "7")]
+                (_("Pattern Producers"), "5"), (_("Unused Files"), "6")]
                 
     active_index = editorstate.media_view_filter
     radio_section = Gio.Menu.new()
