@@ -63,7 +63,6 @@ import updater
 import userfolders
 import utils
 
-_match_frame_writer = None
 
 # ---------------------------------- clip menu
 def display_clip_menu(y, event, frame):
@@ -630,90 +629,6 @@ def _select_all_before(data):
     movemodes._select_multiple_clips(track.id, 0, track.clips.index(clip))
     updater.repaint_tline()
 
-def _match_frame_start(data):
-    clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_in, track, True)
-
-def _match_frame_end(data):
-    clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_out, track, False)
-
-def _match_frame_start_monitor(data):
-    clip, track, item_id, item_data = data
-    gui.monitor_widget.set_frame_match_view(clip, clip.clip_in)
-
-def _match_frame_end_monitor(data):
-    clip, track, item_id, item_data = data
-    gui.monitor_widget.set_frame_match_view(clip, clip.clip_out)
-     
-def _set_match_frame(clip, frame, track, display_on_right):
-    global _match_frame_writer
-    _match_frame_writer = MatchFrameWriter(clip, frame, track, display_on_right)
-    
-    GLib.idle_add(_write_match_frame)
-
-def _write_match_frame():
-    _match_frame_writer.write_image()
-
-def _match_frame_close(data):
-    tlinewidgets.set_match_frame(-1, -1, True)
-    gui.monitor_widget.set_default_view_force()
-    updater.repaint_tline()
-
-
-class MatchFrameWriter:
-    def __init__(self, clip, clip_frame, track, display_on_right):
-        self.clip = clip
-        self.clip_frame = clip_frame
-        self.track = track
-        self.display_on_right = display_on_right
-        
-    def write_image(self):
-        """
-        Writes thumbnail image from file producer
-        """
-        clip_path = self.clip.path
-
-        # Create consumer
-        matchframe_new_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME_NEW
-        consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_new_path)
-        consumer.set("real_time", 0)
-        consumer.set("vcodec", "png")
-
-        # Create one frame producer
-        producer = mlt.Producer(PROJECT().profile, str(clip_path))
-        producer = producer.cut(int(self.clip_frame), int(self.clip_frame))
-
-        # Delete new match frame
-        try:
-            os.remove(matchframe_new_path)
-        except:
-            # This fails when done first time ever  
-            pass
-
-        # Connect and write image
-        consumer.connect(producer)
-        consumer.run()
-        
-        # Wait until new file exists
-        while os.path.isfile(matchframe_new_path) != True:
-            time.sleep(0.1)
-
-        # Copy to match frame
-        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
-        shutil.copyfile(matchframe_new_path, matchframe_path)
-
-        # Update timeline data           
-        # Get frame of clip.clip_in_in on timeline.
-        clip_index = self.track.clips.index(self.clip)
-        clip_start_in_tline = self.track.clip_start(clip_index)
-        tline_match_frame = clip_start_in_tline + (self.clip_frame - self.clip.clip_in)
-        tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
-
-        # Update view
-        updater.repaint_tline()
-
-
 def _add_clip_marker(data):
     clip, track, item_id, item_data = data
     current_frame = PLAYER().current_frame()
@@ -835,11 +750,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev,
                   "clear_filters": _clear_filters,
-                  "match_frame_close":_match_frame_close,
-                  "match_frame_start":_match_frame_start,
-                  "match_frame_end":_match_frame_end,
-                  "match_frame_start_monitor":_match_frame_start_monitor,
-                  "match_frame_end_monitor":_match_frame_end_monitor,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
                   "delete":_delete_clip,

@@ -354,7 +354,7 @@ def set_default_tool_dock_item_selected():
         item.set_item_color(False)
     dock_items[0].set_item_color(True)
 
-        
+
 
 class ToolDockItem:
     def __init__(self, kb_shortcut_number, tool_icon_file, tool_name, tool_id):

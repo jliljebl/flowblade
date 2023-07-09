@@ -119,8 +119,6 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
         os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
-    if not os.path.exists(get_cache_dir() + appconsts.MATCH_FRAME_DIR):
-        os.mkdir(get_cache_dir() + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.TRIM_VIEW_DIR):

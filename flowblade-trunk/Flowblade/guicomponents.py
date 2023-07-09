@@ -2121,44 +2121,6 @@ def _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item
-    
-def _get_match_frame_menu_item(event, clip, track, callback):
-    menu_item = Gtk.MenuItem(_("Show Match Frame"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-
-    start_item_monitor = Gtk.MenuItem(_("First Frame in Monitor"))
-    sub_menu.append(start_item_monitor)
-    start_item_monitor.connect("activate", callback, (clip, track, "match_frame_start_monitor", None))
-    start_item_monitor.show()
-
-    end_item_monitor = Gtk.MenuItem(_("Last Frame in Monitor"))
-    sub_menu.append(end_item_monitor)
-    end_item_monitor.connect("activate", callback, (clip, track, "match_frame_end_monitor", None))
-    end_item_monitor.show()
-    
-    _add_separetor(sub_menu)
-    
-    start_item = Gtk.MenuItem(_("First Frame on Timeline"))
-    sub_menu.append(start_item)
-    start_item.connect("activate", callback, (clip, track, "match_frame_start", None))
-    start_item.show()
-
-    end_item = Gtk.MenuItem(_("Last Frame on Timeline"))
-    sub_menu.append(end_item)
-    end_item.connect("activate", callback, (clip, track, "match_frame_end", None))
-    end_item.show()
-
-    _add_separetor(sub_menu)
-        
-    clear_item = Gtk.MenuItem(_("Clear Match Frame"))
-    sub_menu.append(clear_item)
-    clear_item.connect("activate", callback, (clip, track, "match_frame_close", None))
-    clear_item.show()
-    
-    menu_item.set_sensitive(True)
-    menu_item.show()
-    return menu_item
 
 def _get_select_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Select"))
@@ -2235,11 +2197,6 @@ def _get_edit_menu_item(event, clip, track, callback):
 
     stretch_prev_item = _get_menu_item(_("Stretch Over Prev Blank"), callback, (clip, track, "stretch_prev", event.x))
     sub_menu.append(stretch_prev_item)
-
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
-        _add_separetor(sub_menu)
-        sub_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
-
 
     if track.type == appconsts.VIDEO:
         _add_separetor(sub_menu)

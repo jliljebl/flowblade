@@ -326,13 +326,6 @@ trim_status = appconsts.ON_BETWEEN_FRAME
 # Dict for clip thumbnails path -> image.
 clip_thumbnails = {}
 
-# Timeline match image data.
-match_frame = -1
-match_frame_track_index = -1
-image_on_right = True 
-match_frame_image = None
-match_frame_width = 1
-match_frame_height = 1
 
 
 # ------------------------------------------------------------------- module functions
@@ -436,33 +429,6 @@ def set_dark_bg_color():
     
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
         BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
-        
-def set_match_frame(tline_match_frame, track_index, display_on_right):
-    global match_frame, match_frame_track_index, image_on_right, match_frame_image
-    match_frame = tline_match_frame
-    match_frame_track_index = track_index
-    image_on_right = display_on_right
-    match_frame_image = None
-
-def match_frame_close_hit(x, y):
-    if match_frame == -1:
-        return False
-    
-    if image_on_right == True:
-        frame_adj = 0
-        img_pos_adj = 0
-    else:
-        frame_adj = 1
-        img_pos_adj = int(match_frame_width)
-    
-    scale_in = (match_frame + frame_adj - pos) * pix_per_frame
-
-    test_x = scale_in - img_pos_adj + 4
-    test_y = 24
-    if (x >= test_x and  x <= test_x + 12) and (y >= test_y and  y <= test_y + 12):
-        return True
-    
-    return False
 
 def _load_pixbuf(icon_name, double_for_double_track_heights=False):
     if double_for_double_track_heights == True:
@@ -1682,9 +1648,6 @@ class TimeLineCanvas:
         if EDIT_MODE() != editorstate.SLIDE_TRIM and fake_current_frame != None:
             PLAYER().seek_frame(fake_current_frame)
             fake_current_frame = None
-        
-        # Draw match frame
-        self.draw_match_frame(cr)
             
         # Draw frame pointer
         if EDIT_MODE() != editorstate.SLIDE_TRIM or PLAYER().looping():
@@ -2299,52 +2262,7 @@ class TimeLineCanvas:
             cr.move_to(parent_x + pad, parent_y + pad)
             cr.arc(parent_x + pad, parent_y + pad, small_radius,  0.0 * degrees, 360.0 * degrees)
             cr.fill()
-
-    def draw_match_frame(self, cr):
-        if match_frame == -1:
-            return
-        
-        global match_frame_image
-        if match_frame_image == None:
-            self.create_match_frame_image_surface()
-
-        if image_on_right == True:
-            dir_mult = 1
-            frame_adj = 0
-            img_pos_adj = 0
-        else:
-            dir_mult = -1
-            frame_adj = 1
-            img_pos_adj = int(match_frame_width)
-        
-        scale_in = (match_frame + frame_adj - pos) * pix_per_frame
-                
-        cr.set_source_surface(match_frame_image, scale_in - img_pos_adj, 20)
-        cr.paint_with_alpha(0.7)
     
-        cr.set_source_surface(CLOSE_MATCH_ICON, scale_in - img_pos_adj + 4, 24)
-        cr.paint()
-        
-        cr.set_source_rgb(*MATCH_FRAME_LINES_COLOR)
-        cr.set_line_width(2.0)
-        cr.rectangle(int(scale_in) - img_pos_adj, 20, int(match_frame_width), int(match_frame_height))
-        cr.stroke()
-
-        cr.move_to(int(scale_in), 0, )
-        cr.line_to(int(scale_in), int(match_frame_height) + 42)
-        cr.stroke()
-
-        start_y = _get_track_y(match_frame_track_index)
-        end_y = _get_track_y(match_frame_track_index - 1)
-        
-        cr.move_to (int(scale_in) + 8 * dir_mult, start_y)
-        cr.line_to (int(scale_in), start_y)
-        cr.line_to (int(scale_in), end_y + 1)
-        cr.line_to (int(scale_in) + 8 * dir_mult, end_y + 1)
-        cr.set_source_rgb(0.2, 0.2, 0.2)
-        cr.set_line_width(4.0)
-        cr.stroke()
-
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = M_PI / 180.0
         cr.new_sub_path()
@@ -2353,31 +2271,6 @@ class TimeLineCanvas:
         cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path()
-
-    def create_match_frame_image_surface(self):
-        # Create non-scaled icon
-        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
-        icon = cairo.ImageSurface.create_from_png(matchframe_path)
-
-        # Create and return scaled icon
-        allocation = canvas_widget.widget.get_allocation()
-        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
-        
-        global match_frame_width, match_frame_height
-        match_frame_height = h - 40
-        match_frame_width = match_frame_height * profile_screen_ratio
-    
-        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
-        cr = cairo.Context(scaled_icon)
-        cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
-
-        cr.set_source_surface(icon, 0, 0)
-        cr.paint()
-        
-        global match_frame_image
-        match_frame_image = scaled_icon
-
 
 
 class TimeLineColumn:
