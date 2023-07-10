@@ -444,6 +444,8 @@ class Sequence:
         if ttl != None:
             producer.set("ttl", str(ttl))
 
+        producer.set("mute_on_pause", str(1))
+
         return producer
 
     def create_slowmotion_producer(self, path, speed):
