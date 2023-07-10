@@ -47,7 +47,7 @@ import translations
 import userfolders
 import utils
 
-MONITOR_WIDTH = 400
+MONITOR_WIDTH = 500
 MONITOR_HEIGHT = -1
 PREVIEW_WIDTH = 320
 
