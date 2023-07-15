@@ -63,6 +63,9 @@ _file_filter_popover = None
 _file_filter_menu = None
 _media_file_popover = None
 _media_file_menu = None
+_jobs_popover = None
+_jobs_menu = None
+
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -505,57 +508,20 @@ def media_file_popover_show(media_file, widget, x, y, callback):
 
     rect = create_rect(x, y)
     _media_file_popover = new_mouse_popover(widget, _media_file_menu, rect)
-            
-            
-"""
-def display_media_file_popup_menu(media_file, callback, event):
-    media_file_menu = media_file_popup_menu
-    guiutils.remove_children(media_file_menu)
 
-    # "Open in Clip Monitor" is sent as event id, same for all below
-    media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
-    media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event)))
-    _add_separetor(media_file_menu)
-    
-    if hasattr(media_file, "container_data"): # Why are we guarding against non-existing "container_data" in this method, should be fixed in persistancecompat.py?
-        if media_file.container_data == None:
-            monitor_item_active = True
-        else:
-            monitor_item_active = False
-    else:
-            monitor_item_active = True
-    open_in_monitor_item = _get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))
-    open_in_monitor_item.set_sensitive(monitor_item_active)
-    media_file_menu.add(open_in_monitor_item)
-            
-    if media_file.type != appconsts.PATTERN_PRODUCER:
-        media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
 
-    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
-        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
-            _add_separetor(media_file_menu)
-            media_file_menu.add(_get_menu_item(_("Recreate Icon"), callback,("Recreate Icon", media_file, event)))
-            
-    if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
-        _add_separetor(media_file_menu)
-        if media_file.type != appconsts.IMAGE_SEQUENCE:
-            media_file_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("Render Slow/Fast Motion File", media_file, event)))
-        if media_file.type != appconsts.IMAGE_SEQUENCE:
-            media_file_menu.add(_get_menu_item(_("Render Reverse Motion File"), callback, ("Render Reverse Motion File", media_file, event)))
-    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
-        item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
-        media_file_menu.add(item)
-    
-    if hasattr(media_file, "container_data"):
-        if media_file.container_data != None:
-            if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-                _add_separetor(media_file_menu)
-                item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
-                media_file_menu.add(item)
-                item = _get_menu_item(_("Load Container Program Edit Data"), callback, ("Load Container Data", media_file, event))
-                media_file_menu.add(item)
-                item = _get_menu_item(_("Save Container Program Edit Data"), callback, ("Save Container Data", media_file, event))
-                media_file_menu.add(item)
+def jobs_menu_popover_show(launcher, widget, callback):
+    global _jobs_popover, _jobs_menu
 
-    media_file_menu.popup(None, None, None, None, event.button, event.time)
-"""
+    _jobs_menu = menu_clear_or_create(_jobs_menu)
+
+    cancel_section = Gio.Menu.new()
+    add_menu_action(cancel_section, _("Cancel Selected Render"), "jobspanel.cancelselected", "cancel_selected", callback)
+    add_menu_action(cancel_section, _("Cancel All Renders"), "jobspanel.cancelall",  "cancel_all", callback)
+    _jobs_menu.append_section(None, cancel_section)
+
+    options_section = Gio.Menu.new()
+    add_menu_action_check(options_section, _("Show Jobs Panel on Adding New Job"), "jobspanel.showonadd", editorpersistance.prefs.open_jobs_panel_on_add, "open_on_add", callback)
+    _jobs_menu.append_section(None, options_section)
+
+    _jobs_popover = new_popover(widget, _jobs_menu, launcher)
