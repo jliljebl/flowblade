@@ -63,6 +63,9 @@ _file_filter_popover = None
 _file_filter_menu = None
 _media_file_popover = None
 _media_file_menu = None
+_jobs_popover = None
+_jobs_menu = None
+
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -505,4 +508,20 @@ def media_file_popover_show(media_file, widget, x, y, callback):
 
     rect = create_rect(x, y)
     _media_file_popover = new_mouse_popover(widget, _media_file_menu, rect)
+
+def jobs_menu_popover_show(launcher, widget, callback):
+    global _jobs_popover, _jobs_menu
+
+    _jobs_menu = menu_clear_or_create(_jobs_menu)
+
+    cancel_section = Gio.Menu.new()
+    add_menu_action(cancel_section, _("Cancel Selected Render"), "jobspanel.cancelselected", "cancel_selected", callback)
+    add_menu_action(cancel_section, _("Cancel All Renders"), "jobspanel.cancelall",  "cancel_all", callback)
+    _jobs_menu.append_section(None, cancel_section)
+
+    options_section = Gio.Menu.new()
+    add_menu_action_check(options_section, _("Show Jobs Panel on Adding New Job"), "jobspanel.showonadd", editorpersistance.prefs.open_jobs_panel_on_add, "open_on_add", callback)
+    _jobs_menu.append_section(None, options_section)
+
+    _jobs_popover = new_popover(widget, _jobs_menu, launcher)
 

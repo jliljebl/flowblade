@@ -35,6 +35,7 @@ import editorpersistance
 from editorstate import PROJECT
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import motionheadless
 import persistance
@@ -230,7 +231,7 @@ def get_jobs_panel():
     global _jobs_list_view
 
     actions_menu = guicomponents.HamburgerPressLaunch(_menu_action_pressed)
-    actions_menu.connect_launched_menu(_hamburger_menu)
+    actions_menu.do_popover_callback = True
     guiutils.set_margins(actions_menu.widget, 8, 2, 2, 18)
 
     row2 =  Gtk.HBox()
@@ -249,32 +250,11 @@ def get_active_jobs_count():
 
 
 # ------------------------------------------------------------- module functions
-def _menu_action_pressed(widget, event):
-    menu = _hamburger_menu
-    guiutils.remove_children(menu)
-    menu.add(guiutils.get_menu_item(_("Cancel Selected Render"), _hamburger_item_activated, "cancel_selected"))
-    menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
+def _menu_action_pressed(launcher, widget, event, data):
+    guipopover.jobs_menu_popover_show(launcher, widget, _hamburger_item_activated)
     
-    guiutils.add_separetor(menu)
-
-    """ Not settable for 2.6, let's see later
-    sequential_render_item = Gtk.CheckMenuItem()
-    sequential_render_item.set_label(_("Render All Jobs Sequentially"))
-    sequential_render_item.set_active(editorpersistance.prefs.render_jobs_sequentially)
-    sequential_render_item.connect("activate", _hamburger_item_activated, "sequential_render")
-    menu.add(sequential_render_item)
-    """
-    
-    open_on_add_item = Gtk.CheckMenuItem()
-    open_on_add_item.set_label(_("Show Jobs Panel on Adding New Job"))
-    open_on_add_item.set_active(editorpersistance.prefs.open_jobs_panel_on_add)
-    open_on_add_item.connect("activate", _hamburger_item_activated, "open_on_add")
-    menu.add(open_on_add_item)
-    
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
-def _hamburger_item_activated(widget, msg):
+def _hamburger_item_activated(action, variant, msg=None):
+    print(msg)
     if msg == "cancel_all":
         _cancel_all_jobs()
 
@@ -296,12 +276,10 @@ def _hamburger_item_activated(widget, msg):
         GLib.timeout_add(4000, _remove_jobs)
         
     elif msg == "open_on_add":
-        editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
+        new_state = not(action.get_state().get_boolean())
+        editorpersistance.prefs.open_jobs_panel_on_add = new_state
         editorpersistance.save()
-
-    elif msg == "sequential_render":
-        editorpersistance.prefs.render_jobs_sequentially = widget.get_active()
-        editorpersistance.save()
+        action.set_state(GLib.Variant.new_boolean(new_state))
 
 def _get_jobs_with_status(status):
     running = []
