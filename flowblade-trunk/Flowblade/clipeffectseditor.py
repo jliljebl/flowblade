@@ -41,6 +41,7 @@ from editorstate import PROJECT
 from editorstate import PLAYER
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import mltfilters
 import propertyedit
@@ -426,7 +427,7 @@ def _create_widgets():
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    widgets.hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
     surface_active = guiutils.get_cairo_image("filter_add")
@@ -912,10 +913,12 @@ def _filter_mask_item_activated(widget, data):
 
 
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
-def _hamburger_launch_pressed(widget, event):
-    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
+def _hamburger_launch_pressed(launcher, widget, event, data):
+    guipopover.effects_editor_hamburger_popover_show(launcher, widget, _clip_hamburger_item_activated)
+    
+    #guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
 
-def _clip_hamburger_item_activated(widget, msg):
+def _clip_hamburger_item_activated(action, event, msg):
     if msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
 

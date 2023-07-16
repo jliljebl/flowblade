@@ -65,7 +65,8 @@ _media_file_popover = None
 _media_file_menu = None
 _jobs_popover = None
 _jobs_menu = None
-
+_effects_popover = None
+_effects_menu = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -525,3 +526,59 @@ def jobs_menu_popover_show(launcher, widget, callback):
 
     _jobs_popover = new_popover(widget, _jobs_menu, launcher)
 
+def effects_editor_hamburger_popover_show(launcher, widget, callback):
+    global _effects_popover, _effects_menu
+
+    _effects_menu = menu_clear_or_create(_effects_menu)
+
+    toggle_section = Gio.Menu.new()
+    add_menu_action(toggle_section, _("Toggle All Effects On/Off"), "effectseditor.toggle", "toggle", callback)
+    _effects_menu.append_section(None, toggle_section)
+
+    expand_section = Gio.Menu.new()
+    add_menu_action(expand_section, _("Expand All"), "effectseditor.expanded", "expanded", callback)
+    add_menu_action(expand_section, _("Unexpand All"), "effectseditor.unexpanded", "unexpanded", callback)
+    _effects_menu.append_section(None, expand_section)
+
+    save_section = Gio.Menu.new()
+    add_menu_action(save_section, _("Save Effect Stack"), "effectseditor.savestack", "save_stack", callback)
+    add_menu_action(save_section, _("Load Effect Stack"), "effectseditor.loadstack", "load_stack", callback)
+    _effects_menu.append_section(None, save_section)
+
+    fade_section = Gio.Menu.new()
+    add_menu_action(fade_section, _("Set Fade Buttons Default Fade Length..."), "effectseditor.fadelength", "fade_length", callback)
+    _effects_menu.append_section(None, fade_section)
+
+    close_section = Gio.Menu.new()
+    add_menu_action(close_section, _("Close Editor"), "effectseditor.close", "close", callback)
+    _effects_menu.append_section(None, close_section)
+
+    _effects_popover = new_popover(widget, _effects_menu, launcher)
+    
+"""
+    menu = clip_effects_hamburger_menu
+    guiutils.remove_children(menu)
+    
+    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
+
+    _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Expand All"), callback, "expanded"))
+    menu.add(_get_menu_item(_("Unexpand All"), callback, "unexpanded"))
+
+    _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Save Effect Stack"), callback, "save_stack"))
+    menu.add(_get_menu_item(_("Load Effect Stack"), callback, "load_stack"))
+
+    _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
+
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+"""

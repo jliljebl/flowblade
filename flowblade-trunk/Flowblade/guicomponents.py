@@ -3251,6 +3251,7 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
+"""
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
@@ -3277,6 +3278,7 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
+"""
 
 def get_media_plugin_editor_hamburger_menu(event, callback):
     menu = media_plugin_panel_hamburger_menu
