@@ -34,6 +34,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import edit
 import editorlayout
@@ -65,7 +66,7 @@ def create_widgets():
     """
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    widgets.hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
 
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
@@ -325,10 +326,10 @@ def _compositor_uses_fade_buttons(compositor):
         
     return False
 # ----------------------------------------------------------- hamburger menu
-def _hamburger_launch_pressed(widget, event):
-    guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
+def _hamburger_launch_pressed(launcher, widget, event, data):
+    guipopover.compositor_editor_hamburger_menu_show(launcher, widget, _compositor_hamburger_item_activated)
 
-def _compositor_hamburger_item_activated(widget, msg):
+def _compositor_hamburger_item_activated(action, variant, msg):
     if msg == "save":
         comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
         default_name = comp_name.replace(" ", "_") + _("_compositor_values") + ".data"

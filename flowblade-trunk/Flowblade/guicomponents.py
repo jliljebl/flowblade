@@ -3291,67 +3291,6 @@ def get_filter_mask_menu(event, callback, filter_names, filter_msgs, filter_inde
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_compositor_editor_hamburger_menu(event, callback):
-    # needs renaming
-    menu = clip_effects_hamburger_menu
-    guiutils.remove_children(menu)
-
-    menu.add(_get_menu_item(_("Save Compositor Values"), callback, "save"))
-    menu.add(_get_menu_item(_("Load Compositor Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Compositor Values"), callback, "reset"))
-    
-    _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Delete Compositor"), callback, "delete"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
-
-    _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
-    
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
-
-def get_file_filter_popup_menu(launcher, event, callback):
-    menu = file_filter_menu
-    guiutils.remove_children(menu)
-    menu.set_accel_group(gui.editor_window.accel_group)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_all_files.png"), _("All Files"), callback, 0)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_video_files.png"),   _("Video Files"), callback, 1)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_audio_files.png"), _("Audio Files"), callback, 2)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_graphics_files.png"), _("Graphics Files"), callback, 3)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_imgseq_files.png"), _("Image Sequences"), callback, 4)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Pattern Producers"), callback, 5)
-    menu.add(menu_item)
-
-    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
-        respaths.IMAGE_PATH + "show_unused_files.png"), _("Unused Files"), callback, 6) 
-    menu.add(menu_item)
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()
 

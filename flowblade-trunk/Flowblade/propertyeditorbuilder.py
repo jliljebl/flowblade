@@ -175,7 +175,6 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     
     value = ""
     for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        print("x_tokens[i]", x_tokens[i])
         frame, x, kf_type =  propertyparse._get_roto_geom_frame_value(x_tokens[i])
         frame, y, kf_type =  propertyparse._get_roto_geom_frame_value(y_tokens[i])
         frame, x_scale, kf_type =  propertyparse._get_roto_geom_frame_value(x_scale_tokens[i])
@@ -943,7 +942,6 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
 
 def _create_rotion_geometry_editor(clip, editable_properties):   
     ep = create_editable_property_for_affine_blend(clip, editable_properties)
-    print("HALOOOOO")
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit
 

@@ -69,7 +69,8 @@ _effects_popover = None
 _effects_menu = None
 _plugin_popover = None
 _plugin_menu = None
-
+_compositor_hamburger_popover = None
+_compositor_hamburger_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback):
@@ -572,4 +573,30 @@ def plugin_editor_hamburger_popover_show(launcher, widget, callback):
     _plugin_menu.append_section(None, close_section)
     
     _plugin_popover = new_popover(widget, _plugin_menu, launcher)
+
+def compositor_editor_hamburger_menu_show(launcher, widget, callback):
+    global _compositor_hamburger_popover, _compositor_hamburger_menu
+
+    _compositor_hamburger_menu = menu_clear_or_create(_compositor_hamburger_menu)
+
+    save_section = Gio.Menu.new()
+    add_menu_action(save_section, _("Save Compositor Values"), "compositoreditor.save", "save", callback)
+    add_menu_action(save_section, _("Load Compositor Values"), "compositoreditor.load", "load", callback)
+    add_menu_action(save_section, _("Reset Compositor Values"), "compositoreditor.reset", "reset", callback)
+    _compositor_hamburger_menu.append_section(None, save_section)
+
+
+    delete_section = Gio.Menu.new()
+    add_menu_action(delete_section, _("Delete Compositor"), "compositoreditor.delete", "delete", callback)
+    _compositor_hamburger_menu.append_section(None, delete_section)
+
+    fade_section = Gio.Menu.new()
+    add_menu_action(fade_section, _("Set Fade Buttons Default Fade Length..."), "compositoreditor.fade", "fade_length", callback)
+    _compositor_hamburger_menu.append_section(None, fade_section)
+
+    close_section = Gio.Menu.new()
+    add_menu_action(close_section,_("Close Editor"), "compositoreditor.close", "close", callback)
+    _compositor_hamburger_menu.append_section(None, close_section)
+
+    _compositor_hamburger_popover = new_popover(widget, _compositor_hamburger_menu, launcher)
 
