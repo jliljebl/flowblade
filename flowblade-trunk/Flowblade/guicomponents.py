@@ -3251,52 +3251,6 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
-"""
-def get_clip_effects_editor_hamburger_menu(event, callback):
-    menu = clip_effects_hamburger_menu
-    guiutils.remove_children(menu)
-    
-    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Expand All"), callback, "expanded"))
-    menu.add(_get_menu_item(_("Unexpand All"), callback, "unexpanded"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Save Effect Stack"), callback, "save_stack"))
-    menu.add(_get_menu_item(_("Load Effect Stack"), callback, "load_stack"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
-
-    _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-"""
-
-def get_media_plugin_editor_hamburger_menu(event, callback):
-    menu = media_plugin_panel_hamburger_menu
-    guiutils.remove_children(menu)
-
-    save_item = _get_menu_item(_("Save and Apply Plugin Properties"), callback, "save_properties")
-    menu.append(save_item)
-
-    load_item = _get_menu_item(_("Load and Apply Plugin Properties"), callback, "load_properties")
-    menu.append(load_item)
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-    
 def get_kb_shortcuts_hamburger_menu(event, callback, data):
     shortcuts_combo, dialog = data
     

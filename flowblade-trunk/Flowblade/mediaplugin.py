@@ -37,6 +37,7 @@ from editorstate import current_sequence
 import fluxity
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import mltprofiles
 import positionbar
@@ -601,7 +602,8 @@ def create_widgets():
     """
     widgets.plugin_info = guicomponents.PluginInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    widgets.hamburger_launcher.do_popover_callback = True
+    
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
     widgets.frame_select_box = Gtk.VBox()
     widgets.frame_select_button = None
@@ -746,11 +748,12 @@ def _apply():
     _action_object.apply_editors(_edit_panel.editor_widgets)
     _action_object.render_full_media(_clip)
 
-def _hamburger_launch_pressed(widget, event):
+def _hamburger_launch_pressed(launcher, widget, event, data):
     track, index = current_sequence().get_track_and_index_for_id(_clip.id)
-    guicomponents.get_media_plugin_editor_hamburger_menu(event, _hamburger_item_activated)
-
-def _hamburger_item_activated(widget, msg):
+    #guicomponents.get_media_plugin_editor_hamburger_menu(event, _hamburger_item_activated)
+    guipopover.plugin_editor_hamburger_popover_show(launcher, widget, _hamburger_item_activated)
+ 
+def _hamburger_item_activated(action, event, msg):
     if msg == "close":
         gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
     elif msg == "save_properties":

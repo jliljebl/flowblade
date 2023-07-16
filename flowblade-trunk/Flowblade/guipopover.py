@@ -67,6 +67,8 @@ _jobs_popover = None
 _jobs_menu = None
 _effects_popover = None
 _effects_menu = None
+_plugin_popover = None
+_plugin_menu = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -554,31 +556,20 @@ def effects_editor_hamburger_popover_show(launcher, widget, callback):
     _effects_menu.append_section(None, close_section)
 
     _effects_popover = new_popover(widget, _effects_menu, launcher)
+
+def plugin_editor_hamburger_popover_show(launcher, widget, callback):
+    global _plugin_popover, _plugin_menu
+
+    _plugin_menu = menu_clear_or_create(_plugin_menu)
+
+    save_section = Gio.Menu.new()
+    add_menu_action(save_section, _("Save and Apply Plugin Properties"), "mediaplugineditor.save", "save_properties", callback)
+    add_menu_action(save_section, _("Load and Apply Plugin Properties"), "mediaplugineditor.load", "load_properties", callback)
+    _plugin_menu.append_section(None, save_section)
+
+    close_section = Gio.Menu.new()
+    add_menu_action(close_section, _("Close Editor"), "mediaplugineditor.close", "close", callback)
+    _plugin_menu.append_section(None, close_section)
     
-"""
-    menu = clip_effects_hamburger_menu
-    guiutils.remove_children(menu)
-    
-    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
+    _plugin_popover = new_popover(widget, _plugin_menu, launcher)
 
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Expand All"), callback, "expanded"))
-    menu.add(_get_menu_item(_("Unexpand All"), callback, "unexpanded"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Save Effect Stack"), callback, "save_stack"))
-    menu.add(_get_menu_item(_("Load Effect Stack"), callback, "load_stack"))
-
-    _add_separetor(menu)
-
-    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
-
-    _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-"""
