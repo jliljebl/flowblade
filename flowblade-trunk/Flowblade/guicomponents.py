@@ -101,31 +101,19 @@ gmic_icon = None
 selection_icon = None
 
 # GTK3 requires these to be created outside of callback
-markers_menu = Gtk.Menu.new()
-tracks_menu = Gtk.Menu.new()
-monitor_menu = Gtk.Menu.new()
-trim_view_menu = Gtk.Menu.new()
-tools_menu = Gtk.Menu.new()
-file_filter_menu = Gtk.Menu()
-column_count_menu = Gtk.Menu()
+#tools_menu = Gtk.Menu.new()
 clip_popup_menu = Gtk.Menu()
 tracks_pop_menu = Gtk.Menu()
 transition_clip_menu = Gtk.Menu()
 blank_clip_menu = Gtk.Menu()
 audio_clip_menu = Gtk.Menu()
 compositor_popup_menu = Gtk.Menu()
-media_file_popup_menu = Gtk.Menu()
-filter_stack_menu_popup_menu = Gtk.Menu()
 media_linker_popup_menu = Gtk.Menu()
 log_event_popup_menu = Gtk.Menu()
-levels_menu = Gtk.Menu()
-clip_effects_hamburger_menu = Gtk.Menu()
-bin_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
 effect_menu = Gtk.Menu()
-media_plugin_panel_hamburger_menu = Gtk.Menu()
 
 select_clip_func = None
 add_compositors_is_multi_selection = False 
@@ -2420,8 +2408,7 @@ def _get_clip_markers_menu_item(event, clip, track, callback):
     markers_menu_item = Gtk.MenuItem(_("Markers"))
     markers_menu =  Gtk.Menu()
     markers_exist = len(clip.markers) != 0
-    #menu = markers_menu
-    #guiutils.remove_children(menu)
+
     if markers_exist:
         for i in range(0, len(clip.markers)):
             marker = clip.markers[i]

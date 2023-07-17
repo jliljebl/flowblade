@@ -89,10 +89,6 @@ import userfolders
 import utils
 
 
-bin_popup_menu = Gtk.Menu()
-hamburger_popup_menu = Gtk.Menu()
-compositing_mode_menu = Gtk.Menu()
-
 save_time = None
 save_icon_remove_event_id = None
 

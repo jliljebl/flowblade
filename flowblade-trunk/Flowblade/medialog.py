@@ -48,7 +48,6 @@ widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
 log_changed_since_last_save = False
-actions_popup_menu = Gtk.Menu()        
 
 # Sort order
 TIME_SORT = appconsts.TIME_SORT

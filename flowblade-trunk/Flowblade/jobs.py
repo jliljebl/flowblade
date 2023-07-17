@@ -61,7 +61,6 @@ open_media_file_callback = None
 
 _status_polling_thread = None
 
-_hamburger_menu = Gtk.Menu()
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.

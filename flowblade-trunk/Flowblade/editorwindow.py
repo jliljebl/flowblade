@@ -255,7 +255,6 @@ class EditorWindow:
             
         layout_press.widget.set_margin_top(1)
         layout_press.widget.set_tooltip_text(_("Layouts"))
-        layout_press.connect_launched_menu(editorlayout._top_bar_button_menu)
         
         tline_info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
@@ -319,7 +318,7 @@ class EditorWindow:
         self.bin_list_view.set_property("can-focus",  True)
 
 
-        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed, projectaction.bin_popup_menu)
+        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed)
         self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_popover_mouse_right_pressed,

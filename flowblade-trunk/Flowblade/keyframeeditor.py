@@ -102,8 +102,6 @@ DISCONNECTED_SIGNAL_HANDLER = -9999999
 _get_current_edited_compositor = None
 
 actions_menu = Gtk.Menu()
-oor_before_menu = Gtk.Menu()
-oor_after_menu = Gtk.Menu()
 buttons_hamburger_menu = Gtk.Menu()
 keyframe_menu = Gtk.Menu()
 

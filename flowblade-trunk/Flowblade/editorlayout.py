@@ -156,9 +156,6 @@ _position_notebooks = {}
 _positions_names = {}
 _panels_names = {}
 
-# Pop-up menu from top bar button.
-_top_bar_button_menu = Gtk.Menu()
-
 def top_level_project_panel():
     if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
         return True

@@ -72,7 +72,6 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
-    files_filter_launcher.connect_launched_menu(guicomponents.file_filter_menu)
     gui.media_view_filter_selector = files_filter_launcher
 
     bin_info = guicomponents.BinInfoPanel()
@@ -97,13 +96,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
 
     return (panel, bin_info)
 
-def get_bins_tree_panel(bin_list_view, callback, bins_popup_menu):   
+def get_bins_tree_panel(bin_list_view, callback):   
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
     hamburger.do_popover_callback = True
-    #hamburger.connect_launched_menu(bins_popup_menu)
     
     return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     

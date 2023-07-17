@@ -58,7 +58,6 @@ _plugins = []
 _plugins_groups = []
 
 _add_plugin_window = None
-_plugins_menu = Gtk.Menu()
 
 _selected_plugin = None
 _current_screenshot_surface = None
