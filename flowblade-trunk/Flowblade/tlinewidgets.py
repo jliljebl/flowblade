@@ -294,7 +294,8 @@ pos = 0 # Current left most frame in timeline display
 # ------------------------------------------------------------------ MODULE POSITION STATE
 # ------------------------------------------------------------------ MODULE POSITION STATE
 
-
+# Used to implement 'zoom on mouse position' feature.
+zoom_mouse_x = 0.0
 
 # For debug purposes.
 draw_blank_borders = True
@@ -456,11 +457,22 @@ def get_pos_for_tline_centered_to_current_frame():
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     frames_in_panel = w / pix_per_frame
 
-    # current in first half on first screen width of tline display
     if current_frame < (frames_in_panel / 2.0):
         return 0
     else:
         return current_frame - (frames_in_panel / 2)
+
+def get_mouse_pos_frame():
+    return get_frame(zoom_mouse_x)
+
+def get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom):
+    mouse_pos_frame_after_zoom = get_frame(zoom_mouse_x)
+    new_pos = pos - (mouse_pos_frame_after_zoom - mouse_pos_frame_pre_zoom)
+
+    if new_pos < 0:
+        return 0
+    else:
+        return new_pos
 
 def get_last_tline_view_frame():
     allocation = canvas_widget.widget.get_allocation()
@@ -1283,10 +1295,6 @@ def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.close_path()
 
-
-        
-    
-
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
@@ -1468,6 +1476,9 @@ class TimeLineCanvas:
         # No edit is going on and cursor is on timeline, we need to do context
         # sensitive cursor updates.
         if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
+            global zoom_mouse_x
+            zoom_mouse_x = x
+
             self.set_pointer_context(x, y)
             return
 

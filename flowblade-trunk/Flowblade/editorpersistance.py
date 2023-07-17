@@ -364,4 +364,4 @@ class EditorPreferences:
         self.auto_expand_tracks = True
         self.quick_effects = None
         self.auto_render_media_plugins = True
-        
+        self.zoom_to_playhead = True

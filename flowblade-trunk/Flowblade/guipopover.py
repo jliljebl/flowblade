@@ -184,7 +184,7 @@ def markers_menu_show(launcher, widget, callback):
     launcher.connect_launched_menu(_markers_popover)
     _markers_popover.show()
 
-def tline_properties_menu_show(launcher, widget, callback):
+def tline_properties_menu_show(launcher, widget, callback, mouse_zoom_callback):
     global _tline_properties_popover, _tline_properties_menu
 
     _tline_properties_menu = menu_clear_or_create(_tline_properties_menu)
@@ -194,6 +194,19 @@ def tline_properties_menu_show(launcher, widget, callback):
     add_menu_action_check(display_section, _("Display Audio Levels"), "midbar.tlineproperties.all", editorstate.display_all_audio_levels, "all", callback)
     _tline_properties_menu.append_section(None, display_section)
 
+    zoom_section = Gio.Menu.new()
+    items_data =[(_("Mouse Zoom To Playhead"), "zoomtoplayhead"), (_("Mouse Zoom To Cursor"), "zoomtomouse")]
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        active_index = 0
+    else:
+        active_index = 1
+    add_menu_action_all_items_radio(zoom_section, items_data, "midbar.tlineproperties.mousezoom", active_index, mouse_zoom_callback)
+    _tline_properties_menu.append_section(None, zoom_section)
+
+    snapping_section = Gio.Menu.new()
+    add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping.snapping_on, "snapping", callback)
+    _tline_properties_menu.append_section(None, snapping_section)
+    
     snapping_section = Gio.Menu.new()
     add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping.snapping_on, "snapping", callback)
     _tline_properties_menu.append_section(None, snapping_section)

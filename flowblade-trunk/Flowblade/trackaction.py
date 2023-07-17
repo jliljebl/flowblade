@@ -218,7 +218,7 @@ def _activate_only_current_top_active():
     gui.tline_column.widget.queue_draw()
     
 def tline_properties_menu_launch_pressed(launcher, widget, event):
-    guipopover.tline_properties_menu_show(launcher, widget, _tline_properties_item_activated)
+    guipopover.tline_properties_menu_show(launcher, widget, _tline_properties_item_activated, _tline_mouse_zoom_selected)
 
 def _tline_properties_item_activated(action, event, msg):
     new_state = not(action.get_state().get_boolean())
@@ -238,6 +238,17 @@ def _tline_properties_item_activated(action, event, msg):
 
     action.set_state(GLib.Variant.new_boolean(new_state))
 
+
+def _tline_mouse_zoom_selected(action, variant):
+    if variant.get_string() == "zoomtoplayhead":
+        editorpersistance.prefs.zoom_to_playhead = True
+    else:
+        editorpersistance.prefs.zoom_to_playhead = False
+
+    action.set_state(variant)
+    editorpersistance.save()
+    guipopover._tline_properties_popover.hide()
+    
 # ------------------------------------------------------------- mouse events
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object

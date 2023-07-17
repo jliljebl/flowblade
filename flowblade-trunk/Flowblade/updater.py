@@ -144,7 +144,6 @@ def repaint_tline():
     gui.tline_canvas.widget.queue_draw()
     gui.tline_column.widget.queue_draw()
     gui.tline_scale.widget.queue_draw()
-    # gui.tline_render_strip.widget.queue_draw()
 
 # --- SCROLL AND LENGTH EVENTS
 def update_tline_scrollbar():
@@ -210,6 +209,13 @@ def center_tline_to_current_frame():
     pos = tlinewidgets.get_pos_for_tline_centered_to_current_frame()
     gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
 
+def center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom):
+    """
+    Sets scroll widget adjustment to place current frame in the middle of display.
+    """
+    pos = tlinewidgets.get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom)
+    gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
+    
 def init_tline_scale():
     """
     Calculates and sets first scale quaranteed to display full view 
@@ -250,30 +256,45 @@ def zoom_in():
     """
     Zooms in in the timeline view.
     """
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame *= 1.0 / SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame > PIX_PER_FRAME_MAX:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
 
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
 
 def zoom_out():
     """
     Zooms out in the timeline view.
     """
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame *= SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame < PIX_PER_FRAME_MIN:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
     
 def zoom_max():
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
 
 def zoom_project_length():
     tlinewidgets.pos = 0
@@ -289,15 +310,15 @@ def init_tline_view():
     update_tline_scrollbar()
     
 def mouse_scroll_zoom(event):
-    do_zoom = True
+    do_scroll = True
     if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
+            do_scroll = False
     else:
         if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
+            do_scroll = False
 
-    if do_zoom == True: # Uh, were doing scroll here.
+    if do_scroll == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
         incr = adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)
         if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
