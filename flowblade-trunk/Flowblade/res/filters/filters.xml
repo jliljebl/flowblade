@@ -236,7 +236,19 @@
         <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
         <property name="max_rate" args="editor=no_editor">3.0</property>
     </filter>
-
+    <filter id="ladspa.1410">
+        <name>Noise Gate</name>
+        <group>Audio</group> 
+        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=ladspa_slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
+        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
+        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
+        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
+        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
+        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
+        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
+        <property name="7" args="editor=no_editor">0</property>
+        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+    </filter>
 
 
     <!-- AUDIO FILTER -->
@@ -343,19 +355,6 @@
         <property name="4" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Dry!signal!level(dB)">-70.0</property>
         <property name="5" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Early!reflection!level(dB)">0.0</property>
         <property name="6" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Tail!level(dB)">-17.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
-    </filter>
-    <filter id="ladspa.1410">
-        <name>Noise Gate</name>
-        <group>Audio Filter</group> 
-        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=ladspa_slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
-        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
-        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
-        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
-        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
-        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
-        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
-        <property name="7" args="editor=no_editor">0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1892">
