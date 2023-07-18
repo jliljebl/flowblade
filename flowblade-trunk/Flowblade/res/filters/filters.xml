@@ -249,7 +249,13 @@
         <property name="7" args="editor=no_editor">0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
     </filter>
-
+    <filter id="channelswap">
+      <name>Channel Copy</name>
+      <group>Audio</group> 
+      <property name="from" args="editor=combobox displayname=Copy!Channel!From exptype=default cbopts=0:0,1:1,2:2,3:3,4:4,5:5">0</property>
+      <property name="to" args="editor=combobox displayname=Copy!Channel!To exptype=default cbopts=0:0,1:1,2:2,3:3,4:4,5:5">1</property>
+      <property name="swap" args="editor=no_editor">1</property>
+    </filter>
 
     <!-- AUDIO FILTER -->
     <filter id="ladspa.1433">
@@ -920,9 +926,9 @@
     <filter id="mirror">
         <name>Mirror</name>
         <group>Distort</group>
-        <property name="mirror" args="displayname=Axis editor=combobox exptype=default cbopts=Horizontal:horizontal,Vertical:vertical">horizontal</property>
+        <property name="mirror" args="displayname=Axis editor=combobox exptype=default cbopts=Horizontal:horizontal,Vertical:vertical,Diagonal:diagonal,XDiagonal:xdiagonal">horizontal</property>
         <property name="reverse" args="displayname=Invert editor=booleancheckbox">0</property>
-    </filter>
+    </filter> 
     <filter id="frei0r.nosync0r">
         <name>V Sync</name>
         <group>Distort</group>

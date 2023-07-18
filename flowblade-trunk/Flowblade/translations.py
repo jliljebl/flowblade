@@ -826,6 +826,8 @@ def load_filters_translations():
     combo_options["Underline"] = _("Underline")
     combo_options["Strikethrought"] = _("Strikethrought")
     combo_options["Lines Solid"] = _("Lines Solid")
+    combo_options["Diagonal"] = _("Diagonal")
+    combo_options["XDiagonal"] = _("XDiagonal")
 
     # Added for 2.10
     global plugin_groups
