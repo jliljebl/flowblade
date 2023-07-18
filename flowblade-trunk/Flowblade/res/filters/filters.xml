@@ -252,10 +252,11 @@
     <filter id="channelswap">
       <name>Channel Copy</name>
       <group>Audio</group> 
-      <property name="from" args="editor=combobox displayname=Copy!Channel!From exptype=default cbopts=0:0,1:1,2:2,3:3,4:4,5:5">0</property>
-      <property name="to" args="editor=combobox displayname=Copy!Channel!To exptype=default cbopts=0:0,1:1,2:2,3:3,4:4,5:5">1</property>
-      <property name="swap" args="editor=no_editor">1</property>
+      <property name="from" args="editor=combobox displayname=Copy!Channel!From exptype=default cbopts=Left:0,Right:1">0</property>
+      <property name="to" args="editor=combobox displayname=Copy!Channel!To exptype=default cbopts=Left:0,Right:1">1</property>
+      <property name="swap" args="editor=no_editor">0</property>
     </filter>
+
 
     <!-- AUDIO FILTER -->
     <filter id="ladspa.1433">

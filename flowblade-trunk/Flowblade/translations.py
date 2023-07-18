@@ -828,7 +828,9 @@ def load_filters_translations():
     combo_options["Lines Solid"] = _("Lines Solid")
     combo_options["Diagonal"] = _("Diagonal")
     combo_options["XDiagonal"] = _("XDiagonal")
-
+    combo_options["Left"] = _("Left")
+    combo_options["Right"] = _("Right")
+    
     # Added for 2.10
     global plugin_groups
     plugin_groups["Backgrounds"] = _("Backgrounds")
