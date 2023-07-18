@@ -1,4 +1,4 @@
-![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
+![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
 ------
 
