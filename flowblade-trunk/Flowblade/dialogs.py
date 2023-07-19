@@ -1281,9 +1281,9 @@ def group_rename_dialog(callback, group_name):
     dialog.connect('response', callback, entry)
     dialog.show_all()
 
-def not_valid_producer_dialog(file_path, parent_window):
+def not_valid_producer_dialog(err, parent_window):
     primary_txt = _("Can't open non-valid media")
-    secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
+    secondary_txt = err.value + "\n\n" + _("File: ") + err.file_path + _("\nis not a valid media file.")
     dialogutils.warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
 def marker_name_dialog(frame_str, callback, rename=False):

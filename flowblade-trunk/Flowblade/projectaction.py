@@ -289,7 +289,7 @@ class AddMediaFilesThread(threading.Thread):
                     PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
-                    GLib.idle_add(self._not_valid_producer, err.value)
+                    GLib.idle_add(self._not_valid_producer, err)
 
             self.list_view_update_done = False
             GLib.idle_add(self._list_view_update)
@@ -357,8 +357,8 @@ class AddMediaFilesThread(threading.Thread):
         watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
         gui.editor_window.window.get_window().set_cursor(watch)
 
-    def _not_valid_producer(self, err_value):
-        dialogs.not_valid_producer_dialog(err_value, gui.editor_window.window)
+    def _not_valid_producer(self, err):
+        dialogs.not_valid_producer_dialog(err, gui.editor_window.window)
 
                     
 class UpdateMediaLengthsThread(threading.Thread):

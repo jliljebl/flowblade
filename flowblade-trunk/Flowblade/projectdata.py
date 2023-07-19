@@ -139,6 +139,11 @@ class Project:
         else: # For non-audio we need write a thumbnail file and get file length while we're at it
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
+        # Refuse files giving "fps_den" == 0, these have been seen in the wild.
+        if info["fps_den"] == 0.0:
+            msg = _("Video file gives value 0 for 'fps_den' property.")
+            raise ProducerNotValidError(msg, file_path)
+        
         # Hide file extension if enabled in user preferences
         clip_name = file_name
         if editorpersistance.prefs.hide_file_ext == True:
@@ -491,8 +496,10 @@ class Bin:
         
         
 class ProducerNotValidError(Exception):
-    def __init__(self, value):
+    def __init__(self, value, file_path):
         self.value = value
+        self.file_path = file_path
+
     def __str__(self):
         return repr(self.value)
 
@@ -521,9 +528,8 @@ class Thumbnailer:
         # Create one frame producer
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.is_valid() == False:
-            raise ProducerNotValidError(file_path)
-        #if producer.get("seekable") == "0": lets see about this
-        #    raise ProducerNotValidError("Video file not seekable, cannot be edited. Transcode to another format.\n\n" + file_path)
+            msg = _("MLT reports that file is not a valid media producer.")
+            raise ProducerNotValidError(msg, file_path)
             
         info = utils.get_file_producer_info(producer)
 
@@ -543,7 +549,8 @@ class Thumbnailer:
 
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.get("seekable") == "0":
-            raise ProducerNotValidError("Audio file not seekable, cannot be edited.\n\n" + file_path)
+            msg = _("Audio file not seekable, cannot be edited.\n\n")
+            raise ProducerNotValidError(msg, file_path)
         return producer.get_length()
 
 
