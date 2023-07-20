@@ -145,11 +145,11 @@ def abort_render(session_id):
         print("atomicfile.AtomicFileWriteError in ccrutils.abort_render(), could not open for writing: ", folder)
         
 def _get_session_folder(session_id):
-    return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
+    return userfolders.get_container_clips_dir() + session_id
 
 def get_session_folder(session_id):
     # scriptool.py atleast needs this, so we are giving it outside when needed, but mostly trying to keep use internal.
-    return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
+    return userfolders.get_container_clips_dir() + session_id
     
 def get_render_folder_for_session_id(session_id):
     return _get_session_folder(session_id) + RENDERED_FRAMES_DIR 

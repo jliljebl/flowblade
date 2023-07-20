@@ -152,10 +152,10 @@ AUTOSAVE_DIR = "autosave/"
 
 # Hidden media folders
 # NOTE: We have not been consistent with the starting/ending forward slashes.
-AUDIO_LEVELS_DIR = "audiolevels/"
-PROXIES_DIR = "proxies/"
-THUMBNAILS_DIR = "thumbnails"
-RENDERED_CLIPS_DIR = "rendered_clips"
+AUDIO_LEVELS_DIR = "audiolevels/" # DEPRECATED
+PROXIES_DIR = "proxies/" # DEPRECATED
+THUMBNAILS_DIR = "thumbnails" # DEPRECATED
+RENDERED_CLIPS_DIR = "rendered_clips"  # DEPRECATED
 GMIC_DIR = "gmic"
 PHANTOM_DIR = "phantom2d"
 PHANTOM_DISK_CACHE_DIR = "disk_cache"
@@ -163,8 +163,8 @@ TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
-CONTAINER_CLIPS_DIR = "container_clips"
-CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered"
+CONTAINER_CLIPS_DIR = "container_clips" # DEPRECATED
+CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered" # DEPRECATED
 CC_CLIP_FRAMES_DIR = "/clip_frames"
 CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 CC_PREVIEW_RENDER_DIR = "/preview_frames"

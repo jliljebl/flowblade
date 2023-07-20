@@ -49,7 +49,6 @@ SAVEFILE_VERSION = 5 # This has freezed at 5 for long time,
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
-PROXIES_DIR = "/proxies/"
  
 # Project events
 EVENT_CREATED_BY_NEW_DIALOG = 0
@@ -428,7 +427,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
+        return str(userfolders.get_proxies_dir() + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
         folder, file_name = os.path.split(self.path)
@@ -436,7 +435,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/"+ appconsts.PROXIES_DIR + md_str + "/" + file_name)
+        return str(userfolders.get_proxies_dir() + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True

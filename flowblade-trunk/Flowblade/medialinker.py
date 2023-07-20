@@ -501,7 +501,7 @@ class MediaRecreateThread(threading.Thread):
         self.start_time = time.monotonic()
 
         new_media_file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8') +  str.encode(self.file_name)).hexdigest()
-        link_path_no_ext = userfolders.get_render_dir() + "/" + new_media_file_name
+        link_path_no_ext = userfolders.get_render_dir() + new_media_file_name
         
         if self.media_asset.media_type == appconsts.IMAGE:
             link_path = link_path_no_ext + ".png"

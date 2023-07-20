@@ -224,7 +224,7 @@ class AbstractContainerActionObject:
         action.do_edit()
 
     def get_session_dir(self):
-        return self.get_container_clips_dir() + "/" + self.get_container_program_id()
+        return self.get_container_clips_dir() + self.get_container_program_id()
 
     def get_rendered_media_dir(self):
         if self.container_data.render_data.save_internally == True:
@@ -274,7 +274,7 @@ class AbstractContainerActionObject:
         return "get_job_name not impl"
  
     def get_container_clips_dir(self):
-        return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
+        return userfolders.get_container_clips_dir()
 
     def get_lowest_numbered_file(self):
         frames_info = gmicplayer.FolderFramesInfo(self.get_rendered_media_dir())

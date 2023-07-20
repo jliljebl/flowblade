@@ -1332,7 +1332,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
     uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    write_file = folder + "/"+ uuid_str + ".xml"
+    write_file = folder + uuid_str + ".xml"
 
     dialog.destroy()
     
@@ -1389,7 +1389,7 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
 
@@ -1410,7 +1410,7 @@ def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_en
 
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
 
@@ -1437,7 +1437,7 @@ def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_ent
     
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
     
