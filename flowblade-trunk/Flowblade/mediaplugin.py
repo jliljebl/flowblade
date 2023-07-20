@@ -174,7 +174,7 @@ def fill_media_plugin_sub_menu_gio(app, menu, callback):
 def _add_media_plugin():
     script_file = _selected_plugin.get_plugin_script_file()
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+    screenshot_file = userfolders.get_thumbnail_dir() + md_str +  ".png"
     fctx = _add_plugin_window._render_preview(int(_add_plugin_window.length_spin.get_value()/2))
     fctx.priv_context.frame_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
@@ -214,7 +214,7 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
         name = clip.name
 
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+    screenshot_file = userfolders.get_thumbnail_dir() + md_str +  ".png"
 
     script_file = open(old_cd.program)
     user_script = script_file.read()
@@ -232,7 +232,7 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
 
 def create_plugin_assests_for_media_import(old_cd):
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+    screenshot_file = userfolders.get_thumbnail_dir() + md_str +  ".png"
 
     new_length = old_cd.unrendered_length
     

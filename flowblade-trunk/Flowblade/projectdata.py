@@ -112,7 +112,17 @@ class Project:
         self.c_bin = self.bins[0]
         
         self.init_thumbnailer()
-    
+
+    def create_vault_folder_data(self, vault_dir):
+        # This is called just once when Project is created for the first time.
+        # All versions of project that are saved after this is called one time 
+        # on creation time use this same data and therefore save project data in the same place.
+        self.vault_folder = vault_dir
+        
+        md_key = str(datetime.datetime.now()) + str(os.urandom(16))
+        md_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
+        self.project_data_id = md_str
+
     def init_thumbnailer(self):
         global thumbnailer
         thumbnailer = Thumbnailer()
@@ -520,7 +530,7 @@ class Thumbnailer:
         """
         # Get data
         md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-        thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+        thumbnail_path = userfolders.get_thumbnail_dir() + md_str +  ".png"
 
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 

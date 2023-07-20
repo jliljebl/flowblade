@@ -95,6 +95,7 @@ import preferenceswindow
 import processutils
 import projectaction
 import projectdata
+import projectdatavault
 import projectinfogui
 import propertyeditorbuilder
 import proxyediting
@@ -303,6 +304,14 @@ class FlowbladeApplication(Gtk.Application):
         # There is always a project open, so at startup we create a default project.
         # Set default project as the project being edited.
         editorstate.project = projectdata.get_default_project()
+        
+        # Init projectdatavault, we need it now to create project data folders.
+        projectdatavault.init()
+        vault_folder = projectdatavault.get_active_vault_folder()
+        print(vault_folder)
+        editorstate.project.create_vault_folder_data(vault_folder)
+        projectdatavault.create_project_data_folders()
+
         check_crash = True
 
         # Audiomonitoring being available needs to be known before GUI creation.

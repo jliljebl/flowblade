@@ -68,6 +68,16 @@ def get_cache_dir():
 def get_render_dir():
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
 
+def get_legacy_render_dir():
+    # For accessing legacy render data created prior to 2.12.
+    return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
+    
+def get_audio_levels_dir():
+    return get_cache_dir() + appconsts.AUDIO_LEVELS_DIR 
+
+def get_thumbnail_dir():
+    return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
+ 
 def get_hidden_screenshot_dir_path():
     return get_cache_dir() + "screenshot/"
 
@@ -93,6 +103,11 @@ def _maybe_create_xdg_dirs():
     # Data individual folders
     if not os.path.exists(get_data_dir() + appconsts.USER_PROFILES_DIR):
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
+    """
+    Legacy data folders whree data was kept prior to 2.12.
+    These can be accessed if existing after 2.12, but will nor created anymore
+    when applications are installed fresh.
+    
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
     if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
@@ -101,6 +116,8 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
     if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
         os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
+    """
+    
     if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
         os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
 
@@ -113,12 +130,20 @@ def _maybe_create_xdg_dirs():
     # Cache individual folders
     if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUTOSAVE_DIR)
+    """
+    Legacy data folder.
+    
     if not os.path.exists(get_cache_dir() + appconsts.THUMBNAILS_DIR):
         os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
+    """
     if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
         os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
+    """
+    Legacy data folder.
+    
     if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
+    """
     if not os.path.exists(get_cache_dir() + appconsts.TRIM_VIEW_DIR):
         os.mkdir(get_cache_dir() + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.BATCH_DIR):

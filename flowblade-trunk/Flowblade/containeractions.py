@@ -243,7 +243,7 @@ class AbstractContainerActionObject:
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
 
     def get_container_thumbnail_path(self):
-        return userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + self.get_container_program_id() +  ".png"
+        return userfolders.get_thumbnail_dir() + self.get_container_program_id() +  ".png"
     
     def get_job_proxy(self):
         print("AbstractContainerActionObject.get_job_proxy() not impl")

@@ -138,7 +138,7 @@ def launch_audio_levels_rendering(file_names):
     single_render_launch_thread.start()
 
 def _get_levels_file_path(media_file_path, profile):
-    return userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
+    return userfolders.get_audio_levels_dir() + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
  
 
 class AudioRenderLaunchThread(threading.Thread):
