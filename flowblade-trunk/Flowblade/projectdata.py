@@ -153,7 +153,7 @@ class Project:
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
         # Refuse files giving "fps_den" == 0, these have been seen in the wild.
-        if info["fps_den"] == 0.0:
+        if info["fps_den"] == 0.0 and media_type == appconsts.VIDEO:
             msg = _("Video file gives value 0 for 'fps_den' property.")
             raise ProducerNotValidError(msg, file_path)
         
