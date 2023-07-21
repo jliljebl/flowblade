@@ -30,6 +30,7 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
     
     session_id = _get_arg_value(sys.argv, "session_id")
+    parent_folder = _get_arg_value(sys.argv, "parent_folder")
     media_file_id = _get_arg_value(sys.argv, "media_file_id")
     proxy_w = _get_arg_value(sys.argv, "proxy_w")
     proxy_h = _get_arg_value(sys.argv, "proxy_h")
@@ -47,7 +48,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-proxyheadless.main( modules_path, session_id, media_file_id, 
+proxyheadless.main( modules_path, parent_folder,session_id, media_file_id, 
                     proxy_w, proxy_h, enc_index, proxy_file_path, 
                     proxy_rate, media_file_path, profile_desc, 
                     lookup_path)

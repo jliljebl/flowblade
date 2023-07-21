@@ -162,7 +162,7 @@ def get_render_folder_for_session_id(parent_folder, session_id):
 # ------------------------------------------------------ headless session folders and files, used by render processes
 def init_session_folders(parent_folder, session_id):
     global _session_folder, _clip_frames_folder_internal, _rendered_frames_folder_internal
-    _session_folder = _get_session_folder(session_id)
+    _session_folder = _get_session_folder(parent_folder, session_id)
     _clip_frames_folder_internal = _session_folder + CLIP_FRAMES_DIR
     _rendered_frames_folder_internal = _session_folder + RENDERED_FRAMES_DIR
 

@@ -105,7 +105,10 @@ def get_thumbnail_dir():
         return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
  
     return projectdatavault.get_thumbnails_folder()
-     
+
+def get_temp_render_dir():
+    return get_cache_dir() + appconsts.TEMP_RENDER_DIR 
+
 def get_hidden_screenshot_dir_path():
     return get_cache_dir() + "screenshot/"
 
@@ -181,3 +184,5 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_hidden_screenshot_dir_path())
     if not os.path.exists(get_cache_dir() + appconsts.SCRIP_TOOL_DIR):
         os.mkdir(get_cache_dir() + appconsts.SCRIP_TOOL_DIR)
+    if not os.path.exists(get_temp_render_dir()):
+        os.mkdir(get_temp_render_dir())

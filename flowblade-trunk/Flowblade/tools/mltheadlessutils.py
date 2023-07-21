@@ -41,7 +41,7 @@ import translations
 import userfolders
 
 
-def mlt_env_init(root_path, session_id):
+def mlt_env_init(root_path, parent_folder, session_id):
     os.nice(10) # make user configurable
 
     try:
@@ -57,7 +57,7 @@ def mlt_env_init(root_path, session_id):
 
     mltinit.init_with_translations()
     
-    ccrutils.init_session_folders(session_id)
+    ccrutils.init_session_folders(parent_folder, session_id)
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()

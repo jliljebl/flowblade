@@ -523,6 +523,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         AbstractJobQueueObject.__init__(self, session_id, PROXY_RENDER)
         
         self.render_data = render_data
+        self.parent_folder = userfolders.get_temp_render_dir()
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.render_data.media_file_path)
@@ -544,6 +545,9 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         session_arg = "session_id:" + str(self.session_id)
         command_list.append(session_arg)
 
+        parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+        command_list.append(parent_folder_arg)
+
         subprocess.Popen(command_list)
     
     def update_render_status(self):
@@ -552,17 +556,17 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             
     def _update_from_gui_thread(self):
         
-        if proxyheadless.session_render_complete(self.get_session_id()) == True:
+        if proxyheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
             
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
             
-            proxyheadless.delete_session_folders(self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
+            proxyheadless.delete_session_folders(self.parent_folder, self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
             
             GLib.idle_add(self.proxy_render_complete)
 
         else:
-            status = proxyheadless.get_session_status(self.get_session_id())
+            status = proxyheadless.get_session_status(self.parent_folder, self.get_session_id())
             if status != None:
                 fraction, elapsed = status
                 
@@ -582,7 +586,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
     
     def abort_render(self):
         # remove_as_status_polling_object(self)
-        motionheadless.abort_render(self.get_session_id())
+        motionheadless.abort_render(self.parent_folder, self.get_session_id())
         
     def proxy_render_complete(self):
         try:

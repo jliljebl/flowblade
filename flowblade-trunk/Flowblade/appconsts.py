@@ -170,6 +170,7 @@ CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 CC_PREVIEW_RENDER_DIR = "/preview_frames"
 USER_SHORTCUTS_DIR =  "user_shortcuts/"
 SCRIP_TOOL_DIR = "scripttool"
+TEMP_RENDER_DIR = "temprender/"
 
 # Luma bands
 SHADOWS = 0
