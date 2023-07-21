@@ -64,6 +64,12 @@ def init():
 def get_active_vault_folder():
     return _xdg_data_dir + "/" + DEFAULT_PROJECTS_DATA_FOLDER
 
+def vault_data_exists():
+    if PROJECT().vault_folder == None:
+        return False
+    else:
+        return True
+
 # --------------------------------------------------------- data folders paths
 def get_project_data_folder():
     path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
@@ -85,6 +91,8 @@ def get_audio_levels_folder():
     return get_project_data_folder() + AUDIO_LEVELS_FOLDER
 
 def get_proxies_folder():
+    if PROJECT().vault_folder == None:
+        return None
     return get_project_data_folder() + PROXIES_FOLDER
     
 # ----------------------------------------------------- functional methods

@@ -22,6 +22,7 @@ import os
 import threading
 
 import appconsts
+import projectdatavault
 
 _init_error = None
 
@@ -66,27 +67,45 @@ def get_cache_dir():
     return _xdg_cache_dir + "/"
 
 def get_render_dir():
-    return get_data_dir() + appconsts.RENDERED_CLIPS_DIR + "/"
+    if projectdatavault.vault_data_exists() == False:
+        return get_data_dir() + appconsts.RENDERED_CLIPS_DIR + "/"
+    
+    return projectdatavault.get_render_folder() 
 
 def get_legacy_render_dir():
     # For accessing legacy render data created prior to 2.12.
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
 
 def get_container_clips_dir():
-    return get_data_dir() + appconsts.CONTAINER_CLIPS_DIR + "/"
+    if projectdatavault.vault_data_exists() == False:
+        return get_data_dir() + appconsts.CONTAINER_CLIPS_DIR + "/"
+
+    return projectdatavault.get_containers_folder()
     
 def get_container_clips_unrendered_dir():
-    return get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED + "/"
+    if projectdatavault.vault_data_exists() == False:
+        return get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED + "/"
 
+    return projectdatavault.get_container_clips_unrendered_folder()
+    
 def get_proxies_dir():
-    return get_render_dir() + appconsts.PROXIES_DIR
+    if projectdatavault.vault_data_exists() == False:
+        return get_render_dir() + appconsts.PROXIES_DIR
 
+    return projectdatavault.get_proxies_folder()
+    
 def get_audio_levels_dir():
-    return get_cache_dir() + appconsts.AUDIO_LEVELS_DIR 
+    if projectdatavault.vault_data_exists() == False:
+        return get_cache_dir() + appconsts.AUDIO_LEVELS_DIR 
 
+    return projectdatavault.get_audio_levels_folder()
+    
 def get_thumbnail_dir():
-    return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
+    if projectdatavault.vault_data_exists() == False:
+        return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
  
+    return projectdatavault.get_thumbnails_folder()
+     
 def get_hidden_screenshot_dir_path():
     return get_cache_dir() + "screenshot/"
 
@@ -115,7 +134,7 @@ def _maybe_create_xdg_dirs():
 
     """
     Legacy data folders where data was kept prior to 2.12.
-    These can be accessed if existing after 2.12, but will nor created anymore
+    These can be accessed if existing after 2.12, but will not be created anymore
     when applications are installed fresh.
     
     if not os.path.exists(get_render_dir()):
