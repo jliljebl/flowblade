@@ -28,6 +28,9 @@ import os
 
 from editorstate import PROJECT
 
+# Project data folder path is accessed with PROJECT() in main application, but 
+# reder processses receive it as parameter and set it here in init. 
+_project_data_folder = None
 
 # User folder locations
 _xdg_config_dir = None
@@ -47,32 +50,45 @@ AUDIO_LEVELS_FOLDER = "audio_levels/"
 PROXIES_FOLDER = "proxies/"
 
 # ------------------------------------------------------------------------ init
-def init():
+def init(_current_project_data_folder=None):
     # This data is duplicated with userfolders.py but thats really not an issue.
-    global _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
+    global _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir, _project_data_folder
 
     # XDG folders
     _xdg_config_dir = os.path.join(GLib.get_user_config_dir(), "flowblade")
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
     _xdg_cache_dir = os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
-    # This should only happen once omn first use of application.
-    if not os.path.exists(get_active_vault_folder()):
-        os.mkdir(get_active_vault_folder())
+    # Render processes don't have access to project data folder path via PROJECT(),
+    # so they sometimes use this which set in main() to be available
+    # using get_project_data_folder() as needed.
+    _project_data_folder = _current_project_data_folder
+
+    # This should only happen once on first use of application.
+    if not os.path.exists(get_default_vault_folder()):
+        os.mkdir(get_default_vault_folder())
 
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
+    # user vault folder handling not impl.
+    return get_default_vault_folder()
+
+def get_default_vault_folder():
     return _xdg_data_dir + "/" + DEFAULT_PROJECTS_DATA_FOLDER
 
 def vault_data_exists():
-    if PROJECT().vault_folder == None:
+    if get_project_data_folder() == None:
         return False
     else:
         return True
 
 # --------------------------------------------------------- data folders paths
 def get_project_data_folder():
-    path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
+    try:
+        path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
+    except:
+        path = _project_data_folder
+
     return path
 
 def get_thumbnails_folder():

@@ -358,7 +358,7 @@ def main():
         out_str = out_str + f + MAGIC_SEPARATOR + str(offset) + "\n"
     
     userfolders.init()
-    output_file = userfolders.get_cache_dir() + OFFSETS_DATA_FILE + "_"+ args.idstr
+    output_file = userfolders.get_cache_dir() + OFFSETS_DATA_FILE + "_" + args.idstr
 
     f = open(output_file, 'w')
     f.write(out_str)
