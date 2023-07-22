@@ -377,7 +377,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
-        args = ("session_id:" + str(session_id), 
+        args = ("session_id:" + str(session_id),
                 "speed:" + str(speed), 
                 "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),

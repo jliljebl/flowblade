@@ -30,6 +30,7 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
     
     session_id = _get_arg_value(sys.argv, "session_id")
+    parent_folder = _get_arg_value(sys.argv, "parent_folder")
     speed = _get_arg_value(sys.argv, "speed")
     write_file = _get_arg_value(sys.argv, "write_file")
     encoding_option_index = _get_arg_value(sys.argv, "encoding_option_index")
@@ -47,7 +48,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-motionheadless.main(modules_path, session_id, speed, write_file, profile_desc, encoding_option_index, 
+motionheadless.main(modules_path, session_id, parent_folder, speed, write_file, profile_desc, encoding_option_index, 
                     quality_option_index, source_path, render_full_range, start_frame, end_frame)
 
 
