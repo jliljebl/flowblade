@@ -86,6 +86,8 @@ def get_session_status(parent_folder, session_id):
 def abort_render(parent_folder, session_id):
     ccrutils.abort_render(parent_folder, session_id)
 
+def write_misc_session_data(parent_folder, session_id, file_name, misc_data):
+    ccrutils.write_misc_session_data(parent_folder, session_id, file_name, misc_data)
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, parent_folder, script, range_in, range_out, profile_desc):

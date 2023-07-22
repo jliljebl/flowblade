@@ -38,7 +38,6 @@ import time
 
 import appconsts
 import atomicfile
-import ccrutils
 import dialogutils
 import edit
 import editorstate
@@ -448,6 +447,7 @@ class GMicContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
+        self.parent_folder = userfolders.get_container_clips_dir()
 
     def validate_program(self):
         try:
@@ -495,14 +495,14 @@ class GMicContainerActions(AbstractContainerActionObject):
         self.render_range_out = range_out
         self.gmic_frame_offset = gmic_frame_offset
  
-        gmicheadless.clear_flag_files(self.get_container_program_id())
+        gmicheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        gmicheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
@@ -510,6 +510,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
+                "parent_folder:" + str(self.parent_folder), 
                 "script:" + str(self.container_data.program),
                 "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
@@ -530,7 +531,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             
     def _do_update_render_status(self):
                     
-        if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
+        if gmicheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
             
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -538,7 +539,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
 
         else:
-            status = gmicheadless.get_session_status(self.get_container_program_id())
+            status = gmicheadless.get_session_status(self.parent_folder, self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
 
@@ -583,7 +584,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
     def abort_render(self):
-        gmicheadless.abort_render(self.get_container_program_id())
+        gmicheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
@@ -671,8 +672,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
 
         # we could drop sending args if we wanted and just use this. 
-        ccrutils.write_misc_session_data(self.parent_folder, self.get_container_program_id(), "fluxity_plugin_edit_data", self.container_data.data_slots["fluxity_plugin_edit_data"])
-        
+        fluxityheadless.write_misc_session_data(self.parent_folder, self.get_container_program_id(), "fluxity_plugin_edit_data", self.container_data.data_slots["fluxity_plugin_edit_data"])
+
         args = ("session_id:" + self.get_container_program_id(),
                 "parent_folder:" + self.parent_folder,
                 "script:" + str(self.container_data.program),
