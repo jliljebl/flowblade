@@ -1297,17 +1297,19 @@ class FluxityRangeRenderer(threading.Thread):
         self.in_frame = in_frame
         out_frame = _mark_out
         self.out_frame = out_frame  
-
-        ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
+    
+        parent_folder = userfolders.get_temp_render_dir()
+    
+        ccrutils.init_session_folders(parent_folder, SCRIPT_TOOL_SESSION_ID)
         
         # Create temp script file from text area contents.
-        tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        tmp_script_file = ccrutils.get_session_folder(parent_folder, SCRIPT_TOOL_SESSION_ID) + "/temp_script"
         with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
             write_file = afw.get_file()
             f = afw.get_file()
             f.write(self.script)
             
-        frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+        frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
         
         err_msg, edit_data = fluxity.get_script_default_edit_data(self.script, tmp_script_file, frames_folder, self.profile_file_path)
         if err_msg != None:
@@ -1352,14 +1354,16 @@ def _preview_render_update(render_thread):
 
 def _preview_range_render_complete(render_thread):
         # Get error and log messages.
-        proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
+        parent_folder = userfolders.get_temp_render_dir()
+        
+        proc_fctx_dict = ccrutils.read_range_render_data(parent_folder, SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         if error_msg == None:
             frame_file = proc_fctx_dict["0"] # First written file saved here.
             in_frame, out_frame = render_thread.in_frame, render_thread.out_frame
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+            frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
             range_resourse_mlt_path = frames_folder + "/" + resource_name_str
             
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
@@ -1435,16 +1439,17 @@ class FluxityPluginRenderer(threading.Thread):
             file_path = os.path.join(out_folder, frame_file)
             os.remove(file_path)
 
-        ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
+        parent_folder = userfolders.get_temp_render_dir()
+        ccrutils.init_session_folders(parent_folder, SCRIPT_TOOL_SESSION_ID)
         
         # Create temp script file from text area contents.
-        tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        tmp_script_file = ccrutils.get_session_folder(parent_folder, SCRIPT_TOOL_SESSION_ID) + "/temp_script"
         with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
             write_file = afw.get_file()
             f = afw.get_file()
             f.write(script_text)
             
-        frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+        frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
         
         err_msg, edit_data = fluxity.get_script_default_edit_data(script_text, tmp_script_file, frames_folder, profile_file_path)
         if err_msg != None:
@@ -1464,7 +1469,9 @@ class FluxityPluginRenderer(threading.Thread):
         if self.abort == True:
             return
         
-        proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
+        parent_folder = userfolders.get_temp_render_dir()
+        
+        proc_fctx_dict = ccrutils.read_range_render_data(parent_folder, SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         # Set GUI state and exit on error.
@@ -1522,7 +1529,8 @@ class FluxityPluginRenderer(threading.Thread):
     def abort_render(self):
         self.abort = True
         self.frames_render_in_prgress = False
-        ccrutils.abort_render(SCRIPT_TOOL_SESSION_ID)
+        parent_folder = userfolders.get_temp_render_dir()
+        ccrutils.abort_render(parent_folder, SCRIPT_TOOL_SESSION_ID)
 
         self.shutdown()
                          
@@ -1597,8 +1605,10 @@ def _output_render_update(render_thread):
 
 def _launch_headless_render(session_id, script_path, edit_data, frames_folder, range_in, range_out):
 
-    ccrutils.init_session_folders(session_id)
-    fluxityheadless.clear_flag_files(session_id)
+    parent_folder = userfolders.get_temp_render_dir()
+    
+    ccrutils.init_session_folders(parent_folder, session_id)
+    fluxityheadless.clear_flag_files(parent_folder, session_id)
 
     # Delete old rendered frames.
     old_files = glob.glob(frames_folder + "/*")
@@ -1612,11 +1622,12 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
 
     render_data.do_video_render = False 
 
-    fluxityheadless.set_render_data(session_id, render_data)
+    fluxityheadless.set_render_data(parent_folder, session_id, render_data)
 
-    ccrutils.write_misc_session_data(session_id, "fluxity_plugin_edit_data", edit_data)
+    ccrutils.write_misc_session_data(parent_folder, session_id, "fluxity_plugin_edit_data", edit_data)
     
-    args = ("session_id:" + session_id, 
+    args = ("session_id:" + session_id,
+            "parent_folder:" + parent_folder,
             "script:" + script_path,
             "range_in:" + str(range_in),
             "range_out:"+ str(range_out),
@@ -1632,10 +1643,12 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
 
 def _get_render_status(session_id, render_range_in, render_range_out):
     # Returns tuple (completed, step, progress)
-    if fluxityheadless.session_render_complete(session_id) == True:
+    parent_folder = userfolders.get_temp_render_dir()
+    
+    if fluxityheadless.session_render_complete(parent_folder, session_id) == True:
         return (True, None, None, None)
     else:
-        status = fluxityheadless.get_session_status(session_id)
+        status = fluxityheadless.get_session_status(parent_folder, session_id)
         if status != None:
             step, frame, length, elapsed = status
             frame = int(frame)

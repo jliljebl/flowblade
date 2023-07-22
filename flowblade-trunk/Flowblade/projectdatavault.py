@@ -29,7 +29,7 @@ import os
 from editorstate import PROJECT
 
 # Project data folder path is accessed with PROJECT() in main application, but 
-# reder processses receive it as parameter and set it here in init. 
+# render processses receive it as parameter and set it here in init. 
 _project_data_folder = None
 
 # User folder locations
@@ -84,6 +84,9 @@ def vault_data_exists():
 
 # --------------------------------------------------------- data folders paths
 def get_project_data_folder():
+    # Render processes don't have access to project data folder path via 'PROJECT()',
+    # so they sometimes use '_project_data_folder' which set in main() to be available
+    # when neeeded.
     try:
         path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
     except:
