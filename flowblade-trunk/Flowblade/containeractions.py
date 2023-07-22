@@ -839,6 +839,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
+        self.parent_folder = userfolders.get_container_clips_dir()
         
     def validate_program(self):
         # These are created by application and are quaranteed to be valid.
@@ -859,21 +860,22 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         self.render_range_out = range_out
         self.clip_start_offset = clip_start_offset
  
-        mltxmlheadless.clear_flag_files(self.get_container_program_id())
+        mltxmlheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        mltxmlheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        mltxmlheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
         job_msg.status = jobs.RENDERING
         jobs.update_job_queue(job_msg)
 
-        args = ("session_id:" + self.get_container_program_id(), 
+        args = ("session_id:" + self.get_container_program_id(),
+                "parent_folder:" + str(self.parent_folder),
                 "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
@@ -893,7 +895,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
             
     def _do_update_render_status(self):
                     
-        if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
+        if mltxmlheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
             #self.remove_as_status_polling_object()
 
             job_msg = self.get_completed_job_message()
@@ -902,7 +904,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
         else:
-            status = mltxmlheadless.get_session_status(self.get_container_program_id())
+            status = mltxmlheadless.get_session_status(self.parent_folder, self.get_container_program_id())
 
             if status != None:
                 fraction, elapsed = status
@@ -925,7 +927,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def abort_render(self):
-        mltxmlheadless.abort_render(self.get_container_program_id())
+        mltxmlheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
 
 # -------------------------------------------------------------- creating unrendered clip

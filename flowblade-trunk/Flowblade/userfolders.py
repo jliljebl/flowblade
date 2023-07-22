@@ -17,6 +17,8 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
+
 from gi.repository import GLib
 import os
 import threading
@@ -29,6 +31,7 @@ _init_error = None
 _xdg_config_dir = None
 _xdg_data_dir = None
 _xdg_cache_dir = None
+
 
 # --------------------------------------------------------- interface
 def init():

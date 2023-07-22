@@ -204,7 +204,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         
