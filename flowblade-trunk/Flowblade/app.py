@@ -1028,6 +1028,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
         elif response_id ==  Gtk.ResponseType.YES:# "Save"
             if editorstate.PROJECT().last_save_path != None:
                 persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+                projectdatavault.project_saved(editorstate.PROJECT().last_save_path)
             else:
                 dialogutils.warning_message(_("Project has not been saved previously"), 
                                         _("Save project with File -> Save As before closing."),

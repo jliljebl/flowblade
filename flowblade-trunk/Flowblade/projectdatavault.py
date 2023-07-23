@@ -24,7 +24,12 @@ access to them for all later saved versions of the initial project.
 """
 
 from gi.repository import GLib
+
+import atomicfile
+import datetime
 import os
+import pickle
+import utils
 
 from editorstate import PROJECT
 
@@ -48,6 +53,9 @@ CONTAINER_CLIPS_FOLDER = "container_clips/"
 CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered/"
 AUDIO_LEVELS_FOLDER = "audio_levels/"
 PROXIES_FOLDER = "proxies/"
+
+# Ssve files data file
+SAVE_FILES_FILE = "savefiles"
 
 # ------------------------------------------------------------------------ init
 def init(_current_project_data_folder=None):
@@ -125,3 +133,118 @@ def create_project_data_folders():
     os.mkdir(get_container_clips_unrendered_folder())
     os.mkdir(get_audio_levels_folder())
     os.mkdir(get_proxies_folder())
+
+    savefiles_list = []
+    savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
+    with atomicfile.AtomicFileWriter(savefiles_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(savefiles_list, write_file)
+
+def project_saved(project_path):
+    savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
+    savefiles_list = utils.unpickle(savefiles_path)
+    savefiles_list.append((project_path, datetime.datetime.now()))
+
+    with atomicfile.AtomicFileWriter(savefiles_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(savefiles_list, write_file)
+
+
+# ---------------------------------------------------- handle classes
+class Vaults:
+    def __init__(self):
+        self.active_vault = DEFAULT_VAULT
+        self.user_vaults_data = []
+    
+    def add_user_vault(self, name, path):
+        new_vault_data = {"name":name, "vault_path":vault_path, "creation_time":datetime.datetime.now()}
+        self.user_vaults_data.append(new_vault_data)
+
+    def get_active_vault(self):
+        if self.active_vault == DEFAULT_VAULT:
+            return get_default_vault_folder()
+        else:
+            name, path, ct = self.user_vaults_data[self.active_vault]
+            return path
+
+
+class VaultDataHandle:
+    def __init__(self, path):
+        self.vault_path = path
+        self.data_folders = []
+
+    def create_data_folders_handles(self):
+        folders = [f for f in listdir(self.vault_path) if isfile(join(self.vault_path, f))]
+        
+        for folder in folders:
+            self.data_folders.append(ProjectDataFolderHandle(folder))
+
+
+class ProjectDataFolderHandle:
+    def __init__(self, path):
+        self.data_folder_path = path
+        self.folders_data = {}
+
+    def get_folder_path(self, folder):
+        return self.data_folder_path + folder
+        
+    def create_folder_data_handles(self):
+        self.folders_data[THUMBNAILS_FOLDER] = DiskFolderHandle(self.get_folder_path(THUMBNAILS_FOLDER))
+        self.folders_data[RENDERS_FOLDER] = DiskFolderHandle(self.get_folder_path(RENDERS_FOLDER))
+        self.folders_data[CONTAINER_CLIPS_FOLDER] = DiskFolderHandle(self.get_folder_path(CONTAINER_CLIPS_FOLDER))
+        self.folders_data[CONTAINER_CLIPS_UNRENDERED] = DiskFolderHandle(self.get_folder_path(CONTAINER_CLIPS_UNRENDERED))
+        self.folders_data[AUDIO_LEVELS_FOLDER] = DiskFolderHandle(self.get_folder_path(AUDIO_LEVELS_FOLDER))
+        self.folders_data[PROXIES_FOLDER] = DiskFolderHandle(self.get_folder_path(PROXIES_FOLDER))
+
+
+class DiskFolderHandle:
+    
+    def __init__(self, folder_path):
+        self.folder_path = folder_path
+
+    def get_folder_files(self):
+        return [f for f in listdir(self.folder_path) if isfile(join(self.folder_path, f))]
+        
+    def get_folder_contents(self, folder):
+        return os.listdir(self.folder_path)
+        
+    def get_folder_size(self):
+        return self.get_folder_sizes_recursively(self.folder_path)
+    
+    def get_folder_sizes_recursively(self, folder):
+        files = os.listdir(folder)
+        size = 0
+        for f in files:
+            if os.path.isdir(folder + "/" + f) and self.recursive == True:
+                size += self.get_folder_sizes_recursively(folder + "/" + f)
+            else:
+                size += os.path.getsize(folder +"/" + f)
+        return size
+
+    def get_folder_size_str(self):
+        size = self.get_folder_size()
+        self.used_disk = size
+        return self.get_size_str(size)
+
+    def get_size_str(self, size):
+        if size > 1000000:
+            return str(int((size + 500000) / 1000000)) + _(" MB")
+        elif size > 1000:
+            return str(int((size + 500) / 1000)) + _(" kB")
+        else:
+            return str(int(size)) + " B"
+
+    def destroy_data(self, folder):
+        print("deleting", folder)
+        self.destroy_recursively(folder)
+
+    def destroy_recursively(self, folder):
+        files = os.listdir(folder)
+        for f in files:
+            file_path = folder + "/" + f
+            if os.path.isdir(file_path) == True:
+                if self.recursive == True:
+                    self.destroy_recursively(file_path)
+                    os.rmdir(file_path)
+            else:
+                os.remove(file_path)
