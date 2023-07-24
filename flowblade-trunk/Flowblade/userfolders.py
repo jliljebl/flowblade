@@ -70,7 +70,7 @@ def get_cache_dir():
     return _xdg_cache_dir + "/"
 
 def get_render_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_data_dir() + appconsts.RENDERED_CLIPS_DIR + "/"
     
     return projectdatavault.get_render_folder() 
@@ -80,31 +80,31 @@ def get_legacy_render_dir():
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
 
 def get_container_clips_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_data_dir() + appconsts.CONTAINER_CLIPS_DIR + "/"
 
     return projectdatavault.get_containers_folder()
     
 def get_container_clips_unrendered_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED + "/"
 
     return projectdatavault.get_container_clips_unrendered_folder()
     
 def get_proxies_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_render_dir() + appconsts.PROXIES_DIR
 
     return projectdatavault.get_proxies_folder()
     
 def get_audio_levels_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_cache_dir() + appconsts.AUDIO_LEVELS_DIR 
 
     return projectdatavault.get_audio_levels_folder()
     
 def get_thumbnail_dir():
-    if projectdatavault.vault_data_exists() == False:
+    if projectdatavault.vault_data_exists_for_project() == False:
         return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
  
     return projectdatavault.get_thumbnails_folder()

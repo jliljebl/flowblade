@@ -25,6 +25,9 @@ access to them for all later saved versions of the initial project.
 
 from gi.repository import GLib
 
+from os import listdir
+from os.path import isfile, join, isdir
+
 import atomicfile
 import datetime
 import os
@@ -45,6 +48,7 @@ _xdg_cache_dir = None
 # The one projects data folder quaranteed to always exist and the default one
 # until user creates a new one and sets it active. 
 DEFAULT_PROJECTS_DATA_FOLDER = "projectsdata"
+DEFAULT_VAULT = -1
 
 # Project data folders
 THUMBNAILS_FOLDER = "thumbnails/"
@@ -56,6 +60,9 @@ PROXIES_FOLDER = "proxies/"
 
 # Ssve files data file
 SAVE_FILES_FILE = "savefiles"
+
+# Vaults info data file.
+VAULTS_INFO = "vaults"
 
 # ------------------------------------------------------------------------ init
 def init(_current_project_data_folder=None):
@@ -75,26 +82,41 @@ def init(_current_project_data_folder=None):
     # This should only happen once on first use of application.
     if not os.path.exists(get_default_vault_folder()):
         os.mkdir(get_default_vault_folder())
+    
+    # Create or load vaults data.
+    global _vaults
+    if not os.path.exists(get_vaults_info_path()):
+        # This should only happen once on first use of application.
+        _vaults = Vaults()
+        vaults_info_file_path = get_vaults_info_path()
+        with atomicfile.AtomicFileWriter(vaults_info_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(_vaults, write_file)
+    else:
+        _vaults = utils.unpickle(get_vaults_info_path())
 
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
-    # user vault folder handling not impl.
-    return get_default_vault_folder()
+    return _vaults.get_active_vault()
 
 def get_default_vault_folder():
     return _xdg_data_dir + "/" + DEFAULT_PROJECTS_DATA_FOLDER
 
-def vault_data_exists():
+def vault_data_exists_for_project():
     if get_project_data_folder() == None:
         return False
     else:
         return True
+
+def get_vaults_info_path():
+    return _xdg_config_dir + "/" + VAULTS_INFO
 
 # --------------------------------------------------------- data folders paths
 def get_project_data_folder():
     # Render processes don't have access to project data folder path via 'PROJECT()',
     # so they sometimes use '_project_data_folder' which set in main() to be available
     # when neeeded.
+    path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
     try:
         path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
     except:
@@ -124,8 +146,6 @@ def get_proxies_folder():
     
 # ----------------------------------------------------- functional methods
 def create_project_data_folders():
-    print(get_project_data_folder())
-    
     os.mkdir(get_project_data_folder())
     os.mkdir(get_thumbnails_folder())
     os.mkdir(get_render_folder())
@@ -174,19 +194,32 @@ class VaultDataHandle:
         self.data_folders = []
 
     def create_data_folders_handles(self):
-        folders = [f for f in listdir(self.vault_path) if isfile(join(self.vault_path, f))]
+        self.data_folders = []
+        folders = [f for f in listdir(self.vault_path) if isdir(join(self.vault_path, f))]
         
         for folder in folders:
-            self.data_folders.append(ProjectDataFolderHandle(folder))
+            path = self.vault_path + folder
+            
+            self.data_folders.append(ProjectDataFolderHandle(join(self.vault_path, folder)))
 
 
 class ProjectDataFolderHandle:
     def __init__(self, path):
         self.data_folder_path = path
         self.folders_data = {}
+        self.create_folder_data_handles()
+
+    def get_save_info(self):
+        savefiles = utils.unpickle(join(self.data_folder_path, SAVE_FILES_FILE))
+        if len(savefiles) == 0:
+            return [None, 0]
+
+        savefile_path, date_time = savefiles[-1]
+        
+        return [savefile_path, len(savefiles)]
 
     def get_folder_path(self, folder):
-        return self.data_folder_path + folder
+        return self.data_folder_path + "/" + folder
         
     def create_folder_data_handles(self):
         self.folders_data[THUMBNAILS_FOLDER] = DiskFolderHandle(self.get_folder_path(THUMBNAILS_FOLDER))
@@ -196,6 +229,15 @@ class ProjectDataFolderHandle:
         self.folders_data[AUDIO_LEVELS_FOLDER] = DiskFolderHandle(self.get_folder_path(AUDIO_LEVELS_FOLDER))
         self.folders_data[PROXIES_FOLDER] = DiskFolderHandle(self.get_folder_path(PROXIES_FOLDER))
 
+    def data_folders_info(self):
+        info = {}
+        info[THUMBNAILS_FOLDER] = self.folders_data[THUMBNAILS_FOLDER].get_folder_size_str()
+        info[RENDERS_FOLDER] = self.folders_data[RENDERS_FOLDER].get_folder_size_str()
+        info[CONTAINER_CLIPS_FOLDER] = self.folders_data[CONTAINER_CLIPS_FOLDER].get_folder_size_str()
+        info[AUDIO_LEVELS_FOLDER] = self.folders_data[AUDIO_LEVELS_FOLDER].get_folder_size_str()
+        info[PROXIES_FOLDER] = self.folders_data[PROXIES_FOLDER].get_folder_size_str()
+
+        return info
 
 class DiskFolderHandle:
     
@@ -205,7 +247,7 @@ class DiskFolderHandle:
     def get_folder_files(self):
         return [f for f in listdir(self.folder_path) if isfile(join(self.folder_path, f))]
         
-    def get_folder_contents(self, folder):
+    def get_folder_contents(self):
         return os.listdir(self.folder_path)
         
     def get_folder_size(self):
@@ -215,7 +257,7 @@ class DiskFolderHandle:
         files = os.listdir(folder)
         size = 0
         for f in files:
-            if os.path.isdir(folder + "/" + f) and self.recursive == True:
+            if os.path.isdir(folder + "/" + f):
                 size += self.get_folder_sizes_recursively(folder + "/" + f)
             else:
                 size += os.path.getsize(folder +"/" + f)

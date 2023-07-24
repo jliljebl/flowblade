@@ -192,7 +192,7 @@ class ImageTextTextListView(Gtk.VBox):
 # ------------------------------------------------- item lists
 class TextTextListView(Gtk.VBox):
     """
-    GUI component displaying list with columns: img, text, text
+    GUI component displaying list with columns: text, text
     Middle column expands.
     """
 
@@ -205,7 +205,7 @@ class TextTextListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        #self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
         self.treeview = Gtk.TreeView(model=self.storemodel)
@@ -221,6 +221,7 @@ class TextTextListView(Gtk.VBox):
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+        self.text_rend_1.set_property("font", "Bold Sans 12")
 
         self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
