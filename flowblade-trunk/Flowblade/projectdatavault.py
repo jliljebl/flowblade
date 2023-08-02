@@ -89,13 +89,10 @@ def init(_current_project_data_folder=None):
     if not os.path.exists(get_vaults_info_path()):
         # This should only happen once on first use of application.
         _vaults = Vaults()
-        vaults_info_file_path = get_vaults_info_path()
-        with atomicfile.AtomicFileWriter(vaults_info_file_path, "wb") as afw:
-            write_file = afw.get_file()
-            pickle.dump(_vaults, write_file)
+        _vaults.save()
     else:
         _vaults = utils.unpickle(get_vaults_info_path())
-
+        print(_vaults.user_vaults_data)
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
     return _vaults.get_active_vault()
@@ -180,7 +177,7 @@ class Vaults:
         self.active_vault = DEFAULT_VAULT
         self.user_vaults_data = []
     
-    def add_user_vault(self, name, path):
+    def add_user_vault(self, name, vault_path):
         new_vault_data = {"name":name, "vault_path":vault_path, "creation_time":datetime.datetime.now()}
         self.user_vaults_data.append(new_vault_data)
 
@@ -193,6 +190,13 @@ class Vaults:
         else:
             name, path, ct = self.user_vaults_data[self.active_vault]
             return path
+    
+    def save(self):
+        vaults_info_file_path = get_vaults_info_path()
+        with atomicfile.AtomicFileWriter(vaults_info_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+
 
 
 class VaultDataHandle:

@@ -193,4 +193,33 @@ class ProjectDataManagerWindow(Gtk.Window):
         dialogutils.panel_ok_cancel_dialog(_("Add Projects Data Folder"), vbox, _("Add Data Folder"), self.create_button_callback)
  
     def create_button_callback(self, dialog, response):
+        if response != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+        
+        # Get and verify vault data.
+        dir_path = self.data_folder_button.get_filename()
+        user_visible_name = self.name_entry.get_text() 
         dialog.destroy()
+                        
+        if os.path.isdir(dir_path):
+            if not os.listdir(dir_path):
+                pass
+            else:
+                primary_txt = _("Selected folder was not empty!")
+                secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+                dialogutils.warning_message(primary_txt, secondary_txt, None)
+                return
+        else:
+            primary_txt = _("Selected folder was not empty!")
+            secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+            dialogutils.warning_message(primary_txt, secondary_txt, None)
+            return
+
+        if len(user_visible_name) == 0:
+            user_visible_name = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+
+        # Add new vault
+        vaults_obj = projectdatavault.get_vaults_object()
+        vaults_obj.add_user_vault(user_visible_name, dir_path)
+        vaults_obj.save()
