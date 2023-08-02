@@ -25,6 +25,7 @@ access to them for all later saved versions of the initial project.
 
 from gi.repository import GLib
 
+import copy
 from os import listdir
 from os.path import isfile, join, isdir
 
@@ -98,6 +99,9 @@ def init(_current_project_data_folder=None):
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
     return _vaults.get_active_vault()
+
+def get_vaults_object():
+    return _vaults
 
 def get_default_vault_folder():
     return _xdg_data_dir + "/" + DEFAULT_PROJECTS_DATA_FOLDER
@@ -179,6 +183,9 @@ class Vaults:
     def add_user_vault(self, name, path):
         new_vault_data = {"name":name, "vault_path":vault_path, "creation_time":datetime.datetime.now()}
         self.user_vaults_data.append(new_vault_data)
+
+    def get_user_vaults_data(self):
+        return copy.deepcopy(self.user_vaults_data)
 
     def get_active_vault(self):
         if self.active_vault == DEFAULT_VAULT:
