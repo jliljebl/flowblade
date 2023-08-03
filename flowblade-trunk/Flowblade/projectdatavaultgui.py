@@ -56,7 +56,6 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.default_vault_name = _("Default XDG Data Store")
 
         self.view_vault_index = projectdatavault.get_vaults_object().get_active_vault_index()
-        print("self.view_vault_index", self.view_vault_index)
 
         self.current_folders = []
         self.show_only_saved = True
@@ -67,15 +66,20 @@ class ProjectDataManagerWindow(Gtk.Window):
         
         self.data_folders_list_view = guicomponents.TextTextListView()
         self.load_data_folders()
-
+        tree_sel = self.data_folders_list_view.treeview.get_selection()
+        tree_sel.connect("changed", self.folder_selection_changed)
+        
         if len(self.current_folders) > 0:
-            folders_info_panel = self.create_folder_info_panel(self.current_folders[0])
+            self.project_info_panel = self.create_folder_info_panel(self.current_folders[0])
         else:
-            folders_info_panel = Gtk.Label(label=_("No data folders"))
+            self.project_info_panel = Gtk.Label(label=_("No data folders"))
+
+        self.frame = Gtk.VBox()
+        self.frame.pack_start(self.project_info_panel, False, False, 0)
 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.data_folders_list_view, False, False, 0)
-        hbox.pack_start(folders_info_panel, False, False, 0)
+        hbox.pack_start(self.frame, False, False, 0)
 
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_control_panel, False, False, 0)
@@ -163,7 +167,6 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         # Fill current_folders list
         vault_path = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
-        print("vault_path", vault_path)
         vault = projectdatavault.VaultDataHandle(vault_path)
         vault.create_data_folders_handles()
 
@@ -185,11 +188,27 @@ class ProjectDataManagerWindow(Gtk.Window):
             row = [savefile, str(times_saved)]
             self.data_folders_list_view.storemodel.append(row)
         
+        if len(self.current_folders) > 0:
+            selection = self.data_folders_list_view.treeview.get_selection()
+            selection.select_path("0")
+                    
         self.data_folders_list_view.scroll.queue_draw()
 
     def vault_changed(self, widget):
         self.view_vault_index = widget.get_active()
         self.load_data_folders()
+
+    def folder_selection_changed(self, selection):
+        (model, rows) = selection.get_selected_rows()
+        if len(rows) == 0:
+            return
+        index = max(rows[0])
+        
+        hbox = self.create_folder_info_panel(self.current_folders[index])
+        self.frame.remove (self.project_info_panel)
+        self.project_info_panel = hbox
+        self.project_info_panel.show_all()
+        self.frame.pack_start(self.project_info_panel, False, False, 0)
         
     def create_button_clicked(self):
         label = Gtk.Label(label=_("Select Empty Folder to be added as Data Store"))
