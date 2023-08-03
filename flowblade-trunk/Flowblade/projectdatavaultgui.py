@@ -51,12 +51,14 @@ class ProjectDataManagerWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.default_vault_name = _("Default XDG Projects Data Folder")
+        self.default_vault_name = _("Default XDG Data Store")
 
         self.current_folders = []
         self.show_only_saved = True
 
         vaults_control_panel = self.create_vaults_control_panel()
+        
+        selection_panel = self.create_vault_selection_panel()
         
         self.data_folders_list_view = guicomponents.TextTextListView()
         self.load_data_folders()
@@ -72,6 +74,7 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_control_panel, False, False, 0)
+        vbox.pack_start(selection_panel, False, False, 0)
         vbox.pack_start(hbox, False, False, 0)
         
         self.set_transient_for(gui.editor_window.window)
@@ -83,20 +86,34 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
-    def create_vaults_control_panel(self):
+
+    def create_vault_selection_panel(self):
         self.vaults_combo = Gtk.ComboBoxText()
         self.fill_vaults_combo()
-        
-        create_button = Gtk.Button(_("Add Project Data Folder"))
-        create_button.connect("clicked",
-                                lambda w: self.create_button_clicked())
-        load_button = Gtk.Button(_("Load Project Data Folder"))
-        drop_button = Gtk.Button(_("Drop Project Data Folder"))
+
+        activate_button = Gtk.Button(_("Make This Data Store Active"))
         
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.vaults_combo, False, False, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+        hbox.pack_start(activate_button, False, False, 0)
+    
+        return hbox
+        
+    def create_vaults_control_panel(self):
+        create_button = Gtk.Button(_("Add Data Store"))
+        create_button.connect("clicked",
+                                lambda w: self.create_button_clicked())
+        connect_button = Gtk.Button(_("Connect Data Store"))
+        connect_button.connect("clicked",
+                                lambda w: self.connect_button_clicked())
+        drop_button = Gtk.Button(_("Drop Data Store"))
+        drop_button.connect("clicked",
+                                lambda w: self.drop_button_clicked())
+                                
+        hbox = Gtk.HBox(False, 2)
         hbox.pack_start(create_button, False, False, 0)
-        hbox.pack_start(load_button, False, False, 0)
+        hbox.pack_start(connect_button, False, False, 0)
         hbox.pack_start(drop_button, False, False, 0)
         
         return hbox
@@ -167,9 +184,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.data_folders_list_view.scroll.queue_draw()
 
     def create_button_clicked(self):
-        label = Gtk.Label(label=_("Select Empty folder to be added as Project Data Folder"))
+        label = Gtk.Label(label=_("Select Empty Folder to be added as Data Store"))
         
-        self.data_folder_button = Gtk.FileChooserButton(_("Select Data Folder"))
+        self.data_folder_button = Gtk.FileChooserButton(_("Select Folder"))
         self.data_folder_button.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.data_folder_button.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -178,7 +195,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         vaults_obj = projectdatavault.get_vaults_object()
         user_vaults_data = vaults_obj.get_user_vaults_data()
 
-        name_label = Gtk.Label(label=_("Data Folder Name"))
+        name_label = Gtk.Label(label=_("Data Store Name"))
         self.name_entry = Gtk.Entry()
         now_str = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
         self.name_entry.set_text("User Folder " + now_str)
@@ -190,7 +207,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox.pack_start(out_folder_row, False, False, 0)
         vbox.pack_start(name_row, False, False, 0)
 
-        dialogutils.panel_ok_cancel_dialog(_("Add Projects Data Folder"), vbox, _("Add Data Folder"), self.create_button_callback)
+        dialogutils.panel_ok_cancel_dialog(_("Create Data Store"), vbox, _("Create Data Store"), self.create_button_callback)
  
     def create_button_callback(self, dialog, response):
         if response != Gtk.ResponseType.ACCEPT:
@@ -202,18 +219,10 @@ class ProjectDataManagerWindow(Gtk.Window):
         user_visible_name = self.name_entry.get_text() 
         dialog.destroy()
                         
-        if os.path.isdir(dir_path):
-            if not os.listdir(dir_path):
-                pass
-            else:
-                primary_txt = _("Selected folder was not empty!")
-                secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
-                dialogutils.warning_message(primary_txt, secondary_txt, None)
-                return
+        if not os.listdir(dir_path):
+            pass
         else:
-            primary_txt = _("Selected folder was not empty!")
-            secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
-            dialogutils.warning_message(primary_txt, secondary_txt, None)
+            self.show_non_empty_dialog_info()
             return
 
         if len(user_visible_name) == 0:
@@ -223,3 +232,104 @@ class ProjectDataManagerWindow(Gtk.Window):
         vaults_obj = projectdatavault.get_vaults_object()
         vaults_obj.add_user_vault(user_visible_name, dir_path)
         vaults_obj.save()
+
+        # Update combo
+        self.fill_vaults_combo()
+
+    def show_non_empty_dialog_info(self):
+        primary_txt = _("Selected folder was not empty!")
+        secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+        dialogutils.warning_message(primary_txt, secondary_txt, None)
+                
+    def drop_button_clicked(self):
+        label = Gtk.Label(label=_("Select Data Store to be dropped"))
+        
+        self.user_vaults_combo = Gtk.ComboBoxText()
+
+        vaults_obj = projectdatavault.get_vaults_object()
+        user_vaults_data = vaults_obj.get_user_vaults_data()
+        for vault_properties in user_vaults_data:
+            self.user_vaults_combo.append_text(vault_properties["name"])
+
+        self.user_vaults_combo.set_active(0)
+        
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(label, False, False, 0)
+        vbox.pack_start(self.user_vaults_combo, False, False, 0)
+
+        dialogutils.panel_ok_cancel_dialog(_("Drop Data Store"), vbox, _("Drop Data Store"), self.drop_button_callback)
+        
+    def drop_button_callback(self, dialog, response):
+        if response != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+
+        # Get and verify vault data.
+        drop_index = self.user_vaults_combo.get_active() 
+        dialog.destroy()
+
+        # Drop vault
+        vaults_obj = projectdatavault.get_vaults_object()
+        vaults_obj.drop_user_vault(drop_index)
+        vaults_obj.save()
+
+        # Update combo
+        self.fill_vaults_combo()
+
+    def connect_button_clicked(self):
+        label = Gtk.Label(label=_("Select Folder With existing Data Store data"))
+        
+        self.connect_data_folder_button = Gtk.FileChooserButton(_("Select Folder"))
+        self.connect_data_folder_button.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+        self.connect_data_folder_button.set_current_folder(os.path.expanduser("~") + "/")
+
+        out_folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Data Folder:")), self.connect_data_folder_button, 60)
+
+        vaults_obj = projectdatavault.get_vaults_object()
+        user_vaults_data = vaults_obj.get_user_vaults_data()
+
+        name_label = Gtk.Label(label=_("Data Store Name"))
+        self.connect_name_entry = Gtk.Entry()
+        now_str = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+        self.connect_name_entry.set_text("User Folder " + now_str)
+
+        name_row = guiutils.get_two_column_box(name_label, self.connect_name_entry, 60)
+        
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(label, False, False, 0)
+        vbox.pack_start(out_folder_row, False, False, 0)
+        vbox.pack_start(name_row, False, False, 0)
+
+        dialogutils.panel_ok_cancel_dialog(_("Connect Data Store"), vbox, _("Connect Data Store"), self.connect_button_callback)
+
+    def connect_button_callback(self, dialog, response):
+        if response != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+
+        # Get and verify vault data.
+        dir_path = self.connect_data_folder_button.get_filename()
+        user_visible_name = self.connect_name_entry.get_text() 
+        dialog.destroy()
+                        
+        if not os.listdir(dir_path):
+            # EMpty is okay
+            pass
+        else:
+            validate_success = self.validate_data_store()
+            if validate_success == False:
+                return
+
+        if len(user_visible_name) == 0:
+            user_visible_name = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+
+        # Add new vault
+        vaults_obj = projectdatavault.get_vaults_object()
+        vaults_obj.add_user_vault(user_visible_name, dir_path)
+        vaults_obj.save()
+
+        # Update combo
+        self.fill_vaults_combo()
+        
+    def validate_data_store(self):
+        return True

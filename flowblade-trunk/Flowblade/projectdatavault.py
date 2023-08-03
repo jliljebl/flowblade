@@ -197,6 +197,8 @@ class Vaults:
             write_file = afw.get_file()
             pickle.dump(self, write_file)
 
+    def drop_user_vault(self, drop_index):
+        self.user_vaults_data.pop(drop_index) 
 
 
 class VaultDataHandle:
