@@ -198,14 +198,24 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.view_vault_index = widget.get_active()
         self.load_data_folders()
 
+        if len(self.current_folders) == 0:
+            hbox = Gtk.Label(label=_("No data folders"))
+            self.frame.remove(self.project_info_panel)
+            self.project_info_panel = hbox
+            self.project_info_panel.show_all()
+            self.frame.pack_start(self.project_info_panel, False, False, 0)
+        
     def folder_selection_changed(self, selection):
         (model, rows) = selection.get_selected_rows()
         if len(rows) == 0:
             return
         index = max(rows[0])
-        
-        hbox = self.create_folder_info_panel(self.current_folders[index])
-        self.frame.remove (self.project_info_panel)
+        try:
+            hbox = self.create_folder_info_panel(self.current_folders[index])
+        except:
+            hbox = Gtk.Label(label=_("No data folders"))
+                    
+        self.frame.remove(self.project_info_panel)
         self.project_info_panel = hbox
         self.project_info_panel.show_all()
         self.frame.pack_start(self.project_info_panel, False, False, 0)
