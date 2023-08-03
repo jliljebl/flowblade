@@ -308,7 +308,7 @@ class FlowbladeApplication(Gtk.Application):
         # Init projectdatavault, we need it now to create project data folders.
         projectdatavault.init()
         vault_folder = projectdatavault.get_active_vault_folder()
-        print("vault_folder", vault_folder)
+        print("Active vault_folder: ", vault_folder)
         editorstate.project.create_vault_folder_data(vault_folder)
         projectdatavault.create_project_data_folders()
 

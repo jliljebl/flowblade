@@ -20,6 +20,8 @@
 
 """
 This module provides GUI to manage project data and data vaults.
+
+NOTE: 'vault' in code is presented to user as 'Data Store'.
 """
 from gi.repository import Gtk, GObject
 
@@ -52,6 +54,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         GObject.GObject.__init__(self)
 
         self.default_vault_name = _("Default XDG Data Store")
+
+        self.view_vault_index = projectdatavault.get_vaults_object().get_active_vault_index()
+        print("self.view_vault_index", self.view_vault_index)
 
         self.current_folders = []
         self.show_only_saved = True
@@ -86,12 +91,13 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
-
     def create_vault_selection_panel(self):
         self.vaults_combo = Gtk.ComboBoxText()
         self.fill_vaults_combo()
-
+        self.vaults_combo.connect("changed", lambda w: self.vault_changed(w))
+                          
         activate_button = Gtk.Button(_("Make This Data Store Active"))
+        activate_button.connect("clicked", lambda w: self.activate_button_clicked())
         
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.vaults_combo, False, False, 0)
@@ -102,14 +108,11 @@ class ProjectDataManagerWindow(Gtk.Window):
         
     def create_vaults_control_panel(self):
         create_button = Gtk.Button(_("Add Data Store"))
-        create_button.connect("clicked",
-                                lambda w: self.create_button_clicked())
+        create_button.connect("clicked", lambda w: self.create_button_clicked())
         connect_button = Gtk.Button(_("Connect Data Store"))
-        connect_button.connect("clicked",
-                                lambda w: self.connect_button_clicked())
+        connect_button.connect("clicked", lambda w: self.connect_button_clicked())
         drop_button = Gtk.Button(_("Drop Data Store"))
-        drop_button.connect("clicked",
-                                lambda w: self.drop_button_clicked())
+        drop_button.connect("clicked", lambda w: self.drop_button_clicked())
                                 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(create_button, False, False, 0)
@@ -159,8 +162,9 @@ class ProjectDataManagerWindow(Gtk.Window):
     def load_data_folders(self):
 
         # Fill current_folders list
-        active_vault_path = projectdatavault.get_active_vault_folder()
-        vault = projectdatavault.VaultDataHandle(active_vault_path)
+        vault_path = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
+        print("vault_path", vault_path)
+        vault = projectdatavault.VaultDataHandle(vault_path)
         vault.create_data_folders_handles()
 
         self.current_folders = []
@@ -183,6 +187,10 @@ class ProjectDataManagerWindow(Gtk.Window):
         
         self.data_folders_list_view.scroll.queue_draw()
 
+    def vault_changed(self, widget):
+        self.view_vault_index = widget.get_active()
+        self.load_data_folders()
+        
     def create_button_clicked(self):
         label = Gtk.Label(label=_("Select Empty Folder to be added as Data Store"))
         
@@ -333,3 +341,8 @@ class ProjectDataManagerWindow(Gtk.Window):
         
     def validate_data_store(self):
         return True
+
+    def activate_button_clicked(self):
+        projectdatavault.set_active_vault_index(self.view_vault_index)
+        projectdatavault.get_vaults_object().save()
+

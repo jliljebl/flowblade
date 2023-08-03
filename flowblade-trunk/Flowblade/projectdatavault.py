@@ -20,7 +20,9 @@
 
 """
 This module handles creating data folders for individual projects data files and providing 
-access to them for all later saved versions of the initial project. 
+access to them for all later saved versions of the initial project.
+
+NOTE: 'vault' in code is presented to user as 'Data Store'.
 """
 
 from gi.repository import GLib
@@ -49,7 +51,7 @@ _xdg_cache_dir = None
 # The one projects data folder quaranteed to always exist and the default one
 # until user creates a new one and sets it active. 
 DEFAULT_PROJECTS_DATA_FOLDER = "projectsdata"
-DEFAULT_VAULT = -1
+DEFAULT_VAULT = 0
 
 # Project data folders
 THUMBNAILS_FOLDER = "thumbnails/"
@@ -95,8 +97,17 @@ def init(_current_project_data_folder=None):
         print(_vaults.user_vaults_data)
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
-    return _vaults.get_active_vault()
+    return _vaults.get_active_vault_folder()
 
+def get_vault_folder_for_index(index):
+    return _vaults.get_vault_folder_for_index(index)
+    
+def set_active_vault_index(index):
+    _vaults.set_active_vault_index(index)
+
+def get_active_vault_index():
+    return _vaults.get_active_vault_index()
+    
 def get_vaults_object():
     return _vaults
 
@@ -117,7 +128,7 @@ def get_project_data_folder():
     # Render processes don't have access to project data folder path via 'PROJECT()',
     # so they sometimes use '_project_data_folder' which set in main() to be available
     # when neeeded.
-    path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
+
     try:
         path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"
     except:
@@ -138,6 +149,7 @@ def get_container_clips_unrendered_folder():
     return get_project_data_folder() + CONTAINER_CLIPS_UNRENDERED
     
 def get_audio_levels_folder():
+    print("get_audio_levels_folder", get_project_data_folder() + AUDIO_LEVELS_FOLDER)
     return get_project_data_folder() + AUDIO_LEVELS_FOLDER
 
 def get_proxies_folder():
@@ -184,13 +196,22 @@ class Vaults:
     def get_user_vaults_data(self):
         return copy.deepcopy(self.user_vaults_data)
 
-    def get_active_vault(self):
-        if self.active_vault == DEFAULT_VAULT:
+    def get_active_vault_folder(self):
+        return self.get_vault_folder_for_index(self.active_vault)
+
+    def get_vault_folder_for_index(self, vault_index): 
+        if vault_index == DEFAULT_VAULT:
             return get_default_vault_folder()
         else:
-            name, path, ct = self.user_vaults_data[self.active_vault]
-            return path
-    
+            vault_properties = self.user_vaults_data[vault_index - 1] # -1 because first vault is not user vault and is not in user_vaults_data list
+            return vault_properties["vault_path"]
+
+    def set_active_vault_index(self, index):
+        self.active_vault = index
+
+    def get_active_vault_index(self):
+        return self.active_vault
+        
     def save(self):
         vaults_info_file_path = get_vaults_info_path()
         with atomicfile.AtomicFileWriter(vaults_info_file_path, "wb") as afw:
