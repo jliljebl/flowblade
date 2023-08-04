@@ -196,7 +196,7 @@ class TextTextListView(Gtk.VBox):
     Middle column expands.
     """
 
-    def __init__(self):
+    def __init__(self,  headers_visible=False, header1="text", header2="text2"):
         GObject.GObject.__init__(self)
 
        # Datamodel: icon, text, text
@@ -205,18 +205,18 @@ class TextTextListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        #self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
         self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
-        self.treeview.set_headers_visible(False)
+        self.treeview.set_headers_visible(headers_visible)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.text_col_1 = Gtk.TreeViewColumn("text1")
-        self.text_col_2 = Gtk.TreeViewColumn("text2")
+        self.text_col_1 = Gtk.TreeViewColumn(header1)
+        self.text_col_2 = Gtk.TreeViewColumn(header2)
 
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()

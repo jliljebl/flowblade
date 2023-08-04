@@ -240,17 +240,18 @@ class VaultDataHandle:
 class ProjectDataFolderHandle:
     def __init__(self, path):
         self.data_folder_path = path
+        self.data_id = path.split("/")[-1]
         self.folders_data = {}
         self.create_folder_data_handles()
 
     def get_save_info(self):
         savefiles = utils.unpickle(join(self.data_folder_path, SAVE_FILES_FILE))
         if len(savefiles) == 0:
-            return [None, 0]
+            return [None, 0, 0]
 
         savefile_path, date_time = savefiles[-1]
         
-        return [savefile_path, len(savefiles)]
+        return [savefile_path, len(savefiles), date_time]
 
     def get_folder_path(self, folder):
         return self.data_folder_path + "/" + folder
@@ -272,6 +273,17 @@ class ProjectDataFolderHandle:
         info[PROXIES_FOLDER] = self.folders_data[PROXIES_FOLDER].get_folder_size_str()
 
         return info
+        
+    def get_total_data_size(self):
+        total = 0
+        total += self.folders_data[PROXIES_FOLDER].get_folder_size()
+        total += self.folders_data[AUDIO_LEVELS_FOLDER].get_folder_size()
+        total += self.folders_data[CONTAINER_CLIPS_FOLDER].get_folder_size()
+        total += self.folders_data[RENDERS_FOLDER].get_folder_size()
+        total += self.folders_data[THUMBNAILS_FOLDER].get_folder_size()
+        
+        return  self.folders_data[THUMBNAILS_FOLDER].get_size_str(total)
+
 
 class DiskFolderHandle:
     

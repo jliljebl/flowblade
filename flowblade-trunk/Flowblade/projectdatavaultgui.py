@@ -65,7 +65,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         
         selection_panel = self.create_vault_selection_panel()
         
-        self.data_folders_list_view = guicomponents.TextTextListView()
+        self.data_folders_list_view = guicomponents.TextTextListView(True, _("Last Saved File"), _("Times Saved"))
         self.load_data_folders()
         tree_sel = self.data_folders_list_view.treeview.get_selection()
         tree_sel.connect("changed", self.folder_selection_changed)
@@ -75,19 +75,26 @@ class ProjectDataManagerWindow(Gtk.Window):
         else:
             self.project_info_panel = Gtk.Label(label=_("No data folders"))
 
-        self.frame = Gtk.VBox()
-        self.frame.pack_start(self.project_info_panel, False, False, 0)
+        self.info_frame = Gtk.VBox()
+        self.info_frame.pack_start(self.project_info_panel, False, False, 0)
+        self.info_frame.set_margin_left(12)
+
+        view_properties_panel = self.get_view_properties_panel()
+
 
         hbox = Gtk.HBox(False, 2)
-        hbox.pack_start(self.data_folders_list_view, False, False, 0)
-        hbox.pack_start(self.frame, False, False, 0)
-
+        hbox.pack_start(self.data_folders_list_view, True, True, 0)
+        hbox.pack_start(self.info_frame, False, False, 0)
+        hbox.set_margin_top(4)
+        
         selection_vbox = Gtk.VBox(False, 2)
         selection_vbox.pack_start(selection_panel, False, False, 0)
         selection_vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        selection_vbox.pack_start(guiutils.get_centered_box([guiutils.bold_label(_("Projects Data Info"))]), False, False, 0)
+        selection_vbox.pack_start(view_properties_panel, False, False, 0)
         selection_vbox.pack_start(hbox, False, False, 0)
 
-        selections_frame = guiutils.get_named_frame(_("Data Management"), selection_vbox, 4)
+        selections_frame = guiutils.get_named_frame(_("Data Stores"), selection_vbox, 4)
         
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_frame, False, False, 0)
@@ -100,7 +107,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         notebook.append_page(vbox, Gtk.Label(label=_("Data Stores")))
 
         pane = guiutils.set_margins(notebook, 12, 12, 12, 12)
-        pane.set_size_request(600, 350)
+        pane.set_size_request(750, 350)
 
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Project Data Manager"))
@@ -115,23 +122,31 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.fill_vaults_combo()
         self.vaults_combo.connect("changed", lambda w: self.vault_changed(w))
                           
-        activate_button = Gtk.Button(_("Make This Data Store Active"))
-        activate_button.connect("clicked", lambda w: self.activate_button_clicked())
-        
         hbox_select = Gtk.HBox(False, 2)
         hbox_select.pack_start(self.vaults_combo, False, False, 0)
         hbox_select.pack_start(Gtk.Label(), True, True, 0)
-        hbox_select.pack_start(activate_button, False, False, 0)
+        #hbox_select.pack_start(activate_button, False, False, 0)
         
-        path_label = guiutils.bold_label(_("Path: "))
+        path_label = guiutils.bold_label(_("Data Store Folder: "))
         path = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
         self.store_path_info = Gtk.Label(label=path)
         info_row_1 = guiutils.get_left_justified_box([path_label, self.store_path_info])
-        info_row_1 = guiutils.set_margins(info_row_1, 8, 0, 4, 0)
+        info_row_1 = guiutils.set_margins(info_row_1, 12, 0, 4, 0)
  
+        active_label = guiutils.bold_label(_("Active: "))
+        self.active_info = Gtk.Label(label=_("Yes")) 
+        activate_button = Gtk.Button(_("Make This Data Store Active"))
+        activate_button.connect("clicked", lambda w: self.activate_button_clicked())
+        active_info_left = guiutils.get_left_justified_box([active_label, self.active_info])
+        info_row_2 = Gtk.HBox(False, 2)
+        info_row_2.pack_start(active_info_left, True, True, 0)
+        info_row_2.pack_start(activate_button, False, False, 0)
+        info_row_2 = guiutils.set_margins(info_row_2, 4, 0, 4, 0)
+
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(hbox_select, False, False, 0)
         vbox.pack_start(info_row_1, False, False, 0)
+        vbox.pack_start(info_row_2, False, False, 0)
         
         return vbox
         
@@ -162,11 +177,50 @@ class ProjectDataManagerWindow(Gtk.Window):
             self.vaults_combo.append_text(vault_properties["name"])
 
         self.vaults_combo.set_active(0)
+
+    def get_view_properties_panel(self):
+
+        self.only_saved_check = Gtk.CheckButton()
+        label = Gtk.Label(label=_("Show only saved Projects"))
+        label.set_margin_left(4)
         
+        hbox = Gtk.HBox(False, 2)
+        hbox.pack_start(self.only_saved_check, False, False, 0)
+        hbox.pack_start(label, False, False, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+
+        guiutils.set_margins(hbox, 8, 8, 0, 0)
+        
+        return hbox
+
     def create_folder_info_panel(self, folder_handle):
         info = folder_handle.data_folders_info()
         
         vbox = Gtk.VBox(False, 2)
+
+        savefile, times_saved, last_date = folder_handle.get_save_info()
+
+        save__name_label = guiutils.bold_label(_("Last Saved File Name:"))
+        save__name_label.set_margin_right(4)
+        save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
+        row = guiutils.get_left_justified_box([save__name_label, save_file_name])
+        #row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+        
+        save_label = guiutils.bold_label(_("Last Saved:"))
+        save_label.set_margin_right(4)
+        save_date = Gtk.Label(label=str(last_date))
+        row = guiutils.get_left_justified_box([save_label, save_date])
+        row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+        
+        data_id_label = guiutils.bold_label(_("Data ID:"))
+        data_id_label.set_margin_right(4)
+        data_id = Gtk.Label(label=folder_handle.data_id)
+        row = guiutils.get_left_justified_box([data_id_label, data_id])
+        row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+
         row = self.get_data_row(info, _("Thumbnails"), projectdatavault.THUMBNAILS_FOLDER)
         vbox.pack_start(row, False, False, 0)
         row = self.get_data_row(info, _("Audio Levels Data"), projectdatavault.AUDIO_LEVELS_FOLDER)
@@ -178,6 +232,29 @@ class ProjectDataManagerWindow(Gtk.Window):
         row = self.get_data_row(info, _("Proxy Files"), projectdatavault.PROXIES_FOLDER)
         vbox.pack_start(row, False, False, 0)
 
+
+        total_size_str = folder_handle.get_total_data_size()
+        box = Gtk.HBox(True, 2)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(_("Total"))]), True, True, 0)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=total_size_str)]), True, True, 0)
+        box.set_margin_top(12)
+        vbox.pack_start(box, False, False, 0)
+
+        self.destroy_button = Gtk.Button(label=_("Destroy Project Data"))
+        #self.destroy_button.connect("clicked", self.destroy_pressed)
+        self.destroy_button.set_sensitive(False)
+        self.destroy_guard_check = Gtk.CheckButton()
+        self.destroy_guard_check.set_active(False)
+        #self.destroy_guard_check.connect("toggled", self.destroy_guard_toggled)
+
+        hbox = Gtk.HBox(False, 2)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+        hbox.pack_start(self.destroy_guard_check, False, False, 0)
+        hbox.pack_start(self.destroy_button, False, False, 0)
+        hbox.set_margin_top(12)
+
+        vbox.pack_start(hbox, False, False, 0)
+        
         return vbox
 
     def get_data_row(self, info, name, folder_id):
@@ -198,7 +275,7 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         self.current_folders = []
         for folder_handle in vault.data_folders:
-            savefile, times_saved = folder_handle.get_save_info()
+            savefile, times_saved, last_date = folder_handle.get_save_info()
             if self.show_only_saved == True and times_saved == 0:
                 continue
             else:
@@ -208,10 +285,13 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.data_folders_list_view.storemodel.clear()
         
         for folder_handle in self.current_folders:
-            savefile, times_saved = folder_handle.get_save_info()
+            savefile, times_saved, last_date = folder_handle.get_save_info()
             if savefile == None:
-                savefile = _("Not saved")
-            row = [savefile, str(times_saved)]
+                file_name = _("Not saved")
+            else:
+                file_name = os.path.basename(savefile)
+            
+            row = [file_name, str(times_saved)]
             self.data_folders_list_view.storemodel.append(row)
         
         if len(self.current_folders) > 0:
@@ -226,10 +306,10 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         if len(self.current_folders) == 0:
             hbox = Gtk.Label(label=_("No data folders"))
-            self.frame.remove(self.project_info_panel)
+            self.info_frame.remove(self.project_info_panel)
             self.project_info_panel = hbox
             self.project_info_panel.show_all()
-            self.frame.pack_start(self.project_info_panel, False, False, 0)
+            self.info_frame.pack_start(self.project_info_panel, False, False, 0)
         
     def folder_selection_changed(self, selection):
         (model, rows) = selection.get_selected_rows()
@@ -241,10 +321,10 @@ class ProjectDataManagerWindow(Gtk.Window):
         except:
             hbox = Gtk.Label(label=_("No data folders"))
                     
-        self.frame.remove(self.project_info_panel)
+        self.info_frame.remove(self.project_info_panel)
         self.project_info_panel = hbox
         self.project_info_panel.show_all()
-        self.frame.pack_start(self.project_info_panel, False, False, 0)
+        self.info_frame.pack_start(self.project_info_panel, False, False, 0)
         
     def create_button_clicked(self):
         label = Gtk.Label(label=_("Select Empty Folder to be added as Data Store"))
