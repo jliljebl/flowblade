@@ -61,6 +61,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.show_only_saved = True
 
         vaults_control_panel = self.create_vaults_control_panel()
+        vaults_frame = guiutils.get_named_frame(_("Actions"), vaults_control_panel, 4)
         
         selection_panel = self.create_vault_selection_panel()
         
@@ -81,17 +82,31 @@ class ProjectDataManagerWindow(Gtk.Window):
         hbox.pack_start(self.data_folders_list_view, False, False, 0)
         hbox.pack_start(self.frame, False, False, 0)
 
-        vbox = Gtk.VBox(False, 2)
-        vbox.pack_start(vaults_control_panel, False, False, 0)
-        vbox.pack_start(selection_panel, False, False, 0)
-        vbox.pack_start(hbox, False, False, 0)
+        selection_vbox = Gtk.VBox(False, 2)
+        selection_vbox.pack_start(selection_panel, False, False, 0)
+        selection_vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        selection_vbox.pack_start(hbox, False, False, 0)
+
+        selections_frame = guiutils.get_named_frame(_("Data Management"), selection_vbox, 4)
         
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(vaults_frame, False, False, 0)
+        vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+        vbox.pack_start(selections_frame, False, False, 0)
+
+        vbox = guiutils.set_margins(vbox, 12, 12, 12, 12)
+
+        notebook = Gtk.Notebook.new()
+        notebook.append_page(vbox, Gtk.Label(label=_("Data Stores")))
+
+        pane = guiutils.set_margins(notebook, 12, 12, 12, 12)
+        pane.set_size_request(600, 350)
+
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Project Data Manager"))
         self.connect("delete-event", lambda w, e:_close_window())
-
-        alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
-        self.add(alignment)
+        
+        self.add(pane)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
@@ -103,12 +118,22 @@ class ProjectDataManagerWindow(Gtk.Window):
         activate_button = Gtk.Button(_("Make This Data Store Active"))
         activate_button.connect("clicked", lambda w: self.activate_button_clicked())
         
-        hbox = Gtk.HBox(False, 2)
-        hbox.pack_start(self.vaults_combo, False, False, 0)
-        hbox.pack_start(Gtk.Label(), True, True, 0)
-        hbox.pack_start(activate_button, False, False, 0)
-    
-        return hbox
+        hbox_select = Gtk.HBox(False, 2)
+        hbox_select.pack_start(self.vaults_combo, False, False, 0)
+        hbox_select.pack_start(Gtk.Label(), True, True, 0)
+        hbox_select.pack_start(activate_button, False, False, 0)
+        
+        path_label = guiutils.bold_label(_("Path: "))
+        path = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
+        self.store_path_info = Gtk.Label(label=path)
+        info_row_1 = guiutils.get_left_justified_box([path_label, self.store_path_info])
+        info_row_1 = guiutils.set_margins(info_row_1, 8, 0, 4, 0)
+ 
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(hbox_select, False, False, 0)
+        vbox.pack_start(info_row_1, False, False, 0)
+        
+        return vbox
         
     def create_vaults_control_panel(self):
         create_button = Gtk.Button(_("Add Data Store"))
@@ -117,12 +142,13 @@ class ProjectDataManagerWindow(Gtk.Window):
         connect_button.connect("clicked", lambda w: self.connect_button_clicked())
         drop_button = Gtk.Button(_("Drop Data Store"))
         drop_button.connect("clicked", lambda w: self.drop_button_clicked())
-                                
+
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(create_button, False, False, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
         hbox.pack_start(connect_button, False, False, 0)
         hbox.pack_start(drop_button, False, False, 0)
-        
+
         return hbox
 
     def fill_vaults_combo(self):
@@ -157,10 +183,10 @@ class ProjectDataManagerWindow(Gtk.Window):
     def get_data_row(self, info, name, folder_id):
         size_str = info[folder_id]
 
-        box = Gtk.HBox(False, 2)
-        box.pack_start(Gtk.Label(label=name), False, False, 0)
-        box.pack_start(Gtk.Label(label=size_str), False, False, 0)
-
+        box = Gtk.HBox(True, 2)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(name)]), True, True, 0)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=size_str)]), True, True, 0)
+        
         return box
 
     def load_data_folders(self):
