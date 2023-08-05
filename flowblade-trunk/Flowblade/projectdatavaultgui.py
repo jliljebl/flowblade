@@ -61,7 +61,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.show_only_saved = True
 
         vaults_control_panel = self.create_vaults_control_panel()
-        vaults_frame = guiutils.get_named_frame(_("Actions"), vaults_control_panel, 4)
+        vaults_frame = guiutils.get_named_frame(_("Actions"), vaults_control_panel, 8)
         
         selection_panel = self.create_vault_selection_panel()
         
@@ -81,7 +81,6 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         view_properties_panel = self.get_view_properties_panel()
 
-
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.data_folders_list_view, True, True, 0)
         hbox.pack_start(self.info_frame, False, False, 0)
@@ -94,23 +93,29 @@ class ProjectDataManagerWindow(Gtk.Window):
         selection_vbox.pack_start(view_properties_panel, False, False, 0)
         selection_vbox.pack_start(hbox, False, False, 0)
 
-        selections_frame = guiutils.get_named_frame(_("Data Stores"), selection_vbox, 4)
-        
+        selections_frame = guiutils.get_named_frame(_("Data Stores"), selection_vbox, 8)
+
+        close_button = Gtk.Button(_("Close"))
+        #close_button.connect("clicked", lambda w: self.create_button_clicked())
+
+        close_hbox = Gtk.HBox(False, 2)
+        close_hbox.pack_start(Gtk.Label(), True, True, 0)
+        close_hbox.pack_start(close_button, False, False, 0)
+        close_hbox.set_margin_top(18)
+
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_frame, False, False, 0)
         vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
         vbox.pack_start(selections_frame, False, False, 0)
+        vbox.pack_start(close_hbox, False, False, 0)
 
         vbox = guiutils.set_margins(vbox, 12, 12, 12, 12)
 
-        notebook = Gtk.Notebook.new()
-        notebook.append_page(vbox, Gtk.Label(label=_("Data Stores")))
-
-        pane = guiutils.set_margins(notebook, 12, 12, 12, 12)
-        pane.set_size_request(750, 350)
+        pane = guiutils.set_margins(vbox, 12, 12, 12, 12)
+        pane.set_size_request(780, 350)
 
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Project Data Manager"))
+        self.set_title(_("Data Store Manager"))
         self.connect("delete-event", lambda w, e:_close_window())
         
         self.add(pane)
@@ -183,11 +188,14 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.only_saved_check = Gtk.CheckButton()
         label = Gtk.Label(label=_("Show only saved Projects"))
         label.set_margin_left(4)
+        destroy_non_saved_button = Gtk.Button(_("Destroy Non-Saved Projects"))
+        destroy_non_saved_button.connect("clicked", lambda w: self.create_button_clicked())
         
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.only_saved_check, False, False, 0)
         hbox.pack_start(label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
+        hbox.pack_start(destroy_non_saved_button, False, False, 0)
 
         guiutils.set_margins(hbox, 8, 8, 0, 0)
         
@@ -200,7 +208,7 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         savefile, times_saved, last_date = folder_handle.get_save_info()
 
-        save__name_label = guiutils.bold_label(_("Last Saved File Name:"))
+        save__name_label = guiutils.bold_label(_("Last File Name:"))
         save__name_label.set_margin_right(4)
         save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
         row = guiutils.get_left_justified_box([save__name_label, save_file_name])
@@ -254,6 +262,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         hbox.set_margin_top(12)
 
         vbox.pack_start(hbox, False, False, 0)
+        vbox.set_size_request(370, 100)
         
         return vbox
 
