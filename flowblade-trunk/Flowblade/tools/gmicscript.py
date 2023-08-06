@@ -24,7 +24,6 @@ with the application.
 """
 
 
-from gi.repository import Gtk
 import xml.dom.minidom
 
 import respaths
@@ -33,7 +32,7 @@ GMIC_SCRIPT_NODE = "gmicscript"
 
 _scripts = None
 _script_groups = []
-_scripts_menu = Gtk.Menu()
+
 
 class GmicScript:
 
@@ -44,6 +43,9 @@ class GmicScript:
 
 def get_scripts():
     return _scripts
+
+def get_script_groups():
+    return _script_groups
 
 def load_preset_scripts_xml():
 
@@ -113,26 +115,4 @@ def load_preset_scripts_xml():
 def get_default_script():
     key, group = _script_groups[0]
     return group[0]
-
-def show_menu(event, callback):
-    # Remove current items
-    items = _scripts_menu.get_children()
-    for item in items:
-        _scripts_menu.remove(item)
-
-    for script_group in _script_groups:
-        group_name, group = script_group
-        group_item = Gtk.MenuItem(group_name)
-        #group_item.connect("activate", callback, i)
-        _scripts_menu.append(group_item)
-        sub_menu = Gtk.Menu()
-        group_item.set_submenu(sub_menu)
-
-        for script in group:
-            script_item = Gtk.MenuItem(script.name)
-            sub_menu.append(script_item)
-            script_item.connect("activate", callback, script)
-
-    _scripts_menu.show_all()
-    _scripts_menu.popup(None, None, None, None, event.button, event.time)
 

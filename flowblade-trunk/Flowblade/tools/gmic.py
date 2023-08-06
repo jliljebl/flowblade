@@ -26,6 +26,7 @@ from gi.repository import GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
+import copy
 import cairo
 import locale
 try:
@@ -98,6 +99,8 @@ _encoding_panel = None
 
 _hamburger_popover = None
 _hamburger_popover_menu = None
+_script_popover = None
+_script_popover_menu = None
 
 #_hamburger_menu = Gtk.Menu()
 
@@ -351,10 +354,7 @@ def _finish_clip_open():
 
 
 #-------------------------------------------------- script setting and save/load
-def script_menu_lauched(launcher, event):
-    gmicscript.show_menu(event, script_menu_item_selected)
-
-def script_menu_item_selected(item, script):
+def script_menu_item_selected(widget, action, script):
     if _window.action_select.get_active() == False:
         _window.script_view.get_buffer().set_text(script.script)
     else:
@@ -698,9 +698,9 @@ class GmicWindow(Gtk.Window):
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
-        self.present_event_box.connect("button-press-event",  script_menu_lauched)
+        self.present_event_box.connect("button-press-event",  self.script_menu_lauched)
 
-        self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
+        self.script_menu = toolguicomponents.PressLaunch(self.script_menu_lauched)
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
@@ -952,7 +952,33 @@ class GmicWindow(Gtk.Window):
         _hamburger_popover = Gtk.Popover.new_from_model(widget, _hamburger_popover_menu)
         self.hamburger_launcher.connect_launched_menu(_hamburger_popover)
         _hamburger_popover.show()
+
+    def script_menu_lauched(self, widget, event):
         
+        global _script_popover, _script_popover_menu
+    
+        _script_popover_menu = toolguicomponents.menu_clear_or_create(_script_popover_menu)
+
+        script_groups = gmicscript.get_script_groups()
+
+        for script_group in script_groups:
+            group_name, group = script_group
+            
+            sub_menu = Gio.Menu.new()
+            _script_popover_menu.append_submenu(group_name, sub_menu)
+
+            for script in group:
+                label = script.name
+                item_id = script.name.lower().replace(" ", "_")
+                sub_menu.append(label, "app." + item_id) 
+                
+                action = Gio.SimpleAction(name=item_id)
+                action.connect("activate", script_menu_item_selected, script)
+                _app.add_action(action)
+
+        _script_popover = Gtk.Popover.new_from_model(widget, _script_popover_menu)
+        _script_popover.show()
+    
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
