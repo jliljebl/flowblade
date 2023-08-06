@@ -35,6 +35,10 @@ import guicomponents
 import guiutils
 import projectdatavault
 
+PROJECT_DATA_WIDTH = 370
+PROJECT_DATA_HEIGHT = 270
+
+
 _project_data_manager_window = None
 
 
@@ -64,6 +68,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         vaults_frame = guiutils.get_named_frame(_("Actions"), vaults_control_panel, 8)
         
         selection_panel = self.create_vault_selection_panel()
+        self.update_vault_info()
         
         self.data_folders_list_view = guicomponents.TextTextListView(True, _("Last Saved File"), _("Times Saved"))
         self.load_data_folders()
@@ -74,7 +79,8 @@ class ProjectDataManagerWindow(Gtk.Window):
             self.project_info_panel = self.create_folder_info_panel(self.current_folders[0])
         else:
             self.project_info_panel = Gtk.Label(label=_("No data folders"))
-
+            self.project_info_panel.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
+            
         self.info_frame = Gtk.VBox()
         self.info_frame.pack_start(self.project_info_panel, False, False, 0)
         self.info_frame.set_margin_left(12)
@@ -96,7 +102,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         selections_frame = guiutils.get_named_frame(_("Data Stores"), selection_vbox, 8)
 
         close_button = Gtk.Button(_("Close"))
-        #close_button.connect("clicked", lambda w: self.create_button_clicked())
+        close_button.connect("clicked", lambda w: _close_window())
 
         close_hbox = Gtk.HBox(False, 2)
         close_hbox.pack_start(Gtk.Label(), True, True, 0)
@@ -106,7 +112,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_frame, False, False, 0)
         vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
-        vbox.pack_start(selections_frame, False, False, 0)
+        vbox.pack_start(selections_frame, True, True, 0)
         vbox.pack_start(close_hbox, False, False, 0)
 
         vbox = guiutils.set_margins(vbox, 12, 12, 12, 12)
@@ -181,16 +187,18 @@ class ProjectDataManagerWindow(Gtk.Window):
         for vault_properties in user_vaults_data:
             self.vaults_combo.append_text(vault_properties["name"])
 
-        self.vaults_combo.set_active(0)
+        self.vaults_combo.set_active(self.view_vault_index)
 
     def get_view_properties_panel(self):
 
         self.only_saved_check = Gtk.CheckButton()
-        label = Gtk.Label(label=_("Show only saved Projects"))
+        self.only_saved_check.set_active(self.show_only_saved)
+        self.only_saved_check.connect("toggled", lambda w: self.show_only_saved_toggled(w))
+        
+        label = Gtk.Label(label=_("Show only Saved Projects"))
         label.set_margin_left(4)
         destroy_non_saved_button = Gtk.Button(_("Destroy Non-Saved Projects"))
-        destroy_non_saved_button.connect("clicked", lambda w: self.create_button_clicked())
-        
+
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.only_saved_check, False, False, 0)
         hbox.pack_start(label, False, False, 0)
@@ -253,7 +261,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.destroy_button.set_sensitive(False)
         self.destroy_guard_check = Gtk.CheckButton()
         self.destroy_guard_check.set_active(False)
-        #self.destroy_guard_check.connect("toggled", self.destroy_guard_toggled)
+        self.destroy_guard_check.connect("toggled", self.destroy_guard_toggled)
 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(Gtk.Label(), True, True, 0)
@@ -262,7 +270,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         hbox.set_margin_top(12)
 
         vbox.pack_start(hbox, False, False, 0)
-        vbox.set_size_request(370, 100)
+        vbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
         
         return vbox
 
@@ -296,7 +304,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         for folder_handle in self.current_folders:
             savefile, times_saved, last_date = folder_handle.get_save_info()
             if savefile == None:
-                file_name = _("Not saved")
+                file_name = _("not saved")
             else:
                 file_name = os.path.basename(savefile)
             
@@ -313,13 +321,25 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.view_vault_index = widget.get_active()
         self.load_data_folders()
 
+        self.update_vault_info()
+
         if len(self.current_folders) == 0:
             hbox = Gtk.Label(label=_("No data folders"))
+            hbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
+
             self.info_frame.remove(self.project_info_panel)
             self.project_info_panel = hbox
             self.project_info_panel.show_all()
             self.info_frame.pack_start(self.project_info_panel, False, False, 0)
-        
+
+    def update_vault_info(self):
+        vault_folder = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
+        self.store_path_info.set_text(vault_folder)
+        if vault_folder == projectdatavault.get_active_vault_folder():
+            self.active_info.set_text(_("Yes")) 
+        else:
+            self.active_info.set_text(_("No")) 
+            
     def folder_selection_changed(self, selection):
         (model, rows) = selection.get_selected_rows()
         if len(rows) == 0:
@@ -329,7 +349,8 @@ class ProjectDataManagerWindow(Gtk.Window):
             hbox = self.create_folder_info_panel(self.current_folders[index])
         except:
             hbox = Gtk.Label(label=_("No data folders"))
-                    
+            hbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
+                            
         self.info_frame.remove(self.project_info_panel)
         self.project_info_panel = hbox
         self.project_info_panel.show_all()
@@ -490,3 +511,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         projectdatavault.set_active_vault_index(self.view_vault_index)
         projectdatavault.get_vaults_object().save()
 
+    def show_only_saved_toggled(self, widget):
+        self.show_only_saved = widget.get_active()
+        self.load_data_folders()
+
+    def destroy_guard_toggled(self, widget):
+        self.destroy_button.set_sensitive(widget.get_active())
