@@ -77,7 +77,10 @@ _sorting_section = None
 _sorting_submenu = None
 _move_section = None
 _move_submenu = None
-        
+_tracks_column_popover = None
+_tracks_column_menu = None
+
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True):
     if active == True:
@@ -677,3 +680,71 @@ def  range_log_hamburger_menu_show(launcher, widget, unsensitive_for_all_view, s
     _range_log_menu.append_section(None, _sorting_section)
     
     _range_log_popover = new_popover(widget, _range_log_menu, launcher)
+
+
+# -------------------------------------------- context menus
+def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
+    
+    track_obj = current_sequence().tracks[track]
+    
+    global _tracks_column_popover, _tracks_column_menu
+    _tracks_column_menu = menu_clear_or_create(_tracks_column_menu)
+    
+    lock_section = Gio.Menu.new()
+    if track_obj.edit_freedom != appconsts.FREE:
+        add_menu_action(lock_section, _("Lock Track"), "trackcolumn.lock", (track,"lock", None), callback, False)
+        add_menu_action(lock_section, _("Unlock Track"), "trackcolumn.unlock", (track,"unlock", None), callback)
+    else:
+        add_menu_action(lock_section, _("Lock Track"), "trackcolumn.lock", (track, "lock", None), callback)
+        add_menu_action(lock_section, _("Unlock Track"), "trackcolumn.unlock", (track,"unlock", None), callback, False)
+    _tracks_column_menu.append_section(None, lock_section)
+
+    height_section = Gio.Menu.new()
+    items_data =[(_("High Height"), "highheight"), (_("Large Height"), "normalheight"), (_("Normal Height"), "smallheight")]
+    if track_obj.height == appconsts.TRACK_HEIGHT_HIGH:
+        active_index = 0
+    elif track_obj.height == appconsts.TRACK_HEIGHT_NORMAL:
+        active_index = 1
+    else:
+        active_index = 2
+    add_menu_action_all_items_radio(height_section, items_data, "trackcolumn.height", active_index, callback_height)
+    _tracks_column_menu.append_section(None, height_section)
+
+    mute_section = Gio.Menu.new()
+    # _state_different(track_obj, state) as last param sets 
+    # menu item active if track not in given state
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_NOTHING
+        add_menu_action(mute_section, _("Unmute"), "trackcolumn.unmute", (track, "mute_track", state), callback, _state_different(track_obj, state)) 
+    else:
+        state = appconsts.TRACK_MUTE_VIDEO
+        add_menu_action(mute_section, _("Unmute"), "trackcolumn.unmute", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_VIDEO
+        add_menu_action(mute_section, _("Mute Video"), "trackcolumn.mutevideo", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_AUDIO
+        add_menu_action(mute_section, _("Mute Audio"), "trackcolumn.muteaudio", (track, "mute_track", state), callback, _state_different(track_obj, state))
+    else:
+        state = appconsts.TRACK_MUTE_ALL
+        add_menu_action(mute_section, _("Mute Audio"), "trackcolumn.muteaudio", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_ALL
+        add_menu_action(mute_section, _("Mute All"), "trackcolumn.muteall", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    _tracks_column_menu.append_section(None, mute_section)
+
+    rect = create_rect(x, y)
+    
+    _tracks_column_popover = Gtk.Popover.new_from_model(widget, _tracks_column_menu)
+    _tracks_column_popover.set_pointing_to(rect) 
+    _tracks_column_popover.show()
+
+def _state_different(mutable, state):
+    if mutable.mute_state == state:
+        return False
+    else:
+        return True

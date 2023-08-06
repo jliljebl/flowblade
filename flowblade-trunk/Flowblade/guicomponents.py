@@ -1657,45 +1657,6 @@ def get_compositor_track_select_combo(source_track, target_track, callback):
     return tracks_combo
 
 # -------------------------------------------- context menus
-def display_tracks_popup_menu(event, track, callback):
-    track_obj = current_sequence().tracks[track]
-    track_menu = tracks_pop_menu
-    guiutils.remove_children(track_menu)
-
-    if track_obj.edit_freedom != appconsts.FREE:
-        track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), False))
-        track_menu.append(_get_menu_item(_("Unlock Track"), callback, (track,"unlock", None), True))
-
-    else:
-        track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), True))
-        track_menu.append(_get_menu_item(_("Unlock Track"), callback, (track,"unlock", None), False))
-
-    _add_separetor(track_menu)
-
-    high_size_item = Gtk.RadioMenuItem()
-    high_size_item.set_label(_("High Height"))
-    high_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_HIGH) # appconsts.py
-    high_size_item.connect("activate", callback, (track, "high_height", None))
-    track_menu.append(high_size_item)
-
-    normal_size_item = Gtk.RadioMenuItem().new_with_label([high_size_item], _("Large Height"))
-    normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
-    normal_size_item.connect("activate", callback, (track, "normal_height", None))
-    track_menu.append(normal_size_item)
-
-    small_size_item = Gtk.RadioMenuItem.new_with_label([high_size_item], _("Normal Height"))
-    small_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
-    small_size_item.connect("activate", callback, (track, "small_height", None))
-    track_menu.append(small_size_item)
-
-    _add_separetor(track_menu)
-
-    track_menu.append(_get_track_mute_menu_item(event, track_obj, callback))
-
-    track_menu.show_all()
-
-    track_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
@@ -2333,48 +2294,6 @@ def _get_audio_menu_item(event, clip, track, callback):
     item.connect("activate", callback, (clip, track, "mute_clip", (True)))
     item.show()
     item.set_sensitive(clip.mute_filter==None)
-
-    menu_item.show()
-    return menu_item
-    
-def _get_track_mute_menu_item(event, track, callback):
-    menu_item = Gtk.MenuItem(_("Mute"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-
-    item = Gtk.MenuItem(_("Unmute"))
-    sub_menu.append(item)
-    if track.type == appconsts.VIDEO:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_NOTHING))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_NOTHING)
-    else:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
-    item.show()
-
-    if track.type == appconsts.VIDEO:
-        item = Gtk.MenuItem(_("Mute Video"))
-        sub_menu.append(item)
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
-        item.show()
-
-    item = Gtk.MenuItem(_("Mute Audio"))
-    sub_menu.append(item)
-    if track.type == appconsts.VIDEO:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_AUDIO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_AUDIO)
-    else:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
-    item.show()
-
-    if track.type == appconsts.VIDEO:
-        item = Gtk.MenuItem(_("Mute All"))
-        sub_menu.append(item)
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
-        item.show()
 
     menu_item.show()
     return menu_item

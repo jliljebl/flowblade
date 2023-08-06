@@ -23,7 +23,6 @@ This module contains data describing all G'Mic scripts distributed
 with the application.
 """
 
-
 import xml.dom.minidom
 
 import respaths

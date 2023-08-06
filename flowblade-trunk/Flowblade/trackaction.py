@@ -41,15 +41,30 @@ import snapping
 import tlinewidgets
 import updater
 
+
+_menu_track_index = None
+        
 # --------------------------------------- menu events
-def _track_menu_item_activated(widget, data):
+def _track_menu_item_activated(widget, action, data):
     track, item_id, selection_data = data
     handler = POPUP_HANDLERS[item_id]
     if selection_data == None:
         handler(track)
     else:
         handler(track, selection_data)
+
+def _track_menu_height_activated(action, variant):
+    if variant.get_string() == "highheight":
+        set_track_high_height(_menu_track_index)
+    elif variant.get_string() == "normalheight":
+        set_track_normal_height(_menu_track_index)
+    else:
+        set_track_small_height(_menu_track_index)
         
+    action.set_state(variant)
+    editorpersistance.save()
+    guipopover._tracks_column_popover.hide()
+    
 def lock_track(track_index):
     track = get_track(track_index)
     track.edit_freedom = appconsts.LOCKED
@@ -152,7 +167,7 @@ def _do_auto_expand(initial_drop_track_index):
     
 def mute_track(track, new_mute_state):
     # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IT IS NOT AN UNDOABLE EDIT.
-    current_sequence().set_track_mute_state(track.id, new_mute_state)
+    current_sequence().set_track_mute_state(track, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
 def all_tracks_menu_launch_pressed(launcher, widget, event):
@@ -260,8 +275,12 @@ def track_active_switch_pressed(data):
             track.active = True
         gui.tline_column.widget.queue_draw()
     elif data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
+        global _menu_track_index # popover + gio.actions just wont allow easily packing track to go, so we're going global
+        _menu_track_index = data.track
+        guipopover.tracks_popover_menu_show(data.track, gui.tline_column.widget, \
+                                            data.event.x, data.event.y, \
+                                            _track_menu_item_activated,
+                                            _track_menu_height_activated)
 
 def track_double_click(track_id):
     track = get_track(track_id) # data.track is index, not object
@@ -338,12 +357,13 @@ def track_center_pressed(data):
             gui.tline_column.widget.queue_draw()
     
     if data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
+        global _menu_track_index # popover + gio.actions just wont allow easily packing track to go, so we're going global
+        _menu_track_index = data.track
+        guipopover.tracks_popover_menu_show(data.track, gui.tline_column.widget, \
+                                            data.event.x, data.event.y, \
+                                            _track_menu_item_activated,
+                                            _track_menu_height_activated)
 
 POPUP_HANDLERS = {"lock":lock_track,
                   "unlock":unlock_track,
-                  "high_height":set_track_high_height,
-                  "normal_height":set_track_normal_height,
-                  "small_height":set_track_small_height,
                   "mute_track":mute_track}
