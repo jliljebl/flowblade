@@ -101,7 +101,6 @@ gmic_icon = None
 selection_icon = None
 
 # GTK3 requires these to be created outside of callback
-#tools_menu = Gtk.Menu.new()
 clip_popup_menu = Gtk.Menu()
 tracks_pop_menu = Gtk.Menu()
 transition_clip_menu = Gtk.Menu()

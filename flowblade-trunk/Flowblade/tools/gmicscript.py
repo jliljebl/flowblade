@@ -18,6 +18,11 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module contains data describing all G'Mic scripts distributed
+with the application.
+"""
+
 
 from gi.repository import Gtk
 import xml.dom.minidom
@@ -31,11 +36,7 @@ _script_groups = []
 _scripts_menu = Gtk.Menu()
 
 class GmicScript:
-    """
-    Info of a filter (mlt.Service) that is is available to the user.
-    Constructor input is a dom node object.
-    This is used to create FilterObject objects.
-    """
+
     def __init__(self, script_node):
         self.name = script_node.getElementsByTagName("name").item(0).firstChild.nodeValue
         self.script = script_node.getElementsByTagName("script").item(0).firstChild.nodeValue
