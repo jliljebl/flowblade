@@ -435,7 +435,6 @@ def _create_widgets():
     surface_not_active = guiutils.get_cairo_image("filter_add_not_active")
     surfaces = [surface_active, surface_not_active]
     widgets.filter_add_launch = guicomponents.HamburgerPressLaunch(lambda w,e:_filter_add_menu_launch_pressed(w, e), surfaces)
-    widgets.filter_add_launch.connect_launched_menu(guicomponents.effect_menu)
     guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
     
 # ------------------------------------------------------------------- interface
@@ -944,8 +943,11 @@ def _filter_add_menu_launch_pressed(w, event):
     if _filter_stack != None:
         clip = _filter_stack.clip
         track = _filter_stack.track 
-        guicomponents.display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, _filter_menu_callback)
-            
+        guipopover.filter_add_popover_show(widgets.filter_add_launch, w, clip, track, event.x, mltfilters.groups, _filter_popover_callback)
+
+def _filter_popover_callback(action, variant, data):
+    _filter_menu_callback(None, data)
+
 def _filter_menu_callback(w, data):
     clip, track, item_id, item_data = data
     x, filter_info = item_data

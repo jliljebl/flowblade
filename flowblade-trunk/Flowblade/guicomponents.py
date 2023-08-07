@@ -106,10 +106,9 @@ transition_clip_menu = Gtk.Menu()
 blank_clip_menu = Gtk.Menu()
 audio_clip_menu = Gtk.Menu()
 compositor_popup_menu = Gtk.Menu()
-filter_mask_menu = Gtk.Menu()
+
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
-effect_menu = Gtk.Menu()
 
 select_clip_func = None
 add_compositors_is_multi_selection = False 
@@ -1946,16 +1945,6 @@ def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False)
 
     menu_item.show()
     return menu_item
-
-def display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, callback):
-    menu = effect_menu
-    guiutils.remove_children(menu)
-    
-    item_id = "add_filter"
-    
-    _build_filters_menus(menu, event, clip, track, callback, item_id)
-
-    menu.popup(None, None, None, None, event.button, event.time)
 
 def _build_filters_menus(sub_menu, event, clip, track, callback, item_id):
     for group in mltfilters.groups:

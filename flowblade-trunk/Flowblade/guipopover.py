@@ -28,6 +28,7 @@ import editorpersistance
 import editorstate
 import gui
 import snapping
+import translations
 import utils
 
 
@@ -85,6 +86,8 @@ _log_event_popover = None
 _log_event_menu = None
 _filter_mask_popover = None
 _filter_mask_menu = None
+_filter_add_popover = None
+_filter_add_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -689,8 +692,6 @@ def  range_log_hamburger_menu_show(launcher, widget, unsensitive_for_all_view, s
     
     _range_log_popover = new_popover(widget, _range_log_menu, launcher)
 
-
-# -------------------------------------------- context menus
 def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
     
     track_obj = current_sequence().tracks[track]
@@ -820,3 +821,33 @@ def filter_mask_popover_show(launcher, widget, callback, filter_names, filter_ms
     _filter_mask_menu.append_section(None, main_section)
     _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher)
 
+def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, callback):
+
+    global _filter_add_popover, _filter_add_menu
+    _filter_add_menu = menu_clear_or_create(_filter_add_menu)
+
+    item_id = "add_filter"
+    for group in mltfiltersgroups:
+        group_name, filters_array = group
+
+        # "Blend" group only when in compositing_mode COMPOSITING_MODE_STANDARD_FULL_TRACK.
+        if filters_array[0].mlt_service_id == "cairoblend_mode" and current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            continue
+            
+        sub_menu = Gio.Menu.new()
+        _filter_add_menu.append_submenu(group_name, sub_menu)
+
+        for filter_info in filters_array:
+            filter_name = translations.get_filter_name(filter_info.name)
+            item_id = filter_name.lower().replace(" ", "_")
+            sub_menu.append(filter_name, "app." + item_id)         
+    
+            data = (clip, track, item_id, (x, filter_info))
+                
+            action = Gio.SimpleAction(name=item_id)
+            action.connect("activate", callback, data)
+            APP().add_action(action)
+    
+    _filter_add_popover = Gtk.Popover.new_from_model(widget, _filter_add_menu)
+    launcher.connect_launched_menu(_filter_add_popover)
+    _filter_add_popover.show()
