@@ -83,6 +83,8 @@ _media_linker_popover = None
 _media_linker_menu = None
 _log_event_popover = None
 _log_event_menu = None
+_filter_mask_popover = None
+_filter_mask_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -792,3 +794,29 @@ def media_log_event_popover_show(row, widget, x, y, callback):
     _log_event_popover = Gtk.Popover.new_from_model(widget, _log_event_menu)
     _log_event_popover.set_pointing_to(rect) 
     _log_event_popover.show()
+
+def _add_filter_mask_submenu_items(sub_menu, filter_index, filter_names, filter_msgs, data_bool, callback):
+    for f_name, f_msg in zip(filter_names, filter_msgs):
+        #sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
+        
+        label = "\u21c9" + " " + f_name
+        item_id = f_name.lower().replace(" ", "_") + str(data_bool)
+        data = (data_bool, f_msg, filter_index)
+        add_menu_action(sub_menu, label, item_id, data, callback)
+        
+def filter_mask_popover_show(launcher, widget, callback, filter_names, filter_msgs, filter_index):
+    global _filter_mask_popover, _filter_mask_menu
+    _filter_mask_menu = menu_clear_or_create(_filter_mask_menu)
+
+    main_section = Gio.Menu.new()
+    add_selected_sub_menu = Gio.Menu.new()
+    main_section.append_submenu(_("Add Filter Mask on Selected Filter"), add_selected_sub_menu)
+    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, False, callback)
+
+    add_selected_sub_menu = Gio.Menu.new()
+    main_section.append_submenu(_("Add Filter Mask on All Filters"), add_selected_sub_menu)
+    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
+
+    _filter_mask_menu.append_section(None, main_section)
+    _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher)
+

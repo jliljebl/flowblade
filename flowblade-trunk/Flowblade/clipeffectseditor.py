@@ -118,7 +118,8 @@ class FilterFooterRow:
         else:
             mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=44, h=44)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
-
+        self.mask_button = mask_button
+        
         surface = guiutils.get_cairo_image("filters_move_up")
         if editorpersistance.prefs.double_track_hights  == False:
             move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=22, h=22)
@@ -176,7 +177,7 @@ class FilterFooterRow:
 
     def add_mask_pressed(self, w, e):
         filter_index = self.filter_stack.get_filter_index(self.filter_object)
-        _filter_mask_launch_pressed(w, e, filter_index)
+        _filter_mask_launch_pressed(self.mask_button, w, filter_index)
 
     def move_up_pressed(self, w, e):
         from_index = self.filter_stack.get_filter_index(self.filter_object)
@@ -871,11 +872,11 @@ def update_kfeditors_positions():
 
 
 # ------------------------------------------------ FILTER MASK 
-def _filter_mask_launch_pressed(widget, event, filter_index):
+def _filter_mask_launch_pressed(launcher, widget, filter_index):
     filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
-    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
+    guipopover.filter_mask_popover_show(launcher, widget, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
 
-def _filter_mask_item_activated(widget, data):
+def _filter_mask_item_activated(action, variant, data):
     if _filter_stack == None:
         return False
     

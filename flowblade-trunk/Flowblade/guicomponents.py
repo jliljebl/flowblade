@@ -3146,31 +3146,6 @@ def get_kb_shortcuts_hamburger_menu(event, callback, data):
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
-    
-def get_filter_mask_menu(event, callback, filter_names, filter_msgs, filter_index):
-    menu = filter_mask_menu
-    guiutils.remove_children(menu)
-
-    menu_item = Gtk.MenuItem(_("Add Filter Mask on Selected Filter"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-    #U+2192 right"\u21c9" Left U+21c7
-    for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
-
-    menu.add(menu_item)
-
-    menu_item = Gtk.MenuItem(_("Add Filter Mask on All Filters"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-    
-    for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg, filter_index)))
-
-    menu.add(menu_item)
-    
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()
