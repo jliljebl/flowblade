@@ -79,17 +79,23 @@ _move_section = None
 _move_submenu = None
 _tracks_column_popover = None
 _tracks_column_menu = None
-
+_media_linker_popover = None
+_media_linker_menu = None
+_log_event_popover = None
+_log_event_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
-def add_menu_action(menu, label, item_id, data, callback, active=True):
+def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
         menu.append(label, "app." + item_id) 
     else:
         menu.append(label, "noaction") 
     action = Gio.SimpleAction(name=item_id)
     action.connect("activate", callback, data)
-    APP().add_action(action)
+    if app == None:
+        APP().add_action(action)
+    else:
+        app.add_action(action)
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
     action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(checked_state))
@@ -748,3 +754,41 @@ def _state_different(mutable, state):
         return False
     else:
         return True
+
+def media_linker_popover_show(app, row, widget, x, y, callback):
+
+    global _media_linker_popover, _media_linker_menu
+    _media_linker_menu = menu_clear_or_create(_media_linker_menu)
+
+    file_section = Gio.Menu.new()
+    add_menu_action(file_section, _("Set File Relink Path"), "medialink.relink", ("set relink", row), callback, True, app)
+    add_menu_action(file_section, _("Delete File Relink Path"), "medialink.delete", ("delete relink", row), callback, True, app)
+    add_menu_action(file_section, _("Create Placeholder File"), "medialink.placeholder", ("create placeholder", row), callback, True, app)
+    _media_linker_menu.append_section(None, file_section)
+
+    show_section = Gio.Menu.new()
+    add_menu_action(show_section, _("Show Full Paths"), "medialink.showfull", ("show path", row), callback, True, app)
+    _media_linker_menu.append_section(None, show_section)
+
+    rect = create_rect(x, y)
+    
+    _media_linker_popover = Gtk.Popover.new_from_model(widget, _media_linker_menu)
+    _media_linker_popover.set_pointing_to(rect) 
+    _media_linker_popover.show()
+
+def media_log_event_popover_show(row, widget, x, y, callback):
+    global _log_event_popover, _log_event_menu
+    _log_event_menu = menu_clear_or_create(_log_event_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Display In Clip Monitor"), "logevent.display", ("display", row, widget), callback)
+    add_menu_action(main_section, _("Render Slow/Fast Motion File"), "logevent.renderslowmo", ("renderslowmo", row, widget), callback)
+    add_menu_action(main_section, _("Toggle Star"), "logevent.toggle", ("toggle", row, widget), callback)
+    add_menu_action(main_section, _("Delete"), "logevent.delete", ("delete", row, widget), callback)
+    _log_event_menu.append_section(None, main_section)
+
+    rect = create_rect(x, y + 24) # +24 because there seems to be bug if column titles preset.
+
+    _log_event_popover = Gtk.Popover.new_from_model(widget, _log_event_menu)
+    _log_event_popover.set_pointing_to(rect) 
+    _log_event_popover.show()

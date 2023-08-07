@@ -102,13 +102,10 @@ selection_icon = None
 
 # GTK3 requires these to be created outside of callback
 clip_popup_menu = Gtk.Menu()
-tracks_pop_menu = Gtk.Menu()
 transition_clip_menu = Gtk.Menu()
 blank_clip_menu = Gtk.Menu()
 audio_clip_menu = Gtk.Menu()
 compositor_popup_menu = Gtk.Menu()
-media_linker_popup_menu = Gtk.Menu()
-log_event_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
@@ -2351,27 +2348,6 @@ def _get_clip_markers_menu_item(event, clip, track, callback):
 def _set_non_sensitive_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
         item.set_sensitive(False)
-    
-def display_media_log_event_popup_menu(row, treeview, callback, event):
-    log_event_menu = log_event_popup_menu
-    guiutils.remove_children(log_event_menu)
-
-    log_event_menu.add(_get_menu_item(_("Display In Clip Monitor"), callback, ("display", row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("renderslowmo",  row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
-    log_event_menu.popup(None, None, None, None, event.button, event.time)
-
-def display_media_linker_popup_menu(row, treeview, callback, event):
-    media_linker_menu = media_linker_popup_menu
-    guiutils.remove_children(media_linker_menu)
-
-    media_linker_menu.add(_get_menu_item(_("Set File Relink Path"), callback, ("set relink", row)))
-    media_linker_menu.add(_get_menu_item(_("Delete File Relink Path"), callback, ("delete relink", row)))
-    media_linker_menu.add(_get_menu_item(_("Create Placeholder File"), callback, ("create placeholder", row)))
-    _add_separetor(media_linker_menu)
-    media_linker_menu.add(_get_menu_item(_("Show Full Paths"), callback, ("show path", row)))
-    media_linker_menu.popup(None, None, None, None, event.button, event.time)
 
 def _add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()

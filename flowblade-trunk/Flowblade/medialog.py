@@ -243,10 +243,11 @@ def log_list_view_button_press(treeview, event):
     selection.select_path(path)
     row = int(max(path))
 
-    guicomponents.display_media_log_event_popup_menu(row, treeview, _log_event_menu_item_selected, event)                                    
+    guipopover.media_log_event_popover_show(row, treeview, event.x, event.y, _log_event_menu_item_selected)
+    
     return True
 
-def _log_event_menu_item_selected(widget, data):
+def _log_event_menu_item_selected(action, variant, data):
     item_id, row, treeview = data
     
     if item_id == "delete":
@@ -370,7 +371,7 @@ def get_clips_for_rows(rows):
 def display_log_clip_double_click_listener(treeview, path, view_column):
     row = int(max(path))
     data = ("display", row, treeview)
-    _log_event_menu_item_selected(treeview, data)
+    _log_event_menu_item_selected(None, None, data)
 
 def _group_action_pressed(launcher, widget, event, data):
     guipopover.range_log_hamburger_menu_show(launcher, widget, widgets.group_view_select.get_active() == 0, sorting_order, \

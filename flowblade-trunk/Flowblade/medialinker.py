@@ -45,7 +45,7 @@ import editorstate
 import editorpersistance
 import gui
 import guiutils
-import guicomponents
+import guipopover
 import mltinit
 import patternproducer
 import persistance
@@ -354,7 +354,8 @@ class MediaRelinkListView(Gtk.VBox):
         selection.select_path(path)
         row = int(max(path))
 
-        guicomponents.display_media_linker_popup_menu(row, treeview, _media_asset_menu_item_selected, event)
+        guipopover.media_linker_popover_show(_app, row, treeview, event.x, event.y, _media_asset_menu_item_selected)
+
         return  True
 
 # ----------------------------------------------------------- logic
@@ -430,7 +431,7 @@ def _update_media_assets():
     global media_assets
     media_assets = new_assets
 
-def _media_asset_menu_item_selected(widget, data):
+def _media_asset_menu_item_selected(action, variant, data):
     msg, row = data
     media_asset = linker_window.relink_list.assets[row]
 
