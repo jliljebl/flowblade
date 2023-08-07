@@ -3121,6 +3121,7 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
+"""
 def get_kb_shortcuts_hamburger_menu(event, callback, data):
     shortcuts_combo, dialog = data
     
@@ -3135,6 +3136,7 @@ def get_kb_shortcuts_hamburger_menu(event, callback, data):
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
+"""
 
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()

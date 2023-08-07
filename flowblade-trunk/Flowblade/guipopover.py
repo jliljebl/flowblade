@@ -88,6 +88,8 @@ _filter_mask_popover = None
 _filter_mask_menu = None
 _filter_add_popover = None
 _filter_add_menu = None
+_kb_shortcuts_popover = None
+_kb_shortcuts_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -773,7 +775,7 @@ def media_linker_popover_show(app, row, widget, x, y, callback):
     add_menu_action(show_section, _("Show Full Paths"), "medialink.showfull", ("show path", row), callback, True, app)
     _media_linker_menu.append_section(None, show_section)
 
-    rect = create_rect(x, y)
+    rect = create_rect(x, y + 24)
     
     _media_linker_popover = Gtk.Popover.new_from_model(widget, _media_linker_menu)
     _media_linker_popover.set_pointing_to(rect) 
@@ -851,3 +853,22 @@ def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, 
     _filter_add_popover = Gtk.Popover.new_from_model(widget, _filter_add_menu)
     launcher.connect_launched_menu(_filter_add_popover)
     _filter_add_popover.show()
+
+def kb_shortcuts_popover_show(launcher, widget, data, callback):
+    global _kb_shortcuts_popover, _kb_shortcuts_menu
+
+    _kb_shortcuts_menu = menu_clear_or_create(_kb_shortcuts_menu)
+    
+    shortcuts_combo, dialog = data
+
+    if shortcuts_combo.get_active() < 2:
+        delete_active = False
+    else:
+        delete_active = True
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Add Custom Shortcuts Group"), "kbdialog.addgroup", ("add", data), callback)
+    add_menu_action(main_section, _("Delete Active Custom Shortcuts Group"), "kbdialog.deletegroup", ("delete", data), callback)
+    _kb_shortcuts_menu.append_section(None, main_section)
+
+    _kb_shortcuts_popover = new_popover(widget, _kb_shortcuts_menu, launcher)
