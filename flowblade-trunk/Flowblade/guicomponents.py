@@ -106,8 +106,6 @@ transition_clip_menu = Gtk.Menu()
 blank_clip_menu = Gtk.Menu()
 audio_clip_menu = Gtk.Menu()
 compositor_popup_menu = Gtk.Menu()
-
-kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
 
 select_clip_func = None
@@ -3120,23 +3118,6 @@ def get_text_scroll_widget(text, size):
     sw.set_size_request(*size)
 
     return sw
-
-"""
-def get_kb_shortcuts_hamburger_menu(event, callback, data):
-    shortcuts_combo, dialog = data
-    
-    menu = kb_shortcuts_hamburger_menu
-    guiutils.remove_children(menu)
-
-    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
-    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", data))
-    menu.add(delete_item)
-    if shortcuts_combo.get_active() < 2:
-        delete_item.set_sensitive(False)
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-"""
 
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()
