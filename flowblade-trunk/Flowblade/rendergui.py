@@ -714,27 +714,6 @@ class RenderRangePanel():
         self.vbox.pack_start(range_selector, False, False, 0)
 
 
-"""
-class RenderTypePanel():
-    
-    def __init__(self, render_type_changed_callback, preset_selection_changed_callback):
-        self.type_label = Gtk.Label(label=_("Type:"))
-        
-        self.type_combo = Gtk.ComboBoxText() # filled later when current sequence known
-        self.type_combo.append_text(_("User Defined"))
-        self.type_combo.append_text(_("Preset File type"))
-        self.type_combo.set_active(0)
-        self.type_combo.connect('changed', lambda w: render_type_changed_callback())
-    
-        self.presets_selector = PresetEncodingsSelector(preset_selection_changed_callback)
-
-        self.vbox = Gtk.VBox(False, 2)
-        self.vbox.pack_start(guiutils.get_two_column_box(self.type_label,
-                                                         self.type_combo, 80), 
-                                                         False, False, 0)
-        self.vbox.pack_start(self.presets_selector.widget, False, False, 0)
-"""
-
 class RenderProfilePanel():
 
     def __init__(self, out_profile_changed_callback):
