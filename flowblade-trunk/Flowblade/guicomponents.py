@@ -2213,6 +2213,7 @@ def _get_mute_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    print("hei pimppamarallaa")
     item = Gtk.MenuItem(_("Unmute"))
     sub_menu.append(item)
     item.connect("activate", callback, (clip, track, "mute_clip", (False)))
