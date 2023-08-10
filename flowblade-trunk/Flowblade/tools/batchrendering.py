@@ -1141,19 +1141,6 @@ def render_item_popover_show(widget, x, y, callback):
     _render_item_popover = Gtk.Popover.new_from_model(widget, _render_item_menu)
     _render_item_popover.set_pointing_to(rect) 
     _render_item_popover.show()
-    
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
-
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
-
 
 
 # --------------------------------------------------- single item render
