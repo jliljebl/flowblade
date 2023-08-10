@@ -22,7 +22,7 @@ Gui bilding utils for tool applications with no dependencies on
 main application modules.
 """
 
-from gi.repository import Gio
+from gi.repository import Gio, Gdk
 
 import cairoarea
 
@@ -70,3 +70,12 @@ def add_menu_action(application, menu, label, item_id, data, callback, active=Tr
     action = Gio.SimpleAction(name=item_id)
     action.connect("activate", callback, data)
     application.add_action(action)
+
+def create_rect(x, y):
+    rect = Gdk.Rectangle()
+    rect.x = x
+    rect.y = y
+    rect.width = 2
+    rect.height = 2
+    
+    return rect
