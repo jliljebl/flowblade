@@ -102,7 +102,6 @@ _hamburger_popover_menu = None
 _script_popover = None
 _script_popover_menu = None
 
-#_hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
@@ -414,18 +413,6 @@ def _hamburger_menu_callback(widget, action, msg):
         _shutdown()
     elif msg == "docs":
         webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
-
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem.new_with_label(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
-
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
 
 #-------------------------------------------------- player buttons
 def prev_pressed(delta=-1):

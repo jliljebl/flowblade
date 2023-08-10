@@ -31,12 +31,12 @@ import gui
 import guicomponents
 import guipopover
 import editorstate
-#import edit
 import editorpersistance
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
+import movemodes
 import snapping
 import tlinewidgets
 import updater
@@ -75,6 +75,31 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
+def toggle_track_output():
+    if movemodes.selected_track == -1:
+        return
+    
+    track = current_sequence().tracks[movemodes.selected_track]
+    
+    if movemodes.selected_track >= current_sequence().first_video_index:
+        # Video tracks
+        if track.mute_state != appconsts.TRACK_MUTE_ALL:
+            new_mute_state = appconsts.TRACK_MUTE_ALL
+        else:
+            new_mute_state = appconsts.TRACK_MUTE_NOTHING
+    else:
+        # Audio tracks
+        if track.mute_state == appconsts.TRACK_MUTE_ALL:
+            new_mute_state = appconsts.TRACK_MUTE_VIDEO
+        else:
+            new_mute_state = appconsts.TRACK_MUTE_ALL
+
+    # Update track mute state
+    current_sequence().set_track_mute_state(movemodes.selected_track, new_mute_state)
+    
+    audiomonitoring.update_mute_states()
+    gui.tline_column.widget.queue_draw()
+            
 def set_track_high_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_HIGH
@@ -252,7 +277,6 @@ def _tline_properties_item_activated(action, event, msg):
         updater.repaint_tline()
 
     action.set_state(GLib.Variant.new_boolean(new_state))
-
 
 def _tline_mouse_zoom_selected(action, variant):
     if variant.get_string() == "zoomtoplayhead":

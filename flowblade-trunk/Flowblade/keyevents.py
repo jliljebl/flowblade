@@ -50,6 +50,7 @@ import render
 import rotomask
 import tlineaction
 import tlinewidgets
+import trackaction
 import trimmodes
 import updater
 import projectaction
@@ -256,7 +257,10 @@ def _handle_tline_key_event(event):
     if action == 'trim_end':
         tlineaction.trim_end_pressed()
         return True
-        
+    if action == 'toggle_track_output':
+        trackaction.toggle_track_output()
+        return True
+
     # Key bindings for keyboard trimming.
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':

@@ -1605,6 +1605,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
     track_head_vbox = Gtk.VBox()
     track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
+    track_head_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_track_output"), False, False, 0)
     track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
     
     play_vbox = Gtk.VBox()
