@@ -90,6 +90,8 @@ _filter_add_popover = None
 _filter_add_menu = None
 _kb_shortcuts_popover = None
 _kb_shortcuts_menu = None
+_render_args_popove = None
+_render_args_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -872,3 +874,21 @@ def kb_shortcuts_popover_show(launcher, widget, data, callback):
     _kb_shortcuts_menu.append_section(None, main_section)
 
     _kb_shortcuts_popover = new_popover(widget, _kb_shortcuts_menu, launcher)
+
+def render_args_popover_show(launcher, widget, callback):
+    global _render_args_popover, _render_args_menu
+
+    _render_args_menu = menu_clear_or_create(_render_args_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Load Render Args from a text file"), "renderargs.loadfromfile", "load_from_file", callback)
+    add_menu_action(main_section, _("Save Render Args into a text file"), "renderargs.savetofile", "save_to_from_file", callback)
+    add_menu_action(main_section, _("Load Render Args from Current Encoding"), "renderargs.loadselection", "load_from_selection", callback)
+    _render_args_menu.append_section(None, main_section)
+
+    reset_section = Gio.Menu.new()
+    add_menu_action(reset_section,_("Reset all Render Options to Defaults"), "renderargs.reset", "reset_all", callback)
+    _render_args_menu.append_section(None, reset_section)
+    
+    _render_args_popover = new_popover(widget, _render_args_menu, launcher)
+

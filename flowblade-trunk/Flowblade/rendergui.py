@@ -30,6 +30,7 @@ import editorpersistance # Aug-2019- SvdB - BB
 import editorstate
 import gui
 import guicomponents
+import guipopover
 import guiutils
 from editorstate import current_sequence
 import renderconsumer
@@ -38,7 +39,6 @@ import utils
 destroy_window_event_id = -1
 
 FFMPEG_VIEW_SIZE = (20, 20) # Text edit area height for render opts. Width is ignored in current layout.
-
 
 # ----------------------------------------------------------- dialogs
 def render_progress_dialog(callback, parent_window, frame_rates_match=True):
@@ -833,7 +833,7 @@ class RenderArgsPanel():
         scroll_frame.add(sw)
 
         self.hamburger_launch = guicomponents.HamburgerPressLaunch(self.hamburger_launch_pressed)
-        self.hamburger_launch.connect_launched_menu(_hamburger_menu)
+        self.hamburger_launch.do_popover_callback = True
         guiutils.set_margins(self.hamburger_launch.widget,5,0,0,0)
 
         opts_buttons_row = Gtk.HBox(False)
@@ -850,25 +850,10 @@ class RenderArgsPanel():
         self.vbox.pack_start(scroll_frame, True, True, 0)
         self.vbox.pack_start(opts_buttons_row, False, False, 0)
 
-    def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
+    def hamburger_launch_pressed(self, launcher, widget, event, data):
+        guipopover.render_args_popover_show(launcher, widget, self.hamburger_item_activated)
 
-        menu.add(guiutils.get_menu_item(_("Load Render Args from a text file"), self.hamburger_item_activated, "load_from_file"))
-        menu.add(guiutils.get_menu_item(_("Save Render Args into a text file"), self.hamburger_item_activated, "save_to_from_file"))
-        
-        guiutils.add_separetor(menu)
-        
-        menu.add(guiutils.get_menu_item(_("Load Render Args from Current Encoding"), self.hamburger_item_activated, "load_from_selection"))
-
-        guiutils.add_separetor(menu)
-        
-        menu.add(guiutils.get_menu_item(_("Reset all Render Options to Defaults"), self.hamburger_item_activated, "reset_all"))
-
-        menu.show_all()
-        menu.popup(None, None, None, None, event.button, event.time)
-    
-    def hamburger_item_activated(self, widget, msg):
+    def hamburger_item_activated(self, action, variant, msg):
         if msg ==  "load_from_file":
             self.load_args_callback()
         elif msg == "save_to_from_file":
