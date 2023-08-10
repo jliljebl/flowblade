@@ -1126,6 +1126,34 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
+def replace_media_dialog(callback):
+    dialog = Gtk.Dialog(_("Replace Media Item in Project"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Replace"), Gtk.ResponseType.ACCEPT))
+    
+    info_text = _("Please note:\n\n") + \
+                "\u2022" + _(" It is recommended that you save Project before completing this operation.\n") + \
+                "\u2022" + _(" There is no Undo for this operation.\n") + \
+                "\u2022" + _(" Current Undo Stack will be destroyed.\n") + \
+                "\u2022" + _(" Replacing current media with shorter or othervise unsuitable media may result in\n   crashes or corrupted project data.")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    pad = guiutils.get_pad_label(24, 24)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(info_box, False, False, 0)
+    vbox.pack_start(pad, False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback)
+    dialog.show_all()
 
 def clip_length_change_dialog(callback, clip, track):
     dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,

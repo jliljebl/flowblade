@@ -1119,6 +1119,12 @@ def delete_media_files(force_delete=False):
     _enable_save()
     gui.editor_window.bin_info.display_bin_info()
 
+def replace_media_file(media_file):
+    dialogs.replace_media_dialog(_replace_media_callback)
+
+def _replace_media_callback(dialog, response_id):
+    dialog.destroy()
+ 
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.OK:
@@ -2065,6 +2071,8 @@ def media_file_menu_item_selected(action, variant, data):
         media_file.info = info
         media_file.icon_path = icon_path
         media_file.create_icon()
+    if item_id == "Replace":
+        replace_media_file(media_file)
         
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
