@@ -39,7 +39,6 @@ destroy_window_event_id = -1
 
 FFMPEG_VIEW_SIZE = (20, 20) # Text edit area height for render opts. Width is ignored in current layout.
 
-_hamburger_menu = Gtk.Menu()
 
 # ----------------------------------------------------------- dialogs
 def render_progress_dialog(callback, parent_window, frame_rates_match=True):
