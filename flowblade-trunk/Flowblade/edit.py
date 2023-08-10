@@ -2974,23 +2974,6 @@ def _append_media_log_redo(self):
         clip = self.clips[i]
         append_clip(self.track, clip, clip.clip_in, clip.clip_out)
 
-#-------------------- DISABLE CLIP
-# "track","clip","index"
-def disable_clip_action(data):
-    action = EditAction(_disable_clip_undo,_disable_clip_redo, data)
-    return action
-
-def _disable_clip_undo(self):
-     _remove_clip(self.track, self.index)
-     _insert_clip(self.track, self.clip, self.index, self.clip.clip_in, self.clip.clip_out)
-    
-def _disable_clip_redo(self):
-     _remove_clip(self.track, self.index)
-     _insert_blank(self.track, self.index, _clip_length(self.clip))
-
-     # Add removed clip as attribute blank clip replacing it,
-     # needed for load.
-     self.track.clips[self.index].disabled_clip = self.clip
 
 # --------------------------------------------- help funcs for "range over" and "range splice out" edits
 def _track_put_back_range(over_in, track, track_extract_data):
