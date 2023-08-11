@@ -23,7 +23,7 @@ Module builds dialog windows. User input is handled at
 callsites which provide callback methods for response signals.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import locale
 import os
@@ -1126,12 +1126,11 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
-def replace_media_dialog(callback):
-    dialog = Gtk.Dialog(_("Replace Media Item in Project"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Replace"), Gtk.ResponseType.ACCEPT))
-    
+def replace_media_dialog(media_file, callback):
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+    dialog.set_title(_("Replace Media Item in Project"))
+    dialog.set_transient_for(gui.editor_window.window)
+
     info_text = _("Please note:\n\n") + \
                 "\u2022" + _(" It is recommended that you save Project before completing this operation.\n") + \
                 "\u2022" + _(" There is no Undo for this operation.\n") + \
@@ -1141,19 +1140,75 @@ def replace_media_dialog(callback):
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
 
+    path_row = guiutils.get_left_justified_box([Gtk.Label(label=media_file.path)])
+    file_box = guiutils.get_named_frame(_("Media File To Replace"), path_row, 4)
+    file_box.set_margin_top(24)
+
+    replacement_path_label = Gtk.Label(label=("No Replacement Media Selected"))
+    file_button = Gtk.Button(label=_("Select Replacement File"))
+    file_button.selected_file = ""
+    file_button.connect("clicked", lambda w: GLib.idle_add(_replace_button_clicked, w, dialog, replacement_path_label))
+
+    select_row = guiutils.get_left_justified_box([file_button, replacement_path_label])
+    select_box = guiutils.get_named_frame(_("Replacement Media"), select_row, 4)
+    select_box.set_margin_top(24)
+
+
+    cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+    cancel_b.connect("clicked", lambda w:close_titler())
+    replace_b = guiutils.get_sized_button(_("Replace Media"), 150, 32)
+    replace_b.connect("clicked", lambda w:self._save_title_pressed())
+    buttons_row = guiutils.get_right_justified_box([cancel_b, replace_b])
+    
     pad = guiutils.get_pad_label(24, 24)
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(info_box, False, False, 0)
-    vbox.pack_start(pad, False, False, 0)
+    vbox.pack_start(file_box, False, False, 0)
+    vbox.pack_start(select_box, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.pack_start(buttons_row, False, False, 0)
 
-    alignment = dialogutils.get_alignment2(vbox)
+    guiutils.set_margins(vbox, 12, 12, 12, 12)
 
+    dialog.add(vbox)
+    #dialog.set_default_size(500, 70)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
+    dialog.show_all()
+    
+    """
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
+    """
+    
+def _replace_button_clicked(button, parent, path_label):
+
+    dialog = Gtk.FileChooserDialog( _("Select Replament Media"), parent,
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+                                    
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    ff = utilsgtk.get_media_source_file_filter()
+    ff.set_name(_("Media Files"))
+    dialog.add_filter(ff)
+    
+    data = (button, path_label)
+    dialog.connect('response', _replacement_media_selected, data)
+    dialog.show()
+
+def _replacement_media_selected(dialog, response_id, data):
+    res_path = dialog.get_filename()
+    button, path_label = data
+    if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
+        path_label.set_text(res_path)
+        button.selected_file = res_path
+    
+    dialog.destroy()
 
 def clip_length_change_dialog(callback, clip, track):
     dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,

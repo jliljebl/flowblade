@@ -510,9 +510,9 @@ def media_file_popover_show(media_file, widget, x, y, callback):
     file_action_section = Gio.Menu.new()
     add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", media_file), callback)
     add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", media_file), callback)
-    add_menu_action(file_action_section, _("Replace"), "mediapanel.mediafile.replace", ("Replace", media_file), callback)
+    add_menu_action(file_action_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", media_file), callback)
     _media_file_menu.append_section(None, file_action_section)
-
+    
     if hasattr(media_file, "container_data"): 
         if media_file.container_data == None:
             monitor_item_active = True

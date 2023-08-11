@@ -1120,7 +1120,7 @@ def delete_media_files(force_delete=False):
     gui.editor_window.bin_info.display_bin_info()
 
 def replace_media_file(media_file):
-    dialogs.replace_media_dialog(_replace_media_callback)
+    dialogs.replace_media_dialog(media_file, _replace_media_callback)
 
 def _replace_media_callback(dialog, response_id):
     dialog.destroy()
