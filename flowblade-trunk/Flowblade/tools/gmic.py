@@ -26,6 +26,7 @@ from gi.repository import GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
+import copy
 import cairo
 import locale
 try:
@@ -95,8 +96,12 @@ _startup_data = None
 
 _encoding_panel = None
 
-# GTK3 requires this to be created outside of callback
-_hamburger_menu = Gtk.Menu()
+
+_hamburger_popover = None
+_hamburger_popover_menu = None
+_script_popover = None
+_script_popover_menu = None
+
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
@@ -348,10 +353,7 @@ def _finish_clip_open():
 
 
 #-------------------------------------------------- script setting and save/load
-def script_menu_lauched(launcher, event):
-    gmicscript.show_menu(event, script_menu_item_selected)
-
-def script_menu_item_selected(item, script):
+def script_menu_item_selected(widget, action, script):
     if _window.action_select.get_active() == False:
         _window.script_view.get_buffer().set_text(script.script)
     else:
@@ -404,25 +406,13 @@ def _load_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 #-------------------------------------------------- menu
-def _hamburger_menu_callback(widget, msg):
+def _hamburger_menu_callback(widget, action, msg):
     if msg == "load":
         open_clip_dialog()
     elif msg == "close":
         _shutdown()
     elif msg == "docs":
         webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
-
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem.new_with_label(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
-
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
 
 #-------------------------------------------------- player buttons
 def prev_pressed(delta=-1):
@@ -586,7 +576,7 @@ class GmicWindow(Gtk.Window):
         else:
             psize = 44
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
-        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
+        #self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
         self.load_button = Gtk.Button(label=_("Load Clip"))
@@ -695,9 +685,9 @@ class GmicWindow(Gtk.Window):
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
-        self.present_event_box.connect("button-press-event",  script_menu_lauched)
+        self.present_event_box.connect("button-press-event",  self.script_menu_lauched)
 
-        self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
+        self.script_menu = toolguicomponents.PressLaunch(self.script_menu_lauched)
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
@@ -932,16 +922,50 @@ class GmicWindow(Gtk.Window):
         self.update_render_status_info()
 
     def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
         
-        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
-        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
-        
-        menu.popup(None, None, None, None, event.button, event.time)
+        global _hamburger_popover, _hamburger_popover_menu
+    
+        _hamburger_popover_menu = toolguicomponents.menu_clear_or_create(_hamburger_popover_menu)
 
+        main_section = Gio.Menu.new()    
+        toolguicomponents.add_menu_action(_app, main_section, _("Load Clip"),  "mainmenu.load", "load", _hamburger_menu_callback)
+        toolguicomponents.add_menu_action(_app, main_section, _("G'Mic Webpage"),  "mainmenu.docs", "docs", _hamburger_menu_callback)
+        _hamburger_popover_menu.append_section(None, main_section)
+
+        close_section = Gio.Menu.new()    
+        toolguicomponents.add_menu_action(_app, close_section, _("Close"),  "mainmenu.close", "close", _hamburger_menu_callback)
+        _hamburger_popover_menu.append_section(None, close_section)
+        
+        _hamburger_popover = Gtk.Popover.new_from_model(widget, _hamburger_popover_menu)
+        self.hamburger_launcher.connect_launched_menu(_hamburger_popover)
+        _hamburger_popover.show()
+
+    def script_menu_lauched(self, widget, event):
+        
+        global _script_popover, _script_popover_menu
+    
+        _script_popover_menu = toolguicomponents.menu_clear_or_create(_script_popover_menu)
+
+        script_groups = gmicscript.get_script_groups()
+
+        for script_group in script_groups:
+            group_name, group = script_group
+            
+            sub_menu = Gio.Menu.new()
+            _script_popover_menu.append_submenu(group_name, sub_menu)
+
+            for script in group:
+                label = script.name
+                item_id = script.name.lower().replace(" ", "_")
+                sub_menu.append(label, "app." + item_id) 
+                
+                action = Gio.SimpleAction(name=item_id)
+                action.connect("activate", script_menu_item_selected, script)
+                _app.add_action(action)
+
+        _script_popover = Gtk.Popover.new_from_model(widget, _script_popover_menu)
+        _script_popover.show()
+    
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)

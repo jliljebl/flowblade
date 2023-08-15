@@ -399,18 +399,7 @@ def _hamburger_menu_callback(msg):
         _last_save_path = None
         _plugin_script_path = mediaplugin.get_plugin_script_path(msg)
         _reinit_init_playback()
-    
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem.new_with_label(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
 
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
 
 #-------------------------------------------------- player buttons
 def prev_pressed(delta=-1):

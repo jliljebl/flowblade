@@ -28,6 +28,7 @@ import editorpersistance
 import editorstate
 import gui
 import snapping
+import translations
 import utils
 
 
@@ -77,16 +78,33 @@ _sorting_section = None
 _sorting_submenu = None
 _move_section = None
 _move_submenu = None
-        
+_tracks_column_popover = None
+_tracks_column_menu = None
+_media_linker_popover = None
+_media_linker_menu = None
+_log_event_popover = None
+_log_event_menu = None
+_filter_mask_popover = None
+_filter_mask_menu = None
+_filter_add_popover = None
+_filter_add_menu = None
+_kb_shortcuts_popover = None
+_kb_shortcuts_menu = None
+_render_args_popove = None
+_render_args_menu = None
+
 # -------------------------------------------------- menuitems builder fuctions
-def add_menu_action(menu, label, item_id, data, callback, active=True):
+def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
         menu.append(label, "app." + item_id) 
     else:
         menu.append(label, "noaction") 
     action = Gio.SimpleAction(name=item_id)
     action.connect("activate", callback, data)
-    APP().add_action(action)
+    if app == None:
+        APP().add_action(action)
+    else:
+        app.add_action(action)
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
     action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(checked_state))
@@ -677,3 +695,200 @@ def  range_log_hamburger_menu_show(launcher, widget, unsensitive_for_all_view, s
     _range_log_menu.append_section(None, _sorting_section)
     
     _range_log_popover = new_popover(widget, _range_log_menu, launcher)
+
+def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
+    
+    track_obj = current_sequence().tracks[track]
+    
+    global _tracks_column_popover, _tracks_column_menu
+    _tracks_column_menu = menu_clear_or_create(_tracks_column_menu)
+    
+    lock_section = Gio.Menu.new()
+    if track_obj.edit_freedom != appconsts.FREE:
+        add_menu_action(lock_section, _("Lock Track"), "trackcolumn.lock", (track,"lock", None), callback, False)
+        add_menu_action(lock_section, _("Unlock Track"), "trackcolumn.unlock", (track,"unlock", None), callback)
+    else:
+        add_menu_action(lock_section, _("Lock Track"), "trackcolumn.lock", (track, "lock", None), callback)
+        add_menu_action(lock_section, _("Unlock Track"), "trackcolumn.unlock", (track,"unlock", None), callback, False)
+    _tracks_column_menu.append_section(None, lock_section)
+
+    height_section = Gio.Menu.new()
+    items_data =[(_("High Height"), "highheight"), (_("Large Height"), "normalheight"), (_("Normal Height"), "smallheight")]
+    if track_obj.height == appconsts.TRACK_HEIGHT_HIGH:
+        active_index = 0
+    elif track_obj.height == appconsts.TRACK_HEIGHT_NORMAL:
+        active_index = 1
+    else:
+        active_index = 2
+    add_menu_action_all_items_radio(height_section, items_data, "trackcolumn.height", active_index, callback_height)
+    _tracks_column_menu.append_section(None, height_section)
+
+    mute_section = Gio.Menu.new()
+    # _state_different(track_obj, state) as last param sets 
+    # menu item active if track not in given state
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_NOTHING
+        add_menu_action(mute_section, _("Unmute"), "trackcolumn.unmute", (track, "mute_track", state), callback, _state_different(track_obj, state)) 
+    else:
+        state = appconsts.TRACK_MUTE_VIDEO
+        add_menu_action(mute_section, _("Unmute"), "trackcolumn.unmute", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_VIDEO
+        add_menu_action(mute_section, _("Mute Video"), "trackcolumn.mutevideo", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_AUDIO
+        add_menu_action(mute_section, _("Mute Audio"), "trackcolumn.muteaudio", (track, "mute_track", state), callback, _state_different(track_obj, state))
+    else:
+        state = appconsts.TRACK_MUTE_ALL
+        add_menu_action(mute_section, _("Mute Audio"), "trackcolumn.muteaudio", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    if track_obj.type == appconsts.VIDEO:
+        state = appconsts.TRACK_MUTE_ALL
+        add_menu_action(mute_section, _("Mute All"), "trackcolumn.muteall", (track, "mute_track", state), callback, _state_different(track_obj, state))
+
+    _tracks_column_menu.append_section(None, mute_section)
+
+    rect = create_rect(x, y)
+    
+    _tracks_column_popover = Gtk.Popover.new_from_model(widget, _tracks_column_menu)
+    _tracks_column_popover.set_pointing_to(rect) 
+    _tracks_column_popover.show()
+
+def _state_different(mutable, state):
+    if mutable.mute_state == state:
+        return False
+    else:
+        return True
+
+def media_linker_popover_show(app, row, widget, x, y, callback):
+
+    global _media_linker_popover, _media_linker_menu
+    _media_linker_menu = menu_clear_or_create(_media_linker_menu)
+
+    file_section = Gio.Menu.new()
+    add_menu_action(file_section, _("Set File Relink Path"), "medialink.relink", ("set relink", row), callback, True, app)
+    add_menu_action(file_section, _("Delete File Relink Path"), "medialink.delete", ("delete relink", row), callback, True, app)
+    add_menu_action(file_section, _("Create Placeholder File"), "medialink.placeholder", ("create placeholder", row), callback, True, app)
+    _media_linker_menu.append_section(None, file_section)
+
+    show_section = Gio.Menu.new()
+    add_menu_action(show_section, _("Show Full Paths"), "medialink.showfull", ("show path", row), callback, True, app)
+    _media_linker_menu.append_section(None, show_section)
+
+    rect = create_rect(x, y + 24)
+    
+    _media_linker_popover = Gtk.Popover.new_from_model(widget, _media_linker_menu)
+    _media_linker_popover.set_pointing_to(rect) 
+    _media_linker_popover.show()
+
+def media_log_event_popover_show(row, widget, x, y, callback):
+    global _log_event_popover, _log_event_menu
+    _log_event_menu = menu_clear_or_create(_log_event_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Display In Clip Monitor"), "logevent.display", ("display", row, widget), callback)
+    add_menu_action(main_section, _("Render Slow/Fast Motion File"), "logevent.renderslowmo", ("renderslowmo", row, widget), callback)
+    add_menu_action(main_section, _("Toggle Star"), "logevent.toggle", ("toggle", row, widget), callback)
+    add_menu_action(main_section, _("Delete"), "logevent.delete", ("delete", row, widget), callback)
+    _log_event_menu.append_section(None, main_section)
+
+    rect = create_rect(x, y + 24) # +24 because there seems to be bug if column titles preset.
+
+    _log_event_popover = Gtk.Popover.new_from_model(widget, _log_event_menu)
+    _log_event_popover.set_pointing_to(rect) 
+    _log_event_popover.show()
+
+def _add_filter_mask_submenu_items(sub_menu, filter_index, filter_names, filter_msgs, data_bool, callback):
+    for f_name, f_msg in zip(filter_names, filter_msgs):
+        #sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
+        
+        label = "\u21c9" + " " + f_name
+        item_id = f_name.lower().replace(" ", "_") + str(data_bool)
+        data = (data_bool, f_msg, filter_index)
+        add_menu_action(sub_menu, label, item_id, data, callback)
+        
+def filter_mask_popover_show(launcher, widget, callback, filter_names, filter_msgs, filter_index):
+    global _filter_mask_popover, _filter_mask_menu
+    _filter_mask_menu = menu_clear_or_create(_filter_mask_menu)
+
+    main_section = Gio.Menu.new()
+    add_selected_sub_menu = Gio.Menu.new()
+    main_section.append_submenu(_("Add Filter Mask on Selected Filter"), add_selected_sub_menu)
+    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, False, callback)
+
+    add_selected_sub_menu = Gio.Menu.new()
+    main_section.append_submenu(_("Add Filter Mask on All Filters"), add_selected_sub_menu)
+    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
+
+    _filter_mask_menu.append_section(None, main_section)
+    _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher)
+
+def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, callback):
+
+    global _filter_add_popover, _filter_add_menu
+    _filter_add_menu = menu_clear_or_create(_filter_add_menu)
+
+    item_id = "add_filter"
+    for group in mltfiltersgroups:
+        group_name, filters_array = group
+
+        # "Blend" group only when in compositing_mode COMPOSITING_MODE_STANDARD_FULL_TRACK.
+        if filters_array[0].mlt_service_id == "cairoblend_mode" and current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            continue
+            
+        sub_menu = Gio.Menu.new()
+        _filter_add_menu.append_submenu(group_name, sub_menu)
+
+        for filter_info in filters_array:
+            filter_name = translations.get_filter_name(filter_info.name)
+            item_id = filter_name.lower().replace(" ", "_")
+            sub_menu.append(filter_name, "app." + item_id)         
+    
+            data = (clip, track, item_id, (x, filter_info))
+                
+            action = Gio.SimpleAction(name=item_id)
+            action.connect("activate", callback, data)
+            APP().add_action(action)
+    
+    _filter_add_popover = Gtk.Popover.new_from_model(widget, _filter_add_menu)
+    launcher.connect_launched_menu(_filter_add_popover)
+    _filter_add_popover.show()
+
+def kb_shortcuts_popover_show(launcher, widget, data, callback):
+    global _kb_shortcuts_popover, _kb_shortcuts_menu
+
+    _kb_shortcuts_menu = menu_clear_or_create(_kb_shortcuts_menu)
+    
+    shortcuts_combo, dialog = data
+
+    if shortcuts_combo.get_active() < 2:
+        delete_active = False
+    else:
+        delete_active = True
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Add Custom Shortcuts Group"), "kbdialog.addgroup", ("add", data), callback)
+    add_menu_action(main_section, _("Delete Active Custom Shortcuts Group"), "kbdialog.deletegroup", ("delete", data), callback)
+    _kb_shortcuts_menu.append_section(None, main_section)
+
+    _kb_shortcuts_popover = new_popover(widget, _kb_shortcuts_menu, launcher)
+
+def render_args_popover_show(launcher, widget, callback):
+    global _render_args_popover, _render_args_menu
+
+    _render_args_menu = menu_clear_or_create(_render_args_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Load Render Args from a text file"), "renderargs.loadfromfile", "load_from_file", callback)
+    add_menu_action(main_section, _("Save Render Args into a text file"), "renderargs.savetofile", "save_to_from_file", callback)
+    add_menu_action(main_section, _("Load Render Args from Current Encoding"), "renderargs.loadselection", "load_from_selection", callback)
+    _render_args_menu.append_section(None, main_section)
+
+    reset_section = Gio.Menu.new()
+    add_menu_action(reset_section,_("Reset all Render Options to Defaults"), "renderargs.reset", "reset_all", callback)
+    _render_args_menu.append_section(None, reset_section)
+    
+    _render_args_popover = new_popover(widget, _render_args_menu, launcher)
+

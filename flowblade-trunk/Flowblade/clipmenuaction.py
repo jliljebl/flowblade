@@ -548,7 +548,13 @@ def  _clone_filters_from_next(data):
         end_index = movemodes.selected_range_out
         if end_index == len(track.clips) - 1:
             return # clip is last clip
-        clone_clip = track.clips[end_index + 1]
+        clone_index = end_index + 1
+        while track.clips[clone_index].is_blanck_clip == True:
+            clone_index += 1
+            if clone_index == len(track.clips):
+                return # We auto delete blanks after clips so we should not hit this
+
+        clone_clip = track.clips[clone_index]
                     
         for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             target_clip = track.clips[clip_index]
@@ -562,7 +568,12 @@ def  _clone_filters_from_next(data):
     index = track.clips.index(clip)
     if index == len(track.clips) - 1:
         return # clip is last clip
-    clone_clip = track.clips[index + 1]
+    clone_index = index + 1
+    while track.clips[clone_index].is_blanck_clip == True:
+        clone_index += 1
+        if clone_index == len(track.clips):
+            return # We auto delete blanks after clips so we should not hit this
+    clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
 
 def _clone_filters_from_prev(data):
@@ -572,7 +583,14 @@ def _clone_filters_from_prev(data):
         start_index = movemodes.selected_range_in
         if start_index == 0:
             return  # clip is first clip
-        clone_clip = track.clips[start_index - 1]
+            
+        clone_index = start_index - 1
+        while track.clips[clone_index].is_blanck_clip == True:
+            clone_index -= 1
+            if clone_index == 0:
+                return
+
+        clone_clip = track.clips[clone_index]
                     
         for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             target_clip = track.clips[clip_index]
@@ -586,7 +604,12 @@ def _clone_filters_from_prev(data):
     index = track.clips.index(clip)
     if index == 0:
         return # clip is first clip
-    clone_clip = track.clips[index - 1]
+    clone_index = index - 1
+    while track.clips[clone_index].is_blanck_clip == True:
+        clone_index -= 1
+        if clone_index == 0:
+            return 
+    clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
 
 def _do_filter_clone(clip, clone_clip):

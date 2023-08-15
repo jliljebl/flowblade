@@ -70,7 +70,7 @@ PROP_EXPRESSION = 2
 TRACK_HEIGHT_HIGH = 75 # track height in canvas and column
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
-TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
+TRACK_HEIGHT_SMALLEST = 25 # DEPRECATED
 
 # Main layout minimum heights. Changing these will have effect on layout.
 TOP_ROW_HEIGHT = 300

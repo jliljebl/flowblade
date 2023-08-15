@@ -1483,7 +1483,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
     hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
-    hamburger_menu.connect_launched_menu(guicomponents.kb_shortcuts_hamburger_menu)
+    hamburger_menu.do_popover_callback = True
     guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
     hbox = Gtk.HBox()
     hbox.pack_start(hamburger_menu.widget, False, True, 0)
@@ -1605,6 +1605,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
     track_head_vbox = Gtk.VBox()
     track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
+    track_head_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_track_output"), False, False, 0)
     track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
     
     play_vbox = Gtk.VBox()

@@ -101,19 +101,12 @@ gmic_icon = None
 selection_icon = None
 
 # GTK3 requires these to be created outside of callback
-#tools_menu = Gtk.Menu.new()
 clip_popup_menu = Gtk.Menu()
-tracks_pop_menu = Gtk.Menu()
 transition_clip_menu = Gtk.Menu()
 blank_clip_menu = Gtk.Menu()
 audio_clip_menu = Gtk.Menu()
 compositor_popup_menu = Gtk.Menu()
-media_linker_popup_menu = Gtk.Menu()
-log_event_popup_menu = Gtk.Menu()
-filter_mask_menu = Gtk.Menu()
-kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
-effect_menu = Gtk.Menu()
 
 select_clip_func = None
 add_compositors_is_multi_selection = False 
@@ -1659,45 +1652,6 @@ def get_compositor_track_select_combo(source_track, target_track, callback):
     return tracks_combo
 
 # -------------------------------------------- context menus
-def display_tracks_popup_menu(event, track, callback):
-    track_obj = current_sequence().tracks[track]
-    track_menu = tracks_pop_menu
-    guiutils.remove_children(track_menu)
-
-    if track_obj.edit_freedom != appconsts.FREE:
-        track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), False))
-        track_menu.append(_get_menu_item(_("Unlock Track"), callback, (track,"unlock", None), True))
-
-    else:
-        track_menu.append(_get_menu_item(_("Lock Track"), callback, (track,"lock", None), True))
-        track_menu.append(_get_menu_item(_("Unlock Track"), callback, (track,"unlock", None), False))
-
-    _add_separetor(track_menu)
-
-    high_size_item = Gtk.RadioMenuItem()
-    high_size_item.set_label(_("High Height"))
-    high_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_HIGH) # appconsts.py
-    high_size_item.connect("activate", callback, (track, "high_height", None))
-    track_menu.append(high_size_item)
-
-    normal_size_item = Gtk.RadioMenuItem().new_with_label([high_size_item], _("Large Height"))
-    normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
-    normal_size_item.connect("activate", callback, (track, "normal_height", None))
-    track_menu.append(normal_size_item)
-
-    small_size_item = Gtk.RadioMenuItem.new_with_label([high_size_item], _("Normal Height"))
-    small_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
-    small_size_item.connect("activate", callback, (track, "small_height", None))
-    track_menu.append(small_size_item)
-
-    _add_separetor(track_menu)
-
-    track_menu.append(_get_track_mute_menu_item(event, track_obj, callback))
-
-    track_menu.show_all()
-
-    track_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
@@ -1991,16 +1945,6 @@ def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False)
     menu_item.show()
     return menu_item
 
-def display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, callback):
-    menu = effect_menu
-    guiutils.remove_children(menu)
-    
-    item_id = "add_filter"
-    
-    _build_filters_menus(menu, event, clip, track, callback, item_id)
-
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def _build_filters_menus(sub_menu, event, clip, track, callback, item_id):
     for group in mltfilters.groups:
         group_name, filters_array = group
@@ -2270,6 +2214,7 @@ def _get_mute_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    print("hei pimppamarallaa")
     item = Gtk.MenuItem(_("Unmute"))
     sub_menu.append(item)
     item.connect("activate", callback, (clip, track, "mute_clip", (False)))
@@ -2338,48 +2283,6 @@ def _get_audio_menu_item(event, clip, track, callback):
 
     menu_item.show()
     return menu_item
-    
-def _get_track_mute_menu_item(event, track, callback):
-    menu_item = Gtk.MenuItem(_("Mute"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-
-    item = Gtk.MenuItem(_("Unmute"))
-    sub_menu.append(item)
-    if track.type == appconsts.VIDEO:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_NOTHING))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_NOTHING)
-    else:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
-    item.show()
-
-    if track.type == appconsts.VIDEO:
-        item = Gtk.MenuItem(_("Mute Video"))
-        sub_menu.append(item)
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_VIDEO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_VIDEO)
-        item.show()
-
-    item = Gtk.MenuItem(_("Mute Audio"))
-    sub_menu.append(item)
-    if track.type == appconsts.VIDEO:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_AUDIO))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_AUDIO)
-    else:
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
-    item.show()
-
-    if track.type == appconsts.VIDEO:
-        item = Gtk.MenuItem(_("Mute All"))
-        sub_menu.append(item)
-        item.connect("activate", callback, (track, "mute_track", appconsts.TRACK_MUTE_ALL))
-        _set_non_sensitive_if_state_matches(track, item, appconsts.TRACK_MUTE_ALL)
-        item.show()
-
-    menu_item.show()
-    return menu_item
 
 def _get_clip_properties_menu_item(event, clip, track, callback):
     properties_menu_item = Gtk.MenuItem(_("Properties"))
@@ -2434,27 +2337,6 @@ def _get_clip_markers_menu_item(event, clip, track, callback):
 def _set_non_sensitive_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
         item.set_sensitive(False)
-    
-def display_media_log_event_popup_menu(row, treeview, callback, event):
-    log_event_menu = log_event_popup_menu
-    guiutils.remove_children(log_event_menu)
-
-    log_event_menu.add(_get_menu_item(_("Display In Clip Monitor"), callback, ("display", row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Render Slow/Fast Motion File"), callback, ("renderslowmo",  row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Toggle Star"), callback, ("toggle", row, treeview)))
-    log_event_menu.add(_get_menu_item(_("Delete"), callback, ("delete", row, treeview)))
-    log_event_menu.popup(None, None, None, None, event.button, event.time)
-
-def display_media_linker_popup_menu(row, treeview, callback, event):
-    media_linker_menu = media_linker_popup_menu
-    guiutils.remove_children(media_linker_menu)
-
-    media_linker_menu.add(_get_menu_item(_("Set File Relink Path"), callback, ("set relink", row)))
-    media_linker_menu.add(_get_menu_item(_("Delete File Relink Path"), callback, ("delete relink", row)))
-    media_linker_menu.add(_get_menu_item(_("Create Placeholder File"), callback, ("create placeholder", row)))
-    _add_separetor(media_linker_menu)
-    media_linker_menu.add(_get_menu_item(_("Show Full Paths"), callback, ("show path", row)))
-    media_linker_menu.popup(None, None, None, None, event.button, event.time)
 
 def _add_separetor(menu):
     sep = Gtk.SeparatorMenuItem()
@@ -3238,46 +3120,6 @@ def get_text_scroll_widget(text, size):
     sw.set_size_request(*size)
 
     return sw
-
-def get_kb_shortcuts_hamburger_menu(event, callback, data):
-    shortcuts_combo, dialog = data
-    
-    menu = kb_shortcuts_hamburger_menu
-    guiutils.remove_children(menu)
-
-    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
-    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", data))
-    menu.add(delete_item)
-    if shortcuts_combo.get_active() < 2:
-        delete_item.set_sensitive(False)
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-    
-def get_filter_mask_menu(event, callback, filter_names, filter_msgs, filter_index):
-    menu = filter_mask_menu
-    guiutils.remove_children(menu)
-
-    menu_item = Gtk.MenuItem(_("Add Filter Mask on Selected Filter"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-    #U+2192 right"\u21c9" Left U+21c7
-    for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
-
-    menu.add(menu_item)
-
-    menu_item = Gtk.MenuItem(_("Add Filter Mask on All Filters"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-    
-    for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg, filter_index)))
-
-    menu.add(menu_item)
-    
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
 
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()

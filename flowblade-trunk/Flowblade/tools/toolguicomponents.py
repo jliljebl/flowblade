@@ -17,9 +17,14 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
-import appconsts
+"""
+Gui bilding utils for tool applications with no dependencies on 
+main application modules.
+"""
+
+from gi.repository import Gio, Gdk
+
 import cairoarea
-import editorpersistance
 
 class PressLaunch:
     def __init__(self, callback, w=22, h=22):
@@ -46,3 +51,31 @@ class PressLaunch:
            return 
 
         self.callback(self.widget, event)
+
+
+# ------------------------------------------------------ menu building
+def menu_clear_or_create(menu):
+    if menu != None:
+        menu.remove_all()
+    else:
+        menu = Gio.Menu.new()
+    
+    return menu
+
+def add_menu_action(application, menu, label, item_id, data, callback, active=True):
+    if active == True:
+        menu.append(label, "app." + item_id) 
+    else:
+        menu.append(label, "noaction") 
+    action = Gio.SimpleAction(name=item_id)
+    action.connect("activate", callback, data)
+    application.add_action(action)
+
+def create_rect(x, y):
+    rect = Gdk.Rectangle()
+    rect.x = x
+    rect.y = y
+    rect.width = 2
+    rect.height = 2
+    
+    return rect

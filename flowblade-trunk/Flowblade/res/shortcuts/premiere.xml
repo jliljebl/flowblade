@@ -100,5 +100,6 @@
     <event code='trim_start' name='Trim Clip Start To Playhead'>q</event>
     <event code='trim_end' name='Trim Clip End To Playhead'>w</event>
     <event code='tline_render_request' name='Render Timeline Range' modifiers='ALT'>t</event>
+    <event code='toggle_track_output' name='Toggle Track Output Enabled/Disabled' modifiers='CTRL'>d</event>
   </shortcuts>
 </flowblade>

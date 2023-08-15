@@ -61,6 +61,7 @@ import processutils
 import persistance
 import respaths
 import renderconsumer
+import toolguicomponents
 import translations
 import userfolders
 import utils
@@ -96,7 +97,8 @@ timeout_id = None
 
 _dbus_service = None
 
-render_item_menu = Gtk.Menu()
+_render_item_popover = None
+_render_item_menu = None
 
 _single_render_app = None
 single_render_window = None
@@ -958,12 +960,12 @@ class RenderQueueView(Gtk.VBox):
                 path, col, cellx, celly = pthinfo
                 treeview.grab_focus()
                 treeview.set_cursor(path, col, 0)
-                display_render_item_popup_menu(self.item_menu_item_selected, event)
+                render_item_popover_show(treeview, event.x, event.y, self.item_menu_item_selected)
             return True
         else:
             return False
 
-    def item_menu_item_selected(self, widget, msg):
+    def item_menu_item_selected(self, action, variant, msg):
         model, rows = self.treeview.get_selection().get_selected_rows()
         render_item = render_queue.queue[max(rows[0])]
         if msg == "renderinfo":
@@ -1119,29 +1121,26 @@ def _change_render_item_path_callback(dialog, response_id, data):
     else:
         dialog.destroy()
         
-def display_render_item_popup_menu(callback, event):
-    menu = render_item_menu
-    guiutils.remove_children(menu)
-    
-    menu.add(_get_menu_item(_("Change Item Render File Path..."), callback,"changepath"))
-    menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
-    menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
-    _add_separetor(menu)
-    menu.add(_get_menu_item(_("Delete"), callback,"delete"))
-    menu.popup(None, None, None, None, event.button, event.time)
-    
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
+def render_item_popover_show(widget, x, y, callback):
 
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
+    global _render_item_popover, _render_item_menu
+    _render_item_menu = toolguicomponents.menu_clear_or_create(_render_item_menu)
 
+    main_section = Gio.Menu.new()
+    toolguicomponents.add_menu_action(_batch_render_app, main_section, _("Change Item Render File Path..."), "renderitem.changepath", "changepath", callback)
+    toolguicomponents.add_menu_action(_batch_render_app, main_section, _("Save Item Project As..."), "renderitem.saveas", "saveas", callback)
+    toolguicomponents.add_menu_action(_batch_render_app, main_section, _("Render Properties"), "renderitem.renderinfo", "renderinfo", callback)
+    _render_item_menu.append_section(None, main_section)
+
+    delete_section = Gio.Menu.new()    
+    toolguicomponents.add_menu_action(_batch_render_app, delete_section,_("Delete"), "renderitem.deleta", "delete", callback)
+    _render_item_menu.append_section(None, delete_section)
+
+    rect = toolguicomponents.create_rect(x - 1, y + 24)
+    
+    _render_item_popover = Gtk.Popover.new_from_model(widget, _render_item_menu)
+    _render_item_popover.set_pointing_to(rect) 
+    _render_item_popover.show()
 
 
 # --------------------------------------------------- single item render

@@ -118,7 +118,8 @@ class FilterFooterRow:
         else:
             mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=44, h=44)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
-
+        self.mask_button = mask_button
+        
         surface = guiutils.get_cairo_image("filters_move_up")
         if editorpersistance.prefs.double_track_hights  == False:
             move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=22, h=22)
@@ -176,7 +177,7 @@ class FilterFooterRow:
 
     def add_mask_pressed(self, w, e):
         filter_index = self.filter_stack.get_filter_index(self.filter_object)
-        _filter_mask_launch_pressed(w, e, filter_index)
+        _filter_mask_launch_pressed(self.mask_button, w, filter_index)
 
     def move_up_pressed(self, w, e):
         from_index = self.filter_stack.get_filter_index(self.filter_object)
@@ -434,7 +435,6 @@ def _create_widgets():
     surface_not_active = guiutils.get_cairo_image("filter_add_not_active")
     surfaces = [surface_active, surface_not_active]
     widgets.filter_add_launch = guicomponents.HamburgerPressLaunch(lambda w,e:_filter_add_menu_launch_pressed(w, e), surfaces)
-    widgets.filter_add_launch.connect_launched_menu(guicomponents.effect_menu)
     guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
     
 # ------------------------------------------------------------------- interface
@@ -871,11 +871,11 @@ def update_kfeditors_positions():
 
 
 # ------------------------------------------------ FILTER MASK 
-def _filter_mask_launch_pressed(widget, event, filter_index):
+def _filter_mask_launch_pressed(launcher, widget, filter_index):
     filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
-    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
+    guipopover.filter_mask_popover_show(launcher, widget, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
 
-def _filter_mask_item_activated(widget, data):
+def _filter_mask_item_activated(action, variant, data):
     if _filter_stack == None:
         return False
     
@@ -943,8 +943,11 @@ def _filter_add_menu_launch_pressed(w, event):
     if _filter_stack != None:
         clip = _filter_stack.clip
         track = _filter_stack.track 
-        guicomponents.display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, _filter_menu_callback)
-            
+        guipopover.filter_add_popover_show(widgets.filter_add_launch, w, clip, track, event.x, mltfilters.groups, _filter_popover_callback)
+
+def _filter_popover_callback(action, variant, data):
+    _filter_menu_callback(None, data)
+
 def _filter_menu_callback(w, data):
     clip, track, item_id, item_data = data
     x, filter_info = item_data
