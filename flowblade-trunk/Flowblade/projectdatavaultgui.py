@@ -131,7 +131,8 @@ class ProjectDataManagerWindow(Gtk.Window):
     def create_vault_selection_panel(self):
         self.vaults_combo = Gtk.ComboBoxText()
         self.fill_vaults_combo()
-        self.vaults_combo.connect("changed", lambda w: self.vault_changed(w))
+        changed_id = self.vaults_combo.connect("changed", lambda w: self.vault_changed(w))
+        self.vaults_combo.changed_id = changed_id 
                           
         hbox_select = Gtk.HBox(False, 2)
         hbox_select.pack_start(self.vaults_combo, False, False, 0)
@@ -178,6 +179,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         return hbox
 
     def fill_vaults_combo(self):
+        if hasattr(self.vaults_combo, "changed_id"):
+            self.vaults_combo.handler_block(self.vaults_combo.changed_id)
+
         self.vaults_combo.remove_all()
         
         self.vaults_combo.append_text(self.default_vault_name)
@@ -189,6 +193,9 @@ class ProjectDataManagerWindow(Gtk.Window):
 
         self.vaults_combo.set_active(self.view_vault_index)
 
+        if hasattr(self.vaults_combo, "changed_id"):
+            self.vaults_combo.handler_unblock(self.vaults_combo.changed_id)
+            
     def get_view_properties_panel(self):
 
         self.only_saved_check = Gtk.CheckButton()
@@ -473,9 +480,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox.pack_start(out_folder_row, False, False, 0)
         vbox.pack_start(name_row, False, False, 0)
 
-        dialogutils.panel_ok_cancel_dialog(_("Connect Data Store"), vbox, _("Connect Data Store"), self.connect_button_callback)
+        dialogutils.panel_ok_cancel_dialog(_("Connect Data Store"), vbox, _("Connect Data Store"), self.connect_dialog_callback)
 
-    def connect_button_callback(self, dialog, response):
+    def connect_dialog_callback(self, dialog, response):
         if response != Gtk.ResponseType.ACCEPT:
             dialog.destroy()
             return
@@ -489,7 +496,7 @@ class ProjectDataManagerWindow(Gtk.Window):
             # EMpty is okay
             pass
         else:
-            validate_success = self.validate_data_store()
+            validate_success = self.validate_data_store(dir_path)
             if validate_success == False:
                 return
 
@@ -504,8 +511,30 @@ class ProjectDataManagerWindow(Gtk.Window):
         # Update combo
         self.fill_vaults_combo()
         
-    def validate_data_store(self):
-        return True
+    def validate_data_store(self, dir_path):
+        
+        vault_handle = projectdatavault.VaultDataHandle(dir_path)
+        vault_validity_state, data = vault_handle.folder_is_valid_data_store()
+        
+        if vault_validity_state == projectdatavault.VAULT_IS_VALID:
+            return True
+        
+        if vault_validity_state == projectdatavault.VAULT_HAS_NON_FOLDER_FILES:
+            print("Data Store folder has non-folder files")
+        if vault_validity_state == projectdatavault.VAULT_HAS_BAD_FOLDERS:
+            print("Data Store folder has bad folders")
+            for project_folder_handle in data: # data is list of bads folders.
+                validity_state = project_folder_handle.get_folder_valid_state()
+                if validity_state == projectdatavault.PROJECT_FOLDER_IS_EMPTY:
+                    print(project_folder_handle.data_id + " is empty")
+                elif validity_state == projectdatavault.PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS:
+                    print(project_folder_handle.data_id + " has extra files or folders")
+                elif validity_state == projectdatavault.PROJECT_FOLDER_HAS_MISSING_FOLDERS:
+                    print(project_folder_handle.data_id + " has extra files or folders")
+                else: # projectdatavault.PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA:
+                    print(project_folder_handle.data_id + " has extra files or folders")
+
+        return False
 
     def activate_button_clicked(self):
         projectdatavault.set_active_vault_index(self.view_vault_index)

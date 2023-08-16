@@ -61,6 +61,18 @@ CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered/"
 AUDIO_LEVELS_FOLDER = "audio_levels/"
 PROXIES_FOLDER = "proxies/"
 
+# Enumerations for conditions that make folder an non-valid data vault.
+VAULT_IS_VALID = 0
+VAULT_HAS_NON_FOLDER_FILES = 1
+VAULT_HAS_BAD_FOLDERS = 2
+
+# Enumerations for conditions that make folder an non-valid data vault.
+PROJECT_FOLDER_IS_VALID = 0
+PROJECT_FOLDER_IS_EMPTY = 1
+PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS = 2
+PROJECT_FOLDER_HAS_MISSING_FOLDERS = 3
+PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA = 4 
+
 # Ssve files data file
 SAVE_FILES_FILE = "savefiles"
 
@@ -94,7 +106,16 @@ def init(_current_project_data_folder=None):
         _vaults.save()
     else:
         _vaults = utils.unpickle(get_vaults_info_path())
+        if _vaults.active_vault > len(_vaults.user_vaults_data):
+            # We did hit this once during development, so this is here to save guard against
+            # any bugs in release.
+            _vaults.active_vault = DEFAULT_VAULT
+            _vaults.save()
+
+        print("active_vault", _vaults.active_vault)
         print(_vaults.user_vaults_data)
+
+
 # --------------------------------------------------------- vault
 def get_active_vault_folder():
     return _vaults.get_active_vault_folder()
@@ -236,6 +257,22 @@ class VaultDataHandle:
             
             self.data_folders.append(ProjectDataFolderHandle(join(self.vault_path, folder)))
 
+    def folder_is_valid_data_store(self):
+        self.create_data_folders_handles()
+        if len(self.data_folders) != len(listdir(self.vault_path)):
+            # Valid data store only has folders in it.
+            return (VAULT_HAS_NON_FOLDER_FILES, (len(self.data_folders), listdir(self.vault_path)))
+        
+        bad_folders = []
+        for project_folder_handle in self.data_folders:
+            if project_folder_handle.is_valid_project_folder() == False:
+                bad_folders.append(project_folder_handle)
+        
+        if len(bad_folders) > 0:
+            return(VAULT_HAS_BAD_FOLDERS, bad_folders)
+
+        return (VAULT_IS_VALID, None)
+
 
 class ProjectDataFolderHandle:
     def __init__(self, path):
@@ -284,6 +321,27 @@ class ProjectDataFolderHandle:
         
         return  self.folders_data[THUMBNAILS_FOLDER].get_size_str(total)
 
+    def is_valid_project_folder(self):
+        if self.get_folder_valid_state() != PROJECT_FOLDER_IS_VALID:
+            return False
+        
+        return True
+
+    def get_folder_valid_state(self):
+        if len(listdir(self.data_folder_path)) == 0:
+            return PROJECT_FOLDER_IS_EMPTY
+
+        if isfile(join(self.data_folder_path, SAVE_FILES_FILE)) == False:
+            return PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA
+
+        for folder_handle in self.folders_data.values():
+            if folder_handle.folder_exists() == False:
+                return PROJECT_FOLDER_HAS_MISSING_FOLDERS
+
+        if len(listdir(self.data_folder_path)) > 6:
+            return PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS
+
+        return PROJECT_FOLDER_IS_VALID
 
 class DiskFolderHandle:
     
@@ -298,6 +356,9 @@ class DiskFolderHandle:
         
     def get_folder_size(self):
         return self.get_folder_sizes_recursively(self.folder_path)
+
+    def folder_exists(self):
+        return isdir(self.folder_path)
     
     def get_folder_sizes_recursively(self, folder):
         files = os.listdir(folder)
