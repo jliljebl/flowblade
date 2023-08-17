@@ -869,7 +869,7 @@ class EditorWindow:
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('ChangeProfile', None, _("Change Project Profile..."), None, None, lambda a: projectaction.change_project_profile()),
             ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
-            ('ProjectDataManager', None, _('Project Data Manager'), None, None, lambda a:projectdatavaultgui.show_project_data_manager_window()),
+            ('ProjectDataManager', None, _('Data Store Manager'), None, None, lambda a:projectdatavaultgui.show_project_data_manager_window()),
             ('ProjectInfo', None, _('Project Info'), None, None, lambda a:menuactions.show_project_info()),
             ('RenderMenu', None, _('Render')),
             ('AddToQueue', None, _('Add To Batch Render Queue...'), None, None, lambda a:projectaction.add_to_render_queue()),
@@ -948,8 +948,10 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <separator/>
-                    <menuitem action='ProfilesManager'/>
+                    <menuitem action='ProjectDataManager'/>
                     <menuitem action='DiskCacheManager'/>
+                    <separator/>
+                    <menuitem action='ProfilesManager'/>
                     <menuitem action='KeyboardShortcuts'/>
                     <menuitem action='Preferences'/>
                 </menu>
@@ -988,7 +990,6 @@ class EditorWindow:
                     <menuitem action='ChangeProfile'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
-                    <menuitem action='ProjectDataManager'/>
                 </menu>
                 <menu action='SequenceMenu'>
                     <menuitem action='AddSequence'/>

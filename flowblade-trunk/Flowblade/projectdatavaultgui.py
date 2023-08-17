@@ -29,6 +29,7 @@ from gi.repository import Gtk, GObject
 import datetime
 import os
 
+from editorstate import PROJECT
 import dialogutils
 import gui
 import guicomponents
@@ -62,6 +63,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.view_vault_index = projectdatavault.get_vaults_object().get_active_vault_index()
 
         self.current_folders = []
+        self.current_folder_index = -1
         self.show_only_saved = True
 
         vaults_control_panel = self.create_vaults_control_panel()
@@ -76,7 +78,8 @@ class ProjectDataManagerWindow(Gtk.Window):
         tree_sel.connect("changed", self.folder_selection_changed)
         
         if len(self.current_folders) > 0:
-            self.project_info_panel = self.create_folder_info_panel(self.current_folders[0])
+            self.current_folder_index = 0
+            self.project_info_panel = self.create_folder_info_panel(self.current_folders[self.current_folder_index])
         else:
             self.project_info_panel = Gtk.Label(label=_("No data folders"))
             self.project_info_panel.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
@@ -93,12 +96,15 @@ class ProjectDataManagerWindow(Gtk.Window):
         hbox.pack_start(self.info_frame, False, False, 0)
         #hbox.set_margin_top(4)
         hbox.set_margin_left(24)
-        
+
+        title_row = guiutils.get_centered_box([guiutils.bold_label(_("Projects"))])
+        title_row.set_margin_bottom(12)
+
         selection_vbox = Gtk.VBox(False, 2)
         selection_vbox.pack_start(selection_panel, False, False, 0)
         selection_vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        selection_vbox.pack_start(guiutils.get_centered_box([guiutils.bold_label(_("Data Store Projects"))]), False, False, 0)
-        selection_vbox.pack_start(view_properties_panel, False, False, 0)
+        selection_vbox.pack_start(title_row, False, False, 0)
+        #selection_vbox.pack_start(view_properties_panel, False, False, 0)
         selection_vbox.pack_start(hbox, False, False, 0)
 
         selections_frame = guiutils.get_named_frame(_("Data Stores"), selection_vbox, 8)
@@ -265,18 +271,23 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox.pack_start(box, False, False, 0)
 
         self.destroy_button = Gtk.Button(label=_("Destroy Project Data"))
-        #self.destroy_button.connect("clicked", self.destroy_pressed)
+        self.destroy_button.connect("clicked", self.destroy_pressed)
         self.destroy_button.set_sensitive(False)
         self.destroy_guard_check = Gtk.CheckButton()
         self.destroy_guard_check.set_active(False)
         self.destroy_guard_check.connect("toggled", self.destroy_guard_toggled)
 
         hbox = Gtk.HBox(False, 2)
-        hbox.pack_start(Gtk.Label(), True, True, 0)
-        hbox.pack_start(self.destroy_guard_check, False, False, 0)
-        hbox.pack_start(self.destroy_button, False, False, 0)
+        if folder_handle.data_id != PROJECT().project_data_id:
+            hbox.pack_start(Gtk.Label(), True, True, 0)
+            hbox.pack_start(self.destroy_guard_check, False, False, 0)
+            hbox.pack_start(self.destroy_button, False, False, 0)
+        else:
+            no_destroy = Gtk.Label(label=_("Currently open Project data cannot be destroyed."))
+            hbox.pack_start(no_destroy, False, False, 0)
+            
         hbox.set_margin_top(12)
-
+            
         vbox.pack_start(hbox, False, False, 0)
         vbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
         
@@ -326,6 +337,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.data_folders_list_view.scroll.queue_draw()
 
     def vault_changed(self, widget):
+        print("VAULT CHNAGED")
         self.view_vault_index = widget.get_active()
         self.load_data_folders()
 
@@ -357,10 +369,11 @@ class ProjectDataManagerWindow(Gtk.Window):
         (model, rows) = selection.get_selected_rows()
         if len(rows) == 0:
             return
-        index = max(rows[0])
+        self.current_folder_index = max(rows[0])
         try:
-            hbox = self.create_folder_info_panel(self.current_folders[index])
+            hbox = self.create_folder_info_panel(self.current_folders[self.current_folder_index])
         except:
+            self.current_folder_index = -1
             hbox = Gtk.Label(label=_("No data folders"))
             hbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
                             
@@ -514,7 +527,7 @@ class ProjectDataManagerWindow(Gtk.Window):
         dialog.destroy()
                         
         if not os.listdir(dir_path):
-            # EMpty is okay
+            # Empty is okay
             pass
         else:
             validate_success = self.validate_data_store(dir_path)
@@ -569,3 +582,20 @@ class ProjectDataManagerWindow(Gtk.Window):
 
     def destroy_guard_toggled(self, widget):
         self.destroy_button.set_sensitive(widget.get_active())
+    
+    def destroy_pressed(self, widget):
+        primary_txt = _("Confirm Destroying Project Data")
+        secondary_txt = _("Data will be permanently destroyed and there is no undo for this operation.")
+
+        dialogutils.warning_confirmation(self.destroy_confirm_callback, primary_txt, secondary_txt, gui.editor_window.window)
+    
+    def destroy_confirm_callback(self, dialog, response_id):
+        dialog.destroy()
+        
+        if response_id != Gtk.ResponseType.ACCEPT:
+            return
+        
+        destroy_folder = self.current_folders[self.current_folder_index]
+        destroy_folder.destroy_data()
+
+        self.vault_changed(self.vaults_combo)

@@ -372,6 +372,25 @@ class ProjectDataFolderHandle:
 
         return PROJECT_FOLDER_IS_VALID
 
+    def destroy_data(self):
+        print("deleting", self.data_folder_path)
+        self.destroy_recursively(self.data_folder_path)
+        print("removing data dir", self.data_folder_path)
+        os.rmdir(self.data_folder_path)
+                
+    def destroy_recursively(self, folder):
+        files = os.listdir(folder)
+        for f in files:
+            file_path = folder + "/" + f
+            if os.path.isdir(file_path) == True:
+                self.destroy_recursively(file_path)
+                print("removing dir", file_path)
+                os.rmdir(file_path)
+            else:
+                print("removing file", file_path)
+                os.remove(file_path)
+
+
 class DiskFolderHandle:
     
     def __init__(self, folder_path):
@@ -411,18 +430,3 @@ class DiskFolderHandle:
             return str(int((size + 500) / 1000)) + _(" kB")
         else:
             return str(int(size)) + " B"
-
-    def destroy_data(self, folder):
-        print("deleting", folder)
-        self.destroy_recursively(folder)
-
-    def destroy_recursively(self, folder):
-        files = os.listdir(folder)
-        for f in files:
-            file_path = folder + "/" + f
-            if os.path.isdir(file_path) == True:
-                if self.recursive == True:
-                    self.destroy_recursively(file_path)
-                    os.rmdir(file_path)
-            else:
-                os.remove(file_path)
