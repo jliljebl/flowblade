@@ -86,16 +86,18 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.info_frame.set_margin_left(12)
 
         view_properties_panel = self.get_view_properties_panel()
+        view_properties_panel.set_margin_left(12)
 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.data_folders_list_view, True, True, 0)
         hbox.pack_start(self.info_frame, False, False, 0)
-        hbox.set_margin_top(4)
+        #hbox.set_margin_top(4)
+        hbox.set_margin_left(24)
         
         selection_vbox = Gtk.VBox(False, 2)
         selection_vbox.pack_start(selection_panel, False, False, 0)
         selection_vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        selection_vbox.pack_start(guiutils.get_centered_box([guiutils.bold_label(_("Projects Data Info"))]), False, False, 0)
+        selection_vbox.pack_start(guiutils.get_centered_box([guiutils.bold_label(_("Data Store Projects"))]), False, False, 0)
         selection_vbox.pack_start(view_properties_panel, False, False, 0)
         selection_vbox.pack_start(hbox, False, False, 0)
 
@@ -133,12 +135,15 @@ class ProjectDataManagerWindow(Gtk.Window):
         self.fill_vaults_combo()
         changed_id = self.vaults_combo.connect("changed", lambda w: self.vault_changed(w))
         self.vaults_combo.changed_id = changed_id 
-                          
+
+        self.drop_button = Gtk.Button(_("Drop Data Store"))
+        self.drop_button.connect("clicked", lambda w: self.drop_button_clicked())
+
         hbox_select = Gtk.HBox(False, 2)
         hbox_select.pack_start(self.vaults_combo, False, False, 0)
         hbox_select.pack_start(Gtk.Label(), True, True, 0)
-        #hbox_select.pack_start(activate_button, False, False, 0)
-        
+        hbox_select.pack_start(self.drop_button, False, False, 0)
+
         path_label = guiutils.bold_label(_("Data Store Folder: "))
         path = projectdatavault.get_vault_folder_for_index(self.view_vault_index)
         self.store_path_info = Gtk.Label(label=path)
@@ -159,22 +164,19 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox.pack_start(hbox_select, False, False, 0)
         vbox.pack_start(info_row_1, False, False, 0)
         vbox.pack_start(info_row_2, False, False, 0)
-        
+
         return vbox
-        
+
     def create_vaults_control_panel(self):
-        create_button = Gtk.Button(_("Add Data Store"))
+        create_button = Gtk.Button(_("Create Data Store"))
         create_button.connect("clicked", lambda w: self.create_button_clicked())
         connect_button = Gtk.Button(_("Connect Data Store"))
         connect_button.connect("clicked", lambda w: self.connect_button_clicked())
-        drop_button = Gtk.Button(_("Drop Data Store"))
-        drop_button.connect("clicked", lambda w: self.drop_button_clicked())
 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(create_button, False, False, 0)
-        hbox.pack_start(Gtk.Label(), True, True, 0)
         hbox.pack_start(connect_button, False, False, 0)
-        hbox.pack_start(drop_button, False, False, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
 
         return hbox
 
@@ -227,7 +229,6 @@ class ProjectDataManagerWindow(Gtk.Window):
         save__name_label.set_margin_right(4)
         save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
         row = guiutils.get_left_justified_box([save__name_label, save_file_name])
-        #row.set_margin_bottom(12)
         vbox.pack_start(row, False, False, 0)
         
         save_label = guiutils.bold_label(_("Last Saved:"))
@@ -346,7 +347,12 @@ class ProjectDataManagerWindow(Gtk.Window):
             self.active_info.set_text(_("Yes")) 
         else:
             self.active_info.set_text(_("No")) 
-            
+
+        if self.view_vault_index == projectdatavault.DEFAULT_VAULT:
+            self.drop_button.set_sensitive(False)
+        else:
+            self.drop_button.set_sensitive(True)
+
     def folder_selection_changed(self, selection):
         (model, rows) = selection.get_selected_rows()
         if len(rows) == 0:
@@ -422,35 +428,50 @@ class ProjectDataManagerWindow(Gtk.Window):
         dialogutils.warning_message(primary_txt, secondary_txt, None)
                 
     def drop_button_clicked(self):
-        label = Gtk.Label(label=_("Select Data Store to be dropped"))
-        
-        self.user_vaults_combo = Gtk.ComboBoxText()
 
+        label = guiutils.bold_label(_("Confirm Dropping Data Store:"))
+        label.set_margin_bottom(12)
+        
         vaults_obj = projectdatavault.get_vaults_object()
         user_vaults_data = vaults_obj.get_user_vaults_data()
-        for vault_properties in user_vaults_data:
-            self.user_vaults_combo.append_text(vault_properties["name"])
+        name = vaults_obj.get_user_vaults_data()[self.view_vault_index - 1]["name"] # -1 because first vault is the default vault
+        name_label = Gtk.Label(label=name)
 
-        self.user_vaults_combo.set_active(0)
-        
+        data_label = Gtk.Label(label=_("Data inside folder will NOT be destroyd."))
+        data_label.set_margin_top(24)
+
+                
         vbox = Gtk.VBox(False, 2)
-        vbox.pack_start(label, False, False, 0)
-        vbox.pack_start(self.user_vaults_combo, False, False, 0)
+        vbox.pack_start(guiutils.get_left_justified_box([label]), False, False, 0)
+        vbox.pack_start(guiutils.get_left_justified_box([name_label]), False, False, 0)
+        vbox.pack_start(guiutils.get_left_justified_box([data_label]), False, False, 0)
+        vbox.set_size_request(400, 100)
 
         dialogutils.panel_ok_cancel_dialog(_("Drop Data Store"), vbox, _("Drop Data Store"), self.drop_button_callback)
         
     def drop_button_callback(self, dialog, response):
+        dialog.destroy()
+            
         if response != Gtk.ResponseType.ACCEPT:
-            dialog.destroy()
             return
 
-        # Get and verify vault data.
-        drop_index = self.user_vaults_combo.get_active() 
-        dialog.destroy()
+        drop_index = self.view_vault_index - 1 # -1 because 0 the default vault, 1 - n user vaults
+                                               # and we are always dropping _user_ vault.
+        
+        # We need to get activa vault path before deleting anythin because active 
+        # vault is saved as index and deleting anything can mess that up
+        # and we need to restore correct active vault after droip.
+
 
         # Drop vault
         vaults_obj = projectdatavault.get_vaults_object()
+        # We need to get active vault path before dropping anything because active 
+        # vault is saved as index and deleting anything can mess that up
+        # and we need to restore correct active vault after droip.
+        active_vault_path = projectdatavault.get_active_vault_folder()
+        
         vaults_obj.drop_user_vault(drop_index)
+        vaults_obj.set_active_vault_for_path(active_vault_path)
         vaults_obj.save()
 
         # Update combo
@@ -519,21 +540,23 @@ class ProjectDataManagerWindow(Gtk.Window):
         if vault_validity_state == projectdatavault.VAULT_IS_VALID:
             return True
         
+        msg = _("Data Store Validity Error: ")
         if vault_validity_state == projectdatavault.VAULT_HAS_NON_FOLDER_FILES:
-            print("Data Store folder has non-folder files")
+            msg += _("Data Store folder has non-folder files.")
         if vault_validity_state == projectdatavault.VAULT_HAS_BAD_FOLDERS:
-            print("Data Store folder has bad folders")
-            for project_folder_handle in data: # data is list of bads folders.
+            msg += _("Data Store folder has bad folders.") + "\n"
+            for project_folder_handle in data: # data is list of handles for bad folders.
                 validity_state = project_folder_handle.get_folder_valid_state()
                 if validity_state == projectdatavault.PROJECT_FOLDER_IS_EMPTY:
-                    print(project_folder_handle.data_id + " is empty")
+                    msg += project_folder_handle.data_id + _(" is empty.") + "\n"
                 elif validity_state == projectdatavault.PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS:
-                    print(project_folder_handle.data_id + " has extra files or folders")
+                    msg += project_folder_handle.data_id + _(" has extra files or folders") + "\n"
                 elif validity_state == projectdatavault.PROJECT_FOLDER_HAS_MISSING_FOLDERS:
-                    print(project_folder_handle.data_id + " has extra files or folders")
+                    msg += project_folder_handle.data_id + _(" has missing data folders") + "\n"
                 else: # projectdatavault.PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA:
-                    print(project_folder_handle.data_id + " has extra files or folders")
-
+                    msg += project_folder_handle.data_id + _(" has no savefile data.") + "\n"
+        primary_txt = _("Cannot connect Folder as Data Store!")
+        dialogutils.warning_message(primary_txt, msg, gui.editor_window.window)
         return False
 
     def activate_button_clicked(self):

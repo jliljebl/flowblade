@@ -230,6 +230,19 @@ class Vaults:
     def set_active_vault_index(self, index):
         self.active_vault = index
 
+    def set_active_vault_for_path(self, active_vault_path):
+        if active_vault_path == get_default_vault_folder():
+            self.active_vault = DEFAULT_VAULT
+            return
+
+        for i in range(0, len(self.user_vaults_data)):
+            user_vault = self.user_vaults_data[i]
+            if active_vault_path == user_vault["vault_path"]:
+                self.active_vault = i
+                return
+
+        self.active_vault = DEFAULT_VAULT
+            
     def get_active_vault_index(self):
         return self.active_vault
         
