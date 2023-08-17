@@ -60,6 +60,7 @@ CONTAINER_CLIPS_FOLDER = "container_clips/"
 CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered/"
 AUDIO_LEVELS_FOLDER = "audio_levels/"
 PROXIES_FOLDER = "proxies/"
+INGEST_FOLDER = "ingest/"
 
 # Enumerations for conditions that make folder an non-valid data vault.
 VAULT_IS_VALID = 0
@@ -170,13 +171,15 @@ def get_container_clips_unrendered_folder():
     return get_project_data_folder() + CONTAINER_CLIPS_UNRENDERED
     
 def get_audio_levels_folder():
-    print("get_audio_levels_folder", get_project_data_folder() + AUDIO_LEVELS_FOLDER)
     return get_project_data_folder() + AUDIO_LEVELS_FOLDER
 
 def get_proxies_folder():
     if PROJECT().vault_folder == None:
         return None
     return get_project_data_folder() + PROXIES_FOLDER
+    
+def get_ingest_folder():
+    return get_project_data_folder() + INGEST_FOLDER
     
 # ----------------------------------------------------- functional methods
 def create_project_data_folders():
@@ -187,7 +190,8 @@ def create_project_data_folders():
     os.mkdir(get_container_clips_unrendered_folder())
     os.mkdir(get_audio_levels_folder())
     os.mkdir(get_proxies_folder())
-
+    os.mkdir(get_ingest_folder())
+    
     savefiles_list = []
     savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
     with atomicfile.AtomicFileWriter(savefiles_path, "wb") as afw:
@@ -313,7 +317,8 @@ class ProjectDataFolderHandle:
         self.folders_data[CONTAINER_CLIPS_UNRENDERED] = DiskFolderHandle(self.get_folder_path(CONTAINER_CLIPS_UNRENDERED))
         self.folders_data[AUDIO_LEVELS_FOLDER] = DiskFolderHandle(self.get_folder_path(AUDIO_LEVELS_FOLDER))
         self.folders_data[PROXIES_FOLDER] = DiskFolderHandle(self.get_folder_path(PROXIES_FOLDER))
-
+        self.folders_data[INGEST_FOLDER] = DiskFolderHandle(self.get_folder_path(PROXIES_FOLDER))
+        
     def data_folders_info(self):
         info = {}
         info[THUMBNAILS_FOLDER] = self.folders_data[THUMBNAILS_FOLDER].get_folder_size_str()
@@ -321,7 +326,8 @@ class ProjectDataFolderHandle:
         info[CONTAINER_CLIPS_FOLDER] = self.folders_data[CONTAINER_CLIPS_FOLDER].get_folder_size_str()
         info[AUDIO_LEVELS_FOLDER] = self.folders_data[AUDIO_LEVELS_FOLDER].get_folder_size_str()
         info[PROXIES_FOLDER] = self.folders_data[PROXIES_FOLDER].get_folder_size_str()
-
+        info[INGEST_FOLDER] = self.folders_data[INGEST_FOLDER].get_folder_size_str()
+        
         return info
         
     def get_total_data_size(self):
@@ -331,8 +337,9 @@ class ProjectDataFolderHandle:
         total += self.folders_data[CONTAINER_CLIPS_FOLDER].get_folder_size()
         total += self.folders_data[RENDERS_FOLDER].get_folder_size()
         total += self.folders_data[THUMBNAILS_FOLDER].get_folder_size()
+        total += self.folders_data[INGEST_FOLDER].get_folder_size()
         
-        return  self.folders_data[THUMBNAILS_FOLDER].get_size_str(total)
+        return  self.folders_data[THUMBNAILS_FOLDER].get_size_str(total) 
 
     def is_valid_project_folder(self):
         if self.get_folder_valid_state() != PROJECT_FOLDER_IS_VALID:
@@ -351,7 +358,7 @@ class ProjectDataFolderHandle:
             if folder_handle.folder_exists() == False:
                 return PROJECT_FOLDER_HAS_MISSING_FOLDERS
 
-        if len(listdir(self.data_folder_path)) > 6:
+        if len(listdir(self.data_folder_path)) > 7:
             return PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS
 
         return PROJECT_FOLDER_IS_VALID
