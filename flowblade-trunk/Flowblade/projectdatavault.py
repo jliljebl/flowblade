@@ -77,6 +77,9 @@ PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA = 4
 # Ssve files data file
 SAVE_FILES_FILE = "savefiles"
 
+# Project label file.
+LABEL_FILE = "label"
+
 # Vaults info data file.
 VAULTS_INFO = "vaults"
 
@@ -198,6 +201,12 @@ def create_project_data_folders():
         write_file = afw.get_file()
         pickle.dump(savefiles_list, write_file)
 
+    project_label = ""
+    label_file_path = get_project_data_folder() + LABEL_FILE
+    with atomicfile.AtomicFileWriter(label_file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(project_label, write_file)
+        
 def project_saved(project_path):
     savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
     savefiles_list = utils.unpickle(savefiles_path)
