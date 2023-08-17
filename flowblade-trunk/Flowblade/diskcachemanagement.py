@@ -173,9 +173,15 @@ def show_disk_management_dialog():
     global _panels
     _panels = _get_disk_dir_panels()
 
-    pane = Gtk.VBox(True, 2)
+    lagacy_label_text =  _("This dialog handles legacy Projects data created using versions before 2.12.\nUse <b>Data Store Manager</b> to inspect data created with versions 2.12 or higher")
+    lagacy_label = Gtk.Label()
+    lagacy_label.set_markup("<small>" + lagacy_label_text + "</small>")
+    lagacy_label.set_margin_bottom(8)
+
+    pane = Gtk.VBox(False, 2)
+    pane.pack_start(lagacy_label, False, False, 0)
     for panel in _panels:
-        pane.pack_start(panel.vbox, True, True, 0)
+        pane.pack_start(panel.vbox, False, False, 0)
 
     guiutils.set_margins(pane, 12, 24, 12, 12)
 
@@ -228,11 +234,13 @@ def _show_warning(size_str):
 def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
+    # This is too small amount of data to make deletable.
+    #panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
-    panels.append(DiskFolderManagementPanel(userfolders.get_render_dir(), "/" + appconsts.PROXIES_DIR, _("Proxy Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_render_dir(True), "/" + appconsts.PROXIES_DIR, _("Proxy Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.CONTAINER_CLIPS_DIR, _("Container Clips"), PROJECT_DATA_WARNING, True))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
+    # This is too small amount of data to make deletable.
+    #panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
     return panels

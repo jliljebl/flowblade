@@ -69,8 +69,8 @@ def get_data_dir():
 def get_cache_dir():
     return _xdg_cache_dir + "/"
 
-def get_render_dir():
-    if projectdatavault.vault_data_exists_for_project() == False:
+def get_render_dir(force_legacy=False):
+    if projectdatavault.vault_data_exists_for_project() == False or force_legacy == True:
         return get_data_dir() + appconsts.RENDERED_CLIPS_DIR + "/"
     
     return projectdatavault.get_render_folder() 
