@@ -230,7 +230,6 @@ def _show_warning(size_str):
                     _("change warning level in <b>Edit->Preferences 'General Options'</b> panel.") 
     dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
 
-
 def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))

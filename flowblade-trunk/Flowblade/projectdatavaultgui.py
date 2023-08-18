@@ -41,8 +41,9 @@ PROJECT_DATA_HEIGHT = 270
 
 
 _project_data_manager_window = None
+_current_project_info_window = None
 
-
+# --------------------------------------------------------- interface
 def show_project_data_manager_window():
     global _project_data_manager_window
 
@@ -52,11 +53,91 @@ def _close_window():
     global _project_data_manager_window
     _project_data_manager_window.set_visible(False)
     _project_data_manager_window.destroy()
+
+def show_current_project_data_store_info_window():
+    global _current_project_info_window
     
-    
-class ProjectDataManagerWindow(Gtk.Window):
+    _current_project_info_window = CurrenProjectDataInfoWindow()
+
+def _close_info_window():
+    global _current_project_info_window
+    _current_project_info_window.set_visible(False)
+    _current_project_info_window.destroy()
+
+# --------------------------------------------------------- window classes
+class AbstractDataStoreWindow(Gtk.Window):
+
     def __init__(self):
         GObject.GObject.__init__(self)
+    
+    def folder_properties_panel(self, folder_handle):
+        info = folder_handle.data_folders_info()
+        
+        vbox = Gtk.VBox(False, 2)
+
+        savefile, times_saved, last_date = folder_handle.get_save_info()
+
+        save__name_label = guiutils.bold_label(_("Last File Name:"))
+        save__name_label.set_margin_right(4)
+        try:
+            save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
+        except:
+            save_file_name = Gtk.Label(label=_("Not Saved"))
+        row = guiutils.get_left_justified_box([save__name_label, save_file_name])
+        vbox.pack_start(row, False, False, 0)
+        
+        save_label = guiutils.bold_label(_("Last Saved:"))
+        save_label.set_margin_right(4)
+        if str(last_date) != "0":
+            save_date = Gtk.Label(label=str(last_date))
+        else:
+            save_date = Gtk.Label(label=_("Not Saved"))
+
+        row = guiutils.get_left_justified_box([save_label, save_date])
+        row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+        
+        data_id_label = guiutils.bold_label(_("Data ID:"))
+        data_id_label.set_margin_right(4)
+        data_id = Gtk.Label(label=folder_handle.data_id)
+        row = guiutils.get_left_justified_box([data_id_label, data_id])
+        row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+
+        row = self.get_data_row(info, _("Thumbnails"), projectdatavault.THUMBNAILS_FOLDER)
+        vbox.pack_start(row, False, False, 0)
+        row = self.get_data_row(info, _("Audio Levels Data"), projectdatavault.AUDIO_LEVELS_FOLDER)
+        vbox.pack_start(row, False, False, 0)
+        row = self.get_data_row(info, _("Rendered Files"), projectdatavault.RENDERS_FOLDER)
+        vbox.pack_start(row, False, False, 0)
+        row = self.get_data_row(info, _("Container Clips"), projectdatavault.CONTAINER_CLIPS_FOLDER)
+        vbox.pack_start(row, False, False, 0)
+        row = self.get_data_row(info, _("Proxy Files"), projectdatavault.PROXIES_FOLDER)
+        vbox.pack_start(row, False, False, 0)
+
+        total_size_str = folder_handle.get_total_data_size()
+        box = Gtk.HBox(True, 2)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(_("Total"))]), True, True, 0)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=total_size_str)]), True, True, 0)
+        box.set_margin_top(12)
+        vbox.pack_start(box, False, False, 0)
+
+        return vbox
+
+    def get_data_row(self, info, name, folder_id):
+        size_str = info[folder_id]
+
+        box = Gtk.HBox(True, 2)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(name)]), True, True, 0)
+        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=size_str)]), True, True, 0)
+        
+        return box
+            
+    
+class ProjectDataManagerWindow(AbstractDataStoreWindow):
+
+    def __init__(self):
+        AbstractDataStoreWindow.__init__(self)
 
         self.default_vault_name = _("Default XDG Data Store")
 
@@ -225,51 +306,9 @@ class ProjectDataManagerWindow(Gtk.Window):
         return hbox
 
     def create_folder_info_panel(self, folder_handle):
-        info = folder_handle.data_folders_info()
         
-        vbox = Gtk.VBox(False, 2)
-
-        savefile, times_saved, last_date = folder_handle.get_save_info()
-
-        save__name_label = guiutils.bold_label(_("Last File Name:"))
-        save__name_label.set_margin_right(4)
-        save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
-        row = guiutils.get_left_justified_box([save__name_label, save_file_name])
-        vbox.pack_start(row, False, False, 0)
+        vbox = self.folder_properties_panel(folder_handle)
         
-        save_label = guiutils.bold_label(_("Last Saved:"))
-        save_label.set_margin_right(4)
-        save_date = Gtk.Label(label=str(last_date))
-        row = guiutils.get_left_justified_box([save_label, save_date])
-        row.set_margin_bottom(12)
-        vbox.pack_start(row, False, False, 0)
-        
-        data_id_label = guiutils.bold_label(_("Data ID:"))
-        data_id_label.set_margin_right(4)
-        data_id = Gtk.Label(label=folder_handle.data_id)
-        row = guiutils.get_left_justified_box([data_id_label, data_id])
-        row.set_margin_bottom(12)
-        vbox.pack_start(row, False, False, 0)
-
-        row = self.get_data_row(info, _("Thumbnails"), projectdatavault.THUMBNAILS_FOLDER)
-        vbox.pack_start(row, False, False, 0)
-        row = self.get_data_row(info, _("Audio Levels Data"), projectdatavault.AUDIO_LEVELS_FOLDER)
-        vbox.pack_start(row, False, False, 0)
-        row = self.get_data_row(info, _("Rendered Files"), projectdatavault.RENDERS_FOLDER)
-        vbox.pack_start(row, False, False, 0)
-        row = self.get_data_row(info, _("Container Clips"), projectdatavault.CONTAINER_CLIPS_FOLDER)
-        vbox.pack_start(row, False, False, 0)
-        row = self.get_data_row(info, _("Proxy Files"), projectdatavault.PROXIES_FOLDER)
-        vbox.pack_start(row, False, False, 0)
-
-
-        total_size_str = folder_handle.get_total_data_size()
-        box = Gtk.HBox(True, 2)
-        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(_("Total"))]), True, True, 0)
-        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=total_size_str)]), True, True, 0)
-        box.set_margin_top(12)
-        vbox.pack_start(box, False, False, 0)
-
         self.destroy_button = Gtk.Button(label=_("Destroy Project Data"))
         self.destroy_button.connect("clicked", self.destroy_pressed)
         self.destroy_button.set_sensitive(False)
@@ -292,15 +331,6 @@ class ProjectDataManagerWindow(Gtk.Window):
         vbox.set_size_request(PROJECT_DATA_WIDTH, PROJECT_DATA_HEIGHT)
         
         return vbox
-
-    def get_data_row(self, info, name, folder_id):
-        size_str = info[folder_id]
-
-        box = Gtk.HBox(True, 2)
-        box.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(name)]), True, True, 0)
-        box.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), Gtk.Label(label=size_str)]), True, True, 0)
-        
-        return box
 
     def load_data_folders(self):
 
@@ -599,3 +629,36 @@ class ProjectDataManagerWindow(Gtk.Window):
         destroy_folder.destroy_data()
 
         self.vault_changed(self.vaults_combo)
+
+
+class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
+    
+    def __init__(self):
+        AbstractDataStoreWindow.__init__(self)
+
+        data_folder_path = projectdatavault.get_project_data_folder()
+        folder_handle = projectdatavault.ProjectDataFolderHandle(data_folder_path)
+
+        vbox = self.folder_properties_panel(folder_handle)
+
+        close_button = Gtk.Button(_("Close"))
+        close_button.connect("clicked", lambda w: _close_info_window())
+
+        close_hbox = Gtk.HBox(False, 2)
+        close_hbox.pack_start(Gtk.Label(), True, True, 0)
+        close_hbox.pack_start(close_button, False, False, 0)
+        close_hbox.set_margin_top(18)
+        
+        vbox.pack_start(close_hbox, False, False, 0)
+        
+        pane = guiutils.set_margins(vbox, 12, 12, 12, 12)
+        pane.set_size_request(400, 250)
+
+        self.set_transient_for(gui.editor_window.window)
+        self.set_title(_("Current Project Data Info"))
+        self.connect("delete-event", lambda w, e:_close_info_window())
+        
+        self.add(pane)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.show_all()
+        

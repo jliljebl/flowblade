@@ -303,6 +303,7 @@ class VaultDataHandle:
 class ProjectDataFolderHandle:
     def __init__(self, path):
         self.data_folder_path = path
+        path = path.rstrip("/")
         self.data_id = path.split("/")[-1]
         self.folders_data = {}
         self.create_folder_data_handles()
@@ -373,9 +374,9 @@ class ProjectDataFolderHandle:
         return PROJECT_FOLDER_IS_VALID
 
     def destroy_data(self):
-        print("deleting", self.data_folder_path)
+        #print("deleting", self.data_folder_path)
         self.destroy_recursively(self.data_folder_path)
-        print("removing data dir", self.data_folder_path)
+        #print("removing data dir", self.data_folder_path)
         os.rmdir(self.data_folder_path)
                 
     def destroy_recursively(self, folder):
@@ -384,10 +385,10 @@ class ProjectDataFolderHandle:
             file_path = folder + "/" + f
             if os.path.isdir(file_path) == True:
                 self.destroy_recursively(file_path)
-                print("removing dir", file_path)
+                #print("removing dir", file_path)
                 os.rmdir(file_path)
             else:
-                print("removing file", file_path)
+                #print("removing file", file_path)
                 os.remove(file_path)
 
 
