@@ -83,6 +83,7 @@ def new_project_dialog(callback):
 
     vault_combo = projectdatavaultgui.get_vault_select_combo(projectdatavault.get_active_vault_index())
     add_vault_button = Gtk.Button(label=_("Create New Data Store"))
+    add_vault_button.connect("clicked", lambda w: projectdatavaultgui.show_create_data_dialog(_create_data_store_callback, vault_combo))
     add_vault_button.set_margin_left(12)
     vault_row = Gtk.HBox(False, 8)
     vault_row.pack_start(vault_combo, True, True, 0)
@@ -92,7 +93,7 @@ def new_project_dialog(callback):
     vault_frame = panels.get_named_frame(_("Data Store"), vault_vbox)
     
     ok_button = Gtk.Button(label=_("Ok"))
-    ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select))
+    ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select, vault_combo))
     cancel_button = Gtk.Button(label=_("Cancel"))
     cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select))
     dialog_buttons_box = dialogutils.get_ok_cancel_button_row(ok_button, cancel_button)
@@ -121,6 +122,35 @@ def _new_project_profile_changed(out_profile_combo, profile_info_box):
     profile_info_box.add(info_panel)
     profile_info_box.show_all()
     info_panel.show()
+
+def _create_data_store_callback(dialog, response, widgets):
+    if response != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    # Get and verify vault data.
+    data_folder_button, name_entry, vaults_combo = widgets
+    dir_path = data_folder_button.get_filename()
+    user_visible_name = name_entry.get_text() 
+    dialog.destroy()
+                    
+    if not os.listdir(dir_path):
+        pass
+    else:
+        primary_txt = _("Selected folder was not empty!")
+        secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+        dialogutils.warning_message(primary_txt, secondary_txt, None)
+        return
+
+    if len(user_visible_name) == 0:
+        user_visible_name = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+
+    # Add new vault
+    vaults_obj = projectdatavault.get_vaults_object()
+    vaults_obj.add_user_vault(user_visible_name, dir_path)
+    vaults_obj.save()
+
+    projectdatavaultgui.fill_vaults_combo(vaults_combo, len(vaults_obj.user_vaults_data))
 
 def change_profile_project_dialog(project, callback):
     project_name = project.name.rstrip(".flb")

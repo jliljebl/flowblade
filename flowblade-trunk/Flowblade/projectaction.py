@@ -451,21 +451,21 @@ def _enable_save():
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
-def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_select):
+def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_select, vault_combo):
 
     v_tracks, a_tracks = tracks_select.get_tracks()
     
     if response_id == Gtk.ResponseType.ACCEPT:
         profile_name = profile_combo.get_selected()
         profile_index = mltprofiles.get_index_for_name(profile_name)
-        app.new_project(profile_index, v_tracks, a_tracks)
-        
+        vault_folder = projectdatavault.get_vault_folder_for_index(vault_combo.get_active())
+
         dialog.destroy()
-        
+                
+        app.new_project(profile_index, v_tracks, a_tracks)
+
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
-        
-        vault_folder = projectdatavault.get_active_vault_folder()
         PROJECT().create_vault_folder_data(vault_folder)
         projectdatavault.create_project_data_folders()
     else:
