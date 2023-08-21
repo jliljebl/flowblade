@@ -95,7 +95,7 @@ def new_project_dialog(callback):
     ok_button = Gtk.Button(label=_("Ok"))
     ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select, vault_combo))
     cancel_button = Gtk.Button(label=_("Cancel"))
-    cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select))
+    cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select, vault_combo))
     dialog_buttons_box = dialogutils.get_ok_cancel_button_row(ok_button, cancel_button)
     dialog_buttons_box.set_margin_top(24)
         
@@ -250,7 +250,7 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 
     new_file_frame = panels.get_named_frame(_("New Project File"), new_file_vbox)
 
-    save_profile_info =  guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
+    save_profile_info = guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
 
     vbox = guiutils.get_vbox([info_label, guiutils.pad_label(2, 24), text_panel, \
                               guiutils.pad_label(2, 24), save_profile_info, guiutils.pad_label(2, 24), \
