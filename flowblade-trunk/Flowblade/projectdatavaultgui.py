@@ -64,6 +64,29 @@ def _close_info_window():
     _current_project_info_window.set_visible(False)
     _current_project_info_window.destroy()
 
+def get_vault_select_combo(active_vault_index):
+    vaults_combo = Gtk.ComboBoxText()
+    fill_vaults_combo(vaults_combo, active_vault_index)
+    
+    return vaults_combo
+        
+def fill_vaults_combo(vaults_combo, active_vault_index):
+    if hasattr(vaults_combo, "changed_id"):
+        vaults_combo.handler_block(vaults_combo.changed_id)
+
+    vaults_combo.remove_all()
+
+    vaults_combo.append_text(_("Default XDG Data Store"))
+    vaults_obj = projectdatavault.get_vaults_object()
+    user_vaults_data = vaults_obj.get_user_vaults_data()
+    for vault_properties in user_vaults_data:
+        vaults_combo.append_text(vault_properties["name"])
+
+    vaults_combo.set_active(active_vault_index)
+
+    if hasattr(vaults_combo, "changed_id"):
+        vaults_combo.handler_unblock(vaults_combo.changed_id)
+
 # --------------------------------------------------------- window classes
 class AbstractDataStoreWindow(Gtk.Window):
 
