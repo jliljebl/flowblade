@@ -59,13 +59,17 @@ def new_project_dialog(callback):
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
 
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+    """
     dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("OK"), Gtk.ResponseType.ACCEPT))
-
+    """
+    
     out_profile_combo = guicomponents.get_profiles_combo()
     out_profile_combo.set_selected(default_desc)
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
                                                out_profile_combo.widget,
@@ -76,22 +80,31 @@ def new_project_dialog(callback):
     profile_info_box.add(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
-
+    profiles_frame.set_margin_right(18)
+    
     tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
 
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
 
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
+    tracks_frame.set_margin_right(18)
+    
+    ok_button = Gtk.Button(label=_("Ok"))
+    ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select))
+    cancel_button = Gtk.Button(label=_("Cancel"))
+    cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select))
+    dialog_buttons_box = dialogutils.get_ok_cancel_button_row(ok_button, cancel_button)
+    dialog_buttons_box.set_margin_top(24)
+        
+    vbox = guiutils.get_vbox([profiles_frame, tracks_frame, dialog_buttons_box], False)
+    guiutils.set_margins(vbox, 12, 12, 12, 12)
 
-    vbox = guiutils.get_vbox([profiles_frame, tracks_frame], False)
+    dialog.set_transient_for(gui.editor_window.window)
+    dialog.set_title(_("New Project"))
+    dialog.set_resizable(False)
+    dialog.add(vbox)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
 
-    alignment = dialogutils.get_default_alignment(vbox)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_select)
-                   
-    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     dialog.show_all()
 
 def _new_project_profile_changed(out_profile_combo, profile_info_box):
