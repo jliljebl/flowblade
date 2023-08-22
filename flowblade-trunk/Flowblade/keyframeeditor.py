@@ -107,7 +107,7 @@ keyframe_menu = Gtk.Menu()
 
 _kf_popover = None
 _kf_menu = None
-
+_kf_type_submenu = None
 
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
@@ -921,6 +921,21 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         print(type(self), "get_copy_kf_value not implemented")
 
     def _create_keyframe_type_submenu(self, kf_type, menu, callback):
+
+        items_data = [( _("Linear"), "linear"), ( _("Smooth"), "smooth"), ( _("Discrete"), "discrete")]
+        if kf_type == appconsts.KEYFRAME_LINEAR:
+            active_index = 0
+        elif  kf_type == appconsts.KEYFRAME_SMOOTH:
+            active_index = 1
+        else:
+            active_index = 2
+
+        guipopover.add_menu_action_all_items_radio(menu, items_data, "keyframes.typeselect", active_index, callback)
+        """
+        
+        _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
+        _monitorview_menu.append_section(None, _opacity_section)
+        
         linear_item = Gtk.RadioMenuItem()
         linear_item.set_label(_("Linear"))
         if kf_type == appconsts.KEYFRAME_LINEAR:
@@ -942,7 +957,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             discrete_item.set_active(True)
         discrete_item.show()
         menu.append(discrete_item)
-
+        """
+        
     def _add_geometry_menu_items(self, menu, callback):
         menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
         menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), callback, "ratio" ))
@@ -1126,13 +1142,25 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.update_property_value()
 
     def _hamburger_pressed(self, launcher, widget, event, data):
-        
-        print("haloo")
-        global _kf_popover, _kf_menu
+
+        global _kf_popover, _kf_menu, _kf_type_submenu
 
         _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
 
         main_section = Gio.Menu.new()
+        """
+            frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+            
+            active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+            type_menu = Gtk.Menu()
+            active_type_menu_item.set_submenu(type_menu)
+            self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        """
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        _kf_type_submenu = guipopover.menu_clear_or_create(_kf_type_submenu)
+        self._create_keyframe_type_submenu(kf_type, _kf_type_submenu, self._menu_item_activated)
+        main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
+        
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykf", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekf", "paste_kf", self._menu_item_activated)
         _kf_menu.append_section(None, main_section)

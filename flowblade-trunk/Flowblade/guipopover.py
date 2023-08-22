@@ -389,7 +389,7 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
     # WE are getting gtk warning here, look to fix
     _opacity_section = menu_clear_or_create(_opacity_section)
     _opacity_submenu = menu_clear_or_create(_opacity_submenu)
-    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), (_("20%"), "6")]
+    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
     active_index = current_sequence().get_mix_index()
     add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
     _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
