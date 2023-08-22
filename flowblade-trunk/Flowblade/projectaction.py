@@ -156,10 +156,8 @@ class LoadThread(threading.Thread):
         
         # First video load is a media file change and needs to set flag for it
         # whereas other loads clear the flag above.
-        print("self.is_first_video_load ", self.is_first_video_load )
         if self.is_first_video_load == True:
             projectdata.media_files_changed_since_last_save = True
-            print("project.last_save_path", project.last_save_path)
             project.last_save_path = first_video_load_project_save_path # This gets set to the temp file saved to change profile which is not correct.
             GLib.idle_add(_enable_save) # Enable save if project saved before video project load.
 
