@@ -613,7 +613,7 @@ class ClipKeyFrameEditor:
         
     # 'oor' means out-of-range, these are for handling keyframes that are not in
     # current clip range.
-    def _oor_menu_item_activated(self, widget, data):
+    def _oor_menu_item_activated(self, action, variant, data):
         if data == "delete_all_before":
             keep_doing = True
             while keep_doing:
@@ -626,12 +626,18 @@ class ClipKeyFrameEditor:
                 except:
                     keep_doing = False
             self.parent_editor.update_property_value()
+            self.parent_editor.update_slider_value_display(self.current_clip_frame)
+            if self.active_kf_index > len(self.keyframes) - 1:
+                self.active_kf_index = 0
         elif data == "zero_next":
             frame_zero, frame_zero_value, frame_zero_type  = self.keyframes[0]
             frame, value, type = self.keyframes[1]
             self.keyframes.pop(0)
             self.keyframes.insert(0, (frame_zero, value, type))
             self.parent_editor.update_property_value()
+            self.parent_editor.update_slider_value_display(self.current_clip_frame)
+            if self.active_kf_index > len(self.keyframes) - 1:
+                self.active_kf_index = 0
         elif data == "delete_all_after":
             delete_done = False
             for i in range(0, len(self.keyframes)):
@@ -648,6 +654,9 @@ class ClipKeyFrameEditor:
                 if delete_done:
                     break
             self.parent_editor.update_property_value()
+            self.parent_editor.update_slider_value_display(self.current_clip_frame)
+            if self.active_kf_index > len(self.keyframes) - 1:
+                self.active_kf_index = 0
         self.widget.queue_draw()
         
     def _get_menu_item(self, text, callback, data):
@@ -931,33 +940,6 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             active_index = 2
 
         guipopover.add_menu_action_all_items_radio(menu, items_data, "keyframes.typeselect", active_index, callback)
-        """
-        
-        _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
-        _monitorview_menu.append_section(None, _opacity_section)
-        
-        linear_item = Gtk.RadioMenuItem()
-        linear_item.set_label(_("Linear"))
-        if kf_type == appconsts.KEYFRAME_LINEAR:
-            linear_item.set_active(True)
-        linear_item.connect("activate", callback, "linear")
-        linear_item.show()
-        menu.append(linear_item)
-
-        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
-        smooth_item.connect("activate", callback, "smooth")
-        if kf_type == appconsts.KEYFRAME_SMOOTH:
-            smooth_item.set_active(True)
-        smooth_item.show()
-        menu.append(smooth_item)
-
-        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
-        discrete_item.connect("activate", callback, "discrete")
-        if kf_type == appconsts.KEYFRAME_DISCRETE:
-            discrete_item.set_active(True)
-        discrete_item.show()
-        menu.append(discrete_item)
-        """
         
     def _add_geometry_menu_items(self, menu, callback):
         menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
@@ -1125,7 +1107,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
         menu.popup(None, None, None, None, event.button, event.time)
 
-    def _menu_item_activated(self, widget, data):
+    def _menu_item_activated(self, action, variant, data):
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
         elif data == "smooth":
@@ -1141,6 +1123,19 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.queue_draw()
         self.update_property_value()
 
+    def _kf_type_menu_item_activated(self, action, new_value_variant):
+        data = new_value_variant.get_string()
+        
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+        
+        action.set_state(new_value_variant)
+        _kf_popover.hide()
+        
     def _hamburger_pressed(self, launcher, widget, event, data):
 
         global _kf_popover, _kf_menu, _kf_type_submenu
@@ -1148,17 +1143,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
 
         main_section = Gio.Menu.new()
-        """
-            frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
-            
-            active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
-            type_menu = Gtk.Menu()
-            active_type_menu_item.set_submenu(type_menu)
-            self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
-        """
+
         frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
         _kf_type_submenu = guipopover.menu_clear_or_create(_kf_type_submenu)
-        self._create_keyframe_type_submenu(kf_type, _kf_type_submenu, self._menu_item_activated)
+        self._create_keyframe_type_submenu(kf_type, _kf_type_submenu, self._kf_type_menu_item_activated)
         main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
         
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykf", "copy_kf", self._menu_item_activated)
@@ -1171,9 +1159,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         kfs_section = Gio.Menu.new()
         item_text = _("Set Keyframe at Frame 0 to value of next Keyframe")
         if len(self.clip_editor.keyframes) > 1:
-            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self._menu_item_activated)
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self.clip_editor._oor_menu_item_activated)
         else:
-            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self._menu_item_activated, False)
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self.clip_editor._oor_menu_item_activated, False)
         
         item_text = _("Delete all but first Keyframe before Clip Range")
         if before_kfs > 1:
@@ -1192,62 +1180,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_menu.append_section(None, kfs_section)
 
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
-    
-        """
-        menu = buttons_hamburger_menu
-        guiutils.remove_children(menu)
-        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
-        
-        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
-        type_menu = Gtk.Menu()
-        active_type_menu_item.set_submenu(type_menu)
-        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
-        active_type_menu_item.show_all()
-        menu.add(active_type_menu_item)
 
-        item = _get_menu_item("this gets overwritten..twice", self._menu_item_activated, "copy_kf")
-        action = gui.editor_window.ui.get_action_groups()[0].get_action("Copy")
-        item.set_related_action(action)
-        item.set_label(_("Copy Keyframe Value"))
-        menu.add(item)
-        item = _get_menu_item("this gets overwritten..twice", self._menu_item_activated, "paste_kf")
-        action = gui.editor_window.ui.get_action_groups()[0].get_action("Paste")
-        item.set_related_action(action)
-        item.set_label(_("Paste Keyframe Value"))
-        menu.add(item)
-
-        before_kfs = len(self.clip_editor.get_out_of_range_before_kfs())
-        after_kfs = len(self.clip_editor.get_out_of_range_after_kfs())
-
-        if before_kfs > 0 or after_kfs > 0:
-             _add_separator(menu)
-
-        if len(self.clip_editor.keyframes) > 1:
-            active = True
-        else:
-            active = False
-        item = _get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self.clip_editor._oor_menu_item_activated, "zero_next")
-        menu.add(item)
-        item.set_sensitive(active)
-            
-        if before_kfs > 1:
-            active = True
-        else:
-            active = False
-        item = _get_menu_item(_("Delete all but first Keyframe before Clip Range") + " (" + str(before_kfs - 1) + ")", self.clip_editor._oor_menu_item_activated, "delete_all_before")
-        menu.add(item)
-        item.set_sensitive(active)
-        
-        if after_kfs > 0:
-            active = True
-        else:
-            active = False
-        item = _get_menu_item(_("Delete all Keyframes after Clip Range") + " (" + str(after_kfs) + ")", self.clip_editor._oor_menu_item_activated, "delete_all_after")
-        menu.add(item)
-        item.set_sensitive(active)
-            
-        menu.popup(None, None, None, None, event.button, event.time)
-        """
 
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
