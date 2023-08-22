@@ -92,7 +92,9 @@ _kb_shortcuts_popover = None
 _kb_shortcuts_menu = None
 _render_args_popove = None
 _render_args_menu = None
-
+_kf_popover = None
+_kf_menu = None
+    
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
@@ -105,6 +107,8 @@ def add_menu_action(menu, label, item_id, data, callback, active=True, app=None)
         APP().add_action(action)
     else:
         app.add_action(action)
+
+    return action
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
     action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(checked_state))
@@ -891,4 +895,3 @@ def render_args_popover_show(launcher, widget, callback):
     _render_args_menu.append_section(None, reset_section)
     
     _render_args_popover = new_popover(widget, _render_args_menu, launcher)
-

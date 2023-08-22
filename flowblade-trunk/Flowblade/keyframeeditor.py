@@ -29,7 +29,7 @@ of callbacks to parent objects, this makes the design difficult to follow.
 
 import cairo
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, Gio
 from gi.repository import Pango, PangoCairo
 
 import appconsts
@@ -40,6 +40,7 @@ from editorstate import current_sequence
 from editorstate import PROJECT
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import keyevents
 import keyframeeditcanvas
@@ -101,9 +102,12 @@ DISCONNECTED_SIGNAL_HANDLER = -9999999
 # Callbacks to compositeeditor.py, monkeypatched at startup
 _get_current_edited_compositor = None
 
-actions_menu = Gtk.Menu()
 buttons_hamburger_menu = Gtk.Menu()
 keyframe_menu = Gtk.Menu()
+
+_kf_popover = None
+_kf_menu = None
+
 
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
@@ -688,6 +692,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         if show_hamburger:
             self.hamburger_menu = guicomponents.HamburgerPressLaunch(editor_parent._hamburger_pressed)
             self.hamburger_menu.widget.set_margin_top(5)
+            self.hamburger_menu.do_popover_callback = True
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -1120,7 +1125,47 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.queue_draw()
         self.update_property_value()
 
-    def _hamburger_pressed(self, widget, event):
+    def _hamburger_pressed(self, launcher, widget, event, data):
+        
+        print("haloo")
+        global _kf_popover, _kf_menu
+
+        _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
+
+        main_section = Gio.Menu.new()
+        guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykf", "copy_kf", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekf", "paste_kf", self._menu_item_activated)
+        _kf_menu.append_section(None, main_section)
+
+        before_kfs = len(self.clip_editor.get_out_of_range_before_kfs())
+        after_kfs = len(self.clip_editor.get_out_of_range_after_kfs())
+        
+        kfs_section = Gio.Menu.new()
+        item_text = _("Set Keyframe at Frame 0 to value of next Keyframe")
+        if len(self.clip_editor.keyframes) > 1:
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self._menu_item_activated)
+        else:
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.zeronext", "zero_next", self._menu_item_activated, False)
+        
+        item_text = _("Delete all but first Keyframe before Clip Range")
+        if before_kfs > 1:
+            item_text = item_text + " (" + str(before_kfs - 1) + ")"
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.deleteallbefore", "delete_all_before", self.clip_editor._oor_menu_item_activated)
+        else:
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.deleteallbefore", "delete_all_before", self.clip_editor._oor_menu_item_activated, False)
+
+        item_text = _("Delete all Keyframes after Clip Range") 
+        if after_kfs > 0:
+            item_text = item_text + " (" + str(after_kfs) + ")"
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.deleteallafter", "delete_all_after", self.clip_editor._oor_menu_item_activated)
+        else:
+            guipopover.add_menu_action(kfs_section, item_text, "keyframes.deleteallafter", "delete_all_after", self.clip_editor._oor_menu_item_activated, False)
+
+        _kf_menu.append_section(None, kfs_section)
+
+        _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
+    
+        """
         menu = buttons_hamburger_menu
         guiutils.remove_children(menu)
         frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
@@ -1174,7 +1219,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         item.set_sensitive(active)
             
         menu.popup(None, None, None, None, event.button, event.time)
-            
+        """
 
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
