@@ -108,7 +108,10 @@ keyframe_menu = Gtk.Menu()
 _kf_popover = None
 _kf_menu = None
 _kf_type_submenu = None
-
+_kf_right_mouse_popover = None
+_kf_right_mouse_menu = None
+        
+        
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
     """
@@ -1099,14 +1102,23 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.slider_value_changed(adj)
 
     def show_keyframe_menu(self, event, keyframe):
-        frame, value, kf_type = keyframe
+        global _kf_right_mouse_popover, _kf_right_mouse_menu
         
-        menu = keyframe_menu
-        guiutils.remove_children(menu)
+        frame, value, kf_type = keyframe
 
-        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
-        menu.popup(None, None, None, None, event.button, event.time)
+        _kf_right_mouse_menu = guipopover.menu_clear_or_create(_kf_right_mouse_menu)
 
+        main_section = Gio.Menu.new()
+        self._create_keyframe_type_submenu(kf_type, _kf_right_mouse_menu, self._kf_type_menu_item_activated)
+        _kf_right_mouse_menu.append_section(None, main_section)
+
+        rect = guipopover.create_rect(event.x, event.y)
+
+        _kf_right_mouse_popover = Gtk.Popover.new_from_model(self.clip_editor.widget, _kf_right_mouse_menu)
+        _kf_right_mouse_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+        _kf_right_mouse_popover.set_pointing_to(rect) 
+        _kf_right_mouse_popover.show()
+    
     def _menu_item_activated(self, action, variant, data):
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
@@ -1134,7 +1146,12 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
         
         action.set_state(new_value_variant)
-        _kf_popover.hide()
+        
+        try:
+            _kf_popover.hide()
+        except:
+            # This called from the other one.
+            _kf_right_mouse_popover.hide()
         
     def _hamburger_pressed(self, launcher, widget, event, data):
 
