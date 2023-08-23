@@ -1200,9 +1200,9 @@ def replace_media_dialog(media_file, callback):
 
 
     cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-    cancel_b.connect("clicked", lambda w:close_titler())
+    cancel_b.connect("clicked", dialogutils.dialog_destroy)
     replace_b = guiutils.get_sized_button(_("Replace Media"), 150, 32)
-    replace_b.connect("clicked", lambda w:self._save_title_pressed())
+    replace_b.connect("clicked", lambda w: callback(dialog, media_file, file_button.selected_file))
     buttons_row = guiutils.get_right_justified_box([cancel_b, replace_b])
     
     pad = guiutils.get_pad_label(24, 24)
@@ -1220,15 +1220,7 @@ def replace_media_dialog(media_file, callback):
     #dialog.set_default_size(500, 70)
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
-    
-    """
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback)
-    dialog.show_all()
-    """
-    
+        
 def _replace_button_clicked(button, parent, path_label):
 
     dialog = Gtk.FileChooserDialog( _("Select Replament Media"), parent,

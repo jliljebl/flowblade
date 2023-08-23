@@ -514,7 +514,6 @@ def media_file_popover_show(media_file, widget, x, y, callback):
     file_action_section = Gio.Menu.new()
     add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", media_file), callback)
     add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", media_file), callback)
-    add_menu_action(file_action_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", media_file), callback)
     _media_file_menu.append_section(None, file_action_section)
     
     if hasattr(media_file, "container_data"): 
@@ -538,6 +537,7 @@ def media_file_popover_show(media_file, widget, x, y, callback):
     if hasattr(media_file, "container_data") == True and media_file.container_data == None:
         if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
             icon_section = Gio.Menu.new()
+            add_menu_action(icon_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", media_file), callback)
             add_menu_action(icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", media_file), callback)
             _media_file_menu.append_section(None, icon_section)
 

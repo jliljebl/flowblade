@@ -65,6 +65,7 @@ last_media_dir = None
 media_assets = []
 
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
+REPLACE_TEMP_PROJECT = "replace_temp_project.flb"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
     print("Launching Media Relinker")
@@ -72,7 +73,6 @@ def display_linker(filename=NO_PROJECT_AT_LAUNCH):
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
-# -------------------------------------------------------- render thread
 class ProjectLoadThread(threading.Thread):
     def __init__(self, filename):
         threading.Thread.__init__(self)
@@ -361,12 +361,10 @@ class MediaRelinkListView(Gtk.VBox):
 # ----------------------------------------------------------- logic
 class MediaAsset:
 
-    # Default file for missing files to relink
     def __init__(self, orig_path, media_type, media_length=0):
         self.orig_path = orig_path
         self.media_type = media_type
         self.length = media_length
-    # End of Default file for missing files to relink
 
         self.orig_file_exists = os.path.isfile(orig_path)
         if self.media_type == appconsts.IMAGE_SEQUENCE:
@@ -396,9 +394,7 @@ def _update_media_assets():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
         try:
-            # Default file for missing files to relink
             new_assets.append(MediaAsset(media_file.path, media_file.type, media_file.length))
-            # End of Default file for missing files to relink
             asset_paths[media_file.path] = media_file.path
         except:
             print("failed loading:", media_file)
@@ -411,9 +407,7 @@ def _update_media_assets():
                 # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if not(clip.path in asset_paths):
-                        # Default file for missing files to relink
                         new_assets.append(MediaAsset(clip.path, clip.media_type,clip.clip_out - clip.clip_in + 1))  #clip.get_length()))
-                        # End of Default file for missing files to relink
                         asset_paths[clip.path] = clip.path
         # Wipe lumas
         for compositor in seq.compositors:
@@ -452,7 +446,6 @@ def _set_button_pressed():
 
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
-    # End of Default file for missing files to relink
     dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
                                 _select_relink_path_dialog_callback, False, 
                                 media_asset, linker_window, last_media_dir)
@@ -538,9 +531,7 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     global last_media_dir
     last_media_dir = folder
 
-    # Default file for missing files to relink
     linker_window.set_title( folder + " " + file_name )    
-    #End of Default file for missing files to relink
 
     # Relink all the files in a same directory
     for med_asset in media_assets:
@@ -553,7 +544,6 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
             else:
                 med_asset.relink_path = link_path
             linker_window.relink_list.fill_data_model()
-    # End of Relink all the files in a same directory
 
 def _delete_button_pressed():
     media_asset = linker_window.get_selected_media_asset()
@@ -602,7 +592,7 @@ def _save_as_dialog_callback(dialog, response_id):
     
         # Test that saving is not IOError
         try:
-            filehandle = open( target_project.last_save_path, 'w' )
+            filehandle = open(target_project.last_save_path, 'w')
             filehandle.close()
         except IOError as ioe:
             primary_txt = "I/O error({0})".format(ioe.errno)
@@ -643,6 +633,7 @@ def _relink_project_media_paths():
                 clip = track.clips[i]
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if clip.path in relinked_paths:
+                        print(clip.path, relinked_paths[clip.path])
                         clip.path = relinked_paths[clip.path]
 
         # Relink wipe lumas
@@ -772,3 +763,25 @@ class MediaLinkerApp(Gtk.Application):
         
 def _shutdown():
     _app.quit()
+
+
+
+# ---------------------------------------------------------------- replace media_feature
+def replace_single_file(project, old_media_path, replace_media_path):
+    global target_project
+    target_project = project
+    target_project.c_seq = project.sequences[target_project.c_seq_index]
+
+    _update_media_assets()
+
+    for media_asset in media_assets:
+        if media_asset.orig_path == old_media_path:
+            media_asset.relink_path = replace_media_path 
+
+    _relink_project_media_paths()
+
+    temp_saved_project_path = os.path.join(userfolders.get_cache_dir(), REPLACE_TEMP_PROJECT)
+    persistance.save_project(target_project, temp_saved_project_path)
+        
+    return temp_saved_project_path
+

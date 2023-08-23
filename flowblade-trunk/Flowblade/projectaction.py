@@ -1139,9 +1139,13 @@ def delete_media_files(force_delete=False):
 def replace_media_file(media_file):
     dialogs.replace_media_dialog(media_file, _replace_media_callback)
 
-def _replace_media_callback(dialog, response_id):
+def _replace_media_callback(dialog, media_file, replace_file):
     dialog.destroy()
- 
+        
+    temp_saved_project_path = medialinker.replace_single_file(PROJECT(), media_file.path, replace_file)
+
+    actually_load_project(temp_saved_project_path)
+
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.OK:
