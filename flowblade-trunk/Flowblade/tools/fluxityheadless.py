@@ -67,28 +67,30 @@ _frame_range_update_thread = None
 
 # ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
-def clear_flag_files(session_id):
-    ccrutils.clear_flag_files(session_id)
+def clear_flag_files(parent_folder, session_id):
+    ccrutils.clear_flag_files(parent_folder, session_id)
     
-def set_render_data(session_id, video_render_data):
-    ccrutils.set_render_data(session_id, video_render_data)
+def set_render_data(parent_folder, session_id, video_render_data):
+    ccrutils.set_render_data(parent_folder, session_id, video_render_data)
     
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
-def abort_render(session_id):
-    ccrutils.abort_render(session_id)
+def abort_render(parent_folder, session_id):
+    ccrutils.abort_render(parent_folder, session_id)
 
+def write_misc_session_data(parent_folder, session_id, file_name, misc_data):
+    ccrutils.write_misc_session_data(parent_folder, session_id, file_name, misc_data)
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, script, range_in, range_out, profile_desc):
+def main(root_path, session_id, parent_folder, script, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -103,12 +105,12 @@ def main(root_path, session_id, script, range_in, range_out, profile_desc):
 
     repo = mltinit.init_with_translations()
     
-    ccrutils.init_session_folders(session_id)
+    ccrutils.init_session_folders(parent_folder, session_id)
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()
 
-    fluxity_plugin_edit_data = ccrutils.read_misc_session_data(session_id, "fluxity_plugin_edit_data")
+    fluxity_plugin_edit_data = ccrutils.read_misc_session_data(parent_folder, session_id, "fluxity_plugin_edit_data")
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()
@@ -198,7 +200,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         

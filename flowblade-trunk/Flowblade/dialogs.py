@@ -41,6 +41,8 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import panels
+import projectdatavaultgui
+import projectdatavault
 import renderconsumer
 import respaths
 import shortcuts
@@ -59,39 +61,53 @@ def new_project_dialog(callback):
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
 
-    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                         _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
 
     out_profile_combo = guicomponents.get_profiles_combo()
     out_profile_combo.set_selected(default_desc)
-    
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
                                                out_profile_combo.widget,
                                                250)
-
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
     profile_info_box = Gtk.VBox()
     profile_info_box.add(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
-
+    profiles_frame.set_margin_right(18)
+    
     tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
-
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
-
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
+    tracks_frame.set_margin_right(18)
 
-    vbox = guiutils.get_vbox([profiles_frame, tracks_frame], False)
+    vault_combo = projectdatavaultgui.get_vault_select_combo(projectdatavault.get_active_vault_index())
+    add_vault_button = Gtk.Button(label=_("Create New Data Store"))
+    add_vault_button.connect("clicked", lambda w: projectdatavaultgui.show_create_data_dialog(_create_data_store_callback, vault_combo))
+    add_vault_button.set_margin_left(12)
+    vault_row = Gtk.HBox(False, 8)
+    vault_row.pack_start(vault_combo, True, True, 0)
+    vault_row.pack_start(add_vault_button, False, False, 0)
+    
+    vault_vbox = guiutils.get_vbox([vault_row], False)
+    vault_frame = panels.get_named_frame(_("Data Store"), vault_vbox)
+    
+    ok_button = Gtk.Button(label=_("Ok"))
+    ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select, vault_combo))
+    cancel_button = Gtk.Button(label=_("Cancel"))
+    cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select, vault_combo))
+    dialog_buttons_box = dialogutils.get_ok_cancel_button_row(ok_button, cancel_button)
+    dialog_buttons_box.set_margin_top(24)
+        
+    vbox = guiutils.get_vbox([profiles_frame, tracks_frame, vault_frame, dialog_buttons_box], False)
+    guiutils.set_margins(vbox, 12, 12, 12, 12)
 
-    alignment = dialogutils.get_default_alignment(vbox)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_select)
-                   
-    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
+    dialog.set_transient_for(gui.editor_window.window)
+    dialog.set_title(_("New Project"))
+    dialog.set_resizable(False)
+    dialog.add(vbox)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
+
     dialog.show_all()
 
 def _new_project_profile_changed(out_profile_combo, profile_info_box):
@@ -106,6 +122,35 @@ def _new_project_profile_changed(out_profile_combo, profile_info_box):
     profile_info_box.add(info_panel)
     profile_info_box.show_all()
     info_panel.show()
+
+def _create_data_store_callback(dialog, response, widgets):
+    if response != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    # Get and verify vault data.
+    data_folder_button, name_entry, vaults_combo = widgets
+    dir_path = data_folder_button.get_filename()
+    user_visible_name = name_entry.get_text() 
+    dialog.destroy()
+                    
+    if not os.listdir(dir_path):
+        pass
+    else:
+        primary_txt = _("Selected folder was not empty!")
+        secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+        dialogutils.warning_message(primary_txt, secondary_txt, None)
+        return
+
+    if len(user_visible_name) == 0:
+        user_visible_name = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+
+    # Add new vault
+    vaults_obj = projectdatavault.get_vaults_object()
+    vaults_obj.add_user_vault(user_visible_name, dir_path)
+    vaults_obj.save()
+
+    projectdatavaultgui.fill_vaults_combo(vaults_combo, len(vaults_obj.user_vaults_data))
 
 def change_profile_project_dialog(project, callback):
     project_name = project.name.rstrip(".flb")
@@ -205,7 +250,7 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 
     new_file_frame = panels.get_named_frame(_("New Project File"), new_file_vbox)
 
-    save_profile_info =  guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
+    save_profile_info = guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
 
     vbox = guiutils.get_vbox([info_label, guiutils.pad_label(2, 24), text_panel, \
                               guiutils.pad_label(2, 24), save_profile_info, guiutils.pad_label(2, 24), \

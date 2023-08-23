@@ -48,6 +48,25 @@ def panel_ok_dialog(title, panel):
     dialog.connect('response', dialog_destroy)
     dialog.show_all()
 
+def panel_ok_cancel_dialog(title, panel, accept_text, callback, data=None):
+    dialog = Gtk.Dialog(title, None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                       (_("Cancel"), Gtk.ResponseType.CANCEL,
+                       accept_text, Gtk.ResponseType.ACCEPT))
+        
+    alignment = get_default_alignment(panel)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+    default_behaviour(dialog)
+
+    if data == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, data)
+
+    dialog.show_all()
+    
 def no_button_dialog(title, panel):
     dialog = Gtk.Dialog(title, None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
@@ -190,8 +209,9 @@ def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
     
     return (dialog, entry)
 
-def get_default_alignment(panel):
-    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
+def get_default_alignment(panel): # Ok, why are we doing new Gtk.Frame here and then removing shadow?
+                                  # We may need to change this for Gtk4.
+    alignment = Gtk.Frame.new("")
     alignment.add(panel)
     alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 12, 24, 12, 18)
@@ -211,7 +231,20 @@ def set_outer_margins(cont):
 def set_default_behaviour(dialog):
     dialog.set_default_response(Gtk.ResponseType.OK)
     dialog.set_resizable(False)
-    
+
+def get_ok_cancel_button_row(ok_button, cancel_button):
+    lbox = Gtk.HBox(True, 2)
+    lbox.pack_start(cancel_button, True, True, 0)
+    lbox.pack_start(ok_button, True, True, 0)
+    cancel_button.set_size_request(88, 3)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    hbox.pack_start(lbox, False, False, 0)
+
+    return hbox
+
+
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
     GLib.timeout_add(int(delay * 1000), _window_destroy_event, window)

@@ -39,28 +39,29 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     fraction, elapsed = msg.split(" ")
     return (fraction, elapsed)
     
-def abort_render(session_id):
-    ccrutils.abort_render(session_id)
+def abort_render(parent_folder, session_id):
+    ccrutils.abort_render(parent_folder, session_id)
 
-def delete_session_folders(session_id):
-     ccrutils.delete_internal_folders(session_id)
+def delete_session_folders(parent_folder, session_id):
+     ccrutils.delete_internal_folders(parent_folder, session_id)
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, media_file_id, proxy_w, proxy_h, enc_index, \
+def main(root_path, parent_folder, session_id, media_file_id, proxy_w, proxy_h, enc_index, \
             proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path):
     
-    mltheadlessutils.mlt_env_init(root_path, session_id)
+    # Here we are not using render data item, returned by mlt_env_init()
+    mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
     _render_thread = ProxyClipRenderThread(media_file_id, proxy_w, proxy_h, enc_index, 
@@ -97,7 +98,6 @@ class ProxyClipRenderThread(threading.Thread):
             proxy_profile = mltprofiles.get_profile(self.proxy_profile_desc)
             
             # App wrote the temp profile when launching proxy render.
-            # NOTE: this needs to be created here for future
             proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
             proxy_profile = mlt.Profile(proxy_profile_path)
         

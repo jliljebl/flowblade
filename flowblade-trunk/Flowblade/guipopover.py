@@ -92,7 +92,9 @@ _kb_shortcuts_popover = None
 _kb_shortcuts_menu = None
 _render_args_popove = None
 _render_args_menu = None
-
+_kf_popover = None
+_kf_menu = None
+    
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
@@ -105,6 +107,8 @@ def add_menu_action(menu, label, item_id, data, callback, active=True, app=None)
         APP().add_action(action)
     else:
         app.add_action(action)
+
+    return action
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
     action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(checked_state))
@@ -385,7 +389,7 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
     # WE are getting gtk warning here, look to fix
     _opacity_section = menu_clear_or_create(_opacity_section)
     _opacity_submenu = menu_clear_or_create(_opacity_submenu)
-    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), (_("20%"), "6")]
+    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
     active_index = current_sequence().get_mix_index()
     add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
     _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
@@ -892,4 +896,3 @@ def render_args_popover_show(launcher, widget, callback):
     _render_args_menu.append_section(None, reset_section)
     
     _render_args_popover = new_popover(widget, _render_args_menu, launcher)
-

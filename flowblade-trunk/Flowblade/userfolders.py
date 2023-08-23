@@ -17,17 +17,21 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
+
 from gi.repository import GLib
 import os
 import threading
 
 import appconsts
+import projectdatavault
 
 _init_error = None
 
 _xdg_config_dir = None
 _xdg_data_dir = None
 _xdg_cache_dir = None
+
 
 # --------------------------------------------------------- interface
 def init():
@@ -65,8 +69,51 @@ def get_data_dir():
 def get_cache_dir():
     return _xdg_cache_dir + "/"
 
-def get_render_dir():
+def get_render_dir(force_legacy=False):
+    if projectdatavault.vault_data_exists_for_project() == False or force_legacy == True:
+        return get_data_dir() + appconsts.RENDERED_CLIPS_DIR + "/"
+    
+    return projectdatavault.get_render_folder() 
+
+def get_legacy_render_dir():
+    # For accessing legacy render data created prior to 2.12.
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
+
+def get_container_clips_dir():
+    if projectdatavault.vault_data_exists_for_project() == False:
+        return get_data_dir() + appconsts.CONTAINER_CLIPS_DIR + "/"
+
+    return projectdatavault.get_containers_folder()
+    
+def get_container_clips_unrendered_dir():
+    if projectdatavault.vault_data_exists_for_project() == False:
+        return get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED + "/"
+
+    return projectdatavault.get_container_clips_unrendered_folder()
+    
+def get_proxies_dir():
+    if projectdatavault.vault_data_exists_for_project() == False:
+        return get_render_dir() + appconsts.PROXIES_DIR
+
+    return projectdatavault.get_proxies_folder()
+
+def get_proxies_dir():
+    return projectdatavault.get_ingest_folder()
+    
+def get_audio_levels_dir():
+    if projectdatavault.vault_data_exists_for_project() == False:
+        return get_cache_dir() + appconsts.AUDIO_LEVELS_DIR 
+
+    return projectdatavault.get_audio_levels_folder()
+    
+def get_thumbnail_dir():
+    if projectdatavault.vault_data_exists_for_project() == False:
+        return get_cache_dir() + appconsts.THUMBNAILS_DIR + "/"
+ 
+    return projectdatavault.get_thumbnails_folder()
+
+def get_temp_render_dir():
+    return get_cache_dir() + appconsts.TEMP_RENDER_DIR 
 
 def get_hidden_screenshot_dir_path():
     return get_cache_dir() + "screenshot/"
@@ -93,6 +140,12 @@ def _maybe_create_xdg_dirs():
     # Data individual folders
     if not os.path.exists(get_data_dir() + appconsts.USER_PROFILES_DIR):
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
+
+    """
+    Legacy data folders where data was kept prior to 2.12.
+    These can be accessed if existing after 2.12, but will not be created anymore
+    when applications are installed fresh.
+    
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
     if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
@@ -101,6 +154,8 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
     if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
         os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
+    """
+
     if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
         os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
 
@@ -113,12 +168,20 @@ def _maybe_create_xdg_dirs():
     # Cache individual folders
     if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUTOSAVE_DIR)
+    """
+    Legacy data folder.
+    
     if not os.path.exists(get_cache_dir() + appconsts.THUMBNAILS_DIR):
         os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
+    """
     if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
         os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
+    """
+    Legacy data folder.
+    
     if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
+    """
     if not os.path.exists(get_cache_dir() + appconsts.TRIM_VIEW_DIR):
         os.mkdir(get_cache_dir() + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.BATCH_DIR):
@@ -127,3 +190,5 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_hidden_screenshot_dir_path())
     if not os.path.exists(get_cache_dir() + appconsts.SCRIP_TOOL_DIR):
         os.mkdir(get_cache_dir() + appconsts.SCRIP_TOOL_DIR)
+    if not os.path.exists(get_temp_render_dir()):
+        os.mkdir(get_temp_render_dir())

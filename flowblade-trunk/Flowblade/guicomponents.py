@@ -185,11 +185,11 @@ class ImageTextTextListView(Gtk.VBox):
 # ------------------------------------------------- item lists
 class TextTextListView(Gtk.VBox):
     """
-    GUI component displaying list with columns: img, text, text
+    GUI component displaying list with columns: text, text
     Middle column expands.
     """
 
-    def __init__(self):
+    def __init__(self,  headers_visible=False, header1="text", header2="text2"):
         GObject.GObject.__init__(self)
 
        # Datamodel: icon, text, text
@@ -203,17 +203,18 @@ class TextTextListView(Gtk.VBox):
         # View
         self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
-        self.treeview.set_headers_visible(False)
+        self.treeview.set_headers_visible(headers_visible)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
 
         # Column views
-        self.text_col_1 = Gtk.TreeViewColumn("text1")
-        self.text_col_2 = Gtk.TreeViewColumn("text2")
+        self.text_col_1 = Gtk.TreeViewColumn(header1)
+        self.text_col_2 = Gtk.TreeViewColumn(header2)
 
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()
         self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+        self.text_rend_1.set_property("font", "Bold Sans 12")
 
         self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)

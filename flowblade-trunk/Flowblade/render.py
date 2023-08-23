@@ -377,7 +377,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
-        args = ("session_id:" + str(session_id), 
+        args = ("session_id:" + str(session_id),
                 "speed:" + str(speed), 
                 "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
@@ -504,7 +504,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     folder = userfolders.get_render_dir()
 
     file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    write_file = folder + "/"+ file_name + file_ext
+    write_file = folder + file_name + file_ext
 
     # Render consumer
     consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)

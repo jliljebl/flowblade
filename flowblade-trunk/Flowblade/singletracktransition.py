@@ -604,7 +604,7 @@ class ReRenderderAllWindow:
         profile = PROJECT().profile
         folder = userfolders.get_render_dir()
         file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-        self.write_file = folder + "/"+ file_name + file_ext
+        self.write_file = folder + file_name + file_ext
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)
         
         if clip.rendered_type > appconsts.RENDERED_COLOR_DIP:

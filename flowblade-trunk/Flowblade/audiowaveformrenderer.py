@@ -49,6 +49,7 @@ import editorstate
 import mltinit
 import mltprofiles
 import processutils
+import projectdatavault
 import renderconsumer
 import respaths
 import translations
@@ -138,7 +139,7 @@ def launch_audio_levels_rendering(file_names):
     single_render_launch_thread.start()
 
 def _get_levels_file_path(media_file_path, profile):
-    return userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
+    return userfolders.get_audio_levels_dir() + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
  
 
 class AudioRenderLaunchThread(threading.Thread):
@@ -148,11 +149,13 @@ class AudioRenderLaunchThread(threading.Thread):
         self.profile_desc = profile_desc
 
     def run(self):
+        project_data_path = projectdatavault.get_project_data_folder()
+        
         # Launch render process and wait for it to end
         FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
         # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
-                  self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
+                  self.rendered_media, self.profile_desc, respaths.ROOT_PATH, project_data_path], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
         self.process.wait()
 
@@ -175,7 +178,9 @@ def main():
     
     # Set folders paths
     userfolders.init()
-    
+    project_data_path = sys.argv[4]
+    projectdatavault.init(project_data_path)
+
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     

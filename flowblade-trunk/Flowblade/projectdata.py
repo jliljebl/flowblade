@@ -49,7 +49,6 @@ SAVEFILE_VERSION = 5 # This has freezed at 5 for long time,
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
-PROXIES_DIR = "/proxies/"
  
 # Project events
 EVENT_CREATED_BY_NEW_DIALOG = 0
@@ -98,6 +97,9 @@ class Project:
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
 
+        self.vault_folder = None
+        self.project_data_id = None
+
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -109,7 +111,17 @@ class Project:
         self.c_bin = self.bins[0]
         
         self.init_thumbnailer()
-    
+
+    def create_vault_folder_data(self, vault_dir):
+        # This is called just once when Project is created for the first time.
+        # All versions of project that are saved after this is called one time 
+        # on creation time use this same data and therefore save project data in the same place.
+        self.vault_folder = vault_dir
+        
+        md_key = str(datetime.datetime.now()) + str(os.urandom(16))
+        md_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
+        self.project_data_id = md_str
+
     def init_thumbnailer(self):
         global thumbnailer
         thumbnailer = Thumbnailer()
@@ -415,7 +427,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
+        return str(userfolders.get_proxies_dir() + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
         folder, file_name = os.path.split(self.path)
@@ -423,7 +435,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/"+ appconsts.PROXIES_DIR + md_str + "/" + file_name)
+        return str(userfolders.get_proxies_dir() + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
@@ -517,7 +529,7 @@ class Thumbnailer:
         """
         # Get data
         md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-        thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+        thumbnail_path = userfolders.get_thumbnail_dir() + md_str +  ".png"
 
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 

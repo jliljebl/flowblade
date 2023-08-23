@@ -78,6 +78,7 @@ import projectdata
 import projectinfogui
 import projectmediaimport
 import propertyparse
+import projectdatavault
 import proxyediting
 import render
 import renderconsumer
@@ -178,7 +179,7 @@ class LoadThread(threading.Thread):
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
 
-        if self.is_autosave_load == False: # project loaded with autosave needs to keep its last_save_path data.
+        if self.is_autosave_load == False and self.is_first_video_load == False: # project loaded with autosave needs to keep its last_save_path data.
             # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
             if self.filename != editorstate.project.last_save_path:
                 print("Project file moved since last save, save with updated last_save_path data.")
@@ -432,7 +433,7 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         first_video_load_project_save_path = PROJECT().last_save_path
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
-        
+
         actually_load_project(path, False, True)
 
 def _load_pulse_bar():
@@ -448,17 +449,23 @@ def _enable_save():
 def new_project():
     dialogs.new_project_dialog(_new_project_dialog_callback)
 
-def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_select):
+def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_select, vault_combo):
 
     v_tracks, a_tracks = tracks_select.get_tracks()
     
     if response_id == Gtk.ResponseType.ACCEPT:
         profile_name = profile_combo.get_selected()
         profile_index = mltprofiles.get_index_for_name(profile_name)
-        app.new_project(profile_index, v_tracks, a_tracks)
+        vault_folder = projectdatavault.get_vault_folder_for_index(vault_combo.get_active())
+
         dialog.destroy()
+                
+        app.new_project(profile_index, v_tracks, a_tracks)
+
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
+        PROJECT().create_vault_folder_data(vault_folder)
+        projectdatavault.create_project_data_folders()
     else:
         dialog.destroy()
 
@@ -486,7 +493,10 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
             pass
         elif response_id ==  Gtk.ResponseType.YES:# "Save"
             if editorstate.PROJECT().last_save_path != None:
+                
                 persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+                
+                projectdatavault.project_saved(PROJECT().last_save_path)
             else:
                 dialogutils.warning_message(_("Project has not been saved previously"), 
                                         _("Save project with File -> Save As before closing."),
@@ -525,6 +535,8 @@ def _save_project_in_last_saved_path():
     try:
         
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
+        print("_save_project_in_last_saved_path",  PROJECT().last_save_path)
+        projectdatavault.project_saved( PROJECT().last_save_path)
         
     except IOError as ioe:
         updater.set_info_icon(None)
@@ -569,7 +581,9 @@ def _save_as_dialog_callback(dialog, response_id):
         try:
             
             persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
-            
+            print("_save_as_dialog_callback")
+            projectdatavault.project_saved( PROJECT().last_save_path)
+        
         except IOError as ioe:
             dialog.destroy()
             updater.set_info_icon(None)
@@ -630,7 +644,8 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         PROJECT().name  = name
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
-
+        print("_change_project_profile_callback")
+            
         project_event = projectdata.ProjectEvent(projectdata.EVENT_PROFILE_CHANGED_SAVE, str(profile.description()))
         PROJECT().events.append(project_event)
         
@@ -679,6 +694,8 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
     elif response_id ==  Gtk.ResponseType.YES:# "Save"
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+            projectdatavault.project_saved( PROJECT().last_save_path)
+            print("_open_recent_shutdown_dialog_callback")
         else:
             dialogutils.warning_message(_("Project has not been saved previously"), 
                                     _("Save project with File -> Save As before closing."),
@@ -1338,7 +1355,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
     uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    write_file = folder + "/"+ uuid_str + ".xml"
+    write_file = folder + uuid_str + ".xml"
 
     dialog.destroy()
     
@@ -1395,7 +1412,7 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
 
@@ -1416,7 +1433,7 @@ def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_en
 
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
 
@@ -1443,7 +1460,7 @@ def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_ent
     
     media_name = name_entry.get_text()
     folder = userfolders.get_render_dir()
-    write_file = folder + "/"+ media_name + ".xml"
+    write_file = folder + media_name + ".xml"
 
     dialog.destroy()
     

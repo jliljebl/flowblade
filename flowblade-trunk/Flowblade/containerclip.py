@@ -349,7 +349,7 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest()
     # CACHE
-    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
+    unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
     container_clip_data.unrendered_media = unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
@@ -374,7 +374,7 @@ def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, cont
     # add a rendered cidoa as new media item.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
-    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
+    unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
     
     container_data.unrendered_media = unrendered_clip_path
