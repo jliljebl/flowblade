@@ -1161,7 +1161,14 @@ def replace_media_file(media_file):
 
 def _replace_media_callback(dialog, media_file, replace_file):
     dialog.destroy()
-        
+    
+    if media_file.type != sequence.get_media_type(replace_file):
+        primary_txt = _("Cannot complete media replace action")
+        secondary_txt = _("Original and replace media are not of the same media type.")
+        parent_window = gui.editor_window.window
+        dialogutils.info_message(primary_txt, secondary_txt, parent_window)
+        return
+
     temp_saved_project_path = medialinker.replace_single_file(PROJECT(), media_file.path, replace_file)
     actually_load_project(temp_saved_project_path, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=replace_file)
 
