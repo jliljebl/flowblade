@@ -258,7 +258,14 @@ class Vaults:
             
     def get_active_vault_index(self):
         return self.active_vault
+
+    def get_user_vault_folder_name(self, vault_path):
+        for vault_data in self.user_vaults_data:
+            if vault_data["vault_path"] == vault_path:
+                return vault_data["name"]
         
+        return None 
+
     def save(self):
         vaults_info_file_path = get_vaults_info_path()
         with atomicfile.AtomicFileWriter(vaults_info_file_path, "wb") as afw:

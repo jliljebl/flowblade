@@ -123,8 +123,11 @@ class AbstractDataStoreWindow(Gtk.Window):
 
     def __init__(self):
         GObject.GObject.__init__(self)
+        
+        self.default_vault_name = _("Default XDG Data Store")
     
     def folder_properties_panel(self, folder_handle):
+        
         info = folder_handle.data_folders_info()
         
         vbox = Gtk.VBox(False, 2)
@@ -192,8 +195,6 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
 
     def __init__(self):
         AbstractDataStoreWindow.__init__(self)
-
-        self.default_vault_name = _("Default XDG Data Store")
 
         self.view_vault_index = projectdatavault.get_vaults_object().get_active_vault_index()
 
@@ -670,7 +671,27 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         data_folder_path = projectdatavault.get_project_data_folder()
         folder_handle = projectdatavault.ProjectDataFolderHandle(data_folder_path)
 
-        vbox = self.folder_properties_panel(folder_handle)
+        vbox = Gtk.VBox(False, 2)
+
+        if PROJECT().vault_folder == projectdatavault.get_default_vault_folder():
+            vault_name = self.default_vault_name 
+        else:
+            vaults = projectdatavault.get_vaults_object()
+            vault_name = vaults.get_user_vault_folder_name(PROJECT().vault_folder)
+            if vault_name == None:
+                vault_name = _("Project Vault Not Active")
+        store_name_label = guiutils.bold_label(_("Project Data Store:"))
+        store_name_label.set_margin_right(4)
+        row = guiutils.get_left_justified_box([store_name_label, Gtk.Label(label=vault_name)])
+        vbox.pack_start(row, False, False, 0)
+
+        path_label = guiutils.bold_label(_("Data Store Path:"))
+        path_label.set_margin_right(4)
+        row = guiutils.get_left_justified_box([path_label, Gtk.Label(label=PROJECT().vault_folder)])
+        row.set_margin_bottom(12)
+        vbox.pack_start(row, False, False, 0)
+
+        vbox.pack_start(self.folder_properties_panel(folder_handle), False, False, 0)
 
         close_button = Gtk.Button(_("Close"))
         close_button.connect("clicked", lambda w: _close_info_window())
@@ -688,8 +709,7 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Current Project Data Info"))
         self.connect("delete-event", lambda w, e:_close_info_window())
-        
+
         self.add(pane)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
-        
