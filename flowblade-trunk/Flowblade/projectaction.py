@@ -211,7 +211,7 @@ class LoadThread(threading.Thread):
             media_file.icon_path = icon_path
             media_file.create_icon()
             
-            tlinewidgets.update_clip_thumb_nail(media_file)
+            tlinewidgets.update_clip_thumbnail(media_file)
 
             gui.media_list_view.widget.queue_draw()
             updater.repaint_tline()

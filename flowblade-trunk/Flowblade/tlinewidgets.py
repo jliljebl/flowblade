@@ -399,7 +399,7 @@ def load_icons_and_set_colors():
 
     FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
 
-def update_clip_thumb_nail(media_file):
+def update_clip_thumbnail(media_file):
     global clip_thumbnails
 
     clip_thumbnails[media_file.path] = media_file.icon
