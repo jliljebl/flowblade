@@ -84,6 +84,7 @@ import render
 import renderconsumer
 import rendergui
 import sequence
+import tlinewidgets
 import undo
 import updater
 import userfolders
@@ -112,7 +113,11 @@ class LoadThread(threading.Thread):
         self.block_recent_files = block_recent_files
         self.is_first_video_load = is_first_video_load
         self.is_autosave_load = is_autosave_load
+        self.replace_media_file_path = None
         threading.Thread.__init__(self)
+
+    def set_replace_media_path(self, replace_media_file_path):
+        self.replace_media_file_path = replace_media_file_path
 
     def run(self):
         ticker = utils.Ticker(_load_pulse_bar, 0.15)
@@ -197,6 +202,19 @@ class LoadThread(threading.Thread):
         # Show info on killed compositors.
         if persistance.dead_compositors > 0:
             dialogs.show_dead_compositors(persistance.dead_compositors)
+        
+        # Update icons for 'replace media' feature.
+        if self.replace_media_file_path != None: 
+            (icon_path, length, info) = projectdata.thumbnailer.write_image(self.replace_media_file_path)
+            media_file = PROJECT().get_media_file_for_path(self.replace_media_file_path)
+            media_file.info = info
+            media_file.icon_path = icon_path
+            media_file.create_icon()
+            
+            tlinewidgets.update_clip_thumb_nail(media_file)
+
+            gui.media_list_view.widget.queue_draw()
+            updater.repaint_tline()
 
     def _exit_on_file_not_found_error(self, e, ticker):
         print("LoadThread.run() - FileProducerNotFoundError")
@@ -512,7 +530,7 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
-def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
+def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=None):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
     updater.set_info_icon(Gtk.STOCK_OPEN)
 
@@ -520,6 +538,8 @@ def actually_load_project(filename, block_recent_files=False, is_first_video_loa
     persistance.load_dialog = dialog
 
     load_launch = LoadThread(dialog, filename, block_recent_files, is_first_video_load, is_autosave_load)
+    if replace_media_file != None:
+        load_launch.set_replace_media_path(replace_media_file_path)
     load_launch.start()
 
 def save_project():
@@ -1143,9 +1163,9 @@ def _replace_media_callback(dialog, media_file, replace_file):
     dialog.destroy()
         
     temp_saved_project_path = medialinker.replace_single_file(PROJECT(), media_file.path, replace_file)
+    actually_load_project(temp_saved_project_path, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=replace_file)
 
-    actually_load_project(temp_saved_project_path)
-
+    
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.OK:
