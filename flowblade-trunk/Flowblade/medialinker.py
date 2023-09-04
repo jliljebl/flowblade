@@ -770,7 +770,6 @@ def _shutdown():
 def replace_single_file(project, old_media_path, replace_media_path):
     global target_project
     target_project = project
-    target_project.c_seq = project.sequences[target_project.c_seq_index]
 
     _update_media_assets()
 

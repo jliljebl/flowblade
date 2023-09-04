@@ -1200,7 +1200,7 @@ def replace_media_dialog(media_file, callback):
 
 
     cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-    cancel_b.connect("clicked", dialogutils.dialog_destroy)
+    cancel_b.connect("clicked", lambda w: dialogutils.dialog_destroy(dialog, None))
     replace_b = guiutils.get_sized_button(_("Replace Media"), 150, 32)
     replace_b.connect("clicked", lambda w: callback(dialog, media_file, file_button.selected_file))
     buttons_row = guiutils.get_right_justified_box([cancel_b, replace_b])
