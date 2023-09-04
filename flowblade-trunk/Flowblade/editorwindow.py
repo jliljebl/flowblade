@@ -984,12 +984,12 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='LogClipRange'/>
                     <separator/>
-                    <menuitem action='ProjectDataInfo'/>
-                    <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
                     <separator/>
                     <menuitem action='ChangeProfile'/>
+                    <separator/>
+                    <menuitem action='ProjectDataInfo'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
                 </menu>
