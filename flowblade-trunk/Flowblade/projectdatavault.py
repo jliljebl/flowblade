@@ -216,6 +216,20 @@ def project_saved(project_path):
         write_file = afw.get_file()
         pickle.dump(savefiles_list, write_file)
 
+def delete_unsaved_data_folders():
+    vault_handle = VaultDataHandle(get_active_vault_folder())
+    vault_handle.create_data_folders_handles()
+    
+    non_saved = []
+    for folder_handle in vault_handle.data_folders:
+        path, s_times, s_data = folder_handle.get_save_info()
+        if path == None:
+            non_saved.append(folder_handle)
+    
+    for folder_handle in non_saved:
+        print("Deleting non-saved project data folder", folder_handle.data_folder_path)
+        folder_handle.destroy_data()
+
 
 # ---------------------------------------------------- handle classes
 class Vaults:
@@ -306,7 +320,7 @@ class VaultDataHandle:
 
         return (VAULT_IS_VALID, None)
 
-
+    
 class ProjectDataFolderHandle:
     def __init__(self, path):
         self.data_folder_path = path
@@ -381,6 +395,14 @@ class ProjectDataFolderHandle:
         return PROJECT_FOLDER_IS_VALID
 
     def destroy_data(self):
+        # Only agree to destroy valid or empty folders.
+        folder_state = self.is_valid_project_folder()
+        if folder_state == PROJECT_FOLDER_HAS_MISSING_FOLDERS or \
+           folder_state == PROJECT_FOLDER_HAS_MISSING_SAVE_FILE_DATA or \
+           folder_state == PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS:
+           print("Trying to destroy non-project data folder!!!!", self.data_folder_path)
+           return
+
         #print("deleting", self.data_folder_path)
         self.destroy_recursively(self.data_folder_path)
         #print("removing data dir", self.data_folder_path)
