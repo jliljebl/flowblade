@@ -43,6 +43,7 @@ import mediaplugin
 import utils
 import respaths
 import tlinewidgets
+import tlineypage
 
 page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
                  # so use this to have page size
@@ -120,8 +121,8 @@ def refresh_player(e):
 # --------------------------------- window 
 def window_resized():
     try:
-        # Resize track heights so that all tracks are displayed
-        current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+        # Set page offset.
+        tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
         
         # Place clips in the middle of timeline canvas after window resize
         tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
@@ -131,6 +132,7 @@ def window_resized():
 
         return False
     except:
+        # Sometimes allotion might not be available.
         GLib.timeout_add(200, window_resized)
         print("window resized FAILED")
         return False
@@ -356,9 +358,10 @@ def set_timeline_height():
     if set_v_paned == True:
         new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
         gui.editor_window.app_v_paned.set_position(new_pos)
-    
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+
+    tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+
     gui.tline_column.init_listeners()
     repaint_tline()
 

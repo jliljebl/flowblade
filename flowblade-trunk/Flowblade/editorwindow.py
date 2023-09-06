@@ -640,7 +640,7 @@ class EditorWindow:
                           editevent.tline_media_drop)
 
         # Y Scroll
-        self.tline_y_scroll = tlinewidgets.TimeLineYScroll()
+        self.tline_y_scroll = tlinewidgets.TimeLineYPage()
 
         # Create tool dock if needed
         if editorpersistance.prefs.tools_selection != appconsts.TOOL_SELECTOR_IS_MENU:

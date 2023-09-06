@@ -106,7 +106,7 @@ MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
 
 # Available tracks maximum for Flowblade
-MAX_TRACKS = 9
+MAX_TRACKS = 21
 INIT_V_TRACKS = 5
 INIT_A_TRACKS = 4
 

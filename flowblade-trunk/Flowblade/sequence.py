@@ -35,6 +35,7 @@ import mltfilters
 import mlttransitions
 import mltrefhold
 import patternproducer
+import tlineypage
 import utils
 
 # Media types for tracks or clips
@@ -329,7 +330,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def maximize_video_tracks_height(self, allocation):
         self.minimize_tracks_height()
@@ -337,7 +338,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def maximize_audio_tracks_height(self, allocation):
         self.minimize_tracks_height()
@@ -345,7 +346,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def get_tracks_height(self):
         h = 0

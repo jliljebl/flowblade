@@ -58,6 +58,8 @@ import updater
 M_PI = math.pi
 
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initialization, so value here is irrelevant.
+                 # This ia a variable now not 
+page_y_off = 0
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
@@ -459,7 +461,7 @@ def set_ref_line_y(allocation):
     x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
     centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
     global REF_LINE_Y
-    REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h)
+    REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h) + page_y_off
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
@@ -2814,7 +2816,7 @@ class TimeLineFrameScale:
         return grad
 
 
-class TimeLineYScroll:
+class TimeLineYPage:
     """
     GUI component for displaying and editing track parameters.
     """
