@@ -219,7 +219,7 @@ def project_saved(project_path):
 def delete_unsaved_data_folders():
     vault_handle = VaultDataHandle(get_active_vault_folder())
     vault_handle.create_data_folders_handles()
-    
+
     non_saved = []
     for folder_handle in vault_handle.data_folders:
         path, s_times, s_data = folder_handle.get_save_info()
@@ -236,7 +236,7 @@ class Vaults:
     def __init__(self):
         self.active_vault = DEFAULT_VAULT
         self.user_vaults_data = []
-    
+
     def add_user_vault(self, name, vault_path):
         new_vault_data = {"name":name, "vault_path":vault_path, "creation_time":datetime.datetime.now()}
         self.user_vaults_data.append(new_vault_data)

@@ -1091,7 +1091,7 @@ def _app_destroy():
     except:
         print("Delete autosave file FAILED!")
 
-    # Now that autosave file is deleted, the data store folder contents for unsaved
+    # Now that autosave file is deleted, the data folder contents for unsaved
     # projects are now unreachable and can be destoyed.
     projectdatavault.delete_unsaved_data_folders()
 
