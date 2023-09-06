@@ -85,6 +85,7 @@ MARK_LINE_WIDTH = 5
 COLUMN_WIDTH = 124 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
+Y_SCROLL_WIDTH = 19
 COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
@@ -121,6 +122,7 @@ TRACK_ALL_ON_A_ICON = None
 FILTER_CLIP_ICON = None
 VIEW_SIDE_ICON = None
 INSERT_ARROW_ICON = None
+INSERT_ARROW_ICON_UP = None
 AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
@@ -273,9 +275,12 @@ TRACK_NAME_COLOR = (0.0,0.0,0.0)
 TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
 TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
 
+# Not orange anymote, huh.
 TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
 TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
 
+Y_SCROLL_BG = (0.215, 0.215, 0.215)
+ 
 DARK_THEME_COLUMN_BG = ((62.0/255.0), (62.0/255.0), (62.0/255.0))
 
 LIGHT_MULTILPLIER = 1.14
@@ -330,7 +335,7 @@ clip_thumbnails = {}
 # ------------------------------------------------------------------- module functions
 def load_icons_and_set_colors():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
-    COMPOSITOR_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
+    COMPOSITOR_ICON, INSERT_ARROW_ICON, INSERT_ARROW_ICON_UP, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
     LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
@@ -381,6 +386,7 @@ def load_icons_and_set_colors():
     MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
     INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
+    INSERT_ARROW_ICON_UP = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_fb.png")
     BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
     BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
 
@@ -2806,6 +2812,72 @@ class TimeLineFrameScale:
             grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
         
         return grad
+
+
+class TimeLineYScroll:
+    """
+    GUI component for displaying and editing track parameters.
+    """
+
+    def __init__(self):#, active_listener, center_listener, double_click_listener):
+        # Init widget
+        self.widget = cairoarea.CairoDrawableArea2( Y_SCROLL_WIDTH, 
+                                                    HEIGHT, 
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        
+        self.inactive = True
+ 
+        #self.double_click_listener = double_click_listener       
+        #self.active_listener = active_listener
+        #self.center_listener = center_listener
+        #self.init_listeners()
+
+    # --------------------------------------------- PRESS
+    def _press_event(self, event):
+        if event.button == 1 or event.button == 3:
+            if not timeline_visible():
+                updater.display_sequence_in_monitor()
+                return
+            trimmodes.set_no_edit_trim_mode()
+            frame = current_sequence().get_seq_range_frame(get_frame(event.x))
+            PLAYER().seek_frame(frame)
+            self.drag_on = True
+
+
+    # --------------------------------------------- DRAW
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        # Draw bg
+        cr.set_source_rgb(*Y_SCROLL_BG)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        h_half = (h - 2) // 2
+        
+        rect = (0, 1, w, h_half)
+        self.draw_edge(cr, rect)
+
+        h_half = (h - 2) // 2
+        rect = (0, 1 + h_half, w, h_half)
+        self.draw_edge(cr, rect)
+
+        cr.set_source_surface(INSERT_ARROW_ICON_UP, 3, h_half // 2 - 2)
+        cr.paint()
+        
+        cr.set_source_surface(INSERT_ARROW_ICON, 3, h_half + h_half // 2 - 2)
+        cr.paint()
+
+        #if self.inactive == True:
+        #    cr.set_source_rgba(0.5, 0.5, 0.5, 0.5)
+        #    cr.rectangle(0, 0, w, h)
+        #    cr.fill()
+
+    def draw_edge(self, cr, rect):
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0.105, 0.105, 0.105)
+        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
+        cr.stroke()
 
 
 class KFToolFrameScale:

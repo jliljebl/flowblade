@@ -639,6 +639,9 @@ class EditorWindow:
         dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop,
                           editevent.tline_media_drop)
 
+        # Y Scroll
+        self.tline_y_scroll = tlinewidgets.TimeLineYScroll()
+
         # Create tool dock if needed
         if editorpersistance.prefs.tools_selection != appconsts.TOOL_SELECTOR_IS_MENU:
             self.tool_dock = workflow.get_tline_tool_dock()
@@ -649,6 +652,7 @@ class EditorWindow:
         tline_hbox_2 = Gtk.HBox()
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
+        tline_hbox_2.pack_start(self.tline_y_scroll.widget, False, False, 0)
         
         self.tline_hbox_2 = tline_hbox_2
 
