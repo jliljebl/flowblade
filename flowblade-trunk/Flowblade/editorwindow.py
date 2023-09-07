@@ -81,6 +81,7 @@ import titler
 import tlineaction
 import tlinecursors
 import tlinewidgets
+import tlineypage
 import trackaction
 import updater
 import undo
@@ -640,7 +641,7 @@ class EditorWindow:
                           editevent.tline_media_drop)
 
         # Y Scroll
-        self.tline_y_scroll = tlinewidgets.TimeLineYPage()
+        self.tline_y_page = tlinewidgets.TimeLineYPage(tlineypage.page_up, tlineypage.page_down)
 
         # Create tool dock if needed
         if editorpersistance.prefs.tools_selection != appconsts.TOOL_SELECTOR_IS_MENU:
@@ -652,7 +653,7 @@ class EditorWindow:
         tline_hbox_2 = Gtk.HBox()
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
-        tline_hbox_2.pack_start(self.tline_y_scroll.widget, False, False, 0)
+        tline_hbox_2.pack_start(self.tline_y_page.widget, False, False, 0)
         
         self.tline_hbox_2 = tline_hbox_2
 

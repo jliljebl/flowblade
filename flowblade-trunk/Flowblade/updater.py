@@ -120,23 +120,25 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    try:
-        # Set page offset.
-        tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
-        
-        # Place clips in the middle of timeline canvas after window resize
-        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    #try:
+    # Set page offset.
+    tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
+    
+    # Place clips in the middle of timeline canvas after window resize
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-        repaint_tline()
+    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+    repaint_tline()
 
-        return False
+    return False
+    """
     except:
         # Sometimes allotion might not be available.
         GLib.timeout_add(200, window_resized)
         print("window resized FAILED")
         return False
-
+    """
+    
 # --------------------------------- timeline
 # --- REPAINT
 def repaint_tline():

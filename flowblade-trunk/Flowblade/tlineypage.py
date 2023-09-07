@@ -23,8 +23,10 @@ This module handles displaying timeline in paged view if all tracks
 cannot be displayed in single view.
 """
 
+from editorstate import current_sequence
 import gui
 import tlinewidgets
+import updater
 
 _page = 0
 
@@ -33,17 +35,35 @@ def vertical_size_update(allocation):
 
 def page_up():
     global _page
-    _page =_ page - 1
+    _page = _page + 1
     allocation = gui.tline_canvas.widget.get_allocation()
     set_tlinewidgets_page_offset(allocation)
 
 def page_down():
     global _page
-    _page =_ page + 1
+    _page = _page - 1
     allocation = gui.tline_canvas.widget.get_allocation()
     set_tlinewidgets_page_offset(allocation)
 
 def set_tlinewidgets_page_offset(allocation):
-    x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-    half_height = panel_height // 2
-    tlinewidgets.page_y_off + int(_page * half_height)
+    half_height = allocation.height // 2
+    tlinewidgets.page_y_off = int(_page * half_height)
+    tlinewidgets.set_ref_line_y(allocation)
+
+    set_ypage_buttons_active(allocation)
+
+    updater.repaint_tline()
+    
+def set_ypage_buttons_active(allocation):
+    down_limit = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
+    up_limit = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2)
+
+    up_active = False
+    if up_limit < 0:
+        up_active = True
+
+    down_active = False
+    if down_limit > allocation.height:
+        down_active = True
+
+    gui.editor_window.tline_y_page.set_active_state(up_active, down_active)

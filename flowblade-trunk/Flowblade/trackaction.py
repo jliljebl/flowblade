@@ -119,14 +119,6 @@ def set_track_high_height(track_index, is_retry=False):
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     
-    if new_h > h:
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
-
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
@@ -151,17 +143,6 @@ def set_track_normal_height(track_index, is_retry=False, is_auto_expand=False):
     
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-    
-    if new_h > h:
-        if is_auto_expand == True:
-            return False
-        
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
 
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()

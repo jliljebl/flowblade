@@ -340,7 +340,8 @@ def load_icons_and_set_colors():
     COMPOSITOR_ICON, INSERT_ARROW_ICON, INSERT_ARROW_ICON_UP, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
-    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
+    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON, \
+    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE 
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -389,6 +390,8 @@ def load_icons_and_set_colors():
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
     INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
     INSERT_ARROW_ICON_UP = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_fb.png")
+    INSERT_ARROW_ICON_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_inactive_fb.png")
+    INSERT_ARROW_ICON_UP_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_inactive_fb.png")
     BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
     BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
 
@@ -533,7 +536,7 @@ def get_clip_track_and_index_for_pos(x, y):
 
 def _get_track_y(track_index):
     """
-    NOTE: NOT REALLY INTERNAL TO MODULE, HAS OUTSIDE USERS.
+    NOTE: FUNCTION NOT REALLY INTERNAL TO MODULE, HAS OUTSIDE USERS.
     Returns y pos in canvas for track index. y is top most pixel in track 
     """
     audio_add = 0
@@ -2821,31 +2824,35 @@ class TimeLineYPage:
     GUI component for displaying and editing track parameters.
     """
 
-    def __init__(self):#, active_listener, center_listener, double_click_listener):
+    def __init__(self, up_button_listener, down_button_listener):
         # Init widget
         self.widget = cairoarea.CairoDrawableArea2( Y_SCROLL_WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
-        
-        self.inactive = True
- 
-        #self.double_click_listener = double_click_listener       
-        #self.active_listener = active_listener
-        #self.center_listener = center_listener
-        #self.init_listeners()
+
+        self.up_button_listener = up_button_listener
+        self.down_button_listener = down_button_listener
+
+        self.up_active = False
+        self.down_active = False
 
     # --------------------------------------------- PRESS
+    def set_active_state(self, up_active, down_active):
+        self.up_active = up_active
+        self.down_active = down_active
+        
+        self.widget.queue_draw()
+    
     def _press_event(self, event):
+        alloc = self.widget.get_allocation()
         if event.button == 1 or event.button == 3:
-            if not timeline_visible():
-                updater.display_sequence_in_monitor()
-                return
-            trimmodes.set_no_edit_trim_mode()
-            frame = current_sequence().get_seq_range_frame(get_frame(event.x))
-            PLAYER().seek_frame(frame)
-            self.drag_on = True
-
+            if event.y < alloc.height // 2:
+                if self.up_active == True:
+                    self.up_button_listener()
+            else:
+                if self.down_active == True:
+                    self.down_button_listener()
 
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
@@ -2864,10 +2871,18 @@ class TimeLineYPage:
         rect = (0, 1 + h_half, w, h_half)
         self.draw_edge(cr, rect)
 
-        cr.set_source_surface(INSERT_ARROW_ICON_UP, 3, h_half // 2 - 2)
+        if self.up_active == True:
+            icon = INSERT_ARROW_ICON_UP
+        else:
+            icon = INSERT_ARROW_ICON_UP_INACTIVE 
+        cr.set_source_surface(icon, 3, h_half // 2 - 2)
         cr.paint()
         
-        cr.set_source_surface(INSERT_ARROW_ICON, 3, h_half + h_half // 2 - 2)
+        if self.down_active == True:
+            icon = INSERT_ARROW_ICON
+        else:
+            icon = INSERT_ARROW_ICON_INACTIVE 
+        cr.set_source_surface(icon, 3, h_half + h_half // 2 - 2)
         cr.paint()
 
         #if self.inactive == True:
