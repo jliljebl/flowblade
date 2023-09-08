@@ -45,6 +45,14 @@ def page_down():
     allocation = gui.tline_canvas.widget.get_allocation()
     set_tlinewidgets_page_offset(allocation)
 
+def page_up_key():
+    if gui.editor_window.tline_y_page.up_active == True:
+        page_up()
+
+def page_down_key():
+    if gui.editor_window.tline_y_page.down_active == True:
+        page_down()
+    
 def set_tlinewidgets_page_offset(allocation):
     half_height = allocation.height // 2
     tlinewidgets.page_y_off = int(_page * half_height)

@@ -2830,10 +2830,12 @@ class TimeLineYPage:
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
-
+        self.widget.set_tooltip_markup(_("Up - Page Up\nDown - Page Down"))
+        
         self.up_button_listener = up_button_listener
         self.down_button_listener = down_button_listener
 
+        # tlineypage.py uses these also to see if page up/down should be done. 
         self.up_active = False
         self.down_active = False
 

@@ -1721,13 +1721,15 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward_10"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_next"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_prev"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "tline_page_up"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "tline_page_down"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_track_output"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     track_head_vbox = Gtk.VBox()
     track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
-    track_head_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_track_output"), False, False, 0)
     track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
-    
+
     play_vbox = Gtk.VBox()
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)

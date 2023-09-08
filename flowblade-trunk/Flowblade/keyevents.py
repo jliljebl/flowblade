@@ -50,6 +50,7 @@ import render
 import rotomask
 import tlineaction
 import tlinewidgets
+import tlineypage
 import trackaction
 import trimmodes
 import updater
@@ -63,6 +64,7 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
+    
     # Handle ESCAPE.
     if event.keyval == Gdk.KEY_Escape:
         if editorstate.current_is_move_mode() == False:
@@ -261,6 +263,7 @@ def _handle_tline_key_event(event):
         trackaction.toggle_track_output()
         return True
 
+        
     # Key bindings for keyboard trimming.
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
@@ -507,6 +510,12 @@ def _get_shortcut_action(event):
 
 def _handle_configurable_global_events(event):
     action = _get_shortcut_action(event)
+    if action == 'tline_page_up':
+        tlineypage.page_up_key()
+        return True
+    if action == 'tline_page_down':
+        tlineypage.page_down_key()
+        return True
     if action == 'open_next':
         projectaction.open_next_media_item_in_monitor()
         return True

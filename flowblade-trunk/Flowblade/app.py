@@ -1092,7 +1092,7 @@ def _app_destroy():
         print("Delete autosave file FAILED!")
 
     # Now that autosave file is deleted, the data folder contents for unsaved
-    # projects are now unreachable and can be destoyed.
+    # projects are unreachable and can be destoyed.
     projectdatavault.delete_unsaved_data_folders()
 
     # Calling _app.quit() will block if Gio.Application.hold() has been called,

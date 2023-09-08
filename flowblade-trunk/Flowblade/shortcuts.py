@@ -405,6 +405,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['trim_end'] = _("Trim Clip End To Playhead")
     _keyboard_action_names['tline_render_request'] = _("Render Timeline Range")
     _keyboard_action_names['toggle_track_output'] = _('Enable/Disable Selected Clip Track Output')
+    _keyboard_action_names['tline_page_up'] = _('Timeline Vertical Page Up')
+    _keyboard_action_names['tline_page_down'] = _('Timeline Vertical Page Down')
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
@@ -473,7 +475,9 @@ def _set_key_names():
     _key_names['equal'] = _("=")
     _key_names['comma'] = _(",")
     _key_names['period'] = _(".")
-    
+    _key_names['page_up'] = _("Page Up")
+    _key_names['page_down'] = _("Page Down")
+
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")
