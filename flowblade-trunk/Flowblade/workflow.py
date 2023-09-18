@@ -66,7 +66,7 @@ _TOOL_TIPS = None
 _PREFS_TOOL_TIPS = None
 
 _tools_menu = Gtk.Menu()
-_workflow_menu = Gtk.Menu()
+
 
 # Tool items in dock if used.
 dock_items = None
@@ -75,12 +75,12 @@ def init_data():
     global _TOOLS_DATA, _TOOL_TIPS, _PREFS_TOOL_TIPS
     _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
                     appconsts.TLINE_TOOL_OVERWRITE:     (_("Move"), "overwrite_cursor.png"),
-                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
-                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),
-                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),
+                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),                   # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),                   # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),                     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
                     appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
-                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
-                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),
+                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),              # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
                     appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png"),
                     appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png"),
                     appconsts.TLINE_TOOL_MULTI_TRIM:    (_("Multitrim"), "multitrim_cursor.png")
@@ -99,14 +99,8 @@ def init_data():
                     appconsts.TLINE_TOOL_MULTI_TRIM:    _("Position cursor near or on clip edges for <b>Trim</b> and <b>Roll</b> edits.\nPosition cursor on clip center for <b>Slip</b> edit.\nDrag with <b>Left Mouse</b> to do edits.\n\n<b>Enter Key</b> to start keyboard edit, <b>Left or Right Arrow Key</b> to move edit point.\n<b>Enter Key</b> to complete keyboard edit.")
                   }
 
+    editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] 
 
-#----------------------------------------------------- workflow presets
-def _set_workflow_STANDARD():
-    editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] # appconsts.TLINE_TOOL_ID_<X> values
-    editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
-    editorpersistance.save()
-
-    modesetting.set_default_edit_mode()
 
 # --------------------------------------------------------------- interface
 def get_tline_tool_working_set():
@@ -163,7 +157,7 @@ def _get_image_menu_item(tool_icon_file, text, callback, tool_id):
         item.set_tooltip_markup(_get_tooltip_text(tool_id))
     item.show()
     return item
-    
+"""
 # ---------------------------------------------------- workflow menu
 def workflow_menu_launched(widget, event):
     guiutils.remove_children(_workflow_menu)
@@ -240,12 +234,12 @@ def _build_radio_menu_items_group(menu, labels, msgs, callback, active_index):
             radio_item.set_active(True)
         
         radio_item.connect("activate", callback, (None, msgs[i]))
-
+"""
 def _get_tooltip_text(tool_id):
     text = _TOOL_TIPS[tool_id]
 
     return text
-
+"""
 def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
     
@@ -287,8 +281,6 @@ def _workflow_menu_callback(widget, data):
         else:
             editorpersistance.prefs.active_tools.append(tool_id)
         update_tool_dock()
-    elif msg == "preset standard":
-        _set_workflow_STANDARD()
     elif  msg == "always overwrite":
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     elif  msg == "overwrite nonV1":
@@ -308,6 +300,7 @@ def _workflow_menu_callback(widget, data):
             pass
     
     editorpersistance.save()
+"""
 
 # ---------------------------------------------------- tools dock
 def get_tline_tool_dock():

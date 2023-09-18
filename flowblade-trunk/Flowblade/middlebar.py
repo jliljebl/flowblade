@@ -202,9 +202,9 @@ def _create_buttons(editor_window):
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
 
-    surface = guiutils.get_cairo_image("workflow")
-    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
-    editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
+    #surface = guiutils.get_cairo_image("workflow")
+    #editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
+    #editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window)
@@ -307,7 +307,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
 
-    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
@@ -356,7 +356,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     left_panel.pack_start(Gtk.Label(), True, True, 0)
 
     middle_panel = Gtk.HBox(False, 0)
-    middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
+    #middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     middle_panel.pack_start(w.big_TC, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
@@ -387,7 +387,7 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
         pad_w = 5
             
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
