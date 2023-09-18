@@ -359,11 +359,6 @@ def _view_prefs_panel():
     show_full_file_names = Gtk.CheckButton()
     show_full_file_names.set_active(prefs.show_full_file_names)
 
-    # --------------------------------- Colorized icons
-    colorized_icons = Gtk.CheckButton()
-    colorized_icons.set_active(prefs.colorized_icons)
-    # ------------------------------------ End of Colorized icons
-
     window_mode_combo = Gtk.ComboBoxText()
     window_mode_combo.append_text(_("Single Window"))
     window_mode_combo.append_text(_("Two Windows"))
@@ -399,31 +394,25 @@ def _view_prefs_panel():
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
-    #row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
-    #row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
-    row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
-    #vbox.pack_start(row3, False, False, 0)
-    #vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, top_row_layout, layout_monitor, colorized_icons)
+                  tracks_combo, top_row_layout, layout_monitor)
 
 
 

@@ -304,11 +304,7 @@ class PlayerButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
-        # Colorized icons
-        if prefs.colorized_icons is True:
-            icon_color = "_color"
-        else:
-            icon_color = ""
+
         # End of Colorized icons
         if prefs.double_track_hights:
            size_ind = 1
@@ -318,9 +314,9 @@ class PlayerButtons(AbstractGlassButtons):
         # Force no decorations for player buttons, this cannot be made to work.
         self.no_decorations = True 
 
-        play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
-        play_icon = guiutils.get_cairo_image("play_2_s"+ icon_color)
-        stop_icon = guiutils.get_cairo_image("stop_s"+ icon_color)
+        play_pause_icon = guiutils.get_cairo_image("play_pause_s")
+        play_icon = guiutils.get_cairo_image("play_2_s")
+        stop_icon = guiutils.get_cairo_image("stop_s")
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
         # ------------------------------timeline_start_end_button
@@ -437,12 +433,7 @@ class GmicButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
-        # Colorized icons NOT IMPLEMENTED
-        if prefs.colorized_icons is True:
-            icon_color = "_color"
-        else:
-            icon_color = ""
-        # End of Colorized icons
+
         # NOT IMPLEMENTED
         if prefs.double_track_hights:
            size_ind = 1

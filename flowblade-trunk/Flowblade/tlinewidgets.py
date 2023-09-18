@@ -62,15 +62,15 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 page_y_off = 0
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
-HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
+HEIGHT = appconsts.TLINE_HEIGHT # Defines window min height together with editorwindow.TOP_ROW_HEIGHT.
 
-# Timeline draw constants
+# Timeline draw constants.
 # Other elements than black outline are not drawn if clip screen size
-# in pixels is below certain thresholds
-TEXT_MIN = 12 # if clip shorter, no text
-EMBOSS_MIN = 8 # if clip shorter, no emboss
-FILL_MIN = 1 # if clip shorter, no fill
-TEXT_X = 6 # pos for clip text
+# in pixels is below certain thresholds.
+TEXT_MIN = 12 # If clip shorter, no text.
+EMBOSS_MIN = 8 # If clip shorter, no emboss.
+FILL_MIN = 1 # If clip shorter, no fill.
+TEXT_X = 6
 TEXT_Y_HIGH = 40
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
@@ -136,32 +136,31 @@ KEYBOARD_ICON = None
 CLOSE_MATCH_ICON = None
 COMPOSITOR_ICON = None
 
-# tc scale
 TC_POINTER_HEAD = None
 
 # tc frame scale consts
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 12 # TC text pos in scale
+TC_Y = 12 # TC text pos in scale.
 # Timeline scale is rendered with hardcoded steps for hardcoded 
-# pix_per_frame ranges
-DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs
+# pix_per_frame ranges.
+DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs.
 DRAW_THRESHOLD_2 = 4
 DRAW_THRESHOLD_3 = 2
 DRAW_THRESHOLD_4 = 1
-# Height of sync state stripe indicating if clip is in sync or not
+# Height of sync state stripe indicating if clip is in sync or not.
 SYNC_STRIPE_HEIGHT = 12
 SYNC_SAW_WIDTH = 5
 SYNC_SAW_HEIGHT = 5
-# number on lines and tc codes displayed with small pix_per_frame values
+# number on lines and tc codes displayed with small pix_per_frame values.
 NUMBER_OF_LINES = 7
 # Positions for 1-2 icons on clips.
 ICON_SLOTS = [(14, 2),(28, 2),(42,2),(56,2)]
-# Line width for moving clip boxes
+# Line width for moving clip boxes.
 MOVE_CLIPS_LINE_WIDTH = 3.0
 
-# Color creating utils methods
+# Color creating utils methods.
 def get_multiplied_color(color, m):
     """
     Used to create lighter and darker hues of colors.
@@ -180,7 +179,7 @@ def get_multiplied_color_from_grad(grad_color, m):
     """
     return (grad_color[1] * m, grad_color[2] * m, grad_color[3] * m)
     
-# Colors
+# Colors.
 GRAD_MULTIPLIER = 1.3
 SELECTED_MULTIPLIER = 1.52
 

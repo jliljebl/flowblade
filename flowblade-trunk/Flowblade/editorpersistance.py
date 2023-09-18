@@ -189,7 +189,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, window_mode_combo, full_names, double_track_hights, \
-    top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
+    top_row_layout, layout_monitor = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -240,7 +240,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
-    prefs.colorized_icons = colorized_icons.get_active()
     prefs.auto_render_media_plugins = auto_render_plugins.get_active()
     prefs.dnd_action = dnd_action.get_active()
     
@@ -355,7 +354,7 @@ class EditorPreferences:
                                 appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
                                 appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE] # DEPRECATED, we are now using 'layout_buttons'.
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state.
-        self.colorized_icons = False
+        self.colorized_icons = False # DEPRECATED
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         self.panel_positions = None
         self.force_small_midbar = False # DEPRECATED, after tools moved to topbar we can always support w >=1280 screens and do not care about smaller ones.
