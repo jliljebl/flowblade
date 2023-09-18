@@ -76,13 +76,12 @@ def get_top_level_project_info_panel():
     desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
     desc_row.set_margin_left(4)
+    # We are leaving this for updates for now because smaller window sizes use this reference 'widgets.info_box' still.
     info_box = guicomponents.get_profile_info_reduced_small_box(profile)
-    info_box.set_margin_left(4)
     
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_row, False, True, 0)
     project_info_vbox.pack_start(desc_row, False, True, 0)
-    project_info_vbox.pack_start(info_box, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,0,4,4)
 
     project_info_vbox.set_tooltip_text(guicomponents.get_full_profile_info_text(profile))
