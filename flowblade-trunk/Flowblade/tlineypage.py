@@ -54,13 +54,17 @@ def page_down_key():
         page_down()
     
 def set_tlinewidgets_page_offset(allocation):
-    half_height = allocation.height // 2
-    tlinewidgets.page_y_off = int(_page * half_height)
-    tlinewidgets.set_ref_line_y(allocation)
+    try:
+        half_height = allocation.height // 2
+        tlinewidgets.page_y_off = int(_page * half_height)
+        tlinewidgets.set_ref_line_y(allocation)
 
-    set_ypage_buttons_active(allocation)
+        set_ypage_buttons_active(allocation)
 
-    updater.repaint_tline()
+        updater.repaint_tline()
+    except:
+        # This can get called on project load when no good data available yet.
+        pass
     
 def set_ypage_buttons_active(allocation):
     down_limit = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
