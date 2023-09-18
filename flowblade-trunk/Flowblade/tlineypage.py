@@ -19,7 +19,7 @@
 """
 
 """
-This module handles displaying timeline in paged view if all tracks 
+This module handles displaying timeline in a paged view if all tracks 
 cannot be displayed in single view.
 """
 
