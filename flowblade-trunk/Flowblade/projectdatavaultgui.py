@@ -679,7 +679,7 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
             vaults = projectdatavault.get_vaults_object()
             vault_name = vaults.get_user_vault_folder_name(PROJECT().vault_folder)
             if vault_name == None:
-                vault_name = _("Project Vault Not Active")
+                vault_name = _("Project Data Store is not active")
         store_name_label = guiutils.bold_label(_("Project Data Store:"))
         store_name_label.set_margin_right(4)
         row = guiutils.get_left_justified_box([store_name_label, Gtk.Label(label=vault_name)])
