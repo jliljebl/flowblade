@@ -71,6 +71,7 @@ def load():
     prefs.remember_monitor_clip_frame = True
     prefs.buttons_style = NO_DECORATIONS 
     prefs.buttons_style = NO_DECORATIONS 
+    prefs.show_tool_tooltips = True
 
     try:
         recent_projects = utils.unpickle(recents_file_path)
@@ -334,7 +335,7 @@ class EditorPreferences:
         self.box_for_empty_press_in_overwrite_tool = True # DEPRECATED, NOT USER SETTABLE ANYMORE, behaviour is now always set to this preference.
         self.scroll_horizontal_dir_up_forward = True
         self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead.
-        self.show_tool_tooltips = True
+        self.show_tool_tooltips = True # DEPRECATED, NOT USER SETTABLE ANYMORE. 
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False
         self.audio_scrubbing = False
