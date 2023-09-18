@@ -209,8 +209,9 @@ COMPOSITOR_CLIP = (0.12, 0.12, 0.22, 0.7)
 COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
 COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
 
-BLANK_CLIP_COLOR_GRAD = (1, 0.6, 0.6, 0.65, 1)
-BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
+ # Set in load_icons_and_set_colors().
+BLANK_CLIP_COLOR_GRAD = None
+BLANK_CLIP_COLOR_GRAD_L = None
 
 BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.50, 0.50, 0.50, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.50, 0.50, 0.5, 1)
@@ -274,12 +275,13 @@ BLANK_SELECTED = (0.68, 0.68, 0.74)
 
 TRACK_NAME_COLOR = (0.0,0.0,0.0)
 
-TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
-TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
+ # Set in load_icons_and_set_colors().
+TRACK_GRAD_STOP1 = None
+TRACK_GRAD_STOP3 = None
 
-# Not orange anymote, huh.
-TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
-TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
+ # Set in load_icons_and_set_colors(). Not orange anymore, huh.
+TRACK_GRAD_ORANGE_STOP1 = None
+TRACK_GRAD_ORANGE_STOP3 = None
 
 Y_SCROLL_BG = (0.215, 0.215, 0.215)
  
@@ -362,9 +364,6 @@ def load_icons_and_set_colors():
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
     MARKER_ICON = _load_pixbuf("marker_yellow.png")
-    TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
-    TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
-    MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
@@ -377,10 +376,6 @@ def load_icons_and_set_colors():
 
     FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
-    TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
-    TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
-    TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
-    TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
     TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
@@ -392,8 +387,6 @@ def load_icons_and_set_colors():
     INSERT_ARROW_ICON_UP = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_fb.png")
     INSERT_ARROW_ICON_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_inactive_fb.png")
     INSERT_ARROW_ICON_UP_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_inactive_fb.png")
-    BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
-    BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
 
     r = g = b = 0.215
         
