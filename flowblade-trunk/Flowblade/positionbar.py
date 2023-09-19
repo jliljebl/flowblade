@@ -50,12 +50,12 @@ BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.5, 0.5, 0.5)
-DARK_BG_COLOR = (0.18, 0.18, 0.18)
+DARK_BG_COLOR = (0.24, 0.24, 0.24)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
 DARK_SPEED_TEST_COLOR = (0.9, 0.9, 0.9)
-END_PAD = 6 # empty area at both ends in pixels
+END_PAD = 12 # empty area at both ends in pixels
 MARK_CURVE = 5
 MARK_LINE_WIDTH = 5
 MARK_PAD = -1
@@ -174,13 +174,28 @@ class PositionBar:
         We get cairo context and allocation.
         """
         x, y, w, h = allocation
+
+        # Draw consts
+        ax = 0
+        ay = 0
+        awidth = w
+        aheight = 12
+        aaspect = 1.0
+        acorner_radius = END_PAD / 2.0
+        aradius = END_PAD / 2.0
+        adegrees = math.pi / 180.0
+
+        self._draw_consts = (ax, ay, awidth, aheight, aaspect, acorner_radius, aradius, adegrees)
         
         # Draw bb
         draw_color = BG_COLOR
         if self.disabled:
             draw_color = DISABLED_BG_COLOR
         cr.set_source_rgb(*draw_color)
-        cr.rectangle(0,0,w,h)
+        self._round_rect_path(cr)
+        #cr.set_source_rgb(0,0,0)
+        #cr.stroke()
+        #cr.rectangle(0,0,w,h)
         cr.fill()
         
         # Draw selected area if marks set
@@ -242,6 +257,12 @@ class PositionBar:
         cr.set_source_surface(self.POINTER_ICON, self._pos - 3, 0)
         cr.paint()
 
+        # Draw outline.
+        self._round_rect_path(cr)
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+        
         # This is only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
@@ -306,6 +327,16 @@ class PositionBar:
         cr.fill_preserve()
         cr.set_source_rgb(0,0,0)
         cr.stroke()
+
+    def _round_rect_path(self, cr):
+        x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
+            
+        cr.new_sub_path()
+        cr.arc (x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc (x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path ()
         
     def _press_event(self, event):
         """

@@ -503,9 +503,9 @@ class EditorWindow:
         
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        #pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(2)
         pos_bar_frame.set_margin_bottom(4)
         pos_bar_frame.set_margin_left(4)

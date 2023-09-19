@@ -310,9 +310,8 @@ class AddMediaPluginWindow(Gtk.Window):
         self.pos_bar.mouse_press_listener = self.pos_bar_press_listener
         self.pos_bar.update_display_with_data(self.producer, -1, -1)
 
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_left(6)

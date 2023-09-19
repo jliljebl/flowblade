@@ -637,9 +637,8 @@ class GmicWindow(Gtk.Window):
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_left(6)

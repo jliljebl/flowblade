@@ -274,9 +274,8 @@ class Titler(Gtk.Window):
         self.pos_bar.update_display_from_producer(PLAYER().producer)
         self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
 
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_valign(Gtk.Align.CENTER)
                 
         font_map = PangoCairo.font_map_get_default()
