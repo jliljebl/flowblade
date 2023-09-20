@@ -23,8 +23,8 @@ Module contains GUI widgets used to edit keyframed properties in filters and
 compositors.
 
 NOTE: All the editors are composites of smaller objects (so that similar 
-but slightly different editors can be made in the future). There are a lots 
-of callbacks to parent objects, this makes the design difficult to follow.
+but slightly different editors are easier to create)). There are a lots 
+of callbacks to parent objects, this makes the design sometimes a bit difficult to follow.
 """
 
 import cairo
@@ -49,7 +49,7 @@ import propertyparse
 import respaths
 import utils
 
-# Draw consts
+# Draw consts.
 CLIP_EDITOR_WIDTH = 250 
 CLIP_EDITOR_HEIGHT = 21
 END_PAD = 28
@@ -69,13 +69,13 @@ POS_ENTRY_H = 20
 KF_HIT_WIDTH = 4
 KF_DRAG_THRESHOLD = 3
 
-GEOM_EDITOR_SIZE_LARGE = 0.9 # displayed screensize as fraction of available height
-GEOM_EDITOR_SIZE_MEDIUM = 0.6 # displayed screensize as fraction of available height
-GEOM_EDITOR_SIZE_SMALL = 0.3 # displayed screensize as fraction of available height
-GEOM_EDITOR_SIZE_SMALLER = 0.1 # displayed screensize as fraction of available height
+GEOM_EDITOR_SIZE_LARGE = 0.9 # Displayed screensize as fraction of available height.
+GEOM_EDITOR_SIZE_MEDIUM = 0.6 # Displayed screensize as fraction of available height.
+GEOM_EDITOR_SIZE_SMALL = 0.3 # Displayed screensize as fraction of available height.
+GEOM_EDITOR_SIZE_SMALLER = 0.1 # Displayed screensize as fraction of available height.
 GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL, GEOM_EDITOR_SIZE_SMALLER]
 
-# Colors
+# Colors.
 POINTER_COLOR = (1, 0.3, 0.3)
 CLIP_EDITOR_BG_COLOR = (0.1445, 0.172, 0.25)
 CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.25, 0.28, 0.34)
@@ -83,12 +83,12 @@ CLIP_EDITOR_CENTER_LINE_COLOR = (0.098, 0.313, 0.574)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
-# Editor states
+# Editor states.
 KF_DRAG = 0
 POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2
 
-# Icons
+# Icons.
 ACTIVE_KF_ICON = None
 ACTIVE_KF_ICON_SMOOTH = None
 ACTIVE_KF_ICON_DISCRETE = None
@@ -96,10 +96,10 @@ NON_ACTIVE_KF_ICON = None
 NON_ACTIVE_KF_ICON_SMOOTH = None
 NON_ACTIVE_KF_ICON_DISCRETE = None
 
-# Magic value to signify disconnected signal handler 
+# Magic value to signify disconnected signal handler .
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
-# Callbacks to compositeeditor.py, monkeypatched at startup
+# Callbacks to compositeeditor.py, monkeypatched at startup.
 _get_current_edited_compositor = None
 
 _kf_popover = None
@@ -1941,16 +1941,21 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
 
         main_section = Gio.Menu.new()
-
         frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
         _kf_type_submenu = guipopover.menu_clear_or_create(_kf_type_submenu)
         self._create_keyframe_type_submenu(kf_type, _kf_type_submenu,  "keyframes.typeselectfive", self._kf_type_menu_item_activated)
         main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
-        
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykffive", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekffive", "paste_kf", self._menu_item_activated)
         _kf_menu.append_section(None, main_section)
 
+        action_section = Gio.Menu.new()
+        guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkffive", "vcenter", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkffive", "reset", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
+        _kf_menu.append_section(None, action_section)
+        
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
 
     def show_keyframe_menu(self, event, keyframe):
