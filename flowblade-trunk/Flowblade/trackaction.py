@@ -196,6 +196,11 @@ def _all_tracks_item_activated(action, variant, msg):
     if msg == "deleteaudio":
         projectaction.delete_audio_track()
         return
+    
+    if msg == "resetheights":
+        current_sequence().minimize_tracks_height()
+        current_sequence().tracks[current_sequence().first_video_index].height = appconsts.TRACK_HEIGHT_NORMAL
+        _tracks_resize_update()
 
     if msg == "min":
         current_sequence().minimize_tracks_height()
