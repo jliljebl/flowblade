@@ -837,6 +837,10 @@ class EditorWindow:
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
             ('SyncCompositors', None, _('Sync All Compositors'), sync_all_shortcut, None, lambda a:tlineaction.sync_all_compositors()),
+            ('AddVideoTrack', None, _('Add Video Track'), None, None, lambda a:projectaction.add_video_track()),
+            ('AddAudioTrack', None, _('Add Audio Track'), None, None, lambda a:projectaction.add_audio_track()),
+            ('DeleteVideoTrack', None, _('Delete Video Track'), None, None, lambda a:projectaction.delete_video_track()),
+            ('DeleteAudioTrack', None, _('Delete Audio Track'), None, None, lambda a:projectaction.delete_audio_track()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('DiskCacheManager', None, _('Disk Cache Manager'), None, None, lambda a:diskcachemanagement.show_disk_management_dialog()),
@@ -1008,7 +1012,13 @@ class EditorWindow:
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
                     <separator/>
+                    <menuitem action='AddVideoTrack'/>
+                    <menuitem action='AddAudioTrack'/>
+                    <menuitem action='DeleteVideoTrack'/>
+                    <menuitem action='DeleteAudioTrack'/>
+                    <separator/>
                     <menuitem action='ChangeSequenceTracks'/>
+                    <separator/>
                     <menuitem action='Watermark'/>
                 </menu>
                 <menu action='RenderMenu'>

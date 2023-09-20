@@ -37,6 +37,7 @@ from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
 import movemodes
+import projectaction
 import snapping
 import tlinewidgets
 import updater
@@ -180,6 +181,22 @@ def all_tracks_menu_launch_pressed(launcher, widget, event):
     guipopover.all_tracks_menu_show(launcher, widget, _all_tracks_item_activated)
 
 def _all_tracks_item_activated(action, variant, msg):
+    if msg == "addvideo":
+        projectaction.add_video_track()
+        return
+
+    if msg == "addaudio":
+        projectaction.add_audio_track()
+        return
+        
+    if msg == "deletevideo":
+        projectaction.delete_video_track()
+        return
+        
+    if msg == "deleteaudio":
+        projectaction.delete_audio_track()
+        return
+
     if msg == "min":
         current_sequence().minimize_tracks_height()
         _tracks_resize_update()

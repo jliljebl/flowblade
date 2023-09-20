@@ -246,15 +246,22 @@ def all_tracks_menu_show(launcher, widget, callback):
 
     _all_tracks_menu = menu_clear_or_create(_all_tracks_menu)
 
+    add_delete_section = Gio.Menu.new()
+    add_menu_action(add_delete_section, _("Add Video Track"), "midbar.all.addvideo", "addvideo" , callback)
+    add_menu_action(add_delete_section, _("Add Audio Track"), "midbar.all.addaudio", "addaudio" , callback)
+    add_menu_action(add_delete_section, _("Delete Video Track"), "midbar.all.deletevideo", "deletevideo" , callback)
+    add_menu_action(add_delete_section, _("Delete Audio Track"), "midbar.all.deleteaudio", "deleteaudio" , callback)
+    _all_tracks_menu.append_section(None, add_delete_section)
+
     maximize_section = Gio.Menu.new()
     add_menu_action(maximize_section, _("Maximize Tracks"), "midbar.all.alltracks", "max" , callback)
     add_menu_action(maximize_section, _("Maximize Video Tracks"), "midbar.all.videotracks", "maxvideo" , callback)
     add_menu_action(maximize_section, _("Maximize Audio Tracks"), "midbar.all.audiotracks", "maxaudio" , callback)
+    add_menu_action(maximize_section, _("Minimize Tracks"), "midbar.all.minimize", "min" , callback)
+    add_menu_action(maximize_section, _("Reset Track Heights"), "midbar.all.minimize", "resetheights" , callback)
     _all_tracks_menu.append_section(None, maximize_section)
 
-    minimize_section = Gio.Menu.new()
-    add_menu_action(minimize_section, _("Minimize Tracks"), "midbar.all.minimize", "min" , callback)
-    _all_tracks_menu.append_section(None, minimize_section)
+
     
     activate_section = Gio.Menu.new()
     add_menu_action(activate_section, _("Activate All Tracks"), "midbar.all.allactive", "allactive" , callback)

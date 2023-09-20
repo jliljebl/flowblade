@@ -1856,6 +1856,68 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     v_tracks, a_tracks = tracks_select.get_tracks()
     dialog.destroy()
 
+    _do_tracks_count_change(v_tracks, a_tracks)
+
+def add_video_track():
+    nv, na = PROJECT().c_seq.get_track_counts()
+    
+    if nv + na > appconsts.MAX_TRACKS - 1:
+        _show_max_tracks_info()
+        return
+
+    dialogs.confirm_track_add_delete(True, True, nv + 1, na, _add_delete_track_dialog_callback)
+
+def add_audio_track():
+    nv, na = PROJECT().c_seq.get_track_counts()
+    
+    if nv + na > appconsts.MAX_TRACKS - 1:
+        _show_max_tracks_info()
+        return
+        
+    dialogs.confirm_track_add_delete(True, False, nv, na + 1, _add_delete_track_dialog_callback)
+
+def delete_video_track():
+    nv, na = PROJECT().c_seq.get_track_counts()
+    if nv == 1:
+        _show_min_tracks_info(True)
+        return
+        
+    dialogs.confirm_track_add_delete(False, True, nv - 1, na, _add_delete_track_dialog_callback)
+
+def delete_audio_track():
+    nv, na = PROJECT().c_seq.get_track_counts()
+    if na == 0:
+        _show_min_tracks_info(False)
+        return
+        
+    dialogs.confirm_track_add_delete(False, False, nv, na - 1, _add_delete_track_dialog_callback)
+
+def _show_max_tracks_info():
+    primary_txt = _("Can't add a new Track")
+    secondary_txt = _("Sequence already has 21 tracks, which is the maximum number allowed.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def _show_min_tracks_info(is_video):
+    if is_video:
+        primary_txt = _("Can't delete Video Track")
+        secondary_txt = _("Sequence has to have one Video Track.")
+    else:
+        primary_txt = _("Can't delete Audio Track")
+        secondary_txt = _("There are no Audio Tracks to delete.")
+
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
+def _add_delete_track_dialog_callback(dialog, response_id, v_tracks, a_tracks):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    print(v_tracks)
+
+    dialog.destroy()
+    _do_tracks_count_change(v_tracks, a_tracks)
+
+def _do_tracks_count_change(v_tracks, a_tracks):
     cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
     
     if len(PROJECT().c_seq.tracks[-1].clips) == 1: # Remove hidden hack trick blank so that is does not get copied 

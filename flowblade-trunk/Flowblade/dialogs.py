@@ -1138,6 +1138,51 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)
 
+def confirm_track_add_delete(is_add, is_video, v_tracks, a_tracks, callback):
+
+    title = ""
+    action = ""
+    if is_add == True:
+        if is_video == True:
+            title = _("Confirm Adding Video Track")
+            action = _("Add Video Track")
+        else:
+            title = _("Confirm Adding Audio Track")
+            action = _("Add Audio Track")
+    else:
+        if is_video == True:
+            title = _("Confirm Deleting Video Track")
+            action = _("Delete Video Track")
+        else:
+            title = _("Confirm Deleting Audio Track")
+            action = _("Delete Audio Track")
+
+    dialog = Gtk.Dialog(title,  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        action, Gtk.ResponseType.ACCEPT))
+                        
+    info_text = _("<b>Please note:</b>\n") + \
+                "    \u2022" + _(" There is no Undo for this operation\n") + \
+                "    \u2022" + _(" Current Undo Stack will be destroyed\n")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    pad = guiutils.get_pad_label(24, 12)
+
+    tracks_vbox = Gtk.VBox(False, 2)
+    tracks_vbox.pack_start(info_box, False, False, 0)
+    #tracks_vbox.pack_start(pad, False, False, 0)
+
+    alignment = dialogutils.get_alignment2(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, v_tracks, a_tracks)
+    dialog.show_all()
+    
 def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1146,9 +1191,8 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
 
     tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
 
-    info_text = _("Please note:\n\n") + \
+    info_text = _("Please note:\n") + \
                 "\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
-                "\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
                 "\u2022" + _(" There is no Undo for this operation\n") + \
                 "\u2022" + _(" Current Undo Stack will be destroyed\n") + \
                 "\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
