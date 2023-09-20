@@ -1659,6 +1659,13 @@ class GeometryEditor(AbstractKeyFrameEditor):
 
         _kf_menu.append_section(None, kfs_section)
 
+        action_section = Gio.Menu.new()
+        guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkftwo", "hcenter", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkftwo", "vcenter", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkftwo", "reset", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokftwo", "ratio", self._menu_item_activated)
+        _kf_menu.append_section(None, action_section)
+        
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
 
 
