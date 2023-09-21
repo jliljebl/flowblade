@@ -254,6 +254,17 @@ class Vaults:
             vault_properties = self.user_vaults_data[vault_index - 1] # -1 because first vault is not user vault and is not in user_vaults_data list
             return vault_properties["vault_path"]
 
+    def get_index_for_vault_folder(self, vault_folder): 
+        if vault_folder == get_default_vault_folder():
+            return 0
+        else:
+            for i in range(0, len(self.user_vaults_data)):
+                user_vault = self.user_vaults_data[i]
+                if vault_folder == user_vault["vault_path"]:
+                    return i + 1
+        
+        return NONE
+        
     def set_active_vault_index(self, index):
         self.active_vault = index
 
@@ -389,7 +400,7 @@ class ProjectDataFolderHandle:
             if folder_handle.folder_exists() == False:
                 return PROJECT_FOLDER_HAS_MISSING_FOLDERS
 
-        if len(listdir(self.data_folder_path)) > 7:
+        if len(listdir(self.data_folder_path)) > 8:
             return PROJECT_FOLDER_HAS_EXTRA_FILES_OR_FOLDERS
 
         return PROJECT_FOLDER_IS_VALID

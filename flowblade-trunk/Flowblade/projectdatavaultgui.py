@@ -42,6 +42,7 @@ PROJECT_DATA_HEIGHT = 270
 
 _project_data_manager_window = None
 _current_project_info_window = None
+_clone_window = None
 
 # --------------------------------------------------------- interface
 def show_project_data_manager_window():
@@ -691,6 +692,12 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         row.set_margin_bottom(12)
         vbox.pack_start(row, False, False, 0)
 
+        clone_button = Gtk.Button(_("Create Clone Project with Project Data in another Data Store"))
+        clone_button.connect("clicked", lambda w: self.clone_button_clicked())
+        row = guiutils.get_left_justified_box([clone_button])
+        row.set_margin_bottom(24)
+        vbox.pack_start(row, False, False, 0)
+        
         vbox.pack_start(self.folder_properties_panel(folder_handle), False, False, 0)
 
         close_button = Gtk.Button(_("Close"))
@@ -707,9 +714,125 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         pane.set_size_request(400, 250)
 
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Current Project Data Info"))
+        self.set_title(_("Project Data"))
         self.connect("delete-event", lambda w, e:_close_info_window())
 
         self.add(pane)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
+
+    def clone_button_clicked(self):
+        show_clone_project_dialog()
+        
+def show_clone_project_dialog():
+    global _clone_window
+    _clone_window = ProjectCloneWindow()
+
+def _close_clone_window():
+    global _clone_window
+    _clone_window.set_visible(False)
+    _clone_window.destroy()
+    
+# --------------------------------------------------------- window classes
+class ProjectCloneWindow(Gtk.Window):
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+            
+        self.info_label = Gtk.Label(label=_("Set clone Project path and select new Data Store."))
+        info_row = guiutils.get_left_justified_box([self.info_label])
+        info_row.set_margin_bottom(12)
+        
+        # Create Data store selection combo. This is a bit involved because default valult and uservaults 
+        # are not in the same data structure.
+        project_vault_index = projectdatavault.get_vaults_object().get_index_for_vault_folder(PROJECT().vault_folder)
+        if project_vault_index == None:
+            project_vault_index = -99
+
+        sel_to_vault_index = {}
+        vaults_combo = Gtk.ComboBoxText()
+        if project_vault_index != 0:
+            self.vaults_combo.append_text(self.default_vault_name)
+
+        user_vaults_data =  projectdatavault.get_vaults_object().get_user_vaults_data()
+        user_vault_index = 0
+        for vault_properties in user_vaults_data:
+            if project_vault_index != user_vault_index + 1:
+                vaults_combo.append_text(vault_properties["name"])
+            user_vault_index += 1
+
+        vaults_combo.set_active(0)
+        vaults_combo.set_margin_left(4)
+        vaults_combo_row = guiutils.get_left_justified_box([Gtk.Label(label=_("New Data Store:")), vaults_combo])
+
+        set_path_button = Gtk.Button(label=_("Set Clone Project Path"))
+        set_path_button.connect("clicked", lambda w:self.set_project_path_pressed())
+        set_path_button.set_margin_right(4)
+        clone_project_name = Gtk.Label(label=_("<not set>"))
+        set_path_row = guiutils.get_left_justified_box([set_path_button, clone_project_name])
+
+        create_button = Gtk.Button(label=_("Create Clone Project"))
+        create_button.connect("clicked", lambda w:self.create_clone_project_pressed())
+        create_button.set_sensitive(False)
+        create_row = guiutils.get_right_justified_box([create_button])
+        create_row.set_margin_top(12)
+        
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(info_row, False, False, 0)
+        vbox.pack_start(set_path_row, False, False, 0)
+        vbox.pack_start(vaults_combo_row, False, False, 0)
+        vbox.pack_start(create_row, False, False, 0)
+
+
+        close_button = Gtk.Button(_("Close"))
+        close_button.connect("clicked", lambda w: _close_clone_window())
+
+        close_hbox = Gtk.HBox(False, 2)
+        close_hbox.pack_start(Gtk.Label(), True, True, 0)
+        close_hbox.pack_start(close_button, False, False, 0)
+        close_hbox.set_margin_top(24)
+        
+        vbox.pack_start(close_hbox, False, False, 0)
+        
+        pane = guiutils.set_margins(vbox, 12, 12, 12, 12)
+        pane.set_size_request(400, 100)
+        
+        widgets = (vaults_combo)
+
+        self.set_transient_for(gui.editor_window.window)
+        self.set_title(_("Create Clone Project"))
+        #self.connect("delete-event", lambda w, e:_close_info_window())
+        self.add(pane)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.show_all()
+
+    def set_project_path_pressed(self):
+        no_ext_name = "test_project"
+            
+        dialogs.save_project_as_dialog(self.set_project_path_dialog_callback, 
+                                       no_ext_name + "_clone.flb", 
+                                       None, _clone_window)
+
+    def set_project_path_dialog_callback(self, dialog, response_id):
+        if response_id == Gtk.ResponseType.ACCEPT:
+            filenames = dialog.get_filenames()
+            save_path = filenames[0]
+            print(save_path)
+            #target_project.name = os.path.basename(filenames[0])
+            dialog.destroy()
+
+    def create_clone_project_pressed(self):
+        pass
+
+"""
+    def _clone_project_callback(dialog, response, widgets):
+        if response != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+        
+        vaults_combo = widgets
+        
+        clone_vault_name = vaults_combo.get_active_text()
+        dialog.destroy()
+"""
