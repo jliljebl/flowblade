@@ -862,6 +862,8 @@ class ProjectCloneWindow(Gtk.Window):
 
         shutil.copytree(source_data_folder, clone_project_data_folder_path)
 
+        # ./savefiles file UPDATEING MISSING YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         # Create copy of project via saving to temp file.
         temp_path = userfolders.get_cache_dir() + "/temp_" + PROJECT().name
         persistance.save_project(PROJECT(), temp_path)
