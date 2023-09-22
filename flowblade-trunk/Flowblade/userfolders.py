@@ -94,10 +94,10 @@ def get_container_clips_unrendered_dir():
 def get_proxies_dir():
     if projectdatavault.vault_data_exists_for_project() == False:
         return get_render_dir() + appconsts.PROXIES_DIR
-
+    
     return projectdatavault.get_proxies_folder()
 
-def get_proxies_dir():
+def get_ingest_dir():
     return projectdatavault.get_ingest_folder()
     
 def get_audio_levels_dir():
