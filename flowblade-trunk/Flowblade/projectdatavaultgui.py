@@ -23,26 +23,32 @@ This module provides GUI to manage project data and data vaults.
 
 NOTE: 'vault' in code is presented to user as 'Data Store'.
 """
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, GLib
 
-
+import copy
 import datetime
+import hashlib
 import os
+from os.path import isfile, join, isdir
+import shutil
 
 from editorstate import PROJECT
+import dialogs
 import dialogutils
 import gui
 import guicomponents
 import guiutils
+import persistance
 import projectdatavault
+import userfolders
 
 PROJECT_DATA_WIDTH = 370
 PROJECT_DATA_HEIGHT = 270
 
-
 _project_data_manager_window = None
 _current_project_info_window = None
 _clone_window = None
+
 
 # --------------------------------------------------------- interface
 def show_project_data_manager_window():
@@ -739,11 +745,8 @@ class ProjectCloneWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-            
-        self.info_label = Gtk.Label(label=_("Set clone Project path and select new Data Store."))
-        info_row = guiutils.get_left_justified_box([self.info_label])
-        info_row.set_margin_bottom(12)
-        
+        self.clone_project_path = None
+
         # Create Data store selection combo. This is a bit involved because default valult and uservaults 
         # are not in the same data structure.
         project_vault_index = projectdatavault.get_vaults_object().get_index_for_vault_folder(PROJECT().vault_folder)
@@ -751,41 +754,46 @@ class ProjectCloneWindow(Gtk.Window):
             project_vault_index = -99
 
         sel_to_vault_index = {}
-        vaults_combo = Gtk.ComboBoxText()
+        self.vaults_combo = Gtk.ComboBoxText()
         if project_vault_index != 0:
             self.vaults_combo.append_text(self.default_vault_name)
 
-        user_vaults_data =  projectdatavault.get_vaults_object().get_user_vaults_data()
+        user_vaults_data = projectdatavault.get_vaults_object().get_user_vaults_data()
         user_vault_index = 0
         for vault_properties in user_vaults_data:
             if project_vault_index != user_vault_index + 1:
-                vaults_combo.append_text(vault_properties["name"])
+                self.vaults_combo.append_text(vault_properties["name"])
             user_vault_index += 1
 
-        vaults_combo.set_active(0)
-        vaults_combo.set_margin_left(4)
-        vaults_combo_row = guiutils.get_left_justified_box([Gtk.Label(label=_("New Data Store:")), vaults_combo])
+        self.vaults_combo.set_active(0)
+        self.vaults_combo.set_margin_left(4)
+        vaults_combo_row = guiutils.get_left_justified_box([Gtk.Label(label=_("New Data Store:")), self.vaults_combo])
 
         set_path_button = Gtk.Button(label=_("Set Clone Project Path"))
         set_path_button.connect("clicked", lambda w:self.set_project_path_pressed())
         set_path_button.set_margin_right(4)
-        clone_project_name = Gtk.Label(label=_("<not set>"))
-        set_path_row = guiutils.get_left_justified_box([set_path_button, clone_project_name])
+        self.clone_project_name = Gtk.Label(label=_("<not set>"))
+        set_path_row = guiutils.get_left_justified_box([set_path_button, self.clone_project_name])
 
-        create_button = Gtk.Button(label=_("Create Clone Project"))
-        create_button.connect("clicked", lambda w:self.create_clone_project_pressed())
-        create_button.set_sensitive(False)
-        create_row = guiutils.get_right_justified_box([create_button])
-        create_row.set_margin_top(12)
+        self.info_label = Gtk.Label(label=_("<small>Set clone Project path and select new Data Store.</small>"))
+        self.info_label.set_use_markup(True)
+        info_row = guiutils.get_right_justified_box([self.info_label])
+        info_row.set_margin_top(12)
+
+        self.create_button = Gtk.Button(label=_("Create Clone Project"))
+        self.create_button.connect("clicked", lambda w:self.create_clone_project_pressed())
+        create_row = guiutils.get_right_justified_box([self.create_button])
+        create_row.set_margin_bottom(12)
+        self.update_create_button_state()
         
         vbox = Gtk.VBox(False, 2)
-        vbox.pack_start(info_row, False, False, 0)
+
         vbox.pack_start(set_path_row, False, False, 0)
         vbox.pack_start(vaults_combo_row, False, False, 0)
+        vbox.pack_start(info_row, False, False, 0)
         vbox.pack_start(create_row, False, False, 0)
 
-
-        close_button = Gtk.Button(_("Close"))
+        close_button = Gtk.Button(_("Exit"))
         close_button.connect("clicked", lambda w: _close_clone_window())
 
         close_hbox = Gtk.HBox(False, 2)
@@ -797,12 +805,11 @@ class ProjectCloneWindow(Gtk.Window):
         
         pane = guiutils.set_margins(vbox, 12, 12, 12, 12)
         pane.set_size_request(400, 100)
-        
-        widgets = (vaults_combo)
+
 
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Create Clone Project"))
-        #self.connect("delete-event", lambda w, e:_close_info_window())
+
         self.add(pane)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
@@ -815,24 +822,89 @@ class ProjectCloneWindow(Gtk.Window):
                                        None, _clone_window)
 
     def set_project_path_dialog_callback(self, dialog, response_id):
-        if response_id == Gtk.ResponseType.ACCEPT:
-            filenames = dialog.get_filenames()
-            save_path = filenames[0]
-            print(save_path)
-            #target_project.name = os.path.basename(filenames[0])
-            dialog.destroy()
-
-    def create_clone_project_pressed(self):
-        pass
-
-"""
-    def _clone_project_callback(dialog, response, widgets):
-        if response != Gtk.ResponseType.ACCEPT:
+        if response_id != Gtk.ResponseType.ACCEPT:
             dialog.destroy()
             return
-        
-        vaults_combo = widgets
-        
-        clone_vault_name = vaults_combo.get_active_text()
+
+        save_path = dialog.get_filenames()[0]
         dialog.destroy()
-"""
+
+        self.clone_project_path = save_path
+        self.clone_project_name.set_text(".../" + os.path.basename(self.clone_project_path))
+        self.update_create_button_state()
+
+    def update_create_button_state(self):
+        if self.clone_project_path == None:
+            self.create_button.set_sensitive(False)
+            self.info_label.set_text("<small>Set clone Project path and select new Data Store.</small>")
+            self.info_label.set_use_markup(True)
+        else:
+            self.create_button.set_sensitive(True)
+            self.info_label.set_text("<small>Click button to create clone Project.</small>")
+            self.info_label.set_use_markup(True)
+
+    def cloning_completed(self):
+        self.info_label.set_text("<small>Project cloned succesfully.</small>")
+        self.info_label.set_use_markup(True)
+        self.create_button.set_sensitive(False)
+            
+    def create_clone_project_pressed(self):
+        self.info_label.set_text("<small>Cloning Project...</small>")
+        self.info_label.set_use_markup(True)
+        
+        # Copy Project data 
+        md_key = str(datetime.datetime.now()) + str(os.urandom(16))
+        clone_project_data_id_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
+        clone_vault_name = self.vaults_combo.get_active_text()
+        clone_vault_path = projectdatavault.get_vaults_object().get_vault_path_for_name(clone_vault_name)
+        clone_project_data_folder_path = join(clone_vault_path, clone_project_data_id_str) + "/"
+        source_data_folder = projectdatavault.get_project_data_folder()
+
+        shutil.copytree(source_data_folder, clone_project_data_folder_path)
+
+        # Create copy of project via saving to temp file.
+        temp_path = userfolders.get_cache_dir() + "/temp_" + PROJECT().name
+        persistance.save_project(PROJECT(), temp_path)
+
+        persistance.show_messages = False
+        cloneproject = persistance.load_project(temp_path, False, True)
+        cloneproject.c_seq = cloneproject.sequences[cloneproject.c_seq_index] # c_seq is a seuquence.Sequence object so it is not saved twice, but reference set after load.
+            
+        # Set name and last save data
+        cloneproject.last_save_path = self.clone_project_path
+        cloneproject.name = os.path.basename(self.clone_project_path)
+
+        # Set clone project data store data to point to new data folder.
+        cloneproject.vault_folder = clone_vault_path
+        cloneproject.project_data_id = clone_project_data_id_str
+
+        print(PROJECT().last_save_path, cloneproject.last_save_path)
+        
+        # Test that saving is not IOError
+        try:
+            filehandle = open(cloneproject.last_save_path, 'w')
+            filehandle.close()
+        except IOError as ioe:
+            return
+            """
+            primary_txt = "I/O error({0})".format(ioe.errno)
+            secondary_txt = ioe.strerror + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, linker_window, is_info=False)
+            return 
+            """
+        # Update data store paths.
+        for key, mediafile in cloneproject.media_files.items():
+            mediafile.icon_path = self.get_clone_data_store_path(mediafile.icon_path, source_data_folder, clone_project_data_folder_path)
+
+        # Write clone project.
+        persistance.save_project(cloneproject, cloneproject.last_save_path)
+        
+        # Display info
+        GLib.timeout_add(750, self.cloning_completed)
+
+    def get_clone_data_store_path(self, orig_path, source_data_folder, clone_data_folder):
+        if orig_path.find(source_data_folder) == -1:
+            return orig_path
+        else:
+            return orig_path.replace(source_data_folder, clone_data_folder)
+

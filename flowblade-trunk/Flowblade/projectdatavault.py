@@ -151,7 +151,7 @@ def get_vaults_info_path():
 # --------------------------------------------------------- data folders paths
 def get_project_data_folder():
     # Render processes don't have access to project data folder path via 'PROJECT()',
-    # so they sometimes use '_project_data_folder' which set in main() to be available
+    # so they sometimes use '_project_data_folder' which set is in main() to be available
     # when neeeded.
 
     try:
@@ -290,6 +290,13 @@ class Vaults:
                 return vault_data["name"]
         
         return None 
+
+    def get_vault_path_for_name(self, vault_name):
+        for vault_data in self.user_vaults_data:
+            if vault_data["name"] == vault_name:
+                return vault_data["vault_path"]
+        
+        return None
 
     def save(self):
         vaults_info_file_path = get_vaults_info_path()
