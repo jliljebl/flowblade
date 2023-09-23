@@ -30,8 +30,10 @@ import datetime
 import hashlib
 import os
 from os.path import isfile, join, isdir
+import pickle
 import shutil
 
+import atomicfile
 from editorstate import PROJECT
 import dialogs
 import dialogutils
@@ -852,57 +854,82 @@ class ProjectCloneWindow(Gtk.Window):
         self.info_label.set_text("<small>Cloning Project...</small>")
         self.info_label.set_use_markup(True)
         
-        # Copy Project data 
-        md_key = str(datetime.datetime.now()) + str(os.urandom(16))
-        clone_project_data_id_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
-        clone_vault_name = self.vaults_combo.get_active_text()
-        clone_vault_path = projectdatavault.get_vaults_object().get_vault_path_for_name(clone_vault_name)
-        clone_project_data_folder_path = join(clone_vault_path, clone_project_data_id_str) + "/"
-        source_data_folder = projectdatavault.get_project_data_folder()
-
-        shutil.copytree(source_data_folder, clone_project_data_folder_path)
-
-        # ./savefiles file UPDATEING MISSING YET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        # Create copy of project via saving to temp file.
-        temp_path = userfolders.get_cache_dir() + "/temp_" + PROJECT().name
-        persistance.save_project(PROJECT(), temp_path)
-
-        persistance.show_messages = False
-        cloneproject = persistance.load_project(temp_path, False, True)
-        cloneproject.c_seq = cloneproject.sequences[cloneproject.c_seq_index] # c_seq is a seuquence.Sequence object so it is not saved twice, but reference set after load.
-            
-        # Set name and last save data
-        cloneproject.last_save_path = self.clone_project_path
-        cloneproject.name = os.path.basename(self.clone_project_path)
-
-        # Set clone project data store data to point to new data folder.
-        cloneproject.vault_folder = clone_vault_path
-        cloneproject.project_data_id = clone_project_data_id_str
-
-        print(PROJECT().last_save_path, cloneproject.last_save_path)
-        
-        # Test that saving is not IOError
         try:
-            filehandle = open(cloneproject.last_save_path, 'w')
-            filehandle.close()
-        except IOError as ioe:
-            return
-            """
-            primary_txt = "I/O error({0})".format(ioe.errno)
-            secondary_txt = ioe.strerror + "."
-            dialogutils.warning_message(primary_txt, secondary_txt, linker_window, is_info=False)
-            return 
-            """
-        # Update data store paths.
-        for key, mediafile in cloneproject.media_files.items():
-            mediafile.icon_path = self.get_clone_data_store_path(mediafile.icon_path, source_data_folder, clone_project_data_folder_path)
+            # Copy Project data 
+            md_key = str(datetime.datetime.now()) + str(os.urandom(16))
+            clone_project_data_id_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
+            clone_vault_name = self.vaults_combo.get_active_text()
+            clone_vault_path = projectdatavault.get_vaults_object().get_vault_path_for_name(clone_vault_name)
+            clone_project_data_folder_path = join(clone_vault_path, clone_project_data_id_str) + "/"
+            source_data_folder = projectdatavault.get_project_data_folder()
 
-        # Write clone project.
-        persistance.save_project(cloneproject, cloneproject.last_save_path)
-        
-        # Display info
-        GLib.timeout_add(750, self.cloning_completed)
+            shutil.copytree(source_data_folder, clone_project_data_folder_path)
+
+            # Create copy of project via saving to temp file.
+            temp_path = userfolders.get_cache_dir() + "/temp_" + PROJECT().name
+            persistance.save_project(PROJECT(), temp_path)
+
+            persistance.show_messages = False
+            cloneproject = persistance.load_project(temp_path, False, True)
+            cloneproject.c_seq = cloneproject.sequences[cloneproject.c_seq_index] # c_seq is a seuquence.Sequence object so it is not saved twice, but reference set after load.
+                
+            # Set name and last save data
+            cloneproject.last_save_path = self.clone_project_path
+            cloneproject.name = os.path.basename(self.clone_project_path)
+
+            # Set clone project data store data to point to new data folder.
+            cloneproject.vault_folder = clone_vault_path
+            cloneproject.project_data_id = clone_project_data_id_str
+            
+            # Test that saving is not IOError
+            try:
+                filehandle = open(cloneproject.last_save_path, 'w')
+                filehandle.close()
+            except IOError as ioe:
+                primary_txt = "I/O error({0})".format(ioe.errno)
+                secondary_txt = "Project cloning failed:" + ioe.strerror + "."
+                dialogutils.warning_message(primary_txt, secondary_txt, self, is_info=False)
+                return 
+
+            # Update data store paths.
+            # Media files.
+            for key, mediafile in cloneproject.media_files.items():
+                mediafile.icon_path = self.get_clone_data_store_path(mediafile.icon_path, source_data_folder, clone_project_data_folder_path)
+                mediafile.path = self.get_clone_data_store_path(mediafile.path, source_data_folder, clone_project_data_folder_path)
+                if mediafile.second_file_path != None:
+                    mediafile.second_file_path = self.get_clone_data_store_path(mediafile.second_file_path, source_data_folder, clone_project_data_folder_path)
+                if mediafile.container_data != None:
+                    mediafile.container_data.unrendered_media = self.get_clone_data_store_path(mediafile.container_data.unrendered_media, source_data_folder, clone_project_data_folder_path)
+
+            # Clips.
+            for seq in cloneproject.sequences:
+                for track in seq.tracks:
+                    for clip in track.clips:
+                        if hasattr(clip, "path") and clip.path != "" and clip.path != None:
+                            clip.path = self.get_clone_data_store_path(clip.path, source_data_folder, clone_project_data_folder_path)
+                        if hasattr(clip, "container_data") and clip.container_data != None:
+                            clip.container_data.rendered_media = self.get_clone_data_store_path(clip.container_data.rendered_media, source_data_folder, clone_project_data_folder_path)
+                            clip.container_data.unrendered_media = self.get_clone_data_store_path(clip.container_data.unrendered_media, source_data_folder, clone_project_data_folder_path)
+
+            # Write clone project.
+            persistance.save_project(cloneproject, cloneproject.last_save_path)
+            
+            # Update ./savefiles file for cloned project.
+            savefiles_list = []
+            savefiles_list.append((cloneproject.last_save_path, datetime.datetime.now()))
+            savefiles_path = clone_project_data_folder_path + projectdatavault.SAVE_FILES_FILE
+            with atomicfile.AtomicFileWriter(savefiles_path, "wb") as afw:
+                write_file = afw.get_file()
+                pickle.dump(savefiles_list, write_file)
+            
+            # Display info
+            GLib.timeout_add(750, self.cloning_completed)
+
+        except Exception as e:
+            primary_txt = "Cloning failed"
+            secondary_txt = "Project cloning failed: " + str(e) + "."
+            dialogutils.warning_message(primary_txt, secondary_txt, self, is_info=False)
+
 
     def get_clone_data_store_path(self, orig_path, source_data_folder, clone_data_folder):
         if orig_path.find(source_data_folder) == -1:
