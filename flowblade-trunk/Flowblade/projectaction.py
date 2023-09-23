@@ -73,6 +73,7 @@ import mediaplugin
 import modesetting
 import movemodes
 import mltprofiles
+import patternproducer
 import persistance
 import projectdata
 import projectinfogui
@@ -936,6 +937,10 @@ def _media_panel_menu_item_selected(action, variant, msg):
         add_media_files()
     elif msg == "add image sequence":
         add_image_sequence()
+    elif msg == "add generator":
+        mediaplugin.show_add_media_plugin_window()
+    elif msg == "add color clip":
+        patternproducer.create_color_clip()
 
 def media_panel_double_click(media_file):
     global _media_panel_double_click_counter
