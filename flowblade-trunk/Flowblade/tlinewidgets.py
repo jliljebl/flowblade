@@ -2822,6 +2822,9 @@ class TimeLineYPage:
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.leave_notify_func = self._leave_notify_event
+        self.widget.enter_notify_func = self._enter_notify_event
         self.widget.set_tooltip_markup(_("Up - Page Up\nDown - Page Down"))
         
         self.up_button_listener = up_button_listener
@@ -2831,6 +2834,9 @@ class TimeLineYPage:
         self.up_active = False
         self.down_active = False
 
+        self.mouse_prelight = False
+        self.mouse_pos = None
+        
     # --------------------------------------------- PRESS
     def set_active_state(self, up_active, down_active):
         self.up_active = up_active
@@ -2848,6 +2854,19 @@ class TimeLineYPage:
                 if self.down_active == True:
                     self.down_button_listener()
 
+    def _motion_notify_event(self, x, y, state):
+        self.mouse_pos = (x, y)
+        self.widget.queue_draw()
+        
+    def _enter_notify_event(self, event):
+        self.mouse_prelight = True
+        self.mouse_pos = None
+        
+    def _leave_notify_event(self, event):
+        self.mouse_prelight = False
+        self.mouse_pos = None
+        self.widget.queue_draw()
+    
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -2879,10 +2898,16 @@ class TimeLineYPage:
         cr.set_source_surface(icon, 3, h_half + h_half // 2 - 2)
         cr.paint()
 
-        #if self.inactive == True:
-        #    cr.set_source_rgba(0.5, 0.5, 0.5, 0.5)
-        #    cr.rectangle(0, 0, w, h)
-        #    cr.fill()
+        if self.mouse_prelight == True and self.mouse_pos != None:
+            mx, my = self.mouse_pos
+            if my < h / 2:
+                ly = 0
+            else:
+                ly =  h / 2
+
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.2)
+            cr.rectangle(0 + 1, ly + 2, w - 2, h / 2 - 2)
+            cr.fill()
 
     def draw_edge(self, cr, rect):
         cr.set_line_width(1.0)
