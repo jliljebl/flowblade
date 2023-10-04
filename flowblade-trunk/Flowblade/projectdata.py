@@ -29,6 +29,7 @@ except:
     import mlt
 import hashlib
 import os
+import shutil
 
 from gi.repository import GdkPixbuf
 
@@ -529,11 +530,12 @@ class Thumbnailer:
         """
         # Get data
         md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-        thumbnail_path = userfolders.get_thumbnail_dir() + md_str +  ".png"
+        thumbnail_path = userfolders.get_thumbnail_dir() + md_str +  "_thumb.png"
+        render_image_path = userfolders.get_cache_dir() + "thumbnail%03d.png"
 
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 
-                                     thumbnail_path)
+                                     render_image_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")
 
@@ -552,6 +554,9 @@ class Thumbnailer:
         # Connect and write image
         consumer.connect(producer)
         consumer.run()
+        
+        # consumer.run() blocks until done so the thubnailfile is now ready to be copied.
+        shutil.copyfile(userfolders.get_cache_dir() + "thumbnail001.png", thumbnail_path)
         
         return (thumbnail_path, length, info)
 
