@@ -1268,7 +1268,7 @@ class SingleRenderThread(threading.Thread):
         
         # We just autocreate folder if for some reason it has been deleted.
         maybe_create_render_folder(render_item.render_path)
-        
+
         if self.is_frame_sequence_render(vcodec) == True and vformat == None:
             # Frame sequence render
             consumer = renderconsumer.get_img_seq_render_consumer_codec_ext(render_item.render_path,

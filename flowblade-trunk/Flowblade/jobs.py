@@ -28,6 +28,10 @@ import subprocess
 import sys
 import time
 import threading
+try:
+    import mlt7 as mlt
+except:
+    import mlt
 
 import appconsts
 import editorlayout
@@ -40,6 +44,7 @@ import guiutils
 import motionheadless
 import persistance
 import proxyheadless
+import renderconsumer
 import respaths
 import userfolders
 import utils
@@ -542,6 +547,13 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         command_list = [sys.executable]
         command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
         args = self.render_data.get_data_as_args_tuple()
+
+        # Info print, try to remove later.
+        proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
+        proxy_profile = mlt.Profile(proxy_profile_path)
+        enc_index = int(utils.get_headless_arg_value(args, "enc_index"))
+        print("PROXY FFMPEG ARGS: ", renderconsumer.proxy_encodings[enc_index].get_args_vals_tuples_list(proxy_profile))
+
         for arg in args:
             command_list.append(arg)
             

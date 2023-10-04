@@ -600,3 +600,13 @@ def get_flatpak_real_path_for_app_files(app_file):
             return app_file_path
     
     return None # Hitting here needs to crash
+
+
+def get_headless_arg_value(args, key_str):
+    for arg in args:
+        parts = arg.split(":")
+        if len(parts) > 1:
+            if parts[0] == key_str:
+                return parts[1]
+    
+    return None
