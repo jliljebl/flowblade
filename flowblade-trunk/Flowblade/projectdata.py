@@ -530,7 +530,7 @@ class Thumbnailer:
         """
         # Get data
         md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-        thumbnail_path = userfolders.get_thumbnail_dir() + md_str +  "_thumb.png"
+        thumbnail_path = userfolders.get_thumbnail_dir() + md_str + ".png"
         render_image_path = userfolders.get_cache_dir() + "thumbnail%03d.png"
 
         # Create consumer
