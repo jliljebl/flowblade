@@ -72,7 +72,7 @@ class ProxyRenderItemData:
         self.proxy_profile_desc = proxy_profile_desc
         self.lookup_path = lookup_path # For img seqs only
         
-        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py
+        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py.
         self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
 
     def get_data_as_args_tuple(self):

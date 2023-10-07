@@ -234,5 +234,8 @@
     <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" type="av" audiodesc="pcm" resize="True" qgroup="not_settable">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
     </proxyencodingoption>
-
+    <proxyencodingoption name="NVENC H.264 Fast / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
+        <profile args="f=mp4 acodec=aac ab=128k vcodec=h264_nvenc preset=fast cq=10 qmin=10 qmax=10 vprofile=baseline bf=3 b_ref_mode=2 temporal-aq=1 rc_lookahead=20"/>
+    </proxyencodingoption>
+    
 </renderencoding>
