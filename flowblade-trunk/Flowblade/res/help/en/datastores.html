@@ -1,0 +1,91 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Data Stores</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Data Stores</div>
+
+<p>
+Since Flowblade version 2.12 the new <b>Data Store</b> feature allows user to decide where project data such as proxy files, thumbnails and rendered clips for containers and generators is saved.
+</p>
+<p>
+Deleting data of individual projects without affecting other projects is now also possible.
+</p> 
+<div id="toc"></div>
+
+<h3>Data Stores and Project Data folders</h3>
+<ul>
+<li> <b>Data Store</b> is a folder that contains <b>Project Data Folders</b>.</li>
+<li> <b>Project Data Folder</b> is created for each new project automatically in the currently active <b>Data Store</b> on application startup, or when creating a new Project with <b>File->New...</b>.</li>
+<li> Every subsequent saved version of the project keeps data in the same <b>Data Store</b> and <b>Project Data Folder</b>.</li>
+<li> Default <b>Data Store</b> is located at folder <i><b>$XDG_DATA_HOME/projectsdata</i></b>.</li>
+</ul>
+
+<h3>You can ignore Data Stores</h3>
+
+<p>
+<b>Project Data Folders</b> are automatically created for projects, and you only do need to pay attention to them if you wish to save or move project data into some other place then the default <b>Data Store</b>.
+</p>
+
+<h3>Project Data actions</h3>
+<h4>Selecting Data Store for Project Data Folder</h4>
+<ol>
+<li> Select <b>File->New...</b> from application menu.</li>
+<li> In <b>Data Store</b> panel select some other then current default <b>Data Store</b>.</li>
+<li> If you like to create a new <b>Data Store</b> for the project click <b>Create Data Store</b> button.</li>
+<li> Click <b>Ok</b> and a <b>Project Data Folder</b> is created in the selected <b>Data Store</b>.</li>
+</ol>
+<h4>Viewing Project Data Info</h4>
+<ul>
+<li> For current Project select <b>Project->Project Data</b> from application menu.</li>
+<li> For all projects created in the system select<b>Edit->Data Store Manager</b>.</li>
+</ul>
+<h4>Moving Project Data to new Data Store by cloning Project And Data</h4>
+<p><b>Project Data Folder</b> placement in a <b>Data Store</b> is immutable once project is created. To move <b>Project Data Folder</b> you will need to create a cloned project with <b>Project Data Folder</b> in another data store and then optionally delete original <b>Project Data Folder</b>.</p>
+<ol>
+<li> Select <b>Project->Project Data</b> from application menu.</li>
+<li> Press <b>Create Clone Project With Project Data in another Data Store</b> button.</li>
+<li> Give file name for the new cloned project that has project data in another data store.</li>
+<li> Select <b>Data Store</b> where cloned <b>Project Data Folder</b> is placed.</li>
+<li> Press <b>Create Clone Project</b> button.</li>
+</ol>
+<div class="important">
+<b>BE VERY CAREFUL WHEN DELETING PROJECT FILES AFTER CREATING A CLONED PROJECT!</b>
+<p>If you delete the <b><i>new clone project</i></b> file and <b><i>old data</i></b>  you will end up in a situation where no working projects exist anymore.</p>
+<p>It is advisable to not delete any project files after creating cloned projects before the project is fully completed.</p>
+</div>
+<h4>Deleting Project Data</h4>
+<ol>
+<li> Select <b>Edit->Data Store Manager</b>.</li>
+<li> In <b>Data Store</b> panel select <b>Data Store</b> where <b>Project Data Folder</b> you wish to delete is located.</li>
+<li> Identify the project data you wish to delete by <b>Last Save File</b> info and select that row in the table. </li>
+<li> Click on check button to enable <b>Delete Project Data</b> button in the info panel.</li>
+<li> Confirm deleting project data.</li>
+</ol>
+<p>Data for currently open Project cannot be deleted.</p>
+<h3>Data Store actions</h3>
+
+<h4>Creating new Data Store</h4>
+<h4>Changing active Data Store</h4>
+<h4>Dropping and Data Store</h4>
+
+
+
+
+</div>
+</div>
+</body>
+
+</html> 
