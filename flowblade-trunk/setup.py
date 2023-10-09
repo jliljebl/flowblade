@@ -19,9 +19,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import glob, os 
-from distutils.core import setup
-
+import glob, os
+from setuptools import setup
+    
 # FLOWBLADE distutils setup.py script.
 
 install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblade.desktop']),
