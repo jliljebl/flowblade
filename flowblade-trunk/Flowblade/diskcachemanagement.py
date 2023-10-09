@@ -37,7 +37,12 @@ RECREATE_WARNING = 1
 PROJECT_DATA_WARNING = 2
 
 _panels = None
+_legacy_disk_data_exists = True
 
+
+def legacy_disk_data_exists():
+    return _legacy_disk_data_exists
+    
 
 class DiskFolderManagementPanel:
     
@@ -202,24 +207,29 @@ def check_disk_cache_size():
     Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _check_cache_size)
 
 def _check_cache_size():
-    # We are running this check in GUI thread, but this should be fast enough to not block app GUI noticeably.
-    check_level = editorpersistance.prefs.disk_space_warning
-    
-    # Get disk cache size
-    panels = _get_disk_dir_panels()
-    used_disk_cache_size = 0
-    for panel in panels:
-        used_disk_cache_size += panel.used_disk
-    
-    size_str = panels[0].get_size_str(used_disk_cache_size)
+    try:
+        # We are running this check in GUI thread, but this should be fast enough to not block app GUI noticeably.
+        check_level = editorpersistance.prefs.disk_space_warning
+        
+        # Get disk cache size
+        panels = _get_disk_dir_panels()
+        used_disk_cache_size = 0
+        for panel in panels:
+            used_disk_cache_size += panel.used_disk
+        
+        size_str = panels[0].get_size_str(used_disk_cache_size)
 
-    # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
-    if check_level == 1 and used_disk_cache_size > 1000000 * 500:
-        _show_warning(size_str)
-    elif check_level == 2 and used_disk_cache_size > 1000000 * 1000:
-        _show_warning(size_str)
-    elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
-        _show_warning(size_str)
+        # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+        if check_level == 1 and used_disk_cache_size > 1000000 * 500:
+            _show_warning(size_str)
+        elif check_level == 2 and used_disk_cache_size > 1000000 * 1000:
+            _show_warning(size_str)
+        elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
+            _show_warning(size_str)
+    except:
+        # No legacy data for layout prior to 2.12 exists.
+        global _legacy_disk_data_exists
+        _legacy_disk_data_exists = False
 
     return False
 

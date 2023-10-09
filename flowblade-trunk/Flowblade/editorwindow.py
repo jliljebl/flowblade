@@ -843,7 +843,6 @@ class EditorWindow:
             ('DeleteAudioTrack', None, _('Delete Audio Track'), None, None, lambda a:projectaction.delete_audio_track()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
-            ('DiskCacheManager', None, _('Disk Cache Manager'), None, None, lambda a:diskcachemanagement.show_disk_management_dialog()),
             ('ProfilesManager', None, _('Profiles Manager'), None, None, lambda a:menuactions.profiles_manager()),
             ('Preferences', None, _('Preferences'), None, None, lambda a:preferenceswindow.preferences_dialog()),
             ('ViewMenu', None, _('View')),
@@ -959,7 +958,6 @@ class EditorWindow:
                     <menuitem action='AddTransition'/>
                     <separator/>
                     <menuitem action='DataStoreManager'/>
-                    <menuitem action='DiskCacheManager'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='KeyboardShortcuts'/>

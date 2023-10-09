@@ -37,6 +37,7 @@ import atomicfile
 from editorstate import PROJECT
 import dialogs
 import dialogutils
+import diskcachemanagement
 import gui
 import guicomponents
 import guiutils
@@ -324,11 +325,16 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         connect_button = Gtk.Button(_("Connect Data Store"))
         connect_button.connect("clicked", lambda w: self.connect_button_clicked())
 
+        if diskcachemanagement.legacy_disk_data_exists() == True:
+            disk_cache_button = Gtk.Button(_("Legacy Disk Cache Manager"))
+            disk_cache_button.connect("clicked", lambda w: diskcachemanagement.show_disk_management_dialog())
+            
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(create_button, False, False, 0)
         hbox.pack_start(connect_button, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
-
+        if diskcachemanagement.legacy_disk_data_exists() == True:
+            hbox.pack_start(disk_cache_button, False, False, 0)
         return hbox
 
     def fill_vaults_combo(self):
