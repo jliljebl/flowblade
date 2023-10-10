@@ -474,9 +474,9 @@ def get_gtk_image_from_file(source_path, image_height):
 
 def set_margins(widget, t, b, l, r):
     widget.set_margin_top(t)
-    widget.set_margin_left(l)
+    widget.set_margin_start(l)
     widget.set_margin_bottom(b)
-    widget.set_margin_right(r)
+    widget.set_margin_end(r)
     
     return widget
 

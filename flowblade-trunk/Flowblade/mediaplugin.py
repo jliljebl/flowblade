@@ -290,7 +290,7 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(self.screenshot_canvas, 0, 8, 0, 0)
 
         self.frame_display = Gtk.Label(label=_("Clip Frame"))
-        self.frame_display.set_margin_right(2)
+        self.frame_display.set_margin_end(2)
         
         self.frame_select = Gtk.SpinButton.new_with_range (0, 200, 1)
         self.frame_select.set_value(0)
@@ -314,8 +314,8 @@ class AddMediaPluginWindow(Gtk.Window):
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
-        pos_bar_frame.set_margin_left(6)
-        pos_bar_frame.set_margin_right(2)
+        pos_bar_frame.set_margin_start(6)
+        pos_bar_frame.set_margin_end(2)
                                                  
                                                  
         control_panel = Gtk.HBox(False, 2)

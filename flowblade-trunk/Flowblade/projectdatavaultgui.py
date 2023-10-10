@@ -145,7 +145,7 @@ class AbstractDataStoreWindow(Gtk.Window):
         savefile, times_saved, last_date = folder_handle.get_save_info()
 
         save__name_label = guiutils.bold_label(_("Last File Name:"))
-        save__name_label.set_margin_right(4)
+        save__name_label.set_margin_end(4)
         try:
             save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
         except:
@@ -154,7 +154,7 @@ class AbstractDataStoreWindow(Gtk.Window):
         vbox.pack_start(row, False, False, 0)
         
         save_label = guiutils.bold_label(_("Last Saved:"))
-        save_label.set_margin_right(4)
+        save_label.set_margin_end(4)
         if str(last_date) != "0":
             save_date = Gtk.Label(label=str(last_date))
         else:
@@ -165,7 +165,7 @@ class AbstractDataStoreWindow(Gtk.Window):
         vbox.pack_start(row, False, False, 0)
         
         data_id_label = guiutils.bold_label(_("Data ID:"))
-        data_id_label.set_margin_right(4)
+        data_id_label.set_margin_end(4)
         data_id = Gtk.Label(label=folder_handle.data_id)
         row = guiutils.get_left_justified_box([data_id_label, data_id])
         row.set_margin_bottom(12)
@@ -232,16 +232,16 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
             
         self.info_frame = Gtk.VBox()
         self.info_frame.pack_start(self.project_info_panel, False, False, 0)
-        self.info_frame.set_margin_left(12)
+        self.info_frame.set_margin_start(12)
 
         view_properties_panel = self.get_view_properties_panel()
-        view_properties_panel.set_margin_left(12)
+        view_properties_panel.set_margin_start(12)
 
         hbox = Gtk.HBox(False, 2)
         hbox.pack_start(self.data_folders_list_view, True, True, 0)
         hbox.pack_start(self.info_frame, False, False, 0)
         #hbox.set_margin_top(4)
-        hbox.set_margin_left(24)
+        hbox.set_margin_start(24)
 
         title_row = guiutils.get_centered_box([guiutils.bold_label(_("Projects"))])
         title_row.set_margin_bottom(12)
@@ -362,7 +362,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         self.only_saved_check.connect("toggled", lambda w: self.show_only_saved_toggled(w))
         
         label = Gtk.Label(label=_("Show only Saved Projects"))
-        label.set_margin_left(4)
+        label.set_margin_start(4)
         destroy_non_saved_button = Gtk.Button(_("Destroy Non-Saved Projects"))
 
         hbox = Gtk.HBox(False, 2)
@@ -696,12 +696,12 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
             if vault_name == None:
                 vault_name = _("Project Data Store is not active")
         store_name_label = guiutils.bold_label(_("Project Data Store:"))
-        store_name_label.set_margin_right(4)
+        store_name_label.set_margin_end(4)
         row = guiutils.get_left_justified_box([store_name_label, Gtk.Label(label=vault_name)])
         vbox.pack_start(row, False, False, 0)
 
         path_label = guiutils.bold_label(_("Data Store Path:"))
-        path_label.set_margin_right(4)
+        path_label.set_margin_end(4)
         row = guiutils.get_left_justified_box([path_label, Gtk.Label(label=PROJECT().vault_folder)])
         row.set_margin_bottom(12)
         vbox.pack_start(row, False, False, 0)
@@ -774,12 +774,12 @@ class ProjectCloneWindow(Gtk.Window):
             user_vault_index += 1
 
         self.vaults_combo.set_active(0)
-        self.vaults_combo.set_margin_left(4)
+        self.vaults_combo.set_margin_start(4)
         vaults_combo_row = guiutils.get_left_justified_box([Gtk.Label(label=_("New Data Store:")), self.vaults_combo])
 
         set_path_button = Gtk.Button(label=_("Set Clone Project Path"))
         set_path_button.connect("clicked", lambda w:self.set_project_path_pressed())
-        set_path_button.set_margin_right(4)
+        set_path_button.set_margin_end(4)
         self.clone_project_name = Gtk.Label(label=_("<not set>"))
         set_path_row = guiutils.get_left_justified_box([set_path_button, self.clone_project_name])
 

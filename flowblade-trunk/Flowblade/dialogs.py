@@ -74,17 +74,17 @@ def new_project_dialog(callback):
     profile_info_box.add(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
-    profiles_frame.set_margin_right(18)
+    profiles_frame.set_margin_end(18)
     
     tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
-    tracks_frame.set_margin_right(18)
+    tracks_frame.set_margin_end(18)
 
     vault_combo = projectdatavaultgui.get_vault_select_combo(projectdatavault.get_active_vault_index())
     add_vault_button = Gtk.Button(label=_("Create New Data Store"))
     add_vault_button.connect("clicked", lambda w: projectdatavaultgui.show_create_data_dialog(_create_data_store_callback, vault_combo))
-    add_vault_button.set_margin_left(12)
+    add_vault_button.set_margin_start(12)
     vault_row = Gtk.HBox(False, 8)
     vault_row.pack_start(vault_combo, True, True, 0)
     vault_row.pack_start(add_vault_button, False, False, 0)
@@ -1074,7 +1074,7 @@ def autosave_recovery_dialog(callback, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.set_margin_left(6)
+    dialog.vbox.set_margin_start(6)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -1118,7 +1118,7 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.set_margin_left(6)
+    dialog.vbox.set_margin_start(6)
     _default_behaviour(dialog)
     dialog.connect('response', response_callback, autosaves_view, autosaves)
     dialog.show_all()

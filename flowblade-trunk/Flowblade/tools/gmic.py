@@ -641,8 +641,8 @@ class GmicWindow(Gtk.Window):
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
-        pos_bar_frame.set_margin_left(6)
-        pos_bar_frame.set_margin_right(2)
+        pos_bar_frame.set_margin_start(6)
+        pos_bar_frame.set_margin_end(2)
     
         if editorpersistance.prefs.double_track_hights == True:
             pos_bar_frame_temp = Gtk.VBox(False, 0)
@@ -690,7 +690,7 @@ class GmicWindow(Gtk.Window):
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
-        self.action_select.set_margin_right(4)
+        self.action_select.set_margin_end(4)
                 
         self.action_label = Gtk.Label(label=_("Add to Script"))
 
@@ -766,7 +766,7 @@ class GmicWindow(Gtk.Window):
         self.encode_check_label = Gtk.Label(label=_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
-        self.encode_check.set_margin_right(4)
+        self.encode_check.set_margin_end(4)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
         
         self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))

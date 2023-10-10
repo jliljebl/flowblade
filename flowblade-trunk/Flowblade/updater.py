@@ -248,7 +248,7 @@ def set_info_icon(info_icon_id, icon_gtk_image=None):
             widget = Gtk.Image.new_from_stock(info_icon_id, Gtk.IconSize.MENU)
     else:
         widget = icon_gtk_image
-        widget.set_margin_left(4)
+        widget.set_margin_start(4)
 
     gui.tline_info.remove(gui.tline_info.info_contents)
     gui.tline_info.add(widget)

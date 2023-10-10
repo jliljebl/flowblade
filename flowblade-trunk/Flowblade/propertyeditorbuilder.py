@@ -284,7 +284,7 @@ class SliderEditor:
             self.vbox.pack_start(hbox, False, False, 0)
         else:
             label = Gtk.Label(label=name + ":")
-            label.set_margin_left(4)
+            label.set_margin_start(4)
                 
             label_panel = Gtk.HBox(False, 4)
             label_panel.pack_start(label, False, False, 0)            
@@ -295,7 +295,7 @@ class SliderEditor:
             vboxl.pack_start(hslider, False, False, 0)
                         
             hboxr = Gtk.HBox()
-            spin.set_margin_left(4)
+            spin.set_margin_start(4)
             hboxr.pack_start(spin, False, False, 0)
             kfs_switcher.widget.set_margin_top(6)
             hboxr.pack_start(kfs_switcher.widget, False, False, 4)

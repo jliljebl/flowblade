@@ -303,8 +303,8 @@ class AbstractSimpleEditor(Gtk.HBox):
 
     def set_margins(self, editor_panel):
         editor_panel.set_margin_top(2)
-        editor_panel.set_margin_left(4)
-        editor_panel.set_margin_right(4)
+        editor_panel.set_margin_start(4)
+        editor_panel.set_margin_end(4)
         
 class TextEditor(AbstractSimpleEditor):
 
@@ -854,7 +854,7 @@ class TextAreaEditor(AbstractSimpleEditor):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
 
         editor_label = Gtk.Label(label=translations.get_param_name(label_text))
-        editor_label.set_margin_right(12)
+        editor_label.set_margin_end(12)
         
         self.text_view = Gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -913,7 +913,7 @@ class PreviewPanel(Gtk.VBox):
 
         # Control row
         self.frame_display = Gtk.Label(label=_("Clip Frame"))
-        self.frame_display.set_margin_right(2)
+        self.frame_display.set_margin_end(2)
         
         if length == -1:
             length = clip.clip_out - clip.clip_in

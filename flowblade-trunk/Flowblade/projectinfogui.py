@@ -75,7 +75,7 @@ def get_top_level_project_info_panel():
     desc_label.modify_font(Pango.FontDescription(font_desc))
     desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
-    desc_row.set_margin_left(4)
+    desc_row.set_margin_start(4)
     # We are leaving this for updates for now because smaller window sizes use this reference 'widgets.info_box' still.
     info_box = guicomponents.get_profile_info_reduced_small_box(profile)
     

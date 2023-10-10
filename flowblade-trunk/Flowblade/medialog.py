@@ -661,7 +661,7 @@ def get_media_log_events_panel(events_list_view):
     star_check = Gtk.CheckButton()
     star_check.set_active(True)
     star_check.connect("clicked", lambda w:media_log_filtering_changed())
-    star_check.set_margin_right(5)
+    star_check.set_margin_end(5)
     widgets.star_check = star_check
 
     star_label = Gtk.Image()
@@ -671,7 +671,7 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
     star_not_active_check.connect("clicked", lambda w:media_log_filtering_changed())
-    star_not_active_check.set_margin_right(5)
+    star_not_active_check.set_margin_end(5)
     widgets.star_not_active_check = star_not_active_check
 
     star_not_active_label = Gtk.Image()

@@ -921,7 +921,7 @@ class RenderArgsRow():
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)
         self.use_args_check.set_tooltip_text(_("Render using key=value rendering options"))
-        self.use_args_check.set_margin_left(2)
+        self.use_args_check.set_margin_start(2)
         
         self.args_info = Gtk.Label()
         self.args_info.set_sensitive(False)

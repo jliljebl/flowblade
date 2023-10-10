@@ -506,8 +506,8 @@ class EditorWindow:
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_margin_top(2)
         pos_bar_frame.set_margin_bottom(4)
-        pos_bar_frame.set_margin_left(4)
-        pos_bar_frame.set_margin_right(4)
+        pos_bar_frame.set_margin_start(4)
+        pos_bar_frame.set_margin_end(4)
 
         # Play buttons row
         self._create_monitor_buttons()
@@ -531,7 +531,7 @@ class EditorWindow:
             self.player_buttons.no_decorations = True
 
         self.view_mode_select = guicomponents.get_monitor_view_select_launcher(tlineaction.view_mode_menu_lauched)
-        self.view_mode_select.widget.set_margin_right(10)
+        self.view_mode_select.widget.set_margin_end(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
 
         player_buttons_row = Gtk.HBox(False, 0)
@@ -1387,8 +1387,8 @@ class EditorWindow:
            buttons_row.set_margin_bottom(offset)
 
         buttons_row.set_margin_top(offset)
-        buttons_row.set_margin_left(offset)
-        buttons_row.set_margin_right(offset)
+        buttons_row.set_margin_start(offset)
+        buttons_row.set_margin_end(offset)
 
         return buttons_row
 
