@@ -307,7 +307,7 @@ class Titler(Gtk.Window):
         
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
+        bold_icon = Gtk.Image. new_from_icon_name("format-text-bold", 
                                        Gtk.IconSize.BUTTON)
         italic_icon = Gtk.Image.new_from_stock(Gtk.STOCK_ITALIC, 
                                        Gtk.IconSize.BUTTON)
