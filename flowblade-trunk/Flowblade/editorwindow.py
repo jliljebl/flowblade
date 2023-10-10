@@ -505,7 +505,6 @@ class EditorWindow:
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        #pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(2)
         pos_bar_frame.set_margin_bottom(4)
         pos_bar_frame.set_margin_left(4)
@@ -566,7 +565,6 @@ class EditorWindow:
 
         self.monitor_frame = Gtk.Frame()
         self.monitor_frame.add(monitor_align)
-        self.monitor_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         self.monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
         
         # Middlebar
@@ -574,7 +572,6 @@ class EditorWindow:
 
         self.edit_buttons_frame = Gtk.Frame()
         self.edit_buttons_frame.add(self.edit_buttons_row)
-        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:

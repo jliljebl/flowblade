@@ -1279,7 +1279,6 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_buttons_row = GeometryEditorButtonsRow(self)
         
         g_frame = Gtk.Frame()
-        g_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         g_frame.add(self.geom_kf_edit.widget)
              
         self.buttons_row = ClipEditorButtonsRow(self, False, True)
@@ -1728,7 +1727,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.geom_buttons_row = GeometryEditorButtonsRow(self, True)
         
         g_frame = Gtk.Frame()
-        g_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         g_frame.add(self.geom_kf_edit.widget)
              
         self.buttons_row = ClipEditorButtonsRow(self, True, False)
