@@ -422,7 +422,6 @@ def _create_widgets():
     
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_frame = Gtk.Frame()
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)

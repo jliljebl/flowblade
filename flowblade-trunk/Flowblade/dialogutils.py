@@ -211,16 +211,14 @@ def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
 
 def get_default_alignment(panel): # Ok, why are we doing new Gtk.Frame here and then removing shadow?
                                   # We may need to change this for Gtk4.
-    alignment = Gtk.Frame.new("")
+    alignment = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
     alignment.add(panel)
-    alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 12, 24, 12, 18)
     return alignment
 
 def get_alignment2(panel):
-    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
+    alignment = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
     alignment.add(panel)
-    alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 6, 24, 12, 12)
     
     return alignment

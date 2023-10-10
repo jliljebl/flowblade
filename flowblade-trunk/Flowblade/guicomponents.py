@@ -354,7 +354,6 @@ class BinTreeView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # TreeView
         self.treeview = Gtk.TreeView(model=self.storemodel)
@@ -504,7 +503,6 @@ class SequenceListView(ImageTextImageListView):
         ImageTextImageListView.__init__(self)
         self.sequence_popup_cb = sequence_popup_cb
         self.treeview.connect('button-press-event', self._button_press_event)
-        self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         self.double_click_cb = double_click_cb
         self.double_click_counter = 0 # We get 2 events for double click, we use this to only do one callback
@@ -3733,7 +3731,6 @@ class CategoriesModelComboBoxWithData:
 class EditMultiStack:
     def __init__(self):
         self.widget = Gtk.Frame()
-        self.widget.set_shadow_type(Gtk.ShadowType.NONE)
         self.panels = {}
         self.visible_name = None
 

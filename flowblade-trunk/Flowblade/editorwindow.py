@@ -328,7 +328,6 @@ class EditorWindow:
                                                         projectaction.media_panel_popup_requested)
         view = Gtk.Viewport()
         view.add(self.media_list_view.widget)
-        view.set_shadow_type(Gtk.ShadowType.NONE)
 
         self.media_scroll_window = Gtk.ScrolledWindow()
         self.media_scroll_window.add(view)

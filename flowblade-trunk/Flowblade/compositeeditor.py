@@ -76,7 +76,6 @@ def create_widgets():
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.add(widgets.value_edit_box)
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
 
 def get_compositor_clip_panel():
     create_widgets()

@@ -596,7 +596,7 @@ class PosBarProducer:
 # ---------------------------------------------------------------------edit panel 
 def create_widgets():
     """
-    Widgets for editing compositing properties.
+    Widgets for editing generator properties.
     """
     widgets.plugin_info = guicomponents.PluginInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
@@ -613,7 +613,6 @@ def create_widgets():
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.add(widgets.value_edit_box)
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
 
 def get_plugin_hamburger_row():
     create_widgets()
