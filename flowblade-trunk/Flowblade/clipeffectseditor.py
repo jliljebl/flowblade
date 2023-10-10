@@ -239,9 +239,8 @@ class FilterStackItem:
         self.filter_header_row = FilterHeaderRow(filter_object)
 
         self.edit_panel = edit_panel
-        self.edit_panel_frame = Gtk.Frame()
+        self.edit_panel_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         self.edit_panel_frame.add(edit_panel)
-        self.edit_panel_frame.set_shadow_type(Gtk.ShadowType.NONE)
         
         self.filter_stack = filter_stack
         self.expander = Gtk.Expander()
@@ -249,9 +248,8 @@ class FilterStackItem:
         self.expander.add(self.edit_panel_frame)
         self.expander.set_label_fill(True)
 
-        self.expander_frame = Gtk.Frame()
+        self.expander_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         self.expander_frame.add(self.expander)
-        self.expander_frame.set_shadow_type(Gtk.ShadowType.NONE)
         guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
         
         self.active_check = Gtk.CheckButton()
