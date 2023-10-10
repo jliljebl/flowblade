@@ -327,7 +327,6 @@ class JobsQueueView(Gtk.VBox):
 
         # View
         self.treeview = Gtk.TreeView(model=self.storemodel)
-        self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
