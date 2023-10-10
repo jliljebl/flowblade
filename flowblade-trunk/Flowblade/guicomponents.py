@@ -1047,7 +1047,7 @@ class BinInfoPanel(Gtk.HBox):
             
         self.bin_name = Gtk.Label()
 
-        self.bin_name.modify_font(Pango.FontDescription(font_desc))
+        self.bin_name.override_font(Pango.FontDescription(font_desc))
         self.bin_name.set_sensitive(False)
                        
         self.items = Gtk.Label()
