@@ -406,8 +406,8 @@ def get_sized_button(button_label, w, h, clicked_listener=None):
 
 def get_render_button():
     render_button = Gtk.Button()
-    render_icon = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_RECORD, 
-                                           Gtk.IconSize.BUTTON)
+    render_icon = Gtk.Image.new_from_icon_name( "media-record", 
+                                                Gtk.IconSize.BUTTON)
     render_button_box = Gtk.HBox()
     render_button_box.pack_start(get_pad_label(10, 10), False, False, 0)
     render_button_box.pack_start(render_icon, False, False, 0)

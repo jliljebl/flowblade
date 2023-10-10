@@ -636,7 +636,7 @@ def rendered_clips_no_home_folder_dialog():
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
     title = _("Save project '") + project_name + _("' before exiting?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, "dialog-information")
 
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -657,7 +657,7 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
 
 def close_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before closing project?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, "dialog-information")
     align = dialogutils.get_default_alignment(content)
 
     dialog = Gtk.Dialog("",

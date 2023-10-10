@@ -245,7 +245,7 @@ def set_info_icon(info_icon_id, icon_gtk_image=None):
         if info_icon_id == None:
             widget = Gtk.Label()
         else:
-            widget = Gtk.Image.new_from_stock(info_icon_id, Gtk.IconSize.MENU)
+            widget = Gtk.Image.new_from_icon_name(info_icon_id, Gtk.IconSize.MENU)
     else:
         widget = icon_gtk_image
         widget.set_margin_start(4)

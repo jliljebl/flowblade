@@ -405,7 +405,6 @@ class BinTreeView(Gtk.VBox):
 
         for media_bin in PROJECT().bins:
             try:
-                #Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
                 row_data = [pixbuf,
                             media_bin.name,

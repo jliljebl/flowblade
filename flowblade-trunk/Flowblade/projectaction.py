@@ -533,7 +533,7 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     
 def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=None):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    updater.set_info_icon(Gtk.STOCK_OPEN)
+    updater.set_info_icon("document-open")
 
     dialog = dialogs.load_dialog()
     persistance.load_dialog = dialog

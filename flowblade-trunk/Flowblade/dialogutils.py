@@ -138,14 +138,14 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
 def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None):
 
     if is_info == True:
-        icon = Gtk.STOCK_DIALOG_INFO
+        icon = "dialog-information"
     else:
-        icon = Gtk.STOCK_DIALOG_WARNING
+        icon = "dialog-warning"
     
     if alternative_icon != None:
         icon = alternative_icon
 
-    warning_icon = Gtk.Image.new_from_stock(icon, Gtk.IconSize.DIALOG)
+    warning_icon = Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.DIALOG)
     icon_box = Gtk.VBox(False, 2)
     icon_box.pack_start(warning_icon, False, False, 0)
     icon_box.pack_start(Gtk.Label(), True, True, 0)

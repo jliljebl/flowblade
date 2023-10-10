@@ -67,9 +67,9 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     if frame_rates_match == False:
         # Aug-2019 - SvdB - BB
         if editorpersistance.prefs.double_track_hights:
-            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DND)
+            warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.DND)
         else:
-            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
+            warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.MENU)
         warning_text = Gtk.Label(label=_("Project and Render Profile FPS values are not same. Rendered file may have A/V sync issues."))
         warning_box = Gtk.HBox(False, 2)
         warning_box.pack_start(warning_icon,False, False, 0)
@@ -1110,13 +1110,13 @@ class RenderArgsPanelSmall():
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
         self.opts_save_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
+        icon = Gtk.Image.new_from_icon_name("document-save", Gtk.IconSize.MENU)
         self.opts_save_button.set_image(icon)
         self.opts_save_button.connect("clicked", lambda w: save_args_callback())
         self.opts_save_button.set_sensitive(False)
     
         self.opts_load_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+        icon = Gtk.Image.new_from_icon_name("document-open", Gtk.IconSize.MENU)
         self.opts_load_button.set_image(icon)
         self.opts_load_button.connect("clicked", lambda w: load_args_callback())
 
