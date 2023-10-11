@@ -899,7 +899,7 @@ def _get_items_in_scroll_window(items, rows_count, w, h):
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    sw.add_with_viewport(items_pane)
+    sw.add(items_pane)
     sw.set_size_request(w, h)
     return sw
 
@@ -1704,7 +1704,7 @@ def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    sw.add_with_viewport(pad_panel)
+    sw.add(pad_panel)
     sw.set_size_request(420, 400)
     
     scroll_hold_panel.pack_start(sw, False, False, 0)

@@ -600,7 +600,7 @@ def update_stack(clip, track, clip_index):
     _filter_stack = new_stack
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(_filter_stack.widget)
+    scroll_window.add(_filter_stack.widget)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
@@ -812,7 +812,7 @@ def show_text_in_edit_area(text):
     vbox.show_all()
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(vbox)
+    scroll_window.add(vbox)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 

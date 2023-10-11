@@ -188,7 +188,7 @@ def _display_compositor_edit_box():
         vbox.show_all()
 
         scroll_window = Gtk.ScrolledWindow()
-        scroll_window.add_with_viewport(vbox)
+        scroll_window.add(vbox)
         scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scroll_window.show_all()
 
@@ -276,7 +276,7 @@ def _display_compositor_edit_box():
     vbox.show_all()
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(vbox)
+    scroll_window.add(vbox)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 

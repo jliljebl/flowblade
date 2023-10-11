@@ -66,7 +66,7 @@ class ViewEditor(Gtk.Frame):
         self.last_h_scroll = 0.0
         self.last_v_scroll = 0.0
         
-        self.scroll_window.add_with_viewport(self.edit_area)
+        self.scroll_window.add(self.edit_area)
         self.scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scroll_window.show_all()
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
