@@ -517,8 +517,8 @@ def get_media_log_list_view():
 def update_media_log_view():
     widgets.media_log_view.fill_data_model()
     # Does not show last line, do we need timer?
-    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
-    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+    max_val = widgets.media_log_view.scroll.get_vadjustment().get_upper()
+    widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
 
     
 class MediaLogListView(Gtk.VBox):
