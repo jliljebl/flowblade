@@ -349,7 +349,7 @@ class AddMediaFilesThread(threading.Thread):
         update_current_bin_files_count()
         _enable_save()
 
-        normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
+        normal_cursor = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR) #RTL
         gui.editor_window.window.get_window().set_cursor(normal_cursor)
         gui.editor_window.bin_info.display_bin_info()
         
@@ -374,7 +374,7 @@ class AddMediaFilesThread(threading.Thread):
         self.post_load_update_done = True
         
     def _change_cursor_watch(self):
-        watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
+        watch = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.WATCH)
         gui.editor_window.window.get_window().set_cursor(watch)
 
     def _not_valid_producer(self, err):

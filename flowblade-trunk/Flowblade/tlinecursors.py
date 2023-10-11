@@ -265,7 +265,7 @@ class TLineCursorManager:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:
             gdk_window = gui.tline_display.get_parent_window()
-            gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
+            gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR))
 
     def get_own_cursor(self, display, surface, hotx, hoty):
         pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
@@ -304,9 +304,9 @@ class TLineCursorManager:
         elif mode == editorstate.SLIDE_TRIM_NO_EDIT:
             cursor = self.get_own_cursor(display, SLIDE_NO_EDIT_CURSOR, 9, 9)
         elif mode == editorstate.SELECT_PARENT_CLIP:
-            cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
+            cursor =  Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS)
         elif mode == editorstate.SELECT_TLINE_SYNC_CLIP:
-            cursor =  Gdk.Cursor.new(Gdk.CursorType.TCROSS)
+            cursor =  Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS)
         elif mode == editorstate.MULTI_MOVE:
             cursor = self.get_own_cursor(display, MULTIMOVE_CURSOR, 4, 8)
         elif mode == editorstate.CLIP_END_DRAG:
@@ -319,7 +319,7 @@ class TLineCursorManager:
         elif mode == editorstate.MULTI_TRIM:
             cursor = self.get_own_cursor(display, MULTI_TRIM_CURSOR, 1, 0)
         else:
-            cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
+            cursor = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR)
 
         gdk_window.set_cursor(cursor)
 
@@ -374,7 +374,7 @@ class TLineCursorManager:
             self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_MULTI_TRIM)
 
     def tline_cursor_leave(self, event):
-        cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
+        cursor = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR)
         gdk_window = gui.editor_window.window.get_window()
         gdk_window.set_cursor(cursor)
 
