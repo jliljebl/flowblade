@@ -18,8 +18,6 @@
   color: #D3DAE3;
   background-color: rgba(23, 25, 35, 0.999); }
 
-*:disabled {
-  -gtk-icon-effect: dim; }
 
 .gtkstyle-fallback {
   background-color: #171923;

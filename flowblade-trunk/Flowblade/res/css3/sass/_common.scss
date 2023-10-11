@@ -8,6 +8,7 @@ $asset_suffix: if($variant=='dark', '-dark', ''); // use dark assets in dark var
 $darker_asset_suffix: if($darker=='true', '-dark', $asset_suffix);
 
 * {
+  all: unset;
   background-clip: padding-box;
   -GtkToolButton-icon-spacing: 4;
   -GtkTextView-error-underline-color: $error_color;
@@ -39,7 +40,7 @@ $darker_asset_suffix: if($darker=='true', '-dark', $asset_suffix);
   background-color: if($transparency == 'true', transparentize($bg_color, 0.001), $bg_color); // without this headerbar transparency doesn't seem to work
 }
 
-*:disabled { -gtk-icon-effect: dim; }
+
 
 .gtkstyle-fallback {
   background-color: $bg_color;
