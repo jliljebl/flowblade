@@ -20,7 +20,7 @@
 
 """
 Module provides utility methods for modules creating headless render procesesses.
-Used mostly for container clips rendering, hence ContainerClipsRenderingUTILS.
+Created originally for container clips rendering, hence ContainerClipsRenderingUTILS.
 """
 
 import os
@@ -29,7 +29,6 @@ import sys
 
 import appconsts
 import atomicfile
-#import userfolders
 import utils
 
 

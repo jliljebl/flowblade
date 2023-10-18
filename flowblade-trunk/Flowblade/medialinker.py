@@ -702,7 +702,6 @@ def  video_file_replace(link_path, file_name, duration):
     if os.path.isfile(link_path):
         os.remove(link_path)
     command = "ffmpeg -loop 1 -i "+ image_file + " -i " +  audio_file  + " -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " + link_path
-    print("ml 696",  command)
     os.system(command)
 
     if os.path.isfile(link_path):

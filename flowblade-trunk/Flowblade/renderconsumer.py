@@ -61,6 +61,7 @@ QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
+FFMPEG_GPU_ENC = "ffmpeggpuenc"
 PRESET_GROUP = appconsts.PRESET_GROUP
 PRESET_GROUP_H264 = appconsts.PRESET_GROUP_H264
 PRESET_GROUP_NVENC = appconsts.PRESET_GROUP_NVENC 
@@ -161,6 +162,7 @@ class EncodingOption:
         self.nonuser = _get_attribute(option_node, NON_USER)
         self.quality_qroup_id = _get_attribute(option_node, QGROUP)
         self.quality_options = quality_option_groups[self.quality_qroup_id]
+        self.ffmpeggpuenc =  _get_attribute(option_node, FFMPEG_GPU_ENC)
         try:
             quality_default_index = int(quality_option_groups_default_index[self.quality_qroup_id])
         except KeyError:
@@ -326,6 +328,10 @@ def load_render_profiles():
 
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
+
+def remove_non_working_proxy_encodings(vcodec):
+    global proxy_encodings
+    proxy_encodings = [proxy_enc_opt for proxy_enc_opt in proxy_encodings if proxy_enc_opt.ffmpeggpuenc != vcodec]
 
 def _test_command(bash_args_list, print_output=False):
     if print_output == False:

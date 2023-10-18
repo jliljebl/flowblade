@@ -90,6 +90,8 @@ class GPUTestRunnerThread(threading.Thread):
             test_results[name] = returncode
             if returncode == 0:
                 working_NVENC_encs.append((enc_opt.name, enc_opt))
+            else:
+                renderconsumer.remove_non_working_proxy_encodings(enc_opt.vcodec)
 
         if len(working_NVENC_encs) > 0:
             renderconsumer.categorized_encoding_options.insert(1, (translations.get_encoder_group_name(appconsts.PRESET_GROUP_NVENC), working_NVENC_encs))
@@ -102,7 +104,9 @@ class GPUTestRunnerThread(threading.Thread):
             test_results[name] = returncode
             if returncode == 0:
                 working_VAAPI_encs.append((enc_opt.name, enc_opt))
-
+            else:
+                renderconsumer.remove_non_working_proxy_encodings(enc_opt.vcodec)
+                
         if len(working_VAAPI_encs) > 0:
             renderconsumer.categorized_encoding_options.insert(1, (translations.get_encoder_group_name(appconsts.PRESET_GROUP_VAAPI), working_VAAPI_encs))
 
