@@ -25,7 +25,7 @@ Give the commands given the in a terminal application.
 
 Most Linux distributions provide GUI appstore application and Flowblade should generally be installable using those.
 
-**NOTE: Sometimes version in appstore is older then the latest version, which is always available ar Flathub.**
+**NOTE: Sometimes version in appstore is older then the latest version, which is always available areFlathub.**
 
 ## Installing from your OS repository using commandline
 
