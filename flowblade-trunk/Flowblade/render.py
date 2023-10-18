@@ -21,8 +21,6 @@
 """
 Module loads render options, provides them in displayable form 
 and builds a mlt.Consumer for rendering on request.
-
-Rendering is done in app.player object of class mltplayer.Player
 """
 
 

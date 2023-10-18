@@ -324,7 +324,7 @@ def load_filters_translations():
     filter_names["Trails"] = _("Trails")
     filter_names["Blend Mode"] = _("Blend Mode")
     filter_names["Unpremultiply"] = _("Unpremultiply")
-    
+    filter_names["Fade To Black In / Out"] = _("Fade To Black In / Out")
     
     # param names
     global param_names
@@ -686,7 +686,7 @@ def load_filters_translations():
     param_names["Reveal Left"] = _("Reveal Left")
     param_names["Reveal Right"] = _("Reveal Right")
     param_names["Fade In Type"] = _("Fade In Type")
-
+    param_names["Image"] = _("Image")
 
     # Combo options
     global combo_options

@@ -19,11 +19,10 @@
 """
 
 """
-This module holds functions that maintain campatibility between project savefiles
+This module holds functions that maintain compatibility between project savefiles
 created by different versions of application.
-
-Refactoring to move code here is an ongoing effort.
 """
+
 import appconsts
 
 # ------------------------------------------------------- FIXING MISSING ATTRS

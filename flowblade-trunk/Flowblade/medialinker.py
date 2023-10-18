@@ -18,6 +18,11 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module handles replacing missing media items in projects 
+with generated media or other available media items.
+"""
+
 import glob
 import hashlib
 try:

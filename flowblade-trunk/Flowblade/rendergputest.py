@@ -19,7 +19,7 @@
 """
 
 """
-This module does render tests to find out which GPU encodings work on user system.
+Module does render tests to find out which GPU encodings work on user system.
 """
 
 try:
