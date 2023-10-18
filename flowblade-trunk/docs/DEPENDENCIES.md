@@ -16,7 +16,7 @@
 | Gtk toolkit | [``gir1.2-gtk-3.0``](https://packages.debian.org/unstable/gir1.2-gtk-3.0) | [``gir1.2-gtk-3.0``](https://packages.ubuntu.com/jammy/gir1.2-gtk-3.0) |  [``gtk3``](https://archlinux.org/packages/extra/x86_64/gtk3/) |
 | Pango text lib | [``gir1.2-pango-1.0``](https://packages.debian.org/unstable/gir1.2-pango-1.0) | [``gir1.2-pango-1.0``](https://packages.ubuntu.com/jammy/gir1.2-pango-1.0) |  [``pango``](https://archlinux.org/packages/extra/x86_64/pango/) |
 | Image support | [``gir1.2-gdkpixbuf-2.0``](https://packages.debian.org/unstable/gir1.2-gdkpixbuf-2.0) | [``gir1.2-gdkpixbuf-2.0``](https://packages.ubuntu.com/jammy/gir1.2-gdkpixbuf-2.0) |  [``gdk-pixbuf2``](https://archlinux.org/packages/extra/x86_64/gdk-pixbuf2/) |
-| Python Dependencies | | | |
+| # Python Dependencies | | | |
 | PIL image manipulation library | [``python3-pil``](https://packages.debian.org/unstable/python3-pil) | [``python-pil``](https://packages.ubuntu.com/jammy/python3-pil) | [``python-pillow``](https://archlinux.org/packages/extra/x86_64/python-pillow/) |
 | Math and arrays library | [``python3-numpy``](https://packages.debian.org/stable/python3-numpy) | [``python3-numpy``](https://packages.ubuntu.com/jammy/python3-numpy) | [``python-numpy``](https://archlinux.org/packages/extra/x86_64/python-numpy/) |
 | DBus python bindings | [``python3-dbus``](https://packages.debian.org/unstable/python3-dbus) | [``python3-dbus``](https://packages.ubuntu.com/jammy/python3-dbus) |  [``dbus-python``](https://archlinux.org/packages/extra/x86_64/dbus-python/) |
