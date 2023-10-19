@@ -1,6 +1,6 @@
 # Installing Flowblade
 
-*NOTE: Since version 2.10 we no longer provide .deb packages for the application. The recommended way of installing the latest version if it is not available in your OS repository is to install Floablade Flatpak*
+*NOTE: Since version 2.10 we no longer provide .deb packages for the application. The recommended way of installing the latest version if it is not available in your OS repository is to install Flowblade Flatpak.*
 
   * [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
   * [Installing Flatpak from Flathub with commandline](./INSTALLING.md#installing-flatpak-from-flathub-with-commandline)
@@ -17,15 +17,19 @@ Go to Flathub <a href="https://flathub.org/apps/io.github.jliljebl.Flowblade">Fl
 
 ##  Installing Flatpak from Flathub with commandline
 
-Go to Flatub <a href="https://flathub.org/apps/io.github.jliljebl.Flowblade">Flowblade page</a> and see the *Manual Install* area at the bottom of the page.
+Go to Flathub <a href="https://flathub.org/setup">setup page</a> and follow instructions for your distro.
 
-Give the commands given the in a terminal application.
+Give the following command in a terminal application:
+
+```bash
+flatpak install https://flathub.org/repo/appstream/io.github.jliljebl.Flowblade.flatpakref
+```
 
 ## Installing using your OS appstore GUI application
 
 Most Linux distributions provide GUI appstore application and Flowblade should generally be installable using those.
 
-**NOTE: Sometimes version in appstore is older then the latest version, which is always available areFlathub.**
+**NOTE: Sometimes version in appstore is older then the latest version, which is always available at Flathub.**
 
 ## Installing from your OS repository using commandline
 
