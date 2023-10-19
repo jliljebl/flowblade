@@ -179,6 +179,8 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         self.has_proxy_file = False
         self.is_proxy_file = False
         self.second_file_path = None
+
+        self.container_data = None
         
         self.create_icon()
 
