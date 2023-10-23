@@ -273,14 +273,11 @@ class Envelope:
                           hashlib.md5(name.encode('utf-8')).hexdigest())
         self.cachename = os.path.join(self.args.cache_dir[0], hash)
         if os.access(self.cachename, os.R_OK):
-            #size = os.stat(self.cachename)[stat.ST_SIZE] / 4
             logging.debug("use cache file: %s" % self.cachename)
             f = open(self.cachename, 'rb')
             size = struct.unpack('L', f.read(struct.calcsize('L')))[0]
             self.envelope = array.array('f')
             self.envelope.fromfile(f, size)
-            #logging.debug("cache of size %d ends with: %s" %
-            #              (size,  self.envelope[-10:]))
         else:
             logging.debug("no envelope cache found")
             self.envelope = None

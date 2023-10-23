@@ -582,10 +582,14 @@ def elapsed_time(msg="elapsed: ", show_in_millis=True):
 def unpickle(path):
     try:
         f = open(path, "rb")
-        return pickle.load(f)
+        data = pickle.load(f)
+        f.close()
+        return data
     except:
         f = open(path, "rb")
-        return pickle.load(f, encoding='latin1') 
+        data = pickle.load(f, encoding='latin1') 
+        f.close()
+        return data
 
 def get_flatpak_real_path_for_app_files(app_file):
     # Blender etc. some times need real absolute paths for application script files.

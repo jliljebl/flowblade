@@ -26,9 +26,6 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
-import dbus
-import dbus.service
-from dbus.mainloop.glib import DBusGMainLoop
 try:
     import mlt7 as mlt
 except:
@@ -95,7 +92,8 @@ queue_runner_thread = None
 
 timeout_id = None
 
-_dbus_service = None
+_ipc_handle = None
+APP_LOCK_FILE = "batch_render_app_lock"
 
 _render_item_popover = None
 _render_item_menu = None
@@ -104,6 +102,7 @@ _single_render_app = None
 single_render_window = None
 single_render_launch_thread = None
 single_render_thread = None
+
 
 # -------------------------------------------------------- render thread
 class QueueRunnerThread(threading.Thread):
@@ -217,24 +216,71 @@ class QueueRunnerThread(threading.Thread):
         batch_window.reload_queue() # item may have added to queue while rendering
 
 
-class BatchRenderDBUSService(dbus.service.Object):
+class BatchRenderIPC():
     def __init__(self):
-        print("dbus service init")
-        bus_name = dbus.service.BusName('flowblade.movie.editor.batchrender', bus=dbus.SessionBus())
-        dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/batchrender')
+        self.polling_thread = None
 
-    @dbus.service.method('flowblade.movie.editor.batchrender')
-    def render_item_added(self):
-        if queue_runner_thread == None:
-            batch_window.reload_queue()
+    def app_running(self):
+        if isfile(self.get_lockfile()) == False:
+            return False
         
-        return "OK"
+        # We may just try to read lock file while it is just being written to.
+        timestamp = None
+        attempts = 0
+        while attempts < 10 and timestamp == None:
+            try:
+                #f = open(self.get_lockfile())
+                timestamp = float(utils.unpickle(self.get_lockfile()))
+                #f.close()
+            except:
+                pass
+            attempts += 1
+    
+        # Should not happen.
+        if timestamp == None:
+            print("Failed toi read timestamp in BatchRenderIPC.app_running()")
+            return False
 
-    @dbus.service.method('flowblade.movie.editor.batchrender')
-    def remove_from_dbus(self):
-        self.remove_from_connection()
-        return
-   
+        # Running batch render app lockfile was timestamp longer then 3 ago or
+        # in the future we assume that we don't have reliable info on running app.
+        if time.time() - timestamp > 3.0 or timestamp > time.time() :
+            # We assume that 
+            os.remove(self.get_lockfile())
+            return False
+        
+        return True
+
+    def launch_polling(self, callback_func):
+        self.polling_thread = StatusPollingThread(callback_func)
+        self.polling_thread.start()
+
+    def stop_polling(self):
+        if self.polling_thread != None:
+            self.polling_thread.running = False
+
+    def write_running_timestamp(self):
+        with atomicfile.AtomicFileWriter(self.get_lockfile(), "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(str(time.time()), write_file)
+    
+    def delete_running_timestamp(self):
+        os.remove(self.get_lockfile())
+
+    def get_lockfile(self):
+        return userfolders.get_cache_dir() + APP_LOCK_FILE
+
+
+class StatusPollingThread(threading.Thread):
+    def __init__(self, polling_callback):
+        threading.Thread.__init__(self)
+        self.polling_callback = polling_callback
+    
+    def run(self):        
+        self.running = True
+        while self.running:
+            self.polling_callback()
+            time.sleep(2.0)
+    
 
 # --------------------------------------------------- adding item, always called from main app
 def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
@@ -262,13 +308,9 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     # Write render item file
     render_item.save()
 
-    bus = dbus.SessionBus()
-    if bus.name_has_owner('flowblade.movie.editor.batchrender'):
-        obj = bus.get_object('flowblade.movie.editor.batchrender', '/flowblade/movie/editor/batchrender')
-        iface = dbus.Interface(obj, 'flowblade.movie.editor.batchrender')
-        iface.render_item_added()
-    else:
-        launch_batch_rendering()
+    # Launch app if not already running.
+    launch_batch_rendering()
+
 
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():
@@ -325,14 +367,16 @@ def maybe_create_render_folder(render_path):
         
 # --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
-    bus = dbus.SessionBus()
-    if bus.name_has_owner('flowblade.movie.editor.batchrender'):
-        print("flowblade.movie.editor.batchrender dbus service exists, batch rendering already running")
+    ipc_handle = BatchRenderIPC()
+    if ipc_handle.app_running() == True:
         _show_single_instance_info()
     else:
-        FLOG = open(userfolders.get_cache_dir() + "log_batch_render", 'w')
-        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        _do_batch_render_launch()
 
+def _do_batch_render_launch():
+    FLOG = open(userfolders.get_cache_dir() + "log_batch_render", 'w')
+    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        
 def main(root_path, force_launch=False):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
@@ -380,9 +424,9 @@ class BatchRenderApp(Gtk.Application):
             secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
-        DBusGMainLoop(set_as_default=True)
-        global _dbus_service
-        _dbus_service = BatchRenderDBUSService()
+        global _ipc_handle
+        _ipc_handle = BatchRenderIPC()
+        _ipc_handle.launch_polling(batch_window.poll_status)
 
         self.add_window(batch_window.window)
         
@@ -394,7 +438,7 @@ def _display_single_instance_window():
     GObject.source_remove(timeout_id)
     primary_txt = _("Batch Render Queue already running!")
 
-    msg = _("Batch Render Queue application was detected in session dbus.")
+    msg = _("Batch Render Queue application was detected running.")
 
     content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
     align = dialogutils.get_default_alignment(content)
@@ -423,8 +467,8 @@ def shutdown():
     while(GLib.MainContext.default ().pending()):
         GLib.MainContext.default().iteration(False) # GLib.MainContext to replace this
 
-    if _dbus_service != None:
-        _dbus_service.remove_from_dbus()
+    _ipc_handle.stop_polling()
+    _ipc_handle.delete_running_timestamp()
 
     _batch_render_app.quit()
 
@@ -459,8 +503,6 @@ class RenderQueue:
                 if self.error_status == None:
                     self.error_status = []
                 self.error_status.append((data_file_name, _(" project file load failed with ") + str(e)))
-
-        print(self.error_status)
          
         if self.error_status != None:
             for file_path, error_str in self.error_status:
@@ -506,7 +548,18 @@ class RenderQueue:
         
         return same_paths
 
+    def queue_has_hanged(self, test_queue):
+        if len(self.queue) != len(test_queue.queue):
+            return True
         
+        for i in range(0, len(self.queue)):
+            if self.queue[i].generate_identifier() != test_queue.queue[i].generate_identifier():
+                return True
+        
+        return False
+
+
+
 class BatchRenderItemData:
     def __init__(self, project_name, sequence_name, render_path, sequence_index, \
                  args_vals_list, timestamp, length, mark_in, mark_out, render_data):
@@ -769,6 +822,15 @@ class BatchRenderWindow:
             self.update_queue_view()
         
         dialog.destroy()
+
+    def poll_status(self):
+        _ipc_handle.write_running_timestamp()
+        
+        test_queue = RenderQueue()
+        test_queue.load_render_items()
+        
+        if render_queue.queue_has_hanged(test_queue) == True:
+            self.reload_queue()
 
     def reload_queue(self):
         global render_queue

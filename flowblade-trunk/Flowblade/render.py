@@ -182,7 +182,6 @@ def create_widgets():
     Widgets for editing render properties and viewing render progress.
     """
     widgets.file_panel = rendergui.RenderFilePanel()
-    #widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     if (editorstate.SCREEN_HEIGHT > 898):
