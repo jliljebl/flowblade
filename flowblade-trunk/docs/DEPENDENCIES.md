@@ -20,7 +20,7 @@
 | ``Python Dependencies`` | | | |
 | PIL image manipulation library | [``python3-pil``](https://packages.debian.org/unstable/python3-pil) | [``python-pil``](https://packages.ubuntu.com/jammy/python3-pil) | [``python-pillow``](https://archlinux.org/packages/extra/x86_64/python-pillow/) |
 | Math and arrays library | [``python3-numpy``](https://packages.debian.org/stable/python3-numpy) | [``python3-numpy``](https://packages.ubuntu.com/jammy/python3-numpy) | [``python-numpy``](https://archlinux.org/packages/extra/x86_64/python-numpy/) |
-| DBus python bindings | [``python3-dbus``](https://packages.debian.org/unstable/python3-dbus) | [``python3-dbus``](https://packages.ubuntu.com/jammy/python3-dbus) |  [``dbus-python``](https://archlinux.org/packages/extra/x86_64/dbus-python/) |
+
 
 # Dropped  Dependencies #
 
@@ -33,3 +33,4 @@
 | python-gnome2 |  0.6   |  1.2 |
 | python-gobject-2 |  0.6   |  1.2 |
 | python-cairo |  0.6   |  1.6 |
+| DBus python bindings | 0.12 | 2.12 |
