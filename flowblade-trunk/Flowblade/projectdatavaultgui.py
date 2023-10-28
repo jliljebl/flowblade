@@ -144,7 +144,7 @@ class AbstractDataStoreWindow(Gtk.Window):
 
         savefile, times_saved, last_date = folder_handle.get_save_info()
 
-        save__name_label = guiutils.bold_label(_("Last File Name:"))
+        save__name_label = guiutils.bold_label(_("Last Saved File:"))
         save__name_label.set_margin_end(4)
         try:
             save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
@@ -153,7 +153,7 @@ class AbstractDataStoreWindow(Gtk.Window):
         row = guiutils.get_left_justified_box([save__name_label, save_file_name])
         vbox.pack_start(row, False, False, 0)
         
-        save_label = guiutils.bold_label(_("Last Saved:"))
+        save_label = guiutils.bold_label(_("Last Saved Time:"))
         save_label.set_margin_end(4)
         if str(last_date) != "0":
             save_date = Gtk.Label(label=str(last_date))
@@ -218,7 +218,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         selection_panel = self.create_vault_selection_panel()
         self.update_vault_info()
         
-        self.data_folders_list_view = guicomponents.TextTextListView(True, _("Last Saved File"), _("Times Saved"))
+        self.data_folders_list_view = guicomponents.TextTextListView(True, _("Last Saved Project File"), _("Times Saved"))
         self.load_data_folders()
         tree_sel = self.data_folders_list_view.treeview.get_selection()
         tree_sel.connect("changed", self.folder_selection_changed)
@@ -243,7 +243,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         #hbox.set_margin_top(4)
         hbox.set_margin_start(24)
 
-        title_row = guiutils.get_centered_box([guiutils.bold_label(_("Projects"))])
+        title_row = guiutils.get_centered_box([guiutils.bold_label(_("Project Data Folders"))])
         title_row.set_margin_bottom(12)
 
         selection_vbox = Gtk.VBox(False, 2)
