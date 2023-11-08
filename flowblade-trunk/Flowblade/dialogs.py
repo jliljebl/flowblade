@@ -2184,3 +2184,8 @@ def show_dead_compositors(number_of_dead_compositors):
     secondary_txt = _("MLT version 7 removed several services that were used to implement Compositors in Flowblade.\n\nYour Project had ") \
                     + str(number_of_dead_compositors) + _(" Compositor/s in it that cannot be loaded.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def no_timeline_ranges_dialog():
+    primary_txt = _("Cannot log Ranges from Timelime!")
+    secondary_txt = _("'Range Log' functionality is intented to log areas of interest\nin Media Items.\n\nTo save interesting positions or ranges on Timeline use\nthe 'Timeline Markers' functionality.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

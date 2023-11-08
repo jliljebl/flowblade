@@ -145,6 +145,10 @@ def media_log_no_star_button_pressed():
     _mark_log_changed()
     
 def log_range_clicked():
+    if editorstate.timeline_visible() == True:
+        dialogs.no_timeline_ranges_dialog()
+        return
+
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
         return

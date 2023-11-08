@@ -181,7 +181,6 @@ def current_tline_frame():
     else:
         return tline_shadow_frame
 
-
 def APP():
     return app
 
