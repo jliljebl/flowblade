@@ -24,7 +24,7 @@ Let's call this directory **\<ROOT_DIR\>**. Open terminal in this directory
 
 ### Clone MLT repository
 ```bash
-git clone git://github.com/mltframework/mlt.git
+git clone https://github.com/mltframework/mlt.git
 ```
 
 ### Configure build
