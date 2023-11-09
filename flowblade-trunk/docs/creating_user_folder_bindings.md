@@ -24,30 +24,24 @@ Let's call this directory **\<ROOT_DIR\>**. Open terminal in this directory
 git clone https://github.com/mltframework/mlt.git
 ```
 
-### Configure build
+### Create bindings with CMAKE
+
+Since 2023, MLT only builds with CMAKE.
+
+#### Configure and build
+With terminal still open in **\<ROOT_DIR\>**:
 ```bash
-cd mlt
-./configure --prefix=<ROOT_DIR>/build --enable-gpl --enable-gpl3 --swig-languages=python
+cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=OFF -S ./mlt -B ./build
+
+cmake --build ./build --config Release
 ```
 
-### Build MLT and bindings
- ```bash
-make 
-make install
-```  
-
-#### new mlt with cmake
-
-In 2023, mlt builds with cmake; in that case, to build mlt:
-
+#### Create local install
 ```bash
-cd mlt
-mkdir build
-cd build
-cmake .. -DSWIG_PYTHON=ON -DGPL=ON -DGPL3=ON
-make
+mkdir install
+
+cmake --install ./build --prefix ./install
 ```
-(unsure how to set install path for `make install` here; so this type of build will probably not work with the launch script as given below, without modifications).
 
 ### Set up bindings
 
