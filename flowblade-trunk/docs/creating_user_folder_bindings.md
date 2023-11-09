@@ -33,20 +33,6 @@ cd mlt
 ./configure --prefix=<ROOT_DIR>/build --enable-gpl --enable-gpl3 --swig-languages=python
 ```
 
-### Update bindings file for Python 3
-
-**This is not needed with current MLT repo head anymore.**
-
-Change line in file *\<ROOT_DIR\>/mlt/src/swig/python/build* from:
-
-```bash
-export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
-```
- to:
- ```bash
-export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
-```
-
 ### Build MLT and bindings
  ```bash
 make 
