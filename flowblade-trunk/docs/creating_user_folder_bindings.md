@@ -45,7 +45,7 @@ cmake --install ./build --prefix ./install
 
 ### Set up bindings
 
-1. Copy *mlt.py* and *_mlt.so* from  *\<ROOT_DIR\>/install/lib/python3.\<current_version\>/dist-packages* into  *../flowblade-trunk* where your repository version Flowblade is installed.
+1. Copy *mlt7.py* and *_mlt7.so* from  *\<ROOT_DIR\>/install/lib/python3.\<current_version\>/dist-packages* into  *../flowblade-trunk* where your repository version Flowblade is installed.
 1. Create a launch script in to set up MLT variables correctly on launch.
 
  ```bash
@@ -59,9 +59,9 @@ ROOT_DIR=<ROOT_DIR\>
 INSTALL_DIR=$ROOT_DIR/install
 export PATH=$INSTALL_DIR/bin:$PATH
 
-export MLT_REPOSITORY=$INSTALL_DIR/lib/mlt
-export MLT_DATA=$INSTALL_DIR/share/mlt
-export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt/profiles
+export MLT_REPOSITORY=$INSTALL_DIR/lib/mlt-7
+export MLT_DATA=$INSTALL_DIR/share/mlt-7
+export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt-7/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
 # Launch repository Flowblade
