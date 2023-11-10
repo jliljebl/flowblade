@@ -329,8 +329,8 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     # Create tractor
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track_video = mlt.Playlist()
-    track_audio = mlt.Playlist()
+    track_video = mlt.Playlist(PROJECT().profile)
+    track_audio = mlt.Playlist(PROJECT().profile)
     track_audio.set("hide", 1) # video off, audio on as mlt "hide" value
     multitrack.connect(track_audio, 0)
     multitrack.connect(track_video, 0)
@@ -341,7 +341,6 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     
     # Get offset
     offset = float(files_offsets[audio_file])
-    print(audio_file, offset)
     
     # Add clips
     if offset > 0:

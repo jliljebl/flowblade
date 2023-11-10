@@ -237,7 +237,7 @@ class Sequence:
         Creates a MLT playlist object, adds project
         data and adds to tracks list.
         """
-        new_track = mlt.Playlist()
+        new_track = mlt.Playlist(self.profile)
 
         self._add_track_attributes(new_track, track_type)
         new_track.is_sync_track = False

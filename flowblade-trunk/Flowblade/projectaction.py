@@ -1404,7 +1404,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     # Create tractor
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    track0 = mlt.Playlist(PROJECT().profile)
     multitrack.connect(track0, 0)
     for i in range(0, len(clips)):
         clip = clips[i]

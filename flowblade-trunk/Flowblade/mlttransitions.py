@@ -31,6 +31,7 @@ import os
 import xml.dom.minidom
 
 import appconsts
+from editorstate import PROJECT
 import mltrefhold
 import mltfilters
 import propertyparse
@@ -473,8 +474,8 @@ def get_rendered_transition_tractor(current_sequence,
     # Create tractor and tracks
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
-    track1 = mlt.Playlist()
+    track0 = mlt.Playlist(PROJECT().profile)
+    track1 = mlt.Playlist(PROJECT().profile)
     multitrack.connect(track0, 0)
     multitrack.connect(track1, 1)
 

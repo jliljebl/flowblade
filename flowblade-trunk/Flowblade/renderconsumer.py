@@ -519,7 +519,7 @@ def _parse_line(line_start, line_end, buf):
 def get_producer_as_tractor(producer, last_frame):
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    track0 = mlt.Playlist(producer.profile())
     multitrack.connect(track0, 0)
     track0.insert(producer, 0, 0, last_frame)
     return tractor

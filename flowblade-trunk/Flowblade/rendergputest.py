@@ -217,7 +217,7 @@ def _create_test_render_tractor(profile):
     # Create tractor and tracks
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    track0 = mlt.Playlist(profile)
     multitrack.connect(track0, 0)
     media_path = respaths.ROOT_PATH + "/res/gpu-test/gpu_test_clip.mp4"
     producer = mlt.Producer(profile, str(media_path)) 

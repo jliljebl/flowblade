@@ -257,11 +257,12 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
     # Create tractor and tracks, in_frame
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    profile = mltprofiles.get_profile(_current_profile_name)
+    track0 = mlt.Playlist(profile)
     multitrack.connect(track0, 0)
 
     bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
-    profile = mltprofiles.get_profile(_current_profile_name)
+
     
     # If no producer provided, create producer displaying bg image with plugin icon.
     if range_frame_res_str == None:
