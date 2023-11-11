@@ -473,7 +473,7 @@ def replace_services(services):
                     for i in range(0, len(group)):
                         if group[i].name == f_info.name:
                             group.pop(i)
-                            print(f_info.name +" dropped for " + use_service_name)
+                            #print(f_info.name +" dropped for " + use_service_name)
                             break
             except:
                 print("Dropping a mlt service for " + use_service_name + " failed, maybe not present.")

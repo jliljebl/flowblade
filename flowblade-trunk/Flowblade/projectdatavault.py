@@ -116,8 +116,8 @@ def init(_current_project_data_folder=None):
             _vaults.active_vault = DEFAULT_VAULT
             _vaults.save()
 
-        print("active_vault", _vaults.active_vault)
-        print(_vaults.user_vaults_data)
+        #print("active_vault", _vaults.active_vault)
+        #print(_vaults.user_vaults_data)
 
 
 # --------------------------------------------------------- vault
@@ -227,7 +227,6 @@ def delete_unsaved_data_folders():
             non_saved.append(folder_handle)
     
     for folder_handle in non_saved:
-        print("Deleting non-saved project data folder", folder_handle.data_folder_path)
         folder_handle.destroy_data()
 
 

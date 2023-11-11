@@ -233,11 +233,11 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    ret_code = _test_command(FFMPEG_TEST, True)
+    ret_code = _test_command(FFMPEG_TEST, False)
     if (ret_code == 0):
-        print("ffmpeg available")
+        print("ffmpeg CLI available")
     else:
-        print("ffmpeg NOT available")
+        print("ffmpeg CLI NOT available")
 
     # Create quality option groups
     global quality_option_groups

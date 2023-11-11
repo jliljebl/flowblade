@@ -45,9 +45,9 @@ def init():
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
     _xdg_cache_dir = os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
-    print("XDG Config", _xdg_config_dir)
-    print("XDG Data", _xdg_data_dir)
-    print("XDG Cache",_xdg_cache_dir)
+    #print("XDG Config", _xdg_config_dir)
+    #print("XDG Data", _xdg_data_dir)
+    #print("XDG Cache",_xdg_cache_dir)
 
     # Make sure XDG dirs data is available and usable by trying to create XDG folders
     try:

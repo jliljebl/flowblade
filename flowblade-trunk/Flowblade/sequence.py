@@ -620,11 +620,6 @@ class Sequence:
         return compositor
 
     def restack_compositors(self):
-        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
-            # we should only see this on sequence creation and adding removing tracks for COMPOSITING_MODE_STANDARD_FULL_TRACK
-            # remove this later
-            print("restacking compositors!")
-
         self.sort_compositors()
 
         new_compositors = []
@@ -707,7 +702,7 @@ class Sequence:
         self.compositors = []
 
     def add_full_track_compositors(self):
-        print("Adding full track compositors")
+        #print("Adding full track compositors")
         
         for i in range(self.first_video_index, len(self.tracks) - 1):
             track = self.tracks[i]
@@ -724,7 +719,7 @@ class Sequence:
             self.add_compositor(compositor)
         
         self.restack_compositors()
-        print("Adding full track compositors DONE")
+        #print("Adding full track compositors DONE")
     
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
