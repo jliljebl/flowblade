@@ -384,25 +384,31 @@ def trim_view_popover_show(launcher, widget, callback):
 def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
     global _monitorview_popover, _monitorview_menu, _opacity_section, _opacity_submenu
 
-    _monitorview_menu = menu_clear_or_create(_monitorview_menu)
-    
-    items_data =[( _("Image"), "0"), (_("Vectorscope"), "1"), \
-                ( _("RGB Parade"), "2")]
-    active_index = editorstate.tline_view_mode
-    
-    view_section = Gio.Menu.new()
-    add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
-    _monitorview_menu.append_section(None, view_section)
+    if _monitorview_menu == None:
+        _monitorview_menu = menu_clear_or_create(_monitorview_menu)
+        
+        items_data =[( _("Image"), "0"), (_("Vectorscope"), "1"), \
+                    ( _("RGB Parade"), "2")]
+        active_index = editorstate.tline_view_mode
+        
+        view_section = Gio.Menu.new()
+        add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
+        _monitorview_menu.append_section(None, view_section)
 
-    # WE are getting gtk warning here, look to fix
-    _opacity_section = menu_clear_or_create(_opacity_section)
-    _opacity_submenu = menu_clear_or_create(_opacity_submenu)
-    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
-    active_index = current_sequence().get_mix_index()
-    add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
-    _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
-    _monitorview_menu.append_section(None, _opacity_section)
-    
+        # We are getting gtk warning here, look to fix
+        _opacity_section = menu_clear_or_create(_opacity_section)
+        _opacity_submenu = menu_clear_or_create(_opacity_submenu)
+        items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
+        active_index = current_sequence().get_mix_index()
+        add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
+        _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
+        _monitorview_menu.append_section(None, _opacity_section)
+    else:
+        _opacity_submenu = menu_clear_or_create(_opacity_submenu)
+        items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
+        active_index = current_sequence().get_mix_index()
+        add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
+
     _monitorview_popover = new_popover(widget, _monitorview_menu, launcher)
 
 def bins_panel_widget_popover_show(launcher, widget, callback):

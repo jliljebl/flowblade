@@ -1068,8 +1068,6 @@ def marker_menu_lauch_pressed(launcher, widget, event):
     guipopover.markers_menu_show(launcher, widget, _marker_menu_item_activated)
 
 def _marker_menu_item_activated(action, event, msg):
-    print(type(action), type(event), type(msg))
-
     current_frame = PLAYER().current_frame()
     mrk_index = -1
     for i in range(0, len(current_sequence().markers)):
