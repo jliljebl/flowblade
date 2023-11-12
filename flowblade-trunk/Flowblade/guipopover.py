@@ -224,10 +224,6 @@ def tline_properties_menu_show(launcher, widget, callback, mouse_zoom_callback):
         active_index = 1
     add_menu_action_all_items_radio(zoom_section, items_data, "midbar.tlineproperties.mousezoom", active_index, mouse_zoom_callback)
     _tline_properties_menu.append_section(None, zoom_section)
-
-    snapping_section = Gio.Menu.new()
-    add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping.snapping_on, "snapping", callback)
-    _tline_properties_menu.append_section(None, snapping_section)
     
     snapping_section = Gio.Menu.new()
     add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping.snapping_on, "snapping", callback)
