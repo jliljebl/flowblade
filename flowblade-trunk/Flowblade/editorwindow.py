@@ -299,7 +299,9 @@ class EditorWindow:
             self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
             self.top_row_window_2.pack_start(tline_info_box, False, False, 0)
-
+            monitor_source_box.set_margin_bottom(4)
+            tline_info_box.set_margin_bottom(9)
+            
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
