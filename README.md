@@ -1,15 +1,5 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-------
-
-**Release 2.10 is available now.**
-
-**[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
-
-**Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
-
-------
-
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Releases](https://github.com/jliljebl/flowblade#releases)
