@@ -665,53 +665,79 @@ def  range_log_hamburger_menu_show(launcher, widget, unsensitive_for_all_view, s
 
     global _range_log_popover,  _range_log_menu
 
-    _range_log_menu = menu_clear_or_create(_range_log_menu)
+    if _range_log_menu == None:
 
-    new_section = Gio.Menu.new()
-    add_menu_action(new_section, _("New Group..."), "rangelog.new", "new", callback)
-    add_menu_action(new_section, _("New Group From Selected..."), "rangelog.newfromselected", "newfromselected", callback)
-    _range_log_menu.append_section(None, new_section)
+        _range_log_menu = menu_clear_or_create(_range_log_menu)
 
-    rename_section = Gio.Menu.new()
-    add_menu_action(rename_section, _("Rename Current Group..."),  "rangelog.rename", "rename", callback,  not(unsensitive_for_all_view))
-    _range_log_menu.append_section(None, rename_section)
+        new_section = Gio.Menu.new()
+        add_menu_action(new_section, _("New Group..."), "rangelog.new", "new", callback)
+        add_menu_action(new_section, _("New Group From Selected..."), "rangelog.newfromselected", "newfromselected", callback)
+        _range_log_menu.append_section(None, new_section)
 
-    if len(media_log_groups) > 0:
+        rename_section = Gio.Menu.new()
+        add_menu_action(rename_section, _("Rename Current Group..."),  "rangelog.rename", "rename", callback,  not(unsensitive_for_all_view))
+        _range_log_menu.append_section(None, rename_section)
+
         global _move_section, _move_submenu
         _move_section = menu_clear_or_create(_move_section)
         _move_submenu = menu_clear_or_create(_move_submenu)
-    
-        index = 0
-        items_data = []
-        for group in media_log_groups:
-            name, items = group
-            add_menu_action(_move_submenu, name, "rangelog.move." + str(index), str(index), callback)
-            index = index + 1
+        
+        if len(media_log_groups) > 0:
+            index = 0
+            items_data = []
+            for group in media_log_groups:
+                name, items = group
+                add_menu_action(_move_submenu, name, "rangelog.move." + str(index), str(index), callback)
+                index = index + 1
+        else:
+            add_menu_action(_move_submenu, _("No Groups"), "rangelog.move.none", "dummy", callback, False)
 
         _move_section.append_submenu(_("Move Selected Items To Group"), _move_submenu)
         _range_log_menu.append_section(None, _move_section)
 
-    delete_section = Gio.Menu.new()
-    add_menu_action(delete_section,_("Delete Current Group"),  "rangelog.delete", "delete", callback, not(unsensitive_for_all_view))
-    _range_log_menu.append_section(None, delete_section)
+        delete_section = Gio.Menu.new()
+        add_menu_action(delete_section,_("Delete Current Group"),  "rangelog.delete", "delete", callback, not(unsensitive_for_all_view))
+        _range_log_menu.append_section(None, delete_section)
 
-    comments_section =  Gio.Menu.new()
-    add_menu_action_check(comments_section, _("Use Comments as Clip Names"), "rangelog.usecomments", use_comments_for_name, "usecomments", use_comments_toggled)
-    _range_log_menu.append_section(None, comments_section)
+        comments_section =  Gio.Menu.new()
+        add_menu_action_check(comments_section, _("Use Comments as Clip Names"), "rangelog.usecomments", use_comments_for_name, "usecomments", use_comments_toggled)
+        _range_log_menu.append_section(None, comments_section)
 
-    global _sorting_section, _sorting_submenu
-    _sorting_section = menu_clear_or_create(_sorting_section)
-    _sorting_submenu = menu_clear_or_create(_sorting_submenu)
-    items_data = [( _("Time"), "time"), ( _("File Name"), "name"), ( _("Comment"), "comment")]
-    if sorting_order == appconsts.TIME_SORT:
-        active_index = 0
-    elif sorting_order == appconsts.NAME_SORT:
-        active_index = 1
-    else:# "comment"
-        active_index = 2
-    add_menu_action_all_items_radio(_sorting_submenu, items_data, "rangelog.sorting", active_index, sorting_callback)
-    _sorting_section.append_submenu(_("Sort by"), _sorting_submenu)
-    _range_log_menu.append_section(None, _sorting_section)
+        global _sorting_section, _sorting_submenu
+        _sorting_section = menu_clear_or_create(_sorting_section)
+        _sorting_submenu = menu_clear_or_create(_sorting_submenu)
+        items_data = [( _("Time"), "time"), ( _("File Name"), "name"), ( _("Comment"), "comment")]
+        if sorting_order == appconsts.TIME_SORT:
+            active_index = 0
+        elif sorting_order == appconsts.NAME_SORT:
+            active_index = 1
+        else:# "comment"
+            active_index = 2
+        add_menu_action_all_items_radio(_sorting_submenu, items_data, "rangelog.sorting", active_index, sorting_callback)
+        _sorting_section.append_submenu(_("Sort by"), _sorting_submenu)
+        _range_log_menu.append_section(None, _sorting_section)
+    else:
+        _move_submenu = menu_clear_or_create(_move_submenu)
+        
+        if len(media_log_groups) > 0:
+            index = 0
+            items_data = []
+            for group in media_log_groups:
+                name, items = group
+                add_menu_action(_move_submenu, name, "rangelog.move." + str(index), str(index), callback)
+                index = index + 1
+        else:
+            add_menu_action(_move_submenu, _("No Groups"), "rangelog.move.none", "dummy", callback, False)
+
+        _sorting_submenu = menu_clear_or_create(_sorting_submenu)
+        items_data = [( _("Time"), "time"), ( _("File Name"), "name"), ( _("Comment"), "comment")]
+        if sorting_order == appconsts.TIME_SORT:
+            active_index = 0
+        elif sorting_order == appconsts.NAME_SORT:
+            active_index = 1
+        else:# "comment"
+            active_index = 2
+        add_menu_action_all_items_radio(_sorting_submenu, items_data, "rangelog.sorting", active_index, sorting_callback)
     
     _range_log_popover = new_popover(widget, _range_log_menu, launcher)
 
