@@ -2536,7 +2536,7 @@ class BigTCDisplay:
         x = 2
         y = 2
         width = 166*size_adj
-        height = 24*size_adj
+        height = 22*size_adj
         aspect = 1.0
         corner_radius = height / 3.5
         radius = corner_radius / aspect
@@ -2551,6 +2551,7 @@ class BigTCDisplay:
         TC_COLOR = (0.55, 0.55, 0.55)
 
         self.widget.connect("button-press-event", self._button_press)
+        self.widget.set_margin_top(1)
 
     def _draw(self, event, cr, allocation):
         """
@@ -2564,10 +2565,7 @@ class BigTCDisplay:
         cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
 
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        for stop in BIG_TC_FRAME_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.set_line_width(1)
         cr.stroke()
 
@@ -2831,11 +2829,9 @@ class MonitorInfoDisplay:
         self._round_rect_path(cr)
         cr.set_source_rgb(0.1, 0.1, 0.1)
         cr.fill_preserve()
-
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        for stop in BIG_TC_FRAME_GRAD_STOPS:
-            grad.add_color_stop_rgba(*stop)
-        cr.set_source(grad)
+        
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        
         cr.set_line_width(1)
         cr.stroke()
 
