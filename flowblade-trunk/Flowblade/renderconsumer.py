@@ -91,6 +91,7 @@ DEFAULT_ENCODING_NAME = "H.264 / .mp4"
 BITRATE_RPL = "%BITRATE%"
 VARIABLE_VAL = "%VARIABLE%"
 SCREEN_SIZE_RPL = "%SCREENSIZE%"
+SCREEN_SIZE_RPL_2 = "%SCREENSIZE2%"
 ASPECT_RPL = "%ASPECT%"
 
 render_encoding_doc = None
@@ -204,6 +205,8 @@ class EncodingOption:
             # Replace keyword values
             if arg2 == SCREEN_SIZE_RPL:
                 arg2 = str(profile.width())+ "x" + str(profile.height())
+            if arg2 == SCREEN_SIZE_RPL_2:
+                arg2 = str(profile.width())+ ":" + str(profile.height())
             if arg2 == ASPECT_RPL:
                 arg2 = "@" + str(profile.display_aspect_num()) + "/" + str(profile.display_aspect_den())
 
