@@ -241,7 +241,7 @@
         <profile args="%SOURCEFILE -c:a aac -vf scale=%SCREENSIZE -c:v h264_nvenc -rc vbr -cq 28 -pix_fmt yuv420p %PROXYFILE"/>
     </proxyencodingoption>
     <proxyencodingoption name="FFMPEG VAAPI H.264  / .mp4" extension="mp4" type="av" audiodesc="pcm" resize="True" qgroup="not_settable" ffmpeggpuenc="h264_vaapi">
-        <profile args="%SOURCEFILE -vaapi_device /dev/dri/renderD128 -vf 'format=nv12,hwupload' scale_vaapi=%SCREEN%SIZE%TWO% -c:v %PROXYFILE"/>
+        <profile args="%SOURCEFILE -vaapi_device /dev/dri/renderD128 -vf 'format=nv12,hwupload' -vf scale_vaapi=%SCREEN%SIZE%TWO% -c:v %PROXYFILE"/>
     </proxyencodingoption>
 
 
