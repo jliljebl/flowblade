@@ -64,6 +64,7 @@ CONTAINER_CLIP_RENDER_FLUXITY = 6
 
 FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
 FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
+FFMPEG_ATTR_SCREENSIZE_2 = "%SCREEN%SIZE%TWO%"
 FFMPEG_ATTR_PROXYFILE = "%PROXYFILE"
 
 open_media_file_callback = None
@@ -583,6 +584,9 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             # Set scale size.
             screen_size_str = str(self.render_data.proxy_w) + "x" + str(self.render_data.proxy_h)
             proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE, screen_size_str)
+            #...or
+            screen_size_str = str(self.render_data.proxy_w) + ":" + str(self.render_data.proxy_h)
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE_2, screen_size_str)
             # Set source file.
             proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SOURCEFILE, self.render_data.media_file_path)
             # Set proxy file.
