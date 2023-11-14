@@ -644,7 +644,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 prog_step = 0.07
                 if PROJECT().profile.height() > 1090:
                     prog_step = 0.035
-                self.progress += 0.07
+                self.progress += prog_step
                 if self.progress > 1.0:
                     self.progress = 0.99
                     
