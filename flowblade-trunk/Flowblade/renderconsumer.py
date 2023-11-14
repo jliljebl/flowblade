@@ -233,7 +233,7 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    ret_code = _test_command(FFMPEG_TEST, False)
+    ret_code = _test_command(FFMPEG_TEST, True)
     if (ret_code == 0):
         print("ffmpeg CLI available")
     else:
