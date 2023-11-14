@@ -642,7 +642,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             else:
                 self.elapsed = float(time.monotonic() - self.ffmpeg_start)
                 prog_step = 0.07
-                if self.render_data.proxy_h > 1090:
+                if PROJECT().profile.height() > 1090:
                     prog_step = 0.035
                 self.progress += 0.07
                 if self.progress > 1.0:
