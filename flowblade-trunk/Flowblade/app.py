@@ -96,6 +96,7 @@ import processutils
 import projectaction
 import projectdata
 import projectdatavault
+import projectdatavaultgui
 import projectinfogui
 import propertyeditorbuilder
 import proxyediting
@@ -560,13 +561,11 @@ def init_project_gui():
     except Exception:
         pass
 
-    # Display bins in "Media" tab.
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
     selection.select_path("0")
     gui.editor_window.bin_info.display_bin_info()
 
-    # Display sequences in "Project" tab.
     gui.sequence_list_view.fill_data_model()
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
@@ -876,7 +875,8 @@ def destroy_splash_screen():
 def check_disk_cache_size():
     GLib.source_remove(disk_cache_timeout_id)
     diskcachemanagement.check_disk_cache_size()
-    
+    projectdatavaultgui.check_vaults_sizes()
+
 # ------------------------------------------------------- userfolders dialogs
 def show_user_folders_init_error_dialog(error_msg):
     # not done

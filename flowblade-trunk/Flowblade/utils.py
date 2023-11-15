@@ -614,3 +614,22 @@ def get_headless_arg_value(args, key_str):
                 return parts[1]
     
     return None
+
+def get_folder_size_recursively(folder):
+    files = os.listdir(folder)
+    size = 0
+    for f in files:
+        if os.path.isdir(folder + "/" + f):
+            size += get_folder_size_recursively(folder + "/" + f)
+        else:
+            size += os.path.getsize(folder +"/" + f)
+    return size
+
+def get_disk_size_str(size):
+    if size > 1000000:
+        return str(int((size + 500000) / 1000000)) + " MB"
+    elif size > 1000:
+        return str(int((size + 500) / 1000)) + " kB"
+    else:
+        return str(int(size)) + " B"
+            

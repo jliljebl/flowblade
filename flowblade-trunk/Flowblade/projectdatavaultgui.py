@@ -23,7 +23,7 @@ This module provides GUI to manage project data and data vaults.
 
 NOTE: 'vault' in code is presented to user as 'Data Store'.
 """
-from gi.repository import Gtk, GObject, GLib
+from gi.repository import Gtk, GObject, GLib, Gdk
 
 import copy
 import datetime
@@ -35,6 +35,7 @@ import shutil
 
 import atomicfile
 from editorstate import PROJECT
+import editorpersistance
 import dialogs
 import dialogutils
 import diskcachemanagement
@@ -44,6 +45,7 @@ import guiutils
 import persistance
 import projectdatavault
 import userfolders
+import utils
 
 PROJECT_DATA_WIDTH = 370
 PROJECT_DATA_HEIGHT = 270
@@ -943,3 +945,53 @@ class ProjectCloneWindow(Gtk.Window):
         else:
             return orig_path.replace(source_data_folder, clone_data_folder)
 
+# ---------------------------------------------------------------------------- disk cache size check
+def check_vaults_sizes():
+    check_level = editorpersistance.prefs.disk_space_warning
+    # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+    if check_level == 0:
+        return
+
+    Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _check_all_vaults_sizes)
+
+def _check_all_vaults_sizes():
+    try:
+        # We are running this check in GUI thread, but this should be fast enough to not block app GUI noticeably.
+        check_level = editorpersistance.prefs.disk_space_warning
+        
+        check_dict = {}
+        check_dict[_("Default XDG Data Store")] = projectdatavault.get_default_vault_folder()
+        for vault_data in  projectdatavault.get_vaults_object().user_vaults_data:
+            name = vault_data["name"]
+            vault_path = vault_data["vault_path"]
+            check_dict[name] = vault_path
+
+        warnings_str = ""
+        for name, path in check_dict.items():
+            size = utils.get_folder_size_recursively(path)
+            size_str = utils.get_disk_size_str(size)
+
+            # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+            if check_level == 1 and size > 1000000 * 500:
+                warnings_str += _get_warning_str(name, size_str)
+            elif check_level == 2 and size > 1000000 * 1000:
+                warnings_str += _get_warning_str(name, size_str)
+            elif check_level == 3 and size > 1000000 * 2000:
+                warnings_str += _get_warning_str(name, size_str)
+        
+        if len(warnings_str) > 0:
+            primary_txt = _("Data Store Size Exceeds Current Warning Level!")
+            warnings_str += _("\nYou can either delete data in Disk Store or change warning level in") + "\n" + \
+                            _(" <b>Edit->Preferences 'General Options'</b> panel.") 
+
+            dialogutils.warning_message(primary_txt, warnings_str, gui.editor_window.window)
+    except:
+        print("_check_all_vaults_sizes() crashed!")
+
+    return False
+
+def _get_warning_str(name, size_str):
+    txt = _("Disk Store <b>") + name + _("</b> currently uses ") + size_str + _(" of disk space.") + "\n"
+    return txt
+
+                        
