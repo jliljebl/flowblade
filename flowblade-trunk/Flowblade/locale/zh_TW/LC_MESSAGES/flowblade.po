@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-13 10:46+0200\n"
+"POT-Creation-Date: 2023-11-24 14:35+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:230
+#: app.py:231
 msgid "No Autosave"
 msgstr "不要自動保存"
 
-#: app.py:230
+#: app.py:231
 msgid "1 min"
 msgstr "1 分鐘"
 
-#: app.py:230
+#: app.py:231
 msgid "2 min"
 msgstr "2 分鐘"
 
-#: app.py:230
+#: app.py:231
 msgid "5 min"
 msgstr "5 分鐘"
 
@@ -296,12 +296,12 @@ msgid "N/A"
 msgstr "N/A"
 
 #: projectaction.py:1267 guicomponents.py:2477 guicomponents.py:2512
-#: projectdatavaultgui.py:306 projectdatavaultgui.py:458
+#: projectdatavaultgui.py:308 projectdatavaultgui.py:460
 msgid "Yes"
 msgstr "是"
 
 #: projectaction.py:1269 guicomponents.py:2479 guicomponents.py:2514
-#: projectdatavaultgui.py:460
+#: projectdatavaultgui.py:462
 msgid "No"
 msgstr "否"
 
@@ -826,12 +826,12 @@ msgstr "更改專案設定檔..."
 msgid "Proxy Manager"
 msgstr "代理管理員"
 
-#: editorwindow.py:878 projectdatavaultgui.py:278
+#: editorwindow.py:878 projectdatavaultgui.py:280
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "關閉管理員"
 
-#: editorwindow.py:879 projectdatavaultgui.py:731
+#: editorwindow.py:879 projectdatavaultgui.py:733
 #, fuzzy
 msgid "Project Data"
 msgstr "專案"
@@ -1171,12 +1171,12 @@ msgstr "取消"
 msgid "New Project"
 msgstr "新專案"
 
-#: dialogs.py:140 projectdatavaultgui.py:516
+#: dialogs.py:140 projectdatavaultgui.py:518
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "選擇的資料夾包含檔案"
 
-#: dialogs.py:141 projectdatavaultgui.py:517
+#: dialogs.py:141 projectdatavaultgui.py:519
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
@@ -1202,7 +1202,7 @@ msgstr "新專案"
 
 #: dialogs.py:183 dialogs.py:235 rendergui.py:685 tools/gmic.py:752
 #: tools/toolsencoding.py:293 tools/scripttool.py:851
-#: projectdatavaultgui.py:103 projectdatavaultgui.py:573
+#: projectdatavaultgui.py:105 projectdatavaultgui.py:575
 msgid "Select Folder"
 msgstr "選擇資料夾"
 
@@ -1992,7 +1992,7 @@ msgstr "全部重新渲染"
 #: dialogs.py:1643 dialogs.py:1878 tools/titler.py:601 proxyediting.py:313
 #: medialinker.py:166 tools/gmic.py:839 tools/gmic.py:935
 #: diskcachemanagement.py:176 tools/scripttool.py:928 tools/scripttool.py:1092
-#: projectdatavaultgui.py:258 projectdatavaultgui.py:717
+#: projectdatavaultgui.py:260 projectdatavaultgui.py:719
 msgid "Close"
 msgstr "關閉"
 
@@ -3149,7 +3149,7 @@ msgstr ""
 " 轉場/淡化 無法渲染，因為他們是使用 Flowblade 1.14 版本或更舊版，\n"
 "或者來源剪輯不存在於時間軸。"
 
-#: panels.py:442 jobs.py:353
+#: panels.py:442 jobs.py:354
 msgid "Info"
 msgstr "資訊"
 
@@ -6380,7 +6380,8 @@ msgid "Set selected ranges non-starred"
 msgstr "設定選擇的範圍不加星號"
 
 #: medialog.py:757
-msgid "Log current marked range"
+#, fuzzy
+msgid "Log current marked Media Item range"
 msgstr "記錄目前標記範圍"
 
 #: medialog.py:758
@@ -7322,7 +7323,7 @@ msgstr "狀態"
 msgid "Render File"
 msgstr "渲染檔案"
 
-#: tools/batchrendering.py:963 jobs.py:354
+#: tools/batchrendering.py:963 jobs.py:355
 msgid "Render Time"
 msgstr "渲染時間"
 
@@ -8211,7 +8212,7 @@ msgstr ""
 msgid "Flowblade currently uses "
 msgstr "Flowblade 專案"
 
-#: diskcachemanagement.py:238
+#: diskcachemanagement.py:238 projectdatavaultgui.py:994
 msgid " of disk space."
 msgstr ""
 
@@ -8226,25 +8227,25 @@ msgid ""
 "change warning level in <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 
-#: diskcachemanagement.py:245 projectdatavaultgui.py:176
+#: diskcachemanagement.py:245 projectdatavaultgui.py:178
 msgid "Audio Levels Data"
 msgstr "音訊波形資料"
 
-#: diskcachemanagement.py:248 projectdatavaultgui.py:178
+#: diskcachemanagement.py:248 projectdatavaultgui.py:180
 msgid "Rendered Files"
 msgstr "渲染檔案"
 
-#: diskcachemanagement.py:249 projectdatavaultgui.py:182
+#: diskcachemanagement.py:249 projectdatavaultgui.py:184
 #, fuzzy
 msgid "Proxy Files"
 msgstr "渲染代理檔案"
 
-#: diskcachemanagement.py:250 projectdatavaultgui.py:180
+#: diskcachemanagement.py:250 projectdatavaultgui.py:182
 #, fuzzy
 msgid "Container Clips"
 msgstr "複製剪輯片段"
 
-#: diskcachemanagement.py:251 projectdatavaultgui.py:174
+#: diskcachemanagement.py:251 projectdatavaultgui.py:176
 msgid "Thumbnails"
 msgstr "縮略圖"
 
@@ -8918,57 +8919,57 @@ msgstr ""
 msgid "Clip Frame"
 msgstr "剪輯名稱："
 
-#: jobs.py:105
+#: jobs.py:106
 #, fuzzy
 msgid "G'Mic Clip"
 msgstr "G'Mic 網頁"
 
-#: jobs.py:107
+#: jobs.py:108
 #, fuzzy
 msgid "Selection Clip"
 msgstr "選擇子空間"
 
-#: jobs.py:109
+#: jobs.py:110
 #, fuzzy
 msgid "Motion Clip"
 msgstr "顏色剪輯片段"
 
-#: jobs.py:111
+#: jobs.py:112
 #, fuzzy
 msgid "Proxy Clip"
 msgstr "沒有剪輯片段"
 
-#: jobs.py:113
+#: jobs.py:114
 #, fuzzy
 msgid "Generator Clip"
 msgstr "混合器"
 
-#: jobs.py:183
+#: jobs.py:184
 #, fuzzy
 msgid "Completed"
 msgstr "渲染完成！"
 
-#: jobs.py:210 jobs.py:278
+#: jobs.py:211 jobs.py:279
 #, fuzzy
 msgid "Cancelled"
 msgstr "取消"
 
-#: jobs.py:352
+#: jobs.py:353
 #, fuzzy
 msgid "Job Type"
 msgstr "類型"
 
-#: jobs.py:355
+#: jobs.py:356
 #, fuzzy
 msgid "Progress"
 msgstr "循序式掃瞄"
 
-#: jobs.py:445 containeractions.py:255
+#: jobs.py:446 containeractions.py:255
 #, fuzzy
 msgid "In Queue - "
 msgstr "加到佇列"
 
-#: jobs.py:475 jobs.py:547 containeractions.py:508 containeractions.py:670
+#: jobs.py:476 jobs.py:548 containeractions.py:508 containeractions.py:670
 #: containeractions.py:876
 #, fuzzy
 msgid "Render Starting..."
@@ -9846,236 +9847,260 @@ msgstr "從文字檔載入渲染參數"
 msgid "Reset all Render Options to Defaults"
 msgstr "將所有渲染選項重置為預設值"
 
-#: projectdatavaultgui.py:89 projectdatavaultgui.py:137
+#: projectdatavaultgui.py:91 projectdatavaultgui.py:139
+#: projectdatavaultgui.py:963
 #, fuzzy
 msgid "Default XDG Data Store"
 msgstr "預設刪除動作"
 
-#: projectdatavaultgui.py:101
+#: projectdatavaultgui.py:103
 msgid "Select Empty Folder to be added as Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:107 projectdatavaultgui.py:577
+#: projectdatavaultgui.py:109 projectdatavaultgui.py:579
 #, fuzzy
 msgid "Data Folder:"
 msgstr "目標資料夾："
 
-#: projectdatavaultgui.py:112 projectdatavaultgui.py:582
+#: projectdatavaultgui.py:114 projectdatavaultgui.py:584
 msgid "Data Store Name"
 msgstr ""
 
-#: projectdatavaultgui.py:128 projectdatavaultgui.py:323
+#: projectdatavaultgui.py:130 projectdatavaultgui.py:325
 #, fuzzy
 msgid "Create Data Store"
 msgstr "建立圖案產生器"
 
-#: projectdatavaultgui.py:147
+#: projectdatavaultgui.py:149
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "貼上濾鏡"
 
-#: projectdatavaultgui.py:152 projectdatavaultgui.py:161
+#: projectdatavaultgui.py:154 projectdatavaultgui.py:163
 #, fuzzy
 msgid "Not Saved"
 msgstr "未設定"
 
-#: projectdatavaultgui.py:156
+#: projectdatavaultgui.py:158
 #, fuzzy
 msgid "Last Saved Time:"
 msgstr "在時間軸中的最後影格"
 
-#: projectdatavaultgui.py:167
+#: projectdatavaultgui.py:169
 msgid "Data ID:"
 msgstr ""
 
-#: projectdatavaultgui.py:187
+#: projectdatavaultgui.py:189
 msgid "Total"
 msgstr ""
 
-#: projectdatavaultgui.py:216
+#: projectdatavaultgui.py:218
 #, fuzzy
 msgid "Actions"
 msgstr "動作"
 
-#: projectdatavaultgui.py:221
+#: projectdatavaultgui.py:223
 #, fuzzy
 msgid "Last Saved Project File"
 msgstr "新專案檔案"
 
-#: projectdatavaultgui.py:221
+#: projectdatavaultgui.py:223
 msgid "Times Saved"
 msgstr ""
 
-#: projectdatavaultgui.py:230 projectdatavaultgui.py:446
-#: projectdatavaultgui.py:476
+#: projectdatavaultgui.py:232 projectdatavaultgui.py:448
+#: projectdatavaultgui.py:478
 #, fuzzy
 msgid "No data folders"
 msgstr "匯出資料夾："
 
-#: projectdatavaultgui.py:246
+#: projectdatavaultgui.py:248
 #, fuzzy
 msgid "Project Data Folders"
 msgstr "選擇目的地資料夾"
 
-#: projectdatavaultgui.py:256
+#: projectdatavaultgui.py:258
 msgid "Data Stores"
 msgstr ""
 
-#: projectdatavaultgui.py:291 projectdatavaultgui.py:540
+#: projectdatavaultgui.py:293 projectdatavaultgui.py:542
 msgid "Drop Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:299
+#: projectdatavaultgui.py:301
 #, fuzzy
 msgid "Data Store Folder: "
 msgstr "目標資料夾："
 
-#: projectdatavaultgui.py:305
+#: projectdatavaultgui.py:307
 #, fuzzy
 msgid "Active: "
 msgstr "作用中"
 
-#: projectdatavaultgui.py:307
+#: projectdatavaultgui.py:309
 msgid "Make This Data Store Active"
 msgstr ""
 
-#: projectdatavaultgui.py:325 projectdatavaultgui.py:594
+#: projectdatavaultgui.py:327 projectdatavaultgui.py:596
 msgid "Connect Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:329
+#: projectdatavaultgui.py:331
 #, fuzzy
 msgid "Legacy Disk Cache Manager"
 msgstr "磁碟快取管理員"
 
-#: projectdatavaultgui.py:364
+#: projectdatavaultgui.py:366
 #, fuzzy
 msgid "Show only Saved Projects"
 msgstr "Flowblade 專案"
 
-#: projectdatavaultgui.py:366
+#: projectdatavaultgui.py:368
 #, fuzzy
 msgid "Destroy Non-Saved Projects"
 msgstr "另存專案為"
 
-#: projectdatavaultgui.py:382
+#: projectdatavaultgui.py:384
 #, fuzzy
 msgid "Destroy Project Data"
 msgstr "銷毀數據"
 
-#: projectdatavaultgui.py:395
+#: projectdatavaultgui.py:397
 #, fuzzy
 msgid "Currently open Project data cannot be destroyed."
 msgstr " 目前復原堆疊將被銷毀\n"
 
-#: projectdatavaultgui.py:426
+#: projectdatavaultgui.py:428
 #, fuzzy
 msgid "not saved"
 msgstr "未設定"
 
-#: projectdatavaultgui.py:522
+#: projectdatavaultgui.py:524
 #, fuzzy
 msgid "Confirm Dropping Data Store:"
 msgstr "確認銷毀快取資料！"
 
-#: projectdatavaultgui.py:530
+#: projectdatavaultgui.py:532
 msgid "Data inside folder will NOT be destroyd."
 msgstr ""
 
-#: projectdatavaultgui.py:571
+#: projectdatavaultgui.py:573
 msgid "Select Folder With existing Data Store data"
 msgstr ""
 
-#: projectdatavaultgui.py:633
+#: projectdatavaultgui.py:635
 msgid "Data Store Validity Error: "
 msgstr ""
 
-#: projectdatavaultgui.py:635
+#: projectdatavaultgui.py:637
 #, fuzzy
 msgid "Data Store folder has non-folder files."
 msgstr "無法讓個人資料夾作為縮略圖資料夾"
 
-#: projectdatavaultgui.py:637
+#: projectdatavaultgui.py:639
 #, fuzzy
 msgid "Data Store folder has bad folders."
 msgstr "無法讓個人資料夾作為縮略圖資料夾"
 
-#: projectdatavaultgui.py:641
+#: projectdatavaultgui.py:643
 msgid " is empty."
 msgstr ""
 
-#: projectdatavaultgui.py:643
+#: projectdatavaultgui.py:645
 #, fuzzy
 msgid " has extra files or folders"
 msgstr "' 的資料夾作為縮略圖資料夾"
 
-#: projectdatavaultgui.py:645
+#: projectdatavaultgui.py:647
 msgid " has missing data folders"
 msgstr ""
 
-#: projectdatavaultgui.py:647
+#: projectdatavaultgui.py:649
 msgid " has no savefile data."
 msgstr ""
 
-#: projectdatavaultgui.py:648
+#: projectdatavaultgui.py:650
 msgid "Cannot connect Folder as Data Store!"
 msgstr ""
 
-#: projectdatavaultgui.py:664
+#: projectdatavaultgui.py:666
 #, fuzzy
 msgid "Confirm Destroying Project Data"
 msgstr "確認銷毀快取資料！"
 
-#: projectdatavaultgui.py:665
+#: projectdatavaultgui.py:667
 #, fuzzy
 msgid ""
 "Data will be permanently destroyed and there is no undo for this operation."
 msgstr " 此動作無法撤銷\n"
 
-#: projectdatavaultgui.py:697
+#: projectdatavaultgui.py:699
 msgid "Project Data Store is not active"
 msgstr ""
 
-#: projectdatavaultgui.py:698
+#: projectdatavaultgui.py:700
 #, fuzzy
 msgid "Project Data Store:"
 msgstr "專案名稱："
 
-#: projectdatavaultgui.py:703
+#: projectdatavaultgui.py:705
 msgid "Data Store Path:"
 msgstr ""
 
-#: projectdatavaultgui.py:709
+#: projectdatavaultgui.py:711
 msgid "Create Clone Project with Project Data in another Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:778
+#: projectdatavaultgui.py:780
 msgid "New Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:780
+#: projectdatavaultgui.py:782
 #, fuzzy
 msgid "Set Clone Project Path"
 msgstr "選擇專案檔案"
 
-#: projectdatavaultgui.py:783
+#: projectdatavaultgui.py:785
 #, fuzzy
 msgid "<not set>"
 msgstr "未設定"
 
-#: projectdatavaultgui.py:786
+#: projectdatavaultgui.py:788
 msgid "<small>Set clone Project path and select new Data Store.</small>"
 msgstr ""
 
-#: projectdatavaultgui.py:791 projectdatavaultgui.py:819
+#: projectdatavaultgui.py:793 projectdatavaultgui.py:821
 #, fuzzy
 msgid "Create Clone Project"
 msgstr "建立新專案"
 
-#: projectdatavaultgui.py:804
+#: projectdatavaultgui.py:806
 #, fuzzy
 msgid "Exit"
 msgstr "結束編輯"
+
+#: projectdatavaultgui.py:983
+msgid "Data Store Size Exceeds Current Warning Level!"
+msgstr ""
+
+#: projectdatavaultgui.py:984
+msgid ""
+"\n"
+"You can either delete data in Disk Store or change warning level in"
+msgstr ""
+
+#: projectdatavaultgui.py:985
+msgid " <b>Edit->Preferences 'General Options'</b> panel."
+msgstr ""
+
+#: projectdatavaultgui.py:994
+msgid "Disk Store <b>"
+msgstr ""
+
+#: projectdatavaultgui.py:994
+#, fuzzy
+msgid "</b> currently uses "
+msgstr "Flowblade 專案"
 
 #~ msgid "No Target Bins"
 #~ msgstr "沒有目標容器"

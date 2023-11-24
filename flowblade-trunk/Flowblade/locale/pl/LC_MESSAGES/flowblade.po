@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-13 10:46+0200\n"
+"POT-Creation-Date: 2023-11-24 14:35+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: app.py:230
+#: app.py:231
 msgid "No Autosave"
 msgstr "Brak autozapisu"
 
-#: app.py:230
+#: app.py:231
 msgid "1 min"
 msgstr ""
 
-#: app.py:230
+#: app.py:231
 msgid "2 min"
 msgstr ""
 
-#: app.py:230
+#: app.py:231
 msgid "5 min"
 msgstr ""
 
@@ -311,12 +311,12 @@ msgid "N/A"
 msgstr "Niedostępny"
 
 #: projectaction.py:1267 guicomponents.py:2477 guicomponents.py:2512
-#: projectdatavaultgui.py:306 projectdatavaultgui.py:458
+#: projectdatavaultgui.py:308 projectdatavaultgui.py:460
 msgid "Yes"
 msgstr "Tak"
 
 #: projectaction.py:1269 guicomponents.py:2479 guicomponents.py:2514
-#: projectdatavaultgui.py:460
+#: projectdatavaultgui.py:462
 msgid "No"
 msgstr "Nie"
 
@@ -831,12 +831,12 @@ msgstr "Zmień profil projektu..."
 msgid "Proxy Manager"
 msgstr "Menedżer Proxy"
 
-#: editorwindow.py:878 projectdatavaultgui.py:278
+#: editorwindow.py:878 projectdatavaultgui.py:280
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "Zamknij menedżera"
 
-#: editorwindow.py:879 projectdatavaultgui.py:731
+#: editorwindow.py:879 projectdatavaultgui.py:733
 #, fuzzy
 msgid "Project Data"
 msgstr "Projekt"
@@ -1171,12 +1171,12 @@ msgstr "Anuluj"
 msgid "New Project"
 msgstr "Nowy projekt"
 
-#: dialogs.py:140 projectdatavaultgui.py:516
+#: dialogs.py:140 projectdatavaultgui.py:518
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "Wybrany folder zawiera pliki"
 
-#: dialogs.py:141 projectdatavaultgui.py:517
+#: dialogs.py:141 projectdatavaultgui.py:519
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
@@ -1202,7 +1202,7 @@ msgstr "Nowy profil"
 
 #: dialogs.py:183 dialogs.py:235 rendergui.py:685 tools/gmic.py:752
 #: tools/toolsencoding.py:293 tools/scripttool.py:851
-#: projectdatavaultgui.py:103 projectdatavaultgui.py:573
+#: projectdatavaultgui.py:105 projectdatavaultgui.py:575
 msgid "Select Folder"
 msgstr "Wybierz folder"
 
@@ -2002,7 +2002,7 @@ msgstr "Renderuj wszystko"
 #: dialogs.py:1643 dialogs.py:1878 tools/titler.py:601 proxyediting.py:313
 #: medialinker.py:166 tools/gmic.py:839 tools/gmic.py:935
 #: diskcachemanagement.py:176 tools/scripttool.py:928 tools/scripttool.py:1092
-#: projectdatavaultgui.py:258 projectdatavaultgui.py:717
+#: projectdatavaultgui.py:260 projectdatavaultgui.py:719
 msgid "Close"
 msgstr "Zamknij"
 
@@ -3141,7 +3141,7 @@ msgstr ""
 "utworzone za pomocą Flowblade'a wersja <= 1.14 lub klipy źródłowe nie sąjuż "
 "na osi czasu"
 
-#: panels.py:442 jobs.py:353
+#: panels.py:442 jobs.py:354
 msgid "Info"
 msgstr "Informacje o klipie"
 
@@ -6318,7 +6318,8 @@ msgid "Set selected ranges non-starred"
 msgstr "Usuń oznaczenie gwiazdką dla wybranych zakresów"
 
 #: medialog.py:757
-msgid "Log current marked range"
+#, fuzzy
+msgid "Log current marked Media Item range"
 msgstr "Umieść zaznaczony zakres w rejestrze"
 
 #: medialog.py:758
@@ -7267,7 +7268,7 @@ msgstr ""
 msgid "Render File"
 msgstr "Renderowany plik"
 
-#: tools/batchrendering.py:963 jobs.py:354
+#: tools/batchrendering.py:963 jobs.py:355
 msgid "Render Time"
 msgstr "Czas renderowania"
 
@@ -8168,7 +8169,7 @@ msgstr ""
 msgid "Flowblade currently uses "
 msgstr "Obecnie Flowblade używa "
 
-#: diskcachemanagement.py:238
+#: diskcachemanagement.py:238 projectdatavaultgui.py:994
 msgid " of disk space."
 msgstr " miejsca na dysku."
 
@@ -8187,23 +8188,23 @@ msgstr ""
 "zmień poziom ostrzeżenia w panelu <b> Edycja-> Preferencje 'Opcje ogólne'</"
 "b>."
 
-#: diskcachemanagement.py:245 projectdatavaultgui.py:176
+#: diskcachemanagement.py:245 projectdatavaultgui.py:178
 msgid "Audio Levels Data"
 msgstr "Dane poziomu dźwięku"
 
-#: diskcachemanagement.py:248 projectdatavaultgui.py:178
+#: diskcachemanagement.py:248 projectdatavaultgui.py:180
 msgid "Rendered Files"
 msgstr "Renderowane pliki"
 
-#: diskcachemanagement.py:249 projectdatavaultgui.py:182
+#: diskcachemanagement.py:249 projectdatavaultgui.py:184
 msgid "Proxy Files"
 msgstr "Pliki proxy"
 
-#: diskcachemanagement.py:250 projectdatavaultgui.py:180
+#: diskcachemanagement.py:250 projectdatavaultgui.py:182
 msgid "Container Clips"
 msgstr "Klipy kontenerowe"
 
-#: diskcachemanagement.py:251 projectdatavaultgui.py:174
+#: diskcachemanagement.py:251 projectdatavaultgui.py:176
 msgid "Thumbnails"
 msgstr "Miniatury:"
 
@@ -8883,48 +8884,48 @@ msgstr ""
 msgid "Clip Frame"
 msgstr "Ramka klipu"
 
-#: jobs.py:105
+#: jobs.py:106
 msgid "G'Mic Clip"
 msgstr "Klip G'Mic"
 
-#: jobs.py:107
+#: jobs.py:108
 msgid "Selection Clip"
 msgstr "Klip zaznaczenia"
 
-#: jobs.py:109
+#: jobs.py:110
 msgid "Motion Clip"
 msgstr "Klip ruchu"
 
-#: jobs.py:111
+#: jobs.py:112
 msgid "Proxy Clip"
 msgstr "Klip proxy"
 
-#: jobs.py:113
+#: jobs.py:114
 #, fuzzy
 msgid "Generator Clip"
 msgstr "Klip Blendera"
 
-#: jobs.py:183
+#: jobs.py:184
 msgid "Completed"
 msgstr "Zakończono"
 
-#: jobs.py:210 jobs.py:278
+#: jobs.py:211 jobs.py:279
 msgid "Cancelled"
 msgstr "Anulowano"
 
-#: jobs.py:352
+#: jobs.py:353
 msgid "Job Type"
 msgstr "Typ zadania"
 
-#: jobs.py:355
+#: jobs.py:356
 msgid "Progress"
 msgstr "Progresywne"
 
-#: jobs.py:445 containeractions.py:255
+#: jobs.py:446 containeractions.py:255
 msgid "In Queue - "
 msgstr "W kolejce - "
 
-#: jobs.py:475 jobs.py:547 containeractions.py:508 containeractions.py:670
+#: jobs.py:476 jobs.py:548 containeractions.py:508 containeractions.py:670
 #: containeractions.py:876
 msgid "Render Starting..."
 msgstr "Rozpoczynanie renderowania...."
@@ -9780,237 +9781,266 @@ msgstr "Załaduj argumenty renderowania z bieżącego kodowania"
 msgid "Reset all Render Options to Defaults"
 msgstr "Zresetuj wszystkie opcje renderowania do wartości domyślnych"
 
-#: projectdatavaultgui.py:89 projectdatavaultgui.py:137
+#: projectdatavaultgui.py:91 projectdatavaultgui.py:139
+#: projectdatavaultgui.py:963
 #, fuzzy
 msgid "Default XDG Data Store"
 msgstr "Domyślna akcja kasowania"
 
-#: projectdatavaultgui.py:101
+#: projectdatavaultgui.py:103
 msgid "Select Empty Folder to be added as Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:107 projectdatavaultgui.py:577
+#: projectdatavaultgui.py:109 projectdatavaultgui.py:579
 #, fuzzy
 msgid "Data Folder:"
 msgstr "Folder docelowy:"
 
-#: projectdatavaultgui.py:112 projectdatavaultgui.py:582
+#: projectdatavaultgui.py:114 projectdatavaultgui.py:584
 msgid "Data Store Name"
 msgstr ""
 
-#: projectdatavaultgui.py:128 projectdatavaultgui.py:323
+#: projectdatavaultgui.py:130 projectdatavaultgui.py:325
 #, fuzzy
 msgid "Create Data Store"
 msgstr "Utwórz producenta wzorców"
 
-#: projectdatavaultgui.py:147
+#: projectdatavaultgui.py:149
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "Wklej filtry"
 
-#: projectdatavaultgui.py:152 projectdatavaultgui.py:161
+#: projectdatavaultgui.py:154 projectdatavaultgui.py:163
 #, fuzzy
 msgid "Not Saved"
 msgstr "Nie ustawiony"
 
-#: projectdatavaultgui.py:156
+#: projectdatavaultgui.py:158
 #, fuzzy
 msgid "Last Saved Time:"
 msgstr "Ostatnia klatka na osi czasu"
 
-#: projectdatavaultgui.py:167
+#: projectdatavaultgui.py:169
 #, fuzzy
 msgid "Data ID:"
 msgstr "Dane"
 
-#: projectdatavaultgui.py:187
+#: projectdatavaultgui.py:189
 msgid "Total"
 msgstr ""
 
-#: projectdatavaultgui.py:216
+#: projectdatavaultgui.py:218
 #, fuzzy
 msgid "Actions"
 msgstr "Działanie"
 
-#: projectdatavaultgui.py:221
+#: projectdatavaultgui.py:223
 #, fuzzy
 msgid "Last Saved Project File"
 msgstr "Nowy plik projektu"
 
-#: projectdatavaultgui.py:221
+#: projectdatavaultgui.py:223
 msgid "Times Saved"
 msgstr ""
 
-#: projectdatavaultgui.py:230 projectdatavaultgui.py:446
-#: projectdatavaultgui.py:476
+#: projectdatavaultgui.py:232 projectdatavaultgui.py:448
+#: projectdatavaultgui.py:478
 #, fuzzy
 msgid "No data folders"
 msgstr "Folder kopii migawkowej:"
 
-#: projectdatavaultgui.py:246
+#: projectdatavaultgui.py:248
 #, fuzzy
 msgid "Project Data Folders"
 msgstr "Wybierz folder docelowy"
 
-#: projectdatavaultgui.py:256
+#: projectdatavaultgui.py:258
 msgid "Data Stores"
 msgstr ""
 
-#: projectdatavaultgui.py:291 projectdatavaultgui.py:540
+#: projectdatavaultgui.py:293 projectdatavaultgui.py:542
 msgid "Drop Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:299
+#: projectdatavaultgui.py:301
 #, fuzzy
 msgid "Data Store Folder: "
 msgstr "Folder docelowy:"
 
-#: projectdatavaultgui.py:305
+#: projectdatavaultgui.py:307
 #, fuzzy
 msgid "Active: "
 msgstr "aktywny/a"
 
-#: projectdatavaultgui.py:307
+#: projectdatavaultgui.py:309
 msgid "Make This Data Store Active"
 msgstr ""
 
-#: projectdatavaultgui.py:325 projectdatavaultgui.py:594
+#: projectdatavaultgui.py:327 projectdatavaultgui.py:596
 msgid "Connect Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:329
+#: projectdatavaultgui.py:331
 #, fuzzy
 msgid "Legacy Disk Cache Manager"
 msgstr "Menedżer pamięci podręcznej"
 
-#: projectdatavaultgui.py:364
+#: projectdatavaultgui.py:366
 #, fuzzy
 msgid "Show only Saved Projects"
 msgstr "Projekty Flowblade"
 
-#: projectdatavaultgui.py:366
+#: projectdatavaultgui.py:368
 #, fuzzy
 msgid "Destroy Non-Saved Projects"
 msgstr "Zapisz projekt jako"
 
-#: projectdatavaultgui.py:382
+#: projectdatavaultgui.py:384
 #, fuzzy
 msgid "Destroy Project Data"
 msgstr "Usuń dane"
 
-#: projectdatavaultgui.py:395
+#: projectdatavaultgui.py:397
 #, fuzzy
 msgid "Currently open Project data cannot be destroyed."
 msgstr " Bieżący stos operacji 'cofnij' zostanie zniszczony\n"
 
-#: projectdatavaultgui.py:426
+#: projectdatavaultgui.py:428
 #, fuzzy
 msgid "not saved"
 msgstr "nie ustawiono"
 
-#: projectdatavaultgui.py:522
+#: projectdatavaultgui.py:524
 #, fuzzy
 msgid "Confirm Dropping Data Store:"
 msgstr "Potwierdź usunięcie danych pamięci podręcznej"
 
-#: projectdatavaultgui.py:530
+#: projectdatavaultgui.py:532
 msgid "Data inside folder will NOT be destroyd."
 msgstr ""
 
-#: projectdatavaultgui.py:571
+#: projectdatavaultgui.py:573
 msgid "Select Folder With existing Data Store data"
 msgstr ""
 
-#: projectdatavaultgui.py:633
+#: projectdatavaultgui.py:635
 msgid "Data Store Validity Error: "
 msgstr ""
 
-#: projectdatavaultgui.py:635
+#: projectdatavaultgui.py:637
 #, fuzzy
 msgid "Data Store folder has non-folder files."
 msgstr "Nie można utworzyć folderu miniatur"
 
-#: projectdatavaultgui.py:637
+#: projectdatavaultgui.py:639
 #, fuzzy
 msgid "Data Store folder has bad folders."
 msgstr "Nie można utworzyć folderu miniatur"
 
-#: projectdatavaultgui.py:641
+#: projectdatavaultgui.py:643
 msgid " is empty."
 msgstr ""
 
-#: projectdatavaultgui.py:643
+#: projectdatavaultgui.py:645
 #, fuzzy
 msgid " has extra files or folders"
 msgstr "' jako folder miniatur"
 
-#: projectdatavaultgui.py:645
+#: projectdatavaultgui.py:647
 msgid " has missing data folders"
 msgstr ""
 
-#: projectdatavaultgui.py:647
+#: projectdatavaultgui.py:649
 msgid " has no savefile data."
 msgstr ""
 
-#: projectdatavaultgui.py:648
+#: projectdatavaultgui.py:650
 msgid "Cannot connect Folder as Data Store!"
 msgstr ""
 
-#: projectdatavaultgui.py:664
+#: projectdatavaultgui.py:666
 #, fuzzy
 msgid "Confirm Destroying Project Data"
 msgstr "Potwierdź usunięcie danych pamięci podręcznej"
 
-#: projectdatavaultgui.py:665
+#: projectdatavaultgui.py:667
 #, fuzzy
 msgid ""
 "Data will be permanently destroyed and there is no undo for this operation."
 msgstr " Tej operacji nie można cofnąć\n"
 
-#: projectdatavaultgui.py:697
+#: projectdatavaultgui.py:699
 msgid "Project Data Store is not active"
 msgstr ""
 
-#: projectdatavaultgui.py:698
+#: projectdatavaultgui.py:700
 #, fuzzy
 msgid "Project Data Store:"
 msgstr "Nazwa projektu:"
 
-#: projectdatavaultgui.py:703
+#: projectdatavaultgui.py:705
 msgid "Data Store Path:"
 msgstr ""
 
-#: projectdatavaultgui.py:709
+#: projectdatavaultgui.py:711
 msgid "Create Clone Project with Project Data in another Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:778
+#: projectdatavaultgui.py:780
 msgid "New Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:780
+#: projectdatavaultgui.py:782
 #, fuzzy
 msgid "Set Clone Project Path"
 msgstr "Wybierz plik projektu Blendera:"
 
-#: projectdatavaultgui.py:783
+#: projectdatavaultgui.py:785
 #, fuzzy
 msgid "<not set>"
 msgstr "nie ustawiono"
 
-#: projectdatavaultgui.py:786
+#: projectdatavaultgui.py:788
 msgid "<small>Set clone Project path and select new Data Store.</small>"
 msgstr ""
 
-#: projectdatavaultgui.py:791 projectdatavaultgui.py:819
+#: projectdatavaultgui.py:793 projectdatavaultgui.py:821
 #, fuzzy
 msgid "Create Clone Project"
 msgstr "Utwórz nowy projekt"
 
-#: projectdatavaultgui.py:804
+#: projectdatavaultgui.py:806
 #, fuzzy
 msgid "Exit"
 msgstr "Wyjście z edycji"
+
+#: projectdatavaultgui.py:983
+#, fuzzy
+msgid "Data Store Size Exceeds Current Warning Level!"
+msgstr ""
+"Rozmiar pamięci podręcznej dysku przekracza bieżący poziom ostrzegawczy!"
+
+#: projectdatavaultgui.py:984
+msgid ""
+"\n"
+"You can either delete data in Disk Store or change warning level in"
+msgstr ""
+
+#: projectdatavaultgui.py:985
+#, fuzzy
+msgid " <b>Edit->Preferences 'General Options'</b> panel."
+msgstr ""
+"zmień poziom ostrzeżenia w panelu <b> Edycja-> Preferencje 'Opcje ogólne'</"
+"b>."
+
+#: projectdatavaultgui.py:994
+msgid "Disk Store <b>"
+msgstr ""
+
+#: projectdatavaultgui.py:994
+#, fuzzy
+msgid "</b> currently uses "
+msgstr "Obecnie Flowblade używa "
 
 #~ msgid "No Target Bins"
 #~ msgstr "Brak docelowych pojemników"
