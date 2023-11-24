@@ -754,7 +754,7 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_check.set_tooltip_text(_("Display non-starred ranges"))
     star_button.set_tooltip_text(_("Set selected ranges starred"))
     no_star_button.set_tooltip_text(_("Set selected ranges non-starred"))
-    widgets.log_range.set_tooltip_text(_("Log current marked range"))
+    widgets.log_range.set_tooltip_text(_("Log current marked Media Item range"))
     delete_button.set_tooltip_text(_("Delete selected ranges"))
     insert_displayed.set_tooltip_text(_("Insert selected ranges on Timeline"))
     append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
