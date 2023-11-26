@@ -235,6 +235,7 @@ class Vaults:
     def __init__(self):
         self.active_vault = DEFAULT_VAULT
         self.user_vaults_data = []
+        self.last_xdg_data_dir = _xdg_data_dir
 
     def add_user_vault(self, name, vault_path):
         new_vault_data = {"name":name, "vault_path":vault_path, "creation_time":datetime.datetime.now()}

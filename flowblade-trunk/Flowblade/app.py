@@ -312,6 +312,17 @@ class FlowbladeApplication(Gtk.Application):
         editorstate.project.create_vault_folder_data(vault_folder)
         projectdatavault.create_project_data_folders()
 
+        # Check that we are operating with unchanged xdg data dir.
+        xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
+        vaults_obj = projectdatavault.get_vaults_object()
+        if hasattr(vaults_obj, "last_xdg_data_dir") == False:
+            vaults_obj.last_xdg_data_dir = xdg_data_dir
+            vaults_obj.save()
+        if vaults_obj.last_xdg_data_dir != xdg_data_dir:
+            vaults_obj.last_xdg_data_dir = xdg_data_dir
+            vaults_obj.save()
+            GLib.timeout_add(10, xdg_data_dir_changed_dialog)
+
         check_crash = True
 
         # Audiomonitoring being available needs to be known before GUI creation.
@@ -881,6 +892,14 @@ def check_disk_cache_size():
 def show_user_folders_init_error_dialog(error_msg):
     # not done
     print(error_msg, " user folder XDG init error")
+    return False
+
+def xdg_data_dir_changed_dialog():
+    primary_txt = _("XDG Data folder location has changed and you are in danger of data loss!")
+    secondary_txt = _("Location of <b>Default XDG Data Store</b> has changed because value of <b>XDG Data Home</b> variable has changed.\n\n") + \
+                    _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will not work correctly anymore!\n\n") + \
+                    _("Use clone functionality in <b>Project->Data Store</b> dialog to clone projects and verify their continued functionality.")
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
 
 # ------------------------------------------------------- small and multiple screens
