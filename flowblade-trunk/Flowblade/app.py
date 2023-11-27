@@ -320,7 +320,7 @@ class FlowbladeApplication(Gtk.Application):
         if vaults_obj.last_xdg_data_dir != xdg_data_dir:
             vaults_obj.last_xdg_data_dir = xdg_data_dir
             vaults_obj.save()
-            GLib.timeout_add(10, xdg_data_dir_changed_dialog)
+            GLib.timeout_add(1000, xdg_data_dir_changed_dialog)
 
         check_crash = True
 
@@ -611,7 +611,6 @@ def init_sequence_gui():
     # Set initial timeline scale draw params.
     editorstate.current_sequence().update_length()
 
-        
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
     updater.repaint_tline()
@@ -898,11 +897,12 @@ def show_user_folders_init_error_dialog(error_msg):
     return False
 
 def xdg_data_dir_changed_dialog():
-    primary_txt = _("XDG Data folder location has changed!")
-    secondary_txt = _("Location of <b>Default XDG Data Store</b> has changed because value of <b>XDG Data Home</b> variable has changed.\n\n") + \
-                    _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will continue to work,\n") + \
-                    _("but new projects will have data saved in the location specified by the new value <b>XDG Data Home</b> variable .")
-    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+    if recovery_in_progress == False:
+        primary_txt = _("XDG Data folder location has changed!")
+        secondary_txt = _("Location of <b>Default XDG Data Store</b> has changed because value of <b>XDG Data Home</b> variable has changed.\n\n") + \
+                        _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will continue to work,\n") + \
+                        _("but new projects will have data saved in the location specified by the new value <b>XDG Data Home</b> variable .")
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
 
 # ------------------------------------------------------- small and multiple screens
