@@ -132,10 +132,9 @@ instance_autosave_id_str = None
 PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
-recovery_dialog_id = -1
 disk_cache_timeout_id = -1
-sdl2_timeout_id = -1
 loaded_autosave_file = None
+recovery_in_progress = False
 
 splash_screen = None
 splash_timeout_id = -1
@@ -382,9 +381,12 @@ class FlowbladeApplication(Gtk.Application):
 
         # Existence of autosave file hints that program was exited abnormally.
         if check_crash == True and len(autosave_files) > 0:
+            global recovery_in_progress
             if len(autosave_files) == 1:
+                recovery_in_progress = True
                 GLib.timeout_add(10, autosave_recovery_dialog)
             else:
+                recovery_in_progress = True
                 GLib.timeout_add(10, autosaves_many_recovery_dialog)
         else:
             start_autosave()
@@ -885,8 +887,9 @@ def destroy_splash_screen():
 # ------------------------------------------------------- disk cache size check
 def check_disk_cache_size():
     GLib.source_remove(disk_cache_timeout_id)
-    diskcachemanagement.check_disk_cache_size()
-    projectdatavaultgui.check_vaults_sizes()
+    if recovery_in_progress == False:
+        diskcachemanagement.check_disk_cache_size()
+        projectdatavaultgui.check_vaults_sizes()
 
 # ------------------------------------------------------- userfolders dialogs
 def show_user_folders_init_error_dialog(error_msg):
