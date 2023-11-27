@@ -123,34 +123,13 @@ class DiskFolderManagementPanel:
             return str(int(size)) + " B"
 
     def destroy_pressed(self, widget):
-        if self.warning_level == NO_WARNING:
-            # Delete data
-            self.destroy_data()
-            return
-            
-        primaty_text = _("Confirm Destroying Cached Data!")
-        if self.warning_level == PROJECT_DATA_WARNING:
-            secondary_text = _("Destroying this data may <b>change contents</b> of existing\nprojects or <b>make some projects unopenable!</b>")
-            secondary_text += "\n\n"
-            secondary_text += _("You can use 'File->Save Backup Snapshot...' functionality to backup projects\nso that they can be opened later before destroying this data.")
-        else:
-            secondary_text = _("Destroying this data may require parts of it to be recreated later.")
-            
-        dialogutils.warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
+        self.destroy_data()
 
     def destroy_guard_toggled(self, check_button):
         if check_button.get_active() == True:
             self.destroy_button.set_sensitive(True)
         else:
             self.destroy_button.set_sensitive(False)
-         
-    def warning_confirmation(self, dialog, response_id):
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.ACCEPT:
-            return
-    
-        self.destroy_data()
     
     def destroy_data(self):
         print("deleting", self.folder)
@@ -166,7 +145,10 @@ class DiskFolderManagementPanel:
                     os.rmdir(file_path)
             else:
                 os.remove(file_path)
+    
+        GLib.idle_add(self._update_view)
 
+    def _update_view(self):
         self.size_info.set_text(self.get_folder_size_str())
         self.size_info.queue_draw()
 
@@ -178,7 +160,8 @@ def show_disk_management_dialog():
     global _panels
     _panels = _get_disk_dir_panels()
 
-    lagacy_label_text =  _("This dialog handles legacy Projects data created using versions before 2.12.\nUse <b>Data Store Manager</b> to inspect data created with versions 2.12 or higher")
+    lagacy_label_text =  _("This dialog handles legacy Projects data created using versions before 2.12.\nUse <b>Data Store Manager</b> to inspect data created with versions 2.12 or higher\n\n")
+    lagacy_label_text += _("Destroying data using this dialog may <b>change contents</b> of existing\nprojects or <b>make some projects unopenable!</b>")
     lagacy_label = Gtk.Label()
     lagacy_label.set_markup("<small>" + lagacy_label_text + "</small>")
     lagacy_label.set_margin_bottom(8)
