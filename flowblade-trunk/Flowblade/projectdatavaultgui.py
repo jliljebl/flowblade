@@ -67,6 +67,12 @@ def _close_window():
     _project_data_manager_window.destroy()
 
 def show_current_project_data_store_info_window():
+    if PROJECT().vault_folder == None:
+        primary_txt = _("Project created with version 2.10 or lower!")
+        secondary_txt = _("This feature available only for projects created with version 2.12 or higher.")
+        dialogutils.info_message(primary_txt, secondary_txt, None)
+        return
+        
     global _current_project_info_window
     
     _current_project_info_window = CurrenProjectDataInfoWindow()
