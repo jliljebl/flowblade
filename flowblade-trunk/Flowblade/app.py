@@ -311,7 +311,7 @@ class FlowbladeApplication(Gtk.Application):
         editorstate.project.create_vault_folder_data(vault_folder)
         projectdatavault.create_project_data_folders()
 
-        # Check that we are operating with unchanged xdg data dir.
+        # Check that we are operating with unchanged xdg data dir and give info if not.
         xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
         vaults_obj = projectdatavault.get_vaults_object()
         if hasattr(vaults_obj, "last_xdg_data_dir") == False:
