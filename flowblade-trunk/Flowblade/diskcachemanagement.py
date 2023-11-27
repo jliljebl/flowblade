@@ -71,7 +71,7 @@ class DiskFolderManagementPanel:
             self.destroy_button.set_sensitive(False)
         button_area.pack_start(self.destroy_button, True, True, 0)
         if self.warning_level == PROJECT_DATA_WARNING:
-            warning_icon = Gtk.Image.new_from_file_name(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.SMALL_TOOLBAR)
+            warning_icon = Gtk.Image.new_from_icon_name(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.SMALL_TOOLBAR)
             warning_icon.set_tooltip_text( _("Destroying this data may change contents of existing\nprojects and make some projects unopenable."))
             button_area.pack_start(warning_icon, False, False, 0)
         else:
@@ -226,7 +226,8 @@ def _check_cache_size():
             _show_warning(size_str)
         elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
             _show_warning(size_str)
-    except:
+    except Exception as e:
+        #print(str(e))
         # No legacy data for layout prior to 2.12 exists.
         global _legacy_disk_data_exists
         _legacy_disk_data_exists = False
