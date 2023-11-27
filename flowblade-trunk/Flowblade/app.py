@@ -898,10 +898,10 @@ def show_user_folders_init_error_dialog(error_msg):
     return False
 
 def xdg_data_dir_changed_dialog():
-    primary_txt = _("XDG Data folder location has changed and you are in danger of data loss!")
+    primary_txt = _("XDG Data folder location has changed!")
     secondary_txt = _("Location of <b>Default XDG Data Store</b> has changed because value of <b>XDG Data Home</b> variable has changed.\n\n") + \
-                    _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will not work correctly anymore!\n\n") + \
-                    _("Use clone functionality in <b>Project->Data Store</b> dialog to clone projects and verify their continued functionality.")
+                    _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will continue to work,\n") + \
+                    _("but new projects will have data saved in the location specified by the new value <b>XDG Data Home</b> variable .")
     dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
 
