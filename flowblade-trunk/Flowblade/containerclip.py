@@ -372,11 +372,11 @@ def create_renderered_fluxity_media_item(container_data, length):
 
 def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_data):
     # We need to jump through some hoops here because we are using media plugin rendering functionality to 
-    # add a rendered cidoa as new media item.
+    # add a rendered clip as new media item.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
     unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
-    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    shutil.move(created_unrendered_clip_path, unrendered_clip_path)
     
     container_data.unrendered_media = unrendered_clip_path
     container_data.unrendered_type = appconsts.VIDEO
