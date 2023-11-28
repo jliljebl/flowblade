@@ -556,7 +556,6 @@ def _save_project_in_last_saved_path():
     try:
         
         persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
-        print("_save_project_in_last_saved_path",  PROJECT().last_save_path)
         projectdatavault.project_saved( PROJECT().last_save_path)
         
     except IOError as ioe:
