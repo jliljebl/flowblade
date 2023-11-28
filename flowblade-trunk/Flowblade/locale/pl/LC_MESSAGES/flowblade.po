@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-28 08:07+0200\n"
+"POT-Creation-Date: 2023-11-28 15:09+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -87,11 +87,11 @@ msgstr "Twoja wersja MLT to: "
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Zainstaluj MLT 6.18 lub nowszy, aby uruchomić Flowblade."
 
-#: app.py:1054 projectaction.py:520 projectaction.py:721
+#: app.py:1054 projectaction.py:520 projectaction.py:719
 msgid "Project has not been saved previously"
 msgstr "Projekt nie został wcześniej zapisany"
 
-#: app.py:1055 projectaction.py:521 projectaction.py:722
+#: app.py:1055 projectaction.py:521 projectaction.py:720
 msgid "Save project with File -> Save As before closing."
 msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
@@ -214,47 +214,47 @@ msgstr ""
 "Żadne ze zduplikowanych elementów multimedialnych nie zostały dodane do "
 "projektu."
 
-#: projectaction.py:734
+#: projectaction.py:732
 msgid "Project not found on disk"
 msgstr "Nie znaleziono projektu na dysku"
 
-#: projectaction.py:735
+#: projectaction.py:733
 msgid "Project can't be loaded."
 msgstr "Nie można załadować projektu."
 
-#: projectaction.py:743
+#: projectaction.py:741
 msgid "Project has not been saved since it was opened."
 msgstr "Od czasu jego otwarcia projekt nie został zapisany."
 
-#: projectaction.py:748
+#: projectaction.py:746
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt został zapisany mniej niż minutę temu."
 
-#: projectaction.py:751
+#: projectaction.py:749
 msgid "Project was saved one minute ago."
 msgstr "Projekt został zapisany minutę temu."
 
-#: projectaction.py:753
+#: projectaction.py:751
 msgid "Project was saved "
 msgstr "Projekt został zapisany "
 
-#: projectaction.py:753
+#: projectaction.py:751
 msgid " minutes ago."
 msgstr " minut temu."
 
-#: projectaction.py:781
+#: projectaction.py:779
 msgid "Render target file exists!"
 msgstr "Plik docelowy renderowani już istnieje!"
 
-#: projectaction.py:782
+#: projectaction.py:780
 msgid "Confirm overwriting existing file."
 msgstr "Potwierdź nadpisanie istniejącego pliku."
 
-#: projectaction.py:788
+#: projectaction.py:786
 msgid "Project is currently using proxy media!"
 msgstr "Projekt obecnie korzysta z mediów proxy!"
 
-#: projectaction.py:789
+#: projectaction.py:787
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -269,27 +269,27 @@ msgstr ""
 "\n"
 "Wybierz 'Potwierdź', aby zrezygnować z renderowania z mediów proxy."
 
-#: projectaction.py:881
+#: projectaction.py:879
 msgid "Render launch failed!"
 msgstr "Renderowanie nie powiodło się!"
 
-#: projectaction.py:882 projectaction.py:896 tools/batchrendering.py:360
+#: projectaction.py:880 projectaction.py:894 tools/batchrendering.py:360
 msgid "Error message: "
 msgstr "Komunikat o błędzie: "
 
-#: projectaction.py:895
+#: projectaction.py:893
 msgid "Adding item to render queue failed!"
 msgstr "Dodawanie elementu do kolejki renderowania nie powiodło się!"
 
-#: projectaction.py:956
+#: projectaction.py:954
 msgid "Open.."
 msgstr "Otwórz.."
 
-#: projectaction.py:985
+#: projectaction.py:983
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "Otwarcie pliku .mlt lub .xml jako multimediów było niedozwolone!"
 
-#: projectaction.py:986
+#: projectaction.py:984
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
@@ -299,19 +299,19 @@ msgstr ""
 "\n"
 "Ostatni niezgodny plik XML MLT miał profil:"
 
-#: projectaction.py:1006
+#: projectaction.py:1004
 msgid "No file was selected"
 msgstr "Nie wybrano żadnego pliku"
 
-#: projectaction.py:1006
+#: projectaction.py:1004
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Wybierz numerowany plik, aby dodać sekwencję obrazów do projektu."
 
-#: projectaction.py:1014
+#: projectaction.py:1012
 msgid "Not a sequence file!"
 msgstr "Nie jest plikem sekwencji!"
 
-#: projectaction.py:1014
+#: projectaction.py:1012
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -319,86 +319,86 @@ msgstr ""
 "Wybrany plik nie posiada numerów,\n"
 "więc nie może on być plikiem sekwencji obrazów."
 
-#: projectaction.py:1171
+#: projectaction.py:1169
 msgid "Cannot complete media replace action"
 msgstr ""
 
-#: projectaction.py:1172
+#: projectaction.py:1170
 msgid "Original and replace media are not of the same media type."
 msgstr ""
 
-#: projectaction.py:1252 projectaction.py:1254 projectaction.py:1263
-#: projectaction.py:1271 projectaction.py:1278 tools/batchrendering.py:1098
+#: projectaction.py:1250 projectaction.py:1252 projectaction.py:1261
+#: projectaction.py:1269 projectaction.py:1276 tools/batchrendering.py:1098
 #: clipmenuaction.py:181 clipmenuaction.py:183
 msgid "N/A"
 msgstr "Niedostępny"
 
-#: projectaction.py:1267 guicomponents.py:2477 guicomponents.py:2512
+#: projectaction.py:1265 guicomponents.py:2477 guicomponents.py:2512
 #: projectdatavaultgui.py:314 projectdatavaultgui.py:467
 msgid "Yes"
 msgstr "Tak"
 
-#: projectaction.py:1269 guicomponents.py:2479 guicomponents.py:2514
+#: projectaction.py:1267 guicomponents.py:2479 guicomponents.py:2514
 #: projectdatavaultgui.py:469
 msgid "No"
 msgstr "Nie"
 
-#: projectaction.py:1335
+#: projectaction.py:1333
 msgid "Select Project for Media Import"
 msgstr "Wybierz projekt dla importu multimediów"
 
-#: projectaction.py:1381
+#: projectaction.py:1379
 msgid "selection_"
 msgstr "wybór_"
 
-#: projectaction.py:1382
+#: projectaction.py:1380
 msgid "Save Selection Container Clip"
 msgstr "Zapisz klip kontenerowy zaznaczenia"
 
-#: projectaction.py:1439 projectaction.py:1462 projectaction.py:1736
-#: projectaction.py:1752 projectdata.py:277 tlineaction.py:280
+#: projectaction.py:1437 projectaction.py:1460 projectaction.py:1734
+#: projectaction.py:1750 projectdata.py:277 tlineaction.py:280
 msgid "sequence_"
 msgstr "sekwencja_"
 
-#: projectaction.py:1440
+#: projectaction.py:1438
 msgid "Save Sequence Container Clip"
 msgstr "Zapisz klip kontenerowy sekwencji"
 
-#: projectaction.py:1463
+#: projectaction.py:1461
 msgid "Save Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji"
 
-#: projectaction.py:1489
+#: projectaction.py:1487
 msgid "frame_"
 msgstr "klatka_"
 
-#: projectaction.py:1490
+#: projectaction.py:1488
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji zamrożonych klatek"
 
-#: projectaction.py:1621
+#: projectaction.py:1619
 msgid "Can't remove a non-empty bin"
 msgstr "Nie można usunąć niepustego pojemnika"
 
-#: projectaction.py:1622
+#: projectaction.py:1620
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Przed usunięciem pojemnika należy usunąć wszystkie znajdujące się w nim "
 "pliki."
 
-#: projectaction.py:1630
+#: projectaction.py:1628
 msgid "Can't remove last bin"
 msgstr "Nie można usunąć ostatniego pojemnika"
 
-#: projectaction.py:1631
+#: projectaction.py:1629
 msgid "There must always exist at least one bin."
 msgstr "Zawsze musi istnieć, co najmniej, jeden pojemnik."
 
-#: projectaction.py:1709
+#: projectaction.py:1707
 msgid "Selected sequence is already being edited"
 msgstr "Wybrana sekwencja jest już edytowana"
 
-#: projectaction.py:1710
+#: projectaction.py:1708
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -406,7 +406,7 @@ msgstr ""
 "Wybierz inną sekwencję. Naciśnij przycisk Dodaj, aby utworzyć \n"
 "nową sekwencję, w razie potrzeby."
 
-#: projectaction.py:1791
+#: projectaction.py:1789
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -414,46 +414,46 @@ msgstr ""
 "Jesteś pewny, że chcesz usunąć\n"
 "sekwencję '"
 
-#: projectaction.py:1791
+#: projectaction.py:1789
 msgid "'?"
 msgstr "?"
 
-#: projectaction.py:1792
+#: projectaction.py:1790
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tej operacji nie można cofnąć. Sekwencja zostanie trwale usunięta."
 
-#: projectaction.py:1818
+#: projectaction.py:1816
 msgid "Can't remove last sequence"
 msgstr "Nie można usunąć ostatniej sekwencji"
 
-#: projectaction.py:1819
+#: projectaction.py:1817
 msgid "There must always exist at least one sequence."
 msgstr "Zawsze musi istnieć, co najmniej, jedna sekwencja."
 
-#: projectaction.py:1901
+#: projectaction.py:1899
 #, fuzzy
 msgid "Can't add a new Track"
 msgstr "Nie można edytować zablokowanej ścieżki"
 
-#: projectaction.py:1902
+#: projectaction.py:1900
 msgid "Sequence already has 21 tracks, which is the maximum number allowed."
 msgstr ""
 
-#: projectaction.py:1907
+#: projectaction.py:1905
 #, fuzzy
 msgid "Can't delete Video Track"
 msgstr "Maksymalizuj ścieżki wideo"
 
-#: projectaction.py:1908
+#: projectaction.py:1906
 msgid "Sequence has to have one Video Track."
 msgstr ""
 
-#: projectaction.py:1910
+#: projectaction.py:1908
 #, fuzzy
 msgid "Can't delete Audio Track"
 msgstr "Maksymalizuj ścieżki audio"
 
-#: projectaction.py:1911
+#: projectaction.py:1909
 msgid "There are no Audio Tracks to delete."
 msgstr ""
 
@@ -1163,7 +1163,7 @@ msgid "Data Store"
 msgstr ""
 
 #: dialogs.py:95 dialogs.py:1298 dialogs.py:1515 dialogs.py:1557
-#: menuactions.py:230 containerclip.py:167 tools/scripttool.py:610
+#: menuactions.py:230 containerclip.py:168 tools/scripttool.py:610
 msgid "Ok"
 msgstr ""
 
@@ -1184,7 +1184,7 @@ msgstr ""
 #: patternproducer.py:369 patternproducer.py:400 tools/gmic.py:367
 #: tools/gmic.py:391 tools/gmic.py:533 dialogutils.py:54 dialogutils.py:126
 #: dialogutils.py:186 exporting.py:444 containeractions.py:376
-#: containerclip.py:166 tools/scripttool.py:305 tools/scripttool.py:341
+#: containerclip.py:167 tools/scripttool.py:305 tools/scripttool.py:341
 #: tools/scripttool.py:589 tools/scripttool.py:609 singletracktransition.py:556
 #: singletracktransition.py:735
 msgid "Cancel"
@@ -8965,15 +8965,15 @@ msgstr "Wideo:"
 msgid "<b>Rendering Placeholder Media For:</b> "
 msgstr "<b>Renderowanie multimediów zastępczych dla:</b> "
 
-#: containerclip.py:153
+#: containerclip.py:154
 msgid "Select A File"
 msgstr "Wybierz plik"
 
-#: containerclip.py:194
+#: containerclip.py:195
 msgid "Not all required files were defined"
 msgstr "Nie wszystkie wymagane pliki zostały zdefiniowane"
 
-#: containerclip.py:194
+#: containerclip.py:195
 #, fuzzy
 msgid ""
 "Select all files asked for in dialog for successful Container Clip creation."
@@ -8981,44 +8981,44 @@ msgstr ""
 "Wybierz wszystkie pliki wymagane w oknie dialogowym, aby pomyślnie utworzyć "
 "klip kontenerowy."
 
-#: containerclip.py:201
+#: containerclip.py:202
 msgid "G'Mic Tool Script:"
 msgstr "Skrypt narzędzia G'Mic:"
 
-#: containerclip.py:201
+#: containerclip.py:202
 msgid "Select G'Mic Tool Script"
 msgstr "Wybierz skrypt narzędzia G'Mic"
 
-#: containerclip.py:202
+#: containerclip.py:203
 msgid "Video Clip:"
 msgstr "Klip Wideo:"
 
-#: containerclip.py:203
+#: containerclip.py:204
 msgid "Create G'Mic Script Container Clip"
 msgstr "Utwórz klip kontenerowy skryptu G'Mic"
 
-#: containerclip.py:252
+#: containerclip.py:253
 msgid "G'Mic Container Clip Validation Error"
 msgstr "Błąd weryfikacji klipu kontenerowego G'Mic"
 
-#: containerclip.py:260
+#: containerclip.py:261
 msgid "Generator Plugin Script:"
 msgstr ""
 
-#: containerclip.py:260
+#: containerclip.py:261
 msgid "Generator Plugin Script"
 msgstr ""
 
-#: containerclip.py:261
+#: containerclip.py:262
 msgid "Create Generator Plugin Script Media Item"
 msgstr ""
 
-#: containerclip.py:332
+#: containerclip.py:333
 #, fuzzy
 msgid "Creating Container for Generator..."
 msgstr "Tworzenie kontenera dla projektu Blendera"
 
-#: containerclip.py:336
+#: containerclip.py:337
 #, fuzzy
 msgid "Generator Container Clip Validation Error"
 msgstr "Utwórz klip kontenerowy projektu Blendera"
