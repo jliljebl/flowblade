@@ -24,6 +24,7 @@ import copy
 import hashlib
 import json
 import os
+import shutil
 import threading
 import time
 
@@ -350,7 +351,7 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest()
     # CACHE
     unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
-    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    shutil.move(created_unrendered_clip_path, unrendered_clip_path)
     container_clip_data.unrendered_media = unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
     
