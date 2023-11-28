@@ -446,17 +446,20 @@ def set_ref_line_y(allocation):
     """
     Sets value of REF_LINE_Y to such that tracks are vertically centered.
     """
-    total_h = 0
-    below_ref_h = 0
-    for i in range(1, len(current_sequence().tracks) - 1):
-        total_h += current_sequence().tracks[i].height
-        if i < current_sequence().first_video_index:
-            below_ref_h += current_sequence().tracks[i].height
+    try:
+        total_h = 0
+        below_ref_h = 0
+        for i in range(1, len(current_sequence().tracks) - 1):
+            total_h += current_sequence().tracks[i].height
+            if i < current_sequence().first_video_index:
+                below_ref_h += current_sequence().tracks[i].height
 
-    x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-    centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
-    global REF_LINE_Y
-    REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h) + page_y_off
+        x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
+        centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
+        global REF_LINE_Y
+        REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h) + page_y_off
+    except:
+        print("tlinewidgets.set_ref_line_y() failed")
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
