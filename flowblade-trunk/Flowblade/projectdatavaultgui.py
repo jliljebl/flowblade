@@ -314,6 +314,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         self.active_info = Gtk.Label(label=_("Yes")) 
         activate_button = Gtk.Button(_("Make This Data Store Active"))
         activate_button.connect("clicked", lambda w: self.activate_button_clicked())
+        self.activate_button = activate_button
         active_info_left = guiutils.get_left_justified_box([active_label, self.active_info])
         info_row_2 = Gtk.HBox(False, 2)
         info_row_2.pack_start(active_info_left, True, True, 0)
@@ -467,10 +468,8 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         else:
             self.active_info.set_text(_("No")) 
 
-        if self.view_vault_index == projectdatavault.DEFAULT_VAULT:
-            self.drop_button.set_sensitive(False)
-        else:
-            self.drop_button.set_sensitive(True)
+        self.drop_button.set_sensitive((self.view_vault_index != projectdatavault.DEFAULT_VAULT))
+        self.activate_button.set_sensitive((self.view_vault_index != projectdatavault.get_active_vault_index()))
 
     def folder_selection_changed(self, selection):
         (model, rows) = selection.get_selected_rows()
@@ -660,7 +659,8 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
     def activate_button_clicked(self):
         projectdatavault.set_active_vault_index(self.view_vault_index)
         projectdatavault.get_vaults_object().save()
-
+        self.update_vault_info()
+        
     def show_only_saved_toggled(self, widget):
         self.show_only_saved = widget.get_active()
         self.load_data_folders()
