@@ -233,6 +233,22 @@ def delete_unsaved_data_folders():
 # ---------------------------------------------------- handle classes
 class Vaults:
     def __init__(self):
+        # 'self.active_vault' indexes work as follows:
+        # 0 = DEFAULT_VAULT, the "Default XDG Data Store" in $XDG_DATA_HOME folder.
+        # 1 - n = user defined aAta Stores self.user_vaults_data in indexes 0 - (n-1)
+        #
+        # The reason this scheme was selected was that "Default XDG Data Store"
+        # cannot be deleted, named, dropped or connected, but its location can change
+        # if user changes $XDG_DATA_HOME value and then a new "Default XDG Data Store"
+        # gets created.
+        #
+        # User defined data stores are named and freely placed at creation time,
+        # and can be dropped or connected at will later, but their locations are immutable
+        # once created.
+        #
+        # The method we chose to enforce this difference was to special case index
+        # 0, the DEFAULT_VAULT, and keep user defined data stores in separate 
+        # data structure.
         self.active_vault = DEFAULT_VAULT
         self.user_vaults_data = []
         self.last_xdg_data_dir = _xdg_data_dir
