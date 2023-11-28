@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-24 14:35+0200\n"
+"POT-Creation-Date: 2023-11-28 08:07+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -17,56 +17,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:231
+#: app.py:230
 msgid "No Autosave"
 msgstr "Nincs automatikus mentés"
 
-#: app.py:231
+#: app.py:230
 msgid "1 min"
 msgstr "1 perc"
 
-#: app.py:231
+#: app.py:230
 msgid "2 min"
 msgstr "2 perc"
 
-#: app.py:231
+#: app.py:230
 msgid "5 min"
 msgstr "5 perc"
 
-#: app.py:949
+#: app.py:901
+msgid "XDG Data folder location has changed!"
+msgstr ""
+
+#: app.py:902
+msgid ""
+"Location of <b>Default XDG Data Store</b> has changed because value of "
+"<b>XDG Data Home</b> variable has changed.\n"
+"\n"
+msgstr ""
+
+#: app.py:903
+msgid ""
+"Existing Projects with project data saved in <b>Default XDG Data Store</b> "
+"will continue to work,\n"
+msgstr ""
+
+#: app.py:904
+msgid ""
+"but new projects will have data saved in the location specified by the new "
+"value <b>XDG Data Home</b> variable ."
+msgstr ""
+
+#: app.py:971
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:951
+#: app.py:973
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:952
+#: app.py:974
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:963
+#: app.py:985
 msgid "Cannot launch application because XDG folders init error."
 msgstr ""
 
-#: app.py:974
+#: app.py:996
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr ""
 
-#: app.py:975
+#: app.py:997
 #, fuzzy
 msgid "Your MLT version is: "
 msgstr "MLT változat: "
 
-#: app.py:975
+#: app.py:997
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr ""
 
-#: app.py:1032 projectaction.py:520 projectaction.py:721
+#: app.py:1054 projectaction.py:520 projectaction.py:721
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:1033 projectaction.py:521 projectaction.py:722
+#: app.py:1055 projectaction.py:521 projectaction.py:722
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -302,12 +325,12 @@ msgid "N/A"
 msgstr "N/A"
 
 #: projectaction.py:1267 guicomponents.py:2477 guicomponents.py:2512
-#: projectdatavaultgui.py:308 projectdatavaultgui.py:460
+#: projectdatavaultgui.py:314 projectdatavaultgui.py:467
 msgid "Yes"
 msgstr "Igen"
 
 #: projectaction.py:1269 guicomponents.py:2479 guicomponents.py:2514
-#: projectdatavaultgui.py:462
+#: projectdatavaultgui.py:469
 msgid "No"
 msgstr "Nem"
 
@@ -856,12 +879,12 @@ msgstr "Projekt profiljának megváltoztatása..."
 msgid "Proxy Manager"
 msgstr "Helyettesítés kezelő"
 
-#: editorwindow.py:878 projectdatavaultgui.py:280
+#: editorwindow.py:878 projectdatavaultgui.py:286
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "Kezelő bezárása"
 
-#: editorwindow.py:879 projectdatavaultgui.py:733
+#: editorwindow.py:879 projectdatavaultgui.py:739
 #, fuzzy
 msgid "Project Data"
 msgstr "Projekt"
@@ -1207,12 +1230,12 @@ msgstr "Mégsem"
 msgid "New Project"
 msgstr "Új projekt"
 
-#: dialogs.py:140 projectdatavaultgui.py:518
+#: dialogs.py:140 projectdatavaultgui.py:523
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "A választott könyvtár fájlokat tartalmaz"
 
-#: dialogs.py:141 projectdatavaultgui.py:519
+#: dialogs.py:141 projectdatavaultgui.py:524
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
@@ -1239,7 +1262,7 @@ msgstr "Új profil"
 
 #: dialogs.py:183 dialogs.py:235 rendergui.py:685 tools/gmic.py:752
 #: tools/toolsencoding.py:293 tools/scripttool.py:851
-#: projectdatavaultgui.py:105 projectdatavaultgui.py:575
+#: projectdatavaultgui.py:111 projectdatavaultgui.py:580
 msgid "Select Folder"
 msgstr "Mappa kiválasztása"
 
@@ -2041,8 +2064,8 @@ msgstr "Összes lehetséges renderelése"
 
 #: dialogs.py:1643 dialogs.py:1878 tools/titler.py:601 proxyediting.py:313
 #: medialinker.py:166 tools/gmic.py:839 tools/gmic.py:935
-#: diskcachemanagement.py:176 tools/scripttool.py:928 tools/scripttool.py:1092
-#: projectdatavaultgui.py:260 projectdatavaultgui.py:719
+#: diskcachemanagement.py:158 tools/scripttool.py:928 tools/scripttool.py:1092
+#: projectdatavaultgui.py:266 projectdatavaultgui.py:725
 msgid "Close"
 msgstr "Bezárás"
 
@@ -8293,85 +8316,71 @@ msgstr ""
 msgid " kB"
 msgstr ""
 
-#: diskcachemanagement.py:131
-msgid "Confirm Destroying Cached Data!"
-msgstr ""
-
-#: diskcachemanagement.py:133
-msgid ""
-"Destroying this data may <b>change contents</b> of existing\n"
-"projects or <b>make some projects unopenable!</b>"
-msgstr ""
-
-#: diskcachemanagement.py:135
-msgid ""
-"You can use 'File->Save Backup Snapshot...' functionality to backup "
-"projects\n"
-"so that they can be opened later before destroying this data."
-msgstr ""
-
-#: diskcachemanagement.py:137
-msgid "Destroying this data may require parts of it to be recreated later."
-msgstr ""
-
-#: diskcachemanagement.py:174
+#: diskcachemanagement.py:156
 #, fuzzy
 msgid "Disk Cache Manager"
 msgstr "Kezelő bezárása"
 
-#: diskcachemanagement.py:181
+#: diskcachemanagement.py:163
 msgid ""
 "This dialog handles legacy Projects data created using versions before "
 "2.12.\n"
 "Use <b>Data Store Manager</b> to inspect data created with versions 2.12 or "
-"higher"
+"higher\n"
+"\n"
 msgstr ""
 
-#: diskcachemanagement.py:237
+#: diskcachemanagement.py:164
+msgid ""
+"Destroying data using this dialog may <b>change contents</b> of existing\n"
+"projects or <b>make some projects unopenable!</b>"
+msgstr ""
+
+#: diskcachemanagement.py:221
 msgid "Disk Cache Size Exceeds Current Warning Level!"
 msgstr ""
 
-#: diskcachemanagement.py:238
+#: diskcachemanagement.py:222
 #, fuzzy
 msgid "Flowblade currently uses "
 msgstr "Flowblade projektek"
 
-#: diskcachemanagement.py:238 projectdatavaultgui.py:994
+#: diskcachemanagement.py:222 projectdatavaultgui.py:1000
 msgid " of disk space."
 msgstr ""
 
-#: diskcachemanagement.py:239
+#: diskcachemanagement.py:223
 msgid ""
 "You can either delete saved data using dialog opened with <b>Edit->Disk "
 "Cache</b> or"
 msgstr ""
 
-#: diskcachemanagement.py:240
+#: diskcachemanagement.py:224
 msgid ""
 "change warning level in <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 
-#: diskcachemanagement.py:245 projectdatavaultgui.py:178
+#: diskcachemanagement.py:229 projectdatavaultgui.py:184
 #, fuzzy
 msgid "Audio Levels Data"
 msgstr "Hang szintjének megjelenítése"
 
-#: diskcachemanagement.py:248 projectdatavaultgui.py:180
+#: diskcachemanagement.py:232 projectdatavaultgui.py:186
 #, fuzzy
 msgid "Rendered Files"
 msgstr "Fájl renderelése"
 
-#: diskcachemanagement.py:249 projectdatavaultgui.py:184
+#: diskcachemanagement.py:233 projectdatavaultgui.py:190
 #, fuzzy
 msgid "Proxy Files"
 msgstr "Helyettesítő fájl renderelése"
 
-#: diskcachemanagement.py:250 projectdatavaultgui.py:182
+#: diskcachemanagement.py:234 projectdatavaultgui.py:188
 #, fuzzy
 msgid "Container Clips"
 msgstr "Klipek másolása"
 
-#: diskcachemanagement.py:251 projectdatavaultgui.py:176
+#: diskcachemanagement.py:235 projectdatavaultgui.py:182
 #, fuzzy
 msgid "Thumbnails"
 msgstr "Bélyegképek mappája:"
@@ -9972,255 +9981,264 @@ msgstr "Renderelés paramétereinek betöltése szövegfájlból"
 msgid "Reset all Render Options to Defaults"
 msgstr "Renderelés beállításainak alapértelmezettre állítása"
 
-#: projectdatavaultgui.py:91 projectdatavaultgui.py:139
-#: projectdatavaultgui.py:963
+#: projectdatavaultgui.py:71
+msgid "Project created with version 2.10 or lower!"
+msgstr ""
+
+#: projectdatavaultgui.py:72
+msgid ""
+"This feature available only for projects created with version 2.12 or higher."
+msgstr ""
+
+#: projectdatavaultgui.py:97 projectdatavaultgui.py:145
+#: projectdatavaultgui.py:969
 #, fuzzy
 msgid "Default XDG Data Store"
 msgstr "Kijelölt törlése"
 
-#: projectdatavaultgui.py:103
+#: projectdatavaultgui.py:109
 msgid "Select Empty Folder to be added as Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:109 projectdatavaultgui.py:579
+#: projectdatavaultgui.py:115 projectdatavaultgui.py:584
 #, fuzzy
 msgid "Data Folder:"
 msgstr "Cél mappa:"
 
-#: projectdatavaultgui.py:114 projectdatavaultgui.py:584
+#: projectdatavaultgui.py:120 projectdatavaultgui.py:589
 msgid "Data Store Name"
 msgstr ""
 
-#: projectdatavaultgui.py:130 projectdatavaultgui.py:325
+#: projectdatavaultgui.py:136 projectdatavaultgui.py:332
 #, fuzzy
 msgid "Create Data Store"
 msgstr "Minta előállító létrehozása"
 
-#: projectdatavaultgui.py:149
+#: projectdatavaultgui.py:155
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "Szűrők beillesztése"
 
-#: projectdatavaultgui.py:154 projectdatavaultgui.py:163
+#: projectdatavaultgui.py:160 projectdatavaultgui.py:169
 #, fuzzy
 msgid "Not Saved"
 msgstr "Nincs mentés"
 
-#: projectdatavaultgui.py:158
+#: projectdatavaultgui.py:164
 #, fuzzy
 msgid "Last Saved Time:"
 msgstr "Utolsó képkocka az idővonalon"
 
-#: projectdatavaultgui.py:169
+#: projectdatavaultgui.py:175
 msgid "Data ID:"
 msgstr ""
 
-#: projectdatavaultgui.py:189
+#: projectdatavaultgui.py:195
 msgid "Total"
 msgstr ""
 
-#: projectdatavaultgui.py:218
+#: projectdatavaultgui.py:224
 #, fuzzy
 msgid "Actions"
 msgstr "Művelet"
 
-#: projectdatavaultgui.py:223
+#: projectdatavaultgui.py:229
 #, fuzzy
 msgid "Last Saved Project File"
 msgstr "Új projekt fájl"
 
-#: projectdatavaultgui.py:223
+#: projectdatavaultgui.py:229
 msgid "Times Saved"
 msgstr ""
 
-#: projectdatavaultgui.py:232 projectdatavaultgui.py:448
-#: projectdatavaultgui.py:478
+#: projectdatavaultgui.py:238 projectdatavaultgui.py:455
+#: projectdatavaultgui.py:483
 #, fuzzy
 msgid "No data folders"
 msgstr "Állapot mappa:"
 
-#: projectdatavaultgui.py:248
+#: projectdatavaultgui.py:254
 #, fuzzy
 msgid "Project Data Folders"
 msgstr "Célmappa választása"
 
-#: projectdatavaultgui.py:258
+#: projectdatavaultgui.py:264
 msgid "Data Stores"
 msgstr ""
 
-#: projectdatavaultgui.py:293 projectdatavaultgui.py:542
+#: projectdatavaultgui.py:299 projectdatavaultgui.py:547
 msgid "Drop Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:301
+#: projectdatavaultgui.py:307
 #, fuzzy
 msgid "Data Store Folder: "
 msgstr "Cél mappa:"
 
-#: projectdatavaultgui.py:307
+#: projectdatavaultgui.py:313
 #, fuzzy
 msgid "Active: "
 msgstr "aktív"
 
-#: projectdatavaultgui.py:309
+#: projectdatavaultgui.py:315
 msgid "Make This Data Store Active"
 msgstr ""
 
-#: projectdatavaultgui.py:327 projectdatavaultgui.py:596
+#: projectdatavaultgui.py:334 projectdatavaultgui.py:601
 msgid "Connect Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:331
+#: projectdatavaultgui.py:338
 #, fuzzy
 msgid "Legacy Disk Cache Manager"
 msgstr "Kezelő bezárása"
 
-#: projectdatavaultgui.py:366
+#: projectdatavaultgui.py:373
 #, fuzzy
 msgid "Show only Saved Projects"
 msgstr "Flowblade projektek"
 
-#: projectdatavaultgui.py:368
+#: projectdatavaultgui.py:375
 #, fuzzy
 msgid "Destroy Non-Saved Projects"
 msgstr "Projekt mentése másként"
 
-#: projectdatavaultgui.py:384
+#: projectdatavaultgui.py:391
 #, fuzzy
 msgid "Destroy Project Data"
 msgstr "Rekesz törlése a projektből"
 
-#: projectdatavaultgui.py:397
+#: projectdatavaultgui.py:404
 #, fuzzy
 msgid "Currently open Project data cannot be destroyed."
 msgstr " A jelenlegi visszavonási lista törölve lesz\n"
 
-#: projectdatavaultgui.py:428
+#: projectdatavaultgui.py:435
 #, fuzzy
 msgid "not saved"
 msgstr "nincs megadva"
 
-#: projectdatavaultgui.py:524
+#: projectdatavaultgui.py:529
 msgid "Confirm Dropping Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:532
+#: projectdatavaultgui.py:537
 msgid "Data inside folder will NOT be destroyd."
 msgstr ""
 
-#: projectdatavaultgui.py:573
+#: projectdatavaultgui.py:578
 msgid "Select Folder With existing Data Store data"
 msgstr ""
 
-#: projectdatavaultgui.py:635
+#: projectdatavaultgui.py:640
 msgid "Data Store Validity Error: "
 msgstr ""
 
-#: projectdatavaultgui.py:637
+#: projectdatavaultgui.py:642
 #, fuzzy
 msgid "Data Store folder has non-folder files."
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectdatavaultgui.py:639
+#: projectdatavaultgui.py:644
 #, fuzzy
 msgid "Data Store folder has bad folders."
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectdatavaultgui.py:643
+#: projectdatavaultgui.py:648
 msgid " is empty."
 msgstr ""
 
-#: projectdatavaultgui.py:645
+#: projectdatavaultgui.py:650
 #, fuzzy
 msgid " has extra files or folders"
 msgstr "' a bélyegképek számára"
 
-#: projectdatavaultgui.py:647
+#: projectdatavaultgui.py:652
 msgid " has missing data folders"
 msgstr ""
 
-#: projectdatavaultgui.py:649
+#: projectdatavaultgui.py:654
 msgid " has no savefile data."
 msgstr ""
 
-#: projectdatavaultgui.py:650
+#: projectdatavaultgui.py:655
 msgid "Cannot connect Folder as Data Store!"
 msgstr ""
 
-#: projectdatavaultgui.py:666
+#: projectdatavaultgui.py:672
 msgid "Confirm Destroying Project Data"
 msgstr ""
 
-#: projectdatavaultgui.py:667
+#: projectdatavaultgui.py:673
 #, fuzzy
 msgid ""
 "Data will be permanently destroyed and there is no undo for this operation."
 msgstr " Nincs visszavonási lehetőség ehhez a művelethez\n"
 
-#: projectdatavaultgui.py:699
+#: projectdatavaultgui.py:705
 msgid "Project Data Store is not active"
 msgstr ""
 
-#: projectdatavaultgui.py:700
+#: projectdatavaultgui.py:706
 #, fuzzy
 msgid "Project Data Store:"
 msgstr "Projekt neve:"
 
-#: projectdatavaultgui.py:705
+#: projectdatavaultgui.py:711
 msgid "Data Store Path:"
 msgstr ""
 
-#: projectdatavaultgui.py:711
+#: projectdatavaultgui.py:717
 msgid "Create Clone Project with Project Data in another Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:780
+#: projectdatavaultgui.py:786
 msgid "New Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:782
+#: projectdatavaultgui.py:788
 #, fuzzy
 msgid "Set Clone Project Path"
 msgstr "Projektfájl kiválasztása"
 
-#: projectdatavaultgui.py:785
+#: projectdatavaultgui.py:791
 #, fuzzy
 msgid "<not set>"
 msgstr "nincs megadva"
 
-#: projectdatavaultgui.py:788
+#: projectdatavaultgui.py:794
 msgid "<small>Set clone Project path and select new Data Store.</small>"
 msgstr ""
 
-#: projectdatavaultgui.py:793 projectdatavaultgui.py:821
+#: projectdatavaultgui.py:799 projectdatavaultgui.py:827
 #, fuzzy
 msgid "Create Clone Project"
 msgstr "Új projekt létrehozása"
 
-#: projectdatavaultgui.py:806
+#: projectdatavaultgui.py:812
 #, fuzzy
 msgid "Exit"
 msgstr "Szerkesztés"
 
-#: projectdatavaultgui.py:983
+#: projectdatavaultgui.py:989
 msgid "Data Store Size Exceeds Current Warning Level!"
 msgstr ""
 
-#: projectdatavaultgui.py:984
+#: projectdatavaultgui.py:990
 msgid ""
 "\n"
 "You can either delete data in Disk Store or change warning level in"
 msgstr ""
 
-#: projectdatavaultgui.py:985
+#: projectdatavaultgui.py:991
 msgid " <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 
-#: projectdatavaultgui.py:994
+#: projectdatavaultgui.py:1000
 msgid "Disk Store <b>"
 msgstr ""
 
-#: projectdatavaultgui.py:994
+#: projectdatavaultgui.py:1000
 #, fuzzy
 msgid "</b> currently uses "
 msgstr "Flowblade projektek"

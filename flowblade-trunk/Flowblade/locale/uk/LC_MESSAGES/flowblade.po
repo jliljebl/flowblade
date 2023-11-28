@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-24 14:35+0200\n"
+"POT-Creation-Date: 2023-11-28 08:07+0200\n"
 "PO-Revision-Date: 2021-01-15 21:19+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -19,57 +19,80 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: app.py:231
+#: app.py:230
 msgid "No Autosave"
 msgstr "Без автозбереження"
 
-#: app.py:231
+#: app.py:230
 msgid "1 min"
 msgstr "1 мін"
 
-#: app.py:231
+#: app.py:230
 msgid "2 min"
 msgstr "2 мін"
 
-#: app.py:231
+#: app.py:230
 msgid "5 min"
 msgstr "5 мін"
 
-#: app.py:949
+#: app.py:901
+msgid "XDG Data folder location has changed!"
+msgstr ""
+
+#: app.py:902
+msgid ""
+"Location of <b>Default XDG Data Store</b> has changed because value of "
+"<b>XDG Data Home</b> variable has changed.\n"
+"\n"
+msgstr ""
+
+#: app.py:903
+msgid ""
+"Existing Projects with project data saved in <b>Default XDG Data Store</b> "
+"will continue to work,\n"
+msgstr ""
+
+#: app.py:904
+msgid ""
+"but new projects will have data saved in the location specified by the new "
+"value <b>XDG Data Home</b> variable ."
+msgstr ""
+
+#: app.py:971
 msgid "Too small screen for this application."
 msgstr "Занадто маленький екран для цього додатка."
 
-#: app.py:951
+#: app.py:973
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Мінімальні розміри екрана для цієї програми - 1152 x 768.\n"
 
-#: app.py:952
+#: app.py:974
 msgid "Your screen dimensions are "
 msgstr "Ваші розміри екрана "
 
-#: app.py:963
+#: app.py:985
 msgid "Cannot launch application because XDG folders init error."
 msgstr ""
 "Програму не можна запустити, оскільки сталася помилка ініціалізації папки "
 "XDG."
 
-#: app.py:974
+#: app.py:996
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr "Flowblade версії 2.6 (або пізнішої) вимагає запуску MLT версії 6.18"
 
-#: app.py:975
+#: app.py:997
 msgid "Your MLT version is: "
 msgstr "Ваша версія MLT: "
 
-#: app.py:975
+#: app.py:997
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Встановіть MLT 6.18 або вище для запуску Flowblade."
 
-#: app.py:1032 projectaction.py:520 projectaction.py:721
+#: app.py:1054 projectaction.py:520 projectaction.py:721
 msgid "Project has not been saved previously"
 msgstr "Проект раніше не зберігався"
 
-#: app.py:1033 projectaction.py:521 projectaction.py:722
+#: app.py:1055 projectaction.py:521 projectaction.py:722
 msgid "Save project with File -> Save As before closing."
 msgstr "Перед закриттям збережіть проект через Файл -> Зберегти як."
 
@@ -310,12 +333,12 @@ msgid "N/A"
 msgstr "N/A"
 
 #: projectaction.py:1267 guicomponents.py:2477 guicomponents.py:2512
-#: projectdatavaultgui.py:308 projectdatavaultgui.py:460
+#: projectdatavaultgui.py:314 projectdatavaultgui.py:467
 msgid "Yes"
 msgstr "Так"
 
 #: projectaction.py:1269 guicomponents.py:2479 guicomponents.py:2514
-#: projectdatavaultgui.py:462
+#: projectdatavaultgui.py:469
 msgid "No"
 msgstr "Ні"
 
@@ -827,12 +850,12 @@ msgstr "Зміна типового профілю проекту..."
 msgid "Proxy Manager"
 msgstr "Менеджер проксі"
 
-#: editorwindow.py:878 projectdatavaultgui.py:280
+#: editorwindow.py:878 projectdatavaultgui.py:286
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "Закрити менеджер"
 
-#: editorwindow.py:879 projectdatavaultgui.py:733
+#: editorwindow.py:879 projectdatavaultgui.py:739
 #, fuzzy
 msgid "Project Data"
 msgstr "Проект"
@@ -1166,12 +1189,12 @@ msgstr "Скасувати"
 msgid "New Project"
 msgstr "Новий проект"
 
-#: dialogs.py:140 projectdatavaultgui.py:518
+#: dialogs.py:140 projectdatavaultgui.py:523
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "Типова тека для файлів проекту"
 
-#: dialogs.py:141 projectdatavaultgui.py:519
+#: dialogs.py:141 projectdatavaultgui.py:524
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
@@ -1197,7 +1220,7 @@ msgstr "Новий профіль"
 
 #: dialogs.py:183 dialogs.py:235 rendergui.py:685 tools/gmic.py:752
 #: tools/toolsencoding.py:293 tools/scripttool.py:851
-#: projectdatavaultgui.py:105 projectdatavaultgui.py:575
+#: projectdatavaultgui.py:111 projectdatavaultgui.py:580
 msgid "Select Folder"
 msgstr "Вибір теки"
 
@@ -1992,8 +2015,8 @@ msgstr "Візуалізувати всі"
 
 #: dialogs.py:1643 dialogs.py:1878 tools/titler.py:601 proxyediting.py:313
 #: medialinker.py:166 tools/gmic.py:839 tools/gmic.py:935
-#: diskcachemanagement.py:176 tools/scripttool.py:928 tools/scripttool.py:1092
-#: projectdatavaultgui.py:260 projectdatavaultgui.py:719
+#: diskcachemanagement.py:158 tools/scripttool.py:928 tools/scripttool.py:1092
+#: projectdatavaultgui.py:266 projectdatavaultgui.py:725
 msgid "Close"
 msgstr "Закрити"
 
@@ -7991,79 +8014,65 @@ msgstr " МБ"
 msgid " kB"
 msgstr " кБ"
 
-#: diskcachemanagement.py:131
-msgid "Confirm Destroying Cached Data!"
-msgstr ""
-
-#: diskcachemanagement.py:133
-msgid ""
-"Destroying this data may <b>change contents</b> of existing\n"
-"projects or <b>make some projects unopenable!</b>"
-msgstr ""
-
-#: diskcachemanagement.py:135
-msgid ""
-"You can use 'File->Save Backup Snapshot...' functionality to backup "
-"projects\n"
-"so that they can be opened later before destroying this data."
-msgstr ""
-
-#: diskcachemanagement.py:137
-msgid "Destroying this data may require parts of it to be recreated later."
-msgstr ""
-
-#: diskcachemanagement.py:174
+#: diskcachemanagement.py:156
 msgid "Disk Cache Manager"
 msgstr "Дисковий кеш-менеджер"
 
-#: diskcachemanagement.py:181
+#: diskcachemanagement.py:163
 msgid ""
 "This dialog handles legacy Projects data created using versions before "
 "2.12.\n"
 "Use <b>Data Store Manager</b> to inspect data created with versions 2.12 or "
-"higher"
+"higher\n"
+"\n"
 msgstr ""
 
-#: diskcachemanagement.py:237
+#: diskcachemanagement.py:164
+msgid ""
+"Destroying data using this dialog may <b>change contents</b> of existing\n"
+"projects or <b>make some projects unopenable!</b>"
+msgstr ""
+
+#: diskcachemanagement.py:221
 msgid "Disk Cache Size Exceeds Current Warning Level!"
 msgstr ""
 
-#: diskcachemanagement.py:238
+#: diskcachemanagement.py:222
 msgid "Flowblade currently uses "
 msgstr ""
 
-#: diskcachemanagement.py:238 projectdatavaultgui.py:994
+#: diskcachemanagement.py:222 projectdatavaultgui.py:1000
 msgid " of disk space."
 msgstr ""
 
-#: diskcachemanagement.py:239
+#: diskcachemanagement.py:223
 msgid ""
 "You can either delete saved data using dialog opened with <b>Edit->Disk "
 "Cache</b> or"
 msgstr ""
 
-#: diskcachemanagement.py:240
+#: diskcachemanagement.py:224
 msgid ""
 "change warning level in <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 
-#: diskcachemanagement.py:245 projectdatavaultgui.py:178
+#: diskcachemanagement.py:229 projectdatavaultgui.py:184
 msgid "Audio Levels Data"
 msgstr ""
 
-#: diskcachemanagement.py:248 projectdatavaultgui.py:180
+#: diskcachemanagement.py:232 projectdatavaultgui.py:186
 msgid "Rendered Files"
 msgstr ""
 
-#: diskcachemanagement.py:249 projectdatavaultgui.py:184
+#: diskcachemanagement.py:233 projectdatavaultgui.py:190
 msgid "Proxy Files"
 msgstr "Проміжни файли"
 
-#: diskcachemanagement.py:250 projectdatavaultgui.py:182
+#: diskcachemanagement.py:234 projectdatavaultgui.py:188
 msgid "Container Clips"
 msgstr ""
 
-#: diskcachemanagement.py:251 projectdatavaultgui.py:176
+#: diskcachemanagement.py:235 projectdatavaultgui.py:182
 msgid "Thumbnails"
 msgstr "Мініатюри"
 
@@ -9549,252 +9558,261 @@ msgstr ""
 msgid "Reset all Render Options to Defaults"
 msgstr ""
 
-#: projectdatavaultgui.py:91 projectdatavaultgui.py:139
-#: projectdatavaultgui.py:963
+#: projectdatavaultgui.py:71
+msgid "Project created with version 2.10 or lower!"
+msgstr ""
+
+#: projectdatavaultgui.py:72
+msgid ""
+"This feature available only for projects created with version 2.12 or higher."
+msgstr ""
+
+#: projectdatavaultgui.py:97 projectdatavaultgui.py:145
+#: projectdatavaultgui.py:969
 msgid "Default XDG Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:103
+#: projectdatavaultgui.py:109
 msgid "Select Empty Folder to be added as Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:109 projectdatavaultgui.py:579
+#: projectdatavaultgui.py:115 projectdatavaultgui.py:584
 #, fuzzy
 msgid "Data Folder:"
 msgstr "Тека призначення:"
 
-#: projectdatavaultgui.py:114 projectdatavaultgui.py:584
+#: projectdatavaultgui.py:120 projectdatavaultgui.py:589
 msgid "Data Store Name"
 msgstr ""
 
-#: projectdatavaultgui.py:130 projectdatavaultgui.py:325
+#: projectdatavaultgui.py:136 projectdatavaultgui.py:332
 #, fuzzy
 msgid "Create Data Store"
 msgstr "Створити виробника шаблону"
 
-#: projectdatavaultgui.py:149
+#: projectdatavaultgui.py:155
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "Файл сигналу яскравості:"
 
-#: projectdatavaultgui.py:154 projectdatavaultgui.py:163
+#: projectdatavaultgui.py:160 projectdatavaultgui.py:169
 #, fuzzy
 msgid "Not Saved"
 msgstr "Не встановлено"
 
-#: projectdatavaultgui.py:158
+#: projectdatavaultgui.py:164
 #, fuzzy
 msgid "Last Saved Time:"
 msgstr "Останній кадр на часовій шкалі"
 
-#: projectdatavaultgui.py:169
+#: projectdatavaultgui.py:175
 #, fuzzy
 msgid "Data ID:"
 msgstr "Дані"
 
-#: projectdatavaultgui.py:189
+#: projectdatavaultgui.py:195
 msgid "Total"
 msgstr ""
 
-#: projectdatavaultgui.py:218
+#: projectdatavaultgui.py:224
 #, fuzzy
 msgid "Actions"
 msgstr "Дія"
 
-#: projectdatavaultgui.py:223
+#: projectdatavaultgui.py:229
 #, fuzzy
 msgid "Last Saved Project File"
 msgstr "Додати новий файл"
 
-#: projectdatavaultgui.py:223
+#: projectdatavaultgui.py:229
 msgid "Times Saved"
 msgstr ""
 
-#: projectdatavaultgui.py:232 projectdatavaultgui.py:448
-#: projectdatavaultgui.py:478
+#: projectdatavaultgui.py:238 projectdatavaultgui.py:455
+#: projectdatavaultgui.py:483
 #, fuzzy
 msgid "No data folders"
 msgstr "Експортувати:"
 
-#: projectdatavaultgui.py:248
+#: projectdatavaultgui.py:254
 #, fuzzy
 msgid "Project Data Folders"
 msgstr "Не вдається завантажити проект."
 
-#: projectdatavaultgui.py:258
+#: projectdatavaultgui.py:264
 msgid "Data Stores"
 msgstr ""
 
-#: projectdatavaultgui.py:293 projectdatavaultgui.py:542
+#: projectdatavaultgui.py:299 projectdatavaultgui.py:547
 msgid "Drop Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:301
+#: projectdatavaultgui.py:307
 #, fuzzy
 msgid "Data Store Folder: "
 msgstr "Тека призначення:"
 
-#: projectdatavaultgui.py:307
+#: projectdatavaultgui.py:313
 #, fuzzy
 msgid "Active: "
 msgstr "активна"
 
-#: projectdatavaultgui.py:309
+#: projectdatavaultgui.py:315
 msgid "Make This Data Store Active"
 msgstr ""
 
-#: projectdatavaultgui.py:327 projectdatavaultgui.py:596
+#: projectdatavaultgui.py:334 projectdatavaultgui.py:601
 msgid "Connect Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:331
+#: projectdatavaultgui.py:338
 #, fuzzy
 msgid "Legacy Disk Cache Manager"
 msgstr "Дисковий кеш-менеджер"
 
-#: projectdatavaultgui.py:366
+#: projectdatavaultgui.py:373
 #, fuzzy
 msgid "Show only Saved Projects"
 msgstr "Проекти Flowblade"
 
-#: projectdatavaultgui.py:368
+#: projectdatavaultgui.py:375
 #, fuzzy
 msgid "Destroy Non-Saved Projects"
 msgstr "Зберегти проект як"
 
-#: projectdatavaultgui.py:384
+#: projectdatavaultgui.py:391
 msgid "Destroy Project Data"
 msgstr ""
 
-#: projectdatavaultgui.py:397
+#: projectdatavaultgui.py:404
 #, fuzzy
 msgid "Currently open Project data cannot be destroyed."
 msgstr " Поточний стек скасування буде знищений\n"
 
-#: projectdatavaultgui.py:428
+#: projectdatavaultgui.py:435
 #, fuzzy
 msgid "not saved"
 msgstr "не встановлено"
 
-#: projectdatavaultgui.py:524
+#: projectdatavaultgui.py:529
 msgid "Confirm Dropping Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:532
+#: projectdatavaultgui.py:537
 msgid "Data inside folder will NOT be destroyd."
 msgstr ""
 
-#: projectdatavaultgui.py:573
+#: projectdatavaultgui.py:578
 msgid "Select Folder With existing Data Store data"
 msgstr ""
 
-#: projectdatavaultgui.py:635
+#: projectdatavaultgui.py:640
 msgid "Data Store Validity Error: "
 msgstr ""
 
-#: projectdatavaultgui.py:637
+#: projectdatavaultgui.py:642
 msgid "Data Store folder has non-folder files."
 msgstr ""
 
-#: projectdatavaultgui.py:639
+#: projectdatavaultgui.py:644
 msgid "Data Store folder has bad folders."
 msgstr ""
 
-#: projectdatavaultgui.py:643
+#: projectdatavaultgui.py:648
 msgid " is empty."
 msgstr ""
 
-#: projectdatavaultgui.py:645
+#: projectdatavaultgui.py:650
 #, fuzzy
 msgid " has extra files or folders"
 msgstr "'як папка візуалізації кліпу"
 
-#: projectdatavaultgui.py:647
+#: projectdatavaultgui.py:652
 msgid " has missing data folders"
 msgstr ""
 
-#: projectdatavaultgui.py:649
+#: projectdatavaultgui.py:654
 msgid " has no savefile data."
 msgstr ""
 
-#: projectdatavaultgui.py:650
+#: projectdatavaultgui.py:655
 msgid "Cannot connect Folder as Data Store!"
 msgstr ""
 
-#: projectdatavaultgui.py:666
+#: projectdatavaultgui.py:672
 msgid "Confirm Destroying Project Data"
 msgstr ""
 
-#: projectdatavaultgui.py:667
+#: projectdatavaultgui.py:673
 #, fuzzy
 msgid ""
 "Data will be permanently destroyed and there is no undo for this operation."
 msgstr " Для цієї операції не можна скасувати\n"
 
-#: projectdatavaultgui.py:699
+#: projectdatavaultgui.py:705
 msgid "Project Data Store is not active"
 msgstr ""
 
-#: projectdatavaultgui.py:700
+#: projectdatavaultgui.py:706
 #, fuzzy
 msgid "Project Data Store:"
 msgstr "Назва проекту:"
 
-#: projectdatavaultgui.py:705
+#: projectdatavaultgui.py:711
 msgid "Data Store Path:"
 msgstr ""
 
-#: projectdatavaultgui.py:711
+#: projectdatavaultgui.py:717
 msgid "Create Clone Project with Project Data in another Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:780
+#: projectdatavaultgui.py:786
 msgid "New Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:782
+#: projectdatavaultgui.py:788
 #, fuzzy
 msgid "Set Clone Project Path"
 msgstr "Виберіть Файл проекту"
 
-#: projectdatavaultgui.py:785
+#: projectdatavaultgui.py:791
 #, fuzzy
 msgid "<not set>"
 msgstr "не встановлено"
 
-#: projectdatavaultgui.py:788
+#: projectdatavaultgui.py:794
 msgid "<small>Set clone Project path and select new Data Store.</small>"
 msgstr ""
 
-#: projectdatavaultgui.py:793 projectdatavaultgui.py:821
+#: projectdatavaultgui.py:799 projectdatavaultgui.py:827
 #, fuzzy
 msgid "Create Clone Project"
 msgstr "Створити новий проект"
 
-#: projectdatavaultgui.py:806
+#: projectdatavaultgui.py:812
 #, fuzzy
 msgid "Exit"
 msgstr "Змінити"
 
-#: projectdatavaultgui.py:983
+#: projectdatavaultgui.py:989
 msgid "Data Store Size Exceeds Current Warning Level!"
 msgstr ""
 
-#: projectdatavaultgui.py:984
+#: projectdatavaultgui.py:990
 msgid ""
 "\n"
 "You can either delete data in Disk Store or change warning level in"
 msgstr ""
 
-#: projectdatavaultgui.py:985
+#: projectdatavaultgui.py:991
 msgid " <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 
-#: projectdatavaultgui.py:994
+#: projectdatavaultgui.py:1000
 msgid "Disk Store <b>"
 msgstr ""
 
-#: projectdatavaultgui.py:994
+#: projectdatavaultgui.py:1000
 msgid "</b> currently uses "
 msgstr ""
 
