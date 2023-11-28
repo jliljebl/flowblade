@@ -602,7 +602,6 @@ def _save_as_dialog_callback(dialog, response_id):
         try:
             
             persistance.save_project(PROJECT(), PROJECT().last_save_path) #<----- HERE
-            print("_save_as_dialog_callback")
             projectdatavault.project_saved( PROJECT().last_save_path)
         
         except IOError as ioe:
