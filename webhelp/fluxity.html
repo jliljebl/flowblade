@@ -25,7 +25,7 @@
 <h3 id="gpl-licence-text">GPL Licence text</h3>
 <p>Flowblade Movie Editor is a nonlinear video editor.
 Copyright 2021 Janne Liljeblad.</p>
-<p>This file is part of Flowblade Movie Editor <a href="http://code.google.com/p/flowblade">http://code.google.com/p/flowblade</a>.</p>
+<p>This file is part of Flowblade Movie Editor <a href="https://github.com/jliljebl/flowblade/">https://github.com/jliljebl/flowblade/</a>.</p>
 <p>Flowblade Movie Editor is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -58,7 +58,7 @@ def render_frame(frame, fctx, w, h):
 </code></pre>
 <h2 id="script-lifecycle">SCRIPT LIFECYCLE</h2>
 <p><strong><code>init_script(fctx):</code></strong> This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. </p>
-<p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.</p>
+<p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input from editors and possibly to create some additional data structures.</p>
 <p><strong><code>render_frame(frame, fctx, w, h):</code></strong> This method is called for each frame rendered to create an output image for that frame.</p>
 <p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h2 id="example-script">EXAMPLE SCRIPT</h2>
@@ -84,7 +84,7 @@ def init_script(fctx):
     fctx.add_editor(&quot;Opacity&quot;, fluxity.EDITOR_INT_RANGE, (100, 5, 100))
     fctx.add_editor(&quot;Random Seed&quot;, fluxity.EDITOR_INT, 42)
 </code></pre>
-<p>In <em>init_script()</em> we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.</p>
+<p>In <em>init_script()</em> we define the editors that will be presented to the user and set some metadata like the name of the script displayed to the user and the script author.</p>
 <p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="init_render">init_render()</h3>
 <pre><code>def init_render(fctx):
@@ -182,7 +182,7 @@ def _clamp(v):
 <p>There is a helper function <em>_clamp(v)</em> used to make sure that all color values are in range 0-1. Any number of helper functions, objects and data structures can be created.</p>
 <h2 id="developing-fluxity-scripts">DEVELOPING FLUXITY SCRIPTS</h2>
 <p><strong>Flowblade</strong> comes with a simple GUI tool for developing Fluxity scripts. It can be accessed from menu <strong>Tools-&gt;Generator Script Editor</strong>.</p>
-<p>Using the development tool you can edit scripts, render output from them, and get recieve error messages when something goes wrong. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
+<p>Using the development tool you can edit scripts, render output from them, and get receive error messages when something goes wrong. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
 <p>Since the text editor in the development tool is quite rudimentary <em>(with a future GTK4 port we may get improvement here)</em>, it can be a useful workflow to use an external text editor to edit the scripts, and press <em>Reload Script</em> button to update text area contents before attempting render.</p>
 <h1 id="fluxity-api_1">FLUXITY API</h1>
 <details class="source">
@@ -195,7 +195,7 @@ def _clamp(v):
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2021 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor &lt;http://code.google.com/p/flowblade&gt;.
+    This file is part of Flowblade Movie Editor &lt;https://github.com/jliljebl/flowblade/&gt;.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -246,7 +246,7 @@ def _clamp(v):
     
     **`init_script(fctx):`** This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **`init_render(fctx):`** This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** This method is called before a render is started to get user input from editors and possibly to create some additional data structures.
     
     **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create an output image for that frame.
     
@@ -279,7 +279,7 @@ def _clamp(v):
         fctx.add_editor(&#34;Opacity&#34;, fluxity.EDITOR_INT_RANGE, (100, 5, 100))
         fctx.add_editor(&#34;Random Seed&#34;, fluxity.EDITOR_INT, 42)
     ```
-    In *init_script()* we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.
+    In *init_script()* we define the editors that will be presented to the user and set some metadata like the name of the script displayed to the user and the script author.
 
     ### init_render()
     ```
@@ -386,7 +386,7 @@ def _clamp(v):
     
     **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools-&gt;Generator Script Editor**.
     
-    You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
+    You can edit scripts, render output from them, and receive error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
     
     Since the text editor in the development tool is quite rudimentary *(with a future GTK4 port we can get improvement here)*, it can be a useful workflow to use an external text editor to edit the scripts, and press *Reload Script* button to update text area contents before attempting render.
     
@@ -618,7 +618,7 @@ class FluxityScript:
             _raise_fluxity_error(&#34;error calling function &#39;render_frame()&#39;:\n\n&#34; + str(e))
 
 
-# ----------------------------------------------------------  Data structure correcponding with mlt.Profile
+# ----------------------------------------------------------  Data structure corresponding with mlt.Profile
 class FluxityProfile:
     &#34;&#34;&#34;    
     Properties of this class correspond MLT profile objects.
@@ -726,17 +726,17 @@ class FluxityContext:
 
     def set_data_obj(self, label, item):
         &#34;&#34;&#34;
-        **`label(str):`** lable used to access data later using *`get_data_obj(self, label)`*.
+        **`label(str):`** label used to access data later using *`get_data_obj(self, label)`*.
 
         **`item(obj):`** data item being saved.
         
-        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        Saves data to be used later during execution of script. Using **global** would obviously be possible to replace this, but this is made available as a more clean solution.
         &#34;&#34;&#34;
         self.data[label] = item
 
     def get_data_obj(self, label):
         &#34;&#34;&#34;
-        **`label(str):`** lable of saved data item.
+        **`label(str):`** label of saved data item.
         
         Gives access to previously saved data.
         
@@ -885,7 +885,7 @@ class FluxityContext:
         &#34;&#34;&#34;             
         Returns path to directory where the script being executed is located.  
         
-        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Script Tool* application) and *None* is returned. It is recommended that all Fluxity scripts handle getting *None* gracefully.
         
         This functionality is useful when script is being distributed with some associated media files.
         
@@ -934,9 +934,9 @@ class FluxityContext:
 
     def create_text_layout(self, font_data):
         &#34;&#34;&#34;
-        **`font_data(tuple)`** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
+        **`font_data(tuple)`** this tuple can be acquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
                 
-        Creates obejcts used to draw text.
+        Creates objects used to draw text.
 
         **Returns:** (fluxity.PangoTextLayout) object for drawing text.
         &#34;&#34;&#34;
@@ -1051,7 +1051,7 @@ class FluxityEmptyClass:
 class PangoTextLayout:
 
     &#34;&#34;&#34;
-    **`font_data(tuple)`** this tuple can be aquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
+    **`font_data(tuple)`** this tuple can be acquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
             
     Object for drawing text. Uses internally Pango.
     
@@ -1070,7 +1070,7 @@ class PangoTextLayout:
         
     def create_pango_layout(self, cr, text):
         &#34;&#34;&#34;
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`text(str)`** displayed text.
         
@@ -1103,7 +1103,7 @@ class PangoTextLayout:
         &#34;&#34;&#34;             
         Returns size of layout.
 
-        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
+        Before calling this PangoCairo layout object needs to created *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
         
         **Returns:** (int, int)(width, height) pixel size of layout.
         &#34;&#34;&#34;
@@ -1129,7 +1129,7 @@ class PangoTextLayout:
         
         **`text(str)`** displayed text.
         
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`x(float)`** Text X position.
 
@@ -1279,13 +1279,13 @@ class AnimatedValue:
 
     def add_keyframe_at_frame(self, frame, value, kf_type):
         &#34;&#34;&#34;
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
         
         **`value(float)`** A float value.
         
         **`kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)`** Type of added keyframe.
         
-        Adds or overwites a keyframe.
+        Adds or overwrites a keyframe.
                     
         If frame is on existing keyframe that keyframe is replaced.
         
@@ -1324,7 +1324,7 @@ class AnimatedValue:
         
     def get_value(self, frame):
         &#34;&#34;&#34;
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Computes and returns value at frame using current keyframe values, positions and types.
 
@@ -1394,7 +1394,7 @@ class AffineTransform:
     &#34;&#34;&#34;
     Object for describing animated affine transforms and applying them on *`cairo.Context`*.
 
-    On creation object creates followig instance *`fluxity.AnimatedValue`* attributes:
+    On creation object creates following instance *`fluxity.AnimatedValue`* attributes:
      
     **`x`** X position in pixels.
     
@@ -1434,7 +1434,7 @@ class AffineTransform:
         &#34;&#34;&#34;
         **`cr(cairo.Context)`** a `cairo.Context` object.
         
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Applies affine transform defined by object instance at given frame on `cairo.Context` object.
         &#34;&#34;&#34;
@@ -1492,7 +1492,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
     &#34;&#34;&#34;
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
     
     **frame(int)** Frame to be rendered in range 0 - *(script_length - 1)*.
     
@@ -1542,7 +1542,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     &#34;&#34;&#34;
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
     
     **in_frame(int)** First frame of rendered range.
 
@@ -1560,7 +1560,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     
     **Returns:** (dict) Dictionary object created during rendering with the following information:
     
-    * for each process it has *key -&gt; value* pair *process number(str) -&gt; path to first frame redered by process(str)*.
+    * for each process it has *key -&gt; value* pair *process number(str) -&gt; path to first frame rendered by process(str)*.
     * if errors occurred during rendering it has *key -&gt; value* pair *fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)*.
     * if script created log messages it has *key -&gt; value* pair *fluxity.FLUXITY_LOG_MSG -&gt; log message(str)*.
     &#34;&#34;&#34;
@@ -1655,7 +1655,7 @@ def get_script_default_edit_data(script, script_file, out_folder, profile_file_p
     &#34;&#34;&#34;
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
     
     **out_folder(str)** Path to the folder where rendered frame will be saved.
     
@@ -1833,7 +1833,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </code></dt>
 <dd>
 <div class="desc"><p><strong>script(str)</strong> Script to be rendered as a string.</p>
-<p><strong>script_file(str)</strong> Absolut path to a file containing script. If this is not provided, some methods like <em>FluxityContext.get_script_dir()</em> will not function as intended.</p>
+<p><strong>script_file(str)</strong> Absolute path to a file containing script. If this is not provided, some methods like <em>FluxityContext.get_script_dir()</em> will not function as intended.</p>
 <p><strong>out_folder(str)</strong> Path to the folder where rendered frame will be saved.</p>
 <p><strong>profile_file_path(str)</strong> Path to a file containing a file describing a MLT profile used when rendering the script.</p>
 <p>Creates a <em>FluxityContext</em> object, calls <em>init_script()</em> on it </p>
@@ -1846,7 +1846,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
     &#34;&#34;&#34;
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
     
     **out_folder(str)** Path to the folder where rendered frame will be saved.
     
@@ -1887,7 +1887,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </code></dt>
 <dd>
 <div class="desc"><p>Object for describing animated affine transforms and applying them on <em><code>cairo.Context</code></em>.</p>
-<p>On creation object creates followig instance <em><code><a title="fluxity.AnimatedValue" href="#fluxity.AnimatedValue">AnimatedValue</a></code></em> attributes:</p>
+<p>On creation object creates following instance <em><code><a title="fluxity.AnimatedValue" href="#fluxity.AnimatedValue">AnimatedValue</a></code></em> attributes:</p>
 <p><strong><code>x</code></strong> X position in pixels.</p>
 <p><strong><code>y</code></strong> Y position in pixels.</p>
 <p><strong><code>anchor_x</code></strong> Rotation and scaling offset from <em><code>source</code></em> top left corner in x axis pixels.</p>
@@ -1917,7 +1917,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
     &#34;&#34;&#34;
     Object for describing animated affine transforms and applying them on *`cairo.Context`*.
 
-    On creation object creates followig instance *`fluxity.AnimatedValue`* attributes:
+    On creation object creates following instance *`fluxity.AnimatedValue`* attributes:
      
     **`x`** X position in pixels.
     
@@ -1957,7 +1957,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
         &#34;&#34;&#34;
         **`cr(cairo.Context)`** a `cairo.Context` object.
         
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Applies affine transform defined by object instance at given frame on `cairo.Context` object.
         &#34;&#34;&#34;
@@ -1993,7 +1993,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </code></dt>
 <dd>
 <div class="desc"><p><strong><code>cr(cairo.Context)</code></strong> a <code>cairo.Context</code> object.</p>
-<p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin lenght).</p>
+<p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin length).</p>
 <p>Applies affine transform defined by object instance at given frame on <code>cairo.Context</code> object.</p></div>
 <details class="source">
 <summary>
@@ -2003,7 +2003,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
     &#34;&#34;&#34;
     **`cr(cairo.Context)`** a `cairo.Context` object.
     
-    **`frame(int)`** Frame number in range 0 - (plugin lenght).
+    **`frame(int)`** Frame number in range 0 - (plugin length).
             
     Applies affine transform defined by object instance at given frame on `cairo.Context` object.
     &#34;&#34;&#34;
@@ -2073,13 +2073,13 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 
     def add_keyframe_at_frame(self, frame, value, kf_type):
         &#34;&#34;&#34;
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
         
         **`value(float)`** A float value.
         
         **`kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)`** Type of added keyframe.
         
-        Adds or overwites a keyframe.
+        Adds or overwrites a keyframe.
                     
         If frame is on existing keyframe that keyframe is replaced.
         
@@ -2118,7 +2118,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
         
     def get_value(self, frame):
         &#34;&#34;&#34;
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Computes and returns value at frame using current keyframe values, positions and types.
 
@@ -2188,10 +2188,10 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 <span>def <span class="ident">add_keyframe_at_frame</span></span>(<span>self, frame, value, kf_type)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin lenght).</p>
+<div class="desc"><p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin length).</p>
 <p><strong><code>value(float)</code></strong> A float value.</p>
 <p><strong><code>kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)</code></strong> Type of added keyframe.</p>
-<p>Adds or overwites a keyframe.</p>
+<p>Adds or overwrites a keyframe.</p>
 <p>If frame is on existing keyframe that keyframe is replaced.</p>
 <p>If frame is between two keyframes a new keyframe is added between keyframes.</p>
 <p>If frame is after last keyframe a new keyframe is appended.</p></div>
@@ -2201,13 +2201,13 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </summary>
 <pre><code class="python">def add_keyframe_at_frame(self, frame, value, kf_type):
     &#34;&#34;&#34;
-    **`frame(int)`** Frame number in range 0 - (plugin lenght).
+    **`frame(int)`** Frame number in range 0 - (plugin length).
     
     **`value(float)`** A float value.
     
     **`kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)`** Type of added keyframe.
     
-    Adds or overwites a keyframe.
+    Adds or overwrites a keyframe.
                 
     If frame is on existing keyframe that keyframe is replaced.
     
@@ -2241,7 +2241,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 <span>def <span class="ident">get_value</span></span>(<span>self, frame)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin lenght).</p>
+<div class="desc"><p><strong><code>frame(int)</code></strong> Frame number in range 0 - (plugin length).</p>
 <p>Computes and returns value at frame using current keyframe values, positions and types.</p>
 <p><strong>Returns:</strong> (float) value at frame.</p></div>
 <details class="source">
@@ -2250,7 +2250,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </summary>
 <pre><code class="python">def get_value(self, frame):
     &#34;&#34;&#34;
-    **`frame(int)`** Frame number in range 0 - (plugin lenght).
+    **`frame(int)`** Frame number in range 0 - (plugin length).
             
     Computes and returns value at frame using current keyframe values, positions and types.
 
@@ -2375,17 +2375,17 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 
     def set_data_obj(self, label, item):
         &#34;&#34;&#34;
-        **`label(str):`** lable used to access data later using *`get_data_obj(self, label)`*.
+        **`label(str):`** label used to access data later using *`get_data_obj(self, label)`*.
 
         **`item(obj):`** data item being saved.
         
-        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        Saves data to be used later during execution of script. Using **global** would obviously be possible to replace this, but this is made available as a more clean solution.
         &#34;&#34;&#34;
         self.data[label] = item
 
     def get_data_obj(self, label):
         &#34;&#34;&#34;
-        **`label(str):`** lable of saved data item.
+        **`label(str):`** label of saved data item.
         
         Gives access to previously saved data.
         
@@ -2534,7 +2534,7 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
         &#34;&#34;&#34;             
         Returns path to directory where the script being executed is located.  
         
-        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Script Tool* application) and *None* is returned. It is recommended that all Fluxity scripts handle getting *None* gracefully.
         
         This functionality is useful when script is being distributed with some associated media files.
         
@@ -2583,9 +2583,9 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 
     def create_text_layout(self, font_data):
         &#34;&#34;&#34;
-        **`font_data(tuple)`** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
+        **`font_data(tuple)`** this tuple can be acquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
                 
-        Creates obejcts used to draw text.
+        Creates objects used to draw text.
 
         **Returns:** (fluxity.PangoTextLayout) object for drawing text.
         &#34;&#34;&#34;
@@ -2714,8 +2714,8 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">create_text_layout</span></span>(<span>self, font_data)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>font_data(tuple)</code></strong> this tuple can be aquired by calling <em>FluxityContext.get_editor_value()</em> on editors of type <em>EDITOR_PANGO_FONT</em>.</p>
-<p>Creates obejcts used to draw text.</p>
+<div class="desc"><p><strong><code>font_data(tuple)</code></strong> this tuple can be acquired by calling <em>FluxityContext.get_editor_value()</em> on editors of type <em>EDITOR_PANGO_FONT</em>.</p>
+<p>Creates objects used to draw text.</p>
 <p><strong>Returns:</strong> (fluxity.PangoTextLayout) object for drawing text.</p></div>
 <details class="source">
 <summary>
@@ -2723,9 +2723,9 @@ gradient_color_rgba, gradient_direction))</p>
 </summary>
 <pre><code class="python">def create_text_layout(self, font_data):
     &#34;&#34;&#34;
-    **`font_data(tuple)`** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
+    **`font_data(tuple)`** this tuple can be acquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
             
-    Creates obejcts used to draw text.
+    Creates objects used to draw text.
 
     **Returns:** (fluxity.PangoTextLayout) object for drawing text.
     &#34;&#34;&#34;
@@ -2736,7 +2736,7 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">get_data_obj</span></span>(<span>self, label)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>label(str):</code></strong> lable of saved data item.</p>
+<div class="desc"><p><strong><code>label(str):</code></strong> label of saved data item.</p>
 <p>Gives access to previously saved data.</p>
 <p><strong>Returns:</strong> (obj) Saved data item.</p></div>
 <details class="source">
@@ -2745,7 +2745,7 @@ gradient_color_rgba, gradient_direction))</p>
 </summary>
 <pre><code class="python">def get_data_obj(self, label):
     &#34;&#34;&#34;
-    **`label(str):`** lable of saved data item.
+    **`label(str):`** label of saved data item.
     
     Gives access to previously saved data.
     
@@ -2986,7 +2986,7 @@ gradient_color_rgba, gradient_direction))</p>
 <dd>
 <div class="desc"><p>Returns path to directory where the script being executed is located.
 </p>
-<p>Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade <em>Scrip Tool</em> application) and <em>None</em> is returned. It is recommeded that all Fluxity scripts handle getting <em>None</em> gracefully.</p>
+<p>Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade <em>Script Tool</em> application) and <em>None</em> is returned. It is recommended that all Fluxity scripts handle getting <em>None</em> gracefully.</p>
 <p>This functionality is useful when script is being distributed with some associated media files.</p>
 <p><strong>Returns:</strong> (str) script directory path or <em>None</em>.</p></div>
 <details class="source">
@@ -2997,7 +2997,7 @@ gradient_color_rgba, gradient_direction))</p>
     &#34;&#34;&#34;             
     Returns path to directory where the script being executed is located.  
     
-    Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+    Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Script Tool* application) and *None* is returned. It is recommended that all Fluxity scripts handle getting *None* gracefully.
     
     This functionality is useful when script is being distributed with some associated media files.
     
@@ -3052,20 +3052,20 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">set_data_obj</span></span>(<span>self, label, item)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>label(str):</code></strong> lable used to access data later using <em><code>get_data_obj(self, label)</code></em>.</p>
+<div class="desc"><p><strong><code>label(str):</code></strong> label used to access data later using <em><code>get_data_obj(self, label)</code></em>.</p>
 <p><strong><code>item(obj):</code></strong> data item being saved.</p>
-<p>Saves data to be used later during execution of script. Using <strong>global</strong> would obivously be possible to replace this, but this is made available as a more clean solution.</p></div>
+<p>Saves data to be used later during execution of script. Using <strong>global</strong> would obviously be possible to replace this, but this is made available as a more clean solution.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def set_data_obj(self, label, item):
     &#34;&#34;&#34;
-    **`label(str):`** lable used to access data later using *`get_data_obj(self, label)`*.
+    **`label(str):`** label used to access data later using *`get_data_obj(self, label)`*.
 
     **`item(obj):`** data item being saved.
     
-    Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+    Saves data to be used later during execution of script. Using **global** would obviously be possible to replace this, but this is made available as a more clean solution.
     &#34;&#34;&#34;
     self.data[label] = item</code></pre>
 </details>
@@ -3237,7 +3237,7 @@ gradient_color_rgba, gradient_direction))</p>
 <span>(</span><span>font_data)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>font_data(tuple)</code></strong> this tuple can be aquired by calling <em><code><a title="fluxity.FluxityContext.get_editor_value" href="#fluxity.FluxityContext.get_editor_value">FluxityContext.get_editor_value()</a></code></em> on editors of type <em><code><a title="fluxity.EDITOR_PANGO_FONT" href="#fluxity.EDITOR_PANGO_FONT">EDITOR_PANGO_FONT</a></code></em>.</p>
+<div class="desc"><p><strong><code>font_data(tuple)</code></strong> this tuple can be acquired by calling <em><code><a title="fluxity.FluxityContext.get_editor_value" href="#fluxity.FluxityContext.get_editor_value">FluxityContext.get_editor_value()</a></code></em> on editors of type <em><code><a title="fluxity.EDITOR_PANGO_FONT" href="#fluxity.EDITOR_PANGO_FONT">EDITOR_PANGO_FONT</a></code></em>.</p>
 <p>Object for drawing text. Uses internally Pango.</p>
 <p>Instances of this object can be created using <em><code><a title="fluxity.FluxityContext.create_text_layout" href="#fluxity.FluxityContext.create_text_layout">FluxityContext.create_text_layout()</a></code></em>.</p></div>
 <details class="source">
@@ -3247,7 +3247,7 @@ gradient_color_rgba, gradient_direction))</p>
 <pre><code class="python">class PangoTextLayout:
 
     &#34;&#34;&#34;
-    **`font_data(tuple)`** this tuple can be aquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
+    **`font_data(tuple)`** this tuple can be acquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
             
     Object for drawing text. Uses internally Pango.
     
@@ -3266,7 +3266,7 @@ gradient_color_rgba, gradient_direction))</p>
         
     def create_pango_layout(self, cr, text):
         &#34;&#34;&#34;
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`text(str)`** displayed text.
         
@@ -3299,7 +3299,7 @@ gradient_color_rgba, gradient_direction))</p>
         &#34;&#34;&#34;             
         Returns size of layout.
 
-        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
+        Before calling this PangoCairo layout object needs to created *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
         
         **Returns:** (int, int)(width, height) pixel size of layout.
         &#34;&#34;&#34;
@@ -3325,7 +3325,7 @@ gradient_color_rgba, gradient_direction))</p>
         
         **`text(str)`** displayed text.
         
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`x(float)`** Text X position.
 
@@ -3458,7 +3458,7 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">create_pango_layout</span></span>(<span>self, cr, text)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><strong><code>cr(cairo.Context)</code></strong> frame cairo context aquired with <em><code><a title="fluxity.FluxityContext.get_frame_cr" href="#fluxity.FluxityContext.get_frame_cr">FluxityContext.get_frame_cr()</a></code></em>.</p>
+<div class="desc"><p><strong><code>cr(cairo.Context)</code></strong> frame cairo context acquired with <em><code><a title="fluxity.FluxityContext.get_frame_cr" href="#fluxity.FluxityContext.get_frame_cr">FluxityContext.get_frame_cr()</a></code></em>.</p>
 <p><strong><code>text(str)</code></strong> displayed text.</p>
 <p>Creates internally <em><code>PangoCairo</code></em> layout object. Calling this is required before calling <em><code><a title="fluxity.PangoTextLayout.get_pixel_size" href="#fluxity.PangoTextLayout.get_pixel_size">PangoTextLayout.get_pixel_size()</a></code></em>.</p></div>
 <details class="source">
@@ -3467,7 +3467,7 @@ gradient_color_rgba, gradient_direction))</p>
 </summary>
 <pre><code class="python">def create_pango_layout(self, cr, text):
     &#34;&#34;&#34;
-    **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+    **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
     
     **`text(str)`** displayed text.
     
@@ -3494,7 +3494,7 @@ gradient_color_rgba, gradient_direction))</p>
 <dd>
 <div class="desc"><p><strong> fctx(fluxity.FluxityContext </strong> context object.</p>
 <p><strong><code>text(str)</code></strong> displayed text.</p>
-<p><strong><code>cr(cairo.Context)</code></strong> frame cairo context aquired with <em><code><a title="fluxity.FluxityContext.get_frame_cr" href="#fluxity.FluxityContext.get_frame_cr">FluxityContext.get_frame_cr()</a></code></em>.</p>
+<p><strong><code>cr(cairo.Context)</code></strong> frame cairo context acquired with <em><code><a title="fluxity.FluxityContext.get_frame_cr" href="#fluxity.FluxityContext.get_frame_cr">FluxityContext.get_frame_cr()</a></code></em>.</p>
 <p><strong><code>x(float)</code></strong> Text X position.</p>
 <p><strong><code>y(float)</code></strong> Text Y position.</p>
 <p><strong><code>rotation(float)</code></strong> Text rotation.</p>
@@ -3512,7 +3512,7 @@ gradient_color_rgba, gradient_direction))</p>
     
     **`text(str)`** displayed text.
     
-    **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+    **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
     
     **`x(float)`** Text X position.
 
@@ -3653,7 +3653,7 @@ gradient_color_rgba, gradient_direction))</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns size of layout.</p>
-<p>Before calling this PangoCairo layout object needs to creted <em><code><a title="fluxity.PangoTextLayout.create_pango_layout" href="#fluxity.PangoTextLayout.create_pango_layout">PangoTextLayout.create_pango_layout()</a></code></em> or <em><code><a title="fluxity.PangoTextLayout.draw_layout" href="#fluxity.PangoTextLayout.draw_layout">PangoTextLayout.draw_layout()</a></code>.</em></p>
+<p>Before calling this PangoCairo layout object needs to created <em><code><a title="fluxity.PangoTextLayout.create_pango_layout" href="#fluxity.PangoTextLayout.create_pango_layout">PangoTextLayout.create_pango_layout()</a></code></em> or <em><code><a title="fluxity.PangoTextLayout.draw_layout" href="#fluxity.PangoTextLayout.draw_layout">PangoTextLayout.draw_layout()</a></code>.</em></p>
 <p><strong>Returns:</strong> (int, int)(width, height) pixel size of layout.</p></div>
 <details class="source">
 <summary>
@@ -3663,7 +3663,7 @@ gradient_color_rgba, gradient_direction))</p>
     &#34;&#34;&#34;             
     Returns size of layout.
 
-    Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
+    Before calling this PangoCairo layout object needs to created *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
     
     **Returns:** (int, int)(width, height) pixel size of layout.
     &#34;&#34;&#34;
