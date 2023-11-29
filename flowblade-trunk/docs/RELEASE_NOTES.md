@@ -8,7 +8,7 @@ With Flowblade 2.12 we are getting a couple of important structural updates such
 
 ## DATA STORES
 
-Users can now decide where project data such as proxie clips, container clip renders, thumbnails and audio levels is stored. Data location can be selected for each project individually, and project data can also be destroyd per project so that other projects are not affected. More info here: 
+Users can now decide where project data such as proxie clips, container clip renders, thumbnails and audio levels is stored. Data location can be selected for each project individually, and project data can also be destroyd per project so that other projects are not affected. See documentation for more info.
 
 ## MAXIMUM NUMBER OF TRACKS INCREASED TO 21
 
