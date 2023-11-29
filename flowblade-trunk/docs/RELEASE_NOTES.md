@@ -16,8 +16,6 @@ This release took a long time to get done, but it is finally here. On the other 
 
 Going forward the project is in a quite good place now, and we have a clear path of incremental improvents ahead. We will return to 2-3 releases per year schedule.
 
-*NOTE:  We already put out a fix release 2.10.0.1 to fix some omissions in install data.*
-
 ### FULL TRACK COMPOSITING IS THE NEW DEFAULT
 
 Compositing mode **Standard Full Track** is the now default compositing mode. Previous default compositing mode **Top Down Free Move** remains available via application menu and bottom left corner selector.
