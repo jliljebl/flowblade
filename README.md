@@ -1,12 +1,19 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
+
+**New release 2.12 now available.**
+
+**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+
+**Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
+
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Releases](https://github.com/jliljebl/flowblade#releases)
 4. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
 5. [Docs](https://github.com/jliljebl/flowblade#docs)
 6. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
-7. [Webpage](https://github.com/jliljebl/flowblade#forum-webpage)
+7. [Webpage](https://github.com/jliljebl/flowblade#webpage)
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
@@ -15,12 +22,10 @@ Flowblade is a **multitrack non-linear video editor** for Linux released under *
 
 With Flowblade Movie Editor you can compose movies from video clips, audio clips and graphics files. Clips can be cut at the desired frames, filters can be added to clips, and you can create multilayer composite images using compositor objects.
 
-Flowblade offers a configurable workflow - toolset, its order, default tool and certain timeline behaviours are user settable.
-
 # Features Overview
 
 **Editing:**
-* User configurable toolset with 11 editing tools available
+* Toolset with 6 editing tools available
 * 4 methods to insert / overwrite / append clips on the timeline
 * Drag'n'Drop clips on the timeline from Clip monitor and media panel
 * Clip parenting and audio synchronizing
@@ -61,7 +66,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.10 was released in June 2023.
+**Latest release:** Flowblade Movie Editor 2.12 was released in November 2023.
 
 # Installing Flowblade
 
