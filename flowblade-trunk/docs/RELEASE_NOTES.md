@@ -12,13 +12,13 @@ Users can now decide where project data such as proxie clips, container clip ren
 
 ## MAXIMUM NUMBER OF TRACKS INCREASED TO 21
 
-Flowblade has always avoided UX with free scrolling of Timeline in 2 dimensions. The rationale has been that this provides a stable and maximally controllable view of the Timeline. This in turn has necessitated having a maximum a track count of 9.
+Flowblade has always avoided UX with free scrolling of Timeline in 2 dimensions. The rationale has been that this provides a more stable and maximally controllable view of the Timeline. This in turn has necessitated having a maximum a track count of 9.
 
 For 2.12 we added a paged and auto centered view of Timeline in the vertical dimension. This provides most of the stable view advantages of the previous approach, while simultaniously making it possible to increase the maximum number of tracks available to the user. 
 
 ## FASTER PROXY RENDERING
 
-It was pointed out that creating proxy files with the FFMPEG CLI application GPU rendering was much faster then Flowblade proxy rendering, even if GPU was used for rendering by Flowblade. The reason for this speed difference is the additional overhead necessery to support multitrack playback with arbitrary filtering and image and audio mixing.
+It was pointed out that creating proxy files with the FFMPEG CLI application GPU rendering was much faster then Flowblade proxy rendering, even if GPU was used for rendering by Flowblade. The reason for this speed difference is the additional overhead necessery to support multitrack playback with arbitrary filtering and image and audio mixing that is required for video editor rendering.
 
 Proxies can now be rendered using FFMPEG CLI app if system supports GPU encoding. On testing we were getting 4-10x speed improvements with this approach. 
 
@@ -43,7 +43,7 @@ Flowblade no longer offers user configurable toolset for Timeline editing. The u
 
 ## WORK ON GTK 4 PORT
 
-A considerable portion of available development time was spend on moving to using Gtk.Popover widgets instead of Gtk.Menu widgets. Unfortunately GTK 4 deprecates a large amount of widgets and patterns used by Flowblade, and it will take time and effort to get everything ready to even consider attempting a port.
+A considerable portion of available development time was spend on moving to using Gtk.Popover widgets instead of Gtk.Menu widgets. Unfortunately GTK 4 deprecates a large amount of widgets and patterns used by Flowblade, and it will take some time and effort to get everything ready to even consider attempting a port.
 
 ## Small features, changes, removals and bugfixes
 
