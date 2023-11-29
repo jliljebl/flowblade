@@ -1,5 +1,105 @@
 # Release Notes
 
+## FLOWBLADE 2.12
+
+Date: November 29, 2023
+
+With Flowblade 2.12 we are getting a couple of important structural updates such as Data Stores feature and the possiblity to use up to 21 tracks in a Sequence. 
+
+## DATA STORES
+
+Users can now decide where project data such as proxie clips, container clip renders, thumbnails and audio levels is stored. Data location can be selected for each project individually, and project data can also be destroyd per project so that other projects are not affected. More info here: 
+
+## MAXIMUM NUMBER OF TRACKS INCREASED TO 21
+
+Flowblade has always avoided UX with free scrolling of Timeline in 2 dimensions. The rationale has been that this provides a stable and maximally controllable view of the Timeline. This in turn has necessitated having a maximum a track count of 9.
+
+For 2.12 we added a paged and auto centered view of Timeline in the vertical dimension. This provides most of the stable view advantages of the previous approach, while simultaniously making it possible to increase the maximum number of tracks available to the user. 
+
+## FASTER PROXY RENDERING
+
+It was pointed out that creating proxy files with the FFMPEG CLI application GPU rendering was much faster then Flowblade proxy rendering, even if GPU was used for rendering by Flowblade. The reason for this speed difference is the additional overhead necessery to support multitrack playback with arbitrary filtering and image and audio mixing.
+
+Proxies can now be rendered using FFMPEG CLI app if system supports GPU encoding. On testing we were getting 4-10x speed improvements with this approach. 
+
+## TOOLS AND CONFIGURATION REMOVAL
+
+Flowblade no longer offers user configurable toolset for Timeline editing. The use cases of additional available tools are well covered with the default toolset and user configurable ordering of tools was longer considered an important feature.
+
+## OTHER NEW FEATURES
+
+* New filters **Unpremultiply**, **Grayscale Luminance**, **Copy Channel** and **Fade To Black In/Out**
+* Track output On/Off toggle keyboard shortcut.
+* **Replace Media in Project** functionality.
+* **Zoom to mouse position** feature
+
+## CONTRIBUTIONS
+
+* Translations update from **albanobattistella**
+
+* Documentation and copyrights texts update from **Disaster2life**
+
+*  Arch docs update by **Felix Yan**
+
+## WORK ON GTK 4 PORT
+
+A considerable portion of available development time was spend on moving to using Gtk.Popover widgets instead of Gtk.Menu widgets. Unfortunately GTK 4 deprecates a large amount of widgets and patterns used by Flowblade, and it will take time and effort to get everything ready to even consider attempting a port.
+
+## Small features, changes, removals and bugfixes
+
+* Replace distutils with setuptools in setup.py
+* Remove deprecated Gtk.main_iteration()
+* Use GtkTicker for mltplayer updates and remove dead rendering code
+* Refactor tool cursors handling to new module tlinecursors.py
+* Flake8 fixes
+* Make Add Plugin window resizable
+* Fix few translations typos
+* Fix MLT/ffmpeg complaint when rendering thumbnails
+* Deprecate show_tool_tooltips pref
+* Clone filters from prev/next non-blank clip
+* Refuse to load files with fps_den == 0
+* Add diagonal mirroring options
+* Move 'Noise Gate' filter to group 'Audio'
+* Remove dead timeline render code
+* Remove dead theming code
+* Fix on XML rendering calling player ticker
+* Remove calling deleted method is_rendering()
+* Remove Blender related code
+* Remove light theme icons
+* Fix editing for API version 1 fluxity plugins
+* Add translations for plugin editor groups
+* Make TextArea editor take all possible space for text widget and increase margins
+* Display fluxity editor groups as notebooks
+* Add to Fluxity API method add_editor_group() done
+* Add Fluxity API method required_api_version()
+* Port main app to Gtk.Application
+* Change Add Plugin window to use pos bar for preview position selection
+* Remove unneeded icons
+* Add round caps and lighter bg to posbar
+* Icons touch-up
+* Remove detailed profile description info from top level at larger screensizes
+* Remove colorized icons
+* Remove Edge filter group and moved filters to group Artistic
+* Remove tline match frame feature
+* Remove all rules-hint properties
+* Remove all frame ahdow types
+* Remove deprecated CSS -gtk-icon-effect 
+* Replace depracated Gdk.Cursor.new constructors
+* Replace deprecated add_with_viewport method calls
+* Replace deprecated Gtk.TreeView.get_vadjustment methods calls
+* Change depracated new_from_stock to new_from_icon_name methods
+* Change instance of modify_font to override_font
+* Change instance of set_margin_left to set_margin_start
+* Add Fade To Black filter Janne Liljeblad
+* Add NVENC HEVC non-HDR render option
+* Rename NVENC HEVC Main10 Profile as NVENC HEVC HDR
+* Fix crash when dragging pattern producer into monitor
+* Replace Batch Render dbus usage with polling solution
+* Show info dialog when user tries to log Timeline range
+* Fix for MLT 7.20 requiring profile when creating mlt.Playlist
+* Fix 2 window monitor window top row layout TC and widgets touch-up
+
+
 ## FLOWBLADE 2.10
 
 **Hotfix releases since 2.10 initial release:**
