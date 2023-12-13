@@ -238,7 +238,7 @@ def _kb_menu_item_selected(widget, data):
         dialogutils.warning_confirmation(_delete_new_kb_shortcuts_group, primary_txt, secondary_txt, dialog)
 
 def _create_new_kb_shortcuts_group(dialog, response_id, entry):
-    if response_id != Gtk.ResponseType.REJECT:
+    if response_id != Gtk.ResponseType.CANCEL:
         name = entry.get_text()
         if name == "": # No need for info dialog, user should really get this.
             dialog.destroy()

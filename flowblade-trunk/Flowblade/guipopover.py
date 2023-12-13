@@ -536,7 +536,7 @@ def media_file_popover_show(media_file, widget, x, y, callback):
         else:
             monitor_item_active = False
     else:
-            monitor_item_active = True
+        monitor_item_active = True
 
     if monitor_item_active == True:
         monitor_section = Gio.Menu.new()

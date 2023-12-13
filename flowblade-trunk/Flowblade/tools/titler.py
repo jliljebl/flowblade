@@ -20,6 +20,7 @@
 import array
 import cairo
 import copy
+import hashlib
 import os
 import pickle
 from PIL import Image, ImageFilter
@@ -45,13 +46,13 @@ import positionbar
 import utils
 import vieweditor
 import vieweditorlayer
+import userfolders
 
 _titler = None
 _titler_data = None
 _titler_lastdir = None
 
 _keep_titler_data = True
-_open_saved_in_bin = True
 
 _filling_layer_list = False
 
@@ -592,15 +593,15 @@ class Titler(Gtk.Window):
         self.keep_layers_check = Gtk.CheckButton()
         self.keep_layers_check.set_active(_keep_titler_data)
         self.keep_layers_check.connect("toggled", self._keep_layers_toggled)
-        
-        open_label = Gtk.Label(label=_("Open Saved Title In Bin"))
-        self.open_in_current_check = Gtk.CheckButton()
-        self.open_in_current_check.set_active(_open_saved_in_bin)
-        self.open_in_current_check.connect("toggled", self._open_saved_in_bin)
+
+        self.save_action_combo = Gtk.ComboBoxText()
+        self.save_action_combo.append_text(_("Save As Title Media Item"))
+        self.save_action_combo.append_text(_("Save As Graphic"))
+        self.save_action_combo.set_active(0)
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:close_titler())
-        save_titles_b = guiutils.get_sized_button(_("Save Title Graphic"), 150, 32)
+        save_titles_b = guiutils.get_sized_button(_("Save Title"), 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
         editor_buttons_row = Gtk.HBox()
@@ -609,9 +610,7 @@ class Titler(Gtk.Window):
         editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
         editor_buttons_row.pack_start(keep_label, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
-        editor_buttons_row.pack_start(open_label, False, False, 0)
+        editor_buttons_row.pack_start(self.save_action_combo, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
@@ -696,7 +695,43 @@ class Titler(Gtk.Window):
         self.show_current_frame()
 
     def _save_title_pressed(self):
-        toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
+        if self.save_action_combo.get_active() == 1:
+            toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
+        else:
+            dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
+                                                        _("Select Tile Name"),
+                                                        _("Title Name"),
+                                                        _("New Group Name:"),
+                                                        "name")
+            dialog.connect('response', self._titler_item_name_dialog_callback, entry)
+            dialog.show_all()
+
+    def  _titler_item_name_dialog_callback(self, dialog, response_id, entry):
+        if response_id == Gtk.ResponseType.ACCEPT:
+            name = entry.get_text()
+            dialog.destroy()
+            
+            if name == "":
+                name = _("Title")
+            
+            md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+            save_path = userfolders.get_render_dir() + md_str
+            print(save_path)
+            self.view_editor.write_layers_to_png(save_path)
+            
+            # Destroy pango layouts they cannot be pickled and thus cannot be part of savefile where 
+            # this data ends up as a clip.titler_data and mediafile.titler_data properties.
+            # We need deep copy from picledable shallow copy so when pango layers get put back
+            # for titler they don't end up in save data.
+            title_data_shallow = copy.copy(_titler_data)
+            for layer in title_data_shallow.layers:
+                layer.pango_layout = None
+            title_data = copy.deepcopy(title_data_shallow)
+
+            open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
+            open_title_item_thread.start()
+        else:
+            dialog.destroy()
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -709,9 +744,8 @@ class Titler(Gtk.Window):
                 global _titler_lastdir
                 _titler_lastdir = dirname
         
-                if _open_saved_in_bin:
-                    open_file_thread = OpenFileThread(save_path, self.view_editor)
-                    open_file_thread.start()
+                open_file_thread = OpenFileThread(save_path, self.view_editor)
+                open_file_thread.start()
                 # INFOWINDOW
             except:
                 # INFOWINDOW
@@ -765,10 +799,6 @@ class Titler(Gtk.Window):
     def _keep_layers_toggled(self, widget):
         global _keep_titler_data
         _keep_titler_data = widget.get_active()
-
-    def _open_saved_in_bin(self, widget):
-        global _open_saved_in_bin
-        _open_saved_in_bin = widget.get_active()
 
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin
@@ -1384,3 +1414,34 @@ class OpenFileThread(threading.Thread):
         
         open_in_bin_thread = projectaction.AddMediaFilesThread([self.filename])
         open_in_bin_thread.start()
+
+
+class OpenTitlerItemThread(threading.Thread):
+    
+    def __init__(self, name, filepath, title_data, view_editor):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.filepath = filepath
+        self.view_editor = view_editor
+        self.title_data = title_data
+
+    def run(self):
+        # This makes sure that the file has been written to disk
+        while(self.view_editor.write_out_layers == True):
+            time.sleep(0.1)
+
+        open_in_bin_thread = projectaction.AddTitleItemThread(self.name, self.filepath, self.title_data, self._completed_callback)
+        open_in_bin_thread.start()
+
+    def _completed_callback(self):
+        print("hhh")
+
+        GLib.idle_add(self._recreate_pango_layers)
+    
+    def _recreate_pango_layers(self):
+        global _titler, _titler_data
+        _titler_data.create_pango_layouts()
+        _titler.load_titler_data()
+        _titler.show_current_frame()
+
+        print("pango recreated")

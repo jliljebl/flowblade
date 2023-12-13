@@ -380,7 +380,39 @@ class AddMediaFilesThread(threading.Thread):
     def _not_valid_producer(self, err):
         dialogs.not_valid_producer_dialog(err, gui.editor_window.window)
 
-                    
+
+
+class AddTitleItemThread(threading.Thread):
+    
+    def __init__(self, name, filepath, title_data, completed_callback):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.filepath = filepath
+        self.title_data = title_data
+        self.completed_callback = completed_callback
+
+    def run(self): 
+        target_bin = PROJECT().c_bin
+        PROJECT().add_title_item(self.name, self.filepath, self.title_data, target_bin)
+
+        self.list_view_update_done = False
+        GLib.idle_add(self._list_view_update)
+        while self.list_view_update_done == False:
+            time.sleep(0.05)
+
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_MEDIA_ADDED, str(1))
+        PROJECT().events.append(project_event)
+
+        self.completed_callback()
+
+    def _list_view_update(self):
+        gui.media_list_view.fill_data_model()
+        max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
+        gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+        self.list_view_update_done = True
+
+
+
 class UpdateMediaLengthsThread(threading.Thread):
     
     def __init__(self, dialog):

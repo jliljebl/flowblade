@@ -502,7 +502,8 @@ class Sequence:
         clip.color = None # None means that clip type default color is displayed
         clip.markers = []
         clip.container_data = None
-        
+        clip.titler_data = None
+
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
         if orig_clip.is_blanck_clip == True:

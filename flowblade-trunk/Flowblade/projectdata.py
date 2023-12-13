@@ -176,6 +176,26 @@ class Project:
         
         return media_object
 
+    def add_title_item(self, name, file_path, title_data, target_bin):
+        (directory, file_name) = os.path.split(file_path)
+        (fn, ext) = os.path.splitext(file_name)
+
+        # Get media type
+        media_type = appconsts.IMAGE
+
+        # Get length and icon
+        (icon_path, length, info) = thumbnailer.write_image(file_path)
+        
+        clip_name = name
+
+        # Create media file object
+        media_object = MediaFile(self.next_media_file_id, file_path, 
+                                 clip_name, media_type, length, icon_path, info)
+        media_object.ttl = None
+        media_object.titler_data = title_data
+
+        self._add_media_object(media_object, target_bin)
+
     def add_pattern_producer_media_object(self, media_object):
         self._add_media_object(media_object)
         
@@ -391,7 +411,8 @@ class MediaFile:
         self.current_frame = 0
 
         self.container_data = None
-
+        self.titler_data = None
+        
         self.info = info
 
         # Set default length for graphics files
