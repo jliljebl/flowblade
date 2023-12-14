@@ -260,7 +260,7 @@ class Sequence:
         
         return new_track
 
-    def _add_track_attributes(self, track, type):                
+    def _add_track_attributes(self, track, type):
         # Add data attr
         track.type = type
         track.sequence = self
@@ -502,7 +502,7 @@ class Sequence:
         clip.color = None # None means that clip type default color is displayed
         clip.markers = []
         clip.container_data = None
-        clip.titler_data = None
+        clip.titler_data = None # titler_data != None defines clips as a title clip that can be edited in Titler.
 
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]

@@ -57,6 +57,7 @@ import modesetting
 import movemodes
 import projectaction
 import syncsplitevent
+import titler
 import tlinewidgets
 import tlineaction
 import updater
@@ -379,6 +380,28 @@ def _add_autofade(data):
     
     updater.repaint_tline()
 
+def _edit_title(data):
+    clip, track, item_id, item_data = data
+    titler.edit_tline_title(clip, track, _title_edit_callback)
+
+def _title_edit_callback(clip, track, new_title_path, new_titler_data):
+
+    clip_index = track.clips.index(clip)
+    
+    new_clip = current_sequence().create_file_producer_clip(new_title_path, None, False, clip.ttl) # file producer
+
+    current_sequence().clone_clip_and_filters(clip, new_clip)
+    new_titler_data.destroy_pango_layouts()
+    new_clip.titler_data = new_titler_data
+
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index}
+    action = edit.reload_replace(data)
+    action.do_edit()
+
+    titler.clean_titler_instance()
 
 def _re_render_transition_or_fade(data):
     clip, track, item_id, item_data = data
@@ -744,8 +767,7 @@ def _reload_clip_media(data):
             "index":clip_index}
     action = edit.reload_replace(data)
     action.do_edit()
-    
-    
+
 def _create_container_clip_from_selection(data):
     GLib.idle_add(projectaction.create_selection_compound_clip)
 
@@ -800,4 +822,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_render_settings":containerclip.set_render_settings,
                   "cc_edit_program":containerclip.edit_program,
-                  "cc_clone_generator":mediaplugin.add_media_plugin_clone}
+                  "cc_clone_generator":mediaplugin.add_media_plugin_clone,
+                  "edit_title":_edit_title}

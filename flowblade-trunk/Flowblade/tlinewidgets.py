@@ -199,6 +199,10 @@ IMAGE_CLIP_COLOR_GRAD = (1, 0.20, 0.29, 0.67, 1) # (1, 0.16, 0.26, 0.32, 1) #(1,
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
+TITLE_IMAGE_CLIP_COLOR_GRAD = (1, 0.20, 0.48, 0.40, 1) # (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
+TITLE_IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, TITLE_IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
+TITLE_IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(TITLE_IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
+
 CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
 CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
 CONTAINER_CLIP_RENDERED_COLOR = (0.41, 0.11, 0.31) #0.16, 0.26, 0.32)
@@ -1801,15 +1805,27 @@ class TimeLineCanvas:
                             cr.set_source_rgb(*CLIP_SELECTED_COLOR)
                             clip_bg_col = CLIP_SELECTED_COLOR
                     else: # Image type
-                        if not clip.selected:
-                            grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                            grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
-                            grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD_L)
-                            clip_bg_col = IMAGE_CLIP_COLOR_GRAD[1:4]
-                            cr.set_source(grad)
+                        if clip.titler_data == None:
+                            if not clip.selected:
+                                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                                grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
+                                grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD_L)
+                                clip_bg_col = IMAGE_CLIP_COLOR_GRAD[1:4]
+                                cr.set_source(grad)
+                            else:
+                                cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
+                                clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
                         else:
-                            cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
-                            clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
+                            # Titler clip
+                            if not clip.selected:
+                                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                                grad.add_color_stop_rgba(*TITLE_IMAGE_CLIP_COLOR_GRAD)
+                                grad.add_color_stop_rgba(*TITLE_IMAGE_CLIP_COLOR_GRAD_L)
+                                clip_bg_col = TITLE_IMAGE_CLIP_COLOR_GRAD[1:4]
+                                cr.set_source(grad)
+                            else:
+                                cr.set_source_rgb(*TITLE_IMAGE_CLIP_SELECTED_COLOR)
+                                clip_bg_col = TITLE_IMAGE_CLIP_SELECTED_COLOR
                 else:# Audio track
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)

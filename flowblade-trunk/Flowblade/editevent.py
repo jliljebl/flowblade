@@ -26,6 +26,9 @@ Handles edit mode setting.
 from gi.repository import Gdk
 
 import copy
+import hashlib
+import os
+import shutil
 
 import appconsts
 import audiosync
@@ -57,6 +60,7 @@ import syncsplitevent
 import tlinewidgets
 import trimmodes
 import updater
+import userfolders
 
 
 # functions are monkeypatched in at app.py 
@@ -526,8 +530,20 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
         if media_file.container_data == None:
-            # Standard clips
-            new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+            if media_file.titler_data == None:
+                # Standard clips
+                new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+            else:
+                # Title clips
+                # Create copy of graphic and titler data for clip so that all clips created 
+                # from the same media item can be edited independently.
+                md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+                clip_graphic_path = userfolders.get_render_dir() + md_str
+                shutil.copyfile(media_file.path, clip_graphic_path)
+                titler_data = copy.deepcopy(media_file.titler_data)
+
+                new_clip = current_sequence().create_file_producer_clip(clip_graphic_path, media_file.name, False, media_file.ttl)
+                new_clip.titler_data = titler_data
         else:
             # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
@@ -535,7 +551,7 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             new_clip.container_data.generate_clip_id()
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
-            
+
     # Set clip in and out
     if use_marks == False:
         new_clip.mark_in = 0

@@ -99,6 +99,7 @@ profile_warning_icon = None
 generator_icon = None
 gmic_icon = None
 selection_icon = None
+title_icon = None
 
 # GTK3 requires these to be created outside of callback
 clip_popup_menu = Gtk.Menu()
@@ -1107,7 +1108,9 @@ class MediaPanel():
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, \
-        pattern_icon, profile_warning_icon, unused_icon, generator_icon, gmic_icon, selection_icon
+        pattern_icon, profile_warning_icon, unused_icon, generator_icon, gmic_icon, \
+        selection_icon, title_icon
+
         has_proxy_icon = guiutils.get_cairo_image("has_proxy_indicator")
         is_proxy_icon = guiutils.get_cairo_image("is_proxy_indicator")
         graphics_icon = guiutils.get_cairo_image("graphics_indicator")
@@ -1119,7 +1122,8 @@ class MediaPanel():
         generator_icon = guiutils.get_cairo_image("generator_indicator")
         gmic_icon = guiutils.get_cairo_image("gmic_indicator")
         selection_icon = guiutils.get_cairo_image("selection_indicator")
-
+        title_icon = guiutils.get_cairo_image("open_titler")
+        
     def get_selected_media_objects(self):
         return self.selected_objects
 
@@ -1541,8 +1545,12 @@ class MediaObjectWidget:
                 cr.paint()
         else:
             if self.media_file.type == appconsts.IMAGE:
-                cr.set_source_surface(graphics_icon, 6, 6)
-                cr.paint()
+                if hasattr(self.media_file, "titler_data") and self.media_file.titler_data != None:
+                    cr.set_source_surface(title_icon, 6, 6)
+                    cr.paint()
+                else:
+                    cr.set_source_surface(graphics_icon, 6, 6)
+                    cr.paint()
 
             if self.media_file.type == appconsts.IMAGE_SEQUENCE:
                 cr.set_source_surface(imgseq_icon, 6, 6)
@@ -1708,9 +1716,13 @@ def display_clip_popup_menu(event, clip, track, callback):
     
     if clip.container_data != None:
         _add_separetor(clip_menu)
-        #clip_menu.add(_get_container_clip_menu_items(clip_menu, event, clip, track, callback))
         _get_container_clip_menu_items(clip_menu, event, clip, track, callback)
 
+    if clip.titler_data != None:
+        _add_separetor(clip_menu)
+        edit_title_item = _get_menu_item(_("Edit Title"), callback, (clip, track, "edit_title", event.x))
+        clip_menu.append(edit_title_item)
+        
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
@@ -1751,10 +1763,9 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
             active = False
         clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
               (clip, track, "multi_split_audio_synched", event.x), active))
-            
+
     _add_separetor(clip_menu)
 
-    
     global add_compositors_is_multi_selection
     add_compositors_is_multi_selection = True
 
