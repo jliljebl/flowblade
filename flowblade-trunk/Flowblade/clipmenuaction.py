@@ -388,6 +388,10 @@ def _title_edit_callback(clip, track, new_title_path, new_titler_data):
 
     clip_index = track.clips.index(clip)
     
+    while os.path.exists(new_title_path) == False:
+        print(new_title_path, "not yet updated")
+        time.sleep(0.3)
+    
     new_clip = current_sequence().create_file_producer_clip(new_title_path, None, False, clip.ttl) # file producer
 
     current_sequence().clone_clip_and_filters(clip, new_clip)

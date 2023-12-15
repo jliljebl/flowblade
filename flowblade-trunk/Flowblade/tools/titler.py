@@ -141,6 +141,7 @@ def close_titler():
     global _titler, _titler_data
     
     _titler.set_visible(False)
+    _titler.destroy()
 
     GLib.idle_add(titler_destroy)
 
@@ -529,10 +530,12 @@ class Titler(Gtk.Window):
         clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
 
         layers_save_buttons_row = Gtk.HBox()
+        layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
-        layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-
+        layers_save_buttons_row.set_margin_right(4)
+        layers_save_buttons_row.set_margin_top(2)
+        
         # ---------------------------------------------------- X, Y pos input
         adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.x_pos_spin = Gtk.SpinButton()
@@ -602,7 +605,7 @@ class Titler(Gtk.Window):
         controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, True, True, 0)
-        controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
+        #controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
         controls_panel_2.pack_start(font_main_row, False, False, 0)
@@ -630,14 +633,15 @@ class Titler(Gtk.Window):
         controls_panel.pack_start(guiutils.set_margins(notebook, 0,0,10,4), False, False, 0)
         controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), True, True, 0)
- 
+        controls_panel.pack_start(layers_save_buttons_row, False, False, 0)
+         
         view_editor_editor_buttons_row = Gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------------------- Editor buttons
         self.save_action_combo = Gtk.ComboBoxText()
-        self.save_action_combo.append_text(_("Save As Title Media Item"))
+        self.save_action_combo.append_text(_("Save As Title"))
         self.save_action_combo.append_text(_("Save As Graphic"))
         self.save_action_combo.set_active(0)
 
@@ -651,9 +655,11 @@ class Titler(Gtk.Window):
         save_titles_b = guiutils.get_sized_button(save_text, 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
+        self.info_text = Gtk.Label()
+        
         editor_buttons_row = Gtk.HBox()
-        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        editor_buttons_row.pack_start(self.info_text, True, True, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         if _clip_data == None:
             editor_buttons_row.pack_start(self.save_action_combo, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
@@ -684,6 +690,14 @@ class Titler(Gtk.Window):
         self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
     
+    def show_info(self, info_text):
+        self.info_text.set_markup("<small>" + info_text + "</small>")
+        #GLib.timeout_add(2500, self.clear_info)
+
+    def clear_info(self):
+        self.info_text.set_markup("")
+        return False
+        
     def load_titler_data(self):
         # clear and then load layers, and set layer 0 active
         self.view_editor.clear_layers()
@@ -743,6 +757,7 @@ class Titler(Gtk.Window):
         global _titler_data, _clip_data
 
         if _clip_data != None:
+            # Timeline title edit.
             md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
             new_title_path = userfolders.get_render_dir() + md_str
             self.view_editor.write_layers_to_png(new_title_path)
@@ -754,9 +769,9 @@ class Titler(Gtk.Window):
             else:
                 dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
                                                             _("Select Tile Name"),
-                                                            _("Title Name"),
-                                                            _("New Group Name:"),
-                                                            "name")
+                                                            _("Set Name"),
+                                                            _("Title Name:"),
+                                                            _("Title"))
                 dialog.connect('response', self._titler_item_name_dialog_callback, entry)
                 dialog.show_all()
 
@@ -781,6 +796,9 @@ class Titler(Gtk.Window):
             title_data_shallow.destroy_pango_layouts()
             title_data = copy.deepcopy(title_data_shallow)
 
+            print("show_info 1")
+            #self.show_info(_("Saved Title") + " '" + name + "'.")
+ 
             open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
             open_title_item_thread.start()
         else:
@@ -796,7 +814,10 @@ class Titler(Gtk.Window):
                 (dirname, filename) = os.path.split(save_path)
                 global _titler_lastdir
                 _titler_lastdir = dirname
-        
+
+                print("show_info 2")
+                #self.show_info(_("Saved Graphic."))
+            
                 open_file_thread = OpenFileThread(save_path, self.view_editor)
                 open_file_thread.start()
                 # INFOWINDOW
