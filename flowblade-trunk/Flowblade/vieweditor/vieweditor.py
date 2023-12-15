@@ -49,7 +49,8 @@ class ViewEditor(Gtk.Frame):
         self.bg_buf = None
         self.write_out_layers = False
         self.write_file_path = None
-
+        self.write_callback = None
+        
         self.edit_area_update_blocked = False
     
         self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
@@ -301,10 +302,15 @@ class ViewEditor(Gtk.Frame):
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
 
         if self.write_out_layers == True:
+            write_path = self.write_file_path
             img_surface.write_to_png(self.write_file_path)
             self.write_file_path = None # to make sure user components set this every time
             self.write_out_layers = False
             self.set_scale_and_update(current_scale) # return to user set scale
+            if self.write_callback != None:
+                callback = self.write_callback
+                self.write_callback = None
+                callback(write_path)
         else:
             self._draw_guidelines(cr)
         

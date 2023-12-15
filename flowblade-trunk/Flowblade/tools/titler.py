@@ -760,9 +760,8 @@ class Titler(Gtk.Window):
             # Timeline title edit.
             md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
             new_title_path = userfolders.get_render_dir() + md_str
+            self.view_editor.write_callback = self.title_write_done
             self.view_editor.write_layers_to_png(new_title_path)
-
-            GLib.idle_add(_edit_title_exit, new_title_path)
         else:
             if self.save_action_combo.get_active() == 1:
                 toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
@@ -775,6 +774,9 @@ class Titler(Gtk.Window):
                 dialog.connect('response', self._titler_item_name_dialog_callback, entry)
                 dialog.show_all()
 
+    def title_write_done(self, new_title_path):
+        GLib.idle_add(_edit_title_exit, new_title_path)
+            
     def  _titler_item_name_dialog_callback(self, dialog, response_id, entry):
         if response_id == Gtk.ResponseType.ACCEPT:
             name = entry.get_text()
