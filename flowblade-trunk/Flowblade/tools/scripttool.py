@@ -520,7 +520,7 @@ def render_preview_frame():
     _mark_out = -1
     _window.update_marks_display()
     
-    fctx = fluxity.render_preview_frame(script, _last_save_path, frame, get_session_folder(), _profile_file_path)
+    fctx = fluxity.render_preview_frame(script, _last_save_path, frame, 200, get_session_folder(), _profile_file_path)
     _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
         
     if fctx.error == None:
