@@ -2,6 +2,11 @@
 
 ## FLOWBLADE 2.12
 
+
+**Hotfix releases since 2.12 initial release:**
+
+**Flowblade 2.12.0.2 - Fix Generators rendering Issue (NOTE: 2.12.0.1 release had an issue and was removed)**
+
 Date: November 29, 2023
 
 With Flowblade 2.12 we are getting a couple of important structural updates such as Data Stores feature and the possiblity to use up to 21 tracks in a Sequence. 
