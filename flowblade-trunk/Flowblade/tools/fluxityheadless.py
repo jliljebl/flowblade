@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
 try:
     import pgi
     pgi.install_as_gi()
@@ -35,6 +36,7 @@ except:
     import mlt
 import os
 import threading
+import sys
 import time
 
 import appconsts
@@ -90,7 +92,7 @@ def write_misc_session_data(parent_folder, session_id, file_name, misc_data):
     ccrutils.write_misc_session_data(parent_folder, session_id, file_name, misc_data)
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, parent_folder, script, range_in, range_out, profile_desc):
+def main(root_path, session_id, parent_folder, script, generator_length, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -116,18 +118,19 @@ def main(root_path, session_id, parent_folder, script, range_in, range_out, prof
     ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
-    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, range_in, range_out, profile_desc)
+    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, generator_length, range_in, range_out, profile_desc)
     _render_thread.start()
 
 
 class FluxityHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, fluxity_plugin_edit_data, render_data, range_in, range_out, profile_desc):
+    def __init__(self, script, fluxity_plugin_edit_data, render_data, generator_length, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.script_path = script
         self.fluxity_plugin_edit_data = fluxity_plugin_edit_data
         self.render_data = render_data # toolsencoding.ToolsRenderData object
+        self.generator_length = int(generator_length)
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
@@ -169,6 +172,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         
         proc_fctx_dict = fluxity.render_frame_sequence(   user_script,
                                                           script_file,
+                                                          self.generator_length,
                                                           self.range_in, 
                                                           self.range_out, 
                                                           rendered_frames_folder, 

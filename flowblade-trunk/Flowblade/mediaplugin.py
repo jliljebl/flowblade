@@ -221,7 +221,7 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
         
     profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
 
-    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
+    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), new_length, None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
     fctx.priv_context.frame_surface.write_to_png(screenshot_file)
 
     new_plugin_edit_data = copy.deepcopy(old_cd.data_slots["fluxity_plugin_edit_data"])
@@ -241,7 +241,7 @@ def create_plugin_assests_for_media_import(old_cd):
         
     profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
 
-    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
+    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), new_length, None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
     fctx.priv_context.frame_surface.write_to_png(screenshot_file)
 
     new_plugin_edit_data = copy.deepcopy(old_cd.data_slots["fluxity_plugin_edit_data"])
@@ -523,7 +523,7 @@ class AddMediaPluginWindow(Gtk.Window):
         
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
 
-        fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path, editors_data_json)
+        fctx = fluxity.render_preview_frame(user_script, script_file, frame, int(self.length_spin.get_value()), None, profile_file_path, editors_data_json)
         return fctx
         
     def get_plugin_data(self, plugin_script_path, frame=0):
@@ -531,7 +531,7 @@ class AddMediaPluginWindow(Gtk.Window):
             script_file = open(plugin_script_path)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-            fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path)
+            fctx = fluxity.render_preview_frame(user_script, script_file, frame, int(self.length_spin.get_value()), None, profile_file_path)
          
             if fctx.error == None:
                 return (True, fctx) # no errors
