@@ -66,7 +66,7 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.12 was released in November 2023.
+**Latest release:** Flowblade Movie Editor 2.12.0.2 was released in December 2023.
 
 # Installing Flowblade
 
