@@ -1340,7 +1340,7 @@ def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
+def render_preview_frame(script, script_file, frame, generator_length, out_folder, profile_file_path, editors_data_json=None):
     """
     **script(str)** Script to be rendered as a string.
     
@@ -1370,6 +1370,9 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
 
         fscript, fctx = results
 
+        # Set generator length
+        fctx.set_length(generator_length)
+        
         # Execute script to render a preview frame.
         fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
@@ -1390,7 +1393,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         fctx.error = str(e) + traceback.format_exc(6,True)
         return fctx
 
-def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
+def render_frame_sequence(script, script_file, generator_length, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
     """
     **script(str)** Script to be rendered as a string.
     
@@ -1434,7 +1437,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     jobs = []
     for i in range(threads):
         
-        render_data = ( script, script_file, in_frame, out_frame, out_folder, \
+        render_data = ( script, script_file, generator_length, in_frame, out_frame, out_folder, \
                         profile_file_path, editors_data_json, start_out_from_frame_one)
         
         proc_info = (i, threads, result_queue)
@@ -1453,7 +1456,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
 def _render_process_launch(render_data, proc_info):
 
     try:
-        script, script_file, in_frame, out_frame, out_folder, \
+        script, script_file, generator_length, in_frame, out_frame, out_folder, \
         profile_file_path, editors_data_json, start_out_from_frame_one = render_data
         
         procnum, threads_count, result_queue = proc_info
@@ -1469,6 +1472,9 @@ def _render_process_launch(render_data, proc_info):
             return 
 
         fscript, fctx = results
+
+        # Set generator length
+        fctx.set_length(generator_length)
 
         # Execute script to write frame sequence.
         fctx.priv_context.current_method = METHOD_INIT_SCRIPT
