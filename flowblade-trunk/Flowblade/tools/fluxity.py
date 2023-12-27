@@ -1357,8 +1357,8 @@ def render_preview_frame(script, script_file, frame, generator_length, out_folde
     Renders a single frame from provided script.
     
     **Returns:** (FluxityContext) Object created during rendering. This object has attributes *error* and *log_msg* providing error and logging information.
-    """ 
-
+    """
+ 
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
