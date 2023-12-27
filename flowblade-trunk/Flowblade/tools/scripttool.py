@@ -1286,7 +1286,10 @@ class FluxityRangeRenderer(threading.Thread):
         self.in_frame = in_frame
         out_frame = _mark_out
         self.out_frame = out_frame  
-    
+        
+        # TODO: Make user settable
+        generator_length = 200
+            
         parent_folder = userfolders.get_temp_render_dir()
     
         ccrutils.init_session_folders(parent_folder, SCRIPT_TOOL_SESSION_ID)
@@ -1305,7 +1308,7 @@ class FluxityRangeRenderer(threading.Thread):
             GLib.idle_add(_show_error, err_msg)
             return
 
-        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, generator_length, in_frame, out_frame + 1)
 
         GLib.timeout_add(200, _preview_render_update, self)
 
@@ -1416,6 +1419,9 @@ class FluxityPluginRenderer(threading.Thread):
         self.in_frame = in_frame
         self.out_frame = out_frame
         
+        # TODO: Make user settable
+        generator_length = 200
+        
         # not used !!!
         frame_name = _window.frame_name.get_text()
 
@@ -1446,7 +1452,7 @@ class FluxityPluginRenderer(threading.Thread):
             return
 
         self.frames_render_in_prgress = True
-        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, generator_length, in_frame, out_frame + 1)
         
         self.render_start_time = datetime.datetime.now()
         GLib.timeout_add(150, _output_render_update, self)
@@ -1592,7 +1598,7 @@ def _output_render_update(render_thread):
         _window.render_progress_bar.set_fraction(progress)
         return True # Function will be called again.
 
-def _launch_headless_render(session_id, script_path, edit_data, frames_folder, range_in, range_out):
+def _launch_headless_render(session_id, script_path, edit_data, frames_folder, generator_length, range_in, range_out):
 
     parent_folder = userfolders.get_temp_render_dir()
     
@@ -1618,6 +1624,7 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
     args = ("session_id:" + session_id,
             "parent_folder:" + parent_folder,
             "script:" + script_path,
+            "generator_length:" + str(generator_length),
             "range_in:" + str(range_in),
             "range_out:"+ str(range_out),
             "profile_desc:" + _current_profile_name.replace(" ", "_"))  # Here we have our own string space handling, maybe change later..

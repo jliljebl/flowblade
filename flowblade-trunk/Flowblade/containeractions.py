@@ -612,7 +612,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-            fctx = fluxity.render_preview_frame(user_script, script_file, 0, None, profile_file_path)
+            fctx = fluxity.render_preview_frame(user_script, script_file, 0, self.container_data.unrendered_length, None, profile_file_path)
          
             if fctx.error == None:
                 data_json = fctx.get_script_data()
@@ -633,7 +633,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         frame = self.container_data.unrendered_length // 2
         screenshot_file = self.get_container_thumbnail_path()
         
-        fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path)
+        fctx = fluxity.render_preview_frame(user_script, script_file, frame, self.container_data.unrendered_length, None, profile_file_path)
         fctx.priv_context.frame_surface.write_to_png(screenshot_file)
         cr, surface = _create_image_surface(screenshot_file)
         return (screenshot_file, surface)
@@ -655,7 +655,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
         self.render_range_in = range_in
         self.render_range_out = range_out
- 
+        generator_length = self.container_data.unrendered_length
+
         fluxityheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
@@ -677,6 +678,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         args = ("session_id:" + self.get_container_program_id(),
                 "parent_folder:" + self.parent_folder,
                 "script:" + str(self.container_data.program),
+                "generator_length:" + str(generator_length),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
@@ -807,7 +809,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
-        fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, out_folder, profile_file_path, editors_data_json)
+        fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, self.container_data.unrendered_length, out_folder, profile_file_path, editors_data_json)
         if fctx.error != None:
             error_callback(fctx.error)
             return

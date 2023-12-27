@@ -30,6 +30,7 @@ try:
     session_id = _get_arg_value(sys.argv, "session_id")
     parent_folder = _get_arg_value(sys.argv, "parent_folder")
     script = _get_arg_value(sys.argv, "script")
+    generator_length = _get_arg_value(sys.argv, "generator_length")
     range_in = _get_arg_value(sys.argv, "range_in")
     range_out = _get_arg_value(sys.argv, "range_out")
     profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
@@ -41,7 +42,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-fluxityheadless.main(modules_path, session_id, parent_folder, script, range_in, range_out, profile_desc)
+fluxityheadless.main(modules_path, session_id, parent_folder, script, generator_length, range_in, range_out, profile_desc)
 
 
 
