@@ -612,6 +612,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+            if self.container_data.unrendered_length == None:
+                self.container_data.unrendered_length = 200
+
             fctx = fluxity.render_preview_frame(user_script, script_file, 0, self.container_data.unrendered_length, None, profile_file_path)
          
             if fctx.error == None:
@@ -801,7 +804,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         script_file = open(self.container_data.program)
         user_script = script_file.read()
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-        
+
         self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
         self.container_data.render_data.do_video_render = False 
         
