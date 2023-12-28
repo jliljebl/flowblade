@@ -45,6 +45,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import guipopoverclip
 import edit
 from editorstate import current_sequence
 from editorstate import get_track
@@ -90,8 +91,9 @@ def display_clip_menu(y, event, frame):
 
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:
-            guicomponents.display_clip_popup_menu(event, pressed_clip, \
-                                              track, _clip_menu_item_activated)
+            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, event.x, event.y, pressed_clip, track, _clip_popover_menu_item_activated)
+            #guicomponents.display_clip_popup_menu(event, pressed_clip, \
+            #                                  track, _clip_menu_item_activated)
         else:
             guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
                                                 track, _clip_menu_item_activated)
@@ -103,6 +105,12 @@ def display_clip_menu(y, event, frame):
     return True
 
 def _clip_menu_item_activated(widget, data):
+    # Callback from selected clipmenu item
+    clip, track, item_id, item_data = data
+    handler = POPUP_HANDLERS[item_id]
+    handler(data)
+
+def _clip_popover_menu_item_activated(action, variant, data):
     # Callback from selected clipmenu item
     clip, track, item_id, item_data = data
     handler = POPUP_HANDLERS[item_id]

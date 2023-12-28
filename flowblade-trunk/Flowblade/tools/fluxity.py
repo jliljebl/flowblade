@@ -1419,6 +1419,7 @@ def render_frame_sequence(script, script_file, generator_length, in_frame, out_f
     * if errors occurred during rendering it has *key -> value* pair *fluxity.FLUXITY_ERROR_MSG -> error message(str)*.
     * if script created log messages it has *key -> value* pair *fluxity.FLUXITY_LOG_MSG -> log message(str)*.
     """
+
     # Some simple heuristics to decide how many processes will be used for rendering
     cpu_count = multiprocessing.cpu_count()
     threads = cpu_count - 2
@@ -1565,6 +1566,3 @@ def _prints_to_log_file(log_file):
 
     os.dup2(so.fileno(), sys.stdout.fileno())
     os.dup2(se.fileno(), sys.stderr.fileno())
-    
-    
-        
