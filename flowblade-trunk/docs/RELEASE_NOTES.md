@@ -2,6 +2,7 @@
 
 
 **Hotfix releases since 2.12 initial release:**
+
 **Flowblade 2.12.0.2 - Fix Generators rendering Issue (NOTE: 2.12.0.1 release had an issue and was removed)**
 
 ## FLOWBLADE 2.12
