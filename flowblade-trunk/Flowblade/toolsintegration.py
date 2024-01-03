@@ -20,6 +20,7 @@
 import copy
 
 import appconsts
+import clipmenuaction
 from editorstate import PROJECT
 import gmic
 import render
@@ -59,9 +60,10 @@ class ToolIntegrator:
         else:
             return False
 
-    def export_callback(self, widget, data):
+    def export_callback(self, action, variant, data):
+        clip, track, x = clipmenuaction.get_popover_clip_data()
         new_instance = copy.deepcopy(self)
-        new_instance.data = data
+        new_instance.data = (clip, track)
         new_instance.do_export()
         
     def do_export(self):
@@ -116,7 +118,6 @@ class SlowMoIntegrator(ToolIntegrator):
         media_file.mark_in = clip.clip_in
         media_file.mark_out = clip.clip_out
         render.render_frame_buffer_clip(media_file, True)
-
 
 class ReverseIntegrator(ToolIntegrator):
     

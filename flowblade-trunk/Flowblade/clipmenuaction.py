@@ -66,6 +66,13 @@ import userfolders
 import utils
 
 
+_popover_clip_data = None # clip, track and press x cannot passed through using Gio.MenuItems and Gio.SimpleAction objects
+                          # so they saved here before each menu invocation.
+
+# toolsintegrator.py needs this to launch tools
+def get_popover_clip_data():
+    return _popover_clip_data
+
 # ---------------------------------- clip menu
 def display_clip_menu(y, event, frame):
     # See if we actually hit a clip
@@ -89,9 +96,12 @@ def display_clip_menu(y, event, frame):
     else:
         movemodes.select_blank_range(track, pressed_clip)
 
+    global _popover_clip_data
+        
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:
-            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, event.x, event.y, pressed_clip, track, _clip_popover_menu_item_activated)
+            _popover_clip_data = (pressed_clip, track,  event.x)
+            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
             #guicomponents.display_clip_popup_menu(event, pressed_clip, \
             #                                  track, _clip_menu_item_activated)
         else:
@@ -112,9 +122,12 @@ def _clip_menu_item_activated(widget, data):
 
 def _clip_popover_menu_item_activated(action, variant, data):
     # Callback from selected clipmenu item
-    clip, track, item_id, item_data = data
+    item_id, item_data = data
+    global _popover_clip_data
+    clip, track, x = _popover_clip_data
     handler = POPUP_HANDLERS[item_id]
-    handler(data)
+    handler_data = (clip, track, item_id, item_data)
+    handler(handler_data)
 
 def _compositor_menu_item_activated(widget, data):
     action_id, compositor = data
@@ -152,11 +165,11 @@ def _multi_delete_compositors(data):
             action.do_edit()
 
 def _open_clip_in_effects_editor(data):
-    updater.open_clip_in_effects_editor(data)
+    updater.open_clip_in_effects_editor(_get_data_with_xpos(data))
     
 def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
-    
+
     media_file = PROJECT().get_media_file_for_path(clip.path)
     if media_file == None and clip.container_data != None:
         media_file = PROJECT().get_media_file_for_container_data(clip.container_data)
@@ -241,8 +254,9 @@ def open_selection_in_effects():
     clipeffectseditor.set_clip(clip, track, movemodes.selected_range_in)
     
 def _add_filter(data):
-    clip, track, item_id, item_data = data
-    x, filter_info = item_data
+    clip, track, item_id, filter_info = data
+    clip, track, x = _popover_clip_data 
+
     action = clipeffectseditor.get_filter_add_action(filter_info, clip)
     clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
     action.do_edit()
@@ -784,6 +798,19 @@ def _reload_clip_media(data):
 def _create_container_clip_from_selection(data):
     GLib.idle_add(projectaction.create_selection_compound_clip)
 
+def _get_data_with_xpos(data):
+    clip, track, item_id, item_data = data
+    clip, track, x = _popover_clip_data
+    return (clip, track, item_id, x)
+    
+def _split_audio(data):
+    syncsplitevent.split_audio(_get_data_with_xpos(data))
+
+def _split_audio_synched(data):
+    syncsplitevent.split_audio_synched(_get_data_with_xpos(data))
+
+def _set_audio_sync_clip(data):
+    audiosync.init_select_tline_sync_clip(_get_data_with_xpos(data))
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
@@ -794,8 +821,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "open_in_clip_monitor":_open_clip_in_clip_monitor,
                   "rename_clip":_rename_clip,
                   "clip_color":_clip_color,
-                  "split_audio":syncsplitevent.split_audio,
-                  "split_audio_synched":syncsplitevent.split_audio_synched,
+                  "split_audio":_split_audio,
+                  "split_audio_synched":_split_audio_synched,
                   "resync":syncsplitevent.resync_clip,
                   "add_filter":_add_filter,
                   "add_filter_multi":_add_filter_multi,
@@ -816,7 +843,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,
                   "add_autofade":_add_autofade,
-                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
+                  "set_audio_sync_clip":_set_audio_sync_clip,
                   "re_render":_re_render_transition_or_fade,
                   "add_clip_marker":_add_clip_marker,
                   "go_to_clip_marker":_go_to_clip_marker,
