@@ -1,11 +1,15 @@
 # Release Notes
 
-## FLOWBLADE 2.12
-
 
 **Hotfix releases since 2.12 initial release:**
 
-**Flowblade 2.12.0.2 - Fix Generators rendering Issue (NOTE: 2.12.0.1 release had an issue and was removed)**
+## Flowblade 2.12.0.2 
+Fix Generators rendering Issue (NOTE: 2.12.0.1 release had an issue and was removed)
+
+## FLOWBLADE 2.12
+
+
+
 
 Date: November 29, 2023
 
@@ -105,17 +109,21 @@ A considerable portion of available development time was spend on moving to usin
 * Fix 2 window monitor window top row layout TC and widgets touch-up
 
 
-## FLOWBLADE 2.10
-
 **Hotfix releases since 2.10 initial release:**
 
-**Flowblade 2.10.0.4 - Fix issue with audio scrubbing repeating noise on pause.**
+## Flowblade 2.10.0.4 
+Fix issue with audio scrubbing repeating noise on pause.
 
-**Flowblade 2.10.0.3 - Remove dead Compositors and fix loading if they are used.**
+## Flowblade 2.10.0.3
+Remove dead Compositors and fix loading if they are used.
 
-**Flowblade 2.10.0.2 - Fix Issue #1095.**
+## Flowblade 2.10.0.2
+Fix Issue #1095.
 
-**Flowblade 2.10.0.1 - Fix installdata.**
+## Flowblade 2.10.0.1
+Fix installdata.
+
+## FLOWBLADE 2.10
 
 This release took a long time to get done, but it is finally here. On the other hand, this release has the most ever new and interesting features for a single release, so it was worth taking the time to get everything in.
 
