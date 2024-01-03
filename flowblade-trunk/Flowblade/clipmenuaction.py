@@ -97,7 +97,7 @@ def display_clip_menu(y, event, frame):
         else:
             guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
                                                 track, _clip_menu_item_activated)
-                                              
+
     elif track.type == appconsts.AUDIO:
         guicomponents.display_audio_clip_popup_menu(event, pressed_clip, \
                                                     track, _clip_menu_item_activated)
@@ -382,7 +382,7 @@ def _add_autofade(data):
                 "b_track":track.id,
                 "compositor_type":compositor_type,
                 "clip":clip}
-    #print("edit_data", edit_data)
+
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     
@@ -646,7 +646,8 @@ def _clone_filters_from_prev(data):
             return 
     clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
-
+    print("2")
+    
 def _do_filter_clone(clip, clone_clip):
     if clone_clip.is_blanck_clip:
         return

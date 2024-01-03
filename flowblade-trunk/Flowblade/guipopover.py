@@ -158,9 +158,9 @@ def new_popover(widget, menu, launcher):
 
     return popover
 
-def new_mouse_popover(widget, menu, rect):
+def new_mouse_popover(widget, menu, rect, position_type=Gtk.PositionType.BOTTOM):
     popover = Gtk.Popover.new_from_model(widget, menu)
-    popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    popover.set_position(Gtk.PositionType(position_type))
     popover.set_pointing_to(rect) 
     popover.show()
     
@@ -257,8 +257,6 @@ def all_tracks_menu_show(launcher, widget, callback):
     add_menu_action(maximize_section, _("Reset Track Heights"), "midbar.all.minimize", "resetheights" , callback)
     _all_tracks_menu.append_section(None, maximize_section)
 
-
-    
     activate_section = Gio.Menu.new()
     add_menu_action(activate_section, _("Activate All Tracks"), "midbar.all.allactive", "allactive" , callback)
     add_menu_action(activate_section, _("Activate Only Current Top Active Track"), "midbar.all.topactiveonly", "topactiveonly" , callback)
@@ -395,7 +393,6 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
         add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
         _monitorview_menu.append_section(None, view_section)
 
-        # We are getting gtk warning here, look to fix
         _opacity_section = menu_clear_or_create(_opacity_section)
         _opacity_submenu = menu_clear_or_create(_opacity_submenu)
         items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
