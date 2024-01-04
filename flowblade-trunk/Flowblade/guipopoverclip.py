@@ -37,6 +37,10 @@ _markers_submenu_static_items = None
 _reload_section = None
 _edit_actions_menu = None
 _tools_submenu = None
+_edit_bottom_section = None
+_compositor_section = None
+_title_section = None
+_generator_section = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -57,7 +61,7 @@ def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, c
 def clip_popover_menu_show(widget, clip, track, x, y, callback):
     global _clip_popover, _clip_menu, _audio_submenu, _markers_submenu, \
     _markers_submenu_static_items, _reload_section, _edit_actions_menu, \
-    _tools_submenu
+    _tools_submenu, _title_section, _compositor_section, _generator_section
 
     if _clip_menu == None:
         _clip_menu = guipopover.menu_clear_or_create(_clip_menu)
@@ -77,6 +81,10 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         properties_submenu = _get_properties_submenu(callback)
         clip_data_section.append_submenu(_("Properties"), properties_submenu)
 
+        _generator_section = Gio.Menu.new()
+        _fill_generator_section(_generator_section, clip, callback)
+        _clip_menu.append_section(None, _generator_section)
+         
         _markers_submenu = Gio.Menu.new()
         _markers_submenu_static_items = Gio.Menu.new()
         _fill_markers_menu(_markers_submenu, _markers_submenu_static_items, clip, callback)
@@ -88,6 +96,10 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         add_menu_action(clip_data_section, _("Clip Info"), "clipmenu.openinmonitor.clipinfo",  ("clip_info", None), callback)
         _clip_menu.append_section(None, clip_data_section)
 
+        _compositor_section = Gio.Menu.new()
+        _fill_compositors_section(_compositor_section, clip, track, callback)
+        _clip_menu.append_section(None, _compositor_section)
+        
         _reload_section = Gio.Menu.new()
         _fill_reload_section(_reload_section, clip, callback)
         _clip_menu.append_section(None, _reload_section)
@@ -114,9 +126,13 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         add_menu_action(filters_section, _("Clear Filters"), "clipmenu.clearfilters",  ("clear_filters", None), callback)
         _clip_menu.append_section(None, filters_section)
 
-        edit_filters_section = Gio.Menu.new()
-        add_menu_action(edit_filters_section, _("Edit Filters"), "clipmenu.openineditor",  ("open_in_editor", None), callback)
-        _clip_menu.append_section(None, edit_filters_section)
+        _title_section = Gio.Menu.new()
+        _fill_title_section(_title_section, clip, callback)
+        _clip_menu.append_section(None, _title_section)
+
+        edit_bottom_section = Gio.Menu.new()
+        add_menu_action(edit_bottom_section, _("Edit Filters"), "clipmenu.openineditor",  ("open_in_editor", None), callback)
+        _clip_menu.append_section(None, edit_bottom_section)
 
     else: # Menu items with possible state changes need to recreated.
         guipopover.menu_clear_or_create(_audio_submenu)
@@ -126,6 +142,9 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         guipopover.menu_clear_or_create(_markers_submenu_static_items)
         _fill_markers_menu(_markers_submenu, _markers_submenu_static_items, clip, callback)
 
+        guipopover.menu_clear_or_create(_compositor_section)
+        _fill_compositors_section(_compositor_section, clip, track, callback)
+        
         guipopover.menu_clear_or_create(_reload_section)
         _fill_reload_section(_reload_section, clip, callback)
 
@@ -134,6 +153,12 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
 
         guipopover.menu_clear_or_create(_tools_submenu)
         _fill_tool_integration_menu(_tools_submenu, clip, callback)
+        
+        guipopover.menu_clear_or_create(_title_section)
+        _fill_title_section(_title_section, clip, callback)
+
+        guipopover.menu_clear_or_create(_generator_section)
+        _fill_generator_section(_generator_section, clip, callback)
 
     rect = guipopover.create_rect(x, y)
     _clip_popover = guipopover.new_mouse_popover(widget, _clip_menu, rect, Gtk.PositionType.TOP)
@@ -262,7 +287,35 @@ def _fill_clone_filters_menu(clone_sub_menu, callback, is_multi=False):
     add_menu_action(clone_sub_menu, _("From Next Clip"), "clipmenu.clonefromnext", ("clone_filters_from_next", is_multi), callback)
     add_menu_action(clone_sub_menu, _("From Previous Clip"), "clipmenu.clonefromprev", ("clone_filters_from_prev", is_multi), callback)
 
+
+def _fill_compositors_section(compositor_section, clip, track, callback):
+    if track.id <= current_sequence().first_video_index or current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        active = False
+    else:
+        active = True
+    add_menu_action(compositor_section, _("Add Compositor..."), "clipmenu.addcompositor",  ("add_compositor", None), callback, active)
     
+    if len(current_sequence().get_clip_compositors(clip)) == 0 or current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        active = False
+    else:
+        active = True
+    add_menu_action(compositor_section, _("Delete Compositor"), "clipmenu.deletecompositors",  ("delete_compositors", None), callback, active)
+
+def _fill_title_section(title_section, clip, callback):
+    #if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+    active = (clip.titler_data != None)
+    add_menu_action(title_section, _("Edit Title"), "clipmenu.edittitle",  ("edit_title", None), callback, active)
+    
+def _fill_generator_section(generator_section, clip, callback):
+    active = (clip.container_data != None)
+    genactive = active
+    if clip.container_data != None and clip.container_data.container_type != appconsts.CONTAINER_CLIP_FLUXITY:
+        genactive = False
+    add_menu_action(generator_section, _("Edit Generator Properties..."), "clipmenu.ccedit",  ("cc_edit_program", None), callback, genactive)
+    add_menu_action(generator_section, _("Create Cloned Generator..."), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, genactive)
+    add_menu_action(generator_section, _("Generator/Container Render Actions"), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, active)
+
+
 """
 def _get_edit_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Edit"))
