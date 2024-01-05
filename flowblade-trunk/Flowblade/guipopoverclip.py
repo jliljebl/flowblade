@@ -29,6 +29,7 @@ import toolsintegration
 import translations
 import utils
 
+select_clip_func = None
 
 _clip_popover = None
 _clip_menu = None
@@ -50,6 +51,13 @@ _audio_mute_menu = None
 _audio_markers_submenu = None
 _audio_markers_submenu_static_items = None
 
+_blank_clip_popover = None
+_blank_clip_menu = None
+
+_multi_clip_popover = None
+_multi_clip_menu = None
+_multi_audio_section = None
+
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -67,6 +75,11 @@ def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, c
 
 # -------------------------------------------------- clip menus
 def clip_popover_menu_show(widget, clip, track, x, y, callback):
+    if clip.is_blanck_clip:
+        select_clip_func(track.id, track.clips.index(clip))
+        blank_clip_popover_menu_show(widget, clip, track, x, y, callback)
+        return
+
     global _clip_popover, _clip_menu, _audio_submenu, _markers_submenu, \
     _markers_submenu_static_items, _reload_section, _edit_actions_menu, \
     _tools_submenu, _title_section, _compositor_section, _generator_section
@@ -170,6 +183,11 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
 
 
 def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
+    if clip.is_blanck_clip:
+        select_clip_func(track.id, track.clips.index(clip))
+        blank_clip_popover_menu_show(widget, clip, track, x, y, callback)
+        return
+        
     global _audio_clip_popover, _audio_clip_menu, _sync_section, _audio_mute_menu, \
     _audio_markers_submenu, _audio_markers_submenu_static_items
 
@@ -238,6 +256,145 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         
     rect = guipopover.create_rect(x, y)
     _audio_clip_popover = guipopover.new_mouse_popover(widget, _audio_clip_menu, rect, Gtk.PositionType.TOP)
+
+def blank_clip_popover_menu_show(widget, clip, track, x, y, callback):
+    global _blank_clip_popover, _blank_clip_menu
+
+    if _blank_clip_menu == None:
+        _blank_clip_menu = guipopover.menu_clear_or_create(_blank_clip_menu)
+
+        strecth_section = Gio.Menu.new()
+        add_menu_action(strecth_section, _("Stretch Prev Clip to Cover"), "blankclipmenu.coverwithprev",  ("cover_with_prev", None), callback)
+        add_menu_action(strecth_section, _("Stretch Next Clip to Cover"), "blankclipmenu.coverwithnext",  ("cover_with_next", None), callback)
+        _blank_clip_menu.append_section(None, strecth_section)
+
+        delete_section = Gio.Menu.new()
+        add_menu_action(delete_section, _("Delete"), "blankclipmenu.deleteblank",  ("delete_blank", None), callback)
+        _blank_clip_menu.append_section(None, delete_section)
+
+    rect = guipopover.create_rect(x, y)
+    _blank_clip_popover = guipopover.new_mouse_popover(widget, _blank_clip_menu, rect, Gtk.PositionType.TOP)
+
+def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
+    global _multi_clip_popover, _multi_clip_menu, _multi_audio_section
+
+    if _multi_clip_menu == None:
+        _multi_clip_menu = guipopover.menu_clear_or_create(_multi_clip_menu)
+
+        _multi_audio_section = Gio.Menu.new()
+        _fill_multi_audio_section(_multi_audio_section, clip, track, callback)
+        _multi_clip_menu.append_section(None, _multi_audio_section)
+
+        container_section = Gio.Menu.new()
+        add_menu_action(container_section, _("Create Container Clip From Selected Clips"), "multiclipmenu.createmulticompound",  ("create_multi_compound", None), callback)
+        _multi_clip_menu.append_section(None, container_section)
+
+        filters_section = Gio.Menu.new()
+        add_filter_menu = Gio.Menu.new()
+        _fill_filters_menus(add_filter_menu, callback, "add_filter", "multiclipmenu.addfilter.")
+        filters_section.append_submenu(_("Add Filter"), add_filter_menu)
+        clone_sub_menu = Gio.Menu.new()
+        _fill_clone_filters_menu(clone_sub_menu, callback, True, False)
+        filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
+        add_menu_action(filters_section, _("Clear Filters"), "multiclipmenu.clearfilters",  ("clear_filters", None), callback)
+        _multi_clip_menu.append_section(None, filters_section)
+
+        delete_section = Gio.Menu.new()
+        add_menu_action(delete_section, _("Delete"), "multiclipmenu.delete",  ("delete", None), callback)
+        add_menu_action(delete_section, _("Lift"), "multiclipmenu.delete",  ("lift", None), callback)
+        _multi_clip_menu.append_section(None, delete_section)
+
+    else: # Menu items with possible state changes need to recreated.
+        guipopover.menu_clear_or_create(_multi_audio_section)
+        _fill_multi_audio_section(_multi_audio_section, clip, track, callback)
+
+    rect = guipopover.create_rect(x, y)
+    _multi_clip_popover = guipopover.new_mouse_popover(widget, _multi_clip_menu, rect, Gtk.PositionType.TOP)
+    
+def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
+    active = (track.type == appconsts.VIDEO)
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        active = False
+    add_menu_action(multi_audio_section, _("Split Audio"), "multiclipmenu.multisplitaudio",  ("multi_split_audio", None), callback, active)
+    active = (track.id == current_sequence().first_video_index)
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        active = False
+    add_menu_action(multi_audio_section, _("Split Audio Synched"), "multiclipmenu.multisplitaudiosynched",  ("multi_split_audio_synched", None), callback, active)
+
+"""
+def display_multi_clip_popup_menu(event, clip, track, callback):
+    if clip.is_blanck_clip:
+        select_clip_func(track.id, track.clips.index(clip))
+        display_blank_clip_popup_menu(event, clip, track, callback)
+        return
+
+    if hasattr(clip, "rendered_type"):
+        display_transition_clip_popup_menu(event, clip, track, callback)
+        return
+
+    clip_menu = multi_clip_popup_menu
+    guiutils.remove_children(clip_menu)
+    
+    # Menu items
+    if track.type == appconsts.VIDEO:
+        active = True
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
+        clip_menu.add(_get_menu_item(_("Split Audio"), callback,\
+                      (clip, track, "multi_split_audio", event.x), active))
+        if track.id == current_sequence().first_video_index:
+            active = True
+        else:
+            active = False
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
+        clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
+              (clip, track, "multi_split_audio_synched", event.x), active))
+
+    _add_separetor(clip_menu)
+
+    global add_compositors_is_multi_selection
+    add_compositors_is_multi_selection = True
+
+    clip_menu.add(_get_menu_item(_("Create Container Clip From Selected Clips"), callback, (clip, track, "create_multi_compound", event.x)))
+    _add_separetor(clip_menu)
+        
+    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback, True))
+
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        _add_separetor(clip_menu)
+        
+        # Only add compositors for video tracks V2 and higher
+        if track.id <= current_sequence().first_video_index:
+            active = False
+        else:
+            active = True
+        compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+        clip_menu.add(compositors_add_item)
+
+        item_text = _("Delete Compositor/s")
+        comp_delete_item = _get_menu_item(item_text, callback, (clip, track, "multi_delete_compositors", event.x))
+        if len(current_sequence().get_clip_compositors(clip)) == 0:
+            comp_delete_item.set_sensitive(False)
+        clip_menu.add(comp_delete_item)
+
+    _add_separetor(clip_menu)
+
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback, True))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
+
+    _add_separetor(clip_menu)
+        
+    del_item = _get_menu_item(_("Delete"), callback, (clip, track, "delete", event.x))
+    clip_menu.add(del_item)
+
+    lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
+    clip_menu.add(lift_item)
+
+    add_compositors_is_multi_selection = False
+    
+    clip_menu.popup(None, None, None, None, event.button, event.time)
+"""
 
 def _fill_audio_menu(audio_submenu, clip, track, callback):
     if track.type == appconsts.VIDEO:
@@ -375,8 +532,11 @@ def _fill_filters_menus(sub_menu, callback, item_id, action_id):
 def _fill_clone_filters_menu(clone_sub_menu, callback, is_multi=False, is_audio=False):
     if is_audio == True:
         preid = "audio"
+    elif is_multi == True:
+        preid = "multi"
     else:
         preid = ""
+
     add_menu_action(clone_sub_menu, _("From Next Clip"), preid + "clipmenu.clonefromnext", ("clone_filters_from_next", is_multi), callback)
     add_menu_action(clone_sub_menu, _("From Previous Clip"), preid + "clipmenu.clonefromprev", ("clone_filters_from_prev", is_multi), callback)
 

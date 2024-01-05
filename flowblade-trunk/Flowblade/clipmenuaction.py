@@ -101,12 +101,13 @@ def display_clip_menu(y, event, frame):
             
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:
-            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
-            #guicomponents.display_clip_popup_menu(event, pressed_clip, \
-            #                                  track, _clip_menu_item_activated)
+            #guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
+            guicomponents.display_clip_popup_menu(event, pressed_clip, \
+                                              track, _clip_menu_item_activated)
         else:
-            guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
-                                                track, _clip_menu_item_activated)
+            guipopoverclip.multi_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
+            #guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
+            #                                    track, _clip_menu_item_activated)
 
     elif track.type == appconsts.AUDIO:
         guipopoverclip.audio_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)

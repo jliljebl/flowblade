@@ -74,6 +74,7 @@ import editorwindow
 import gmic
 import gui
 import guicomponents
+import guipopoverclip
 import jobs
 import keyevents
 import keyframeeditor
@@ -462,6 +463,7 @@ def monkeypatch_callbacks():
     keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
 
     guicomponents.select_clip_func = movemodes.select_clip
+    guipopoverclip.select_clip_func = movemodes.select_clip
     
     containeractions.set_plugin_to_be_edited_func = mediaplugin.set_plugin_to_be_edited
     containeractions.get_edited_plugin_clip = mediaplugin.get_clip
