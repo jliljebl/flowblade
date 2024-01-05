@@ -29,6 +29,7 @@ import toolsintegration
 import translations
 import utils
 
+
 _clip_popover = None
 _clip_menu = None
 _audio_submenu = None 
@@ -41,6 +42,13 @@ _edit_bottom_section = None
 _compositor_section = None
 _title_section = None
 _generator_section = None
+
+_audio_clip_popover = None
+_audio_clip_menu = None
+_sync_section = None
+_audio_mute_menu = None 
+_audio_markers_submenu = None
+_audio_markers_submenu_static_items = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -76,15 +84,13 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         audio_section.append_submenu(_("Audio Edit"), _audio_submenu)
         _clip_menu.append_section(None, audio_section)
 
-        clip_data_section = Gio.Menu.new()
-
-        properties_submenu = _get_properties_submenu(callback)
-        clip_data_section.append_submenu(_("Properties"), properties_submenu)
-
         _generator_section = Gio.Menu.new()
         _fill_generator_section(_generator_section, clip, callback)
         _clip_menu.append_section(None, _generator_section)
-         
+        
+        clip_data_section = Gio.Menu.new()
+        properties_submenu = _get_properties_submenu(callback)
+        clip_data_section.append_submenu(_("Properties"), properties_submenu)
         _markers_submenu = Gio.Menu.new()
         _markers_submenu_static_items = Gio.Menu.new()
         _fill_markers_menu(_markers_submenu, _markers_submenu_static_items, clip, callback)
@@ -92,7 +98,6 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         markers_section_all.append_section(None, _markers_submenu)
         markers_section_all.append_section(None, _markers_submenu_static_items)
         clip_data_section.append_submenu(_("Markers"), markers_section_all)
-
         add_menu_action(clip_data_section, _("Clip Info"), "clipmenu.openinmonitor.clipinfo",  ("clip_info", None), callback)
         _clip_menu.append_section(None, clip_data_section)
 
@@ -121,7 +126,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_filters_menus(add_filter_menu, callback, "add_filter", "clipmenu.addfilter.")
         filters_section.append_submenu(_("Add Filter"), add_filter_menu)
         clone_sub_menu = Gio.Menu.new()
-        _fill_clone_filters_menu(clone_sub_menu, callback, False)
+        _fill_clone_filters_menu(clone_sub_menu, callback, False, False)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
         add_menu_action(filters_section, _("Clear Filters"), "clipmenu.clearfilters",  ("clear_filters", None), callback)
         _clip_menu.append_section(None, filters_section)
@@ -163,6 +168,77 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
     rect = guipopover.create_rect(x, y)
     _clip_popover = guipopover.new_mouse_popover(widget, _clip_menu, rect, Gtk.PositionType.TOP)
 
+
+def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
+    global _audio_clip_popover, _audio_clip_menu, _sync_section, _audio_mute_menu, \
+    _audio_markers_submenu, _audio_markers_submenu_static_items
+
+    if _audio_clip_menu == None:
+        _audio_clip_menu = guipopover.menu_clear_or_create(_audio_clip_menu)
+        
+        monitor_section = Gio.Menu.new()
+        add_menu_action(monitor_section, _("Open in Clip Monitor"), "audioclipmenu.openinmonitor", ("open_in_clip_monitor", None), callback)
+        _audio_clip_menu.append_section(None, monitor_section)
+
+        _sync_section = Gio.Menu.new()
+        _fill_audio_clip_sync_section(_sync_section, clip, callback)
+        _audio_clip_menu.append_section(None, _sync_section)
+
+        mute_section = Gio.Menu.new()
+        _audio_mute_menu = Gio.Menu.new()
+        _fill_audio_mute_menu(_audio_mute_menu, clip, callback)
+        mute_section.append_submenu(_("Mute"), _audio_mute_menu)
+        _audio_clip_menu.append_section(None, mute_section)
+
+        clip_data_section = Gio.Menu.new()
+        properties_submenu = _get_properties_submenu(callback, True)
+        clip_data_section.append_submenu(_("Properties"), properties_submenu)
+        _audio_markers_submenu = Gio.Menu.new()
+        _audio_markers_submenu_static_items = Gio.Menu.new()
+        _fill_markers_menu(_audio_markers_submenu, _audio_markers_submenu_static_items, clip, callback, True)
+        markers_section_all = Gio.Menu.new()
+        markers_section_all.append_section(None, _audio_markers_submenu)
+        markers_section_all.append_section(None, _audio_markers_submenu_static_items)
+        clip_data_section.append_submenu(_("Markers"), markers_section_all)
+        _audio_clip_menu.append_section(None, clip_data_section)
+        
+        edit_section = Gio.Menu.new()
+        select_menu = Gio.Menu.new()
+        _fill_select_menu(select_menu, callback, True)
+        edit_section.append_submenu(_("Select"), select_menu)
+        edit_actions_menu = Gio.Menu.new()
+        _fill_audio_edit_actions_menu(edit_actions_menu, callback)
+        edit_section.append_submenu(_("Edit"), edit_actions_menu)
+        _audio_clip_menu.append_section(None, edit_section)
+
+        filters_section = Gio.Menu.new()
+        audio_filters_menu = Gio.Menu.new()
+        _fill_audio_filters_add_menu_item(audio_filters_menu, callback)
+        filters_section.append_submenu(_("Add Filter"), audio_filters_menu)
+        clone_sub_menu = Gio.Menu.new()
+        _fill_clone_filters_menu(clone_sub_menu, callback, False, True)
+        filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
+        add_menu_action(filters_section, _("Clear Filters"), "audioclipmenu.clearfilters",  ("clear_filters", None), callback)
+        _audio_clip_menu.append_section(None, filters_section)
+
+        edit_bottom_section = Gio.Menu.new()
+        add_menu_action(edit_bottom_section, _("Edit Filters"), "audioclipmenu.openineditor",  ("open_in_editor", None), callback)
+        _audio_clip_menu.append_section(None, edit_bottom_section)
+        
+    else:
+        guipopover.menu_clear_or_create(_sync_section)
+        _fill_audio_clip_sync_section(_sync_section, clip, callback)
+
+        guipopover.menu_clear_or_create(_audio_mute_menu)
+        _fill_audio_mute_menu(_audio_mute_menu, clip, callback)
+
+        guipopover.menu_clear_or_create(_audio_markers_submenu)
+        guipopover.menu_clear_or_create(_audio_markers_submenu_static_items)
+        _fill_markers_menu(_audio_markers_submenu, _audio_markers_submenu_static_items, clip, callback, True)
+        
+    rect = guipopover.create_rect(x, y)
+    _audio_clip_popover = guipopover.new_mouse_popover(widget, _audio_clip_menu, rect, Gtk.PositionType.TOP)
+
 def _fill_audio_menu(audio_submenu, clip, track, callback):
     if track.type == appconsts.VIDEO:
         active = True
@@ -188,38 +264,47 @@ def _fill_audio_menu(audio_submenu, clip, track, callback):
     active = (clip.mute_filter==None)
     add_menu_action(audio_submenu, _("Mute Audio"), "clipmenu.muteclip", ("mute_clip", True), callback, active)
 
-def _get_properties_submenu(callback):
+def _get_properties_submenu(callback, is_audio_properties=False):
+    if is_audio_properties == True:
+        pre_id = "audio"
+    else:
+        pre_id = ""
 
     properties_submenu = Gio.Menu.new()
 
-    add_menu_action(properties_submenu, _("Rename Clip"), "clipmenu.rename", ("rename_clip", None), callback)
+    add_menu_action(properties_submenu, _("Rename Clip"), pre_id + "clipmenu.rename", ("rename_clip", None), callback)
     
     color_submenu = Gio.Menu.new()
-    add_menu_action(color_submenu, _("Default"), "clipmenu.colordefault", ("clip_color", "default"), callback)
-    add_menu_action(color_submenu, _("Red"), "clipmenu.colorred", ("clip_color", "red"), callback)
-    add_menu_action(color_submenu, _("Green"), "clipmenu.colorgreen", ("clip_color", "green"), callback)
-    add_menu_action(color_submenu, _("Blue"), "clipmenu.colorblue", ("clip_color", "blue"), callback)
-    add_menu_action(color_submenu, _("Orange"), "clipmenu.colororange", ("clip_color", "orange"), callback)
-    add_menu_action(color_submenu, _("Brown"), "clipmenu.colorbrown",  ("clip_color", "brown"), callback)
-    add_menu_action(color_submenu, _("Olive"), "clipmenu.colorolive",  ("clip_color", "olive"), callback)
+    add_menu_action(color_submenu, _("Default"), pre_id + "clipmenu.colordefault", ("clip_color", "default"), callback)
+    add_menu_action(color_submenu, _("Red"), pre_id + "clipmenu.colorred", ("clip_color", "red"), callback)
+    add_menu_action(color_submenu, _("Green"), pre_id + "clipmenu.colorgreen", ("clip_color", "green"), callback)
+    add_menu_action(color_submenu, _("Blue"), pre_id + "clipmenu.colorblue", ("clip_color", "blue"), callback)
+    add_menu_action(color_submenu, _("Orange"), pre_id + "clipmenu.colororange", ("clip_color", "orange"), callback)
+    add_menu_action(color_submenu, _("Brown"), pre_id + "clipmenu.colorbrown",  ("clip_color", "brown"), callback)
+    add_menu_action(color_submenu, _("Olive"), pre_id + "clipmenu.colorolive",  ("clip_color", "olive"), callback)
     properties_submenu.append_submenu(_("Clip Color"), color_submenu)
 
     return properties_submenu
 
-def _fill_markers_menu(markers_submenu, markers_submenu_static_items, clip, callback):
+def _fill_markers_menu(markers_submenu, markers_submenu_static_items, clip, callback, is_audio_markers=False):
+    if is_audio_markers == True:
+        pre_id = "audio"
+    else:
+        pre_id = ""
+        
     markers_exist = len(clip.markers) != 0
     if markers_exist:
         for i in range(0, len(clip.markers)):
             marker = clip.markers[i]
             name, frame = marker
             item_str = utils.get_tc_string(frame) + " " + name
-            add_menu_action(markers_submenu, item_str, "clipmenu.markeritems." + str(i),  ("go_to_clip_marker", str(i)), callback)
+            add_menu_action(markers_submenu, item_str, pre_id + "clipmenu.markeritems." + str(i),  ("go_to_clip_marker", str(i)), callback)
     else:
-            add_menu_action(markers_submenu, _("No Clip Markers"), "clipmenu.markeritems.nomarkers",  (None, None), callback, False)
+            add_menu_action(markers_submenu, _("No Clip Markers"), pre_id + "clipmenu.markeritems.nomarkers",  (None, None), callback, False)
 
-    add_menu_action(markers_submenu_static_items, _("Add Clip Marker At Playhead Position"), "clipmenu.markeritems.addclipmarker",  ("add_clip_marker", None), callback)
-    add_menu_action(markers_submenu_static_items, _("Delete Clip Marker At Playhead Position"), "clipmenu.markeritems.deleteclipmarker",  ("delete_clip_marker", None), callback)
-    add_menu_action(markers_submenu_static_items, _("Delete All Clip Markers"), "clipmenu.markeritems.deleteall",  ("deleteall_clip_markers", None), callback)
+    add_menu_action(markers_submenu_static_items, _("Add Clip Marker At Playhead Position"), pre_id + "clipmenu.markeritems.addclipmarker",  ("add_clip_marker", None), callback)
+    add_menu_action(markers_submenu_static_items, _("Delete Clip Marker At Playhead Position"), pre_id + "clipmenu.markeritems.deleteclipmarker",  ("delete_clip_marker", None), callback)
+    add_menu_action(markers_submenu_static_items, _("Delete All Clip Markers"), pre_id + "clipmenu.markeritems.deleteall",  ("deleteall_clip_markers", None), callback)
 
 def _fill_reload_section(reload_section, clip, callback):
     if clip.media_type != appconsts.PATTERN_PRODUCER and clip.container_data == None:
@@ -266,9 +351,13 @@ def _fill_tool_integration_menu(tools_sub_menu, clip, callback):
         add_menu_action(tools_sub_menu, copy.copy(integrator.tool_name), "clipmenu." + str(i), (None, None),  integrator.export_callback, active)
         i += 1
 
-def _fill_select_menu(select_menu, callback):
-    add_menu_action(select_menu, _("All Clips After"), "clipmenu.selectallafter",  ("select_all_after", None), callback)
-    add_menu_action(select_menu, _("All Clips Before"), "clipmenu.selectallbefore",  ("select_all_before", None), callback)
+def _fill_select_menu(select_menu, callback, is_audio_select=False):
+    if is_audio_select == True:
+        pre_id = "audio"
+    else:
+        pre_id = ""
+    add_menu_action(select_menu, _("All Clips After"), pre_id + "clipmenu.selectallafter",  ("select_all_after", None), callback)
+    add_menu_action(select_menu, _("All Clips Before"), pre_id + "clipmenu.selectallbefore",  ("select_all_before", None), callback)
 
 def _fill_filters_menus(sub_menu, callback, item_id, action_id):
     j = 0
@@ -283,10 +372,13 @@ def _fill_filters_menus(sub_menu, callback, item_id, action_id):
             i += 1
         j += 1
 
-def _fill_clone_filters_menu(clone_sub_menu, callback, is_multi=False):
-    add_menu_action(clone_sub_menu, _("From Next Clip"), "clipmenu.clonefromnext", ("clone_filters_from_next", is_multi), callback)
-    add_menu_action(clone_sub_menu, _("From Previous Clip"), "clipmenu.clonefromprev", ("clone_filters_from_prev", is_multi), callback)
-
+def _fill_clone_filters_menu(clone_sub_menu, callback, is_multi=False, is_audio=False):
+    if is_audio == True:
+        preid = "audio"
+    else:
+        preid = ""
+    add_menu_action(clone_sub_menu, _("From Next Clip"), preid + "clipmenu.clonefromnext", ("clone_filters_from_next", is_multi), callback)
+    add_menu_action(clone_sub_menu, _("From Previous Clip"), preid + "clipmenu.clonefromprev", ("clone_filters_from_prev", is_multi), callback)
 
 def _fill_compositors_section(compositor_section, clip, track, callback):
     if track.id <= current_sequence().first_video_index or current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -315,6 +407,50 @@ def _fill_generator_section(generator_section, clip, callback):
     add_menu_action(generator_section, _("Create Cloned Generator..."), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, genactive)
     add_menu_action(generator_section, _("Generator/Container Render Actions"), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, active)
 
+def _fill_audio_clip_sync_section(sync_section, clip, callback):
+    is_synched = (clip.sync_data != None)
+    add_menu_action(sync_section, _("Resync"), "audioclipmenu.resync", ("resync", None), callback, is_synched)
+    add_menu_action(sync_section, _("Clear Sync Relation"), "audioclipmenu.clearsyncrel", ("clear_sync_rel", None), callback, is_synched)
+    add_menu_action(sync_section, _("Select Sync Parent Clip..."), "audioclipmenu.setmaster", ("set_master", None), callback, (not is_synched))
+
+def _fill_audio_mute_menu(audio_mute_menu, clip, callback):
+    active = not(clip.mute_filter==None)
+    add_menu_action(audio_mute_menu, _("Unmute"), "audioclipmenu.unmuteclip", ("mute_clip", False), callback, active)
+
+    active = (clip.mute_filter==None)
+    add_menu_action(audio_mute_menu, _("Mute Audio"), "audioclipmenu.muteclip", ("mute_clip", True), callback, active)
+
+def _fill_audio_edit_actions_menu(edit_actions_menu, callback):
+    kf_section = Gio.Menu.new()
+    add_menu_action(edit_actions_menu, _("Volume Keyframes"), "audioclipmenu.volumekfs",  ("volumekf", None), callback)
+    edit_actions_menu.append_section(None, kf_section)
+
+    del_section = Gio.Menu.new()
+    add_menu_action(del_section,_("Delete"), "audioclipmenu.delete",  ("delete", None), callback)
+    add_menu_action(del_section,_("Lift"), "audioclipmenu.delete",  ("lift", None), callback)
+    edit_actions_menu.append_section(None, del_section)
+
+    length_section = Gio.Menu.new()
+    add_menu_action(length_section, _("Set Clip Length..."), "audioclipmenu.length",  ("length", None), callback)
+    add_menu_action(length_section, _("Stretch Over Next Blank"), "audioclipmenu.stretchnext",  ("stretch_next", None), callback)
+    add_menu_action(length_section,_("Stretch Over Prev Blank"), "audioclipmenu.stretchprev",  ("stretch_prev", None), callback)
+    edit_actions_menu.append_section(None, length_section)
+
+def _fill_audio_filters_add_menu_item(audio_filters_menu, callback):
+    audio_groups = mltfilters.get_audio_filters_groups()
+    j = 0
+    for group in audio_groups:
+        if group == None:
+            continue
+        group_name, filters_array = group
+        
+        group_menu = Gio.Menu.new()
+        audio_filters_menu.append_submenu(group_name, group_menu)
+        i = 0
+        for filter_info in filters_array:
+            add_menu_action(group_menu, translations.get_filter_name(filter_info.name), "audioclipmenu.addfilter." + str(j) + "." + str(i), ("add_filter", filter_info), callback)
+            i += 1
+        j += 1
 
 """
 def _get_edit_menu_item(event, clip, track, callback):
