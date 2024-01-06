@@ -1650,6 +1650,7 @@ def get_compositor_track_select_combo(source_track, target_track, callback):
     return tracks_combo
 
 # -------------------------------------------- context menus
+"""
 def display_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
@@ -2333,7 +2334,7 @@ def _get_clip_markers_menu_item(event, clip, track, callback):
     markers_menu_item.set_submenu(markers_menu)
     markers_menu_item.show_all()
     return markers_menu_item
-
+"""
 def _set_non_sensitive_if_state_matches(mutable, item, state):
     if mutable.mute_state == state:
         item.set_sensitive(False)
@@ -2364,6 +2365,7 @@ def _get_image_menu_item(img, text, callback, data):
     item.set_label(text)
     item.show()
     return item
+
 
 # --------------------------------------------------- profile info gui
 def get_profile_info_box(profile, show_description=True):

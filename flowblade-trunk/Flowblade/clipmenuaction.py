@@ -44,7 +44,6 @@ import containerclip
 import dialogs
 import dialogutils
 import gui
-import guicomponents
 import guipopoverclip
 import edit
 from editorstate import current_sequence
@@ -65,13 +64,20 @@ import updater
 import userfolders
 import utils
 
-
+# --------------------------------------------- menu data for each invocation.
 _popover_clip_data = None # clip, track and press x cannot passed through using Gio.MenuItems and Gio.SimpleAction objects
+                          # so they saved here before each menu invocation.
+_compositor_data = None # clip, track and press x cannot passed through using Gio.MenuItems and Gio.SimpleAction objects
                           # so they saved here before each menu invocation.
 
 # toolsintegrator.py needs this to launch tools
 def get_popover_clip_data():
     return _popover_clip_data
+
+# Edit event sets this because we cannot pass data through menu with Gio.Menu anymore.
+def set_compositor_data(compositor):
+    global _compositor_data
+    _compositor_data = compositor
 
 # ---------------------------------- clip menu
 def display_clip_menu(y, event, frame):
@@ -101,18 +107,12 @@ def display_clip_menu(y, event, frame):
             
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:
-            #guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
-            guicomponents.display_clip_popup_menu(event, pressed_clip, \
-                                              track, _clip_menu_item_activated)
+            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
         else:
             guipopoverclip.multi_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
-            #guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
-            #                                    track, _clip_menu_item_activated)
 
     elif track.type == appconsts.AUDIO:
         guipopoverclip.audio_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
-        #guicomponents.display_audio_clip_popup_menu(event, pressed_clip, \
-        #                                            track, _clip_menu_item_activated)
 
     return True
 
@@ -131,8 +131,8 @@ def _clip_popover_menu_item_activated(action, variant, data):
     handler_data = (clip, track, item_id, item_data)
     handler(handler_data)
 
-def _compositor_menu_item_activated(widget, data):
-    action_id, compositor = data
+def compositor_menu_item_activated(action, variant, action_id):
+    compositor = _compositor_data
     if action_id == "open in editor":
         compositeeditor.set_compositor(compositor)
     elif action_id == "delete":
@@ -815,7 +815,7 @@ def _set_audio_sync_clip(data):
     audiosync.init_select_tline_sync_clip(_get_data_with_xpos(data))
 
 # Functions to handle popup menu selections for strings 
-# set as activation messages in guicomponents.py
+# set as activation messages in guipopoverclip.py
 # activation_message -> _handler_func
 POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "open_in_editor":_open_clip_in_effects_editor,

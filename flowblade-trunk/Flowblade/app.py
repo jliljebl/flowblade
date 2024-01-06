@@ -444,7 +444,8 @@ def monkeypatch_callbacks():
     medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert
 
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
-    editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
+    editevent.compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated
+    editevent.set_compositor_data = clipmenuaction.set_compositor_data
     
     # Posionbar in gmic.py does not need trimmodes.py dependency and is avoided.
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode

@@ -49,7 +49,7 @@ from editorstate import timeline_visible
 from editorstate import EDIT_MODE
 import editorpersistance
 import gui
-import guicomponents
+import guipopoverclip
 import kftoolmode
 import medialog
 import modesetting
@@ -66,7 +66,7 @@ import userfolders
 # functions are monkeypatched in at app.py 
 display_clip_menu_pop_up = None
 compositor_menu_item_activated = None
-
+set_compositor_data = None
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos):
@@ -309,7 +309,10 @@ def tline_canvas_mouse_pressed(event, frame):
                     return
             if event.button == 3:
                 compositormodes.set_compositor_selected(hit_compositor)
-                guicomponents.display_compositor_popup_menu(event, hit_compositor,
+                set_compositor_data(hit_compositor)
+                guipopoverclip.compositor_popover_menu_show(gui.tline_canvas.widget,
+                                                            event.x, event.y, 
+                                                            hit_compositor, 
                                                             compositor_menu_item_activated)
                 return
             elif event.button == 2:
