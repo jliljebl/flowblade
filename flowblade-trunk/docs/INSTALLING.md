@@ -46,7 +46,7 @@ sudo apt-get install flowblade
 _Latest release_. Visit the <a href="https://archlinux.org/packages/extra/any/flowblade/">Package info</a> page or use terminal command:
 
 ```bash
-yaourt -S flowblade
+pacman -S flowblade
 ```
 
 _Git version_. Visit the <a href="https://aur.archlinux.org/packages/flowblade-git/">AUR</a> page or use terminal command:
