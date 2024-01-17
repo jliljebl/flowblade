@@ -352,8 +352,8 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
         _transition_menu = guipopover.menu_clear_or_create(_transition_menu)
 
         clip_section = Gio.Menu.new()
-        add_menu_action(clip_section, _("Rerender"), "transitionclipmenu.rerender",  "re_render", callback)
-        add_menu_action(clip_section, _("Edit Filters"), "transitionclipmenu.openineditor",  "open_in_editor", callback)
+        add_menu_action(clip_section, _("Rerender"), "transitionclipmenu.rerender", ("re_render", None), callback)
+        add_menu_action(clip_section, _("Edit Filters"), "transitionclipmenu.openineditor", ("open_in_editor", None), callback)
         _transition_menu.append_section(None, clip_section)
 
         mute_section = Gio.Menu.new()
