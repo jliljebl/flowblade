@@ -2189,3 +2189,26 @@ def no_timeline_ranges_dialog():
     primary_txt = _("Cannot log Ranges from Timelime!")
     secondary_txt = _("'Range Log' functionality is intented to log areas of interest\nin Media Items.\n\nTo save interesting positions or ranges on Timeline use\nthe 'Timeline Markers' functionality.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def add_compositor_dialog(compositors, callback):
+    dialog = Gtk.Dialog(_("Add Compositor To Clip"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Add Compositor"), Gtk.ResponseType.ACCEPT))
+
+    select_combo = Gtk.ComboBoxText()
+    for comp in compositors:
+        name, compositor_type = comp
+        select_combo.append_text(name)
+    select_combo.set_active(0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.add(select_combo)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, compositors, select_combo)
+    dialog.show_all()

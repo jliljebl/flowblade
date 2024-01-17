@@ -295,35 +295,39 @@ def _add_filter_multi(data):
     clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
 def _add_compositor(data):
-    clip, track, item_id, item_data = data
-    x, compositor_type, add_compositors_is_multi_selection = item_data
+    # Get the currently available compositors. 
+    compositors = []
+    for i in range(0, len(mlttransitions.compositors)):
+        compositor = mlttransitions.compositors[i]
+        name, compositor_type = compositor
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
+        compositors.append(compositor)
+    
+    for i in range(0, len(mlttransitions.wipe_compositors)):
+        alpha_combiner = mlttransitions.wipe_compositors[i]
+        name, compositor_type = alpha_combiner
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
+        compositors.append(alpha_combiner)
+    
+    dialogs.add_compositor_dialog(compositors, _add_compositor_dialog_callback)
+
+def _add_compositor_dialog_callback(dialog, response_id, compositors, combo):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    name, compositor_type = compositors[combo.get_active()]
+    dialog.destroy()
+
+    clip, track, x = _popover_clip_data
+    add_compositors_is_multi_selection = False
 
     target_track_index = track.id - 1
 
     a_track = target_track_index
     b_track = track.id
-
-    if add_compositors_is_multi_selection == True:
-        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-            composited_clip = track.clips[clip_index]
-            if composited_clip.is_blanck_clip == True:
-                continue
-            compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
-            clip_length = composited_clip.clip_out - composited_clip.clip_in
-            compositor_out = compositor_in + clip_length
-            
-            edit_data = {"origin_clip_id":composited_clip.id,
-                        "in_frame":compositor_in,
-                        "out_frame":compositor_out,
-                        "a_track":a_track,
-                        "b_track":b_track,
-                        "compositor_type":compositor_type,
-                        "clip":composited_clip}
-            action = edit.add_compositor_action(edit_data)
-            action.do_edit()
-        
-        updater.repaint_tline()
-        return
 
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
