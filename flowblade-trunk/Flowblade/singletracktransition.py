@@ -292,7 +292,7 @@ def re_render_transition(data):
         return
     
     from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index, color_str = clip.creation_data
+    sorted_wipe_luma_index = clip.creation_data
     
     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
     to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
@@ -328,7 +328,7 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
     clip = transition_data["clip"]
     track =  transition_data["track"]
     from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index, color_str = clip.creation_data
+    sorted_wipe_luma_index = clip.creation_data
     
     trans_index = track.clips.index(clip)
 
@@ -340,8 +340,7 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index,
-                                                                        color_str)
+                                                                        sorted_wipe_luma_index)
     
 
     # Save transition data into global variable to be available at render complete callback

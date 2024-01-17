@@ -56,6 +56,7 @@ import mlttransitions
 import modesetting
 import movemodes
 import projectaction
+import singletracktransition
 import syncsplitevent
 import titler
 import tlinewidgets
@@ -433,10 +434,19 @@ def _title_edit_callback(clip, track, new_title_path, new_titler_data):
 
 def _re_render_transition_or_fade(data):
     clip, track, item_id, item_data = data
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+
+    # Fix for changed number of creation data params
+    try:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+    except:
+        print("except")
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
+
+    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index)
+
     name, type_id = mlttransitions.rendered_transitions[transition_type_index]
     if type_id < appconsts.RENDERED_FADE_IN:
-        tlineaction.re_render_transition(data)
+        singletracktransition.re_render_transition(data)
     else:
         tlineaction.re_render_fade(data)
         
