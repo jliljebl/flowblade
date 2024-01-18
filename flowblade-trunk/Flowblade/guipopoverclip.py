@@ -406,6 +406,10 @@ def _fill_audio_menu(audio_submenu, clip, track, callback):
         active = False
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
+    info = utils.get_file_producer_info(clip)
+    channels = int(info["channels"])
+    if channels == 0:
+        active = False
     add_menu_action(audio_submenu, _("Select Clip to Audio Sync With..."), "clipmenu.setaudiosyncclip", ("set_audio_sync_clip", None), callback, active)
         
     active = not(clip.mute_filter==None)

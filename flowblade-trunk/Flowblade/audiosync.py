@@ -128,8 +128,7 @@ def init_select_tline_sync_clip(popup_data):
     _tline_sync_data.origin_clip = clip
     _tline_sync_data.origin_track = track
     _tline_sync_data.origin_clip_index = clip_index
-    
-    
+
 def select_sync_clip_mouse_pressed(event, frame):
     sync_clip = _get_sync_tline_clip(event, frame)
 
@@ -137,7 +136,6 @@ def select_sync_clip_mouse_pressed(event, frame):
         return # selection wasn't good
     
     if utils.is_mlt_xml_file(sync_clip.path) == True:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
         dialogutils.warning_message(_("Cannot Timeline Audio Sync with MLT XML Container Clips!"), 
                                     _("Audio syncing for MLT XML Container Clips is not supported."),
                                     gui.editor_window.window,
