@@ -676,7 +676,6 @@ def _clone_filters_from_prev(data):
             return 
     clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
-    print("2")
     
 def _do_filter_clone(clip, clone_clip):
     if clone_clip.is_blanck_clip:
@@ -828,6 +827,23 @@ def _split_audio_synched(data):
 def _set_audio_sync_clip(data):
     audiosync.init_select_tline_sync_clip(_get_data_with_xpos(data))
 
+def _render_tline_generator(data):
+    clip, track, item_id, item_data = data
+    clip, track, x = _popover_clip_data
+    containerclip.render_tline_generator_clip(clip, _render_tline_generator_callback)
+
+def _render_tline_generator_callback(combo):
+    clip, track, x = _popover_clip_data
+    render_data = (clip, None, None, None) # We keep old data package format for now.
+    if combo.get_active() == 0: # 0 is render full media, see containeractions.set_video_endoding()
+        containerclip.render_full_media(render_data)
+    else:
+        containerclip.render_clip_length(render_data)
+
+    """
+    TODO: see if "cc_render_full_media", "cc_render_settings" ca be deleted below.
+    """
+
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guipopoverclip.py
 # activation_message -> _handler_func
@@ -874,7 +890,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "multi_split_audio":_multi_split_audio,
                   "multi_split_audio_synched":_multi_split_audio_synched,
                   "cc_render_full_media":containerclip.render_full_media,
-                  "cc_render_clip":containerclip.render_clip_length,
+                  "cc_render_clip":_render_tline_generator,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_render_settings":containerclip.set_render_settings,
                   "cc_edit_program":containerclip.edit_program,

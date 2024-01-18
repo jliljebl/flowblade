@@ -355,7 +355,7 @@ class AbstractContainerActionObject:
 
         return rendered_clip
 
-    def set_video_endoding(self, clip, callback=None):
+    def set_video_endoding(self, clip, callback=None, show_render_buttons=False):
         self.external_encoding_callback = callback
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
         # These need to re-initialized always when using this module.
@@ -367,27 +367,51 @@ class AbstractContainerActionObject:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
         encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
+        if show_render_buttons == True:
+            render_combo = Gtk.ComboBoxText()
+            render_combo.append_text(_("Render Full Media"))
+            render_combo.append_text(_("Render Clip Length"))
+            render_combo.set_active(0)
 
-        align = dialogutils.get_default_alignment(encoding_panel)
+        vbox = Gtk.VBox()
+        if show_render_buttons == True:
+            vbox.pack_start(render_combo, False, False, 0)
+        vbox.pack_start(encoding_panel, False, False, 0)
         
-        dialog = Gtk.Dialog(_("Container Clip Render Settings"),
+        align = dialogutils.get_default_alignment(vbox)
+
+        if show_render_buttons == True:
+            title = _("Container/Generator Clip Render")
+            ok_text =  _("Render")
+        else:
+            title = _("Set Render Encoding Settings")
+            ok_text =  _("Set Encoding")
+                        
+        dialog = Gtk.Dialog(title,
                             gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Cancel"), Gtk.ResponseType.REJECT,
-                             _("Set Encoding"), Gtk.ResponseType.ACCEPT))
+                             ok_text, Gtk.ResponseType.ACCEPT))
         dialog.vbox.pack_start(align, True, True, 0)
         dialogutils.set_outer_margins(dialog.vbox)
         dialog.set_resizable(False)
-
         dialog.connect('response', self.encode_settings_callback)
+                    
+        if show_render_buttons == True:
+            self.render_combo = render_combo
+        else:
+            self.render_combo = None
         dialog.show_all()
 
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             self.container_data.render_data = toolsencoding.get_render_data_for_current_selections()
             if self.external_encoding_callback != None:
-                self.external_encoding_callback(self.container_data.render_data)
-
+                if self.render_combo == None:
+                    self.external_encoding_callback(self.container_data.render_data)
+                else:
+                    self.external_encoding_callback(self.render_combo)
+                    
         dialog.destroy()
         
     def clone_clip(self, old_clip):

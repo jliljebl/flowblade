@@ -112,6 +112,11 @@ class ContainerClipData:
 
 
 # -------------------------------------------------------- Clip menu actions
+
+def render_tline_generator_clip(clip, callback):
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.set_video_endoding(None, callback, True)
+
 def render_full_media(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)

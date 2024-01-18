@@ -564,7 +564,8 @@ def _fill_generator_section(generator_section, clip, callback):
         genactive = False
     add_menu_action(generator_section, _("Edit Generator Properties..."), "clipmenu.ccedit",  ("cc_edit_program", None), callback, genactive)
     add_menu_action(generator_section, _("Create Cloned Generator..."), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, genactive)
-    add_menu_action(generator_section, _("Generator/Container Render Actions"), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, active)
+    add_menu_action(generator_section, _("Generator/Container Render Actions"), "clipmenu.ccrender",  ("cc_render_clip", None), callback, active)
+    add_menu_action(generator_section, _("Switch to Unrendered Media"), "clipmenu.ccgotounrendered", ("cc_go_to_underdered", None),  callback, active)
 
 def _fill_audio_clip_sync_section(sync_section, clip, callback):
     is_synched = (clip.sync_data != None)
