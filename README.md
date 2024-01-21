@@ -9,8 +9,8 @@
 
 ```
 SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
-``````
-**More info on Issue here: Issue #1140**
+```
+**More info on Issue here: [Issue #1134](https://github.com/jliljebl/flowblade/issues/1134)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
