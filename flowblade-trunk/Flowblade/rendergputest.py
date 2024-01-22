@@ -132,8 +132,12 @@ class GPUTestRunnerThread(threading.Thread):
             item_write_file = afw.get_file()
             pickle.dump(args_vals_list, item_write_file)
 
+        # Get unique string from enc name to save logs for all tests.
+        enc_name = enc_opt.name.replace(" ", "")
+        enc_name = enc_name.replace("/", "")
+
         # Launch test render
-        FLOG = open(userfolders.get_cache_dir() + "log_gputest_render", 'w')
+        FLOG = open(userfolders.get_cache_dir() + "log_gputest_render_" + enc_name, 'w')
 
         process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegputestrender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         try:

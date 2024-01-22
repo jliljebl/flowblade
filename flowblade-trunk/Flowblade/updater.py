@@ -131,13 +131,7 @@ def window_resized():
     repaint_tline()
 
     return False
-    """
-    except:
-        # Sometimes allotion might not be available.
-        GLib.timeout_add(200, window_resized)
-        print("window resized FAILED")
-        return False
-    """
+
     
 # --------------------------------- timeline
 # --- REPAINT

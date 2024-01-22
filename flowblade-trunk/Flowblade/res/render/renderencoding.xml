@@ -120,10 +120,10 @@
         <profile args="f=mp4 acodec=aac ab=256k vcodec=h264_nvenc preset=medium vb=%BITRATE% bufsize=%BITRATE% vprofile=high bf=3 b_ref_mode=2 temporal-aq=1 rc_lookahead=20 vsync=0"/>
     </encodingoption>
     <encodingoption name="NVENC HEVC / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
-        <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main"/>
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main b_ref_mode=0"/>
     </encodingoption>
      <encodingoption name="NVENC HEVC HDR / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
-         <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main10 pix_fmt=p010le"/>
+         <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main10 b_ref_mode=0 pix_fmt=p010le"/>
      </encodingoption>
 
     <!-- VAAPI -->
