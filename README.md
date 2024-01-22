@@ -1,11 +1,16 @@
+
+
+
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
+**Fix for non-working video preview issue.**
 
-**New release 2.12 now available.**
+**Start application from terminal with command:**
 
-**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
-
-**Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
+```
+SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
+```
+**More info on Issue here: [Issue #1134](https://github.com/jliljebl/flowblade/issues/1134)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
