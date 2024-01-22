@@ -133,7 +133,8 @@ class GPUTestRunnerThread(threading.Thread):
             pickle.dump(args_vals_list, item_write_file)
 
         # Get unique string from enc name to save logs for all tests.
-        enc_name = enc_opt.name.replace(" ", "")
+        enc_name = enc_opt.name.split(".")[0]
+        enc_name = enc_name.replace(" ", "")
         enc_name = enc_name.replace("/", "")
 
         # Launch test render
