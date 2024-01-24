@@ -1013,8 +1013,8 @@
         <property name="av.x3" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x3">550</property>
         <property name="av.y3" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y3">420</property>
     </filter>
-    
-    
+
+
 
     <!-- FIX -->
     <filter id="frei0r.hqdn3d">

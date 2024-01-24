@@ -64,7 +64,7 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
-    
+
     # Handle ESCAPE.
     if event.keyval == Gdk.KEY_Escape:
         if editorstate.current_is_move_mode() == False:
