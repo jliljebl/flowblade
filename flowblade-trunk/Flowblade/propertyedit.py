@@ -286,6 +286,17 @@ class AbstractProperty:
         out_norm = out_frac / out_range
         return in_l + (out_norm * in_range)
 
+    def get_page_factor(self, upper, lower, step):
+        range_count = int(abs(float(upper)-float(lower))/float(step)) # number of steps in the range. 
+        if range_count > 50: 
+            page_factor=10 
+        elif range_count > 25:
+            page_factor=5 
+        else:
+            page_factor=1
+        
+        return page_factor
+
     def get_input_range_adjustment(self):
         try:
             step = propertyparse.get_args_num_value(self.args[STEP])
@@ -293,9 +304,10 @@ class AbstractProperty:
             step = DEFAULT_STEP
         lower, upper = self.input_range
         value = self.get_current_in_value()
-
-        return Gtk.Adjustment(value=float(value), lower=float(lower), upper=float(upper), step_increment=float(step))
+        page_factor = self.get_page_factor(upper, lower, step)
     
+        return Gtk.Adjustment(value=float(value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
+            
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
         out_value = self.get_out_value(value)
@@ -504,8 +516,9 @@ class SingleKeyFrameProperty(EditableProperty):
         val = self.value.strip('"')
         epxr_sides = val.split("=")
         in_value = self.get_in_value(float(epxr_sides[1]))
-
-        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step))
+        page_factor = self.get_page_factor(upper, lower, step)
+    
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -572,8 +585,9 @@ class OpacityInGeomSKFProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
+        page_factor = self.get_page_factor(upper, lower, step)
 
-        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step))
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -602,8 +616,9 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
+        page_factor = self.get_page_factor(upper, lower, step)
 
-        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step))
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, opacity)
@@ -660,8 +675,10 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
+        page_factor = self.get_page_factor(upper, lower, step)
 
-        return Gtk.Adjustment(value=float(1.0), lower=float(lower), upper=float(upper), step_increment=float(step)) # Value set later to first kf value
+        return Gtk.Adjustment(value=float(1.0), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
+
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
@@ -725,7 +742,7 @@ class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
 
 class KeyFrameHCSFilterProperty(EditableProperty):
     """
-    Coverts array of keyframe tuples to string of type "0=0.2;123=0.143"
+    Converts array of keyframe tuples to string of type "0=0.2;123=0.143"
     """
     def get_input_range_adjustment(self):
         try:
@@ -733,8 +750,9 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
- 
-        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step)) # Value set later to first kf value
+        page_factor = self.get_page_factor(upper, lower, step)
+
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
         
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -781,8 +799,9 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-
-        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step)) # Value set later to first kf value
+        page_factor = self.get_page_factor(upper, lower, step)
+    
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -889,8 +908,9 @@ class MultipartKeyFrameProperty(AbstractProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-
-        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step)) # Value set later to first kf value
+        page_factor = self.get_page_factor(upper, lower, step)
+    
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
