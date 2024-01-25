@@ -98,6 +98,17 @@ def node_list_to_extraeditors_array(node_list):
         editors.append(e_name)
     return editors
 
+def node_list_to_extraeditors_args_dict(node_list):
+    args_dict = {}
+    for node in node_list:
+        e_name = node.getAttribute(NAME)
+        args = node.getAttribute(ARGS)
+        if args == "":
+            args = None
+        args_dict[e_name] = args
+
+    return args_dict
+
 def args_string_to_args_dict(args_str):
     """
     Returns key->value dict of property args.

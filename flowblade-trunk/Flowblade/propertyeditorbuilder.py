@@ -79,7 +79,7 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
-
+INFOANDTIPS = "infotips"                                    # Displays link to docs Info & Tips page 
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
@@ -134,7 +134,12 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     for editor_name in extra_editors:
         try:
             create_func = EDITOR_ROW_CREATORS[editor_name]
-            editor_row = create_func(filt, editable_properties)
+
+            try:
+                editor_row = create_func(filt, editable_properties, editor_name)
+            except: # Was too lazy to find and fix all creator funcs.
+                editor_row = create_func(filt, editable_properties)
+
             rows.append(editor_row)
         except KeyError:
             print("get_filter_extra_editor_rows fail with:" + editor_name)
@@ -1046,6 +1051,22 @@ def _create_rotomask_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _create_infotips_editor(filt, editable_properties, editor_name):
+    
+    args_str = filt.info.extra_editors_args[editor_name]
+    args = propertyparse.args_string_to_args_dict(args_str)
+    header_name = args["header"].replace("!", " ")
+    link_text = _("Info & tips available under heading '{}'").format(header_name)     
+    uri = "file://" + respaths.INFO_TIPS_DOC
+
+    infotips_editor = extraeditors.InfoAndTipsEditor(uri, link_text)
+
+    hbox = Gtk.VBox(False, 4)
+    hbox.pack_start(infotips_editor.widget, False, False, 0)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    hbox.no_separator = False
+    return hbox
+
 def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels):
     show_rotomask_func(filt, editable_properties, property_editor_widgets_create_func, value_labels)
 
@@ -1221,6 +1242,7 @@ EDITOR_ROW_CREATORS = { \
     COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
     ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
+    INFOANDTIPS: lambda filt, editable_properties, editor_name:_create_infotips_editor(filt, editable_properties, editor_name),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }

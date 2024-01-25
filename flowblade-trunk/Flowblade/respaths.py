@@ -46,6 +46,7 @@ PHANTOM_JAR = None
 FLUXITY_EMPTY_BG_RES_PATH = None
 MEDIA_PLUGINS_PATH = None
 FLUXITY_API_DOC = None
+INFO_TIPS_DOC = None
 
 def set_paths(root_path):
     # Apr-2017 - SvdB - Added SHORTCUTS_PATH for keyboard shortcuts files
@@ -56,7 +57,7 @@ def set_paths(root_path):
     LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
     PHANTOM_JAR, PHANTOM_DIR, DEVELOPERS_DOC, CONTRIBUTORS_DOC, \
     SHORTCUTS_PATH, FLUXITY_EMPTY_BG_RES_PATH, MEDIA_PLUGINS_PATH, \
-    FLUXITY_API_DOC
+    FLUXITY_API_DOC, INFO_TIPS_DOC
     
     ROOT_PATH = root_path
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
@@ -78,8 +79,9 @@ def set_paths(root_path):
     LAUNCH_DIR = root_path + "/launch/"
     GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
-    # Apr-2017 - SvdB
     SHORTCUTS_PATH = root_path + "/res/shortcuts/"
     FLUXITY_EMPTY_BG_RES_PATH = root_path + "/res/scripttool/not_rendered.png"
     MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
     FLUXITY_API_DOC = root_path + "/res/mediaplugins/fluxity.html"
+    INFO_TIPS_DOC = root_path + "/res/help/en/infotips.html"
+

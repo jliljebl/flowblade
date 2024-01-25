@@ -23,6 +23,7 @@ This module contains complex property editors.
 """
 
 import math
+import webbrowser
 
 from gi.repository import Gtk
 
@@ -1357,3 +1358,16 @@ class ColorBandSelector:
         cr.close_path()
         cr.fill()
 
+
+class InfoAndTipsEditor:
+    
+        def __init__(self, uri, link_text):
+            self.uri = uri
+            self.widget = Gtk.LinkButton.new_with_label (uri, link_text)
+            self.widget.connect("activate-link", self._open_info)
+            self.widget.set_margin_top(24)
+            self.widget.set_margin_bottom(4)
+
+        def _open_info(self, widget):
+            webbrowser.open(self.uri)
+            return True

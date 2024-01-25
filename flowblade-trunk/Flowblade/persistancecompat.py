@@ -72,7 +72,9 @@ def FIX_MISSING_CLIP_ATTRS(clip):
 def FIX_MISSING_FILTER_ATTRS(filter):
     if not hasattr(filter.info, "filter_mask_filter"):
         filter.info.filter_mask_filter = None
-            
+    if not hasattr(filter.info, "extra_editors_args"):
+        filter.info.extra_editors_args = {}
+
 def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
     # Keeping backwards compatibility
     if not hasattr(compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16

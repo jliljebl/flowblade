@@ -161,7 +161,8 @@ class FilterInfo:
 
         #  Extra editors that handle properties that have been set "no_editor"
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
-        self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
+        self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)
+        self.extra_editors_args = propertyparse.node_list_to_extraeditors_args_dict(e_node_list)
 
         # Non-MLT properties are persistent values like properties. but they have values are not directly written out as MLT properties.
         p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
