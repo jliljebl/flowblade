@@ -123,7 +123,7 @@ def args_string_to_args_dict(args_str):
 def replace_value_keywords(properties, profile):
     """
     Property value expressions may have keywords in default values that 
-    need to be replaced with other expressions when containing
+    need to be replaced with other expressions or int values when containing
     objects first become active.
     """
     sreensize_expr = str(profile.width()) + "x" + str(profile.height())
