@@ -632,7 +632,7 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
-        #print("write_out_keyframes", val_str)
+
 
 class LUTTableProperty(EditableProperty):
     def reset_to_linear(self):
@@ -728,9 +728,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
             val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
             val_str += "1"
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
-        
-        
-        print(val_str)
+
         val_str = val_str.strip(";")
         self.write_value(val_str)
 

@@ -39,6 +39,7 @@ import editorpersistance
 import editorstate
 from editorstate import PROJECT
 from editorstate import PLAYER
+from editorstate import current_sequence
 import gui
 import guicomponents
 import guipopover
@@ -46,6 +47,7 @@ import guiutils
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
+import propertyparse
 import respaths
 import translations
 import updater
@@ -1022,6 +1024,8 @@ def _load_effect_stack_values_dialog_callback(dialog, response_id):
 
 def _reset_filter_values(filter_object):
         filter_object.properties = copy.deepcopy(filter_object.info.properties)
+        propertyparse.replace_value_keywords(filter_object.properties, current_sequence().profile)
+        
         filter_object.non_mlt_properties = copy.deepcopy(filter_object.info.non_mlt_properties)
         filter_object.update_mlt_filter_properties_all()
                 
