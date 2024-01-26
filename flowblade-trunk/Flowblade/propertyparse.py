@@ -135,10 +135,10 @@ def replace_value_keywords(properties, profile):
         if prop_type == PROP_EXPRESSION:
             if SCREENSIZE_WIDTH in value:
                 value = value.replace(SCREENSIZE_WIDTH, sreensize_width)
-                prop_type = 0 # value is int after raplace
+                prop_type = 0 # value is int after replace
             elif SCREENSIZE_HEIGHT in value:
                 value = value.replace(SCREENSIZE_HEIGHT, sreensize_height)
-                prop_type = 0 # value is int after raplace
+                prop_type = 0 # value is int after replace
             elif SCREENSIZE in value:
                 value = value.replace(SCREENSIZE, sreensize_expr)
             elif SCREENSIZE2 in value:
