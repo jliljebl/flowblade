@@ -84,4 +84,3 @@ def set_paths(root_path):
     MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
     FLUXITY_API_DOC = root_path + "/res/mediaplugins/fluxity.html"
     INFO_TIPS_DOC = root_path + "/res/help/en/infotips.html"
-
