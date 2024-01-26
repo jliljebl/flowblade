@@ -128,12 +128,24 @@ def replace_value_keywords(properties, profile):
     """
     sreensize_expr = str(profile.width()) + "x" + str(profile.height())
     sreensize_expr_2 = str(profile.width()) + " " + str(profile.height())
+    sreensize_width = str(profile.width())
+    sreensize_height = str(profile.height())
     for i in range(0, len(properties)):
         name, value, prop_type = properties[i]
         if prop_type == PROP_EXPRESSION:
-            value = value.replace(SCREENSIZE, sreensize_expr)
-            value = value.replace(SCREENSIZE2, sreensize_expr_2)
-            value = value.replace(WIPE_PATH, respaths.WIPE_RESOURCES_PATH)
+            if SCREENSIZE_WIDTH in value:
+                value = value.replace(SCREENSIZE_WIDTH, sreensize_width)
+                prop_type = 0 # value is int after raplace
+            elif SCREENSIZE_HEIGHT in value:
+                value = value.replace(SCREENSIZE_HEIGHT, sreensize_height)
+                prop_type = 0 # value is int after raplace
+            elif SCREENSIZE in value:
+                value = value.replace(SCREENSIZE, sreensize_expr)
+            elif SCREENSIZE2 in value:
+                value = value.replace(SCREENSIZE2, sreensize_expr_2)
+            elif WIPE_PATH in value:
+                value = value.replace(WIPE_PATH, respaths.WIPE_RESOURCES_PATH)
+
             properties[i] = (name, value, prop_type)
 
 def replace_values_using_clip_data(properties, info, clip):
