@@ -1125,7 +1125,7 @@
         <property name="transition.valign" args="editor=no_editor exptype=not_parsed">middle</property>
         <property name="transition.halign" args="editor=no_editor exptype=not_parsed">center</property>
         <property name="transition.threads" args="editor=no_editor">0</property>
-        <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=338.658</property>
+        <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
         <extraeditor name="filter_rotation_geometry_editor"></extraeditor> 
     </filter>
  
