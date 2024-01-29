@@ -1002,8 +1002,7 @@ def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_
 
 def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, track, clip_index):
     clip, filter_index, prop, property_index, args_str = editable_properties[0].used_create_params
-        
-    # This property is fed into keyframeditor.
+
     kf_editable_property = propertyedit.KeyFrameFilterRotatingGeometryProperty(
                                 editable_properties[0].used_create_params, 
                                 editable_properties,
