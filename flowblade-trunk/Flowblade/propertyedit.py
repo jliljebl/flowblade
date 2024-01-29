@@ -61,6 +61,7 @@ OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTH
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
 GEOMETRY_RECT_FILTER_KF = "geom_filt_rect_kf"               # frame=x y w h 1  with 1 being constant for full opacity
+GEOMETRY_ROTATING_FILTER_KF = "geom_filt_rotating_kf"       # extra editor parameter for "Positioan Size Rotation" filter
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
@@ -594,8 +595,8 @@ class OpacityInGeomSKFProperty(TransitionEditableProperty):
         out_value = self.get_out_value(value)
         val_str = self.value_parts[0] + ":" + self.value_parts[1] + ":" + str(out_value)
         self.write_value(val_str)
- 
-        
+
+
 class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
     
     def __init__(self, params):
@@ -632,7 +633,8 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
-        #print("write_out_keyframes", val_str)
+
+
 
 class LUTTableProperty(EditableProperty):
     def reset_to_linear(self):
@@ -729,12 +731,118 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
             val_str += "1"
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
-        
-        print(val_str)
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
+
+class KeyFrameFilterRotatingGeometryProperty:
+
+    def __init__(self, create_params, editable_properties, track, clip_index):
+        
+        # We need all editable_properties to write values out. 
+        self.editable_properties = editable_properties
+
+        # Pick up the editable properties that actually have their values written to on user edits
+        # and affect to filter output.
+        self.rect_ep = [ep for ep in editable_properties if ep.name == "transition.rect"][0]
+        self.fix_rotate_x_ep = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
+
+        # Get create data
+        clip, filter_index, p, i, args_str = create_params
+        p_name, p_value, p_type = p
+
+        # We need a lot stuff to ba able to edit this with keyframe editor as
+        # propertyedit.EditableProperty.
+        self.clip = clip
+        self.value = "this is set below"
+        self.is_compositor_filter = False
+        self.track = track
+        self.clip_index = clip_index
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+        self.get_display_name = lambda : "Opacity"
+
+        # We also need these to be able to edit this in keyframeeditcanvas.RotatingEditCanvas
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+        #self.write_out_keyframes = lambda w_kf : write_out_keyframes.rotating_ge_write_out_keyframes(self, w_kf)
+        self.update_prop_value = lambda : propertyparse.rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
+                                                                                        # We need this to reinit GUI components after programmatically added kfs.
+
+        # This value is parsed by to keyframes by keyframecanvas.RotatingEditCanvas
+        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
+        #
+        # The value itself is not persintant or used to affect output.
+        self.value = self.get_value_keyframes_str()
+
+    def get_clip_length(self):
+        return self.clip.clip_out - self.clip.clip_in + 1
+        
+    def get_clip_tline_pos(self):
+        return self.track.clip_start(self.clip_index)
+        
+    def get_value_keyframes_str(self):
+        rect_tokens = self.rect_ep.value.split(";")
+        rotation_tokens = self.fix_rotate_x_ep.value.split(";")
+
+        value = ""
+        for rect_token, rotation_token in zip(rect_tokens, rotation_tokens):
+            frame, rect_str, kf_type = propertyparse.get_token_frame_value_type(rect_token)
+            frame, rotation, kf_type = propertyparse.get_token_frame_value_type(rotation_token)
+
+            # returns [x, y, w, h, opacity], the string we need to input into "transition.rect" mlt property for filter "affine"
+            rect = rect_str.split(" ")
+
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            frame_str = str(frame) + eq_str + str(rect[0]) + ":" + str(rect[1]) + ":" + str(rect[2]) + ":" + str(rect[3]) + ":" + str(rotation)
+            value += frame_str + ";"
+
+        # This value is parset as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
+        value = value.strip(";")
+        return value
+
+    def get_input_range_adjustment(self):
+        # Returns DUMMY noop Adjustment that needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # but this not the case for this editor/property pair.
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
+        
+    def write_out_keyframes(self, keyframes):    
+        rect_val = ""
+        roto_val = ""
+        profile_width = float(current_sequence().profile.width())
+        profile_height = float(current_sequence().profile.height())
+    
+        for kf in keyframes:
+            frame, transf, opacity, kf_type = kf
+            x, y, x_scale, y_scale, rotation = transf
+            
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            # Transform pos coordinates to intpretation used by mlt "affine" filter property "transition.rect"
+            x_trans = x - profile_width / 2.0 + (profile_width - x_scale * profile_width) / 2.0 
+            y_trans = y - profile_height / 2.0 + (profile_height - y_scale * profile_height) / 2.0
+
+            rect_val += str(frame) + eq_str + str(x_trans) + " " + str(y_trans) + " " + \
+                         str(profile_width * x_scale) + " " + str(profile_height * y_scale) + " 1" + ";"# opacity always 1 
+            roto_val += str(frame) + eq_str + str(rotation) + ";"
+
+        rect_val = rect_val.strip(";")
+        roto_val = roto_val.strip(";")
+
+        self.rect_ep.write_value(rect_val)
+        self.fix_rotate_x_ep.write_value(roto_val)
  
+    def write_value(self, str_value):
+        print("write_value", str_value)
+         
+    def write_mlt_property_str_value(self, str_value):
+        print("write_mlt_property_str_value", str_value)
+         
+    def write_filter_object_property(self, str_value):
+        print("write_filter_object_property", str_value)
+
+
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
@@ -774,7 +882,7 @@ class KeyFrameHCSFilterProperty(EditableProperty):
 
 class RotoJSONProperty(EditableProperty):
 
-    def write_out_keyframes(self, keyframes):                    
+    def write_out_keyframes(self, keyframes):
         val_str = "{"
         for kf_obj in keyframes:
             kf, points, kf_type = kf_obj
@@ -947,113 +1055,6 @@ class AffineScaleProperty(EditableProperty):
         return in_value  
 
 
-# ----------------------------------------------------------------------------- AFFINE FILTER TRANSFORM
-"""
-Refactor Affine Blend EditableProperty ducktyping object to be like the below instead of the current EmptyClass thing.
-
-class FilterAffineTransformEditableProperty:
-    
-    def __init__(self, clip, editable_properties):
-
-        # pack real properties to go
-        self.x = [ep for ep in editable_properties if ep.name == "transition.ox"][0]
-        self.y = [ep for ep in editable_properties if ep.name == "transition.oy"][0]
-        self.x_scale = [ep for ep in editable_properties if ep.name == "transition.scale_x"][0]
-        self.y_scale = [ep for ep in editable_properties if ep.name == "transition.scale_y"][0]
-        self.rotation = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
-        self.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-        # Screen width and height are needed for anchor point related conversions
-        self.profile_width = current_sequence().profile.width()
-        self.profile_height = current_sequence().profile.height()
-        #self.aspect_ratio = float(self.profile_width) / self.profile_height
-        # duck type methods, using opacity is not meaningful, any property with clip member could do
-        self.clip = self.x.clip
-        self.get_clip_tline_pos = lambda : clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
-        self.get_clip_length = lambda : clip.get_length()
-        self.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
-        self.get_display_name = lambda : "GGSFSF"
-        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
-        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-        self.write_out_keyframes = lambda w_kf : self._rotating_ge_write_out_keyframes(w_kf)
-        self.update_prop_value = lambda : self._noop()
-
-        value = self._get_initial_value_str()
-        self.value = value.strip(";")
-
-    def _get_initial_value_str(self):
-        # duck type members
-        x_tokens = self.x.value.split(";")
-        y_tokens = self.y.value.split(";")
-        x_scale_tokens = self.x_scale.value.split(";")
-        y_scale_tokens = self.y_scale.value.split(";")
-        rotation_tokens = self.rotation.value.split(";")
-        opacity_tokens = self.opacity.value.split(";")
-        
-        value = ""
-        for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-            frame, x = x_tokens[i].split("=")
-            x = -float(x) + float(self.profile_width) / 2.0 # -x is how MLT wants this param, offset is to make editor and output match 
-            frame, y = y_tokens[i].split("=")
-            y = -float(y) + float(self.profile_height) / 2.0  # this how MLT want this param
-            frame, x_scale = x_scale_tokens[i].split("=")
-            x_scale = 1.0 / float(x_scale) # this how MLT want this param
-            frame, y_scale = y_scale_tokens[i].split("=")
-            y_scale = 1.0 / float(y_scale) # this how MLT want this param
-            frame, rotation = rotation_tokens[i].split("=")
-            frame, opacity = opacity_tokens[i].split("=")
-            opacity = 1.0 # we ae not editing this so let's make it alwaus constant
-            
-            frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
-            value += frame_str + ";"
-
-        return value
-
-    def _noop(self):
-        pass
-
-    def _rotating_ge_write_out_keyframes(self, keyframes):
-
-        x_val = ""
-        y_val = ""
-        x_scale_val = ""
-        y_scale_val = ""
-        rotation_val = ""
-        opacity_val = ""
-        
-        for kf in keyframes:
-            frame, transf, opacity = kf
-            x, y, x_scale, y_scale, rotation = transf
-            print (type(x), type(y), type(x_scale), type(y_scale), type(rotation))
-            print("X:", x, "Y:", y)
-            x_val += str(frame) + "=" + str(((-x)) + (float(self.profile_width)/2.0) * x_scale) + ";" # (self.profile_width/2.0)) editor thinks anchor point has been offset into middle of image, filter does this automatically.
-            y_val += str(frame) + "=" + str(((-y)) + (float(self.profile_height)/2.0) * y_scale) + ";"
-            x_scale_val += str(frame) + "=" + str(1.0/x_scale) + ";"
-            y_scale_val += str(frame) + "=" + str(1.0/y_scale) + ";"
-            rotation_val += str(frame) + "=" + str(rotation) + ";"
-            opacity_val += str(frame) + "=" + str(1.0) + ";"
-
-            print("KF ____________________________________________________________________")
-            print(x, y, x_scale, y_scale, rotation)
-            print(x_val, y_val, x_scale_val, y_scale_val, rotation_val)
-        
-        x_val = x_val.strip(";")
-        y_val = y_val.strip(";")
-        x_scale_val = x_scale_val.strip(";")
-        y_scale_val = y_scale_val.strip(";")
-        rotation_val = rotation_val.strip(";")
-        opacity_val = opacity_val.strip(";")
-       
-
-       
-        self.x.write_value(x_val)
-        self.y.write_value(y_val)
-        self.x_scale.write_value(x_scale_val)
-        self.y_scale.write_value(y_scale_val)
-        self.rotation.write_value(rotation_val)
-        self.opacity.write_value(opacity_val)
-
-        print("kf write done")
-"""
 # ------------------------------------------ creator func dicts
 # dict EXPRESSION_TYPE args value -> class extending AbstractProperty
 # Note: HCS means half comma separated
@@ -1073,6 +1074,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     CAIRO_COLOR: lambda params : CairoColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOMETRY_RECT_FILTER_KF: lambda params : KeyFrameFilterGeometryRectProperty(params),
+    GEOMETRY_ROTATING_FILTER_KF: lambda params : KeyFrameFilterRotatingGeometryProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),

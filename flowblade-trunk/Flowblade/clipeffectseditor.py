@@ -781,7 +781,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
         # with "editor=no_editor" and now extra editors may be created to edit those
         # Non mlt properties are added as these are only needed with extraeditors
         editable_properties.extend(non_mlteditable_properties)
-        editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
+        editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties, track, clip_index)
         for editor_row in editor_rows:
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):

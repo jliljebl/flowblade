@@ -48,6 +48,7 @@ FADE_OUT_REPLAMENT = "fade_out_replament"                   # replace with fade 
 FADE_IN_OUT_REPLAMENT = "fade_in_out_replament"             # replace with fade in and out keyframes
 WIPE_IN_REPLAMENT = "wipe_in_replament"
 
+
 # ------------------------------------------- parse funcs
 def node_list_to_properties_array(node_list):
     """
@@ -120,6 +121,8 @@ def args_string_to_args_dict(args_str):
         args_dict[sides[0]] = sides[1]
     return args_dict
 
+
+# ------------------------------------------- key word replace functions
 def replace_value_keywords(properties, profile):
     """
     Property value expressions may have keywords in default values that 
@@ -334,7 +337,7 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
-    # keyframe tuples.
+    # keyframe tuples used by keyframeeditorcanvas.RotatingEditCanvas editor.
     new_keyframes = []
     screen_width = current_sequence().profile.width()
     screen_height = current_sequence().profile.height()
@@ -368,30 +371,46 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
-def non_freior_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
-    # keyframe tuples.
+def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
+    
     new_keyframes = []
+
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split('=')
-        values = sides[1].split(':')
-        frame = int(sides[0])
-        # get values and convert "frei0r.cairoaffineblend" values to editor values
-        # this because all frei0r plugins require values in range 0 - 1
-        x = float(values[0])
-        y = float(values[1])
-        x_scale = float(values[2])
-        y_scale = float(values[3])
-        rotation = float(values[4])
-        opacity = float(values[5]) * 100
-        source_rect = [x,y,x_scale,y_scale,rotation]
-        add_kf = (frame, source_rect, float(opacity))
-        new_keyframes.append(add_kf)
+        frame, value, kf_type = get_token_frame_value_type(token)
+        values = value.split(':')
 
+        # keyframecanvas.RotatingEditCanvas editor uses x scale and y scale with normalized values,
+        # whereas "affine.transition.rect" uses source image width and height.
+        x_scale = float(values[2]) / float(screen_width)
+        y_scale = float(values[3]) / float(screen_height)
+
+        # keyframecanvas.RotatingEditCanvas editor considers x anf y values position of
+        # anchor point around whicth image is rotated.
+        #
+        # MLT porprty "affine.transition.rect" considers x anf y values amount translation
+        # and rotate image automatically around its tramslated center point.
+        #
+        # So the we need to add half of width and height to mlt values AND 
+        # addional linear correction based on applied scaling when creating
+        # keyframes for keyframecanvas.RotatingEditCanvas editor.
+        x = float(values[0]) + float(screen_width) / 2.0 + \
+            ((x_scale * screen_width) - screen_width) / 2.0
+        y = float(values[1]) + float(screen_height) / 2.0 + \
+            ((y_scale * screen_height) - screen_height) / 2.0
+
+        rotation = float(values[4]) # degrees al arund
+        opacity = 100 # not edited
+
+        source_rect = [x,y,x_scale,y_scale,rotation]
+        add_kf = (int(frame), source_rect, float(opacity), kf_type)
+        new_keyframes.append(add_kf)
+        
     return new_keyframes
-    
+
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
@@ -402,6 +421,20 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
 
     return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
 
+def get_token_frame_value_type(token):
+    sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+    if len(sides) == 2:
+        kf_type = appconsts.KEYFRAME_DISCRETE
+    else:
+        sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_SMOOTH
+        else:
+            sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+            kf_type = appconsts.KEYFRAME_LINEAR
+                
+    # returns (frame, value, kf_type)
+    return(sides[0], sides[1], kf_type)
 
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def _get_roto_geom_frame_value(token):
@@ -435,7 +468,7 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     y_scale_val = ""
     rotation_val = ""
     opacity_val = ""
-    
+
     for kf in keyframes:
         frame, transf, opacity, kf_type = kf
         x, y, x_scale, y_scale, rotation = transf
@@ -487,7 +520,7 @@ def rotating_ge_update_prop_value(ep):
         value += frame_str + ";"
 
     ep.value = value.strip(";")
-
+         
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
     # convert positions from range used by frei0r cairo plugins to pixel values
     return -2.0 * screen_dim + value * 5.0 * screen_dim

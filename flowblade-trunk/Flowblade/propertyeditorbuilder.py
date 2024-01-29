@@ -59,8 +59,9 @@ KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used t
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
 FILTER_RECT_GEOM_EDITOR = "filter_rect_geometry_editor"     # keyframeeditor.FilterRectGeometryEditor
+FILTER_ROTATION_GEOM_EDITOR = "filter_rotation_geometry_editor" # Creates a single editor for multiple geometry values for using in filter 
 WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas, possible to select luma from file system
-FILTER_WIPE_SELECT = "filter_wipe_select"                   #  Gtk.Combobox with options from mlttransitions.wipe_lumas
+FILTER_WIPE_SELECT = "filter_wipe_select"                   # Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
@@ -96,7 +97,6 @@ def _p(name):
     except KeyError:
         return name
 
-
 def get_editor_row(editable_property):
     """
     Returns GUI component to edit provided editable property.
@@ -125,7 +125,7 @@ def get_transition_extra_editor_rows(compositor, editable_properties):
 
     return rows
 
-def get_filter_extra_editor_rows(filt, editable_properties):
+def get_filter_extra_editor_rows(filt, editable_properties, track, clip_index):
     """
     Returns list of extraeditors GUI components.
     """
@@ -134,67 +134,14 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     for editor_name in extra_editors:
         try:
             create_func = EDITOR_ROW_CREATORS[editor_name]
-
-            try:
-                editor_row = create_func(filt, editable_properties, editor_name)
-            except: # Was too lazy to find and fix all creator funcs.
-                editor_row = create_func(filt, editable_properties)
-
+            editor_row = create_func(filt, editable_properties, editor_name, track, clip_index)
+            
             rows.append(editor_row)
         except KeyError:
             print("get_filter_extra_editor_rows fail with:" + editor_name)
 
     return rows
 
-def create_editable_property_for_affine_blend(clip, editable_properties):
-    # Build a custom object that duck types for TransitionEditableProperty 
-    # to be used in editor propertyeditor.RotatingGeometryEditor.
-    ep = utils.EmptyClass()
-    # pack real properties to go
-    ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
-    ep.y = [ep for ep in editable_properties if ep.name == "y"][0]
-    ep.x_scale = [ep for ep in editable_properties if ep.name == "x scale"][0]
-    ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
-    ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
-    ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-    # Screen width and height are needed for frei0r conversions
-    ep.profile_width = current_sequence().profile.width()
-    ep.profile_height = current_sequence().profile.height()
-    # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points are straight in timeline frames
-    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
-    ep.get_display_name = lambda : "Opacity"
-    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
-    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-    ep.write_out_keyframes = lambda w_kf : propertyparse.rotating_ge_write_out_keyframes(ep, w_kf)
-    ep.update_prop_value = lambda : propertyparse.rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
-                                                                            # We need this to reinit GUI components after programmatically added kfs.
-    # duck type members
-    x_tokens = ep.x.value.split(";")
-    y_tokens = ep.y.value.split(";")
-    x_scale_tokens = ep.x_scale.value.split(";")
-    y_scale_tokens = ep.y_scale.value.split(";")
-    rotation_tokens = ep.rotation.value.split(";")
-    opacity_tokens = ep.opacity.value.split(";")
-    
-    value = ""
-    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        frame, x, kf_type =  propertyparse._get_roto_geom_frame_value(x_tokens[i])
-        frame, y, kf_type =  propertyparse._get_roto_geom_frame_value(y_tokens[i])
-        frame, x_scale, kf_type =  propertyparse._get_roto_geom_frame_value(x_scale_tokens[i])
-        frame, y_scale, kf_type =  propertyparse._get_roto_geom_frame_value(y_scale_tokens[i])
-        frame, rotation, kf_type =  propertyparse._get_roto_geom_frame_value(rotation_tokens[i])
-        frame, opacity, kf_type =  propertyparse._get_roto_geom_frame_value(opacity_tokens[i])
-
-        eq_str = propertyparse._get_eq_str(kf_type)
-
-        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
-        value += frame_str + ";"
-
-    ep.value = value.strip(";")
-
-    return ep
 
 
     
@@ -946,9 +893,58 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         progressive.write_value("1")
 
 def _create_rotion_geometry_editor(clip, editable_properties):   
-    ep = create_editable_property_for_affine_blend(clip, editable_properties)
+    ep = create_rotating_geometry_editor_property(clip, editable_properties)
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit
+
+def create_rotating_geometry_editor_property(clip, editable_properties):
+    # Build a custom object that duck types for TransitionEditableProperty 
+    # to be used in editor keyframeeditor.RotatingGeometryEditor.
+    ep = utils.EmptyClass()
+    # pack real properties to go
+    ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
+    ep.y = [ep for ep in editable_properties if ep.name == "y"][0]
+    ep.x_scale = [ep for ep in editable_properties if ep.name == "x scale"][0]
+    ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
+    ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
+    ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
+    # Screen width and height are needed for frei0r conversions
+    ep.profile_width = current_sequence().profile.width()
+    ep.profile_height = current_sequence().profile.height()
+    # duck type methods, using opacity is not meaningful, any property with clip member could do
+    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points are straight in timeline frames
+    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
+    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+    ep.get_display_name = lambda : "Opacity"
+    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+    ep.write_out_keyframes = lambda w_kf : propertyparse.rotating_ge_write_out_keyframes(ep, w_kf)
+    ep.update_prop_value = lambda : propertyparse.rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
+                                                                                    # We need this to reinit GUI components after programmatically added kfs.
+    x_tokens = ep.x.value.split(";")
+    y_tokens = ep.y.value.split(";")
+    x_scale_tokens = ep.x_scale.value.split(";")
+    y_scale_tokens = ep.y_scale.value.split(";")
+    rotation_tokens = ep.rotation.value.split(";")
+    opacity_tokens = ep.opacity.value.split(";")
+    
+    value = ""
+    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+        frame, x, kf_type = propertyparse._get_roto_geom_frame_value(x_tokens[i])
+        frame, y, kf_type = propertyparse._get_roto_geom_frame_value(y_tokens[i])
+        frame, x_scale, kf_type = propertyparse._get_roto_geom_frame_value(x_scale_tokens[i])
+        frame, y_scale, kf_type = propertyparse._get_roto_geom_frame_value(y_scale_tokens[i])
+        frame, rotation, kf_type = propertyparse._get_roto_geom_frame_value(rotation_tokens[i])
+        frame, opacity, kf_type = propertyparse._get_roto_geom_frame_value(opacity_tokens[i])
+
+        eq_str = propertyparse._get_eq_str(kf_type)
+
+        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        value += frame_str + ";"
+
+    ep.value = value.strip(";")
+
+    return ep
 
 def _create_region_editor(clip, editable_properties):
     aligned = [ep for ep in editable_properties if ep.name == "composite.aligned"][0]
@@ -982,7 +978,7 @@ def _create_region_editor(clip, editable_properties):
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     return hbox
 
-def _create_color_grader(filt, editable_properties):
+def _create_color_grader(filt, editable_properties, editor_name, track, clip_index):
     color_grader = extraeditors.ColorGrader(editable_properties)
 
     vbox = Gtk.VBox(False, 4)
@@ -995,7 +991,7 @@ def _create_color_grader(filt, editable_properties):
 def _get_filter_rect_geom_editor(ep):
     return keyframeeditor.FilterRectGeometryEditor(ep)
 
-def _create_crcurves_editor(filt, editable_properties):
+def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
     vbox = Gtk.VBox(False, 4)
@@ -1004,7 +1000,35 @@ def _create_crcurves_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
-def _create_colorbox_editor(filt, editable_properties):
+def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, track, clip_index):
+    print(type(filt))
+    print(editable_properties)
+
+    clip, filter_index, prop, property_index, args_str = editable_properties[0].used_create_params
+
+    print(clip, filter_index, prop, property_index, args_str) 
+        
+    # This property is fed into keyframeditor.
+    kf_editable_property = propertyedit.KeyFrameFilterRotatingGeometryProperty(
+                                editable_properties[0].used_create_params, 
+                                editable_properties,
+                                track, 
+                                clip_index)
+
+    #roto_geom_ep = create_rotating_geometry_editor_property(clip, editable_properties)
+    #roto_geom_ep.write_out_keyframes = lambda w_kf : kf_editable_property.write_out_keyframes(wkf)
+
+    #kf_editable_property.roto_geom_ep = kf_editable_property.roto_geom_ep
+    kf_edit = keyframeeditor.FilterRotatingGeometryEditor(kf_editable_property)
+
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(Gtk.Label("haloo"), False, False, 0)
+    vbox.pack_start(kf_edit, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
+def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_index):
     colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties)
     
     vbox = Gtk.VBox(False, 4)
@@ -1013,7 +1037,7 @@ def _create_colorbox_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
-def _create_color_lgg_editor(filt, editable_properties):
+def _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index):
     color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(color_lgg_editor.widget, False, False, 0)
@@ -1021,7 +1045,7 @@ def _create_color_lgg_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
-def _create_rotomask_editor(filt, editable_properties):
+def _create_rotomask_editor(filt, editable_properties, editor_name, track, clip_index):
 
     property_editor_widgets_create_func = lambda: _create_rotomask_property_editor_widgets(editable_properties)
 
@@ -1051,7 +1075,7 @@ def _create_rotomask_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
-def _create_infotips_editor(filt, editable_properties, editor_name):
+def _create_infotips_editor(filt, editable_properties, editor_name, track, clip_index):
     
     args_str = filt.info.extra_editors_args[editor_name]
     args = propertyparse.args_string_to_args_dict(args_str)
@@ -1237,12 +1261,20 @@ EDITOR_ROW_CREATORS = { \
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
     ROTATION_GEOMETRY_EDITOR_BUILDER: lambda comp, editable_properties: _create_rotion_geometry_editor(comp, editable_properties),
-    COLOR_CORRECTOR: lambda filt, editable_properties: _create_color_grader(filt, editable_properties),
-    CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
-    COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
-    COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
-    ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
-    INFOANDTIPS: lambda filt, editable_properties, editor_name:_create_infotips_editor(filt, editable_properties, editor_name),
+    COLOR_CORRECTOR: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_color_grader(filt, editable_properties, editor_name, track, clip_index),
+    CR_CURVES: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index),
+    COLOR_BOX: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_colorbox_editor(filt, editable_properties),
+    COLOR_LGG: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index),
+    ROTOMASK: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_rotomask_editor(filt, editable_properties, editor_name, track, clip_index),
+    FILTER_ROTATION_GEOM_EDITOR: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_filter_roto_geom_editor(filt, editable_properties,  editor_name, track, clip_index),
+    INFOANDTIPS: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_infotips_editor(filt, editable_properties, editor_name, track, clip_index),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
