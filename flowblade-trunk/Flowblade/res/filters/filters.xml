@@ -1086,46 +1086,47 @@
     <filter id="affine">
         <name>Position Scale</name>
         <group>Transform</group>
-            <property name="transition.fill" args="editor=no_editor">1</property>
-            <property name="transition.distort" args="editor=no_editor">1</property>
-            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
-            <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
-            <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
-            <property name="transition.threads" args="editor=no_editor">0</property>
-            <property name="transition.repeat_off" args="editor=no_editor">1</property>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">1</property>
+        <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.repeat_off" args="editor=no_editor">1</property>
     </filter>
     <filter id="affine">
         <name>Rotate</name>
         <group>Transform</group>
-            <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
-            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
-            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
-            <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
+        <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+        <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+        <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+        <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
     <filter id="affine">
         <name>Shear</name>
         <group>Transform</group>
-            <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-            <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
-            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
-            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
-          <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
+        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
+        <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+        <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+        <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+        <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
 
-    <!-- compositor filters that are not displayed to user, not used currently -->
-    <filter id="frei0r.mask0mate">
-        <name>##crop</name>
-        <group>COMPOSITOR_FILTER</group>
-        <property name="Left" args="range_in=0,100">0.0</property>
-        <property name="Right" args="range_in=0,100">0.0</property>
-        <property name="Top" args="range_in=0,100">0.0</property>
-        <property name="Bottom" args="range_in=0,100">0.0</property>
-        <property name="Invert" args="editor=booleancheckbox">1</property>
-        <property name="Blur" args="range_in=0,100">0</property>
-   </filter>
-   
+    <filter id="affine">
+        <name>Position Scale Rotate</name>
+        <group>Transform</group>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">0</property>
+        <property name="transition.rect" args="editor=no_editor exptype=not_parsed">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">middle</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">center</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=338.658</property>
+        <extraeditor name="filter_rotation_geometry_editor"></extraeditor> 
+    </filter>
+ 
 </filters>

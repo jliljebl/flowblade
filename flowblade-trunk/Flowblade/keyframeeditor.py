@@ -2025,7 +2025,30 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
         self.queue_draw()
         self.update_property_value()
-        
+
+
+
+class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
+
+    def __init__(self, editable_property, use_clip_in=True):
+        FilterRectGeometryEditor.__init__(self, editable_property)
+
+    def init_geom_gui(self, editable_property):
+        # We need feed keyframed editor with one kind of property and 
+        # RotatingEditCanvas with another kind as that was originally written 
+        # different kind of property.
+        #geom_edit_poperty = editable_property.roto_geom_ep
+        self.geom_kf_edit = keyframeeditcanvas.RotatingEditCanvas(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        self.geom_kf_edit.is_scale_locked = True
+        self.geom_kf_edit.create_edit_points_and_values()
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+
+
 
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
