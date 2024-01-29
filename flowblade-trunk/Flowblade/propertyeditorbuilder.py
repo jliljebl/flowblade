@@ -1001,12 +1001,7 @@ def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_
     return vbox
 
 def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, track, clip_index):
-    print(type(filt))
-    print(editable_properties)
-
     clip, filter_index, prop, property_index, args_str = editable_properties[0].used_create_params
-
-    print(clip, filter_index, prop, property_index, args_str) 
         
     # This property is fed into keyframeditor.
     kf_editable_property = propertyedit.KeyFrameFilterRotatingGeometryProperty(
@@ -1015,10 +1010,6 @@ def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, trac
                                 track, 
                                 clip_index)
 
-    #roto_geom_ep = create_rotating_geometry_editor_property(clip, editable_properties)
-    #roto_geom_ep.write_out_keyframes = lambda w_kf : kf_editable_property.write_out_keyframes(wkf)
-
-    #kf_editable_property.roto_geom_ep = kf_editable_property.roto_geom_ep
     kf_edit = keyframeeditor.FilterRotatingGeometryEditor(kf_editable_property)
 
     vbox = Gtk.VBox(False, 4)
