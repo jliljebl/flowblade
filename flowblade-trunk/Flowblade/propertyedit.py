@@ -763,14 +763,15 @@ class KeyFrameFilterRotatingGeometryProperty:
         # We also need these to be able to edit this in keyframeeditcanvas.RotatingEditCanvas
         self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
         self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-        #self.write_out_keyframes = lambda w_kf : write_out_keyframes.rotating_ge_write_out_keyframes(self, w_kf)
-        self.update_prop_value = lambda : propertyparse.rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
-                                                                                        # We need this to reinit GUI components after programmatically added kfs.
 
-        # This value is parsed by to keyframes by keyframecanvas.RotatingEditCanvas
-        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
-        #
-        # The value itself is not persintant or used to affect output.
+        # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
+        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
+        # and is only used to the initialize editor. The original design was that editor is given
+        # property value strings, and they then call keyframe_parser() method that is set when editor is 
+        # build for particular type of property string. Here we need to write out keyframes
+        # to _two_ different properties, so this "dummy" editable property is created to act as the 
+        # property being edited, and it converts editor output to property values of two different 
+        # properties in method write_out_keyframes() below.
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -833,13 +834,13 @@ class KeyFrameFilterRotatingGeometryProperty:
         self.fix_rotate_x_ep.write_value(roto_val)
  
     def write_value(self, str_value):
-        print("write_value", str_value)
+        pass
          
     def write_mlt_property_str_value(self, str_value):
-        print("write_mlt_property_str_value", str_value)
+        pass
          
     def write_filter_object_property(self, str_value):
-        print("write_filter_object_property", str_value)
+        pass
 
 
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
