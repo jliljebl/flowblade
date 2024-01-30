@@ -737,11 +737,8 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
 class KeyFrameFilterRotatingGeometryProperty:
 
     def __init__(self, create_params, editable_properties, track, clip_index):
-        
-        # We need all editable_properties to write values out. 
-        self.editable_properties = editable_properties
 
-        # Pick up the editable properties that actually have their values written to on user edits
+        # Pick up the editable properties that actually have their values being written to on user edits
         # and affect to filter output.
         self.rect_ep = [ep for ep in editable_properties if ep.name == "transition.rect"][0]
         self.fix_rotate_x_ep = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
@@ -766,7 +763,7 @@ class KeyFrameFilterRotatingGeometryProperty:
 
         # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
         # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
-        # and is only used to the initialize editor. The original design was that editor is given
+        # and is only used to the initialize the editor. The original design was that editor is given
         # property value strings, and they then call keyframe_parser() method that is set when editor is 
         # build for particular type of property string. Here we need to write out keyframes
         # to _two_ different properties, so this "dummy" editable property is created to act as the 
@@ -781,6 +778,7 @@ class KeyFrameFilterRotatingGeometryProperty:
         return self.track.clip_start(self.clip_index)
         
     def get_value_keyframes_str(self):
+        # Create input string for keyframecanvas.RotatingEditCanvas editor.
         rect_tokens = self.rect_ep.value.split(";")
         rotation_tokens = self.fix_rotate_x_ep.value.split(";")
 
@@ -797,7 +795,7 @@ class KeyFrameFilterRotatingGeometryProperty:
             frame_str = str(frame) + eq_str + str(rect[0]) + ":" + str(rect[1]) + ":" + str(rect[2]) + ":" + str(rect[3]) + ":" + str(rotation)
             value += frame_str + ";"
 
-        # This value is parset as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
+        # This value is parsed as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
         value = value.strip(";")
         return value
 
@@ -824,7 +822,7 @@ class KeyFrameFilterRotatingGeometryProperty:
             y_trans = y - profile_height / 2.0 + (profile_height - y_scale * profile_height) / 2.0
 
             rect_val += str(frame) + eq_str + str(x_trans) + " " + str(y_trans) + " " + \
-                         str(profile_width * x_scale) + " " + str(profile_height * y_scale) + " 1" + ";"# opacity always 1 
+                         str(profile_width * x_scale) + " " + str(profile_height * y_scale) + " 1" + ";" # opacity always 1 
             roto_val += str(frame) + eq_str + str(rotation) + ";"
 
         rect_val = rect_val.strip(";")
