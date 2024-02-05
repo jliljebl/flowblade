@@ -659,12 +659,6 @@ class ClipKeyFrameEditor:
                 self.active_kf_index = 0
         self.widget.queue_draw()
         
-    def _get_menu_item(self, text, callback, data):
-        item = Gtk.MenuItem(text)
-        item.connect("activate", callback, data)
-        item.show()
-        return item
-        
     def set_sensitive(self, sensitive):
         self.sensitive = sensitive
  
@@ -817,12 +811,6 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         else:
             self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
         self.pack_start(size_select, False, False, 0)
-    
-    def _get_menu_item(self, text, callback, data):
-        item = Gtk.MenuItem(text)
-        item.connect("activate", callback, data)
-        item.show()
-        return item
 
 # ------------------------------------------------------------ master editors
 
@@ -940,13 +928,6 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             active_index = 2
 
         guipopover.add_menu_action_all_items_radio(menu, items_data, action_id, active_index, callback)
-        
-    def _add_geometry_menu_items(self, menu, callback):
-        menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
-        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), callback, "ratio" ))
-        menu.add(_get_menu_item(_("Center"), callback, "hvcenter" ))
-        menu.add(_get_menu_item(_("Center Horizontal"), callback, "hcenter" ))
-        menu.add(_get_menu_item(_("Center Vertical"), callback, "vcenter" ))
 
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
@@ -2396,6 +2377,7 @@ class PositionNumericalEntries(Gtk.HBox):
 
 
 # ----------------------------------------------------------------- linear interpolation
+# check if still correct after adding new kf types
 def _get_frame_value(frame, keyframes):
     for i in range(0, len(keyframes)):
         kf_frame, kf_value, kf_type = keyframes[i]
@@ -2412,16 +2394,4 @@ def _get_frame_value(frame, keyframes):
                 return kf_value + time_fract * value_range
         except: # past last frame, use its value
             return kf_value
-   
 
-# ------------------------------------------------------------- gui utils
-def _get_menu_item(text, callback, data):
-    item = Gtk.MenuItem(text)
-    item.connect("activate", callback, data)
-    item.show()
-    return item
-
-def _add_separator(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
