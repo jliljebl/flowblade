@@ -93,13 +93,6 @@ KF_DRAG_FRAME_ZERO_KF = 3
 KF_DRAG_BETWEEN_TWO = 4
 
 DRAG_MIN_Y = 4 # To make start value slightly magnetic, makes easier to move position without changing value.
-
-hamburger_menu = Gtk.Menu()
-oor_before_menu = Gtk.Menu()
-oor_after_menu = Gtk.Menu()
-value_snapping_menu = Gtk.Menu()
-params_menu =  Gtk.Menu()
-kf_menu = Gtk.Menu()
   
 edit_data = None
 enter_mode = None
