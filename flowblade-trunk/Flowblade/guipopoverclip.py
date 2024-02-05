@@ -29,6 +29,12 @@ import toolsintegration
 import translations
 import utils
 
+
+# Kftool edit types, these match types in kftoolmode.py
+VOLUME_KF_EDIT = 0
+BRIGHTNESS_KF_EDIT = 1
+PARAM_KF_EDIT = 2
+
 select_clip_func = None
 
 _clip_popover = None
@@ -64,6 +70,17 @@ _compositor_menu = None
 _transition_popover = None
 _transition_menu = None
 _transition_audio_mute_menu = None 
+ 
+_kftool_popover = None
+_kftool_menu = None
+_leading_submenu = None
+_trailing_submenu = None
+_params_submenu = None 
+_snapping_submenu = None
+ 
+_kf_select_popover = None
+_kf_select_menu = None
+ 
  
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -611,3 +628,137 @@ def _fill_audio_filters_add_menu_item(audio_filters_menu, callback):
             add_menu_action(group_menu, translations.get_filter_name(filter_info.name), "audioclipmenu.addfilter." + str(j) + "." + str(i), ("add_filter", filter_info), callback)
             i += 1
         j += 1
+
+# ------------------------------------------------------ kf tool menus
+def kftool_popover_menu_show(widget, kftool, x, y, callback, callback_snapping):
+    global _kftool_popover, _kftool_menu, _leading_submenu, _trailing_submenu, \
+    _params_submenu, _snapping_submenu
+
+    if _kftool_menu == None:
+        _kftool_menu = guipopover.menu_clear_or_create(_kftool_menu)
+
+        params_section = Gio.Menu.new()
+        _params_submenu = Gio.Menu.new()
+        _fill_params_submenu(_params_submenu, kftool, callback)
+        params_section.append_submenu(_("Select Edit Filter"), _params_submenu)
+        _kftool_menu.append_section(None, params_section)
+
+        leadtrail_section = Gio.Menu.new()
+        _leading_submenu = Gio.Menu.new()
+        _fill_leading_menu(_leading_submenu, kftool, callback)
+        leadtrail_section.append_submenu(_("Leading Keyframes"), _leading_submenu)
+        _trailing_submenu = Gio.Menu.new()
+        _fill_trailing_menu(_trailing_submenu, kftool, callback)
+        leadtrail_section.append_submenu(_("Trailing Keyframes"), _trailing_submenu)
+        _kftool_menu.append_section(None, leadtrail_section)
+
+        snapping_section = Gio.Menu.new()
+        _snapping_submenu = Gio.Menu.new()
+        _fill_snapping_submenu(_snapping_submenu, kftool, callback_snapping)
+        snapping_section.append_submenu(_("Value Snapping"), _snapping_submenu)
+        _kftool_menu.append_section(None, snapping_section)
+
+        plyhead_section = Gio.Menu.new()
+        guipopover.add_menu_action_check(plyhead_section, _("Playhead Follows Dragged Keyframe"), "kftoolmenu.playheadfollows", kftool.get_playback_follows, ("playhead_follows", None), callback)
+        _kftool_menu.append_section(None, plyhead_section)
+
+        exit_section = Gio.Menu.new()
+        add_menu_action(exit_section, _("Exit Edit"), "kftoolmenu.exit",  ("exit", None), callback)
+        _kftool_menu.append_section(None, exit_section)
+
+    else:
+        guipopover.menu_clear_or_create(_params_submenu)
+        _fill_params_submenu(_params_submenu, kftool, callback)
+        
+        guipopover.menu_clear_or_create(_leading_submenu)
+        _fill_leading_menu(_leading_submenu, kftool, callback)
+        
+        guipopover.menu_clear_or_create(_trailing_submenu)
+        _fill_trailing_menu(_trailing_submenu, kftool, callback)
+
+        guipopover.menu_clear_or_create(_snapping_submenu)
+        _fill_snapping_submenu(_snapping_submenu, kftool, callback_snapping)
+
+    rect = guipopover.create_rect(x, y)
+    _kftool_popover = guipopover.new_mouse_popover(widget, _kftool_menu, rect, Gtk.PositionType.TOP)
+    
+def _fill_leading_menu(leading_submenu, kftool, callback):
+    active = False
+    before_kfs = len(kftool.get_out_of_range_before_kfs())
+    if before_kfs > 1:
+        active = True
+    add_menu_action(leading_submenu, _("Delete all but first Keyframe before Clip Range"), "kftoolmenu.deleteallbefore",  ("delete_all_before", None), callback, active)
+
+    active = False
+    if len(kftool.keyframes) > 1 and before_kfs > 0:
+        active = True 
+    add_menu_action(leading_submenu, _("Set Keyframe at Frame 0 to value of next Keyframe"), "kftoolmenu.zeronext",  ("zero_next", None), callback, active)
+
+def _fill_trailing_menu(trailing_submenu, kftool, callback):
+    active = False
+    after_kfs = len(kftool.get_out_of_range_after_kfs())
+    if after_kfs > 0 and kftool.edit_type == VOLUME_KF_EDIT:
+        active = True
+    add_menu_action(trailing_submenu, _("Delete all but last Keyframe after Clip Range"), "kftoolmenu.deleteallbutlastafter",  ("delete_all_but_last_after", None), callback, active)
+
+    active = False
+    if after_kfs > 0 and kftool.edit_type != VOLUME_KF_EDIT:
+        active = True
+    add_menu_action(trailing_submenu, _("Delete all Keyframe after Clip Range"), "kftoolmenu.deleteallafter",  ("delete_all_after", None), callback, active)
+
+def _fill_params_submenu(params_submenu, kftool, callback):
+    kftool_params = kftool.get_clip_kftool_editable_params_data()
+    if len(kftool_params) > 0:
+        param_index = 0
+        for param_data in kftool_params:
+            p_name, filt, i, disp_name = param_data 
+
+            item_text = filt.info.name  + ": " +  disp_name
+            add_menu_action(params_submenu, item_text, "kftoolmenu.editparam." + str(param_index),  ("edit_param", param_index), callback)
+            param_index += 1
+    else:
+        add_menu_action(params_submenu, _("No additional Keyframe Tool editable Params"), "kftoolmenu.noparams",  (None, None), callback, False)
+
+def _fill_snapping_submenu(snapping_submenu, kftool, callback_snapping):
+    snapping = kftool.get_snapping_value()
+
+    items_data = [("1", "1"), ( "3", "3"), ("5", "5")]
+    active_index = 0
+    if snapping == 3:
+        active_index = 1
+    if snapping == 5:
+        active_index = 2
+        
+    guipopover.add_menu_action_all_items_radio(snapping_submenu, items_data, "kftoolmenu.snappin", active_index, callback_snapping)
+
+
+
+# --------------------------------------------------------------- keyframe type
+def kftype_select_popover_menu_show(widget, kf_type, x, y, callback):
+
+    #if _kf_select_menu == None:
+    global _kf_select_popover, _kf_select_menu
+    
+    _kf_select_menu = guipopover.menu_clear_or_create(_kf_select_menu)
+    
+    items_data = [( _("Linear"), "linear"), ( _("Smooth"), "smooth"), ( _("Discrete"), "discrete")]
+    if kf_type == appconsts.KEYFRAME_LINEAR:
+        active_index = 0
+    elif  kf_type == appconsts.KEYFRAME_SMOOTH:
+        active_index = 1
+    else:
+        active_index = 2
+
+    guipopover.add_menu_action_all_items_radio(_kf_select_menu, items_data, "kftoolkftypemenu.selecttype", active_index, callback)
+        
+    """
+    else:
+        guipopover.menu_clear_or_create(_params_submenu)
+        
+        guipopover.add_menu_action_all_items_radio(menu, items_data, action_id, active_index, callback)
+    """
+
+
+    rect = guipopover.create_rect(x, y)
+    _kf_select_popover = guipopover.new_mouse_popover(widget, _kf_select_menu, rect, Gtk.PositionType.TOP)
+    

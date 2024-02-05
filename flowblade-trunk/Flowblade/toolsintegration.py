@@ -20,7 +20,6 @@
 import copy
 
 import appconsts
-import clipmenuaction
 from editorstate import PROJECT
 import gmic
 import render
@@ -29,7 +28,9 @@ import utils
 _tools = []
 _render_items = []
 test_timeout_id = None
-           
+
+get_popover_clip_data_func = None
+ 
 # --------------------------------------------------- interface
 def init():
     _tools.append(SlowMoIntegrator())
@@ -53,7 +54,9 @@ class ToolIntegrator:
         self.is_export_target = is_export_target
         self.supported_media_types = supported_media_types
         self.data = None # Used at call sites to give needed info for exports
-    
+        self.clip = None
+        self.track = None
+        
     def supports_clip_media(self, clip):
         if clip.media_type in self.supported_media_types:
             return True
@@ -61,7 +64,7 @@ class ToolIntegrator:
             return False
 
     def export_callback(self, action, variant, data):
-        clip, track, x = clipmenuaction.get_popover_clip_data()
+        clip, track, x = get_popover_clip_data_func() # is clipmenuaction.get_popover_clip_data()
         new_instance = copy.deepcopy(self)
         new_instance.data = (clip, track)
         new_instance.do_export()

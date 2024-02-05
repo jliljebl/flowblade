@@ -470,7 +470,9 @@ def monkeypatch_callbacks():
     containeractions.get_edited_plugin_clip = mediaplugin.get_clip
     
     boxmove.set_move_selection_from_box_selection_func = movemodes.select_from_box_selection
-    
+
+    toolsintegration.get_popover_clip_data_func = clipmenuaction.get_popover_clip_data
+
     # These provide clues for possible further refactoring.
 
 # ---------------------------------- SDL2 consumer
