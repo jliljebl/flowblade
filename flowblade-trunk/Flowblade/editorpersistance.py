@@ -246,8 +246,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
     prefs.auto_render_media_plugins = auto_render_plugins.get_active()
-<<<<<<< HEAD
-
     # --------------------------------- USB HID
     prefs.usbhid_enabled = usbhid_enabled_check.get_active()
     usbhid_config_index = usbhid_config_combo.get_active()
@@ -262,10 +260,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
         else:
             prefs.usbhid_config = None
 
-=======
     prefs.dnd_action = dnd_action.get_active()
     
->>>>>>> master
+
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
@@ -386,10 +383,7 @@ class EditorPreferences:
         self.auto_expand_tracks = True
         self.quick_effects = None
         self.auto_render_media_plugins = True
-<<<<<<< HEAD
         self.usbhid_enabled = False
         self.usbhid_config = None
-
-=======
         self.zoom_to_playhead = True
->>>>>>> master
+

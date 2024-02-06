@@ -47,7 +47,6 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
 
-import audiowaveform
 import compositormodes
 import editorpersistance
 import gui

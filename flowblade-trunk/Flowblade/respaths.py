@@ -85,13 +85,12 @@ def set_paths(root_path):
     FLUXITY_EMPTY_BG_RES_PATH = root_path + "/res/scripttool/not_rendered.png"
     MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
     FLUXITY_API_DOC = root_path + "/res/mediaplugins/fluxity.html"
-<<<<<<< HEAD
+    INFO_TIPS_DOC = root_path + "/res/help/en/infotips.html"
     USBHID_DRIVERS_PATH = root_path + "/res/usbhid/"
     
 def apply_dark_theme():
     global IMAGE_PATH
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
-    
-=======
-    INFO_TIPS_DOC = root_path + "/res/help/en/infotips.html"
->>>>>>> master
+
+
+

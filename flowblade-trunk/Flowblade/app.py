@@ -1140,20 +1140,9 @@ def _app_destroy():
     except:
         print("Delete autosave file FAILED!")
 
-<<<<<<< HEAD
     # Disconnect from USB HID device (if necessary)
     stop_usb_hid_input()
 
-    do_gtk_main_quit = jobs.handle_shutdown(get_instance_autosave_file())
-    
-    # Exit gtk main loop if no jobs unfinished.
-    if do_gtk_main_quit == True:
-        Gtk.main_quit()
-    else:
-        # Jobs lauches its own top level window to show progress on unfinished jobs renders
-        # and does Gtk.main_quit() later when done.
-        pass
-=======
     # Now that autosave file is deleted, the data folder contents for unsaved
     # projects are unreachable and can be destoyed.
     projectdatavault.delete_unsaved_data_folders()
@@ -1173,4 +1162,3 @@ def _app_destroy():
     os._exit(0)
     #_app.quit()
 
->>>>>>> master

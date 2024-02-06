@@ -313,17 +313,12 @@ def _handle_tline_key_event(event):
     if action == 'trim_end':
         tlineaction.trim_end_pressed()
         return True
-<<<<<<< HEAD
 
     # Key bindings for keyboard trimming
-=======
     if action == 'toggle_track_output':
         trackaction.toggle_track_output()
         return True
 
-        
-    # Key bindings for keyboard trimming.
->>>>>>> master
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
             trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))

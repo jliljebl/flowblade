@@ -62,14 +62,10 @@ def preferences_dialog():
     notebook.append_page(jog_shuttle_panel, Gtk.Label(label=_("Jog/Shuttle")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
-<<<<<<< HEAD
-    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
-        performance_widgets, jog_shuttle_widgets))
-=======
     dialog.connect('response', _preferences_dialog_callback, 
                     (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, 
-                    view_pref_widgets, performance_widgets))
->>>>>>> master
+                    view_pref_widgets, performance_widgets, jog_shuttle_widgets))
+
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
