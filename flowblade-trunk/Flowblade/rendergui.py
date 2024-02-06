@@ -1005,6 +1005,7 @@ class RenderArgsRow():
         guiutils.set_margins(self.pop_over_pane, 4,4,4,4)
         self.pop_over_pane.show_all()
         
+        
         # ----------------------------------------- build GUI
         self.box = Gtk.VBox(False, 2)
         self.box.pack_start(use_opts_row , False, False, 0)
