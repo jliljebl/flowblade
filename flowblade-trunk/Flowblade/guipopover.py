@@ -88,13 +88,12 @@ _filter_mask_popover = None
 _filter_mask_menu = None
 _filter_add_popover = None
 _filter_add_menu = None
-_kb_shortcuts_popover = None
-_kb_shortcuts_menu = None
-_render_args_popove = None
+_render_args_popover = None
 _render_args_menu = None
 _kf_popover = None
 _kf_menu = None
-    
+
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
@@ -897,25 +896,6 @@ def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, 
     _filter_add_popover = Gtk.Popover.new_from_model(widget, _filter_add_menu)
     launcher.connect_launched_menu(_filter_add_popover)
     _filter_add_popover.show()
-
-def kb_shortcuts_popover_show(launcher, widget, data, callback):
-    global _kb_shortcuts_popover, _kb_shortcuts_menu
-
-    _kb_shortcuts_menu = menu_clear_or_create(_kb_shortcuts_menu)
-    
-    shortcuts_combo, dialog = data
-
-    if shortcuts_combo.get_active() < 2:
-        delete_active = False
-    else:
-        delete_active = True
-
-    main_section = Gio.Menu.new()
-    add_menu_action(main_section, _("Add Custom Shortcuts Group"), "kbdialog.addgroup", ("add", data), callback)
-    add_menu_action(main_section, _("Delete Active Custom Shortcuts Group"), "kbdialog.deletegroup", ("delete", data), callback)
-    _kb_shortcuts_menu.append_section(None, main_section)
-
-    _kb_shortcuts_popover = new_popover(widget, _kb_shortcuts_menu, launcher)
 
 def render_args_popover_show(launcher, widget, callback):
     global _render_args_popover, _render_args_menu

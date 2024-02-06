@@ -219,12 +219,8 @@ def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
     
     shortcuts.set_keyboard_shortcuts()
 
-def keyboard_shortcuts_menu_item_selected_callback(launcher, widget, event, data):
-    guipopover.kb_shortcuts_popover_show(launcher, widget, data, _kb_menu_item_selected)
-    
-    #guicomponents.get_kb_shortcuts_hamburger_menu(event, _kb_menu_item_selected, data) #:_kb_menu_item_selected, shortcuts_combo)
+def keyboard_shortcuts_menu_item_selected_callback(widget, data):
 
-def _kb_menu_item_selected(widget, data):
     action, data = data
     if action == "add":
         dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Add New Custom Shortcuts Group"), _("Ok"),

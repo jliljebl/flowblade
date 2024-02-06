@@ -1643,14 +1643,18 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
                         (_("Close"), Gtk.ResponseType.ACCEPT))
     kb_shortcut_dialog = dialog
     
-    presets_label = guiutils.bold_label(_("Shortcuts Group:"))
+    presets_label = guiutils.bold_label(_("Active Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
-    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
-    hamburger_menu.do_popover_callback = True
-    guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
+    button_data = (shortcuts_combo, dialog)
+    
+    add_button = Gtk.Button(label=_("Add Custom Shortcuts Group"))
+    add_button.connect("clicked", _kb_menu_callback, ("add", button_data))
+    add_button.set_margin_top(8)
+    delete_button = Gtk.Button(label=_("Delete Active Custom Shortcuts Group"))
+    delete_button.connect("clicked", _kb_menu_callback, ("delete", button_data))
+
     hbox = Gtk.HBox()
-    hbox.pack_start(hamburger_menu.widget, False, True, 0)
     hbox.pack_start(presets_label, False, True, 0)
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(shortcuts_combo, True, True, 0)
@@ -1660,6 +1664,8 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     
     content_panel = Gtk.VBox(False, 2)
     content_panel.pack_start(hbox, False, False, 0)
+    content_panel.pack_start(add_button, False, False, 0)
+    content_panel.pack_start(delete_button, False, False, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     content_panel.pack_start(scroll_hold_panel, True, True, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)

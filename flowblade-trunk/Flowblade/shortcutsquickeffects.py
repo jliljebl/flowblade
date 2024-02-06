@@ -29,7 +29,6 @@ import mltfilters
 import movemodes
 import translations
 
-_set_quick_effect_menu = Gtk.Menu()
 
 NO_SHORTCUT_SET = "##¤¤NOSHORTCUTSET¤¤##"
 
@@ -47,6 +46,8 @@ _EMPTY_SHORTCUTS_DICT = {   "f1": NO_SHORTCUT_SET,
                             "f12": NO_SHORTCUT_SET}
 
 _quick_effects_dict = None
+_active_edit_popover = None
+
 
 def load_shortcuts():
     if editorpersistance.prefs.quick_effects == None:
@@ -207,11 +208,10 @@ class QuickKBShortcutEditPopover:
         self.hide()
         
     def _delete_shortcut(self, widget):
-        #name, filter_info = self.filter_select_combo.get_selected()
         data = (self.shortcut_key, self.shortcut_value_label)
         _delete_shortcut(data)
         self.hide()
-         
+
     def show(self):
         self.popover.show()
 

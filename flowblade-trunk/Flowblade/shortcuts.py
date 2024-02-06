@@ -260,7 +260,7 @@ def change_custom_shortcut(code, key_val_name, mods_list, add_event=False):
 
     # Add new element if so ordered.
     if add_event == True:
-        new_event = etree.Element("event")    
+        new_event = etree.Element("event")
         new_event.text = key_val_name
         new_event.set('code', code)
         shortcuts_node = root.find("shortcuts")
@@ -304,19 +304,23 @@ def is_blocked_shortcut(key_val, mods_list):
         if key_val == r_key_val:
             if collections.Counter(mods_list) == collections.Counter(r_mods_list):
                 return True
-                
+
     return False
 
 def get_shortcut_info(root, code):
-    events = root.iter('event')
+    try:
+        events = root.iter('event')
 
-    for event in events:
-        if event.get('code') == code:
-            mod_name = _get_mod_string(event)
-            if mod_name != "":
-                mod_name = mod_name + " + "
-            return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
-    
+        for event in events:
+            if event.get('code') == code:
+                mod_name = _get_mod_string(event)
+                if mod_name != "":
+                    mod_name = mod_name + " + "
+                return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
+    except:
+        print("error in get_shortcut_info, event.text:", event.text)
+        pass
+
     return (None, None)
 
 def get_shortcut_gtk_code(root, code):
