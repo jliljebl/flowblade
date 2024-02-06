@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -144,7 +144,7 @@ def mouse_release(x, y, frame, state):
     else:
         print("COMPOSITOR MODE EXIT PROBLEM at compositormodes.mouse_release")
 
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
     if sub_mode == TRIM_EDIT:
         _bounds_check_trim(frame, edit_data)

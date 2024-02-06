@@ -18,7 +18,7 @@ The approach taken in structuring Flowblade code base is that **modules are cons
 
 **The goal of the design is to have the maximum amount of code in the Leaf Modules** and to have as little as possible interdependence between *Functional Modules*.
 
-**Each new clearly defined functionality should be added by creating a new module** and connecting it in root modules to GUI callbacks and  into existing main paths in the application and importing the necessery *Leaf Modules*.
+**Each new clearly defined functionality should be added by creating a new module** and connecting it in root modules to GUI callbacks and  into existing main paths in the application and importing the necessary *Leaf Modules*.
 
 **Example:** When timeline sensitive cursor was introduced most of the new functionality was contained in module *snapping.py* that was imported by 3 other modules as needed.
 

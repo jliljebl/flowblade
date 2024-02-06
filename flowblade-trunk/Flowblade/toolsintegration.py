@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,16 +28,16 @@ import utils
 _tools = []
 _render_items = []
 test_timeout_id = None
-           
+
+get_popover_clip_data_func = None
+ 
 # --------------------------------------------------- interface
 def init():
-    
+    _tools.append(SlowMoIntegrator())
+    _tools.append(ReverseIntegrator())
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
         
-    _tools.append(SlowMoIntegrator())
-    _tools.append(ReverseIntegrator())
-    
 def get_export_integrators():
     export_integrators = []
     for tool_integrator in _tools:
@@ -54,16 +54,19 @@ class ToolIntegrator:
         self.is_export_target = is_export_target
         self.supported_media_types = supported_media_types
         self.data = None # Used at call sites to give needed info for exports
-    
+        self.clip = None
+        self.track = None
+        
     def supports_clip_media(self, clip):
         if clip.media_type in self.supported_media_types:
             return True
         else:
             return False
 
-    def export_callback(self, widget, data):
+    def export_callback(self, action, variant, data):
+        clip, track, x = get_popover_clip_data_func() # is clipmenuaction.get_popover_clip_data()
         new_instance = copy.deepcopy(self)
-        new_instance.data = data
+        new_instance.data = (clip, track)
         new_instance.do_export()
         
     def do_export(self):
@@ -118,7 +121,6 @@ class SlowMoIntegrator(ToolIntegrator):
         media_file.mark_in = clip.clip_in
         media_file.mark_out = clip.clip_out
         render.render_frame_buffer_clip(media_file, True)
-
 
 class ReverseIntegrator(ToolIntegrator):
     

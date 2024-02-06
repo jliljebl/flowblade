@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ import hashlib
 from gi.repository import Gtk, Gdk
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 
 import appconsts
 import dialogutils
@@ -41,6 +41,7 @@ import mltrefhold
 import respaths
 import userfolders
 import utils
+import updater
 
 # Pattern producer types
 UNDEFINED = 0
@@ -92,27 +93,7 @@ def _create_ising_clip_callback(dialog, response_id, widgets):
         _update_gui_for_pattern_producer_media_object_add()
         
     dialog.destroy()
-"""
-def create_color_pulse_clip():
-    _color_pulse_clip_dialog(_create_color_pulse_clip_callback)
 
-def _create_color_pulse_clip_callback(dialog, response_id, widgets):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
-
-        s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider = widgets
-        media_object.set_property_values(s1_slider.get_adjustment().get_value() / 100.0,
-                                         s2_slider.get_adjustment().get_value() / 100.0, 
-                                         s3_slider.get_adjustment().get_value() / 100.0,
-                                         s4_slider.get_adjustment().get_value() / 100.0,
-                                         m1_slider.get_adjustment().get_value() / 100.0,
-                                         m2_slider.get_adjustment().get_value() / 100.0)
-
-        PROJECT().add_pattern_producer_media_object(media_object)
-        _update_gui_for_pattern_producer_media_object_add()
-
-    dialog.destroy()
-"""
 def create_count_clip():
     media_object = BinCountClip(PROJECT().next_media_file_id, _("Count"))
     PROJECT().add_pattern_producer_media_object(media_object)
@@ -120,7 +101,7 @@ def create_count_clip():
 
 def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
+    updater.update_current_bin_files_count()
 
 # ---------------------------------------------------- 
 def create_pattern_producer(profile, bin_clip):
@@ -131,8 +112,6 @@ def create_pattern_producer(profile, bin_clip):
         clip = bin_clip.create_mlt_producer(profile)
     except:
         clip = _create_patten_producer_old_style(profile, bin_clip)
-
-    print("create_pattern_producer")
 
     clip.path = ""
     clip.filters = []
@@ -145,7 +124,7 @@ def create_pattern_producer(profile, bin_clip):
     return clip
 
 # --------------------------------------------------- DECPRECATED producer create methods
-# --------------------------------------------------- REMOVE 2017
+# --------------------------------------------------- LOOK TO REMOVE.
 """
 We originally did producer creation using elifs and now using pickle() for save/load 
 requires keeping this around until atleast 2017 for backwards compatibility.
@@ -200,6 +179,8 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         self.has_proxy_file = False
         self.is_proxy_file = False
         self.second_file_path = None
+
+        self.container_data = None
         
         self.create_icon()
 
@@ -210,7 +191,7 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         print("create_mlt_producer not implemented")
 
     def create_icon(self):
-        print("patter producer create_icon() not implemented")
+        print("pattern producer create_icon() not implemented")
 
 
 class BinColorClip(AbstractBinClip):
@@ -233,7 +214,7 @@ class BinColorClip(AbstractBinClip):
         cr.fill()
 
         file_name = hashlib.md5((self.gdk_color_str + str(width) + str(height)).encode('utf-8')).hexdigest()      
-        write_file_path = userfolders.get_render_dir() + "/" + file_name + ".png"
+        write_file_path = userfolders.get_render_dir() + file_name + ".png"
         surface.write_to_png(write_file_path)
         
         producer = mlt.Producer(profile, write_file_path)
@@ -333,14 +314,6 @@ class BinCountClip(AbstractBinClip):
 
     def set_property_values(self):
         pass
-        """
-        self.s1 = s1
-        self.s2 = s2
-        self.s3 = s3
-        self.s4 = s4
-        self.m1 = m1
-        self.m2 = m2
-        """
         
     def create_mlt_producer(self, profile):
         producer = mlt.Producer(profile, "count")    
@@ -460,4 +433,3 @@ def _color_pulse_clip_dialog(callback):
     dialogutils.default_behaviour(dialog)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.show_all()
-    

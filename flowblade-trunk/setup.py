@@ -3,7 +3,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import glob, os 
-from distutils.core import setup
-
+import glob, os
+from setuptools import setup
+    
 # FLOWBLADE distutils setup.py script.
 
 install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblade.desktop']),
@@ -38,7 +38,10 @@ flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/shortcuts/*','res/css/*','res/css/assets/*','res/css/sass/*',
                           'res/css2/*','res/css2/assets/*','res/css2/sass/*',
                           'res/css3/*','res/css3/assets/*','res/css3/sass/*',
-                          'res/mediaplugins/*']
+                          'res/mediaplugins/*', 'res/mediaplugins/animations_1/*',
+                          'res/mediaplugins/animations_2/*', 'res/mediaplugins/text_1/*',
+                          'res/mediaplugins/text_2/*', 'res/mediaplugins/transitions_1/*',
+                          'res/mediaplugins/transitions_2/*','res/gpu-test/*','res/scripttool/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
@@ -46,7 +49,7 @@ for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
     locale_files.append(filepath)
 
 setup(  name='flowblade',
-        version='2.8.0.3',
+        version='2.12.0.2',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',

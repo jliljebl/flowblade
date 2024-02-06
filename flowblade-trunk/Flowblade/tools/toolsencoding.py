@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ disable_audio_encoding = False
 default_profile_index = None
 
 
-
 class ToolsRenderData():
     """
     This is used to save and communicate render selections defined by user
@@ -68,13 +67,26 @@ class ToolsRenderData():
         self.frame_name = "frame"
         self.is_preview_render = False
         self.is_flatpak_render = False
+    
+    
+    
+def get_args_vals_list_for_render_data(render_data):
+    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
+
+    args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                        render_data.encoding_option_index, 
+                                                                                        render_data.quality_option_index)
+    # sample rate not supported
+    # args rendering not supported
+
+    return args_vals_list
 
 
 def create_container_clip_default_render_data_object(profile):
     # When ToolsRenderData is used by G'Mic tool we need to have default values be 'None', for container clis we need different
     # default values.
     # 
-    # When first render is attempted this created to have data availeble for render process
+    # When first render is attempted this created to have data available for render process
     # even if user has not set any values.
     render_data = ToolsRenderData()
     render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
@@ -211,16 +223,6 @@ def get_render_data_for_current_selections():
 
     return render_data
 
-def get_args_vals_list_for_render_data(render_data):
-    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-
-    args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
-                                                                                        render_data.encoding_option_index, 
-                                                                                        render_data.quality_option_index)
-    # sample rate not supported
-    # args rendering not supported
-
-    return args_vals_list
 
 def get_encoding_desc(args_vals_list):
     print(args_vals_list)
@@ -478,7 +480,7 @@ class ProfileSelector():
 
 class RenderQualitySelector():
     """
-    Component displays quality option relevant for encoding slection.
+    Component displays quality option relevant for encoding selection.
     """
     def __init__(self):
         self.widget = Gtk.ComboBoxText()

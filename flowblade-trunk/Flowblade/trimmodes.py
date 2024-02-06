@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ import gui
 import tlinewidgets
 import updater
 
+
+import traceback
 
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
@@ -73,7 +75,14 @@ submode = NOTHING_ON
 
 MAX_DELTA = 100000000
 
-# ------------------------------------ module functions       
+# ------------------------------------ module functions
+def clear_edit_data():
+    global submode, edit_data, ripple_data, mouse_disabled
+    submode = NOTHING_ON
+    edit_data = None
+    ripple_data = None
+    mouse_disabled = False
+
 def _get_trim_edit(track, frame):
     """
     Return a trim edit for a frame on a track.
@@ -104,7 +113,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     """
     # This is too complex now that roll is handled separately, could be reworked.
     # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
-    # needed taken into account when calculating legel trim range.
+    # needed taken into account when calculating legal trim range.
     trim_limits = {}
 
     if from_clip == None:
@@ -231,7 +240,7 @@ def trim_looping_stopped():
                          edit_data["reinit_frame"])
 
 def update_cursor_to_mode():
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
 def set_no_edit_trim_mode():
     if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or \
@@ -486,7 +495,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         edit_data["trim_limits"]["ripple_display_end"] = -1
         edit_data["trim_limits"]["ripple_display_start"] = -1
 
-    # Cant't trim a blank clip. Blank clips are special in MLT and can't be
+    # Can't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         ripple_data = None
@@ -612,7 +621,7 @@ def oneroll_trim_release(x, y, frame, state):
     if mouse_disabled:
         mouse_disabled = False
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         return
@@ -789,14 +798,14 @@ class RippleData:
         self.track_edit_ops = []
         self.track_affected = []
         self.track_blank_end_offset = []
-        self.moved_compositors_destroy_ids = [] # we cannot rely on object identies with compositors because they get destroyd and recreated in undo/redo actions
+        self.moved_compositors_destroy_ids = [] # we cannot rely on object identities with compositors because they get destroyed and recreated in undo/redo actions
         self.legal_edit = True
         self._build_ripple_data()
 
     def _build_ripple_data(self):
         tracks = current_sequence().tracks
 
-        # Look at all tracks exept hidden and black
+        # Look at all tracks except hidden and black
         # Get per track:
         # * maximum length trim can be done backwards or forwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
@@ -1113,7 +1122,7 @@ def tworoll_trim_release(x, y, frame, state):
     global mouse_disabled
     if mouse_disabled == True:
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False
@@ -1415,7 +1424,7 @@ def slide_trim_release(x, y, frame, state):
     global mouse_disabled
     if mouse_disabled == True:
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False

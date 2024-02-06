@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -505,7 +505,7 @@ class AbstractEditCanvas:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         if self.coords == None:
             self._create_coords()
@@ -777,7 +777,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
         queue_draw()
         geometry_edit_finished()
         
-    Keyframes in form: [frame, [x, y, x_scale, y_scale, rotation] opacity]
+    Keyframes in form: [frame, [x, y, x_scale, y_scale, rotation], opacity, keyframe_type]
     """
     def __init__(self, editable_property, parent_editor):
         AbstractEditCanvas.__init__(self, editable_property, parent_editor)
@@ -789,7 +789,9 @@ class RotatingEditCanvas(AbstractEditCanvas):
         self.y_scale = None
 
         self.draw_bounding_box = True # This may be set False at creation site.
-    
+
+        self.is_scale_locked = False  # This may be set True at creation site
+
     def create_edit_points_and_values(self):
         # creates untransformed edit shape to init array, values will be overridden shortly
         self.edit_points.append((self.source_width / 2, self.source_height / 2)) # center
@@ -954,9 +956,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
         r = self.catmull_rom_interpolate(r0, r1, r2, r3, fract)
 
         return (x, y, xs, ys, r)
-        
 
-        
     def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
             self.shape_x -= delta
@@ -981,7 +981,10 @@ class RotatingEditCanvas(AbstractEditCanvas):
             self.x_scale += delta
         
         self.y_scale = self.y_scale * (self.x_scale / old_scale)
-        
+
+        if self.is_scale_locked == True:
+            self.y_scale = self.x_scale 
+ 
     # --------------------------------------------------------- mouse events
     def _shape_press_event(self):
         self.start_edit_points = copy.deepcopy(self.edit_points)
@@ -1020,7 +1023,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
             dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
             orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[X_SCALE_HANDLE])
             self.x_scale = dist / orig_dist
-            if CTRL_DOWN:
+            if CTRL_DOWN or self.is_scale_locked == True:
                 self.y_scale = self.x_scale
             self._update_edit_points()
         elif self.current_mouse_hit == Y_SCALE_HANDLE:
@@ -1029,7 +1032,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
             dist = viewgeom.distance(self.edit_points[POS_HANDLE], pp)
             orig_dist = viewgeom.distance(self.untrans_points[POS_HANDLE], self.untrans_points[Y_SCALE_HANDLE])
             self.y_scale = dist / orig_dist
-            if CTRL_DOWN:
+            if CTRL_DOWN or self.is_scale_locked == True:
                 self.x_scale = self.y_scale
             self._update_edit_points()
         elif self.current_mouse_hit == ROTATION_HANDLE:

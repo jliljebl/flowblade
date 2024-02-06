@@ -40,7 +40,7 @@ __version__ = "0.99.8"
 Algorithms for aligning (i.e. registering, synchronizing) time series
 """
 
-## BLOCKRATE set by the comand line option --rate
+## BLOCKRATE set by the command line option --rate
 """
 @ivar BLOCKRATE: The number of amplitude blocks per second.
 
@@ -220,9 +220,9 @@ class Envelope:
         logging.debug("framesize: %d" % framesize)
         logging.debug("samplesize: %d" % fmt_h[7])
 
-        # fix fmt_section allignment
+        # fix fmt_section alignment
         if fmt_size > 16:
-            logging.debug("fix allignment for fmt_size: %d" % fmt_size)
+            logging.debug("fix alignment for fmt_size: %d" % fmt_size)
             data = sp.stdout.read(fmt_size - 16)
 
         while True:
@@ -273,14 +273,11 @@ class Envelope:
                           hashlib.md5(name.encode('utf-8')).hexdigest())
         self.cachename = os.path.join(self.args.cache_dir[0], hash)
         if os.access(self.cachename, os.R_OK):
-            #size = os.stat(self.cachename)[stat.ST_SIZE] / 4
             logging.debug("use cache file: %s" % self.cachename)
             f = open(self.cachename, 'rb')
             size = struct.unpack('L', f.read(struct.calcsize('L')))[0]
             self.envelope = array.array('f')
             self.envelope.fromfile(f, size)
-            #logging.debug("cache of size %d ends with: %s" %
-            #              (size,  self.envelope[-10:]))
         else:
             logging.debug("no envelope cache found")
             self.envelope = None
@@ -309,7 +306,7 @@ hh:mm:ss or amount in seconds.
 
 def cl_parser():
     parser = argparse.ArgumentParser(
-        description="automaticly find sync offsets",
+        description="automatically find sync offsets",
         epilog=epilog
         )
     parser.add_argument('files', nargs='+', help="FILE FILE [FILES]")
@@ -358,7 +355,7 @@ def main():
         out_str = out_str + f + MAGIC_SEPARATOR + str(offset) + "\n"
     
     userfolders.init()
-    output_file = userfolders.get_cache_dir() + OFFSETS_DATA_FILE + "_"+ args.idstr
+    output_file = userfolders.get_cache_dir() + OFFSETS_DATA_FILE + "_" + args.idstr
 
     f = open(output_file, 'w')
     f.write(out_str)

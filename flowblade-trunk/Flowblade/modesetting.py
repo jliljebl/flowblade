@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ def set_default_edit_mode(disable_mouse=False):
     situations where for example user is in trim and exits it
     without specifying which edit mode to go to.
     """
-    gui.editor_window.set_default_edit_tool()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     if disable_mouse:
         editorstate.timeline_mouse_disabled = True
 
@@ -60,9 +60,9 @@ def set_clip_monitor_edit_mode():
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         pass
     else:
-        gui.editor_window.set_default_edit_tool()
+        gui.editor_window.tline_cursor_manager.set_default_edit_tool()
         
-    gui.editor_window.set_tool_selector_to_mode()
+    gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()
 
 def set_post_undo_redo_edit_mode():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
@@ -100,7 +100,7 @@ def overwrite_move_mode_pressed():
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE so this false
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE so this false
     editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
@@ -113,7 +113,7 @@ def box_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
     
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
     editorstate.overwrite_mode_box = True
     boxmove.clear_data()
@@ -151,7 +151,7 @@ def oneroll_trim_no_edit_init():
     """
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -202,7 +202,7 @@ def oneroll_trim_mode_init(x, y):
 def tworoll_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -246,7 +246,7 @@ def tworoll_trim_mode_init(x, y):
 def slide_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -291,8 +291,9 @@ def slide_trim_mode_init(x, y):
 def multitrim_mode_pressed():
     stop_looping()
     editorstate.edit_mode = editorstate.MULTI_TRIM
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    trimmodes.clear_edit_data()
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode.
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection.
     updater.set_trim_mode_gui()
     
 # -------------------------------------- cut mode
@@ -300,7 +301,7 @@ def cut_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
 
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.CUT
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
@@ -311,7 +312,7 @@ def kftool_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
 
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.KF_TOOL
     kftoolmode.enter_mode = None
     kftoolmode.set_no_clip_edit_data()
@@ -335,6 +336,6 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
 
     kftoolmode.init_tool_for_clip(clip, track, edit_type)
     kftoolmode.edit_data["initializing"] = False
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
     clipeffectseditor.keyframe_editor_widgets = []

@@ -4,7 +4,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,9 +23,8 @@
 import os
 import sys
 
-print ("FLOWBLADE MOVIE EDITOR 2.8")
-print ("--------------------------")
-
+print ("FLOWBLADE MOVIE EDITOR 2.12.0.2")
+print ("-------------------------------")
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -57,7 +56,7 @@ sys.path.insert(0, modules_path)
 
 # Check that we have MLT, missing is fatal.
 try:
-    import mlt
+    import mlt7 as mlt
     try:
         mlt_version = mlt.LIBMLT_VERSION
         print ("MLT found, version:", mlt_version)

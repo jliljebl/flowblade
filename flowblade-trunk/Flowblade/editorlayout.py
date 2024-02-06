@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GLib
 
 import copy
 import pickle
@@ -35,6 +35,7 @@ import dialogs
 import dialogutils
 import gui
 import guiutils
+import guipopover
 import utils
 
 # Transforms when adding panels.
@@ -45,7 +46,7 @@ import utils
 
 # Transforms when removing panels.
 # N -> 2    Panel is removed from notebook.
-# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from noteboook
+# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from notebook
 #           and added to pre-created Gtk.Frame.
 # 1 -> 0    Panel is removed from the pre-created Gtk.Frame.
 
@@ -123,10 +124,10 @@ PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
 PANEL_MINIMUM_SIZES = { \
-    appconsts.PANEL_MEDIA: None, 
+    appconsts.PANEL_MEDIA: (appconsts.PANEL_MEDIA_MINIMUM_SIZE, appconsts.TOP_ROW_HEIGHT), 
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
-    appconsts.PANEL_MULTI_EDIT: (470, 500), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_MULTI_EDIT: (appconsts.PANEL_MULTI_EDIT_MINIMUM_SIZE, appconsts.TOP_ROW_HEIGHT),
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
@@ -148,15 +149,12 @@ DEFAULT_TABS_POSITIONS = { \
 # Saved data struct holding panel positions information.
 _panel_positions = None
 
-# Gtk.Notebooks that may or may not exist to containe 2-N panel is layou position
+# Gtk.Notebooks that may or may not exist to contain 2-N panel is layout position
 _position_notebooks = {}
 
 # Dicts for translations.
 _positions_names = {}
 _panels_names = {}
-
-# Pop-up menu from top bar button.
-_top_bar_button_menu = Gtk.Menu()
 
 def top_level_project_panel():
     if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
@@ -169,9 +167,14 @@ def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks
     _panel_positions = editorpersistance.prefs.panel_positions
 
-    # Use default panels positons if nothing available yet or too small screen
-    if panel_positioning_available() == False or _panel_positions == None:
+    # Use default panels positions if nothing available yet or too small screen, 
+    # or default panel position is empty, layout code makes too many assumptions to make that work.
+    if panel_positioning_available() == False or _panel_positions == None \
+       or not (appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT in _panel_positions.values()):
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
+        if editorstate.SCREEN_WIDTH < 1439:
+            # App window may become invsible if all buttons shown in midbar and window too wide for screen.
+            _panel_positions[appconsts.PANEL_FILTER_SELECT] = appconsts.PANEL_PLACEMENT_NOT_VISIBLE
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
 
@@ -324,7 +327,7 @@ def _set_min_size(panel_id, widget):
 def panel_positioning_available():
     # This feature now available only for 1680x1050 and larger screens.
     # Maybe some reduced version later for smaller screens.
-    if editorstate.SCREEN_WIDTH > 1678 and  editorstate.SCREEN_HEIGHT > 1048:
+    if editorstate.SCREEN_WIDTH > 1678 and editorstate.SCREEN_HEIGHT > 1048:
         return True
     
     return False
@@ -333,7 +336,7 @@ def set_positions_frames_visibility():
     # if frame has 0 panels in it, hide
     for position in _positions_names:
         if position == appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
-            continue # this not applicaple here
+            continue # this not applicable here
         frame = _get_position_frames_dict()[position]
         panels = _get_position_panels(position)
         if len(panels) > 0:
@@ -520,20 +523,13 @@ def get_tabs_menu_item():
         
     return tabs_menu_item
 
-def show_layout_press_menu(widget, event):
-    menu = _top_bar_button_menu
-    guiutils.remove_children(menu)
-    _create_layout_presets_menu(menu)
-    #menu.connect("hide", _testing_hide)
-    
-    menu.popup(None, None, None, None, event.button, event.time)
+def show_layout_press_menu(launcher, widget, event):
+    guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover)
 
-#def _testing_hide(widget):
-    #print("hide layout")
 
 def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated
-    
+
     menu_item = guiutils.get_menu_item(_("Layout Monitor Left"), callback, "monitor_left")
     menu.add(menu_item)
 
@@ -557,6 +553,9 @@ def _create_layout_presets_menu(menu):
     menu.add(menu_item)
 
     menu.show_all()
+
+def _top_bar_menu_item_activated_popover(action, variant, msg):
+    _top_bar_menu_item_activated(None, msg)
 
 def _top_bar_menu_item_activated(widget, msg):
     if msg == "monitor_center":
@@ -605,6 +604,16 @@ def _change_panel_position(widget, panel_id, pos_option):
     # We're again getting one event for activated item and one for the de-activated item.
     if widget != None and widget.get_active() == False:
         return
+    
+    # Refuse to make default notebook empty.
+    panels_in_default_notebook = 0
+    for pos in _panel_positions.values():
+        if pos == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+            panels_in_default_notebook += 1
+    if panels_in_default_notebook == 1 and \
+       _panel_positions[panel_id] == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+       dialogs.refuse_to_empty_default_notebook_dialog()
+       return
 
     # Remove panel if it currently has position in layout.
     if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
@@ -621,7 +630,7 @@ def _change_panel_position(widget, panel_id, pos_option):
     if widget != None:
         gui.editor_window.window.show_all()
         set_positions_frames_visibility()
-        GObject.timeout_add(100, _check_dimensions)
+        GLib.timeout_add(100, _check_dimensions)
         
 def _check_dimensions():
     top_row_min_width = get_top_row_minimum_width()

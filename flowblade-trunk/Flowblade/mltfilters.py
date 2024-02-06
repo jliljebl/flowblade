@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,12 +25,11 @@ are attached to mlt.Producer objects.
 
 import copy
 
-from gi.repository import GdkPixbuf
-
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
+    
 import xml.dom.minidom
 
 import appconsts
@@ -79,7 +78,7 @@ group_icons = None
 # Filters that are used as parts of mlttransitions.CompositorObject
 # and are not displayed to user
 # dict name:FilterInfo
-# THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
+# THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND REMOVE!
 compositor_filters = {}
 
 # Special filters used to achieve partial applicatiopn of other filters
@@ -96,39 +95,19 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 # HACK! references to old filters are kept because freeing them causes crashes
 old_filters = []
 
-# We need this to mute clips
-_volume_filter_info = None
+# Other filter are always use selected, these are needed by other functionality.
+_volume_filter_info = None # for muting clips
 _brightness_filter_info = None # for kf tool
 _colorize_filter_info = None # for tline render tests
+_shape_filter_info = None # for rendered wipes
 
-def _load_icons():
-    global FILTER_DEFAULT_ICON
-    FILTER_DEFAULT_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
-    
+
 def _get_group_icon(group_name):
-    global group_icons
-    if group_icons == None:
-        group_icons = {}
-        group_icons["Color"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color.png")
-        group_icons["Color Effect"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color_filter.png")
-        group_icons["Audio"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter.png")
-        group_icons["Audio Filter"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter_sin.png")
-        group_icons["Blur"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blur_filter.png")
-        group_icons["Distort"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "distort_filter.png")
-        group_icons["Alpha"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "alpha_filter.png")
-        group_icons["Movement"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "movement_filter.png")
-        group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
-        group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
-        group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
-        group_icons["Fade In / Out"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
-        group_icons["Artistic"] = FILTER_DEFAULT_ICON
-        group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
-        group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
     try:
         return group_icons[group_name]
     except:
         return FILTER_DEFAULT_ICON
-    
+
 def _translate_group_name(group_name):
     return translations.filter_groups[group_name]
 
@@ -168,7 +147,7 @@ class FilterInfo:
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
     
         # Multipart property describes how filters are created and edited when filter 
-        # constists of multiple filters.
+        # consists of multiple filters.
         # There 0 or 1 of these in the info object.
         node_list = filter_node.getElementsByTagName(MULTIPART_PROPERTY)
         if len(node_list) == 1:
@@ -182,7 +161,8 @@ class FilterInfo:
 
         #  Extra editors that handle properties that have been set "no_editor"
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
-        self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
+        self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)
+        self.extra_editors_args = propertyparse.node_list_to_extraeditors_args_dict(e_node_list)
 
         # Non-MLT properties are persistent values like properties. but they have values are not directly written out as MLT properties.
         p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
@@ -196,7 +176,7 @@ class FilterInfo:
 
 class FilterObject:
     """
-    These objects are saved with projects. Thay are used to generate, 
+    These objects are saved with projects. They are used to generate, 
     update and hold a reference to an mlt.Filter object attached to a mlt.Producer object
     representing a clip on the timeline.
     
@@ -241,7 +221,7 @@ class FilterObject:
              self.mlt_filter.set("disable", str(1))
 
     def replace_values(self, clip):
-        # We need to initilize some calues based clip langth and need wait until clip for
+        # We need to initialize some calues based clip length and need wait until clip for
         # filter is known, replace at object creation is done before clip is available
         replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
         if replacement_happened == True:
@@ -253,7 +233,7 @@ class FilterObject:
 # DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
 class MultipartFilterObject:
     """
-    These objects are saved with projects. Thay are used to generate, 
+    These objects are saved with projects. They are used to generate, 
     update and hold references to a GROUP of mlt.Filter objects attached to a mlt.Producer object.
     """
     def __init__(self, filter_info):
@@ -298,7 +278,7 @@ class MultipartFilterObject:
         self.value = kf_str
 
     def create_filters_for_keyframes(self, keyframes, mlt_profile):
-        for i in range(0, len(keyframes) - 1): # Theres one less filter parts than keyframes
+        for i in range(0, len(keyframes) - 1): # There's one less filter parts than keyframes
             mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
             mltrefhold.hold_ref(mlt_filter)
             self.mlt_filters.append(mlt_filter)
@@ -333,7 +313,7 @@ class MultipartFilterObject:
         return self._parse_string_to_keyframes(self.value)
         
     def _parse_string_to_keyframes(self, kf_string):
-        # returs list of (frame, value) tuples
+        # returns list of (frame, value) tuples
         value = kf_string.strip('"') # for some reason we have to use " around values or something broke
         parts = value.split(";")
         kfs = []
@@ -358,14 +338,13 @@ class MultipartFilterObject:
             for f in self.mlt_filters:
                 f.set("disable", str(1))
 
-
+# -------------------------------------------------------------------- init
 def load_filters_xml(services):
     """
     Load filters document and save filters nodes as FilterInfo objects in array.
     Save them also as array of tuples of names and arrays of FilterInfo objects
-    that represent named groups of filters as displayd to user.
+    that represent named groups of filters as displayed to user.
     """
-    _load_icons()
     
     print("Loading filters...")
     
@@ -396,6 +375,10 @@ def load_filters_xml(services):
         if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save reference to it
             global _volume_filter_info
             _volume_filter_info = filter_info
+
+        if filter_info.mlt_service_id == "shape": # we need this filter to do mutes so save reference to it
+            global _shape_filter_info
+            _shape_filter_info = filter_info
 
         # These are special cased as filters added from mask add menu
         if filter_info.mlt_service_id == "mask_start" or filter_info.mlt_service_id == "mask_apply":
@@ -434,6 +417,12 @@ def load_filters_xml(services):
         add_group = sorted(group, key=lambda finfo: translations.get_filter_name(finfo.name) )
         groups.append((gkey, add_group))
 
+def set_icons(default_icon, loaded_group_icons):
+    global FILTER_DEFAULT_ICON, group_icons
+    FILTER_DEFAULT_ICON = default_icon
+    group_icons = loaded_group_icons
+
+# -------------------------------------------------------------------- module funcs
 def clone_filter_object(filter_object, mlt_profile):
     """
     Creates new filter object with with copied properties values.
@@ -485,7 +474,7 @@ def replace_services(services):
                     for i in range(0, len(group)):
                         if group[i].name == f_info.name:
                             group.pop(i)
-                            print(f_info.name +" dropped for " + use_service_name)
+                            #print(f_info.name +" dropped for " + use_service_name)
                             break
             except:
                 print("Dropping a mlt service for " + use_service_name + " failed, maybe not present.")

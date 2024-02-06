@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ from gi.repository import Gtk, GLib
 
 import cairo
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import numpy as np
 import os
 import threading
@@ -63,7 +63,7 @@ MONITOR_INDICATOR_COLOR_MATCH = utils.get_cairo_color_tuple_255_rgb(21, 71, 105)
 
 FRAME_MATCH_VIEW_COLOR = (0.3, 0.3, 0.3)
 
-# Continuos match frame update
+# Continuous match frame update
 CONTINUOS_UPDATE_PAUSE = 0.2
 _last_render_time = 0.0
 _producer = None
@@ -72,9 +72,11 @@ _frame_write_on = False
             
 _widget = None
 
+
 def _get_match_frame_path():
     return userfolders.get_cache_dir() + appconsts.TRIM_VIEW_DIR + "/" + MATCH_FRAME
-        
+
+
 class MonitorWidget:
     
     def __init__(self):
@@ -91,16 +93,16 @@ class MonitorWidget:
         self.slip_clip_length = -1
 
         self.clip_name = "clip name"
-    
+
         self.match_not_updateble = False # Roll and Slip need this flag to know if surface updates needed
-        
+
         # top row
         self.top_row = Gtk.HBox()
         
         self.top_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_top_panel, use_widget_bg=False)
         self.top_edge_panel.press_func = self._press_event
         self.top_row.pack_start(self.top_edge_panel, True, True,0)
-        
+
         # mid row
         self.mid_row = Gtk.HBox()
 
@@ -165,11 +167,6 @@ class MonitorWidget:
 
         if self.view == FRAME_MATCH_VIEW and force_default_mode==False:
             return
-            
-        # Refreshing player while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
 
         # Delete match frame
         try:
@@ -192,10 +189,6 @@ class MonitorWidget:
         PLAYER().refresh()
 
     def set_frame_match_view(self, match_clip, frame):        
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
 
         # Delete match frame
         try:
@@ -222,11 +215,6 @@ class MonitorWidget:
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
            
         self.view = START_TRIM_VIEW
@@ -260,11 +248,6 @@ class MonitorWidget:
     def set_end_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
             return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
         
         self.view = END_TRIM_VIEW
         self.match_frame_surface = None
@@ -296,11 +279,6 @@ class MonitorWidget:
         
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
         
         self.view = ROLL_TRIM_RIGHT_ACTIVE_VIEW
@@ -334,11 +312,6 @@ class MonitorWidget:
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
             return
-            
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
         
         self.view = ROLL_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
@@ -370,11 +343,6 @@ class MonitorWidget:
         
     def set_slip_trim_right_active_view(self, match_clip):
         if self.is_active() == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
 
         self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
@@ -410,11 +378,6 @@ class MonitorWidget:
         if self.is_active() == False:
             return
 
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
-    
         self.view = SLIP_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = 0 # We're using tiline frames just as units to get edit deltas and displayed clip tc
@@ -544,11 +507,12 @@ class MonitorWidget:
     # ------------------------------------------------------------------ MATCH FRAME
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
-        
-        Gdk.threads_enter()
+        GLib.timeout_add(0, self._draw_displays)
+            
+    def _draw_displays(self):
+        # This is called from GUI process, we can do Gtk calls.
         self.left_display.queue_draw()
         self.right_display.queue_draw()
-        Gdk.threads_leave()
 
     def create_pattern_producer_match_frame(self):        
         w, h = self.get_match_frame_panel_size()
@@ -598,7 +562,7 @@ class MonitorWidget:
     
     def _get_cairo_buf_from_mlt_rgb(self, screen_rgb_data, img_w, img_h ):
         buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
-        buf.shape = (img_h + 1, img_w, 4) # +1 in h, seemeed to need it
+        buf.shape = (img_h, img_w, 4)
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]
         b = np.index_exp[:, :, 2]
@@ -852,7 +816,7 @@ class MonitorWidget:
 
 
     
-# ---------------------------------------------------------------------------------- match frame cration
+# ---------------------------------------------------------------------------------- match frame creation
 def _launch_match_frame_writer(data):
     match_clip_path, clip_frame, frame_name, callback = data        
 
@@ -928,7 +892,7 @@ class MatchSurfaceCreator(threading.Thread):
         # And make sureto deinterlace if input is interlaced
         frame.set("consumer_deinterlace", 1)
         size = _widget.get_match_frame_panel_size()
-        mlt_rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
+        mlt_rgb = frame.get_image(mlt.mlt_image_rgba, *size) 
    
         # Create cairo surface
         cairo_buf = _widget._get_cairo_buf_from_mlt_rgb(mlt_rgb, *size)
@@ -939,10 +903,7 @@ class MatchSurfaceCreator(threading.Thread):
         _widget.match_frame_surface = surface
         
         # Repaint
-        Gdk.threads_enter()
-        _widget.left_display.queue_draw()
-        _widget.right_display.queue_draw()
-        Gdk.threads_leave()
-        
+        GLib.timeout_add(0, _widget._draw_displays)
+
         
         

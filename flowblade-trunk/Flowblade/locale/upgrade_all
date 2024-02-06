@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LANGUAGES=("cs" "fr" "es" "it" "de" "hu" "ru" "zh_CN" "pl" "zh_TW" "uk")
+LANGUAGES=("cs" "fr" "es" "it" "de" "hu" "ru" "zh_CN" "pl" "zh_TW" "uk" "tr")
 
-echo "Upgading all languages"
+echo "Upgrading all languages"
 
 "./"create_pot
 

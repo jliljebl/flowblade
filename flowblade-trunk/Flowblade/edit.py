@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,9 +38,9 @@ from editorstate import PLAYER
 from editorstate import auto_follow_active
 import mltfilters
 import movemodes
+import mediaplugin
 import resync
 import tlinewidgets
-import tlinerender
 import trackaction
 import trimmodes
 import undo
@@ -217,7 +217,7 @@ def _overwrite_cut_track(track, frame, add_cloned_filters=False):
     and returns tuple of in and out frames of the clip that was cut as they
     were before the cut, for the purpose of having information to do undo later.
     
-    If cut was made it also clones fliters to new clip created by cut if requested.
+    If cut was made it also clones filters to new clip created by cut if requested.
     """
     index = track.get_clip_index_at(frame)
     clip = track.clips[index]
@@ -310,12 +310,13 @@ class EditAction:
         # when origin clips are destroyed.
         self.orphaned_compositors = None
         
-        # Some edit redo/undo actions require this but let's only do it when needed.
-        self.do_restack_compositors = False
-        
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
         self.exit_active_trimmode_on_edit = True
-        
+
+        # If edit is part of group some updates are only done once for the whole 
+        # group.
+        self.is_part_of_consolidated_group = False
+
         # HACK!!!! Overwrite edits crash at redo(sometimes undo) when current frame inside 
         # affected area if consumer running.
         # Remove when fixed in MLT.
@@ -345,6 +346,7 @@ class EditAction:
 
         self.redo()
         undo.register_edit(self)
+
         if self.turn_on_stop_for_edit:
             self.stop_for_edit = True
 
@@ -352,25 +354,7 @@ class EditAction:
         edit_done_since_last_save = True
 
         trackaction.maybe_do_auto_expand(tracks_clips_count_before)
-
-        # Create autofollow data if needed and update GUI.
-        # If autofollow and no data, then GUI update happens in do_edit()
-        # Added complexity here is to avoid two GUI updates
-        if auto_follow_active() == True:
-            self.compositor_autofollow_data, self.orphaned_compositors = get_full_compositor_sync_data()
-            do_autofollow_redo(self)
-            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                do_orphaned_compositors_delete_redo(self)
-            
-            if self.do_restack_compositors == True:
-                current_sequence().restack_compositors()
-                
-            self.do_restack_compositors = False  # We wish to do this only once 
-             
-            # This wasn't done in redo() because no auto follow data was available
-            if do_gui_update:
-                self._update_gui()
-
+        
     def undo(self):
         PLAYER().stop_playback()
 
@@ -387,30 +371,20 @@ class EditAction:
         _remove_all_trailing_blanks(None)
 
         resync.calculate_and_set_child_clip_sync_states()
-
-        tlinerender.get_renderer().timeline_changed()
-        
-        if self.compositor_autofollow_data != None:
-            do_autofollow_undo(self)
-            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                do_orphaned_compositors_delete_undo(self)
-                if self.do_restack_compositors == True:
-                    current_sequence().restack_compositors()
-                
+    
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
-
-        self.do_restack_compositors = False  # We wish to do this only once 
         
         if do_gui_update:
+            #print("undo() _update_gui")
             self._update_gui()
             
     def redo(self):
         PLAYER().stop_playback()
 
         # HACK, see above in __init()__
-        if self.stop_for_edit:
+        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
             PLAYER().consumer.stop()
 
         movemodes.clear_selected_clips() # selection is not valid after a change in sequence
@@ -422,41 +396,35 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
-        tlinerender.get_renderer().timeline_changed()
-        
-        if self.compositor_autofollow_data != None: # This is not called from do_edit() if these exist, we need to do auto follow and orphan compositos management
-            do_autofollow_redo(self)
-            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                do_orphaned_compositors_delete_redo(self)
-                if self.do_restack_compositors == True:
-                    current_sequence().restack_compositors()
-
-        tlinewidgets.set_match_frame(-1, -1, True)
-
         # HACK, see above.
-        if self.stop_for_edit:
+        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
             PLAYER().consumer.start()
-
-        self.do_restack_compositors = False # We wish to do this only once
                 
-        # Update GUI if no autofollow or if autofollow data is available.
-        # If autofollow and no data, then GUI update happens in do_edit()
-        # Added complexity here is to avoid two GUI updates
-        if ((do_gui_update and auto_follow_active() == False) or 
-           (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
+        # Update GUI.
+        if do_gui_update:
             self._update_gui()
         
     def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
         updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
+                                         
+        # Clear or update edit panels that do not target an existing and up-to-date object.
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
                 updater.update_kf_editors_positions()
                 clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
+            elif mediaplugin.panel_is_open() == True:
+                if current_sequence().clip_is_in_sequence(mediaplugin.get_clip()) == True:
+                    # Keep displaying open Generator properties edit panel 
+                    # if the clip is still in sequence. 
+                    pass
+                else:
+                    updater.clear_editor_panel()
             else:
-                updater.clear_effects_editor_clip()
+                if compositeeditor.compositor == None:
+                    updater.clear_editor_panel()
         else:
-            updater.clear_effects_editor_clip()
+            updater.clear_editor_panel()
 
         current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
@@ -464,10 +432,61 @@ class EditAction:
         PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
         updater.update_position_bar()
-
         updater.update_seqence_info_text()
 
 
+
+class ConsolidatedEditAction:
+    """
+    Combines 1 - n EditAction objects in a group so that they are represented 
+    in the undo stack as a single un-doable action.
+    Edits are assumed to be all of the same type.
+    """
+
+    def __init__(self, edit_actions):
+        self.edit_actions = edit_actions
+
+    def do_consolidated_edit(self):
+        # There is 1 - n edits in these,
+        # and they are assumed to be all of the same type.
+        if self.edit_actions[0].exit_active_trimmode_on_edit:
+            trimmodes.set_no_edit_trim_mode()
+
+        # We only want to do one consumer stop per group.
+        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
+            PLAYER().consumer.stop()
+            
+        for edit_action in self.edit_actions:
+            edit_action.is_part_of_consolidated_group = True
+            
+            # Tracks autoexpand-on-drop feature needs to be here to avoid caching data.
+            tracks_clips_count_before = current_sequence().get_tracks_clips_counts()
+
+            edit_action.redo()
+
+            if edit_action.turn_on_stop_for_edit:
+                edit_action = True
+
+            global edit_done_since_last_save
+            edit_done_since_last_save = True
+
+            trackaction.maybe_do_auto_expand(tracks_clips_count_before)
+        
+        undo.register_edit(self)
+
+        # We only want to do one consumer start per group.
+        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
+            PLAYER().consumer.start()
+            
+    def redo(self):
+        for edit_action in self.edit_actions:
+            edit_action.redo()
+            
+    def undo(self):
+        for edit_action in reversed(self.edit_actions):
+            #edit_action = self.edit_actions[i]
+            edit_action.undo()
+        
 # ---------------------------------------------------- compositor sync methods
 def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
@@ -507,13 +526,6 @@ def get_full_compositor_sync_data():
             clip_start = track.clip_start(clip_index)
             clip_end = clip_start + clip.clip_out - clip.clip_in
             
-            # Auto fades need to go to start or end of clips and maintain their lengths
-            if compositor.transition.info.auto_fade_compositor == True:
-                if compositor.transition.info.name == "##auto_fade_in":
-                    clip_end = clip_start + compositor.get_length() - 1
-                else:
-                    clip_start = clip_end - compositor.get_length() + 1
-            
             orig_in = compositor.clip_in
             orig_out = compositor.clip_out
             
@@ -526,70 +538,6 @@ def get_full_compositor_sync_data():
             pass
 
     return (full_sync_data, orhan_compositors)
-
-def do_autofollow_redo(action_object):
-    for sync_item in action_object.compositor_autofollow_data:
-        # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
-        destroy_id, orig_in, orig_out, clip_start, clip_end, clip_track, orig_compositor_track = sync_item
-        try:
-            sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-            if sync_compositor.transition.b_track != clip_track and current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                new_compositor = current_sequence().create_compositor(sync_compositor.type_id)
-                new_compositor.clone_properties(sync_compositor)
-                new_compositor.set_in_and_out(sync_compositor.clip_in, sync_compositor.clip_out)
-                new_compositor.transition.set_tracks(sync_compositor.transition.a_track, clip_track)
-                
-                current_sequence().remove_compositor(sync_compositor)
-                current_sequence().add_compositor(new_compositor)
-                action_object.do_restack_compositors = True
-            elif sync_compositor.obey_autofollow == True:
-                sync_compositor.set_in_and_out(clip_start, clip_end)
-        except:
-            pass
-
-def do_autofollow_undo(action_object):
-    for sync_item in action_object.compositor_autofollow_data:
-        # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
-        destroy_id, orig_in, orig_out, clip_start, clip_end, clip_track, orig_compositor_track = sync_item
-        try:
-            sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-            if sync_compositor.transition.b_track != orig_compositor_track and current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                new_compositor = current_sequence().create_compositor(sync_compositor.type_id)
-                new_compositor.clone_properties(sync_compositor)
-                new_compositor.set_in_and_out(sync_compositor.clip_in, sync_compositor.clip_out)
-                new_compositor.transition.set_tracks(sync_compositor.transition.a_track, orig_compositor_track)
-                
-                current_sequence().remove_compositor(sync_compositor)
-                current_sequence().add_compositor(new_compositor)
-                
-                action_object.do_restack_compositors = True
-            elif sync_compositor.obey_autofollow == True:
-                sync_compositor.set_in_and_out(orig_in, orig_out)   
-        except:
-            # Compositor or clip not found
-            pass
-                
-def do_orphaned_compositors_delete_redo(action_object):
-    for delete_compositor in action_object.orphaned_compositors:
-        current_sequence().remove_compositor(delete_compositor)
-        compositeeditor.maybe_clear_editor(delete_compositor)
-
-        action_object.do_restack_compositors = True
-
-def do_orphaned_compositors_delete_undo(action_object):
-    old_orphaned = action_object.orphaned_compositors
-    new_orphaned = []
-    for old_compositor in old_orphaned:
-        new_ompositor = current_sequence().create_compositor(old_compositor.type_id)
-        new_ompositor.clone_properties(old_compositor)
-        new_ompositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
-        new_ompositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
-        current_sequence().add_compositor(new_ompositor)
-        new_orphaned.append(new_ompositor)
-        
-        action_object.do_restack_compositors = True
-        
-    action_object.orphaned_compositors = new_orphaned
 
 
 # ---------------------------------------------------- SYNC DATA
@@ -1167,7 +1115,7 @@ def _overwrite_move_redo(self):
     removed_length = self.over_out - self.over_in
     _insert_blank(track, self.selected_range_in, removed_length)
 
-    # Find out if overwrite starts after or on track end and pad track with blanck if so.
+    # Find out if overwrite starts after or on track end and pad track with blank if so.
     if self.over_in >= track.get_length():
         self.starts_after_end = True
         gap = self.over_out - track.get_length()
@@ -1202,7 +1150,7 @@ def _overwrite_move_redo(self):
 
 #----------------- BOX OVERWRITE MOVE
 # "box_selection_data","delta"
-# Lifts clips from track and overwrites part of track with them for multple tracks
+# Lifts clips from track and overwrites part of track with them for multiple tracks
 # Move  compositors contained by selection too.
 def box_overwrite_move_action(data):
     action = EditAction(_box_overwrite_move_undo, _box_overwrite_move_redo, data)
@@ -1213,17 +1161,24 @@ def _box_overwrite_move_undo(self):
     
     # Do track move edits
     for move_data in self.track_moves:
-        action_object = utils.EmptyClass
-        action_object.__dict__.update(move_data)
+        action_object = DummyOverWriteMove(move_data)
 
         _overwrite_move_undo(action_object)
 
     # Move compositors
     for comp in self.box_selection_data.selected_compositors:
         comp.move(-self.delta)
-        
+
+
+# This exists to avoid hitting object being mappingproxy when doing __dict__.update
+class DummyOverWriteMove:
+    def __init__(self, move_data):
+        # Grabs data as object members.
+        self.__dict__.update(move_data)
+
+
 def _box_overwrite_move_redo(self):
-    # Create data for track overwite moves
+    # Create data for track overwrite moves
     if not hasattr(self, "track_moves"):
         self.track_moves = []
         for track_selection in self.box_selection_data.track_selections:
@@ -1238,7 +1193,7 @@ def _box_overwrite_move_redo(self):
                 self.track_moves.append(track_move_data)
 
     else:
-        # This may not be necessery...but its going in to make sure move_data is always same
+        # This may not be necessary...but its going in to make sure move_data is always same
         for move_data in self.track_moves:
             move_data.pop("removed_clips")
 
@@ -1581,7 +1536,7 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         
         if edit_op == appconsts.MULTI_NOOP: # no blank clip on this track is not changed
             continue
-        elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, lenth is changed
+        elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, length is changed
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length + applied_delta)
@@ -1698,7 +1653,7 @@ def _set_clip_length_redo(self):
     self.orig_clip_out = self.clip.clip_out
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
-                 self.clip.clip_in,  self.clip.clip_in + self.length - 1) # -1, out is inclusive and we're usin length here
+                 self.clip.clip_in,  self.clip.clip_in + self.length - 1) # -1, out is inclusive and we're using length here
 
 # ----------------------------------- CLIP END DRAG ON BLANK
 # "track","index","clip","blank_clip_length","delta"
@@ -1925,7 +1880,7 @@ def _remove_filter_undo(self):
 
     _attach_all(self.clip)
         
-    self.filter_edit_done_func(self.clip,self.index) # updates effect stack gui if needed
+    self.filter_edit_done_func(self.clip, self.index) # updates effect stack gui if needed
 
 def _remove_filter_redo(self):
     _detach_all(self.clip)
@@ -2127,8 +2082,6 @@ def _add_compositor_redo(self):
 
     current_sequence().add_compositor(self.compositor)
     current_sequence().restack_compositors()
-
-    self.compositor.update_autofade_keyframes()
     
     compositeeditor.set_compositor(self.compositor)
 
@@ -2153,8 +2106,8 @@ def _delete_compositor_undo(self):
     compositeeditor.set_compositor(self.compositor)
 
 def _delete_compositor_redo(self):
-    # Compositors are recreated continually in sequnece.restack_compositors() and cannot be identified for undo/redo using object identity 
-    # so these ids must be  preserved for all succesive versions of a compositor.
+    # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
+    # so these ids must be  preserved for all successive versions of a compositor.
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id
         self.first_do = False
@@ -2181,7 +2134,7 @@ def _move_compositor_undo(self):
 
 def _move_compositor_redo(self):
     # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
-    # so these ids must be  preserved for all succesive versions of a compositor.
+    # so these ids must be  preserved for all successive versions of a compositor.
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id
         self.orig_in = self.compositor.clip_in
@@ -2241,7 +2194,7 @@ def _audio_splice_redo(self):
     # Get shorter name for readability
     to_track = self.to_track
     
-    # Find out if overwrite starts after track end and pad track with blanck if so.
+    # Find out if overwrite starts after track end and pad track with blank if so.
     if self.over_in >= to_track.get_length():
         self.starts_after_end = True
         gap = self.over_out - to_track.get_length()
@@ -2274,119 +2227,127 @@ def _audio_splice_redo(self):
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
 
-# ------------------------------------------------- RESYNC ALL
-# No input data
-def resync_all_action(data):
-    action = EditAction(_resync_all_undo, _resync_all_redo, data)
-    return action
-
-def _resync_all_undo(self):
-    self.actions.reverse()
-    
-    for action in self.actions:
-        action.undo_func(action)
-    
-    self.actions.reverse()
-        
-def _resync_all_redo(self):
-    if hasattr(self, "actions"):
-        # Actions have already been created, this is redo
-        for action in self.actions:
-            action.redo_func(action)
-        return
-
-    resync_data = resync.get_resync_data_list()
-    self.actions = _create_and_do_sync_actions_list(resync_data)
-
-# ------------------------------------------------- RESYNC SOME CLIPS
+# ------------------------------------------------- RESYNC CLIP
 # "clips"
-def resync_some_clips_action(data):
-    action = EditAction(_resync_some_clips_undo, _resync_some_clips_redo, data)
+def resync_clip_action(data):
+    action = EditAction(_resync_clip_undo, _resync_clip_redo, data)
     return action
 
-
-def _resync_some_clips_undo(self):
-    self.actions.reverse()
-    
-    for action in self.actions:
-        action.undo_func(action)
-    
-    self.actions.reverse()
+def _resync_clip_undo(self):
+    self.action.undo_func(self.action)
         
-def _resync_some_clips_redo(self):
-    if hasattr(self, "actions"):
-        # Actions have already been created, this is redo
-        for action in self.actions:
-            action.redo_func(action)
+def _resync_clip_redo(self):
+    if hasattr(self, "action"):
+        # Action has already been created, this a is redo.
+        self.action.redo_func(self.action)
         return
 
     resync_data = resync.get_resync_data_list_for_clip_list(self.clips)
-    self.actions = _create_and_do_sync_actions_list(resync_data)
+    # Here we always only have one item in the list.
+    self.action = _create_and_do_sync_action(resync_data[0])
 
-def _create_and_do_sync_actions_list(resync_data_list):
-    # input is list tuples list (clip, track, index, pos_off)
-    actions = []
-    for clip_data in resync_data_list:
-        clip, track, index, pos_offset = clip_data
+def _create_and_do_sync_action(resync_data_list_item):
+    clip, track, index, child_clip_start, pos_offset = resync_data_list_item
 
-        # If we're in sync, do nothing
-        if pos_offset == clip.sync_data.pos_offset:
-            continue
-
-        # Get new in and out frames for clip
-        diff = pos_offset - clip.sync_data.pos_offset
-        over_in = track.clip_start(index) - diff
-        over_out = over_in + (clip.clip_out - clip.clip_in + 1)
-        data = {"track":track,
-                "over_in":over_in,
-                "over_out":over_out,
-                "selected_range_in":index,
-                "selected_range_out":index,
-                "move_edit_done_func":None}
-        
-        action = overwrite_move_action(data)
-        actions.append(action)
-        action.redo_func(action)
-
-    return actions
-
-# ------------------------------------------------- RESYNC CLIP SEQUENCE
-# "clips"
-def resync_clips_sequence_action(data):
-    action = EditAction(_resync_clips_sequence_undo, _resync_clips_sequence_redo, data)
-    return action
-
-def _resync_clips_sequence_undo(self):
-     if self.sync_action != None:
-        self.sync_action.undo_func(self.sync_action)
-        
-def _resync_clips_sequence_redo(self):
-    resync_data = resync.get_resync_data_list_for_clip_list(self.clips)
-    clip, track, index, pos_offset = resync_data[0]
-
-    # If we're in sync, do nothing
+    # If we're in sync, do nothing.
+    # Note that we get no-op undo redo if user tries to sync clip that is 
+    # already in sync, maybe fix later.
     if pos_offset == clip.sync_data.pos_offset:
-        self.sync_action = None
+        return None
+
+    # Get new in and out frames for clip
+    diff = pos_offset - clip.sync_data.pos_offset
+    over_in = track.clip_start(index) - diff
+    over_out = over_in + (clip.clip_out - clip.clip_in + 1)
+    data = {"track":track,
+            "over_in":over_in,
+            "over_out":over_out,
+            "selected_range_in":index,
+            "selected_range_out":index,
+            "move_edit_done_func":None}
+    
+    action = overwrite_move_action(data)
+    action.redo_func(action)
+
+    return action
+
+
+#----------------- RESYNC TRACK
+# "track", "resync_clips_data_list"
+def resync_track_action(data):
+    action = EditAction(_resync_track_undo, _resync_track_redo, data)
+    return action
+
+def _resync_track_undo(self):        
+    clip, track = self.resync_clips_data_list[0]
+    for synched_clip in self.synched_track:
+        _remove_clip(track, 0)
+
+    for orig_clip in self.orig_track:
+         append_clip(track, orig_clip, orig_clip.clip_in, orig_clip.clip_out)
+
+def _resync_track_redo(self):
+    if not hasattr(self, "orig_track"):
+        
+        # List of tuples (clip, track, index, child_clip_start, pos_off)
+        resync_data = resync.get_resync_data_list_for_clip_list(self.resync_clips_data_list)
+
+        # Lift resync clips and insert blank in their place
+        for data_item in resync_data: # + 1 == out inclusive
+            clip, track, index, child_clip_start, pos_off = data_item
+            
+            # Do copy of original track on first iteration.
+            if not hasattr(self, "orig_track"):
+                self.orig_track = copy.copy(track.clips)
+        
+            _remove_clip(track, index)
+            removed_length = clip.clip_out - clip.clip_in
+            _insert_blank(track, index, removed_length)
+
+        # Put resync clips in synched positions.
+        for data_item in resync_data:
+            clip, track, index, child_clip_start, pos_offset = data_item
+            
+            diff = pos_offset - clip.sync_data.pos_offset
+            over_in = child_clip_start - diff
+            over_out = over_in + (clip.clip_out - clip.clip_in + 1)
+        
+            # Find out if overwrite starts after or on track end and pad track with blank if so.
+            if over_in >= track.get_length():
+                gap = over_out - track.get_length()
+                _insert_blank(track, len(track.clips), gap)
+            
+            # Cut at in point if not already on cut
+            clip_in, clip_out = _overwrite_cut_track(track, over_in)
+            in_clip_out = clip_out
+                
+            # Cut at out point if not already on cut and out point inside track length.
+            self.over_out = over_out # _overwrite_cut_range_out() gets this data from 'self' 
+            _overwrite_cut_range_out(track, self)
+            
+            # Splice out clips in overwrite range
+            in_index = track.get_clip_index_at(over_in)
+            out_index = track.get_clip_index_at(over_out)
+
+            for i in range(in_index, out_index):
+                _remove_clip(track, in_index)
+
+            _insert_clip(track, clip, in_index, clip.clip_in, clip.clip_out)
+
+        # Do copy of original track on first iteration.
+        self.synched_track = copy.copy(track.clips)
+                
+        # HACK, see EditAction for details
+        self.turn_on_stop_for_edit = True
     else:
-        # Get new in and out frames for clips 
-        diff = pos_offset - clip.sync_data.pos_offset
-        over_in = track.clip_start(index) - diff
+        # This is a redo. We have data to do just simple track contents replacement.
+        clip, track = self.resync_clips_data_list[0]
+        for orig_clip in self.orig_track:
+            _remove_clip(track, 0)
 
-        clip_last, track, index_last, pos_offset = resync_data[-1]
-        last_over_in = track.clip_start(index_last) - diff
-        over_out = last_over_in + (clip_last.clip_out - clip_last.clip_in + 1)
+        for synched_clip in self.synched_track:
+             append_clip(track, synched_clip, synched_clip.clip_in, synched_clip.clip_out)
 
-        # Create, do and sacve edit action.
-        data = {"track":track,
-                "over_in":over_in,
-                "over_out":over_out,
-                "selected_range_in":index,
-                "selected_range_out":index_last,
-                "move_edit_done_func":None}
-
-        action = overwrite_move_action(data)
-        action.redo_func(action)
-        self.sync_action = action
 
 # ------------------------------------------------- SET SYNC
 # "child_index","child_track","parent_index","parent_track"
@@ -2442,7 +2403,7 @@ def _clear_sync_redo(self):
     # Clear child sync data
     self.child_clip.sync_data = None
 
-    # Claer resync data
+    # Clear resync data
     resync.clip_sync_cleared(self.child_clip)
     
 # --------------------------------------- MUTE CLIP
@@ -2494,7 +2455,7 @@ def _trim_end_over_blanks_undo(self):
 
 def _trim_end_over_blanks_redo(self):
     # Remove blanks
-    self.removed_lengths = _remove_consecutive_blanks(self.track, self.clip_index + 1) # +1, we're streching clip over blank are starting at NEXT index
+    self.removed_lengths = _remove_consecutive_blanks(self.track, self.clip_index + 1) # +1, we're stretching clip over blank are starting at NEXT index
     total_length = 0
     for length in self.removed_lengths:
         total_length = total_length + length
@@ -3060,7 +3021,7 @@ def _track_put_back_range(over_in, track, track_extract_data):
 def _track_extract_range(over_in, over_out, track):
     track_extract_data = utils.EmptyClass()
 
-    # Find out if overwrite starts after track end and pad track with blanck if so
+    # Find out if overwrite starts after track end and pad track with blank if so
     if over_in >= track.get_length():
         track_extract_data.starts_after_end = True
         gap = over_out - track.get_length()

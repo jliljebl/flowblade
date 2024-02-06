@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,7 +50,6 @@ import guiutils
 import respaths
 import sequence
 import snapping
-import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -58,19 +57,20 @@ import updater
 
 M_PI = math.pi
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initialization, so value here is irrelevant.
+                 # This ia a variable now not 
+page_y_off = 0
 
-WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH -- so this never has effect, but we need to set heights and this can remain as dummy value.
-HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
-STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
+MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
+HEIGHT = appconsts.TLINE_HEIGHT # Defines window min height together with editorwindow.TOP_ROW_HEIGHT.
 
-# Timeline draw constants
+# Timeline draw constants.
 # Other elements than black outline are not drawn if clip screen size
-# in pixels is below certain thresholds
-TEXT_MIN = 12 # if clip shorter, no text
-EMBOSS_MIN = 8 # if clip shorter, no emboss
-FILL_MIN = 1 # if clip shorter, no fill
-TEXT_X = 6 # pos for clip text
+# in pixels is below certain thresholds.
+TEXT_MIN = 12 # If clip shorter, no text.
+EMBOSS_MIN = 8 # If clip shorter, no emboss.
+FILL_MIN = 1 # If clip shorter, no fill.
+TEXT_X = 6
 TEXT_Y_HIGH = 40
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
@@ -81,12 +81,13 @@ WAVEFORM_HEIGHT_HIGH = 35.0
 WAVEFORM_HEIGHT_LARGE = 27.0
 WAVEFORM_HEIGHT_SMALL = 17.0
 MARK_PAD = 6
-MARK_LINE_WIDTH = 4
+MARK_LINE_WIDTH = 5
 
 # tracks column consts
 COLUMN_WIDTH = 124 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
+Y_SCROLL_WIDTH = 19
 COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
@@ -123,6 +124,7 @@ TRACK_ALL_ON_A_ICON = None
 FILTER_CLIP_ICON = None
 VIEW_SIDE_ICON = None
 INSERT_ARROW_ICON = None
+INSERT_ARROW_ICON_UP = None
 AUDIO_MUTE_ICON = None
 VIDEO_MUTE_ICON = None
 ALL_MUTE_ICON = None
@@ -134,32 +136,31 @@ KEYBOARD_ICON = None
 CLOSE_MATCH_ICON = None
 COMPOSITOR_ICON = None
 
-# tc scale
 TC_POINTER_HEAD = None
 
 # tc frame scale consts
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 12 # TC text pos in scale
+TC_Y = 12 # TC text pos in scale.
 # Timeline scale is rendered with hardcoded steps for hardcoded 
-# pix_per_frame ranges
-DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs
+# pix_per_frame ranges.
+DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs.
 DRAW_THRESHOLD_2 = 4
 DRAW_THRESHOLD_3 = 2
 DRAW_THRESHOLD_4 = 1
-# Height of sync state stripe indicating if clip is in sync or not
+# Height of sync state stripe indicating if clip is in sync or not.
 SYNC_STRIPE_HEIGHT = 12
 SYNC_SAW_WIDTH = 5
 SYNC_SAW_HEIGHT = 5
-# number on lines and tc codes displayed with small pix_per_frame values
+# number on lines and tc codes displayed with small pix_per_frame values.
 NUMBER_OF_LINES = 7
 # Positions for 1-2 icons on clips.
 ICON_SLOTS = [(14, 2),(28, 2),(42,2),(56,2)]
-# Line width for moving clip boxes
+# Line width for moving clip boxes.
 MOVE_CLIPS_LINE_WIDTH = 3.0
 
-# Color creating utils methods
+# Color creating utils methods.
 def get_multiplied_color(color, m):
     """
     Used to create lighter and darker hues of colors.
@@ -178,7 +179,7 @@ def get_multiplied_color_from_grad(grad_color, m):
     """
     return (grad_color[1] * m, grad_color[2] * m, grad_color[3] * m)
     
-# Colors
+# Colors.
 GRAD_MULTIPLIER = 1.3
 SELECTED_MULTIPLIER = 1.52
 
@@ -187,28 +188,33 @@ CLIP_TEXT_COLOR_OVERLAY = (0.78, 0.78, 0.78, 0.6)
 
 CLIP_COLOR_GRAD = (1,  0.18, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
-CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
+CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.12)
 CLIP_END_DRAG_OVERLAY_COLOR = (1,1,1,0.3)
 
 AUDIO_CLIP_COLOR_GRAD = (1, 0.09, 0.21, 0.09, 1)#(1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
 AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER)
-AUDIO_CLIP_SELECTED_COLOR = (0.53, 0.85, 0.53)
+AUDIO_CLIP_SELECTED_COLOR = ( 0.18, 0.42, 0.18)
 
-IMAGE_CLIP_COLOR_GRAD = (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
+IMAGE_CLIP_COLOR_GRAD = (1, 0.20, 0.29, 0.67, 1) # (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
+TITLE_IMAGE_CLIP_COLOR_GRAD = (1, 0.20, 0.48, 0.40, 1) # (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
+TITLE_IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, TITLE_IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
+TITLE_IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(TITLE_IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
+
 CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
 CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
-CONTAINER_CLIP_RENDERED_COLOR = (0.25, 0.33, 0.78)
-CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.35, 0.43, 0.84)
+CONTAINER_CLIP_RENDERED_COLOR = (0.41, 0.11, 0.31) #0.16, 0.26, 0.32)
+CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.55, 0.23, 0.43) #(0.35, 0.43, 0.84)
  
 COMPOSITOR_CLIP = (0.12, 0.12, 0.22, 0.7)
 COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
 COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
 
-BLANK_CLIP_COLOR_GRAD = (1, 0.6, 0.6, 0.65, 1)
-BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
+ # Set in load_icons_and_set_colors().
+BLANK_CLIP_COLOR_GRAD = None
+BLANK_CLIP_COLOR_GRAD_L = None
 
 BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.50, 0.50, 0.50, 1)
 BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.50, 0.50, 0.5, 1)
@@ -223,6 +229,7 @@ PROXY_STRIP_COLOR = (0.40, 0.60, 0.82)
 PROXY_STRIP_COLOR_SELECTED = (0.52, 0.72, 0.96)
 
 MARK_COLOR = (0.1, 0.1, 0.1)
+DARK_MARK_COLOR = (0.75, 0.75, 0.75)
 MARK_OUTLINE = (0.8, 0.8, 0.8)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
@@ -250,6 +257,7 @@ FRAME_SCALE_NEUTRAL_BG_COLOR = ((35.0/255.0) + 0.02, (35.0/255.0) + 0.02, (35.0/
 THEME_NEUTRAL_COLUMN_BG_COLOR = (41.7/255.0, 41.7/255.0, 41.7/255.0)
 
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
+COLUMN_ACTIVE_COLOR  = (0.063, 0.341, 0.659)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
@@ -270,12 +278,16 @@ BLANK_SELECTED = (0.68, 0.68, 0.74)
 
 TRACK_NAME_COLOR = (0.0,0.0,0.0)
 
-TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
-TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
+ # Set in load_icons_and_set_colors().
+TRACK_GRAD_STOP1 = None
+TRACK_GRAD_STOP3 = None
 
-TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
-TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
+ # Set in load_icons_and_set_colors(). Not orange anymore, huh.
+TRACK_GRAD_ORANGE_STOP1 = None
+TRACK_GRAD_ORANGE_STOP3 = None
 
+Y_SCROLL_BG = (0.215, 0.215, 0.215)
+ 
 DARK_THEME_COLUMN_BG = ((62.0/255.0), (62.0/255.0), (62.0/255.0))
 
 LIGHT_MULTILPLIER = 1.14
@@ -294,6 +306,8 @@ pos = 0 # Current left most frame in timeline display
 # ------------------------------------------------------------------ MODULE POSITION STATE
 # ------------------------------------------------------------------ MODULE POSITION STATE
 
+# Used to implement 'zoom on mouse position' feature.
+zoom_mouse_x = 0.0
 
 # For debug purposes.
 draw_blank_borders = True
@@ -301,44 +315,38 @@ draw_blank_borders = True
 # A context defining action taken when mouse press happens based on edit mode and mouse position.
 # Cursor communicates current pointer contest to user.
 pointer_context = appconsts.POINTER_CONTEXT_NONE
-DRAG_SENSITIVITY_AREA_WIDTH_PIX = 10
-MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 8
+DRAG_SENSITIVITY_AREA_WIDTH_PIX = 6
+MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 2
 MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX = 14
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
 canvas_widget = None
 
-# Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
+# Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit.
 trim_mode_in_non_active_state = False
 
 # Used ahen editing with SLIDE_TRIM mode to make user believe that the frame being displayed 
 # is the view frame user selected while in reality user is displayed images from hidden track and the
-# current frame is moving in opposite direction to users mouse movement
+# current frame is moving in opposite direction to users mouse movement.
 fake_current_frame = None
 
-# Used to draw indicators that tell if more frames are available while trimming
+# Used to draw indicators that tell if more frames are available while trimming.
 trim_status = appconsts.ON_BETWEEN_FRAME
 
-# Dict for clip thumbnails path -> image
+# Dict for clip thumbnails path -> image.
 clip_thumbnails = {}
 
-# Timeline match image
-match_frame = -1
-match_frame_track_index = -1
-image_on_right = True 
-match_frame_image = None
-match_frame_width = 1
-match_frame_height = 1
 
 
 # ------------------------------------------------------------------- module functions
 def load_icons_and_set_colors():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
-    COMPOSITOR_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
+    COMPOSITOR_ICON, INSERT_ARROW_ICON, INSERT_ARROW_ICON_UP, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
-    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
+    LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON, \
+    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE 
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -359,71 +367,49 @@ def load_icons_and_set_colors():
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
     MARKER_ICON = _load_pixbuf("marker_yellow.png")
-    TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
-    TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
-    MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
             TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR
-                
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
 
-        FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
-        FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
-        BG_COLOR = (0.44, 0.44, 0.46)
+    FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
+    FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
+    BG_COLOR = (0.44, 0.44, 0.46)
 
-        FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.DARK_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
-            TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
-            TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
-            TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
-            TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
-            TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
-            TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
-            MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png", True)
-            MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png", True)
-            MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
-            MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
-            INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
-            BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
-            BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-                or editorpersistance.prefs.theme == appconsts.DARK_THEME \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
-                if editorpersistance.prefs.theme == appconsts.DARK_THEME:
-                    r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                    r = g = b = 0.215
-                    
-                BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
-                BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
-                            
-                TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
-                TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
-                rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
-                TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
-                TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
-            
-                COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                    COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.44)
+    FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
+
+    TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
+    TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
+    TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
+    MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png", True)
+    MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png", True)
+    MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
+    MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
+    INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
+    INSERT_ARROW_ICON_UP = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_fb.png")
+    INSERT_ARROW_ICON_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_inactive_fb.png")
+    INSERT_ARROW_ICON_UP_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_inactive_fb.png")
+
+    r = g = b = 0.215
         
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+    BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
+    BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
                 
-    else:
-        TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
-        TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
+    TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
+    TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
+    rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
+    TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
+    TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
 
-        TRACK_GRAD_STOP1 = (1, 0.68, 0.68, 0.68, 1) #0.93, 0.93, 0.93, 1)
-        TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
+    COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
+
+    FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+
+def update_clip_thumbnail(media_file):
+    global clip_thumbnails
+
+    clip_thumbnails[media_file.path] = media_file.icon
 
 def set_tracks_double_height_consts():
     global ID_PAD_Y_HIGH, ID_PAD_Y, ID_PAD_Y_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, \
@@ -445,47 +431,14 @@ def set_tracks_double_height_consts():
     WAVEFORM_PAD_SMALL = 33
 
 def set_dark_bg_color():
-    if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-        return
-    
     global BG_COLOR
     
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
-        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color())
 
     BG_COLOR = get_multiplied_color((r, g, b), 1.25)
     
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
         BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
-        
-def set_match_frame(tline_match_frame, track_index, display_on_right):
-    global match_frame, match_frame_track_index, image_on_right, match_frame_image
-    match_frame = tline_match_frame
-    match_frame_track_index = track_index
-    image_on_right = display_on_right
-    match_frame_image = None
-
-def match_frame_close_hit(x, y):
-    if match_frame == -1:
-        return False
-    
-    if image_on_right == True:
-        frame_adj = 0
-        img_pos_adj = 0
-    else:
-        frame_adj = 1
-        img_pos_adj = int(match_frame_width)
-    
-    scale_in = (match_frame + frame_adj - pos) * pix_per_frame
-
-    test_x = scale_in - img_pos_adj + 4
-    test_y = 24
-    if (x >= test_x and  x <= test_x + 12) and (y >= test_y and  y <= test_y + 12):
-        return True
-    
-    return False
 
 def _load_pixbuf(icon_name, double_for_double_track_heights=False):
     if double_for_double_track_heights == True:
@@ -497,17 +450,20 @@ def set_ref_line_y(allocation):
     """
     Sets value of REF_LINE_Y to such that tracks are vertically centered.
     """
-    total_h = 0
-    below_ref_h = 0
-    for i in range(1, len(current_sequence().tracks) - 1):
-        total_h += current_sequence().tracks[i].height
-        if i < current_sequence().first_video_index:
-            below_ref_h += current_sequence().tracks[i].height
+    try:
+        total_h = 0
+        below_ref_h = 0
+        for i in range(1, len(current_sequence().tracks) - 1):
+            total_h += current_sequence().tracks[i].height
+            if i < current_sequence().first_video_index:
+                below_ref_h += current_sequence().tracks[i].height
 
-    x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-    centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
-    global REF_LINE_Y
-    REF_LINE_Y = centerered_tracks_bottom_y - below_ref_h
+        x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
+        centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
+        global REF_LINE_Y
+        REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h) + page_y_off
+    except:
+        print("tlinewidgets.set_ref_line_y() failed")
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
@@ -515,11 +471,22 @@ def get_pos_for_tline_centered_to_current_frame():
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     frames_in_panel = w / pix_per_frame
 
-    # current in first half on first screen width of tline display
     if current_frame < (frames_in_panel / 2.0):
         return 0
     else:
         return current_frame - (frames_in_panel / 2)
+
+def get_mouse_pos_frame():
+    return get_frame(zoom_mouse_x)
+
+def get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom):
+    mouse_pos_frame_after_zoom = get_frame(zoom_mouse_x)
+    new_pos = pos - (mouse_pos_frame_after_zoom - mouse_pos_frame_pre_zoom)
+
+    if new_pos < 0:
+        return 0
+    else:
+        return new_pos
 
 def get_last_tline_view_frame():
     allocation = canvas_widget.widget.get_allocation()
@@ -568,7 +535,7 @@ def get_clip_track_and_index_for_pos(x, y):
 
 def _get_track_y(track_index):
     """
-    NOTE: NOT REALLY INTERNAL TO MODULE, HAS OUTSIDE USERS.
+    NOTE: FUNCTION NOT REALLY INTERNAL TO MODULE, HAS OUTSIDE USERS.
     Returns y pos in canvas for track index. y is top most pixel in track 
     """
     audio_add = 0
@@ -804,7 +771,9 @@ def draw_overwrite_box_overlay(cr, data):
             tc_str = _get_signed_tc_str(tc_str, delta)
                 
             _draw_text_info_box(cr, x, y - 12, tc_str)
-        
+
+        _draw_snap(cr, y)
+    
 def _draw_move_overlay(cr, data, y):
     # Get data
     press_frame = data["press_frame"]
@@ -1340,10 +1309,6 @@ def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.close_path()
 
-
-        
-    
-
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
@@ -1472,7 +1437,7 @@ class TimeLineCanvas:
     def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
                     mouse_scroll_listener, leave_notify_listener, enter_notify_listener):
         # Create widget and connect listeners
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.add_pointer_motion_mask()
@@ -1522,8 +1487,12 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
-        
+        # No edit is going on and cursor is on timeline, we need to do context
+        # sensitive cursor updates.
         if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
+            global zoom_mouse_x
+            zoom_mouse_x = x
+
             self.set_pointer_context(x, y)
             return
 
@@ -1536,7 +1505,7 @@ class TimeLineCanvas:
         track = get_track(y)
         x = snapping.get_snapped_x(x, track, self.edit_mode_data)
             
-        self.move_listener(x, y, get_frame(x), button, state) # -> editevent.tline_canvas_mouse_pressed(...)
+        self.move_listener(x, y, get_frame(x), button, state) # -> editevent.tline_canvas_mouse_moved(...)
         
     def _release_event(self, event):
         """
@@ -1559,9 +1528,9 @@ class TimeLineCanvas:
         if pointer_context != current_pointer_context:
             pointer_context = current_pointer_context
             if pointer_context == appconsts.POINTER_CONTEXT_NONE:
-                gui.editor_window.set_tline_cursor(EDIT_MODE())
+                gui.editor_window.tline_cursor_manager.set_tline_cursor(EDIT_MODE())
             else:
-                gui.editor_window.set_tline_cursor_to_context(pointer_context)
+                gui.editor_window.tline_cursor_manager.set_tline_cursor_to_context(pointer_context)
         
     def get_pointer_context(self, x, y):
         frame = get_frame(x)
@@ -1590,11 +1559,14 @@ class TimeLineCanvas:
 
         clip_start_frame = track.clip_start(clip_index)
         clip_end_frame = track.clip_start(clip_index + 1)
-        # INSERT, OVEWRITE
+        
+        # INSERT, OVERWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
-            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+            # the + 4 is attempt to center sensitivity area at cut. Because we are doing sensitivity testing on opposite sides of a single clip, not on
+            # both sides of a cut we are having trouble centering the sensitivity area. 
+            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX + 4:
                 return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
-            if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+            if abs(x + 4 - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
             
             return appconsts.POINTER_CONTEXT_NONE
@@ -1674,12 +1646,21 @@ class TimeLineCanvas:
         self.parent_positions = {}
         self.sync_children = []
 
+        # Draw track lines, light.
+        for i in range(0, len(current_sequence().tracks) - 1):
+            y = int(_get_track_y(i))
+            cr.set_source_rgb(0.165, 0.165, 0.165)
+            cr.set_line_width(1.0)
+            cr.move_to(0, y + 0.5)
+            cr.line_to(w, y + 0.5)
+            cr.stroke()
+        
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
-            self.draw_track(cr
-                            ,current_sequence().tracks[i]
-                            ,_get_track_y(i)
-                            ,w)
+            self.draw_track(cr,
+                            current_sequence().tracks[i],
+                            _get_track_y(i),
+                            w)
 
         self.draw_compositors(cr)
         self.draw_sync_relations(cr)
@@ -1690,9 +1671,6 @@ class TimeLineCanvas:
         if EDIT_MODE() != editorstate.SLIDE_TRIM and fake_current_frame != None:
             PLAYER().seek_frame(fake_current_frame)
             fake_current_frame = None
-        
-        # Draw match frame
-        self.draw_match_frame(cr)
             
         # Draw frame pointer
         if EDIT_MODE() != editorstate.SLIDE_TRIM or PLAYER().looping():
@@ -1797,7 +1775,9 @@ class TimeLineCanvas:
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
                     if clip.container_data != None:
-                        if clip.container_data.rendered_media_range_in == -1: 
+                        # Container clip
+                        if clip.container_data.rendered_media_range_in == -1 \
+                            or (hasattr(clip.container_data, "progress") and clip.container_data.progress != None):
                             if not clip.selected:
                                 clip_bg_col = (0.7, 0.3, 0.3)
                                 cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_COLOR)
@@ -1814,6 +1794,7 @@ class TimeLineCanvas:
                                 cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_SELECTED_COLOR)
                                 clip_bg_col = CONTAINER_CLIP_RENDERED_SELECTED_COLOR
                     elif clip.media_type == sequence.VIDEO:
+                        # Video clip
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
@@ -1823,16 +1804,28 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*CLIP_SELECTED_COLOR)
                             clip_bg_col = CLIP_SELECTED_COLOR
-                    else: # IMAGE type
-                        if not clip.selected:
-                            grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                            grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
-                            grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD_L)
-                            clip_bg_col = IMAGE_CLIP_COLOR_GRAD[1:4]
-                            cr.set_source(grad)
+                    else: # Image type
+                        if clip.titler_data == None:
+                            if not clip.selected:
+                                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                                grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
+                                grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD_L)
+                                clip_bg_col = IMAGE_CLIP_COLOR_GRAD[1:4]
+                                cr.set_source(grad)
+                            else:
+                                cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
+                                clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
                         else:
-                            cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
-                            clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
+                            # Titler clip
+                            if not clip.selected:
+                                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                                grad.add_color_stop_rgba(*TITLE_IMAGE_CLIP_COLOR_GRAD)
+                                grad.add_color_stop_rgba(*TITLE_IMAGE_CLIP_COLOR_GRAD_L)
+                                clip_bg_col = TITLE_IMAGE_CLIP_COLOR_GRAD[1:4]
+                                cr.set_source(grad)
+                            else:
+                                cr.set_source_rgb(*TITLE_IMAGE_CLIP_SELECTED_COLOR)
+                                clip_bg_col = TITLE_IMAGE_CLIP_SELECTED_COLOR
                 else:# Audio track
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
@@ -1914,7 +1907,7 @@ class TimeLineCanvas:
                     cr.close_path()
                     cr.fill()
 
-            # Draw video clip icon
+            # Draw video clip icon.
             text_x_add = 0
             if scale_length > TEXT_MIN and editorstate.display_clip_media_thumbnails:
                 if clip.is_blanck_clip == False and track.type == sequence.VIDEO and \
@@ -1929,7 +1922,7 @@ class TimeLineCanvas:
                         cr.clip()
                         cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
-                    except: # thumbnail not found  in dict, get it and  paint it
+                    except: # thumbnail not found  in dict, get it and  paint it.
                         try:
                             if clip.container_data == None:
                                 media_file = PROJECT().get_media_file_for_path(clip.path)
@@ -1947,7 +1940,7 @@ class TimeLineCanvas:
                             cr.paint()
                             clip_thumbnails[clip.path] = thumb_img
                         except:
-                            pass # This fails for rendered fades and transitions
+                            pass # This fails for rendered fades and transitions.
                     
                     if clip.selected:
                         if scale_length - 8 < appconsts.THUMB_WIDTH:
@@ -1959,63 +1952,14 @@ class TimeLineCanvas:
                         cr.fill()
                                                     
                     cr.restore()
-                
-            # Draw sync stripe
-            if scale_length > FILL_MIN: 
-                if clip.sync_data != None:
-                    stripe_color = SYNC_OK_COLOR
-                    if clip.sync_data.sync_state == appconsts.SYNC_CORRECT:
-                        stripe_color = SYNC_OK_COLOR
-                    elif clip.sync_data.sync_state == appconsts.SYNC_OFF:
-                        stripe_color = SYNC_OFF_COLOR
-                    else:
-                        stripe_color = SYNC_GONE_COLOR
 
-                    dx = scale_in + 1
-                    dy = y + track_height - SYNC_STRIPE_HEIGHT
-                    saw_points = []
-                    saw_points.append((dx, dy))
-                    saw_delta = SYNC_SAW_HEIGHT
-                    for i in range(0, int((scale_length - 2) / SYNC_SAW_WIDTH) + 1):
-                        dx += SYNC_SAW_WIDTH
-                        dy += saw_delta
-                        saw_points.append((dx, dy))
-                        saw_delta = -(saw_delta)
-
-                    px = scale_in + 1 + scale_length - 2
-                    py = y + track_height
-                    cr.move_to(px, py)
-                    for p in reversed(saw_points):
-                        cr.line_to(*p)
-                    cr.line_to(scale_in + 1, y + track_height)
-                    cr.close_path()
-
-                    cr.set_source_rgb(*stripe_color)
-                    cr.fill_preserve()
-                    cr.set_source_rgb(0.3, 0.3, 0.3)
-                    cr.stroke()
-                    
-                    if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
-                        cr.set_source_rgb(1, 1, 1)
-                        cr.select_font_face ("sans-serif",
-                                             cairo.FONT_SLANT_NORMAL,
-                                             cairo.FONT_WEIGHT_NORMAL)
-                        cr.set_font_size(9)
-                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is needed for backwards compability
-                             # Projects saved before adding this feature do not have sync_diff attribute
-                            cr.show_text(str(clip.sync_diff))
-                        except:
-                            clip.sync_diff = "n/a"
-                            cr.show_text(str(clip.sync_diff))
-
-            # Draw audio level data if needed.
-            # Init data rendering if data needed and not available
+            # Draw audio levels data if needed.
+            # Init data rendering if data needed and not available.
             if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
-                and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
-                 clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
+                and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
+                clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
             # Draw data if available large enough scale
-            if clip.is_blanck_clip == False and clip.waveform_data != None and scale_length > FILL_MIN:
+            if clip.is_blanck_clip == False and clip.waveform_data != None and scale_length > FILL_MIN and editorstate.display_all_audio_levels == True:
                 r, g, b = clip_bg_col
                 cr.set_source_rgb(r * 1.9, g * 1.9, b * 1.9)
                 
@@ -2035,8 +1979,8 @@ class TimeLineCanvas:
                     y_pad = WAVEFORM_PAD_SMALL
                     bar_height = WAVEFORM_HEIGHT_SMALL
                 
-                # Draw all frames only if pixels per frame > 2, otherwise
-                # draw only every other or fewer frames
+                # Draw all frames only if pixels per frame > 2, otherwise.
+                # draw only every other or fewer frames.
                 draw_pix_per_frame = pix_per_frame
                 if draw_pix_per_frame < 2:
                     draw_pix_per_frame = 2
@@ -2046,7 +1990,7 @@ class TimeLineCanvas:
                 else:
                     step = 1
 
-                # Draw only frames in display
+                # Draw only frames in display.
                 draw_first = clip_in
                 draw_last = clip_out + 1
                 if clip_start_frame < 0:
@@ -2054,10 +1998,10 @@ class TimeLineCanvas:
                 if draw_first + width_frames < draw_last:
                     draw_last = int(draw_first + width_frames) + 1
 
-                # Get media frame 0 position in screen pixels
+                # Get media frame 0 position in screen pixels.
                 media_start_pos_pix = scale_in - clip_in * pix_per_frame
                 
-                # Draw level bar for each frame in draw range
+                # Draw level bar for each frame in draw range.
                 for f in range(draw_first, draw_last, step):
                     try:
                         x = media_start_pos_pix + f * pix_per_frame
@@ -2066,13 +2010,13 @@ class TimeLineCanvas:
                             h = 1
                         cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
                     except:
-                        # This is just dirty fix a when 23.98 fps does not work
+                        # This is just dirty fix a when 23.98 fps does not work.
                         break
 
                 cr.fill()
                 cr.restore()
 
-            # Draw proxy indicator
+            # Draw proxy indicator.
             if scale_length > FILL_MIN:
                 if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
                     if clip.selected:
@@ -2083,10 +2027,15 @@ class TimeLineCanvas:
                     cr.rectangle(scale_in, y, scale_length, 8)
                     cr.fill()
 
-            # Draw text and filter, sync icons
+            # Draw text and filter, sync icons.
             if scale_length > TEXT_MIN and clip.is_blanck_clip == False:
                 if not hasattr(clip, "rendered_type"):
                     # Text
+                    cr.save()
+
+                    cr.rectangle(scale_in, y, scale_length - 3, track_height)
+                    cr.clip()
+
                     cr.set_source_rgba(*CLIP_TEXT_COLOR_OVERLAY)
                     cr.select_font_face ("sans-serif",
                                          cairo.FONT_SLANT_NORMAL,
@@ -2095,14 +2044,16 @@ class TimeLineCanvas:
                     cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
                     cr.show_text(clip.name.upper())
                     
+                    cr.restore()
+                    
                 icon_slot = 0
-                # Filter icon
+                # Filter icon.
                 if len(clip.filters) > 0:
                     ix, iy = ICON_SLOTS[icon_slot]
                     cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
-                # Mute icon
+                # Mute icon.
                 if clip.mute_filter != None:
                     icon = AUDIO_MUTE_ICON
                     ix, iy = ICON_SLOTS[icon_slot]
@@ -2117,10 +2068,9 @@ class TimeLineCanvas:
                     cr.set_source_surface(icon, ix, iy)
                     cr.paint()
 
-            # Save sync children data
+            # Save sync children data.
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
-
 
             # Draw clip frame 
             cr.set_line_width(1.0)
@@ -2130,34 +2080,46 @@ class TimeLineCanvas:
                 cr.set_source_rgb(0.3, 0.3, 0.3)
                 
             self.create_round_rect_path(cr, scale_in,
-                                         y, scale_length, 
+                                         y + 0.5, scale_length, 
                                          track_height)
             cr.stroke()
         
-            # No further drawing for blank clips
+            # No further drawing for blank clips.
             if clip.is_blanck_clip:
                 clip_start_frame += clip_length
                 continue
-
 
             # Draw sync offset value
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
                     if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
+                        cr.set_source_rgb(*SYNC_OFF_COLOR)
+                        cr.rectangle(scale_in + 2, y + track_height - 13, 26, 13)
+                        cr.fill()
+
+                        if abs(clip.sync_diff) > 999:
+                            centering = -3
+                        elif abs(clip.sync_diff) > 99:
+                            centering = 0
+                        elif abs(clip.sync_diff) > 9:
+                            centering = 3
+                        else:
+                            centering = 6
+                                                    
                         cr.set_source_rgb(1, 1, 1)
                         cr.select_font_face ("sans-serif",
                                              cairo.FONT_SLANT_NORMAL,
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
-                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
+                        cr.move_to(scale_in + TEXT_X + centering, y + track_height - 3)
                         cr.show_text(str(clip.sync_diff))
 
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and scale_length > FILL_MIN:
-                if clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
+                if clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                     cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
                     cr.paint()
 
-            # Clip markers
+            # Clip markers.
             if len(clip.markers) > 0 and scale_length > TEXT_MIN:
                 for marker in clip.markers:
                     name, clip_marker_frame = marker
@@ -2166,13 +2128,28 @@ class TimeLineCanvas:
                         cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
                         cr.paint()
 
-            # Get next draw position
+            # Container clip render status.
+            if clip.container_data != None:
+                if hasattr(clip.container_data, "progress") and clip.container_data.progress != None:
+                    cr.set_source_rgba(0, 0, 0, 0.6)
+                    cr.rectangle(int(scale_in + scale_length / 2.0 - 14),  int(y + track_height / 2.0 - 8), 39, 16)
+                    cr.fill()
+            
+                    cr.set_source_rgb(1, 1, 1)
+                    cr.select_font_face ("sans-serif",
+                                         cairo.FONT_SLANT_NORMAL,
+                                         cairo.FONT_WEIGHT_BOLD)
+                    cr.set_font_size(14)
+                    cr.move_to(int(scale_in + scale_length / 2.0 - 12), int(y + track_height / 2.0 + 5))
+                    cr.show_text(str(int(clip.container_data.progress * 100)) + "%")
+                        
+            # Get next draw position.
             clip_start_frame += clip_length
 
-        # Fill rest of track with bg color if needed
+        # Fill rest of track with bg color if needed.
         scale_in = clip_start_frame  * pix_per_frame
         if scale_in < width:
-            cr.rectangle(scale_in + 0.5, y, width - scale_in, track_height)
+            cr.rectangle(scale_in + 0.5, y + 1, width - scale_in, track_height - 1)
             cr.set_source_rgb(*BG_COLOR)  
             cr.fill()
 
@@ -2320,86 +2297,15 @@ class TimeLineCanvas:
             cr.move_to(parent_x + pad, parent_y + pad)
             cr.arc(parent_x + pad, parent_y + pad, small_radius,  0.0 * degrees, 360.0 * degrees)
             cr.fill()
-
-    def draw_match_frame(self, cr):
-        if match_frame == -1:
-            return
-        
-        global match_frame_image
-        if match_frame_image == None:
-            self.create_match_frame_image_surface()
-
-        if image_on_right == True:
-            dir_mult = 1
-            frame_adj = 0
-            img_pos_adj = 0
-        else:
-            dir_mult = -1
-            frame_adj = 1
-            img_pos_adj = int(match_frame_width)
-        
-        scale_in = (match_frame + frame_adj - pos) * pix_per_frame
-                
-        cr.set_source_surface(match_frame_image, scale_in - img_pos_adj, 20)
-        cr.paint_with_alpha(0.7)
     
-        cr.set_source_surface(CLOSE_MATCH_ICON, scale_in - img_pos_adj + 4, 24)
-        cr.paint()
-        
-        cr.set_source_rgb(*MATCH_FRAME_LINES_COLOR)
-        cr.set_line_width(2.0)
-        cr.rectangle(int(scale_in) - img_pos_adj, 20, int(match_frame_width), int(match_frame_height))
-        cr.stroke()
-
-        cr.move_to(int(scale_in), 0, )
-        cr.line_to(int(scale_in), int(match_frame_height) + 42)
-        cr.stroke()
-
-        start_y = _get_track_y(match_frame_track_index)
-        end_y = _get_track_y(match_frame_track_index - 1)
-        
-        cr.move_to (int(scale_in) + 8 * dir_mult, start_y)
-        cr.line_to (int(scale_in), start_y)
-        cr.line_to (int(scale_in), end_y + 1)
-        cr.line_to (int(scale_in) + 8 * dir_mult, end_y + 1)
-        cr.set_source_rgb(0.2, 0.2, 0.2)
-        cr.set_line_width(4.0)
-        cr.stroke()
-
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = M_PI / 180.0
-
         cr.new_sub_path()
         cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
         cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
         cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path()
-
-    def create_match_frame_image_surface(self):
-        # Create non-scaled icon
-        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
-        icon = cairo.ImageSurface.create_from_png(matchframe_path)
-
-        # Create and return scaled icon
-        allocation = canvas_widget.widget.get_allocation()
-        x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
-        
-        global match_frame_width, match_frame_height
-        match_frame_height = h - 40
-        match_frame_width = match_frame_height * profile_screen_ratio
-    
-        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
-        cr = cairo.Context(scaled_icon)
-        cr.scale(float(match_frame_width) / float(icon.get_width()), float(match_frame_height) / float(icon.get_height()))
-
-        cr.set_source_surface(icon, 0, 0)
-        cr.paint()
-        
-        global match_frame_image
-        match_frame_image = scaled_icon
-
 
 
 class TimeLineColumn:
@@ -2443,7 +2349,7 @@ class TimeLineColumn:
 
         # Center area tester
         # NOTE: There was a left column of active areas similar to active switch
-        # so this is still called 'center' even whe it is the left side of two active 
+        # so this is still called 'center' even when it is the left side of two active 
         # areas.
         tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)
@@ -2480,17 +2386,7 @@ class TimeLineColumn:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                r, g, b, a = gui.get_light_gray_bg_in_cairo_rgb()
-            elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-            cr.set_source_rgb(r, g, b)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-        elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             cr.set_source_rgb(*THEME_NEUTRAL_COLUMN_BG_COLOR)
             cr.rectangle(0, 0, w, h)
             cr.fill()
@@ -2512,12 +2408,12 @@ class TimeLineColumn:
         
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1):
-            y = _get_track_y(i)
+            y = int(_get_track_y(i))
             is_insert_track = (insert_track_index==i)
             self.draw_track(cr, current_sequence().tracks[i], y, is_insert_track)
  
     def draw_track(self, cr, track, y, is_insert_track):
-        # Draw center area
+        # Draw track info area.
         center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
         rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
         grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
@@ -2527,22 +2423,23 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
         
-
-        
-        # Draw active switch bg end edge
+        # Draw active switch bg end edge.
         rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
-            grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
-                                        COLUMN_LEFT_PAD + center_width, y + track.height)
-            self._add_gradient_color_stops(grad, track)
-            cr.set_source(grad)
+            if track == current_sequence().get_first_active_track():
+                cr.set_source_rgb(*COLUMN_ACTIVE_COLOR)
+            else:
+                grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
+                                            COLUMN_LEFT_PAD + center_width, y + track.height)
+                self._add_gradient_color_stops(grad, track)
+                cr.set_source(grad)
         else:
             cr.set_source_rgb(*COLUMN_NOT_ACTIVE_COLOR)
         cr.fill()
         self.draw_edge(cr, rect)
 
-        # Draw track name
+        # Draw track name.
         layout = PangoCairo.create_layout(cr)
         text = utils.get_track_name(track, current_sequence())
         desc = Pango.FontDescription("Sans Bold 10")
@@ -2560,7 +2457,7 @@ class TimeLineColumn:
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
-        # Draw mute icon
+        # Draw mute icon.
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_VIDEO_ICON
@@ -2586,7 +2483,7 @@ class TimeLineColumn:
             cr.set_source_surface(mute_icon, int(ix), int(y + iy))
             cr.paint()
 
-        # Draw locked icon
+        # Draw locked icon.
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
             if track.height == sequence.TRACK_HEIGHT_HIGH: 
@@ -2598,11 +2495,7 @@ class TimeLineColumn:
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
-        # Draw insert arrow
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            stop, r,g,b, a = TRACK_GRAD_STOP1
-            cr.set_source_rgb(r,g,b)
+        # Draw insert arrow.
         if is_insert_track == True:
             if track.height == sequence.TRACK_HEIGHT_HIGH:
                 ix, iy = INSRT_ICON_POS_HIGH
@@ -2613,7 +2506,7 @@ class TimeLineColumn:
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
 
-        # Draw audio level info
+        # Draw audio level info.
         if track.audio_gain != 1.0:
             pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
             # Draw track name
@@ -2652,7 +2545,7 @@ class TimeLineFrameScale:
     """
 
     def __init__(self, set_default_callback, mouse_scroll_listener):
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH,
                                                     SCALE_HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
@@ -2662,14 +2555,11 @@ class TimeLineFrameScale:
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
-            FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
-            FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-               editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
-                
+        global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
+        FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
+        FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
+        MARK_COLOR = DARK_MARK_COLOR
+
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
             if not timeline_visible():
@@ -2698,18 +2588,13 @@ class TimeLineFrameScale:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 
         # Draw grad bg
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            grad = self._get_dark_theme_grad(h)
-        else:
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD)
-            grad.add_color_stop_rgba(*FRAME_SCALE_COLOR_GRAD_L)
+        grad = self._get_dark_theme_grad(h)
+
         cr.set_source(grad)
         cr.rectangle(0,0,w,h)
         cr.fill()
@@ -2726,13 +2611,7 @@ class TimeLineFrameScale:
         if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
             in_x = (seq.tractor.mark_in - pos) * pix_per_frame
             out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
-            if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-                cr.set_source_rgba(*SELECTED_RANGE_COLOR)
-            else:
-                grad = cairo.LinearGradient (0, 0, 0, h)
-                grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
-                cr.set_source(grad)
-
+            cr.set_source_rgba(*SELECTED_RANGE_COLOR)
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 
@@ -2892,7 +2771,7 @@ class TimeLineFrameScale:
             return
              
         x = _get_frame_x(mark_frame)
-        cr.set_source_rgb(*MARK_COLOR)
+
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x - 2 * MARK_LINE_WIDTH, h - MARK_PAD)
@@ -2903,9 +2782,10 @@ class TimeLineFrameScale:
         cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path()
+
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()
-        cr.set_source_rgb(*MARK_OUTLINE)
-        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
         cr.stroke()
         
     def draw_mark_out(self, cr, h):
@@ -2917,7 +2797,7 @@ class TimeLineFrameScale:
             return
              
         x = _get_frame_x(mark_frame + 1)
-        cr.set_source_rgb(*MARK_COLOR)
+
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x + 2 * MARK_LINE_WIDTH, h - MARK_PAD)
@@ -2928,24 +2808,21 @@ class TimeLineFrameScale:
         cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path()
+
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()
-        cr.set_source_rgb(*MARK_OUTLINE)
-        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
         cr.stroke()
-   
+        
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
-            #r += 0.02
-            #g += 0.02 
-            #b += 0.02
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r, g, b, 1)
         else:
             r, g, b, a  = gui.get_bg_color()
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
-                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
+
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
@@ -2953,42 +2830,111 @@ class TimeLineFrameScale:
         return grad
 
 
-class TimeLineRenderingControlStrip:
+class TimeLineYPage:
     """
-    GUI component that passes draw and mouse events to tlinerender module with some added data.
+    GUI component for displaying and editing track parameters.
     """
 
-    def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
-                                                    STRIP_HEIGHT, 
+    def __init__(self, up_button_listener, down_button_listener):
+        # Init widget
+        self.widget = cairoarea.CairoDrawableArea2( Y_SCROLL_WIDTH, 
+                                                    HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
-        self.widget.release_func = self._release_event
-        self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
-        self.widget.connect("focus-out-event", self._focus_out_event)
-    # --------------------------------------------- DRAW
-    def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
-        """
-        tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
-
+        self.widget.leave_notify_func = self._leave_notify_event
+        self.widget.enter_notify_func = self._enter_notify_event
+        self.widget.set_tooltip_markup(_("Up - Page Up\nDown - Page Down"))
         
-    # --------------------------------------------- MOUSE EVENTS    
+        self.up_button_listener = up_button_listener
+        self.down_button_listener = down_button_listener
+
+        # tlineypage.py uses these also to see if page up/down should be done. 
+        self.up_active = False
+        self.down_active = False
+
+        self.mouse_prelight = False
+        self.mouse_pos = None
+        
+    # --------------------------------------------- PRESS
+    def set_active_state(self, up_active, down_active):
+        self.up_active = up_active
+        self.down_active = down_active
+        
+        self.widget.queue_draw()
+    
     def _press_event(self, event):
-        tlinerender.get_renderer().press_event(event)
+        alloc = self.widget.get_allocation()
+        if event.button == 1 or event.button == 3:
+            if event.y < alloc.height // 2:
+                if self.up_active == True:
+                    self.up_button_listener()
+            else:
+                if self.down_active == True:
+                    self.down_button_listener()
 
     def _motion_notify_event(self, x, y, state):
-        tlinerender.get_renderer().motion_notify_event(x, y, state)
-                
-    def _release_event(self, event):
-        tlinerender.get_renderer().release_event(event)
+        self.mouse_pos = (x, y)
+        self.widget.queue_draw()
         
-    def _focus_out_event(self, widget, event):
-        tlinerender.get_renderer().focus_out()
+    def _enter_notify_event(self, event):
+        self.mouse_prelight = True
+        self.mouse_pos = None
+        
+    def _leave_notify_event(self, event):
+        self.mouse_prelight = False
+        self.mouse_pos = None
+        self.widget.queue_draw()
     
+    # --------------------------------------------- DRAW
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        # Draw bg
+        cr.set_source_rgb(*Y_SCROLL_BG)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        h_half = (h - 2) // 2
+        
+        rect = (0, 1, w, h_half)
+        self.draw_edge(cr, rect)
+
+        h_half = (h - 2) // 2
+        rect = (0, 1 + h_half, w, h_half)
+        self.draw_edge(cr, rect)
+
+        if self.up_active == True:
+            icon = INSERT_ARROW_ICON_UP
+        else:
+            icon = INSERT_ARROW_ICON_UP_INACTIVE 
+        cr.set_source_surface(icon, 3, h_half // 2 - 2)
+        cr.paint()
+        
+        if self.down_active == True:
+            icon = INSERT_ARROW_ICON
+        else:
+            icon = INSERT_ARROW_ICON_INACTIVE 
+        cr.set_source_surface(icon, 3, h_half + h_half // 2 - 2)
+        cr.paint()
+
+        if self.mouse_prelight == True and self.mouse_pos != None:
+            mx, my = self.mouse_pos
+            if my < h / 2:
+                ly = 0
+            else:
+                ly =  h / 2
+
+            cr.set_source_rgba(0.5, 0.5, 0.5, 0.2)
+            cr.rectangle(0 + 1, ly + 2, w - 2, h / 2 - 2)
+            cr.fill()
+
+    def draw_edge(self, cr, rect):
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0.105, 0.105, 0.105)
+        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
+        cr.stroke()
+
+
 class KFToolFrameScale:
     
     def __init__(self, line_color):
@@ -3095,7 +3041,7 @@ class TimeLineScroller(Gtk.HScrollbar):
     def __init__(self, scroll_listener):
         GObject.GObject.__init__(self)
         
-        adjustment = Gtk.Adjustment(value=0.0, lower=0.0, upper=100.0, step_incr=1.0, page_increment=10.0, page_size=30.0)
+        adjustment = Gtk.Adjustment(value=0.0, lower=0.0, upper=100.0, step_increment=1.0, page_increment=10.0, page_size=30.0)
         adjustment.connect("value-changed", scroll_listener)
         self.set_adjustment(adjustment)
 

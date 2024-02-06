@@ -4,7 +4,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2019 Janne Liljeblad and contributors.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -57,6 +57,14 @@ DEFAULT_SAMPLE_RATE = 48000
 # this is meaningless for an NLE audio export, but we have to use it to
 # calculate some additional region position information in the Ardour project
 BPM = 120
+
+# available sample rates for export from the GUI
+SAMPLE_RATES = [
+    ("44.1 kHz", 44100),
+    ("48 kHz", 48000),
+    ("88.2 kHz", 88200),
+    ("96 kHz", 96000)
+]
 
 ##############################################################################
 # MODEL                                                                      #
@@ -693,7 +701,7 @@ def _get_ardour_audiofiles_dir(basedir):
 def _get_audio_channel_name(media, channel, num_channels):
     """
     Add a suffix to each exported mono channel if the input media has
-    multiple channels. This is done in a determinstic way, so that
+    multiple channels. This is done in a deterministic way, so that
     this method can be called from various parts of the export
     process and get the same results.
 

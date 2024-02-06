@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,9 +26,9 @@ import copy
 import hashlib
 import json
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import subprocess
 import shutil
@@ -38,8 +38,6 @@ import time
 
 import appconsts
 import atomicfile
-import blenderheadless
-import ccrutils
 import dialogutils
 import edit
 import editorstate
@@ -48,6 +46,7 @@ from editorstate import PROJECT
 import fluxity
 import fluxityheadless
 import gui
+import guiutils
 import gmicheadless
 import gmicplayer
 import jobs
@@ -58,6 +57,7 @@ import rendergui
 import respaths
 import simpleeditors
 import toolsencoding
+import updater
 import userfolders
 import utils
 
@@ -77,12 +77,13 @@ OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
 
 GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
-BLENDER_TYPE_ICON = None
+BLENDER_TYPE_ICON = None # Deprecated
 FLUXITY_TYPE_ICON = None
 
 NEWLINE = '\n'
 
 set_plugin_to_be_edited_func = None
+get_edited_plugin_clip = None
 
 # ----------------------------------------------------- interface
 def get_action_object(container_data):
@@ -90,22 +91,18 @@ def get_action_object(container_data):
         return GMicContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_MLT_XML:
          return MLTXMLContainerActions(container_data)
-    elif container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-         return BlenderContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
          return FluxityContainerActions(container_data)
          
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
     # TODO: When we get third move this into action objects.
-    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, BLENDER_TYPE_ICON, FLUXITY_TYPE_ICON
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, FLUXITY_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
     if MLT_XML_TYPE_ICON == None:
         MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
-    if BLENDER_TYPE_ICON == None:
-        BLENDER_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_blender.png")
     if FLUXITY_TYPE_ICON == None:
         FLUXITY_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_fluxity.png")
         
@@ -113,8 +110,6 @@ def _get_type_icon(container_type):
         return GMIC_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_MLT_XML: 
         return MLT_XML_TYPE_ICON
-    elif container_type == appconsts.CONTAINER_CLIP_BLENDER:  
-        return BLENDER_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_FLUXITY:  
         return FLUXITY_TYPE_ICON
         
@@ -133,8 +128,6 @@ def _write_thumbnail_image(profile, file_path, action_object):
 
     # Create one frame producer
     producer = mlt.Producer(profile, str(file_path))
-    #if producer.is_valid() == False:
-    #    raise ProducerNotValidError(file_path)
 
     info = utils.get_file_producer_info(producer)
 
@@ -230,7 +223,7 @@ class AbstractContainerActionObject:
         action.do_edit()
 
     def get_session_dir(self):
-        return self.get_container_clips_dir() + "/" + self.get_container_program_id()
+        return self.get_container_clips_dir() + self.get_container_program_id()
 
     def get_rendered_media_dir(self):
         if self.container_data.render_data.save_internally == True:
@@ -245,11 +238,11 @@ class AbstractContainerActionObject:
             return self.container_data.render_data.render_dir + appconsts.CC_PREVIEW_RENDER_DIR
 
     def get_container_program_id(self):
-        id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media #
+        id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
 
     def get_container_thumbnail_path(self):
-        return userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + self.get_container_program_id() +  ".png"
+        return userfolders.get_thumbnail_dir() + self.get_container_program_id() +  ".png"
     
     def get_job_proxy(self):
         print("AbstractContainerActionObject.get_job_proxy() not impl")
@@ -280,7 +273,7 @@ class AbstractContainerActionObject:
         return "get_job_name not impl"
  
     def get_container_clips_dir(self):
-        return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
+        return userfolders.get_container_clips_dir()
 
     def get_lowest_numbered_file(self):
         frames_info = gmicplayer.FolderFramesInfo(self.get_rendered_media_dir())
@@ -360,7 +353,9 @@ class AbstractContainerActionObject:
             action = edit.container_clip_clip_render_replace(data)
             action.do_edit()
 
-    def set_video_endoding(self, clip, callback=None):
+        return rendered_clip
+
+    def set_video_endoding(self, clip, callback=None, show_render_buttons=False):
         self.external_encoding_callback = callback
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
         # These need to re-initialized always when using this module.
@@ -372,27 +367,51 @@ class AbstractContainerActionObject:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
         encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
+        if show_render_buttons == True:
+            render_combo = Gtk.ComboBoxText()
+            render_combo.append_text(_("Render Full Media"))
+            render_combo.append_text(_("Render Clip Length"))
+            render_combo.set_active(0)
 
-        align = dialogutils.get_default_alignment(encoding_panel)
+        vbox = Gtk.VBox()
+        if show_render_buttons == True:
+            vbox.pack_start(render_combo, False, False, 0)
+        vbox.pack_start(encoding_panel, False, False, 0)
         
-        dialog = Gtk.Dialog(_("Container Clip Render Settings"),
+        align = dialogutils.get_default_alignment(vbox)
+
+        if show_render_buttons == True:
+            title = _("Container/Generator Clip Render")
+            ok_text =  _("Render")
+        else:
+            title = _("Set Render Encoding Settings")
+            ok_text =  _("Set Encoding")
+                        
+        dialog = Gtk.Dialog(title,
                             gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Cancel"), Gtk.ResponseType.REJECT,
-                             _("Set Encoding"), Gtk.ResponseType.ACCEPT))
+                             ok_text, Gtk.ResponseType.ACCEPT))
         dialog.vbox.pack_start(align, True, True, 0)
         dialogutils.set_outer_margins(dialog.vbox)
         dialog.set_resizable(False)
-
         dialog.connect('response', self.encode_settings_callback)
+                    
+        if show_render_buttons == True:
+            self.render_combo = render_combo
+        else:
+            self.render_combo = None
         dialog.show_all()
 
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             self.container_data.render_data = toolsencoding.get_render_data_for_current_selections()
             if self.external_encoding_callback != None:
-                self.external_encoding_callback(self.container_data.render_data)
-
+                if self.render_combo == None:
+                    self.external_encoding_callback(self.container_data.render_data)
+                else:
+                    self.external_encoding_callback(self.render_combo)
+                    
         dialog.destroy()
         
     def clone_clip(self, old_clip):
@@ -436,9 +455,6 @@ class AbstractContainerActionObject:
         
     def _build_icon(self, icon_path):
         cr, surface = _create_image_surface(icon_path)
-        type_icon = _get_type_icon(self.container_data.container_type)
-        cr.set_source_surface(type_icon, 1, 30)
-        cr.paint()
         return surface
         
     def load_icon(self):
@@ -447,12 +463,15 @@ class AbstractContainerActionObject:
     def edit_program(sef, clip):
         print("AbstractContainerActionObject.edit_program not impl")
 
+    def create_image_surface(self, icon_path):
+        return _create_image_surface(icon_path)
 
 class GMicContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
+        self.parent_folder = userfolders.get_container_clips_dir()
 
     def validate_program(self):
         try:
@@ -500,14 +519,14 @@ class GMicContainerActions(AbstractContainerActionObject):
         self.render_range_out = range_out
         self.gmic_frame_offset = gmic_frame_offset
  
-        gmicheadless.clear_flag_files(self.get_container_program_id())
+        gmicheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        gmicheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
@@ -515,6 +534,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
+                "parent_folder:" + str(self.parent_folder), 
                 "script:" + str(self.container_data.program),
                 "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
@@ -531,10 +551,11 @@ class GMicContainerActions(AbstractContainerActionObject):
         subprocess.Popen(command_list)
         
     def update_render_status(self):
-        
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
                     
-        if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
+        if gmicheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
             
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -542,7 +563,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
 
         else:
-            status = gmicheadless.get_session_status(self.get_container_program_id())
+            status = gmicheadless.get_session_status(self.parent_folder, self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
 
@@ -586,10 +607,8 @@ class GMicContainerActions(AbstractContainerActionObject):
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
-        Gdk.threads_leave()
-
     def abort_render(self):
-        gmicheadless.abort_render(self.get_container_program_id())
+        gmicheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
@@ -601,7 +620,6 @@ class GMicContainerActions(AbstractContainerActionObject):
         cr.set_source_surface(type_icon, 1, 30)
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
- 
         return (surface, length, icon_path)
 
 
@@ -611,24 +629,42 @@ class FluxityContainerActions(AbstractContainerActionObject):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
         self.plugin_create_render_complete_callback = None # set at object creation site if needed
-
+        self.parent_folder = userfolders.get_container_clips_dir()
+        
     def validate_program(self):
         try:
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-            fctx = fluxity.render_preview_frame(user_script, script_file, 0, None, profile_file_path)
+            if self.container_data.unrendered_length == None:
+                self.container_data.unrendered_length = 200
+
+            fctx = fluxity.render_preview_frame(user_script, script_file, 0, self.container_data.unrendered_length, None, profile_file_path)
          
             if fctx.error == None:
                 data_json = fctx.get_script_data()
                 self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json) # script data saved as Python object, not json str.
+                self.container_data.data_slots["fluxity_plugin_edit_data"] ["groups_list"] = fctx.groups
+
                 return (True, None) # no errors
             else:
                 return (False,  fctx.error)
     
         except Exception as e:
             return (False, str(e))
+    
+    def re_render_screenshot(self):
+        script_file = open(self.container_data.program)
+        user_script = script_file.read()
+        profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+        frame = self.container_data.unrendered_length // 2
+        screenshot_file = self.get_container_thumbnail_path()
         
+        fctx = fluxity.render_preview_frame(user_script, script_file, frame, self.container_data.unrendered_length, None, profile_file_path)
+        fctx.priv_context.frame_surface.write_to_png(screenshot_file)
+        cr, surface = _create_image_surface(screenshot_file)
+        return (screenshot_file, surface)
+
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_FLUXITY
@@ -638,21 +674,25 @@ class FluxityContainerActions(AbstractContainerActionObject):
         data_object = self.container_data.data_slots["fluxity_plugin_edit_data"] 
         return data_object["name"]
 
-    def _launch_render(self, clip, range_in, range_out, fluxity_frame_offset):
+    def _launch_render(self, clip, range_in, range_out, unused_frame_ofset):
         self.create_data_dirs_if_needed()
+        
+        range_out = range_out + 1 # MLT handles out frames inclusive but fluxity exclusive.
+                                  # We just need to manually make sure we get always correct lengths.
+        
         self.render_range_in = range_in
         self.render_range_out = range_out
-        self.fluxity_frame_offset = fluxity_frame_offset
- 
-        fluxityheadless.clear_flag_files(self.get_container_program_id())
+        generator_length = self.container_data.unrendered_length
+
+        fluxityheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             self.container_data.render_data.do_video_render = False 
-    
-        fluxityheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+
+        fluxityheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
@@ -660,35 +700,39 @@ class FluxityContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
 
         # we could drop sending args if we wanted and just use this. 
-        ccrutils.write_misc_session_data(self.get_container_program_id(), "fluxity_plugin_edit_data", self.container_data.data_slots["fluxity_plugin_edit_data"])
-        
-        args = ("session_id:" + self.get_container_program_id(), 
+        fluxityheadless.write_misc_session_data(self.parent_folder, self.get_container_program_id(), "fluxity_plugin_edit_data", self.container_data.data_slots["fluxity_plugin_edit_data"])
+
+        args = ("session_id:" + self.get_container_program_id(),
+                "parent_folder:" + self.parent_folder,
                 "script:" + str(self.container_data.program),
-                "clip_path:" + str(self.container_data.unrendered_media),
+                "generator_length:" + str(generator_length),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
-                "fluxity_frame_offset:" + str(fluxity_frame_offset))
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
 
-        # Create command list and launch process.
-        command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladefluxityheadless")
-        for arg in args:
-            command_list.append(arg)
-
-        subprocess.Popen(command_list)
+        t = CommandLauncherThread(respaths.LAUNCH_DIR + "flowbladefluxityheadless", args)
+        t.start()
         
     def update_render_status(self):
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
         
-        Gdk.threads_enter()
-                    
-        if fluxityheadless.session_render_complete(self.get_container_program_id()) == True:
+        # We need to set these None so that when render is complete tlinewidgets.py drawing code no longer thinks
+        # that render is in progress
+        self.container_data.progress = None
+        self.clip.container_data.progress = None
+        
+        if fluxityheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
             
             if self.plugin_create_render_complete_callback == None:
+                # Completed render for timeline container clip update is handled here.
+                GLib.idle_add(self.plugin_tline_render_comlete)
                 GLib.idle_add(self.create_producer_and_do_update_edit, None)
             else:
+                # Completed render for adding Generator plugin as rendered video clip is handled here. 
                 if self.container_data.render_data.do_video_render == False:
                     resource_path = self.get_rendered_frame_sequence_resource_path()
                 else:
@@ -697,7 +741,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 GLib.idle_add(self.plugin_create_render_complete_callback, resource_path, self.container_data)
 
         else:
-            status = fluxityheadless.get_session_status(self.get_container_program_id())
+            status = fluxityheadless.get_session_status(self.parent_folder, self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
 
@@ -717,9 +761,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
                     job_msg.progress = float(frame)/float(length)
                 else:
                     if step == "1":
-                        render_length = self.render_range_out - self.render_range_in 
-                        frame = int(frame) - self.fluxity_frame_offset
-                    else:
                         render_length = self.render_range_out - self.render_range_in
                     job_msg.progress = float(frame)/float(render_length)
                     
@@ -729,17 +770,28 @@ class FluxityContainerActions(AbstractContainerActionObject):
                         job_msg.progress = 1.0
 
                     if job_msg.progress > 1.0:
-                        # Ffix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                        # Fix how progress is calculated in rendering process because producers can render a bit longer then required.
                         job_msg.progress = 1.0
 
                 job_msg.elapsed = float(elapsed)
                 job_msg.text = msg
                 
                 jobs.update_job_queue(job_msg)
+
+                # Update tline render % display, we need to set different attrs for 
+                # first and succeeding renders.
+                self.container_data.progress = job_msg.progress
+                self.clip.container_data.progress = job_msg.progress
+                updater.repaint_tline()
+                
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
-        Gdk.threads_leave()
+
+    def plugin_tline_render_comlete(self):
+        clip = self.create_producer_and_do_update_edit(None)
+        # Reopen in edit panel, doing callback to avoid circular imports
+        set_plugin_to_be_edited_func(clip, self)
 
     def abort_render(self):
         fluxityheadless.abort_render(self.get_container_program_id())
@@ -751,9 +803,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
             icon_path, not_used_length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
 
         cr, surface = _create_image_surface(icon_path)
-        type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_FLUXITY)
-        cr.set_source_surface(type_icon, 1, 30)
-        cr.paint() #_with_alpha(0.5)
  
         data_object = self.container_data.data_slots["fluxity_plugin_edit_data"]
         length = data_object["length"]
@@ -767,7 +816,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def apply_editors(self, editors):
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
-
+        get_edited_plugin_clip().container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
 
     def render_fluxity_preview(self, callbacks, editors, preview_frame):
         self.create_data_dirs_if_needed() # This could be first time we are writing
@@ -779,7 +828,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         script_file = open(self.container_data.program)
         user_script = script_file.read()
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-        
+
         self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
         self.container_data.render_data.do_video_render = False 
         
@@ -787,7 +836,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
-        fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, out_folder, profile_file_path, editors_data_json)
+        fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, self.container_data.unrendered_length, out_folder, profile_file_path, editors_data_json)
         if fctx.error != None:
             error_callback(fctx.error)
             return
@@ -822,6 +871,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
+        self.parent_folder = userfolders.get_container_clips_dir()
         
     def validate_program(self):
         # These are created by application and are quaranteed to be valid.
@@ -842,21 +892,22 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         self.render_range_out = range_out
         self.clip_start_offset = clip_start_offset
  
-        mltxmlheadless.clear_flag_files(self.get_container_program_id())
+        mltxmlheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        mltxmlheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        mltxmlheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
         job_msg.status = jobs.RENDERING
         jobs.update_job_queue(job_msg)
 
-        args = ("session_id:" + self.get_container_program_id(), 
+        args = ("session_id:" + self.get_container_program_id(),
+                "parent_folder:" + str(self.parent_folder),
                 "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
@@ -872,10 +923,11 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         subprocess.Popen(command_list)
 
     def update_render_status(self):
-
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
                     
-        if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
+        if mltxmlheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
             #self.remove_as_status_polling_object()
 
             job_msg = self.get_completed_job_message()
@@ -884,7 +936,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
         else:
-            status = mltxmlheadless.get_session_status(self.get_container_program_id())
+            status = mltxmlheadless.get_session_status(self.parent_folder, self.get_container_program_id())
 
             if status != None:
                 fraction, elapsed = status
@@ -902,233 +954,12 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-                
-        Gdk.threads_leave()
-                
-    def create_icon(self):
-        return self._create_icon_default_action()
-
-    def abort_render(self):
-        mltxmlheadless.abort_render(self.get_container_program_id())
-
-
-class BlenderContainerActions(AbstractContainerActionObject):
-
-    def __init__(self, container_data):
-        AbstractContainerActionObject.__init__(self, container_data)
-
-    def validate_program(self):
-        try:
-
-            handle = open(self.container_data.program, 'rb')
-            magic = handle.read(7).decode()
-            handle.close()
-            if magic == "BLENDER":
-                return (True, None)
-            else:
-                msg = _("Wrong magic: ") + magic
-                return (False, msg)
-                
-        except Exception as e:
-            return (False, str(e))
-
-    def initialize_project(self, project_path):
-        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py")
-        command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
-
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            info_script = utils.get_flatpak_real_path_for_app_files(info_script)
-            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
-            
-        FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-
-        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        p.wait()
-
-    def get_job_proxy(self):
-        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
-        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
-        return job_proxy
-
-    def get_job_name(self):
-        return self.container_data.get_program_name()
-        
-    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
-        self.create_data_dirs_if_needed()
-
-        job_msg = self.get_job_queue_message()
-        job_msg.text = _("Render Starting...")
-        job_msg.status = jobs.RENDERING
-        jobs.update_job_queue(job_msg)
-        
-        self.render_range_in = range_in
-        self.render_range_out = range_out
-        self.clip_start_offset = clip_start_offset
-
-        blenderheadless.clear_flag_files(self.get_container_program_id())
-        # We need data to be available for render process, 
-        # create video_render_data object with default values if not available.
-        if self.container_data.render_data == None:
-            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
-        
-        # Make sure preview render does not try to create video clip.
-        render_data = copy.deepcopy(self.container_data.render_data)
-        if self.render_type == PREVIEW_RENDER:
-            render_data.do_video_render = False
-            render_data.is_preview_render = True
-
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            render_data.is_flatpak_render = True
-        
-        blenderheadless.set_render_data(self.get_container_program_id(), render_data)
-        
-        # Write current render target container clip for blenderrendersetup.py
-        cont_info_id_path = userfolders.get_cache_dir() + "blender_render_container_id"
-        with atomicfile.AtomicFileWriter(cont_info_id_path, "w") as afw:
-            outfile = afw.get_file()
-            outfile.write(str(self.get_container_program_id()))
-
-        # Write current render set up exec lines for blenderrendersetup.py
-        if self.render_type != PREVIEW_RENDER:
-            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_rendered_media_dir() + '/frame"' + NEWLINE
-        else:
-            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_preview_media_dir() + '/frame"' + NEWLINE
-            if not os.path.exists(self.get_preview_media_dir()):
-                os.mkdir(self.get_preview_media_dir())
-            
-        render_exec_lines = file_path_str \
-        + 'bpy.context.scene.render.fps = 24' + NEWLINE \
-        + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
-        + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
-        + 'bpy.context.scene.render.film_transparent = 1' + NEWLINE \
-        + 'bpy.context.scene.render.resolution_x = '+ str(current_sequence().profile.width()) + NEWLINE \
-        + 'bpy.context.scene.render.resolution_y = ' + str(current_sequence().profile.height()) + NEWLINE \
-        + 'bpy.context.scene.render.resolution_percentage = 100' + NEWLINE \
-        + 'bpy.context.scene.frame_start = ' + str(range_in) + NEWLINE \
-        + 'bpy.context.scene.frame_end = ' + str(range_out)  + NEWLINE
-
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "objects")
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "materials")
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "curves")
-
-        exec_lines_file_path = self.get_session_dir() + "/blender_render_exec_lines"
-        with atomicfile.AtomicFileWriter(exec_lines_file_path, "w") as afw:
-            outfile = afw.get_file()
-            outfile.write(render_exec_lines)
-
-        args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + str(self.container_data.program),
-                "range_in:" + str(range_in),
-                "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
-        
-        # Create command list and launch process.
-        command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladeblenderheadless")
-        for arg in args:
-            command_list.append(arg)
-
-        subprocess.Popen(command_list)
-        
-    def _write_exec_lines_for_obj_type(self, render_exec_lines, obj_type):
-        objects = self.blender_project_objects(obj_type)
-        for obj in objects:
-            # objects are lists [name, type, editorlist], see  blenderprojectinit.py
-            obj_name = obj[0]
-            editor_lines = []
-            for editor_data in obj[2]:
-                # editor_data is list [prop_path, label, tooltip, editor_type, value], see containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                prop_path = editor_data[0]
-                value = editor_data[4]
-                
-                render_exec_lines += 'obj = bpy.data.' + obj_type + '["' + obj_name + '"]' + NEWLINE
-                render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
-    
-        return render_exec_lines
-
-    def update_render_status(self):
-
-        Gdk.threads_enter()
-                    
-        if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
-
-            job_msg = self.get_completed_job_message()
-            jobs.update_job_queue(job_msg)
-            
-            if self.render_type != PREVIEW_RENDER:
-                GLib.idle_add(self.create_producer_and_do_update_edit, None)
-            else:
-                self.program_editor_window.preview_render_complete()
-                
-        else:
-            status = blenderheadless.get_session_status(self.get_container_program_id())
-            
-            if status != None:
-                step, fraction, elapsed = status
-                msg = _("Rendering Image Sequence")
-                if self.render_type == PREVIEW_RENDER:
-                    msg = _("Rendering Preview")
-                if  step == "2":
-                     msg = _("Rendering Video")
-                     
-                job_msg = self.get_job_queue_message()
-                job_msg.progress = float(fraction)
-                job_msg.elapsed = float(elapsed)
-                job_msg.text = msg
-                
-                jobs.update_job_queue(job_msg)
-            else:
-                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-                
-        Gdk.threads_leave()
-
-    def abort_render(self):
-        #self.remove_as_status_polling_object()
-        blenderheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
         return self._create_icon_default_action()
 
-    def edit_program(self, clip):
-        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["project_edit_info"])
-
-    def render_blender_preview(self, program_editor_window, editors, preview_frame):
-        self.program_editor_window = program_editor_window
-        self.update_program_values_from_editors(editors)
-        self.render_preview(None, preview_frame, 0)
-
-    def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
-        if response_is_accept == True:
-            self.update_program_values_from_editors(editors)
-            dialog.destroy()
-        else:
-            self.container_data.data_slots["project_edit_info"] = orig_program_info_json
-            dialog.destroy()
-
-    def update_program_values_from_editors(self, editors):
-        objects = self.blender_project_objects("objects")
-        materials = self.blender_project_objects("materials")
-        curves = self.blender_project_objects("curves")
-        
-        for guieditor in editors:
-            value = guieditor.get_value()
-            obj_name, prop_path = guieditor.id_data
-
-            self.set_edited_object_value(objects, obj_name, prop_path, value)
-            self.set_edited_object_value(materials, obj_name, prop_path, value)
-            self.set_edited_object_value(curves, obj_name, prop_path, value)
-                
-    def set_edited_object_value(self, objects, obj_name, prop_path, value):
-        for obj in objects:
-            if obj[0] == obj_name:
-                # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                 for json_editor_data in obj[2]:
-                     if json_editor_data[0] == prop_path:
-                         json_editor_data[4] = value
-
-    def blender_project_objects(self, editable_object_type):
-        program_info_json = self.container_data.data_slots["project_edit_info"]
-        return program_info_json[editable_object_type]
+    def abort_render(self):
+        mltxmlheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
 
 # -------------------------------------------------------------- creating unrendered clip
@@ -1167,27 +998,43 @@ class UnrenderedCreationThread(threading.Thread):
         clip_renderer.wait_for_producer_end_stop = True
         clip_renderer.start()
 
-        Gdk.threads_enter()
+        GLib.idle_add(self._show_progress_window,  clip_renderer)
+    
+        while clip_renderer.stopped == False:       
+            time.sleep(0.5)
+
+        GLib.idle_add(self._do_write_callback, write_file)
+
+    def _show_progress_window(self, clip_renderer):
         
         info_text = _("<b>Rendering Placeholder Media For:</b> ")  + self.data.get_program_name()
 
         progress_bar = Gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
+        self.dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
 
-        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, clip_renderer, self.progress_thread_complete)
+        motion_progress_update = guiutils.ProgressWindowThread(self.dialog, progress_bar, clip_renderer, self.progress_thread_complete)
         motion_progress_update.start()
-
-        Gdk.threads_leave()
         
-        while clip_renderer.stopped == False:       
-            time.sleep(0.5)
-
-        Gdk.threads_enter()
-        
+    def _do_write_callback(self, write_file):
         self.callback(write_file, self.data)
 
-        Gdk.threads_leave()
-
     def progress_thread_complete(self, dialog, some_number):
-        #  Gdk.threads_enter() is done before this is called from "motion_progress_update" thread.
-        dialog.destroy()
+        GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
+
+
+class CommandLauncherThread(threading.Thread):
+    def __init__(self, path, args):
+        self.path = path
+        self.args = args
+
+        threading.Thread.__init__(self)
+
+    def run(self):    
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(self.path)
+        for arg in self.args:
+            command_list.append(arg)
+
+        subprocess.Popen(command_list)
+        

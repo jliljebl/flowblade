@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,38 +44,42 @@ SHOW_IMAGE_SEQUENCES = 4
 SHOW_PATTERN_PRODUCERS = 5
 SHOW_UNUSED_FILES = 6
 
-# These are used to draw indicators that tell if more frames are available while trimming
+# These are used to draw indicators that tell if more frames are available while trimming.
 ON_FIRST_FRAME = 0
 ON_LAST_FRAME = 1
 ON_BETWEEN_FRAME = 2
 
-# Sync states of sync child clips
+# Sync states of sync child clips.
 SYNC_CORRECT = 0
 SYNC_OFF = 1
 SYNC_PARENT_GONE = 2
 
-# Allowed editing operations on a track
+# Allowed editing operations on a track.
 FREE = 0        # All edits allowed
 SYNC_LOCKED = 1 # No insert, splice out or one roll trim.
                 # Allowed edits do not change positions of later clips 
 LOCKED = 2      # No edits allowed
 
-# Property types of mlt filters and mlt transitions in filters.xml
+# Property types of mlt filters and mlt transitions in filters.xml.
 # and compositors.xml
 PROP_INT = 0
 PROP_FLOAT = 1
 PROP_EXPRESSION = 2
 
-# Display heights for tracks and timeline.
+# Display heights for tracks and timeline. 
 TRACK_HEIGHT_HIGH = 75 # track height in canvas and column
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
-TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
+TRACK_HEIGHT_SMALLEST = 25 # DEPRECATED
+
+# Main layout minimum heights. Changing these will have effect on layout.
+TOP_ROW_HEIGHT = 300
 TLINE_HEIGHT = 260
 
-# Notebook widths
-NOTEBOOK_WIDTH = 400 # currently has no effect, panels widgets size requests combined width > 400 (about 488), make bigger if needed.
-TOP_ROW_HEIGHT = 500
+# Main layout minimum widths. Changing these will have effect on layout.
+MONITOR_AREA_WIDTH = 400
+PANEL_MEDIA_MINIMUM_SIZE = 400 #  Most panels have larger minimum widths then this and will expand Media panel if in same notebook.
+PANEL_MULTI_EDIT_MINIMUM_SIZE = 470 # Render, and Jobs panels have larger have larger minimum widths then this and will expand Edit panel if in same notebook.
 
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22
@@ -102,7 +106,7 @@ MLT_SERVICE = "mlt_service"
 EXTRA_EDITOR = "extraeditor"
 
 # Available tracks maximum for Flowblade
-MAX_TRACKS = 9
+MAX_TRACKS = 21
 INIT_V_TRACKS = 5
 INIT_A_TRACKS = 4
 
@@ -132,8 +136,8 @@ COMMENT_SORT = 2
 
 # Rendered clip types
 RENDERED_DISSOLVE = 0
-RENDERED_WIPE = 1
-RENDERED_COLOR_DIP = 2
+RENDERED_WIPE = 1 # DEPRECATED
+RENDERED_COLOR_DIP = 2 # DEPRECATED
 RENDERED_FADE_IN = 3
 RENDERED_FADE_OUT = 4
 
@@ -147,30 +151,27 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 AUTOSAVE_DIR = "autosave/"
 
 # Hidden media folders
-# NOTE: We have not been fully consistant with the ending forward slashes.
-AUDIO_LEVELS_DIR = "audiolevels/"
-PROXIES_DIR = "proxies/"
-THUMBNAILS_DIR = "thumbnails"
-RENDERED_CLIPS_DIR = "rendered_clips"
-TLINE_RENDERS_DIR = "tlinerenders"
+# NOTE: We have not been consistent with the starting/ending forward slashes.
+AUDIO_LEVELS_DIR = "audiolevels/" # DEPRECATED
+PROXIES_DIR = "proxies/" # DEPRECATED
+THUMBNAILS_DIR = "thumbnails" # DEPRECATED
+RENDERED_CLIPS_DIR = "rendered_clips"  # DEPRECATED
 GMIC_DIR = "gmic"
 PHANTOM_DIR = "phantom2d"
 PHANTOM_DISK_CACHE_DIR = "disk_cache"
-MATCH_FRAME_DIR = "match_frame"
-MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
-MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
-CONTAINER_CLIPS_DIR = "container_clips"
-CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered"
+CONTAINER_CLIPS_DIR = "container_clips" # DEPRECATED
+CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered" # DEPRECATED
 CC_CLIP_FRAMES_DIR = "/clip_frames"
 CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 CC_PREVIEW_RENDER_DIR = "/preview_frames"
 USER_SHORTCUTS_DIR =  "user_shortcuts/"
 USER_USBHID_DIR =  "user_usbhid/"
 SCRIP_TOOL_DIR = "scripttool"
+TEMP_RENDER_DIR = "temprender/"
 
 # Luma bands
 SHADOWS = 0
@@ -221,7 +222,7 @@ P_PROP_LAST_RENDER_SELECTIONS = "P_PROP_LAST_RENDER_SELECTIONS"
 P_PROP_TRANSITION_ENCODING = "P_PROP_TRANSITION_ENCODING"
 P_PROP_DEFAULT_FADE_LENGTH = "P_PROP_DEFAULT_FADE_LENGTH"
 
-# A context defining action taken when mouse press happens based on edit mode ands mouse position
+# A context defining action taken when mouse press happens based on edit mode and mouse position.
 POINTER_CONTEXT_NONE = 0
 POINTER_CONTEXT_END_DRAG_LEFT = 1
 POINTER_CONTEXT_END_DRAG_RIGHT = 2
@@ -234,73 +235,79 @@ POINTER_CONTEXT_BOX_SIDEWAYS = 8
 POINTER_CONTEXT_MULTI_ROLL = 9
 POINTER_CONTEXT_MULTI_SLIP = 10
 
-# Timeline tool ids. NOTE: a tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
+# Timeline tool ids. 
+# NOTE: A tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
 TLINE_TOOL_INSERT = 1
 TLINE_TOOL_OVERWRITE = 2
-TLINE_TOOL_TRIM = 3
-TLINE_TOOL_ROLL = 4
-TLINE_TOOL_SLIP = 5
+TLINE_TOOL_TRIM = 3 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+TLINE_TOOL_ROLL = 4 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+TLINE_TOOL_SLIP = 5 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
 TLINE_TOOL_SPACER = 6
-TLINE_TOOL_BOX = 7
-TLINE_TOOL_RIPPLE_TRIM = 8
+TLINE_TOOL_BOX = 7 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+TLINE_TOOL_RIPPLE_TRIM = 8 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
 TLINE_TOOL_CUT = 9
 TLINE_TOOL_KFTOOL = 10
 TLINE_TOOL_MULTI_TRIM = 11
 
-# Monitor switch events
+# Monitor switch events.
 MONITOR_TLINE_BUTTON_PRESSED = 1
 MONITOR_CLIP_BUTTON_PRESSED = 2
 
-# Appliation thmes and colors preference
-FLOWBLADE_THEME = 0
+# Application themes and colors preference.
+# NOTE: Deactivated 2.10 and higher because Gnome global theme light/dark preferences
+# caused Flatpak to present invisible window for certain combinations of glovbal prefenrence and 
+# Flowblade preference. See after Gtk 4 port if fixable.
+FLOWBLADE_THEME = 0 # Deprecated
 DARK_THEME = 1
 LIGHT_THEME = 2
-FLOWBLADE_THEME_GRAY = 3
-FLOWBLADE_THEME_NEUTRAL = 4
+FLOWBLADE_THEME_GRAY = 3  # Deprecated
+FLOWBLADE_THEME_NEUTRAL = 4 # Forced for 2.10
 
-# DND actions
+# DND actions.
 DND_ALWAYS_OVERWRITE = 0
 DND_OVERWRITE_NON_V1 = 1
 DND_ALWAYS_INSERT = 2
 
-# Top row layouts
+# Top row layouts.
 THREE_PANELS_IF_POSSIBLE = 0
 ALWAYS_TWO_PANELS = 1
 
-# Tool selection optiokns
+# Tool selection optiokns.
 TOOL_SELECTOR_IS_MENU = 0
 TOOL_SELECTOR_IS_LEFT_DOCK = 1
 
-# Copypaste data tyoe
+# Copypaste data type.
 COPY_PASTE_DATA_CLIPS = 1
 COPY_PASTE_DATA_COMPOSITOR_PROPERTIES = 2
 COPY_PASTE_KEYFRAME_EDITOR_KF_DATA = 3
 COPY_PASTE_GEOMETRY_EDITOR_KF_DATA = 4
+CUT_PASTE_MEDIA_ITEMS = 5
+CUT_PASTE_DATA_CLIPS = 6
 
-# Timeline Compositong modes
+# Timeline Compositing modes.
 COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 0
-COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1 # Deprecated, mode removed 2.6 ->
-COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
+COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1 # DEPRECATED, mode removed 2.6 ->
+COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2  # DEPRECATED, mode removed 2.10 ->
 COMPOSITING_MODE_STANDARD_FULL_TRACK = 3
 
 # Magic string for selection path being user home directory root
 USER_HOME_DIR = "USER_HOME_DIERCTORY_&&##&&"
 
-# Timeline rendering modes
+# Timeline rendering modes.
 TLINE_RENDERING_OFF = 0
 TLINE_RENDERING_AUTO = 1
 TLINE_RENDERING_REQUEST = 2
 
-# Timeline rendering uses these now
+# Timeline rendering uses these now.
 PROXY_SIZE_FULL = 0
 PROXY_SIZE_HALF = 1
 PROXY_SIZE_QUARTER = 2
 
-# Container clip types
+# Container clip types.
 CONTAINER_CLIP_GMIC = 0
 CONTAINER_CLIP_MLT_XML = 1
 CONTAINER_CLIP_CAIRO_SCRIPT = 2
-CONTAINER_CLIP_BLENDER = 3
+CONTAINER_CLIP_BLENDER = 3 # DEPRECATED
 CONTAINER_CLIP_FLUXITY = 4
 
 CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"
@@ -317,7 +324,7 @@ BIG_TIME_CODE = "big_TC" # DEPRECATED, not configurable.
 WORKFLOW_LAUNCH = "worflow_launch" # DEPRECATED, not configurable. 
 TOOL_SELECT = "tool_selector" # DEPRECATED, not configurable.
 
-# Panel placement options
+# Panel placement options.
 PANEL_PLACEMENT_TOP_ROW_DEFAULT = 0
 PANEL_PLACEMENT_TOP_ROW_RIGHT = 1
 PANEL_PLACEMENT_LEFT_COLUMN = 2
@@ -339,7 +346,7 @@ PANEL_PROJECT_SMALL_SCREEN = 7
 PANEL_MEDIA_AND_BINS_SMALL_SCREEN = 8
 PANEL_FILTER_SELECT = 9
 
-# Keyframe interpolation
+# Keyframe interpolation.
 KEYFRAME_LINEAR = 0
 KEYFRAME_SMOOTH = 1
 KEYFRAME_DISCRETE = 2
@@ -348,8 +355,20 @@ KEYFRAME_LINEAR_EQUALS_STR = "="
 KEYFRAME_SMOOTH_EQUALS_STR = "~="
 KEYFRAME_DISCRETE_EQUALS_STR = "|="
 
-# Multi edit panel
+# Multi edit panel display options.
 EDIT_MULTI_EMPTY = "edit_multi_empty"
 EDIT_MULTI_FILTERS = "edit_multi_filters"
 EDIT_MULTI_COMPOSITORS = "edit_multi_compositors"
 EDIT_MULTI_PLUGINS = "edit_multi_plugins"
+
+# Encoder groups.
+PRESET_GROUP = "presetgroup"
+PRESET_GROUP_H264 = "H.264, HEVC"
+PRESET_GROUP_NVENC = "NVENC"
+PRESET_GROUP_VAAPI = "VAAPI"
+PRESET_GROUP_MPEG = "MPEG"
+PRESET_GROUP_LOSSLESS = "Lossless"
+PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
+PRESET_GROUP_AUDIO = "Audio" 
+PRESET_GROUP_MISC = "webmetc"
+PRESET_GROUP_ALPHA = "Alpha"

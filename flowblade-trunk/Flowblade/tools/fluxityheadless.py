@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,17 +25,18 @@ except ImportError:
     pass
     
 import gi
-
 gi.require_version('Gtk', '3.0')
+gi.require_version('PangoCairo', '1.0')
 
 import json
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import threading
+import sys
 import time
 
 import appconsts
@@ -43,10 +44,8 @@ import ccrutils
 import editorstate
 import editorpersistance
 import fluxity
-import mltfilters
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
 import processutils
 import renderconsumer
 import respaths
@@ -67,30 +66,33 @@ RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 _render_thread = None
 _frame_range_update_thread = None
 
+
 # ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
-def clear_flag_files(session_id):
-    ccrutils.clear_flag_files(session_id)
+def clear_flag_files(parent_folder, session_id):
+    ccrutils.clear_flag_files(parent_folder, session_id)
     
-def set_render_data(session_id, video_render_data):
-    ccrutils.set_render_data(session_id, video_render_data)
+def set_render_data(parent_folder, session_id, video_render_data):
+    ccrutils.set_render_data(parent_folder, session_id, video_render_data)
     
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
-def abort_render(session_id):
-    ccrutils.abort_render(session_id)
+def abort_render(parent_folder, session_id):
+    ccrutils.abort_render(parent_folder, session_id)
 
+def write_misc_session_data(parent_folder, session_id, file_name, misc_data):
+    ccrutils.write_misc_session_data(parent_folder, session_id, file_name, misc_data)
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+def main(root_path, session_id, parent_folder, script, generator_length, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -103,58 +105,36 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     userfolders.init()
     editorpersistance.load()
 
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    repo = mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-    
-    ccrutils.init_session_folders(session_id)
+    ccrutils.init_session_folders(parent_folder, session_id)
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()
 
-    fluxity_plugin_edit_data = ccrutils.read_misc_session_data(session_id, "fluxity_plugin_edit_data")
-    #print("main():", json.dumps(fluxity_plugin_edit_data["editors_list"])) # See fluxity.FluxityContext.get_script_data()
+    fluxity_plugin_edit_data = ccrutils.read_misc_session_data(parent_folder, session_id, "fluxity_plugin_edit_data")
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
-    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset)
+    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, generator_length, range_in, range_out, profile_desc)
     _render_thread.start()
 
 
 class FluxityHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+    def __init__(self, script, fluxity_plugin_edit_data, render_data, generator_length, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.script_path = script
         self.fluxity_plugin_edit_data = fluxity_plugin_edit_data
         self.render_data = render_data # toolsencoding.ToolsRenderData object
-        self.clip_path = clip_path
+        self.generator_length = int(generator_length)
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
         self.profile_desc = profile_desc
-        self.fluxity_frame_offset = int(fluxity_frame_offset) # Note this not used currently can't get MLT to find frame seq if not starting from 0001
         self.last_frame_write_time = 0.0
     
         self.abort = False
@@ -192,13 +172,23 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         
         proc_fctx_dict = fluxity.render_frame_sequence(   user_script,
                                                           script_file,
+                                                          self.generator_length,
                                                           self.range_in, 
                                                           self.range_out, 
                                                           rendered_frames_folder, 
                                                           profile_file_path, 
                                                           editors_data_json,
                                                           True)
-
+        ccrutils.write_range_render_data(proc_fctx_dict)
+        
+        # Exit on error without waiting frame render to complete.
+        error_msg, log_msg = self.get_range_render_messages(proc_fctx_dict)
+        if error_msg != None:
+            ccrutils.write_completed_message()
+            _frame_range_update_thread.abort = True
+            return
+            
+        # Wait all frames to be rendered
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
                 _frame_range_update_thread.abort = True
@@ -214,7 +204,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         
@@ -263,7 +253,20 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         msg = "2 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
         ccrutils.write_status_message(msg)
 
+    def get_range_render_messages(self, proc_fctx_dict):
+        # Get error and log messages.
+        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
+            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG]
+        else:
+            error_msg = None
 
+        if fluxity.FLUXITY_LOG_MSG in proc_fctx_dict.keys():
+            log_msg = proc_fctx_dict[fluxity.FLUXITY_LOG_MSG]
+        else:
+            log_msg = None
+
+        return (error_msg, log_msg)
+    
 class FrameRangeUpdateThread(threading.Thread):
 
     def __init__(self, rendered_frames_folder, render_length):
@@ -286,4 +289,4 @@ class FrameRangeUpdateThread(threading.Thread):
             msg = "1 " + str(frame) + " " + str(self.render_length + 1) + " " + str(elapsed)
             ccrutils.write_status_message(msg)
         
-            time.sleep(0.5)
+            time.sleep(0.2)

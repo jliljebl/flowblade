@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,24 +19,21 @@
 """
 
 """
-Module provides utility methods for moduless creating headless render procesesses
-in initialized Flowblade/MLT enviroment.
+Module provides utility methods for modules creating headless render procesesses
+in initialized Flowblade/MLT environment.
 """
 
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 
 import ccrutils
 import editorstate
 import editorpersistance
-import mltfilters
-import mltenv
-import mltprofiles
-import mlttransitions
+import mltinit
 import processutils
 import renderconsumer
 import respaths
@@ -44,7 +41,7 @@ import translations
 import userfolders
 
 
-def mlt_env_init(root_path, session_id):
+def mlt_env_init(root_path, parent_folder, session_id):
     os.nice(10) # make user configurable
 
     try:
@@ -58,29 +55,9 @@ def mlt_env_init(root_path, session_id):
     userfolders.init()
     editorpersistance.load()
 
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-    
-    ccrutils.init_session_folders(session_id)
+    ccrutils.init_session_folders(parent_folder, session_id)
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()

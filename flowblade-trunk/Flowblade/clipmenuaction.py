@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2014 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,15 +28,14 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 from operator import itemgetter
 import os
 import shutil
 import time
 
-import audiowaveform
 import audiosync
 import appconsts
 import clipeffectseditor
@@ -45,25 +44,41 @@ import containerclip
 import dialogs
 import dialogutils
 import gui
-import guicomponents
+import guipopoverclip
 import edit
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
 import kftoolmode
+import mediaplugin
 import mlttransitions
 import modesetting
 import movemodes
 import projectaction
+import singletracktransition
 import syncsplitevent
+import titler
 import tlinewidgets
 import tlineaction
 import updater
 import userfolders
 import utils
 
-_match_frame_writer = None
+# --------------------------------------------- menu data for each invocation.
+_popover_clip_data = None # clip, track and press x cannot passed through using Gio.MenuItems and Gio.SimpleAction objects
+                          # so they saved here before each menu invocation.
+_compositor_data = None # clip, track and press x cannot passed through using Gio.MenuItems and Gio.SimpleAction objects
+                          # so they saved here before each menu invocation.
+
+# toolsintegrator.py needs this to launch tools
+def get_popover_clip_data():
+    return _popover_clip_data
+
+# Edit event sets this because we cannot pass data through menu with Gio.Menu anymore.
+def set_compositor_data(compositor):
+    global _compositor_data
+    _compositor_data = compositor
 
 # ---------------------------------- clip menu
 def display_clip_menu(y, event, frame):
@@ -88,17 +103,17 @@ def display_clip_menu(y, event, frame):
     else:
         movemodes.select_blank_range(track, pressed_clip)
 
+    global _popover_clip_data
+    _popover_clip_data = (pressed_clip, track,  event.x)
+            
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:
-            guicomponents.display_clip_popup_menu(event, pressed_clip, \
-                                              track, _clip_menu_item_activated)
+            guipopoverclip.clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
         else:
-            guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
-                                                track, _clip_menu_item_activated)
-                                              
+            guipopoverclip.multi_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
+
     elif track.type == appconsts.AUDIO:
-        guicomponents.display_audio_clip_popup_menu(event, pressed_clip, \
-                                                    track, _clip_menu_item_activated)
+        guipopoverclip.audio_clip_popover_menu_show(gui.tline_canvas.widget, pressed_clip, track, event.x, event.y, _clip_popover_menu_item_activated)
 
     return True
 
@@ -108,8 +123,17 @@ def _clip_menu_item_activated(widget, data):
     handler = POPUP_HANDLERS[item_id]
     handler(data)
 
-def _compositor_menu_item_activated(widget, data):
-    action_id, compositor = data
+def _clip_popover_menu_item_activated(action, variant, data):
+    # Callback from selected clipmenu item
+    item_id, item_data = data
+    global _popover_clip_data
+    clip, track, x = _popover_clip_data
+    handler = POPUP_HANDLERS[item_id]
+    handler_data = (clip, track, item_id, item_data)
+    handler(handler_data)
+
+def compositor_menu_item_activated(action, variant, action_id):
+    compositor = _compositor_data
     if action_id == "open in editor":
         compositeeditor.set_compositor(compositor)
     elif action_id == "delete":
@@ -144,11 +168,11 @@ def _multi_delete_compositors(data):
             action.do_edit()
 
 def _open_clip_in_effects_editor(data):
-    updater.open_clip_in_effects_editor(data)
+    updater.open_clip_in_effects_editor(_get_data_with_xpos(data))
     
 def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
-    
+
     media_file = PROJECT().get_media_file_for_path(clip.path)
     if media_file == None and clip.container_data != None:
         media_file = PROJECT().get_media_file_for_container_data(clip.container_data)
@@ -233,8 +257,9 @@ def open_selection_in_effects():
     clipeffectseditor.set_clip(clip, track, movemodes.selected_range_in)
     
 def _add_filter(data):
-    clip, track, item_id, item_data = data
-    x, filter_info = item_data
+    clip, track, item_id, filter_info = data
+    clip, track, x = _popover_clip_data 
+
     action = clipeffectseditor.get_filter_add_action(filter_info, clip)
     clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
     action.do_edit()
@@ -270,37 +295,39 @@ def _add_filter_multi(data):
     clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
 def _add_compositor(data):
-    clip, track, item_id, item_data = data
-    x, compositor_type, add_compositors_is_multi_selection = item_data
+    # Get the currently available compositors. 
+    compositors = []
+    for i in range(0, len(mlttransitions.compositors)):
+        compositor = mlttransitions.compositors[i]
+        name, compositor_type = compositor
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
+        compositors.append(compositor)
+    
+    for i in range(0, len(mlttransitions.wipe_compositors)):
+        alpha_combiner = mlttransitions.wipe_compositors[i]
+        name, compositor_type = alpha_combiner
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
+        compositors.append(alpha_combiner)
+    
+    dialogs.add_compositor_dialog(compositors, _add_compositor_dialog_callback)
+
+def _add_compositor_dialog_callback(dialog, response_id, compositors, combo):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    name, compositor_type = compositors[combo.get_active()]
+    dialog.destroy()
+
+    clip, track, x = _popover_clip_data
+    add_compositors_is_multi_selection = False
 
     target_track_index = track.id - 1
-    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        target_track_index = current_sequence().first_video_index
 
     a_track = target_track_index
     b_track = track.id
-
-    if add_compositors_is_multi_selection == True:
-        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-            composited_clip = track.clips[clip_index]
-            if composited_clip.is_blanck_clip == True:
-                continue
-            compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
-            clip_length = composited_clip.clip_out - composited_clip.clip_in
-            compositor_out = compositor_in + clip_length
-            
-            edit_data = {"origin_clip_id":composited_clip.id,
-                        "in_frame":compositor_in,
-                        "out_frame":compositor_out,
-                        "a_track":a_track,
-                        "b_track":b_track,
-                        "compositor_type":compositor_type,
-                        "clip":composited_clip}
-            action = edit.add_compositor_action(edit_data)
-            action.do_edit()
-        
-        updater.repaint_tline()
-        return
 
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
@@ -318,7 +345,7 @@ def _add_compositor(data):
                 "clip":clip}
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
-    
+        
     updater.repaint_tline()
 
 def _add_autofade(data):
@@ -376,19 +403,54 @@ def _add_autofade(data):
                 "b_track":track.id,
                 "compositor_type":compositor_type,
                 "clip":clip}
-    #print("edit_data", edit_data)
+
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     
     updater.repaint_tline()
 
+def _edit_title(data):
+    clip, track, item_id, item_data = data
+    titler.edit_tline_title(clip, track, _title_edit_callback)
+
+def _title_edit_callback(clip, track, new_title_path, new_titler_data):
+
+    clip_index = track.clips.index(clip)
+    
+    while os.path.exists(new_title_path) == False:
+        print(new_title_path, "not yet updated")
+        time.sleep(0.3)
+    
+    new_clip = current_sequence().create_file_producer_clip(new_title_path, None, False, clip.ttl) # file producer
+
+    current_sequence().clone_clip_and_filters(clip, new_clip)
+    new_titler_data.destroy_pango_layouts()
+    new_clip.titler_data = new_titler_data
+
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index}
+    action = edit.reload_replace(data)
+    action.do_edit()
+
+    titler.clean_titler_instance()
 
 def _re_render_transition_or_fade(data):
     clip, track, item_id, item_data = data
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+
+    # Fix for changed number of creation data params
+    try:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
+    except:
+        print("except")
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
+
+    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index)
+
     name, type_id = mlttransitions.rendered_transitions[transition_type_index]
     if type_id < appconsts.RENDERED_FADE_IN:
-        tlineaction.re_render_transition(data)
+        singletracktransition.re_render_transition(data)
     else:
         tlineaction.re_render_fade(data)
         
@@ -545,19 +607,19 @@ def clear_filters():
     movemodes.clear_selected_clips()
     updater.repaint_tline()
 
-def _display_wavefrom(data):
-    audiowaveform.set_waveform_displayer_clip_from_popup(data)
-
-def _clear_waveform(data):
-    audiowaveform.clear_waveform(data)
-
 def  _clone_filters_from_next(data):
     clip, track, item_id, is_multi = data
     if is_multi == True:
         end_index = movemodes.selected_range_out
         if end_index == len(track.clips) - 1:
             return # clip is last clip
-        clone_clip = track.clips[end_index + 1]
+        clone_index = end_index + 1
+        while track.clips[clone_index].is_blanck_clip == True:
+            clone_index += 1
+            if clone_index == len(track.clips):
+                return # We auto delete blanks after clips so we should not hit this
+
+        clone_clip = track.clips[clone_index]
                     
         for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             target_clip = track.clips[clip_index]
@@ -571,7 +633,12 @@ def  _clone_filters_from_next(data):
     index = track.clips.index(clip)
     if index == len(track.clips) - 1:
         return # clip is last clip
-    clone_clip = track.clips[index + 1]
+    clone_index = index + 1
+    while track.clips[clone_index].is_blanck_clip == True:
+        clone_index += 1
+        if clone_index == len(track.clips):
+            return # We auto delete blanks after clips so we should not hit this
+    clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
 
 def _clone_filters_from_prev(data):
@@ -581,7 +648,14 @@ def _clone_filters_from_prev(data):
         start_index = movemodes.selected_range_in
         if start_index == 0:
             return  # clip is first clip
-        clone_clip = track.clips[start_index - 1]
+            
+        clone_index = start_index - 1
+        while track.clips[clone_index].is_blanck_clip == True:
+            clone_index -= 1
+            if clone_index == 0:
+                return
+
+        clone_clip = track.clips[clone_index]
                     
         for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             target_clip = track.clips[clip_index]
@@ -595,9 +669,14 @@ def _clone_filters_from_prev(data):
     index = track.clips.index(clip)
     if index == 0:
         return # clip is first clip
-    clone_clip = track.clips[index - 1]
+    clone_index = index - 1
+    while track.clips[clone_index].is_blanck_clip == True:
+        clone_index -= 1
+        if clone_index == 0:
+            return 
+    clone_clip = track.clips[clone_index]
     _do_filter_clone(clip, clone_clip)
-
+    
 def _do_filter_clone(clip, clone_clip):
     if clone_clip.is_blanck_clip:
         return
@@ -609,6 +688,25 @@ def _clear_filters(data):
     clip, track, item_id, item_data = data
     clear_filters()
 
+def _multi_split_audio(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+    
+    syncsplitevent.split_audio_from_clips_list(clips, track)
+
+def _multi_split_audio_synched(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+    
+    syncsplitevent.split_audio_synched_from_clips_list(clips, track)
+
+def _get_non_blank_selected_clips(track):
+    clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        if track.clips[i].is_blanck_clip == False:
+            clips.append(track.clips[i])
+    return clips
+
 def _select_all_after(data):
     clip, track, item_id, item_data = data
     movemodes._select_multiple_clips(track.id, track.clips.index(clip), len(track.clips) - 1)
@@ -618,90 +716,6 @@ def _select_all_before(data):
     clip, track, item_id, item_data = data
     movemodes._select_multiple_clips(track.id, 0, track.clips.index(clip))
     updater.repaint_tline()
-
-def _match_frame_start(data):
-    clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_in, track, True)
-
-def _match_frame_end(data):
-    clip, track, item_id, item_data = data
-    _set_match_frame(clip, clip.clip_out, track, False)
-
-def _match_frame_start_monitor(data):
-    clip, track, item_id, item_data = data
-    gui.monitor_widget.set_frame_match_view(clip, clip.clip_in)
-
-def _match_frame_end_monitor(data):
-    clip, track, item_id, item_data = data
-    gui.monitor_widget.set_frame_match_view(clip, clip.clip_out)
-     
-def _set_match_frame(clip, frame, track, display_on_right):
-    global _match_frame_writer
-    _match_frame_writer = MatchFrameWriter(clip, frame, track, display_on_right)
-    
-    GLib.idle_add(_write_match_frame)
-
-def _write_match_frame():
-    _match_frame_writer.write_image()
-
-def _match_frame_close(data):
-    tlinewidgets.set_match_frame(-1, -1, True)
-    gui.monitor_widget.set_default_view_force()
-    updater.repaint_tline()
-
-
-class MatchFrameWriter:
-    def __init__(self, clip, clip_frame, track, display_on_right):
-        self.clip = clip
-        self.clip_frame = clip_frame
-        self.track = track
-        self.display_on_right = display_on_right
-        
-    def write_image(self):
-        """
-        Writes thumbnail image from file producer
-        """
-        clip_path = self.clip.path
-
-        # Create consumer
-        matchframe_new_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME_NEW
-        consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_new_path)
-        consumer.set("real_time", 0)
-        consumer.set("vcodec", "png")
-
-        # Create one frame producer
-        producer = mlt.Producer(PROJECT().profile, str(clip_path))
-        producer = producer.cut(int(self.clip_frame), int(self.clip_frame))
-
-        # Delete new match frame
-        try:
-            os.remove(matchframe_new_path)
-        except:
-            # This fails when done first time ever  
-            pass
-
-        # Connect and write image
-        consumer.connect(producer)
-        consumer.run()
-        
-        # Wait until new file exists
-        while os.path.isfile(matchframe_new_path) != True:
-            time.sleep(0.1)
-
-        # Copy to match frame
-        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
-        shutil.copyfile(matchframe_new_path, matchframe_path)
-
-        # Update timeline data           
-        # Get frame of clip.clip_in_in on timeline.
-        clip_index = self.track.clips.index(self.clip)
-        clip_start_in_tline = self.track.clip_start(clip_index)
-        tline_match_frame = clip_start_in_tline + (self.clip_frame - self.clip.clip_in)
-        tlinewidgets.set_match_frame(tline_match_frame, self.track.id, self.display_on_right)
-
-        # Update view
-        updater.repaint_tline()
-
 
 def _add_clip_marker(data):
     clip, track, item_id, item_data = data
@@ -795,14 +809,43 @@ def _reload_clip_media(data):
             "index":clip_index}
     action = edit.reload_replace(data)
     action.do_edit()
-    
-    
+
 def _create_container_clip_from_selection(data):
     GLib.idle_add(projectaction.create_selection_compound_clip)
 
+def _get_data_with_xpos(data):
+    clip, track, item_id, item_data = data
+    clip, track, x = _popover_clip_data
+    return (clip, track, item_id, x)
+    
+def _split_audio(data):
+    syncsplitevent.split_audio(_get_data_with_xpos(data))
+
+def _split_audio_synched(data):
+    syncsplitevent.split_audio_synched(_get_data_with_xpos(data))
+
+def _set_audio_sync_clip(data):
+    audiosync.init_select_tline_sync_clip(_get_data_with_xpos(data))
+
+def _render_tline_generator(data):
+    clip, track, item_id, item_data = data
+    clip, track, x = _popover_clip_data
+    containerclip.render_tline_generator_clip(clip, _render_tline_generator_callback)
+
+def _render_tline_generator_callback(combo):
+    clip, track, x = _popover_clip_data
+    render_data = (clip, None, None, None) # We keep old data package format for now.
+    if combo.get_active() == 0: # 0 is render full media, see containeractions.set_video_endoding()
+        containerclip.render_full_media(render_data)
+    else:
+        containerclip.render_clip_length(render_data)
+
+    """
+    TODO: see if "cc_render_full_media", "cc_render_settings" ca be deleted below.
+    """
 
 # Functions to handle popup menu selections for strings 
-# set as activation messages in guicomponents.py
+# set as activation messages in guipopoverclip.py
 # activation_message -> _handler_func
 POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "open_in_editor":_open_clip_in_effects_editor,
@@ -810,27 +853,20 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "open_in_clip_monitor":_open_clip_in_clip_monitor,
                   "rename_clip":_rename_clip,
                   "clip_color":_clip_color,
-                  "split_audio":syncsplitevent.split_audio,
-                  "split_audio_synched":syncsplitevent.split_audio_synched,
+                  "split_audio":_split_audio,
+                  "split_audio_synched":_split_audio_synched,
                   "resync":syncsplitevent.resync_clip,
                   "add_filter":_add_filter,
                   "add_filter_multi":_add_filter_multi,
                   "add_compositor":_add_compositor,
                   "clear_sync_rel":syncsplitevent.clear_sync_relation,
                   "mute_clip":_mute_clip,
-                  "display_waveform":_display_wavefrom,
-                  "clear_waveform":_clear_waveform,
                   "delete_blank":_delete_blank,
                   "cover_with_prev": _cover_blank_from_prev,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev,
                   "clear_filters": _clear_filters,
-                  "match_frame_close":_match_frame_close,
-                  "match_frame_start":_match_frame_start,
-                  "match_frame_end":_match_frame_end,
-                  "match_frame_start_monitor":_match_frame_start_monitor,
-                  "match_frame_end_monitor":_match_frame_end_monitor,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
                   "delete":_delete_clip,
@@ -839,7 +875,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,
                   "add_autofade":_add_autofade,
-                  "set_audio_sync_clip":audiosync.init_select_tline_sync_clip,
+                  "set_audio_sync_clip":_set_audio_sync_clip,
                   "re_render":_re_render_transition_or_fade,
                   "add_clip_marker":_add_clip_marker,
                   "go_to_clip_marker":_go_to_clip_marker,
@@ -851,8 +887,12 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "multi_delete_compositors": _multi_delete_compositors,
                   "reload_media":_reload_clip_media,
                   "create_multi_compound":_create_container_clip_from_selection,
+                  "multi_split_audio":_multi_split_audio,
+                  "multi_split_audio_synched":_multi_split_audio_synched,
                   "cc_render_full_media":containerclip.render_full_media,
-                  "cc_render_clip":containerclip.render_clip_length,
+                  "cc_render_clip":_render_tline_generator,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_render_settings":containerclip.set_render_settings,
-                  "cc_edit_program":containerclip.edit_program}
+                  "cc_edit_program":containerclip.edit_program,
+                  "cc_clone_generator":mediaplugin.add_media_plugin_clone,
+                  "edit_title":_edit_title}

@@ -8,6 +8,7 @@ $asset_suffix: if($variant=='dark', '-dark', ''); // use dark assets in dark var
 $darker_asset_suffix: if($darker=='true', '-dark', $asset_suffix);
 
 * {
+  all: unset;
   background-clip: padding-box;
   -GtkToolButton-icon-spacing: 4;
   -GtkTextView-error-underline-color: $error_color;
@@ -39,7 +40,7 @@ $darker_asset_suffix: if($darker=='true', '-dark', $asset_suffix);
   background-color: if($transparency == 'true', transparentize($bg_color, 0.001), $bg_color); // without this headerbar transparency doesn't seem to work
 }
 
-*:disabled { -gtk-icon-effect: dim; }
+
 
 .gtkstyle-fallback {
   background-color: $bg_color;
@@ -731,10 +732,10 @@ modelbutton.flat {
   min-height: 24px;
   padding-left: 8px;
   padding-right: 8px;
-  outline-offset: -3px;
-  border-radius: 2px;
+  outline-offset: -12px;
+  border-radius: 0px;
 
-  @extend %undecorated_button;
+  //@extend %undecorated_button;
 
   &:hover { background-color: if($variant=='light', mix($fg_color,$bg_color,5%), mix($fg_color,$bg_color,10%)); }
   &:active, &:selected { &, arrow { @extend %selected_items; } }
@@ -1200,13 +1201,6 @@ headerbar {
       background-color: transparentize($selection_mode_fg, 1);
     }
     &:hover { @extend %normal_selected_button; }
-    &:active, &:checked { @extend %selected-button:active; }
-
-    &:disabled {
-      @extend %selected-button.flat:disabled;
-
-      &:checked, &:active { @extend %selected-button:disabled:checked; }
-    }
   }
 
   // Linking stuff
@@ -1527,7 +1521,7 @@ treeview.view {
       padding: 3px 6px;
       font-weight: bold;
 
-      color: $_column_header_color;
+      color: $insensitive_fg_color;
       background-color: $base_color;
       background-image: none;
       border-style: none solid none none;
@@ -1617,7 +1611,7 @@ menu,
 
   separator,
   .csd & separator {
-    margin: 2px 0;
+    margin: 5px 0;
     background-color: $_menu_bg;
   }
 
@@ -1702,13 +1696,13 @@ popover.background {
   border-radius: 3px;
   background-clip: border-box;
   background-color: $_popover_bg;
-
+  font-weight: bold;
   box-shadow: 0 2px 6px 1px if($variant=='light', transparentize(black, 0.93), transparentize(black, 0.65));
 
   .csd &, & { border: 1px solid darken($borders_color, 5%); }
 
   & separator { background-color: $_popover_bg; }
-  label.separator { @extend label.separator; } // Noice
+  label.separator { @extend label, .separator; } // Noice
 
   > list,
   > .view,
@@ -2046,14 +2040,14 @@ switch {
     // the borders of checks and radios are
     // too similar in luminosity to the selected background color, hence
     // we need special casing.
-    menuitem #{$w}#{$s}:hover,
-    .view #{$w}#{$s}:selected,
-    treeview.#{$w}#{$s}:selected,
-    row:selected #{$w}#{$s},
-    infobar #{$w}#{$s} {
-      -gtk-icon-source: -gtk-scaled(url("assets/#{$a}#{$as}-selected.png"),
-                                    url("assets/#{$a}#{$as}-selected@2.png"));
-    }
+    //(menuitem #{$w}#{$s}:hover,
+    //.view #{$w}#{$s}:selected,
+    //treeview.#{$w}#{$s}:selected,
+    //row:selected #{$w}#{$s},
+    //infobar #{$w}#{$s} {
+    //  -gtk-icon-source: -gtk-scaled(url("assets/#{$a}#{$as}-selected.png"),
+    //                                url("assets/#{$a}#{$as}-selected@2.png"));
+    //}
   }
 }
 
@@ -2706,7 +2700,7 @@ placessidebar {
       margin-top: 2px;
       margin-bottom: 2px;
       padding: 0;
-      @extend button.flat;
+      @extend button, .flat;
       border-radius: 100%;
       -gtk-outline-radius: 100%;
 

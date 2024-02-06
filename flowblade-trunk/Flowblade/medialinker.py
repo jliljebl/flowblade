@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2015 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,12 +18,17 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module handles replacing missing media items in projects 
+with generated media or other available media items.
+"""
+
 import glob
 import hashlib
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import locale
 import os
 import subprocess
@@ -35,7 +40,7 @@ import time
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Gio
 from gi.repository import Pango, GObject
 
 import appconsts
@@ -45,11 +50,8 @@ import editorstate
 import editorpersistance
 import gui
 import guiutils
-import guicomponents
-import mltenv
-import mltprofiles
-import mlttransitions
-import mltfilters
+import guipopover
+import mltinit
 import patternproducer
 import persistance
 import processutils
@@ -61,12 +63,14 @@ import translations
 import userfolders
 import utils
 
+_app = None
 linker_window = None
 target_project = None
 last_media_dir = None
 media_assets = []
 
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
+REPLACE_TEMP_PROJECT = "replace_temp_project.flb"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
     print("Launching Media Relinker")
@@ -74,17 +78,12 @@ def display_linker(filename=NO_PROJECT_AT_LAUNCH):
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
-# -------------------------------------------------------- render thread
 class ProjectLoadThread(threading.Thread):
     def __init__(self, filename):
         threading.Thread.__init__(self)
         self.filename = filename
 
     def run(self):
-        Gdk.threads_enter()
-        linker_window.project_label.set_text("Loading...")
-        Gdk.threads_leave()
-
         persistance.show_messages = False
         project = persistance.load_project(self.filename, False, True)
         
@@ -93,14 +92,14 @@ class ProjectLoadThread(threading.Thread):
         target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
 
-        Gdk.threads_enter()
+        GLib.idle_add(self._load_done_update)
+
+    def _load_done_update(self):
         linker_window.relink_list.fill_data_model()
         linker_window.project_label.set_text(self.filename)
         linker_window.set_active_state()
         linker_window.update_files_info()
         linker_window.load_button.set_sensitive(False)
-        Gdk.threads_leave()
-
 
 class MediaLinkerWindow(Gtk.Window):
     def __init__(self):
@@ -110,7 +109,7 @@ class MediaLinkerWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
 
-        load_button = Gtk.Button(_("Load Project For Relinking"))
+        load_button = Gtk.Button(label=_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
         self.load_button = load_button
@@ -140,11 +139,11 @@ class MediaLinkerWindow(Gtk.Window):
         
         self.relink_list = MediaRelinkListView()
 
-        self.find_button = Gtk.Button(_("Set File Relink Path"))
+        self.find_button = Gtk.Button(label=_("Set File Relink Path"))
         self.find_button.connect("clicked", lambda w: _set_button_pressed())
-        self.create_button = Gtk.Button(_("Create Placeholder File"))
+        self.create_button = Gtk.Button(label=_("Create Placeholder File"))
         self.create_button.connect("clicked", lambda w: _create_relink_media_button_pressed())
-        self.delete_button = Gtk.Button(_("Delete File Relink Path"))
+        self.delete_button = Gtk.Button(label=_("Delete File Relink Path"))
         self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
 
         self.display_combo = Gtk.ComboBoxText()
@@ -162,15 +161,15 @@ class MediaLinkerWindow(Gtk.Window):
         buttons_row.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
-        self.save_button = Gtk.Button(_("Save Relinked Project As..."))
+        self.save_button = Gtk.Button(label=_("Save Relinked Project As..."))
         self.save_button.connect("clicked", lambda w:_save_project_pressed())
-        cancel_button = Gtk.Button(_("Close"))
+        cancel_button = Gtk.Button(label=_("Close"))
         cancel_button.connect("clicked", lambda w:_shutdown())
         dialog_buttons_box = Gtk.HBox(True, 2)
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
-        self.msg_label = Gtk.Label("")
+        self.msg_label = Gtk.Label(label="")
         dialog_buttons_row = Gtk.HBox(False, 2)
         dialog_buttons_row.pack_start(self.msg_label, True, True, 0)
         dialog_buttons_row.pack_start(dialog_buttons_box, False, False, 0)
@@ -209,6 +208,8 @@ class MediaLinkerWindow(Gtk.Window):
             dialog.destroy()
 
     def load_project(self, filename):
+        linker_window.project_label.set_text(_("Loading..."))
+        
         global load_thread
         load_thread = ProjectLoadThread(filename)
         load_thread.start()
@@ -263,7 +264,7 @@ class MediaRelinkListView(Gtk.VBox):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.assets = [] # Used to store list displayd data items
+        self.assets = [] # Used to store list displayed data items
 
         # Datamodel: text, text
         self.storemodel = Gtk.ListStore(str, str)
@@ -271,10 +272,9 @@ class MediaRelinkListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         self.treeview.connect("button-press-event", self.row_pressed)
@@ -358,18 +358,17 @@ class MediaRelinkListView(Gtk.VBox):
         selection.select_path(path)
         row = int(max(path))
 
-        guicomponents.display_media_linker_popup_menu(row, treeview, _media_asset_menu_item_selected, event)
+        guipopover.media_linker_popover_show(_app, row, treeview, event.x, event.y, _media_asset_menu_item_selected)
+
         return  True
 
 # ----------------------------------------------------------- logic
 class MediaAsset:
 
-    # Default file for missing files to relink
     def __init__(self, orig_path, media_type, media_length=0):
         self.orig_path = orig_path
         self.media_type = media_type
         self.length = media_length
-    # End of Default file for missing files to relink
 
         self.orig_file_exists = os.path.isfile(orig_path)
         if self.media_type == appconsts.IMAGE_SEQUENCE:
@@ -399,9 +398,7 @@ def _update_media_assets():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
         try:
-            # Default file for missing files to relink
             new_assets.append(MediaAsset(media_file.path, media_file.type, media_file.length))
-            # End of Default file for missing files to relink
             asset_paths[media_file.path] = media_file.path
         except:
             print("failed loading:", media_file)
@@ -414,9 +411,7 @@ def _update_media_assets():
                 # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if not(clip.path in asset_paths):
-                        # Default file for missing files to relink
                         new_assets.append(MediaAsset(clip.path, clip.media_type,clip.clip_out - clip.clip_in + 1))  #clip.get_length()))
-                        # End of Default file for missing files to relink
                         asset_paths[clip.path] = clip.path
         # Wipe lumas
         for compositor in seq.compositors:
@@ -434,7 +429,7 @@ def _update_media_assets():
     global media_assets
     media_assets = new_assets
 
-def _media_asset_menu_item_selected(widget, data):
+def _media_asset_menu_item_selected(action, variant, data):
     msg, row = data
     media_asset = linker_window.relink_list.assets[row]
 
@@ -455,7 +450,6 @@ def _set_button_pressed():
 
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
-    # End of Default file for missing files to relink
     dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
                                 _select_relink_path_dialog_callback, False, 
                                 media_asset, linker_window, last_media_dir)
@@ -505,7 +499,7 @@ class MediaRecreateThread(threading.Thread):
         self.start_time = time.monotonic()
 
         new_media_file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8') +  str.encode(self.file_name)).hexdigest()
-        link_path_no_ext = userfolders.get_render_dir() + "/" + new_media_file_name
+        link_path_no_ext = userfolders.get_render_dir() + new_media_file_name
         
         if self.media_asset.media_type == appconsts.IMAGE:
             link_path = link_path_no_ext + ".png"
@@ -541,9 +535,7 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
     global last_media_dir
     last_media_dir = folder
 
-    # Default file for missing files to relink
     linker_window.set_title( folder + " " + file_name )    
-    #End of Default file for missing files to relink
 
     # Relink all the files in a same directory
     for med_asset in media_assets:
@@ -556,7 +548,6 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
             else:
                 med_asset.relink_path = link_path
             linker_window.relink_list.fill_data_model()
-    # End of Relink all the files in a same directory
 
 def _delete_button_pressed():
     media_asset = linker_window.get_selected_media_asset()
@@ -605,7 +596,7 @@ def _save_as_dialog_callback(dialog, response_id):
     
         # Test that saving is not IOError
         try:
-            filehandle = open( target_project.last_save_path, 'w' )
+            filehandle = open(target_project.last_save_path, 'w')
             filehandle.close()
         except IOError as ioe:
             primary_txt = "I/O error({0})".format(ioe.errno)
@@ -646,6 +637,7 @@ def _relink_project_media_paths():
                 clip = track.clips[i]
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if clip.path in relinked_paths:
+                        print(clip.path, relinked_paths[clip.path])
                         clip.path = relinked_paths[clip.path]
 
         # Relink wipe lumas
@@ -715,7 +707,6 @@ def  video_file_replace(link_path, file_name, duration):
     if os.path.isfile(link_path):
         os.remove(link_path)
     command = "ffmpeg -loop 1 -i "+ image_file + " -i " +  audio_file  + " -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " + link_path
-    print("ml 696",  command)
     os.system(command)
 
     if os.path.isfile(link_path):
@@ -742,51 +733,57 @@ def main(root_path, filename):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
+    # Create app.
+    global _app
+    _app = MediaLinkerApp()
+    _app.filename = filename
+    _app.run(None)
 
-    # Themes
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-    
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
+class MediaLinkerApp(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id=None,
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
+    def on_activate(self, data=None):
+        # Themes
+        gui.apply_theme(editorpersistance.prefs.theme)
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
+        # Init mlt.
+        repo = mltinit.init_with_translations()
+        
+        appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
 
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
+        global linker_window
+        linker_window = MediaLinkerWindow()
 
-    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
+        if self.filename != NO_PROJECT_AT_LAUNCH:
+            linker_window.load_project(self.filename)
 
-    global linker_window
-    linker_window = MediaLinkerWindow()
-
-    if filename != NO_PROJECT_AT_LAUNCH:
-        linker_window.load_project(filename)
-
-    Gtk.main()
-    Gdk.threads_leave()
-    
+        self.add_window(linker_window)
+        
 def _shutdown():
-    Gtk.main_quit()
+    _app.quit()
+
+
+
+# ---------------------------------------------------------------- replace media_feature
+def replace_single_file(project, old_media_path, replace_media_path):
+    global target_project
+    target_project = project
+
+    _update_media_assets()
+
+    for media_asset in media_assets:
+        if media_asset.orig_path == old_media_path:
+            media_asset.relink_path = replace_media_path 
+
+    _relink_project_media_paths()
+
+    temp_saved_project_path = os.path.join(userfolders.get_cache_dir(), REPLACE_TEMP_PROJECT)
+    persistance.save_project(target_project, temp_saved_project_path)
+        
+    return temp_saved_project_path
+

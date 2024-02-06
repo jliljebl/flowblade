@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,21 +45,20 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb, media_pop_up_menu):   
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
     # Aug-2019 - SvdB - BB
     size_adj = 1
     prefs = editorpersistance.prefs
     if prefs.double_track_hights:
         size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
-    hamburger_launcher.connect_launched_menu(media_pop_up_menu)
+    hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
     columns_img = guiutils.get_cairo_image("columns")
-    columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22*size_adj, h=22*size_adj)
+    columns_launcher = guicomponents.PressLaunchPopover(col_changed_cb, columns_img, w=22*size_adj, h=22*size_adj)
     columns_launcher.surface_y = 6
     columns_launcher.widget.set_tooltip_text(_("Number of Media File columns."))
-    columns_launcher.connect_launched_menu(guicomponents.column_count_menu)
     
     all_pixbuf = guiutils.get_cairo_image("show_all_files")
     audio_pixbuf = guiutils.get_cairo_image("show_audio_files")
@@ -69,14 +68,12 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     pattern_pixbuf = guiutils.get_cairo_image("show_pattern_producers")
     unused_pixbuf = guiutils.get_cairo_image("show_unused_files")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24*size_adj, 22*size_adj)
+    files_filter_launcher = guicomponents.ImageMenuLaunchPopover(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24*size_adj, 22*size_adj)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
-    files_filter_launcher.connect_launched_menu(guicomponents.file_filter_menu)
     gui.media_view_filter_selector = files_filter_launcher
 
-    
     bin_info = guicomponents.BinInfoPanel()
     
     buttons_box = Gtk.HBox(False,1)
@@ -99,21 +96,20 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
 
     return (panel, bin_info)
 
-def get_bins_tree_panel(bin_list_view, callback, bins_popup_menu):   
+def get_bins_tree_panel(bin_list_view, callback):   
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
-    hamburger.connect_launched_menu(bins_popup_menu)
+    hamburger.do_popover_callback = True
     
     return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     
-def get_sequences_panel(sequence_list_view, callback, sequence_popup_menu):
+def get_sequences_panel(sequence_list_view, callback):
     panel = Gtk.VBox()
     panel.pack_start(sequence_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
-    hamburger.connect_launched_menu(sequence_popup_menu)
     
     return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 
@@ -153,7 +149,7 @@ def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=
     if name != None:
         label = guiutils.bold_label(name)
         label.set_justify(Gtk.Justification.LEFT)
-        label.set_margin_left(4)
+        label.set_margin_start(4)
         label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
@@ -275,8 +271,6 @@ def get_transition_panel(trans_data):
     type_combo_box.append_text(name)
     name, t_service_id = mlttransitions.rendered_transitions[1]
     type_combo_box.append_text(name)
-    name, t_service_id = mlttransitions.rendered_transitions[2]
-    type_combo_box.append_text(name)
     type_combo_box.set_active(0)
 
     type_row = get_two_column_box(Gtk.Label(label=_("Type:")), 
@@ -292,17 +286,10 @@ def get_transition_panel(trans_data):
     wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
 
-    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
-    color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = Gtk.Label(label=_("Dip Color:"))
-    color_row = get_two_column_box(color_label, color_button_box)
-
     wipe_luma_combo_box.set_sensitive(False)
-    color_button.set_sensitive(False)
     wipe_label.set_sensitive(False)
-    color_label.set_sensitive(False)
-
-    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label)
+    
+    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, wipe_label)
     type_combo_box.connect("changed", 
                               lambda w,e: _transition_type_changed(transition_type_widgets), 
                               None)
@@ -354,7 +341,6 @@ def get_transition_panel(trans_data):
     edit_vbox.pack_start(type_row, False, False, 0)
     edit_vbox.pack_start(length_row, False, False, 0)
     edit_vbox.pack_start(wipe_row, False, False, 0)
-    edit_vbox.pack_start(color_row, False, False, 0)
 
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
@@ -373,7 +359,7 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames, encodings)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, steal_frames, encodings)
 
 def _get_encodings_widget_and_list():
     # We have an unexplained issue with rendering using libx264 vcodec
@@ -421,40 +407,6 @@ def get_transition_re_render_panel(trans_data):
     
     return (alignment, encodings_cb, quality_cb, encodings)
 
-def get_fade_re_render_panel(trans_data):
-    fade_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
-    fade_length_label = Gtk.Label(label=_("Length:"))
-    fade_length_value = Gtk.Label(label=str(fade_length))
-    fade_length_row = get_two_column_box(fade_length_label, fade_length_value)
-
-    # Encoding widgets
-    encodings, encodings_cb = _get_encodings_widget_and_list()
-
-    quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, encodings, quality_cb)
-    encodings_cb.connect("changed", 
-                              lambda w,e: _transition_encoding_changed(transition_widgets), 
-                              None)
-    _fill_transition_quality_combo_box(transition_widgets, 10)
-    
-    _set_saved_encoding(transition_widgets)
-
-    fade_vbox = Gtk.VBox(False, 2)
-    fade_vbox.pack_start(fade_length_row, False, False, 0)
-   
-    enconding_vbox = Gtk.VBox(False, 2)
-    enconding_vbox.pack_start(encodings_cb, False, False, 0)
-    enconding_vbox.pack_start(quality_cb, False, False, 0)
-    
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Fade"),  fade_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
-
-    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
-    alignment.set_size_request(450, 200)
-    
-    return (alignment, encodings_cb, quality_cb, encodings)
-
 def get_re_render_all_panel(rerender_list, unrenderable):
     rerendercount_label = Gtk.Label(label=_("Transitions / Fades to be rerendered:"))
     rerendercount_value = Gtk.Label(label=str(len(rerender_list)))
@@ -462,7 +414,7 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     
     if unrenderable > 0:
         unrenderable_info = _("There are ") + str(unrenderable) + _(" Transitions / Fades that cannot be rerendered, either because they are\ncreated with Flowblade version <=1.14 or the source clips are no longer on timeline.")
-        unrenderable_info_label = Gtk.Label(unrenderable_info)
+        unrenderable_info_label = Gtk.Label(label=unrenderable_info)
         
     info_vbox = Gtk.VBox(False, 2)
     info_vbox.pack_start(rerendercount_row, False, False, 0)
@@ -495,63 +447,10 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     
     return (alignment, encodings_cb, quality_cb, encodings)
     
-def get_fade_panel(fade_data):
-    type_combo_box = Gtk.ComboBoxText()    
-    type_combo_box.append_text(_("Fade In"))
-    type_combo_box.append_text(_("Fade Out"))
-    type_combo_box.set_active(0)
-
-    type_row = get_two_column_box(Gtk.Label(label=_("Type:")), 
-                                 type_combo_box)
-        
-    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
-    color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = Gtk.Label(label=_("Color:"))
-    color_row = get_two_column_box(color_label, color_button_box)
-                              
-    length_entry = Gtk.Entry()
-    fade_length = 30
-    if editorstate.fade_length > 0: # use last invocation length if available
-        fade_length = editorstate.fade_length
-    length_entry.set_text(str(fade_length))    
-    length_row = get_two_column_box(Gtk.Label(label=_("Length:")), 
-                                    length_entry)
-
-    # Encoding widgets
-    encodings, encodings_cb = _get_encodings_widget_and_list()
-
-    quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, encodings, quality_cb)
-    encodings_cb.connect("changed", 
-                              lambda w,e: _transition_encoding_changed(transition_widgets), 
-                              None)
-
-    _fill_transition_quality_combo_box(transition_widgets, 10)
-    _set_saved_encoding(transition_widgets)
-    
-    # Build panel
-    edit_vbox = Gtk.VBox(False, 2)
-    edit_vbox.pack_start(type_row, False, False, 0)
-    edit_vbox.pack_start(length_row, False, False, 0)
-    edit_vbox.pack_start(color_row, False, False, 0)
-
-    enconding_vbox = Gtk.VBox(False, 2)
-    enconding_vbox.pack_start(encodings_cb, False, False, 0)
-    enconding_vbox.pack_start(quality_cb, False, False, 0)
-
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
-
-    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
-    
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button, encodings)
-    
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
-
     encodings_cb, encodings, quality_cb = widgets
     sel_enc_index = encodings_cb.get_active()
     sel_enc = encodings[sel_enc_index]
@@ -587,22 +486,13 @@ def _set_saved_encoding(transition_widgets):
         quality_cb.set_active(quality_index)
     
 def _transition_type_changed(transition_type_widgets):
-    type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label = transition_type_widgets
+    type_combo_box, wipe_luma_combo_box, wipe_label = transition_type_widgets
     if type_combo_box.get_active() == 0:
         wipe_luma_combo_box.set_sensitive(False)
-        color_button.set_sensitive(False)
         wipe_label.set_sensitive(False)
-        color_label.set_sensitive(False)
     elif type_combo_box.get_active() == 1:
         wipe_luma_combo_box.set_sensitive(True)
-        color_button.set_sensitive(False)
         wipe_label.set_sensitive(True)
-        color_label.set_sensitive(False)
-    else:
-        wipe_luma_combo_box.set_sensitive(False)
-        color_button.set_sensitive(True)
-        wipe_label.set_sensitive(False)
-        color_label.set_sensitive(True)
     
 def get_effect_selection_panel(double_click_cb):
     effects_list_view = guicomponents.FilterListView(None)

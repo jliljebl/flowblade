@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2013 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import dnd
 import edit
 import editorlayout
 import guicomponents
+import guipopover
 import guiutils
 import editorpersistance # Aug-2019 - SvdB - BB
 import editorstate
@@ -47,7 +48,6 @@ widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
 log_changed_since_last_save = False
-actions_popup_menu = Gtk.Menu()        
 
 # Sort order
 TIME_SORT = appconsts.TIME_SORT
@@ -145,6 +145,10 @@ def media_log_no_star_button_pressed():
     _mark_log_changed()
     
 def log_range_clicked():
+    if editorstate.timeline_visible() == True:
+        dialogs.no_timeline_ranges_dialog()
+        return
+
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
         return
@@ -243,10 +247,11 @@ def log_list_view_button_press(treeview, event):
     selection.select_path(path)
     row = int(max(path))
 
-    guicomponents.display_media_log_event_popup_menu(row, treeview, _log_event_menu_item_selected, event)                                    
+    guipopover.media_log_event_popover_show(row, treeview, event.x, event.y, _log_event_menu_item_selected)
+    
     return True
 
-def _log_event_menu_item_selected(widget, data):
+def _log_event_menu_item_selected(action, variant, data):
     item_id, row, treeview = data
     
     if item_id == "delete":
@@ -260,9 +265,15 @@ def _log_event_menu_item_selected(widget, data):
     elif item_id == "renderslowmo":
         render_slowmo_from_item(row)
 
-def _use_comments_toggled(widget):
+def _do_range_log_drop_on_monitor(row):
+    display_item(row)
+
+def _use_comments_toggled(action, variant, msg):
+    new_state = not(action.get_state().get_boolean())
+    action.set_state(GLib.Variant.new_boolean(new_state))
+        
     global _use_comments_for_name
-    _use_comments_for_name = widget.get_active()
+    _use_comments_for_name = new_state
 
 def render_slowmo_from_item(row):
     log_events = get_current_filtered_events()
@@ -364,90 +375,18 @@ def get_clips_for_rows(rows):
 def display_log_clip_double_click_listener(treeview, path, view_column):
     row = int(max(path))
     data = ("display", row, treeview)
-    _log_event_menu_item_selected(treeview, data)
+    _log_event_menu_item_selected(None, None, data)
 
-def _group_action_pressed(widget, event):
-    actions_menu = actions_popup_menu
-    guiutils.remove_children(actions_menu)      
-    actions_menu.add(guiutils.get_menu_item(_("New Group..."), _actions_callback, "new"))
-    actions_menu.add(guiutils.get_menu_item(_("New Group From Selected..."), _actions_callback, "newfromselected"))
-    
-    guiutils.add_separetor(actions_menu)
-
-    item = guiutils.get_menu_item(_("Rename Current Group..."), _actions_callback, "rename")
-    _unsensitive_for_all_view(item)
-    actions_menu.add(item)
-
-    guiutils.add_separetor(actions_menu)
-    
-    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group"))
-    move_menu = Gtk.Menu()
-    if len(PROJECT().media_log_groups) == 0:
-        move_menu.add(guiutils.get_menu_item(_("No Groups"), _actions_callback, "dummy", False))
-    else:
-        index = 0
-        for group in PROJECT().media_log_groups:
-            name, items = group
-            move_menu.add(guiutils.get_menu_item(name, _actions_callback, str(index)))
-            index = index + 1
-    move_menu_item.set_submenu(move_menu)
-    actions_menu.add(move_menu_item)
-    move_menu_item.show()
-
-    guiutils.add_separetor(actions_menu)
-
-    item = guiutils.get_menu_item(_("Delete Current Group"), _actions_callback, "delete")
-    _unsensitive_for_all_view(item)
-    actions_menu.add(item)
-
-    guiutils.add_separetor(actions_menu)
-    
-    comments_item = Gtk.CheckMenuItem.new_with_label(label=_("Use Comments as Clip Names"))
-    comments_item.set_active(_use_comments_for_name)
-    comments_item.connect("toggled", _use_comments_toggled)
-    comments_item.show()
-    actions_menu.add(comments_item)
-    
-    guiutils.add_separetor(actions_menu)
-    
-    sort_item = Gtk.MenuItem(_("Sort by"))
-    sort_menu = Gtk.Menu()
-    time_item = Gtk.RadioMenuItem()
-    time_item.set_label(_("Time"))
-    time_item.set_active(True)
-    time_item.show()
-    time_item.connect("activate", lambda w: _sorting_changed("time"))
-    sort_menu.append(time_item)
-
-    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name"))
-    name_item.connect("activate", lambda w: _sorting_changed("name"))
-    name_item.show()
-    sort_menu.append(name_item)
-
-    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment"))
-    comment_item.connect("activate", lambda w: _sorting_changed("comment"))
-    comment_item.show()
-    sort_menu.append(comment_item)
-
-    global sorting_order
-    if sorting_order == TIME_SORT:
-        time_item.set_active(True)
-    elif sorting_order == NAME_SORT:
-        name_item.set_active(True)
-    else:# "comment"
-        comment_item.set_active(True)
-
-    sort_item.set_submenu(sort_menu)
-    sort_item.show()
-    actions_menu.add(sort_item)
-        
-    actions_menu.popup(None, None, None, None, event.button, event.time)
+def _group_action_pressed(launcher, widget, event, data):
+    guipopover.range_log_hamburger_menu_show(launcher, widget, widgets.group_view_select.get_active() == 0, sorting_order, \
+                                       _use_comments_for_name, PROJECT().media_log_groups,
+                                        _actions_callback, _sorting_callback, _use_comments_toggled)
 
 def _unsensitive_for_all_view(item):
     if widgets.group_view_select.get_active() == 0:
         item.set_sensitive(False)
 
-def _actions_callback(widget, data):
+def _actions_callback(action, variant, data):
     if data == "newfromselected":
         next_index = len(PROJECT().media_log_groups)
         dialogs.new_media_log_group_name_dialog(_new_group_name_callback, next_index, True)
@@ -489,6 +428,12 @@ def _actions_callback(widget, data):
         current_group_index = _get_current_group_index()
         PROJECT().add_to_group(to_group_index, move_items)
         widgets.group_view_select.set_active(to_group_index + 1) # 0 index items is "All" items group not a user created group
+
+def _sorting_callback(action, variant):
+    action.set_state(variant)
+    print(variant.get_string())
+    _sorting_changed(variant.get_string())
+    guipopover._range_log_popover.hide()
 
 def _delete_with_items_dialog_callback(dialog, response_id):
     dialog.destroy()
@@ -576,8 +521,8 @@ def get_media_log_list_view():
 def update_media_log_view():
     widgets.media_log_view.fill_data_model()
     # Does not show last line, do we need timer?
-    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
-    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+    max_val = widgets.media_log_view.scroll.get_vadjustment().get_upper()
+    widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
 
     
 class MediaLogListView(Gtk.VBox):
@@ -591,11 +536,9 @@ class MediaLogListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
-        self.treeview.set_property("rules_hint", True)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -716,13 +659,13 @@ def get_media_log_events_panel(events_list_view):
     global widgets
 
     group_actions_menu = guicomponents.HamburgerPressLaunch(_group_action_pressed)
-    group_actions_menu.connect_launched_menu(actions_popup_menu)
+    group_actions_menu.do_popover_callback = True
     guiutils.set_margins(group_actions_menu.widget, 10, 0, 2, 18)
 
     star_check = Gtk.CheckButton()
     star_check.set_active(True)
     star_check.connect("clicked", lambda w:media_log_filtering_changed())
-    star_check.set_margin_right(5)
+    star_check.set_margin_end(5)
     widgets.star_check = star_check
 
     star_label = Gtk.Image()
@@ -732,7 +675,7 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
     star_not_active_check.connect("clicked", lambda w:media_log_filtering_changed())
-    star_not_active_check.set_margin_right(5)
+    star_not_active_check.set_margin_end(5)
     widgets.star_not_active_check = star_not_active_check
 
     star_not_active_label = Gtk.Image()
@@ -801,22 +744,22 @@ def get_media_log_events_panel(events_list_view):
     row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 
+    # NOTE: Panel width determined by row1 widgets sizes.
     panel = Gtk.VBox()
     panel.pack_start(row1, False, True, 0)
     panel.pack_start(events_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 10)
 
     star_check.set_tooltip_text(_("Display starred ranges"))    
     star_not_active_check.set_tooltip_text(_("Display non-starred ranges"))
     star_button.set_tooltip_text(_("Set selected ranges starred"))
     no_star_button.set_tooltip_text(_("Set selected ranges non-starred"))
-    widgets.log_range.set_tooltip_text(_("Log current marked range"))
+    widgets.log_range.set_tooltip_text(_("Log current marked Media Item range"))
     delete_button.set_tooltip_text(_("Delete selected ranges"))
     insert_displayed.set_tooltip_text(_("Insert selected ranges on Timeline"))
     append_displayed.set_tooltip_text(_("Append displayed ranges on Timeline"))
 
-    dnd.connect_range_log(events_list_view.treeview)
+    dnd.connect_range_log(events_list_view.treeview, _do_range_log_drop_on_monitor)
         
     return panel
 

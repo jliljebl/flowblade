@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,9 +32,10 @@ import fnmatch
 import hashlib
 import os
 import pickle
+import sys
 import time
 
-from gi.repository import Gdk
+from gi.repository import GLib
 
 import appconsts
 import atomicfile
@@ -61,7 +62,7 @@ MEDIA_FILE_REMOVE = ['icon']
 
 # Used to flag a not found relative path
 NOT_FOUND = "/not_found_not_found/not_found"
-
+        
 # Used to send messages when loading project, set at callsite.
 load_dialog = None
 
@@ -89,6 +90,10 @@ _fps_conv_mult = 1.0
 # A dict is put here when saving for profile change to contain paths to changed MLT XML files
 _xml_new_paths_for_profile_change = None
 
+# MLT removed quite few services for 7.0 and we need to inform users if any of those cannot be loaded.
+dead_compositors = 0
+
+
 class FileProducerNotFoundError(Exception):
 
     def __init__(self, value):
@@ -104,19 +109,19 @@ class ProjectProfileNotFoundError(Exception):
         return repr(self.value)
 
 # -------------------------------------------------- LOAD MESSAGES
-def _show_msg(msg, delay=0.0):
+def _show_msg(msg):
     if show_messages == True:
-        Gdk.threads_enter()
-        load_dialog.info.set_text(msg)
-        time.sleep(delay)
-        Gdk.threads_leave()
+        GLib.idle_add(_do_show_msg, msg)
 
+def _do_show_msg(msg):
+    load_dialog.info.set_text(msg)
+        
 # -------------------------------------------------- SAVE
 def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print("Saving project...")  # + os.path.basename(file_path)
+    print("Saving project...")# + os.path.basename(file_path))
     
     # Get shallow copy
     s_proj = copy.copy(project)
@@ -144,7 +149,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     project_proxy_mode = s_proj.proxy_data.proxy_mode
     proxy_path_dict = {}
 
-    # Replace media file objects with pickleable copys
+    # Replace media file objects with pickleable copies
     media_files = {}
     for k, v in s_proj.media_files.items():
         s_media_file = copy.copy(v)
@@ -255,7 +260,7 @@ def get_p_clip(clip):
             pass 
 
     # Set 'type' attribute for MLT object type
-    # This IS NOT USED anywhere anymore and should be removed.
+    # This is NOT USED anywhere anymore and should be removed.
     s_clip.type = 'Mlt__Producer'
 
     # Get replace filters
@@ -372,7 +377,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
 
     folder = userfolders.get_render_dir()
     uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    new_xml_file_path = folder + "/"+ uuid_str + ".xml"
+    new_xml_file_path = folder + uuid_str + ".xml"
 
     with atomicfile.AtomicFileWriter(new_xml_file_path, "w") as afw:
         new_xml_file = afw.get_file()
@@ -384,7 +389,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
-    project = utils.unpickle(file_path)
+    project = unpickle(file_path)
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
@@ -510,6 +515,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and fill MLT tracks.
     for py_track in py_tracks:
         mlt_track = seq.add_track(py_track.type)
+        if py_track.id == len(py_tracks) - 1:
+            continue # Do not try to fill hidden track even if somehow a clip was saved there.
         fill_track_mlt(mlt_track, py_track)
         # Set audio gain and pan filter values
         if hasattr(mlt_track, "gain_filter"): # Hidden track and black track do not have these
@@ -519,12 +526,21 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     
     # Create and connect compositors.
     mlt_compositors = []
-    for py_compositor in seq.compositors:
-            # Keeping backwards compability
-            persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
+    global dead_compositors
+    dead_compositors = 0
                 
+    for py_compositor in seq.compositors:
+            # Keeping backwards compatibility
+            persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
+
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)
+
+            # Some Compositors have been removed from MLT, and cannot be created on load.
+            if compositor == None:
+                dead_compositors += 1
+                continue
+
             compositor.create_mlt_objects(seq.profile)
 
             # Copy and set param values
@@ -661,7 +677,7 @@ def fill_track_mlt(mlt_track, py_track):
         if append_created == True:
             append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
 
-        # Save refences to recreate sync relations after all clips loaded
+        # Save references to recreate sync relations after all clips loaded
         global all_clips, sync_clips
         all_clips[mlt_clip.id] = mlt_clip
         if mlt_clip.sync_data != None:
@@ -758,7 +774,7 @@ def get_img_seq_media_path(path, load_file_path):
 
 def get_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...")
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
@@ -775,7 +791,7 @@ def get_relative_path(project_file_path, asset_path):
 
 def get_img_seq_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...")
     asset_folder, asset_file_name = os.path.split(asset_path)
     look_up_file_name = utils.get_img_seq_glob_lookup_name(asset_file_name)
     
@@ -790,7 +806,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
     return NOT_FOUND # no relative path found
         
     
-# ------------------------------------------------------- backwards compability
+# ------------------------------------------------------- backwards compatibility
 def _fix_wipe_relative_path(compositor):
     if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
         _set_wipe_res_path(compositor, "resource")
@@ -808,3 +824,32 @@ compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##r
                                 "##grain_extract", "##grain_merge", "##hardlight", "##hue", "##lighten",
                                 "##multiply", "##overlay", "##saturation", "##screen", "##softlight",
                                 "##subtract", "##value"]
+
+# ------------------------------------------------------- unpickling with mlt module fixes
+def unpickle(path):
+    try:
+        f = open(path, "rb")
+        return pickle.load(f)
+    except:
+        # Fix for opening projects when mlt available as 'mlt7' but saved with 
+        # mlt available as 'mlt'.
+        #
+        # Because sequence.py does 'import mlt' (and now does 'import mlt7') we still 
+        # import it on pickle.load() even if no MLT objects are pickled.
+        # Once mlt Python bindigs name changed from 'mlt to 'mlt7' the unpickle failed.
+        # We need to do 'sys.modules["mlt"] = mlt' after 'import mlt7 as mlt'
+        # to make module 'mlt' available when doing unpickling.
+        #
+        # NOTE: It may not be possible to remove mlt import from pickle data, but we need to 
+        # make an effort.
+
+        print("Fixing for unpickling doing 'import mlt'...")
+        
+        import mlt7 as mlt
+        sys.modules["mlt"] = mlt
+        try:
+            f = open(path, "rb")
+            return pickle.load(f)
+        except:
+            f = open(path, "rb")
+            return pickle.load(f, encoding='latin1') 

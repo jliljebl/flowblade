@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@ Handles syncing clips based on their audio data.
 import datetime
 import hashlib
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import subprocess
 import sys
@@ -120,7 +120,7 @@ def init_select_tline_sync_clip(popup_data):
         return
 
     gdk_window = gui.tline_display.get_parent_window()
-    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.TCROSS))
+    gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_TLINE_SYNC_CLIP
 
     global _tline_sync_data
@@ -128,8 +128,7 @@ def init_select_tline_sync_clip(popup_data):
     _tline_sync_data.origin_clip = clip
     _tline_sync_data.origin_track = track
     _tline_sync_data.origin_clip_index = clip_index
-    
-    
+
 def select_sync_clip_mouse_pressed(event, frame):
     sync_clip = _get_sync_tline_clip(event, frame)
 
@@ -137,7 +136,6 @@ def select_sync_clip_mouse_pressed(event, frame):
         return # selection wasn't good
     
     if utils.is_mlt_xml_file(sync_clip.path) == True:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
         dialogutils.warning_message(_("Cannot Timeline Audio Sync with MLT XML Container Clips!"), 
                                     _("Audio syncing for MLT XML Container Clips is not supported."),
                                     gui.editor_window.window,
@@ -158,11 +156,10 @@ def select_sync_clip_mouse_pressed(event, frame):
     _tline_sync_data.clip_tline_media_offset = (sync_clip_start_in_tline - sync_clip.clip_in) - (_tline_sync_data.origin_clip_start_in_tline - _tline_sync_data.origin_clip.clip_in)
     
     gdk_window = gui.tline_display.get_parent_window()
-    gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
+    gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR))
     
     global _compare_dialog_thread
     _compare_dialog_thread = AudioCompareActiveThread()
-    _compare_dialog_thread.start()
     
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
@@ -180,7 +177,7 @@ def _get_sync_tline_clip(event, frame):
         return None
         
     if sync_track == _tline_sync_data.origin_track:
-        dialogutils.warning_message(_("Audio Sync parent clips must be on differnt tracks "), 
+        dialogutils.warning_message(_("Audio Sync parent clips must be on different tracks "), 
                                 _("Selected audio sync clip is on the sametrack as the sync action origin clip."),
                                 gui.editor_window.window,
                                 True)
@@ -264,7 +261,7 @@ def create_audio_sync_compound_clip():
     video_file = selection[0].media_file
     audio_file = selection[1].media_file
     
-    # Can't sync coumpound clips
+    # Can't sync compound clips
     if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
 
         dialogutils.warning_message(_("Cannot Create Audio Sync Clip from  MLT XML Container Clips!"), 
@@ -291,7 +288,6 @@ def create_audio_sync_compound_clip():
 
     global _compare_dialog_thread
     _compare_dialog_thread = AudioCompareActiveThread()
-    _compare_dialog_thread.start()
     
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
@@ -326,13 +322,13 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
     uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    write_file = folder + "/"+ uuid_str + ".xml"
+    write_file = folder + uuid_str + ".xml"
     
     # Create tractor
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track_video = mlt.Playlist()
-    track_audio = mlt.Playlist()
+    track_video = mlt.Playlist(PROJECT().profile)
+    track_audio = mlt.Playlist(PROJECT().profile)
     track_audio.set("hide", 1) # video off, audio on as mlt "hide" value
     multitrack.connect(track_audio, 0)
     multitrack.connect(track_video, 0)
@@ -343,7 +339,6 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     
     # Get offset
     offset = float(files_offsets[audio_file])
-    print(audio_file, offset)
     
     # Add clips
     if offset > 0:
@@ -365,31 +360,34 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     render_player.start()
 
 
+# This is not a thread anymore but successive calls to Gdk.threads_add_timeout() 
+# to achieve the same functionality.
+class AudioCompareActiveThread:
 
-class AudioCompareActiveThread(threading.Thread):
-    
     def __init__(self):
-        threading.Thread.__init__(self)
         self.running = True
+        self.dialog = None
         
-    def run(self):
-
-        Gdk.threads_enter()
-        dialog = dialogs.audio_sync_active_dialog()
-        dialog.progress_bar.set_pulse_step(0.2)
-        time.sleep(0.1)
-        Gdk.threads_leave()
-
-        while self.running:
-            dialog.progress_bar.pulse()
-            time.sleep(0.2)
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, self.start_dialog)
                 
-        PROJECT().update_media_lengths_on_load = False
+    def start_dialog(self):
+        self.dialog = dialogs.audio_sync_active_dialog()
+        self.dialog.progress_bar.set_pulse_step(0.2)
+        time.sleep(0.1)
+
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 200, self.run_dialog)
         
-        Gdk.threads_enter()
-        dialog.destroy()
-        Gdk.threads_leave()
+        return False
     
+    def run_dialog(self):
+        if self.running:
+            self.dialog.progress_bar.pulse()
+            return True
+        else:
+            PROJECT().update_media_lengths_on_load = False
+            self.dialog.destroy()
+            return False
+
     def compare_done(self):
         self.running = False
 

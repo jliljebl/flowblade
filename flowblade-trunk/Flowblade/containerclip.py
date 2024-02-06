@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,12 +18,13 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 import copy
 import hashlib
 import json
 import os
+import shutil
 import threading
 import time
 
@@ -39,6 +40,7 @@ import guicomponents
 import guiutils
 import projectaction
 import respaths
+import updater
 import userfolders
 import utils
 
@@ -47,11 +49,11 @@ This module handles creating ContainerClipData objects that are the persistent
 data representations of container clips, and ContainerClipMediaItem objects that represent
 data in Media Bins that can be used to create container clips.
 
-Wrapper objects of type extending containeactions.AbstractContainerActionObject are created and discarded
+Wrapper objects of a type extending containeactions.AbstractContainerActionObject are created and discarded
 as needed to execute all actions on container clips.
 """
 
-_blender_available = False
+_media_import_callback = None # Used to import generators sequentially from another project.
 
 ROW_WIDTH = 300
 FALLBACK_THUMB = "fallback_thumb.png"
@@ -107,28 +109,14 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
-        
 
-# ------------------------------------------------------- testing availebility on statrt up
-def test_blender_availebility():
-    global _blender_available
-    if os.path.exists("/usr/bin/blender") == True:
-        _blender_available = True
-    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-        _blender_available = False
-        """ Work o0n this continues for 2.8
-        command_list = ["flatpak-spawn", "--host", "flatpak", "info","org.blender.Blender"]
-        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)
-        p.wait(timeout=3)
-        
-        if p.returncode == 0: # If not present we get returncode==1
-            _blender_available = True
-        """
-def blender_available():
-    return _blender_available
-            
 
 # -------------------------------------------------------- Clip menu actions
+
+def render_tline_generator_clip(clip, callback):
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.set_video_endoding(None, callback, True)
+
 def render_full_media(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
@@ -206,10 +194,10 @@ def _open_rows_dialog(callback, title, rows, data):
 
 def _update_gui_for_media_object_add():
     gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
+    updater.update_current_bin_files_count()
 
 def _show_not_all_data_info():
-    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
+    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for successful Container Clip creation."), gui.editor_window.window)
         
         
 
@@ -257,34 +245,27 @@ class GMicLoadCompletionThread(threading.Thread):
 
         time.sleep(0.5) # To make sure text is seen.
 
-        Gdk.threads_enter()
+        GLib.idle_add(_gmic_load_complete, self.container_clip_data, self.dialog, is_valid, err_msg)
 
-        self.dialog.destroy()
+def _gmic_load_complete(container_clip_data, dialog, is_valid, err_msg):
+        dialog.destroy()
         
         if is_valid == True:
-            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, self.container_clip_data.get_unrendered_media_name(), self.container_clip_data)
+            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
             PROJECT().add_container_clip_media_object(container_clip)
             _update_gui_for_media_object_add()
         else:
             primary_txt = _("G'Mic Container Clip Validation Error")
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            
-        Gdk.threads_leave()
-        
-# ------------------------------------------------------- Fluxity
-def create_fluxity_media_item():
-    script_select, row1 = _get_file_select_row_and_editor(_("Flowblade Media Plugin Script:"), None, _("Flowblade Media Plugin Script"))
-    _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
 
-def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
-    container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
-    container_data.data_slots["icon_file"] = screenshot_file
-    container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
     
-    # We need to exit this Gtk callback to get info text above updated.
-    completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
-    completion_thread.start()
-        
+# ------------------------------------------------------- Fluxity
+# ------------------------------------------------------- ADDING GENERATOR FROM SCRIPT AS MEDIA ITEM
+# Adding Generator item from loaded script file.
+def create_fluxity_media_item():
+    script_select, row1 = _get_file_select_row_and_editor(_("Generator Plugin Script:"), None, _("Generator Plugin Script"))
+    _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Generator Plugin Script Media Item"), [row1], [script_select])
+
 def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -306,6 +287,21 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
         completion_thread = FluxityLoadCompletionThread(container_clip_data, dialog)
         completion_thread.start()
 
+# ------------------------------------------------------- ADDING GENERATOR FROM DIALOG AS MEDIA ITEM
+# Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data, import_callback=None):
+    container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
+    container_data.data_slots["icon_file"] = screenshot_file
+    container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
+    
+    # Set callback
+    global _media_import_callback
+    _media_import_callback = import_callback
+
+    # We need to exit this Gtk callback to get info text above updated.
+    completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
+    completion_thread.start()
+    
 class FluxityLoadCompletionThread(threading.Thread):
     
     def __init__(self, container_clip_data, dialog, plugin_data=None):
@@ -322,37 +318,32 @@ class FluxityLoadCompletionThread(threading.Thread):
         # Media plugins have plugin data created with user set values, scripts loaded from file system
         # do not and just had it created in 'action_object.validate_program()'
         if self.plugin_data != None:
-            # For media plugins use provided user edited creation data.
+            # For media plugins use the provided user edited creation data.
             self.container_clip_data.data_slots["fluxity_plugin_edit_data"] = self.plugin_data
-    
+        
         time.sleep(0.5) # To make sure text is seen.
 
         if self.dialog != None:
-            Gdk.threads_enter()
-            self.dialog.destroy()
-
-            if is_valid == False:
-                primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
-                dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-                    
-            Gdk.threads_leave()
-
+            GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
+    
         if is_valid == False:
-            Gdk.threads_enter()
-            primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
-            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            Gdk.threads_leave()
+            GLib.idle_add(_show_fluxity_validation_error, err_msg)
             return 
     
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
         length = data_object["length"]
+        length = length - 1 # MLT handles out frames exclusive and we are using length as out frame value.
+
         fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
-        window_text = _("Creating Container for Flowblade Media Plugin...")
-        containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unredered_media_creation_complete, window_text)
+        window_text = _("Creating Container for Generator...")
+        containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unrendered_media_creation_complete, window_text)
 
-def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
+def _show_fluxity_validation_error(err_msg):
+    primary_txt = _("Generator Container Clip Validation Error")
+    dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
 
-    # This called from inside Gdk.threads_enter(), entering second time here crashes.
+
+def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
     # Now that unrendered media has been created we have full container data info.
     data_object = container_clip_data.data_slots["fluxity_plugin_edit_data"]
     container_clip_data.editable = True
@@ -360,27 +351,37 @@ def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, con
     container_clip_data.unrendered_media = created_unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
 
-    # Copy created unred
+    # Copy created unrendered media clip.
     rand_id_str = str(os.urandom(16))
-    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
-    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
-    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest()
+    # CACHE
+    unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
+    shutil.move(created_unrendered_clip_path, unrendered_clip_path)
     container_clip_data.unrendered_media = unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
     
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, data_object["name"], container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
     _update_gui_for_media_object_add()
-
+    
+    # If we're doing media import we need to go back to do next.
+    if _media_import_callback != None:
+        _media_import_callback()
+        
+    
+# ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
+# Called when user selects 'Add Generator' in with option 'Add as Rendered Clip'.
 def create_renderered_fluxity_media_item(container_data, length):
     fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
     containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, container_data, _add_fluxity_rendered_help_media_complete, "Please wait")
 
 def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_data):
+    # We need to jump through some hoops here because we are using media plugin rendering functionality to 
+    # add a rendered clip as new media item.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
-    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
-    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    unrendered_clip_path = userfolders.get_container_clips_unrendered_dir() + clip_id_str + ".mp4"
+    shutil.move(created_unrendered_clip_path, unrendered_clip_path)
     
     container_data.unrendered_media = unrendered_clip_path
     container_data.unrendered_type = appconsts.VIDEO
@@ -407,76 +408,6 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
     _update_gui_for_media_object_add()
 
 
-# ---------------------------------------------------------------------- Blender
-def create_blender_media_item():
-    f = Gtk.FileFilter()
-    f.set_name(_("Blender Project"))
-    f.add_pattern("*.blend")
-    project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"), f)
-
-    _open_rows_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
-
-def _blender_clip_create_dialog_callback(dialog, response_id, data):
-    dialog.destroy()
-
-    if response_id != Gtk.ResponseType.ACCEPT:
-        dialog.destroy()
-    else:
-        project_select = data[0]
-        project_file = project_select.get_filename()
-        
-        dialog.destroy()
-    
-        if project_file == None:
-            _show_not_all_data_info()
-            return
-
-        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, None)
-        
-        action_object = containeractions.get_action_object(container_clip_data)
-        
-        is_valid, err_msg = action_object.validate_program()
-        if is_valid == False:
-            primary_txt = _("Blender Container Clip Validation Error")
-            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            return
-        
-        action_object.initialize_project(project_file) # blocks until info data written
-
-        project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            project_edit_info_path = userfolders.get_user_home_cache_for_flatpak() + "blender_container_projectinfo.json"
-        
-        info_file = open(project_edit_info_path, "r")
-        project_edit_info = json.load(info_file)
-        
-        length = int(project_edit_info["frame_end"]) - int(project_edit_info["frame_start"])
-        container_clip_data.data_slots["project_edit_info"] = project_edit_info
-        container_clip_data.editable = True
-        container_clip_data.unrendered_length = length
-
-        blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
-
-        window_text = _("Creating Container for Blender Project")
- 
-        containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete, window_text)
-
-def _blender_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
-    rand_id_str = str(os.urandom(16))
-    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
-    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
-
-    os.replace(created_unrendered_clip_path, unrendered_clip_path)
-
-    # Now that unrendered media has been created we have full container data info.
-    container_clip_data.unrendered_media = unrendered_clip_path
-    container_clip_data.unrendered_type = appconsts.VIDEO
-
-    container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_program_name(), container_clip_data)
-    PROJECT().add_container_clip_media_object(container_clip)
-    _update_gui_for_media_object_add()
-
-
 
 # ---------------------------------------------------------------- MEDIA FILE OBJECT
 
@@ -492,7 +423,7 @@ class ContainerClipMediaItem:
         self.container_data = container_data
         self.length = None
         self.type = container_data.unrendered_type
-        self.icon = None
+        self.icon = None # cairo.ImageSurface
         self.icon_path = None
         
         self.mark_in = -1
@@ -518,8 +449,7 @@ class ContainerClipMediaItem:
         try:
             action_object = containeractions.get_action_object(self.container_data)
             if self.icon_path == None:
-
-                surface, length, icon_path = action_object.create_icon()      
+                surface, length, icon_path = action_object.create_icon()
                 self.icon = surface
                 self.icon_path = icon_path
                 self.length = length
@@ -527,89 +457,8 @@ class ContainerClipMediaItem:
             else:
                 self.icon = action_object.load_icon()
         except:
+            print("ContainerClipMediaItem.create_icon() except")
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
             cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
             self.icon = scaled_icon
-            
-    def save_program_edit_info(self):
-        if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-            edit_info = self.container_data.data_slots["project_edit_info"]
 
-            save_data = {}
-            save_data["objects"] = copy.copy(edit_info["objects"])
-            save_data["materials"] = copy.copy(edit_info["materials"])
-            save_data["curves"] = copy.copy(edit_info["curves"])
-            
-            default_name = self.name  + "_edit_data"
-            
-            dialogs.save_cont_clip_edit_data(self._save_program_edit_info_callback, default_name, save_data)
-        
-    def _save_program_edit_info_callback(self, dialog, response_id, edit_data):
-        
-        if response_id != Gtk.ResponseType.ACCEPT:
-            dialog.destroy()
-        else:
-            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-                save_file = dialog.get_filename()
-                dialog.destroy()
-                if save_file == None:
-                    return
-                
-                with open(save_file, "w") as f: 
-                     json.dump(edit_data, f, indent=4)
-
-    def load_program_edit_info(self):
-        dialogs.load_cont_clip_edit_data(self._load_program_edit_info_callback)
-    
-    def _load_program_edit_info_callback(self, dialog, response_id):
-        if response_id != Gtk.ResponseType.ACCEPT:
-            dialog.destroy()
-        else:
-            load_file_path = dialog.get_filename()
-            dialog.destroy()
-            if load_file_path == None:
-                return
-                
-            load_file = open(load_file_path, "r")
-            loaded_project_edit_info = json.load(load_file)
-            
-            primary_txt = _("Container Program Edit Data is Executable!")
-            secondary_txt = _("Only accept Container Program Edit Data from similar trustwothy sources\nyou would accept applications!\n\nContainer Program Edit Data will be used to call Python <b>exec()</b> function and\ncan maybe used as an attack vector against your system.")
-            warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt)
-            
-            sw = guicomponents.get_scroll_widget((300, 200), str(loaded_project_edit_info))
-            
-            content = Gtk.VBox(False, 2)
-            content.pack_start(warning_panel, False, False, 0)
-            content.pack_start(guiutils.bold_label("Loaded Container Program Edit Data"), False, False, 0)
-            content.pack_start(sw, False, False, 0)
-            
-            align = dialogutils.get_default_alignment(content)
-            
-            dialog = Gtk.Dialog("",
-                                 gui.editor_window.window,
-                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                (_("Cancel"), Gtk.ResponseType.REJECT,
-                                 _("Load Program Edit Data"), Gtk.ResponseType.ACCEPT))
-            dialog.vbox.pack_start(align, True, True, 0)
-            dialogutils.set_outer_margins(dialog.vbox)
-            dialog.set_resizable(False)
-            dialog.connect('response', self._load_warning_callback, loaded_project_edit_info)
-
-            dialog.show_all()
-            
-    def _load_warning_callback(self, dialog, response_id, loaded_project_edit_info):
-        if response_id != Gtk.ResponseType.ACCEPT:
-            dialog.destroy()
-        else:
-            dialog.destroy()
-
-            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-                edit_data = self.container_data.data_slots["project_edit_info"]
-                edit_data["objects"] = loaded_project_edit_info["objects"]
-                edit_data["materials"] = loaded_project_edit_info["materials"]
-                edit_data["curves"] = loaded_project_edit_info["curves"]
-
-            
-            
-            

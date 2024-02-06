@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2014 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,16 +22,27 @@ from gi.repository import Gdk
 
 import appconsts
 import dialogutils
+import gui
 import edit
 from editorstate import current_sequence
+import editorstate
 import tlinewidgets
 import updater
 
 MAX_DELTA = 100000000
-        
+
 edit_data = None
 mouse_disabled = True
 
+# ------------------------------------- edit mode setting
+def set_default_edit_mode(disable_mouse=False):
+    """
+    We interpret clicks on empty in this tool as request to exit to default edit tool.
+    """
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
+    if disable_mouse:
+        editorstate.timeline_mouse_disabled = True
+        
 class MultimoveData:
     """
     This class collects and saves data that enables a "Multi" tool edit to be performed.
@@ -61,7 +72,7 @@ class MultimoveData:
     def _build_move_data(self):
         tracks = current_sequence().tracks
 
-        # Look at all tracks exept hidden and black
+        # Look at all tracks except hidden and black
         # Get per track:
         # * maximum length edit can be done backwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
@@ -237,10 +248,12 @@ def mouse_press(event, frame):
     track = tlinewidgets.get_track(y)  
     if track == None:
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
 
     if dialogutils.track_lock_check_and_user_info(track):
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
 
     # Get pressed clip index
@@ -249,7 +262,9 @@ def mouse_press(event, frame):
     # Selecting empty or blank clip does not define edit
     if clip_index == -1:
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
+
     pressed_clip = track.clips[clip_index]
     if pressed_clip.is_blanck_clip:
         mouse_disabled = True

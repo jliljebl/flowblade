@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,7 +42,9 @@ def maybe_init_for_mouse_press(event, frame):
     if track == None:
         return
     if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
-        return False
+        return
+    if track.edit_freedom == appconsts.LOCKED:
+        return
     clip_index = current_sequence().get_clip_index(track, frame)
     if clip_index == -1:
         return
@@ -98,7 +100,7 @@ def maybe_init_for_mouse_press(event, frame):
         else:
             tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_LEFT
 
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
 def mouse_press(event, frame):
     frame = _legalize_frame(frame)
@@ -185,7 +187,7 @@ def _exit_clip_end_drag():
     tlinewidgets.set_edit_mode(None, _enter_draw_func)
     tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
     
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     updater.repaint_tline()
 
 def _legalize_frame(frame):

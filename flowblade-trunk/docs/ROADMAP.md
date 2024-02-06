@@ -1,36 +1,16 @@
 # FLOWBLADE ROADMAP
 
-## Technology updates
+Last updated April 4th 2023.
 
-* Moving video display away from SDL 1.2
-* SDL 2 and OpenGL based GPU filters and Compositors
+### Media cache and project data folder
 
-## GUI improvements
+* Make possible to select folder where project media data is saved. Keep current XDG Data Directory as the default place.
+* Make projects save rendered clips, proxies and contain clips data individual in data folder to enable moving and destroying data per project.
 
-* Keyframe tool look'n'feel update
+### GTK 4 port
 
-* Neutral theme tweaks, add more darker hues by manipulating individual widgets' CSS if needed
+* We will start gradually working towards doing GTK 4 through multiple releases. Adwaita dark theme looks promising and we will drop custom theming if possible.
 
-* make e.g. monitor player buttons panel tighter, look for smilar options to tighten up by cutting down on margins and white space
+### Video display
 
-## Editing
-
-* keyframes - make keyframe type editable ()linear, curve, hold)
-
-## Project vault
-
-* provide possibility to store all projects in a user defined folder
-
-* provide possibility to delete resources like container clips and proxies per project
-
-## Render issues
-
-* try to reproduce and diagnose reported memory issues
-
-* attempt moving to *melt* for export render although it seems that some render issues persist with *melt* rendring too
-
-## Fluxity plugins
-
-* animated values
-
-* 
+- Moving video display away from SDL 1.2 is still a long term goal, but there hasn't been a viable technology path to do that yet. Unfortunately SDL 2 no longer looks promising as the needed API for creating video displays for Wayland will likely never be available there.

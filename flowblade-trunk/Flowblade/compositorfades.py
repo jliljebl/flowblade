@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import gui
 from editorstate import current_sequence
 import propertyedit
 import propertyparse
+import propertyeditorbuilder
 
 """
 This module handles adding fade-ins and fade-outs to compositors and filters.
@@ -110,13 +111,13 @@ def set_auto_fade_out_keyframes(compositor):
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # We create a SECOND SET of EditableProperties from compositor properties.
     # These are not the same EditableProperties that are edited in GUI in "Compositor" panel.
-    # This approach seems necessery because Affine Blend requires creating a new property.
+    # This approach seems necessary because Affine Blend requires creating a new property.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
 
     # Find keyframe property, its class and create keyframes list
     if compositor.transition.info.mlt_service_id == "frei0r.cairoaffineblend": # Affine Blend
         # Because of frei0r's forced value 0.0-1.0 range "Affine Blend" is handled in a more complex way compared to other compositors
-        keyframe_property = propertyparse.create_editable_property_for_affine_blend(clip, t_editable_properties)
+        keyframe_property = propertyeditorbuilder.create_rotating_geometry_editor_property(clip, t_editable_properties)
         keyframes = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array(keyframe_property.value, keyframe_property.get_in_value)
         property_klass = keyframe_property.__class__.__name__
         return (keyframe_property, property_klass, keyframes)

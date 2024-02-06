@@ -5,9 +5,9 @@
     <!-- addargs="arg1=val1 arg2=va2"(space separated list) -->
     <!-- replvalues="replexp1 replval1;replexp2 replval2" (; separated list) -->
     <!-- @#@# is encoding = e.g. 'format@#@#nv12,hwupload' turns to 'format=nv12,hwupload' -->
-    
-    
-    
+
+
+
     <qualityqroup id="qgroup1" defaultindex="10">
         <quality name="200 kb/s" replvalues="%BITRATE% 200k" />
         <quality name="400 kb/s" replvalues="%BITRATE% 400k" />
@@ -119,8 +119,11 @@
     <encodingoption name="NVENC H.264 High Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=h264_nvenc preset=medium vb=%BITRATE% bufsize=%BITRATE% vprofile=high bf=3 b_ref_mode=2 temporal-aq=1 rc_lookahead=20 vsync=0"/>
     </encodingoption>
-     <encodingoption name="NVENC HEVC Main10 Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
-         <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main10 pix_fmt=p010le"/>
+    <encodingoption name="NVENC HEVC / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main b_ref_mode=0"/>
+    </encodingoption>
+     <encodingoption name="NVENC HEVC HDR / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+         <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main10 b_ref_mode=0 pix_fmt=p010le"/>
      </encodingoption>
 
     <!-- VAAPI -->
@@ -131,30 +134,27 @@
 
     <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
+        <profile args="f=mp4 hq=1 acodec=mp2 ab=256k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" presetgroup="MPEG" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
+        <profile args="f=mpeg acodec=mp2 ab=256k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
     
     
-    <!--WebM, Ogg, Prores, DNxHD -->
-    <encodingoption name="Ogg Theora / .ogv" extension="ogv" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
-    </encodingoption>
-    <encodingoption name="WebM VP8 / .webm" extension="webm" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+    <!--WebM, Prores, DNxHD -->
+    <encodingoption name="WebM VP8 / .webm" extension="webm" presetgroup="webmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
-    <encodingoption name="WebM VP9 / .webm" extension="webm" presetgroup="oggwebmetc" audiodesc=" opus" type="av" resize="True" qgroup="qgroup2">
+    <encodingoption name="WebM VP9 / .webm" extension="webm" presetgroup="webmetc" audiodesc=" opus" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=%BITRATE% g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 auto-alt-ref=1 lag-in-frames=25 row-mt=1" />
     </encodingoption>
-    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
+    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" presetgroup="webmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
     </encodingoption>
-    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
+    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" presetgroup="webmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
     </encodingoption>    
-    <encodingoption name="DNxHD / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="qgroup3">
+    <encodingoption name="DNxHD / .mov" extension="mov" presetgroup="webmetc" audiodesc=" pcm" type="av" resize="True" qgroup="qgroup3">
         <profile args="pix_fmt=yuv422p progressive=1 vcodec=dnxhd vprofile=dnxhr_hq qscale=1 vb=%BITRATE% g=1 bf=0 acodec=pcm_s24le f=mov movflags=+write_colr+faststart" />
     </encodingoption> 
 
@@ -212,6 +212,7 @@
     
     
     <!-- Alpha -->
+    <!--
     <encodingoption name="WebM VP9 Alpha" extension="webm" presetgroup="Alpha" audiodesc="opus" type="av" resize="True" qgroup="not_settable">
         <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=2M g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 lag-in-frames=25 row-mt=1 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
@@ -221,7 +222,7 @@
     <encodingoption name="UT Video Alpha" extension="avi" presetgroup="Alpha" audiodesc="pcm" type="av" resize="True" qgroup="not_settable">
         <profile args="f=avi vcodec=utvideo mlt_image_format=rgb24a pix_fmt=gbrap g=1 bf=0 acodec=pcm_s24le" />
     </encodingoption>
-
+    -->
 
     <!-- Proxy encoding -->
     <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup2">
@@ -231,10 +232,17 @@
         <profile args="f=mp4 acodec=libmp3lame ac=2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
     <proxyencodingoption name="MPEG-2 Transport Stream" extension="m2t" type="av" audiodesc="mp2, 256kb/s, 48000Hz" resize="True" qgroup="qgroup1">
-       <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
+       <profile args="f=mpegts acodec=mp2 ab=256k ar=48000 vcodec=mpeg2video g=5" />
     </proxyencodingoption>
     <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" type="av" audiodesc="pcm" resize="True" qgroup="not_settable">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
     </proxyencodingoption>
+    <proxyencodingoption name="FFMPEG NVENC H.264  / .mp4" extension="mp4" type="av" audiodesc="pcm" resize="True" qgroup="not_settable" ffmpeggpuenc="h264_nvenc">
+        <profile args="%SOURCEFILE -c:a aac -vf scale=%SCREENSIZE -c:v h264_nvenc -rc vbr -cq 28 -pix_fmt yuv420p %PROXYFILE"/>
+    </proxyencodingoption>
+    <proxyencodingoption name="FFMPEG VAAPI H.264  / .mp4" extension="mp4" type="av" audiodesc="pcm" resize="True" qgroup="not_settable" ffmpeggpuenc="h264_vaapi">
+        <profile args="%SOURCEFILE -vaapi_device /dev/dri/renderD128 -vf 'format=nv12,hwupload,scale_vaapi=%SCREEN%SIZE%TWO%' -c:v h264_vaapi %PROXYFILE"/>
+    </proxyencodingoption>
+
 
 </renderencoding>

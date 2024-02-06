@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,9 +24,9 @@ Clip player used to select frames for preview and range selection.
 
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 from os import listdir
 from os.path import isfile, join
@@ -145,6 +145,9 @@ class GmicPlayer:
         if self.ticker != None:
             self.ticker.stop_ticker()
         self.producer.set_speed(0)
+
+    def is_playing(self):
+        return (self.producer.get_speed() != 0)
         
     def seek_position_normalized(self, pos, length):
         frame_number = pos * length

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ import gi
 
 import cairo
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 
 from gi.repository import Gtk, GObject
 from gi.repository import GLib
@@ -48,6 +48,7 @@ import editorstate
 import mltrefhold
 import guiutils
 import utils
+import utilsgtk
 
 SLOT_W = 60
 METER_SLOT_H = 458
@@ -95,7 +96,7 @@ RIGHT_CHANNEL = "_audio_level.1"
 
 MONITORING_AVAILABLE = False
 
-# GUI compoents displaying levels
+# GUI components displaying levels
 _monitor_window = None
 _master_volume_meter = None
 
@@ -127,22 +128,26 @@ def init(profile):
             METER_LIGHTS = 82
             METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 
+    # We want a global ticker object to always exist, so we can use it to know if it is running.
+    launch_update_ticker()
+    _update_ticker.destroy_ticker()
+            
+def launch_update_ticker():
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
-    _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
+    _update_ticker = utilsgtk.GtkTicker(_audio_monitor_update, 40)
     _update_ticker.start_ticker()
-    _update_ticker.stop_ticker()    
-
+  
 def init_for_project_load():
     # Monitor window is quaranteed to be closed
     if _update_ticker.running:
-        _update_ticker.stop_ticker()    
+        _update_ticker.destroy_ticker()    
         
     global _level_filters
     _level_filters = None
     _init_level_filters(False)
 
-    _update_ticker.start_ticker()
+    launch_update_ticker()
 
 def update_mute_states():
     if _monitor_window != None:
@@ -151,7 +156,7 @@ def update_mute_states():
 def close():
     close_audio_monitor()
     close_master_meter()
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
 def show_audio_monitor():
     global _monitor_window
@@ -164,7 +169,7 @@ def show_audio_monitor():
         
     global _update_ticker
     if _update_ticker.running == False:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def close_audio_monitor():
     
@@ -198,14 +203,13 @@ def get_master_meter():
     _master_volume_meter = MasterVolumeMeter()
 
     if _update_ticker.running == False:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
     align = guiutils.set_margins(_master_volume_meter.widget, 3, 3, 3, 3)
     
     frame = Gtk.Frame()
     frame.add(align)
-    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-    guiutils.set_margins(frame, 0, 0, 1, 0)
+    guiutils.set_margins(frame, 0, 0, 1, 1)
     return frame
 
 def close_master_meter():
@@ -237,7 +241,7 @@ def _init_level_filters(create_track_filters):
     # so when Sequence is saved these filters will automatically be removed.
     # Filters are not part of sequence.Sequence object because they just used for monitoring,
     #
-    # Track/master gain values are persistant, they're also editing desitions 
+    # Track/master gain values are persistent, they're also editing decisions 
     # and are therefore part of sequence.Sequence objects.
     
     # Create levels filters array if it deosn't exist
@@ -261,7 +265,7 @@ def _destroy_level_filters(destroy_track_filters=False):
 
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
     # Detach filters
     if len(_level_filters) != 0:
@@ -281,17 +285,17 @@ def _destroy_level_filters(destroy_track_filters=False):
         _audio_levels = []
     elif _monitor_window == None:
         _level_filters = [_level_filters[0]]
-        _audio_levels[0] = 0.0
+        _audio_levels[0] = (0.0, 0.0)
 
     if _master_volume_meter != None or _monitor_window != None:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def recreate_master_meter_filter_for_new_sequence():
     global _level_filters, _audio_levels
 
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
     if len(_level_filters) != 0:
         seq = editorstate.current_sequence()
@@ -299,12 +303,12 @@ def recreate_master_meter_filter_for_new_sequence():
         if _master_volume_meter != None:
             seq.tractor.detach(_level_filters[0])
             _level_filters.pop(0)
-            _audio_levels[0] = 0.0
+            _audio_levels[0] = (0.0, 0.0)
             master_level_filter = _add_audio_level_filter(seq.tractor, seq.profile)
             _level_filters.insert(0, master_level_filter)
 
     if _master_volume_meter != None or _monitor_window != None:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def _add_audio_level_filter(producer, profile):
     audio_level_filter = mlt.Filter(profile, "audiolevel")
@@ -312,13 +316,11 @@ def _add_audio_level_filter(producer, profile):
     producer.attach(audio_level_filter)
     return audio_level_filter
 
-def _audio_monitor_update():
-    # This is not called from gtk thread
-
+def _audio_monitor_update(data):
+    # 'data' is not used here. 
+    # This is called holding Gdk lock so we can do Gtk updates.
     if _monitor_window == None and _master_volume_meter == None:
         return
-
-    Gdk.threads_enter()
 
     global _audio_levels
     _audio_levels = []
@@ -332,8 +334,6 @@ def _audio_monitor_update():
         _monitor_window.meters_area.widget.queue_draw()
     if _master_volume_meter != None:
         _master_volume_meter.canvas.queue_draw()
-
-    Gdk.threads_leave()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
@@ -413,10 +413,7 @@ class MetersArea:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(*METER_BG_COLOR)
-        else:
-            cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
@@ -573,7 +570,7 @@ class GainControl(Gtk.Frame):
             gain_value = producer.audio_gain # track
         gain_value = gain_value * 100
         
-        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
+        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_increment=1)
         self.slider = Gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
@@ -588,7 +585,7 @@ class GainControl(Gtk.Frame):
             pan_value = 0.5 # center
         pan_value = (pan_value - 0.5) * 200 # from range 0 - 1 to range -100 - 100
 
-        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
+        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_increment=1)
         self.pan_slider = Gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
@@ -597,12 +594,6 @@ class GainControl(Gtk.Frame):
         surface = guiutils.get_cairo_image("pan_track")
         self.pan_button.set_image(Gtk.Image.new_from_surface (surface))
         self.pan_button.connect("toggled", self.pan_active_toggled)
-        
-        if pan_value == 0.0:
-            self.pan_slider.set_sensitive(False)
-        else:
-            self.pan_button.set_active(True)
-            self.pan_adjustment.set_value(pan_value) # setting button active sets value = 0, set correct value again
 
         label = guiutils.bold_label(name)
 
@@ -620,6 +611,12 @@ class GainControl(Gtk.Frame):
 
         self.mute_changed()
 
+        if pan_value == 0.0:
+            self.pan_slider.set_sensitive(False)
+        else:
+            self.pan_button.set_active(True)
+            self.pan_adjustment.set_value(pan_value) # setting button active sets value = 0, set correct value again
+            
     def gain_changed(self, slider):
         gain = slider.get_value() / 100.0
         if self.is_master == True:
@@ -691,10 +688,7 @@ class MasterVolumeMeter:
 
         self.meter.set_height(h - self.H_CUT)
  
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            cr.set_source_rgb(*METER_BG_COLOR)
-        else:
-            cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.fill_preserve()
         cr.rectangle(0, 0, w, h)
         cr.fill()
@@ -708,5 +702,6 @@ class MasterVolumeMeter:
         grad.add_color_stop_rgba(*GREEN_2)
 
         l_value, r_value = _audio_levels[0]
+
         x = 0
         self.meter.display_value(cr, x, l_value, r_value, grad)

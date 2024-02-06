@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import mltfilters
 import movemodes
 import translations
 
-_set_quick_effect_menu = Gtk.Menu()
 
 NO_SHORTCUT_SET = "##¤¤NOSHORTCUTSET¤¤##"
 
@@ -47,6 +46,8 @@ _EMPTY_SHORTCUTS_DICT = {   "f1": NO_SHORTCUT_SET,
                             "f12": NO_SHORTCUT_SET}
 
 _quick_effects_dict = None
+_active_edit_popover = None
+
 
 def load_shortcuts():
     if editorpersistance.prefs.quick_effects == None:
@@ -103,7 +104,7 @@ def _get_row(shotcut_name, shortcut_key):
     shortcut_value_label = Gtk.Label(label=shortcut_value_text)
 
     surface = guiutils.get_cairo_image("kb_configuration")
-    edit_menu_press = guicomponents.PressLaunch(lambda w,e : _launch_menu(shortcut_key, e, shortcut_value_label), surface)
+    edit_menu_press = guicomponents.PressLaunch(lambda w,e : _launch_menu(w, shortcut_key, shortcut_value_label), surface)
 
     edit_box = Gtk.HBox()
     edit_box.pack_start(edit_menu_press.widget, False, False, 0)
@@ -124,41 +125,13 @@ def _get_short_cut_value_text(shortcut_key):
     filter_info = mltfilters.get_filter_for_name(shortcut_filter_name)
     return translations.get_filter_name(filter_info.name)
 
-def _launch_menu(shortcut_key, event, shortcut_value_label):
-    menu = _set_quick_effect_menu
-    guiutils.remove_children(menu)
-
-    add_item = Gtk.MenuItem(_("Set Quick Filter for Shortcut Key"))
-    menu.append(add_item)
-    add_menu = Gtk.Menu()
-    add_item.set_submenu(add_menu)
-    add_item.show()
-    delete_item = Gtk.MenuItem(_("Delete Quick Filter from Shortcut Key"))
-    delete_item.connect("activate", _delete_shortcut, (shortcut_key, shortcut_value_label))
-    delete_item.show()
-    menu.append(delete_item)
+def _launch_menu(widget, shortcut_key, shortcut_value_label):
+    global _active_edit_popover
     
-    for group in mltfilters.groups:
-        group_name, filters_array = group
+    _active_edit_popover = QuickKBShortcutEditPopover(widget, shortcut_key, shortcut_value_label)
+    _active_edit_popover.show()
 
-        # "Blend" group not available for quick shortcuts.
-        if filters_array[0].mlt_service_id == "cairoblend_mode":
-            continue
-        
-        group_item = Gtk.MenuItem(group_name)
-        add_menu.append(group_item)
-        sub_menu = Gtk.Menu()
-        group_item.set_submenu(sub_menu)
-        for filter_info in filters_array:
-            filter_item = Gtk.MenuItem(translations.get_filter_name(filter_info.name))
-            sub_menu.append(filter_item)
-            filter_item.connect("activate", _set_shortcut, (shortcut_key, filter_info, shortcut_value_label))
-            filter_item.show()
-        group_item.show()
-
-    menu.popup(None, None, None, None, event.button, event.time)
-
-def _set_shortcut(w, data):
+def _set_shortcut(data):
     shortcut_key, filter_info, shortcut_value_label = data
 
     global _quick_effects_dict
@@ -168,7 +141,7 @@ def _set_shortcut(w, data):
     
     shortcut_value_label.set_text(_get_short_cut_value_text(shortcut_key))
 
-def _delete_shortcut(w, data):
+def _delete_shortcut(data):
     shortcut_key, shortcut_value_label = data
 
     global _quick_effects_dict
@@ -177,3 +150,70 @@ def _delete_shortcut(w, data):
     editorpersistance.save()
  
     shortcut_value_label.set_text(_get_short_cut_value_text(shortcut_key))
+
+
+
+class QuickKBShortcutEditPopover:
+    def __init__(self, launch_widget, shortcut_key, shortcut_value_label):
+
+        self.shortcut_key = shortcut_key
+        self.shortcut_value_label = shortcut_value_label
+
+        set_label_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Select Quick Filter:"))])
+        set_button = Gtk.Button(_("Set Quick Filter for Shortcut Key"))
+        set_button.connect("clicked", self._set_shortcut)
+        delete_button = Gtk.Button(_("Delete Quick Filter from Shortcut Key"))
+        delete_button.connect("clicked", self._delete_shortcut)
+        self.filter_select_combo = self._create_filter_select_combo()
+        self.filter_select_combo.widget.set_margin_bottom(8)
+
+        self.pop_over_pane = Gtk.VBox(False, 2)
+        self.pop_over_pane.pack_start(set_label_row, False, False, 0)
+        self.pop_over_pane.pack_start(self.filter_select_combo.widget, False, False, 0)
+        self.pop_over_pane.pack_start(set_button, False, False, 0)
+        self.pop_over_pane.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+        self.pop_over_pane.pack_start(delete_button, False, False, 0)
+        guiutils.set_margins(self.pop_over_pane,8,8,8,8)
+        self.pop_over_pane.show_all()
+
+        self.popover = Gtk.Popover.new(launch_widget)
+        self.popover.add(self.pop_over_pane)
+
+    def _create_filter_select_combo(self):
+        # categories_list is list of form [("category_name", [category_items]), ...]
+        # with category_items list of form [("item_name", data_object), ...]
+        categories_list = []
+
+        for group in mltfilters.groups:
+            group_name, filters_array = group
+                
+            items_list = []
+
+            for filter_info in filters_array:
+                filter_name = translations.get_filter_name(filter_info.name)
+                items_list.append((filter_name, filter_info))
+
+            categories_list.append((group_name, items_list))
+        
+        combo = guicomponents.CategoriesModelComboBoxWithData(categories_list)
+        iter = combo.model.get_iter_from_string("0:0")
+        combo.widget.set_active_iter(iter)
+        
+        return combo
+    
+    def _set_shortcut(self, widget):
+        name, filter_info = self.filter_select_combo.get_selected()
+        data = (self.shortcut_key, filter_info, self.shortcut_value_label)
+        _set_shortcut(data)
+        self.hide()
+        
+    def _delete_shortcut(self, widget):
+        data = (self.shortcut_key, self.shortcut_value_label)
+        _delete_shortcut(data)
+        self.hide()
+
+    def show(self):
+        self.popover.show()
+
+    def hide(self):
+        self.popover.popdown()

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,6 +26,9 @@ Handles edit mode setting.
 from gi.repository import Gdk
 
 import copy
+import hashlib
+import os
+import shutil
 
 import appconsts
 import audiosync
@@ -37,6 +40,7 @@ import containeractions
 import cutmode
 import dialogs
 import dialogutils
+import dnd
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -45,7 +49,7 @@ from editorstate import timeline_visible
 from editorstate import EDIT_MODE
 import editorpersistance
 import gui
-import guicomponents
+import guipopoverclip
 import kftoolmode
 import medialog
 import modesetting
@@ -56,12 +60,13 @@ import syncsplitevent
 import tlinewidgets
 import trimmodes
 import updater
+import userfolders
 
 
 # functions are monkeypatched in at app.py 
 display_clip_menu_pop_up = None
 compositor_menu_item_activated = None
-
+set_compositor_data = None
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos):
@@ -229,18 +234,20 @@ def tline_canvas_mouse_pressed(event, frame):
     """
     Mouse event callback from timeline canvas widget
     """
-    editorstate.timeline_mouse_disabled = False # This is used to disable "move and "release" events when they would get bad data.
+    editorstate.timeline_mouse_disabled = False # This is used to disable "move" and "release" events when they would get bad data.
+    
+    dnd.clear_tline_out_drag_context() # This exits if tline out drag failed.
     
     if PLAYER().looping():
         return
     elif PLAYER().is_playing():
         PLAYER().stop_playback()
     
-    # Double click handled separately
+    # Double click handled separately.
     if event.type == Gdk.EventType._2BUTTON_PRESS:
         return
 
-    # Handle and exit parent clip selecting
+    # Handle and exit parent clip selecting.
     if EDIT_MODE() == editorstate.SELECT_PARENT_CLIP:
         syncsplitevent.select_sync_parent_mouse_pressed(event, frame)
         editorstate.timeline_mouse_disabled = True
@@ -248,7 +255,7 @@ def tline_canvas_mouse_pressed(event, frame):
         modesetting.set_default_edit_mode()  
         return
 
-    # Handle and exit tline sync clip selecting
+    # Handle and exit tline sync clip selecting.
     if EDIT_MODE() == editorstate.SELECT_TLINE_SYNC_CLIP:
         audiosync.select_sync_clip_mouse_pressed(event, frame)
         editorstate.timeline_mouse_disabled = True
@@ -262,11 +269,11 @@ def tline_canvas_mouse_pressed(event, frame):
         updater.display_sequence_in_monitor()
         if (event.button == 1):
             # Now that we have correct edit mode we'll re-enter
-            # this method to get e.g. a select action
+            # this method to get e.g. a select action.
             tline_canvas_mouse_pressed(event, frame)
             return
         if (event.button == 3):
-            # Right mouse + CTRL displays clip menu if we hit clip
+            # Right mouse + CTRL displays clip menu if we hit clip.
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 PLAYER().seek_frame(frame)
             # Right mouse on timeline seeks frame
@@ -276,20 +283,13 @@ def tline_canvas_mouse_pressed(event, frame):
                     PLAYER().seek_frame(frame)
         return
 
-    # If clip end drag mode is for some reason still active, exit to default edit mode
+    # If clip end drag mode is for some reason still active, exit to default edit mode.
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
         modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
         print("EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!")
-
-    #  Check if match frame close is hit
-    if editorstate.current_is_move_mode() and timeline_visible():
-        if tlinewidgets.match_frame_close_hit(event.x, event.y) == True:
-            tlinewidgets.set_match_frame(-1, -1, True)
-            updater.repaint_tline()
-            return
-
-    #  Check if compositor is hit and if so, handle compositor editing
+    
+    #  Check if compositor is hit and if so, handle compositor editing.
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.x, event.y, current_sequence().compositors)
         if hit_compositor != None:
@@ -309,7 +309,10 @@ def tline_canvas_mouse_pressed(event, frame):
                     return
             if event.button == 3:
                 compositormodes.set_compositor_selected(hit_compositor)
-                guicomponents.display_compositor_popup_menu(event, hit_compositor,
+                set_compositor_data(hit_compositor)
+                guipopoverclip.compositor_popover_menu_show(gui.tline_canvas.widget,
+                                                            event.x, event.y, 
+                                                            hit_compositor, 
                                                             compositor_menu_item_activated)
                 return
             elif event.button == 2:
@@ -318,7 +321,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     compositormodes.clear_compositor_selection()
 
-    # Check if we should enter clip end drag mode
+    # Check if we should enter clip end drag mode.
     if (event.button == 3 and editorstate.current_is_move_mode()
         and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
         # with CTRL right mouse
@@ -330,7 +333,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     # Handle mouse button presses depending which button was pressed and
     # editor state.
-    # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end
+    # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end.
     if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.KF_TOOL):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -338,7 +341,7 @@ def tline_canvas_mouse_pressed(event, frame):
                 if not success:
                     PLAYER().seek_frame(frame)
         else:
-            # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
+            # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame.
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
@@ -357,8 +360,8 @@ def tline_canvas_mouse_pressed(event, frame):
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
         else:	
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT	
-        gui.editor_window.set_tline_cursor_to_context(pointer_context)	
-        gui.editor_window.set_tool_selector_to_mode()	
+        gui.editor_window.tline_cursor_manager.set_tline_cursor_to_context(pointer_context)	
+        gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()	
         if not editorpersistance.prefs.quick_enter_trims:	
             editorstate.timeline_mouse_disabled = True	
         else:	
@@ -399,10 +402,10 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     """
     Mouse event callback from timeline canvas widget
     """
-    gui.editor_window.set_cursor_to_mode() # we need this for box move at least, probably trims too
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # we need this for box move at least, probably trims too
      
     if editorstate.timeline_mouse_disabled == True:
-        gui.editor_window.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         tlinewidgets.trim_mode_in_non_active_state = False # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         gui.tline_canvas.widget.queue_draw()
         editorstate.timeline_mouse_disabled = False
@@ -469,27 +472,17 @@ def tline_effect_drop(x, y):
     if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
-    
+
+    filter_info = clipeffectseditor.get_currently_selected_filter_info()
+                
     selected_track_before = movemodes.selected_track
     selected_in_before = movemodes.selected_range_in
     selected_out_before = movemodes.selected_range_out
     
-    if clipeffectseditor.clip_is_being_edited(clip) == False:
-        clipeffectseditor.set_clip(clip, track, index)
-    
-    clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
-    filter_info = clipeffectseditor.get_currently_selected_filter_info()
-    
-    if selected_track_before != track.id:
-        return
-    
-    if not((selected_in_before <= index) and (selected_out_before >= index)):
-        return
-    
-    if selected_in_before != -1:
+    # Effect dropped on selected range, add to all in range.
+    if selected_in_before != -1 and selected_track_before == track.id and ((selected_in_before <= index) and (selected_out_before >= index)):
+        actions = []
         for add_index in range(selected_in_before, selected_out_before + 1):
-            if add_index == index:
-                continue
             add_clip = track.clips[add_index]
             if add_clip.is_blanck_clip == True:
                 continue
@@ -498,10 +491,24 @@ def tline_effect_drop(x, y):
                     "filter_info":filter_info,
                     "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
             action = edit.add_filter_action(data)
-            action.do_edit()
+            actions.append(action)
+    
+        if len(actions) > 0:
+            c_action = edit.ConsolidatedEditAction(actions)
+            c_action.do_consolidated_edit()
+    else:
+        # Effect dropped on single clip.
+        data = {"clip":clip, 
+                "filter_info":filter_info,
+                "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
+        action = edit.add_filter_action(data)
+        action.do_edit()
 
+    clipeffectseditor.set_clip(clip, track, index)
+    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+    
 def tline_media_drop(drag_data, x, y, use_marks=False):
-    # drag_data not used unless we wich later to enable dropping multiple media items.
+    # drag_data not used unless we which later to enable dropping multiple media items.
     track = tlinewidgets.get_track(y)
     if track == None:
         return
@@ -517,13 +524,29 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
         kftoolmode.exit_tool()
 
     frame = tlinewidgets.get_frame(x)
-    media_file = gui.media_list_view.last_pressed.media_file
+
+    if dnd.drag_source == dnd.SOURCE_MONITOR_WIDGET:
+        media_file = dnd.drag_data
+    else:
+        media_file = gui.media_list_view.last_pressed.media_file
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
         if media_file.container_data == None:
-            # Standard clips
-            new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+            if media_file.titler_data == None:
+                # Standard clips
+                new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+            else:
+                # Title clips
+                # Create copy of graphic and titler data for clip so that all clips created 
+                # from the same media item can be edited independently.
+                md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+                clip_graphic_path = userfolders.get_render_dir() + md_str
+                shutil.copyfile(media_file.path, clip_graphic_path)
+                titler_data = copy.deepcopy(media_file.titler_data)
+
+                new_clip = current_sequence().create_file_producer_clip(clip_graphic_path, media_file.name, False, media_file.ttl)
+                new_clip.titler_data = titler_data
         else:
             # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
@@ -531,7 +554,7 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             new_clip.container_data.generate_clip_id()
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
-            
+
     # Set clip in and out
     if use_marks == False:
         new_clip.mark_in = 0
@@ -577,15 +600,18 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
                 maybe_autorender_plugin(new_clip)
+                gui.media_list_view.clear_selection()
                 return
     elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
         drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
         if drop_done == True:
             maybe_autorender_plugin(new_clip)
+            gui.media_list_view.clear_selection()
             return
             
     do_clip_insert(track, new_clip, frame)
-    
+    gui.media_list_view.clear_selection()
+                
     maybe_autorender_plugin(new_clip)
 
 def tline_range_item_drop(rows, x, y):

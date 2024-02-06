@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ gi.require_version('Gtk', '3.0')
 
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import threading
 import time
@@ -42,10 +42,8 @@ import ccrutils
 import editorstate
 import editorpersistance
 import gmicplayer
-import mltfilters
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
 import processutils
 import renderconsumer
 import respaths
@@ -68,28 +66,28 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
-def clear_flag_files(session_id):
-    ccrutils.clear_flag_files(session_id)
+def clear_flag_files(parent_folder, session_id):
+    ccrutils.clear_flag_files(parent_folder, session_id)
     
-def set_render_data(session_id, video_render_data):
-    ccrutils.set_render_data(session_id, video_render_data)
+def set_render_data(parent_folder, session_id, video_render_data):
+    ccrutils.set_render_data(parent_folder, session_id, video_render_data)
     
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
-def abort_render(session_id):
-    ccrutils.abort_render(session_id)
+def abort_render(parent_folder, session_id):
+    ccrutils.abort_render(parent_folder, session_id)
 
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
+def main(root_path, session_id, parent_folder, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
 
@@ -111,29 +109,9 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     userfolders.init()
     editorpersistance.load()
 
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    repo = mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-    
-    ccrutils.init_session_folders(session_id)
+    ccrutils.init_session_folders(parent_folder, session_id)
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()
@@ -210,7 +188,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
                                                                         10,
-                                                                        False,  # this is not useful until we get MLT to find frames sequences not startin from 0001
+                                                                        False,  # this is not useful until we get MLT to find frames sequences not starting from 0001
                                                                         0)
         self.script_renderer.write_frames()
 
@@ -226,7 +204,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,14 +38,17 @@ import editorlayout
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
+from editorstate import PLAYER
+from editorstate import current_sequence
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
+import propertyparse
 import respaths
-import tlinerender
 import translations
 import updater
 import utils
@@ -62,8 +65,8 @@ _block_stack_update = False # Used to block full stack update when adding new fi
 # Property change polling.
 # We didn't put a layer of indirection to look for and launch events on filter property edits
 # so now we detect filter edits by polling. This has no performance impect, n is so small.
-_edit_polling_thread = None
-filter_changed_since_last_save = False
+#_edit_polling_thread = None
+# filter_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
@@ -117,7 +120,8 @@ class FilterFooterRow:
         else:
             mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=44, h=44)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
-
+        self.mask_button = mask_button
+        
         surface = guiutils.get_cairo_image("filters_move_up")
         if editorpersistance.prefs.double_track_hights  == False:
             move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=22, h=22)
@@ -175,7 +179,7 @@ class FilterFooterRow:
 
     def add_mask_pressed(self, w, e):
         filter_index = self.filter_stack.get_filter_index(self.filter_object)
-        _filter_mask_launch_pressed(w, e, filter_index)
+        _filter_mask_launch_pressed(self.mask_button, w, filter_index)
 
     def move_up_pressed(self, w, e):
         from_index = self.filter_stack.get_filter_index(self.filter_object)
@@ -237,9 +241,8 @@ class FilterStackItem:
         self.filter_header_row = FilterHeaderRow(filter_object)
 
         self.edit_panel = edit_panel
-        self.edit_panel_frame = Gtk.Frame()
+        self.edit_panel_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         self.edit_panel_frame.add(edit_panel)
-        self.edit_panel_frame.set_shadow_type(Gtk.ShadowType.NONE)
         
         self.filter_stack = filter_stack
         self.expander = Gtk.Expander()
@@ -247,9 +250,8 @@ class FilterStackItem:
         self.expander.add(self.edit_panel_frame)
         self.expander.set_label_fill(True)
 
-        self.expander_frame = Gtk.Frame()
+        self.expander_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         self.expander_frame.add(self.expander)
-        self.expander_frame.set_shadow_type(Gtk.ShadowType.NONE)
         guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
         
         self.active_check = Gtk.CheckButton()
@@ -304,7 +306,7 @@ class ClipFilterStack:
             stack_item = FilterStackItem(filter_object, edit_panel, self)
             self.filter_stack.append(stack_item)
             self.widget.pack_start(stack_item.widget, False, False, 0)
-        
+
         self.widget.show_all()
 
     def get_filters(self):
@@ -326,7 +328,7 @@ class ClipFilterStack:
             for child in children:
                 self.widget.remove(child)
                 
-            # Remove old stack item for reseted filter.
+            # Remove old stack item for reset filter.
             self.filter_stack.pop(stack_index)
             self.clear_kf_editors_from_update_list(filter_object)
 
@@ -422,18 +424,16 @@ def _create_widgets():
     
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_frame = Gtk.Frame()
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    widgets.hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
     surface_active = guiutils.get_cairo_image("filter_add")
     surface_not_active = guiutils.get_cairo_image("filter_add_not_active")
     surfaces = [surface_active, surface_not_active]
     widgets.filter_add_launch = guicomponents.HamburgerPressLaunch(lambda w,e:_filter_add_menu_launch_pressed(w, e), surfaces)
-    widgets.filter_add_launch.connect_launched_menu(guicomponents.effect_menu)
     guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
     
 # ------------------------------------------------------------------- interface
@@ -448,9 +448,15 @@ def set_clip(clip, track, clip_index, show_tab=True):
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
 
+    if _filter_stack != None and clip != _filter_stack.clip:
+        clip_start_frame = track.clip_start(clip_index)
+        PLAYER().seek_frame(clip_start_frame)
+    
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)
+    if len(clip.filters) > 0:
+        set_filter_item_expanded(len(clip.filters) - 1)
 
     if len(clip.filters) > 0:
         pass # remove if nothing needed here.
@@ -462,13 +468,13 @@ def set_clip(clip, track, clip_index, show_tab=True):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
 
-    global _edit_polling_thread
+    #global _edit_polling_thread
     # Close old polling
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
+    #if _edit_polling_thread != None:
+    #    _edit_polling_thread.shutdown()
     # Start new polling
-    _edit_polling_thread = PropertyChangePollingThread()
-    _edit_polling_thread.start()
+    #_edit_polling_thread = PropertyChangePollingThread()
+    #_edit_polling_thread.start()
 
 def refresh_clip():
     if _filter_stack == None:
@@ -567,7 +573,7 @@ def clear_clip():
     show_text_in_edit_area(_("No Clip"))
 
     set_enabled(False)
-    shutdown_polling()
+    # shutdown_polling()
 
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
@@ -596,7 +602,7 @@ def update_stack(clip, track, clip_index):
     _filter_stack = new_stack
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(_filter_stack.widget)
+    scroll_window.add(_filter_stack.widget)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
@@ -605,12 +611,14 @@ def update_stack(clip, track, clip_index):
     widgets.value_edit_frame.add(scroll_window)
 
     widgets.value_edit_box = scroll_window
-    
+
+"""
 def update_stack_changed_blocked():
     global _block_changed_update
     _block_changed_update = True
     update_stack()
     _block_changed_update = False
+"""
 
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
@@ -775,7 +783,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
         # with "editor=no_editor" and now extra editors may be created to edit those
         # Non mlt properties are added as these are only needed with extraeditors
         editable_properties.extend(non_mlteditable_properties)
-        editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
+        editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties, track, clip_index)
         for editor_row in editor_rows:
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
@@ -806,7 +814,7 @@ def show_text_in_edit_area(text):
     vbox.show_all()
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(vbox)
+    scroll_window.add(vbox)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
@@ -816,10 +824,7 @@ def show_text_in_edit_area(text):
     widgets.value_edit_box = scroll_window
 
 def clear_effects_edit_panel():
-    widgets.value_edit_frame.remove(widgets.value_edit_box)
-    label = Gtk.Label()
-    widgets.value_edit_frame.add(label)
-    widgets.value_edit_box = label
+    show_text_in_edit_area(_("Clip Has No Filters"))
 
 def filter_edit_done_stack_update(edited_clip, index=-1):
     """
@@ -832,17 +837,17 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
 
+    track = _filter_stack.track
+    clip_index = _filter_stack.clip_index
+        
     global _block_changed_update
     _block_changed_update = True
-    update_stack()
+    update_stack(edited_clip, track, clip_index)
     _block_changed_update = False
 
-    # Select row in effect stack view and to display corresponding effect editor panel.
-    if not(index < 0):
-        widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
-    else: # no effects after edit, clear effect editor panel
+    if len(_filter_stack.clip.filters) == 0:
         clear_effects_edit_panel()
-
+    
 def filter_edit_multi_done_stack_update(clips):
     for clip in clips:
         if clip == get_edited_clip():
@@ -865,11 +870,11 @@ def update_kfeditors_positions():
 
 
 # ------------------------------------------------ FILTER MASK 
-def _filter_mask_launch_pressed(widget, event, filter_index):
+def _filter_mask_launch_pressed(launcher, widget, filter_index):
     filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
-    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
+    guipopover.filter_mask_popover_show(launcher, widget, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
 
-def _filter_mask_item_activated(widget, data):
+def _filter_mask_item_activated(action, variant, data):
     if _filter_stack == None:
         return False
     
@@ -907,10 +912,12 @@ def _filter_mask_item_activated(widget, data):
 
 
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
-def _hamburger_launch_pressed(widget, event):
-    guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
+def _hamburger_launch_pressed(launcher, widget, event, data):
+    guipopover.effects_editor_hamburger_popover_show(launcher, widget, _clip_hamburger_item_activated)
+    
+    #guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
 
-def _clip_hamburger_item_activated(widget, msg):
+def _clip_hamburger_item_activated(action, event, msg):
     if msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
 
@@ -935,8 +942,11 @@ def _filter_add_menu_launch_pressed(w, event):
     if _filter_stack != None:
         clip = _filter_stack.clip
         track = _filter_stack.track 
-        guicomponents.display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, _filter_menu_callback)
-            
+        guipopover.filter_add_popover_show(widgets.filter_add_launch, w, clip, track, event.x, mltfilters.groups, _filter_popover_callback)
+
+def _filter_popover_callback(action, variant, data):
+    _filter_menu_callback(None, data)
+
 def _filter_menu_callback(w, data):
     clip, track, item_id, item_data = data
     x, filter_info = item_data
@@ -971,7 +981,7 @@ def _load_effect_values_dialog_callback(dialog, response_id, filter_object):
             # Info window
             saved_effect_name = effect_data.info.name
             current_effect_name = filter_object.info.name
-            primary_txt = _("Saved Filter data not applicaple for this Filter!")
+            primary_txt = _("Saved Filter data not applicable for this Filter!")
             secondary_txt = _("Saved data is for ") + saved_effect_name + " Filter,\n" + _("current edited Filter is ") + current_effect_name + "."
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     
@@ -1014,6 +1024,8 @@ def _load_effect_stack_values_dialog_callback(dialog, response_id):
 
 def _reset_filter_values(filter_object):
         filter_object.properties = copy.deepcopy(filter_object.info.properties)
+        propertyparse.replace_value_keywords(filter_object.properties, current_sequence().profile)
+        
         filter_object.non_mlt_properties = copy.deepcopy(filter_object.info.non_mlt_properties)
         filter_object.update_mlt_filter_properties_all()
                 
@@ -1079,60 +1091,3 @@ class EffectStackSaveData:
         with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(self, write_file)
-
-    
-# ------------------------------------------------------- CHANGE POLLING
-def shutdown_polling():
-    global _edit_polling_thread
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-        _edit_polling_thread = None
-
-
-class PropertyChangePollingThread(threading.Thread):
-    
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.last_properties = None
-        
-    def run(self):
-
-        self.running = True
-        while self.running:
-            
-            if _filter_stack == None:
-                self.shutdown()
-            else:
-                if self.last_properties == None:
-                    self.last_properties = self.get_clip_filters_properties()
-                
-                new_properties = self.get_clip_filters_properties()
-                
-                changed = False
-                for new_filt_props, old_filt_props in zip(new_properties, self.last_properties):
-                        for new_prop, old_prop in zip(new_filt_props, old_filt_props):
-                            if new_prop != old_prop:
-                                changed = True
-
-                if changed:
-                    global filter_changed_since_last_save
-                    filter_changed_since_last_save = True
-                    tlinerender.get_renderer().timeline_changed()
-
-                self.last_properties = new_properties
-                
-                time.sleep(1.0)
-
-    def get_clip_filters_properties(self):
-        filters_properties = []
-        for filt in _filter_stack.get_filters():
-            filt_props = []
-            for prop in filt.properties:
-                filt_props.append(copy.deepcopy(prop))
-
-            filters_properties.append(filt_props)
-        
-        return filters_properties
-        
-    def shutdown(self):
-        self.running = False

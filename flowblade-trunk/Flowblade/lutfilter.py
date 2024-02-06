@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2014 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -341,7 +341,7 @@ class ColorGradeBandCorrection:
         # Convert saved and editor hue, saturation ranges to one used 
         # to generate look-up tables 
         saturation = (saturation - 0.5) * 2.0
-        # Negative saturation means addding complementary color
+        # Negative saturation means adding complementary color
         if saturation < 0.0:
             saturation = abs(saturation)
             hue = hue + 0.5

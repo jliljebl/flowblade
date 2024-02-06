@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,7 @@
 """
 Module contains functions to build generic dialogs.
 """
-from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import appconsts
 from editorstate import current_sequence
@@ -49,6 +48,25 @@ def panel_ok_dialog(title, panel):
     dialog.connect('response', dialog_destroy)
     dialog.show_all()
 
+def panel_ok_cancel_dialog(title, panel, accept_text, callback, data=None):
+    dialog = Gtk.Dialog(title, None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                       (_("Cancel"), Gtk.ResponseType.CANCEL,
+                       accept_text, Gtk.ResponseType.ACCEPT))
+        
+    alignment = get_default_alignment(panel)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+    default_behaviour(dialog)
+
+    if data == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, data)
+
+    dialog.show_all()
+    
 def no_button_dialog(title, panel):
     dialog = Gtk.Dialog(title, None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
@@ -120,14 +138,14 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
 def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None):
 
     if is_info == True:
-        icon = Gtk.STOCK_DIALOG_INFO
+        icon = "dialog-information"
     else:
-        icon = Gtk.STOCK_DIALOG_WARNING
+        icon = "dialog-warning"
     
     if alternative_icon != None:
         icon = alternative_icon
 
-    warning_icon = Gtk.Image.new_from_stock(icon, Gtk.IconSize.DIALOG)
+    warning_icon = Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.DIALOG)
     icon_box = Gtk.VBox(False, 2)
     icon_box.pack_start(warning_icon, False, False, 0)
     icon_box.pack_start(Gtk.Label(), True, True, 0)
@@ -165,8 +183,8 @@ def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
                                       label, default_text):
     dialog = Gtk.Dialog(title, None,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            (_("Cancel"), Gtk.ResponseType.REJECT,
-                            ok_button_text, Gtk.ResponseType.OK))
+                            (_("Cancel"), Gtk.ResponseType.CANCEL,
+                            ok_button_text, Gtk.ResponseType.ACCEPT))
 
     entry = Gtk.Entry()
     entry.set_width_chars(chars)
@@ -191,17 +209,16 @@ def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
     
     return (dialog, entry)
 
-def get_default_alignment(panel):
-    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
+def get_default_alignment(panel): # Ok, why are we doing new Gtk.Frame here and then removing shadow?
+                                  # We may need to change this for Gtk4.
+    alignment = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
     alignment.add(panel)
-    alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 12, 24, 12, 18)
     return alignment
 
 def get_alignment2(panel):
-    alignment = Gtk.Frame.new("") #Gtk.Frame.new(None)
+    alignment = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
     alignment.add(panel)
-    alignment.set_shadow_type(Gtk.ShadowType.NONE)
     guiutils.set_margins(alignment, 6, 24, 12, 12)
     
     return alignment
@@ -209,9 +226,26 @@ def get_alignment2(panel):
 def set_outer_margins(cont):
     guiutils.set_margins(cont, 0, 6, 0, 6)
 
+def set_default_behaviour(dialog):
+    dialog.set_default_response(Gtk.ResponseType.OK)
+    dialog.set_resizable(False)
+
+def get_ok_cancel_button_row(ok_button, cancel_button):
+    lbox = Gtk.HBox(True, 2)
+    lbox.pack_start(cancel_button, True, True, 0)
+    lbox.pack_start(ok_button, True, True, 0)
+    cancel_button.set_size_request(88, 3)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    hbox.pack_start(lbox, False, False, 0)
+
+    return hbox
+
+
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
-    GObject.timeout_add(int(delay * 1000), _window_destroy_event, window)
+    GLib.timeout_add(int(delay * 1000), _window_destroy_event, window)
 
 def _window_destroy_event(window):
     window.destroy()
@@ -219,6 +253,7 @@ def _window_destroy_event(window):
 
 # ------------------------------------ track locks handling
 # returns True if track locked and displays info
+# This sort of makes no sense to be in this module, but we'll let it slide for now.
 def track_lock_check_and_user_info(track):
     if track.edit_freedom == appconsts.LOCKED:
         track_name = utils.get_track_name(track, current_sequence())

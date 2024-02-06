@@ -44,7 +44,7 @@ To maintain sync and playback both Project Profile and Render Profile both need 
 
 ### Wayland ###
 
-Flowblade does not run natively on Wayland yet, but there are fwe ways to get Flowblade running.
+Flowblade does not run natively on Wayland yet, but there are few ways to get Flowblade running.
 
 1. Start Flowblade from terminal with command:
 

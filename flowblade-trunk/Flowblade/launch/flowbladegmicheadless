@@ -28,6 +28,7 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
     
     session_id = _get_arg_value(sys.argv, "session_id")
+    parent_folder =  _get_arg_value(sys.argv, "parent_folder")
     script = _get_arg_value(sys.argv, "script")
     clip_path = _get_arg_value(sys.argv, "clip_path")
     range_in = _get_arg_value(sys.argv, "range_in")
@@ -42,7 +43,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-gmicheadless.main(modules_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
+gmicheadless.main(modules_path, session_id, parent_folder, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
 
 
 

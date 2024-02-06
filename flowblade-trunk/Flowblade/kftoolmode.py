@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 Module handles Keyframe tool functionality
 """
 from gi.repository import Pango, PangoCairo, Gtk
-from gi.repository import  Gdk
+from gi.repository import Gdk, GLib
 
 import cairo
 import math
@@ -34,6 +34,7 @@ import edit
 from editorstate import current_sequence
 from editorstate import PLAYER
 import gui
+import guipopoverclip
 import guiutils
 import mltfilters
 import propertyedit
@@ -92,13 +93,6 @@ KF_DRAG_FRAME_ZERO_KF = 3
 KF_DRAG_BETWEEN_TWO = 4
 
 DRAG_MIN_Y = 4 # To make start value slightly magnetic, makes easier to move position without changing value.
-
-hamburger_menu = Gtk.Menu()
-oor_before_menu = Gtk.Menu()
-oor_after_menu = Gtk.Menu()
-value_snapping_menu = Gtk.Menu()
-params_menu =  Gtk.Menu()
-kf_menu = Gtk.Menu()
   
 edit_data = None
 enter_mode = None
@@ -142,13 +136,19 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     if edit_type == PARAM_KF_EDIT:
         pass # We are not trying to decide based on track what to edit
     else:
-        # Always brightness keyframes for media types that contain no audio.
-        if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
-            edit_type = BRIGHTNESS_KF_EDIT
-        
-        # Volume keyframes on audio track for video and audio
+        # Volume keyframes on audio track for video and audio.
         if track.type == appconsts.AUDIO and not(edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO):
             edit_type = VOLUME_KF_EDIT
+            
+        # For non-video media types that contain no audio edit first kftool-editable param if available, 
+        # otherwise do brightness edit.
+        if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
+            kftool_params_data = get_clip_kftool_editable_params_data(edit_data["clip"])
+            if len(kftool_params_data) == 0:
+                edit_type = BRIGHTNESS_KF_EDIT
+            else:
+                edit_type = PARAM_KF_EDIT
+                param_data = kftool_params_data[0]
 
     global _kf_editor
         
@@ -207,6 +207,40 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
+def get_clip_kftool_editable_params_data(clip):
+    kftool_editable_params = []
+    for i in range(0, len(clip.filters)):
+        filt = clip.filters[i]
+        for prop in filt.properties:
+            p_name, p_val, p_type = prop
+            args_str = filt.info.property_args[p_name]
+
+            args_dict = propertyparse.args_string_to_args_dict(args_str)
+            try:
+                editor = args_dict["editor"]
+            except:
+                editor = "slider"
+                
+            try:
+                disp_name = args_dict["displayname"]
+            except:
+                disp_name = p_name
+
+            try:
+                range_in = args_dict["range_in"]
+            except:
+                range_in = None
+
+            if (editor == "slider" or editor == "keyframe_editor" \
+                or editor == "keyframe_editor_release" \
+                or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
+                param_data = (p_name, filt, i, disp_name.replace("!", " "))
+            
+                kftool_editable_params.append(param_data)
+    
+    return kftool_editable_params
+
+                
 def update_clip_frame(tline_frame):
     if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
         clip_frame = tline_frame - edit_data["clip_start_in_timeline"] + edit_data["clip"].clip_in
@@ -273,19 +307,37 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
     return None
 
 def _has_deprecated_volume_filter(clip):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
-            return True 
+    try:
+        for i in range(0, len(clip.filters)):
+            filter_object = clip.filters[i]
+            if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
+                return True 
 
-    return False
-            
+        return False
+    except:
+        # We had a single crash, here leaving print to get data if we hit this again.
+        print("Exception at kftoolmode._has_deprecated_volume_filter")
+        print(clip.__dict__)
+        return False
+
 def exit_tool():
+    if _kf_editor == None:
+        editor_was_open = False
+    else:
+        editor_was_open = True
+                
     set_no_clip_edit_data()
+    
     global enter_mode
     if enter_mode != None:
-        gui.editor_window.kf_tool_exit_to_mode(enter_mode)
+        # Exit to enter mode if we had one.
+        gui.editor_window.tline_cursor_manager.tline_cursor_manager.kf_tool_exit_to_mode(enter_mode)
         enter_mode = None
+    else:
+        # Exit to default mode if no editor was open.
+        if editor_was_open == False:
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
+
     updater.repaint_tline()
         
 def _filter_create_dummy_func(obj1, obj2):
@@ -303,10 +355,10 @@ def mouse_press(event, frame):
         _handle_edit_mouse_press(event)
         return
 
-    # Get pressed track
+    # Get pressed track.
     track = tlinewidgets.get_track(y)  
 
-    # Selecting empty clears selection
+    # Selecting empty clears selection.
     if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
         exit_tool()
         return    
@@ -316,17 +368,16 @@ def mouse_press(event, frame):
         set_no_clip_edit_data()
         return
         
-    # Attempt to init kf tool editing on some clip
+    # Attempt to init kf tool editing on some clip.
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
-    # Selecting empty clears selection
+    # Selecting empty clears selection.
     if clip_index == -1:
         exit_tool()
         return
 
     clip = track.clips[clip_index]
-
 
     if _has_deprecated_volume_filter(clip) == True:
         set_no_clip_edit_data()
@@ -574,7 +625,7 @@ class TLineKeyFrameEditor:
         
         for i in range(0, len(kf_positions)):
 
-            # Draw value between between curreent and prev kf.
+            # Draw value between between current and prev kf.
             if i > 0:
 
                 kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
@@ -1024,7 +1075,8 @@ class TLineKeyFrameEditor:
 
     def set_clip_color(self, clip, track, cr, y, track_height):
         # This is ALMOST same as clip colors in tlinewidgets but not quite,
-        # so we need to do any clip coloe changes here too.
+        # so we need to do any clip color changes here too.
+        a = 0.92
         clip_bg_col = None
         if clip.color != None:
             cr.set_source_rgb(*clip.color)
@@ -1046,19 +1098,25 @@ class TLineKeyFrameEditor:
                     clip_bg_col = tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR
             elif clip.media_type == sequence.VIDEO: 
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD)
-                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD_L)
+                pos,r,g,b,ad = tlinewidgets.CLIP_COLOR_GRAD
+                grad.add_color_stop_rgba(pos,r,g,b,a)
+                pos,r,g,b,ad = tlinewidgets.CLIP_COLOR_GRAD_L
+                grad.add_color_stop_rgba(pos,r,g,b,a)
                 clip_bg_col = tlinewidgets.CLIP_COLOR_GRAD[1:4]
                 cr.set_source(grad)
             else: # IMAGE type
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD)
-                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L)
+                pos,r,g,b,ad = tlinewidgets.IMAGE_CLIP_COLOR_GRAD
+                grad.add_color_stop_rgba(pos,r,g,b,a)
+                pos,r,g,b,ad = tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L
+                grad.add_color_stop_rgba(pos,r,g,b,a)
                 cr.set_source(grad)
         else:# Audio track
             grad = cairo.LinearGradient (0, y, 0, y + track_height)
-            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD)
-            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L)
+            pos,r,g,b,ad = tlinewidgets.AUDIO_CLIP_COLOR_GRAD
+            grad.add_color_stop_rgba(pos,r,g,b,a)
+            pos,r,g,b,ad = tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L
+            grad.add_color_stop_rgba(pos,r,g,b,a)
             cr.set_source(grad)
                 
     # ----------------------------------------------------------- mouse events
@@ -1068,7 +1126,7 @@ class TLineKeyFrameEditor:
         """
         # Check if menu icons hit
         if self._hamburger_hit(event.x, event.y) == True:
-            self._show_hamburger_menu(gui.tline_canvas.widget, event)
+            self._show_hamburger_popover(gui.tline_canvas.widget, event)
             return
 
         lx = self._legalize_x(event.x)
@@ -1510,36 +1568,14 @@ class TLineKeyFrameEditor:
 
     # ------------------------------------------------------------ menus
     def _show_kf_menu(self, event):
-        menu = kf_menu
-        guiutils.remove_children(menu)
-        kf_type = self.get_active_kf_type()
-        self._create_keyframe_type_submenu(kf_type, menu, self._kf_menu_callback)
-        menu.popup(None, None, None, None, event.button, event.time)
+        guipopoverclip.kftype_select_popover_menu_show(gui.tline_canvas.widget, self.get_active_kf_type(), event.x, event.y, self._kf_popover_callback)
 
-    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
-        linear_item = Gtk.RadioMenuItem()
-        linear_item.set_label(_("Linear"))
-        if kf_type == appconsts.KEYFRAME_LINEAR:
-            linear_item.set_active(True)
-        linear_item.connect("activate", callback, "linear")
-        linear_item.show()
-        menu.append(linear_item)
-
-        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
-        smooth_item.connect("activate", callback, "smooth")
-        if kf_type == appconsts.KEYFRAME_SMOOTH:
-            smooth_item.set_active(True)
-        smooth_item.show()
-        menu.append(smooth_item)
-
-        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
-        discrete_item.connect("activate", callback, "discrete")
-        if kf_type == appconsts.KEYFRAME_DISCRETE:
-            discrete_item.set_active(True)
-        discrete_item.show()
-        menu.append(discrete_item)
-
-    def _kf_menu_callback(self, widget, data):
+    def _kf_popover_callback2(self, action, variant):
+        print(action, variant)
+        
+    def _kf_popover_callback(self, action, variant):
+        data = variant.get_string()
+        
         if data == "linear":
             self.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
         elif data == "smooth":
@@ -1547,163 +1583,16 @@ class TLineKeyFrameEditor:
         elif data == "discrete":
             self.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
 
+        action.set_state(variant)
+        guipopoverclip._kf_select_popover.hide()
         updater.repaint_tline()
 
-    def _build_oor_before_menu(self, menu):
-        guiutils.remove_children(menu)
-        before_kfs = len(self.get_out_of_range_before_kfs())
+    def _show_hamburger_popover(self, widget, event):
+        guipopoverclip.kftool_popover_menu_show(widget, self, event.x, event.y, self._popover_callback, self._snapping_menu_item_item_activated)
 
-        if before_kfs == 0 or (before_kfs == 1 and len(self.keyframes) == 1):
-            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
-            item.set_sensitive(False)
-            menu.add(item)
-
-        if before_kfs > 1:
-            menu.add(self._get_menu_item(_("Delete all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "delete_all_before" ))
-            sep = Gtk.SeparatorMenuItem()
-            sep.show()
-            menu.add(sep)
-
-        if len(self.keyframes) > 1 and before_kfs > 0:
-            menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
-
-    def _build_oor_after_menu(self, menu):
-        guiutils.remove_children(menu)
-        after_kfs = len(self.get_out_of_range_after_kfs())
-
-        if after_kfs == 0:
-            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
-            item.set_sensitive(False)
-            menu.add(item)
-            return
-
-        if self.edit_type == BRIGHTNESS_KF_EDIT:
-            menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
-        elif self.edit_type == VOLUME_KF_EDIT:
-            if after_kfs > 1:
-                menu.add(self._get_menu_item(_("Delete all but last Keyframe after Clip Range"), self._oor_menu_item_activated, "delete_all_but_last_after" ))
-            else:
-                item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
-                item.set_sensitive(False)
-                menu.add(item)
-
-    def _show_hamburger_menu(self, widget, event):
-        menu = hamburger_menu
-        guiutils.remove_children(menu)
-
-        if edit_data["track"].type == appconsts.VIDEO:
-            if edit_data["clip"].media_type == appconsts.VIDEO:
-                edit_volume = self._get_menu_item(_("Volume"), self._oor_menu_item_activated, "edit_volume" )
-                if self.edit_type == VOLUME_KF_EDIT:
-                    edit_volume.set_sensitive(False)
-                menu.add(edit_volume)
-
-                edit_brightness = self._get_menu_item(_("Brightness"), self._oor_menu_item_activated, "edit_brightness" )
-                if self.edit_type == BRIGHTNESS_KF_EDIT:
-                    edit_brightness.set_sensitive(False)
-                menu.add(edit_brightness)
-
-            for i in range(0, len(edit_data["clip"].filters)):
-                filt = edit_data["clip"].filters[i]
-                for prop in filt.properties:
-                    p_name, p_val, p_type = prop
-                    args_str = filt.info.property_args[p_name]
-
-                    args_dict = propertyparse.args_string_to_args_dict(args_str)
-                    try:
-                        editor = args_dict["editor"]
-                    except:
-                        editor = "slider"
-                        
-                    try:
-                        disp_name = args_dict["displayname"]
-                    except:
-                        disp_name = p_name
-
-                    try:
-                        range_in = args_dict["range_in"]
-                    except:
-                        range_in = None
-
-                    if (editor == "slider" or editor == "keyframe_editor") and range_in != None:
-                        param_data = (p_name, filt, i, disp_name)
-                        editable_params_exist = True
-                        item_text = filt.info.name  + ": " +  disp_name
-                        param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
-                        menu.add(param_item)
-
-            if editable_params_exist == False:
-                sep = Gtk.SeparatorMenuItem()
-                sep.show()
-                menu.add(sep)
-
-        leading_menu_item = Gtk.MenuItem(_("Leading Keyframes"))
-        leading_menu = Gtk.Menu()
-        self._build_oor_before_menu(leading_menu)
-        leading_menu_item.set_submenu(leading_menu)
-        leading_menu_item.show_all()
-        menu.add(leading_menu_item)
-        
-        trailing_menu_item = Gtk.MenuItem(_("Trailing Keyframes"))
-        trailing_menu = Gtk.Menu()
-        self._build_oor_after_menu(trailing_menu)
-        trailing_menu_item.set_submenu(trailing_menu)
-        trailing_menu_item.show_all()
-        menu.add(trailing_menu_item)
-        
-        sep = Gtk.SeparatorMenuItem()
-        sep.show()
-        menu.add(sep)
-        
-        playhead_follow_item = Gtk.CheckMenuItem()
-        playhead_follow_item.set_label(_("Playhead Follows Dragged Keyframe"))
-        playhead_follow_item.set_active(_playhead_follow_kf)
-        playhead_follow_item.connect("activate", self._oor_menu_item_activated, "playhead_follows")
-        playhead_follow_item.show()
-        menu.add(playhead_follow_item)
-
-        value_snapping_item = Gtk.MenuItem(_("Value Snapping"))
-        value_snapping_menu = Gtk.Menu()
-        guiutils.remove_children(value_snapping_menu)
-
-        first_item = Gtk.RadioMenuItem()
-        first_item.set_label("1")
-        if _snapping == 1:
-            first_item.set_active(True)
-        first_item.show()
-        value_snapping_menu.append(first_item)
-        first_item.connect("activate", self._oor_menu_item_activated, "1")
-
-        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], "2")
-        if _snapping == 2:
-            radio_item.set_active(True)
-        radio_item.connect("activate", self._oor_menu_item_activated, "2")
-        value_snapping_menu.append(radio_item)
-        radio_item.show()
-
-        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], "5")
-        if _snapping == 5:
-            radio_item.set_active(True)
-        radio_item.connect("activate", self._oor_menu_item_activated, "5")
-        value_snapping_menu.append(radio_item)
-        radio_item.show()
-
-        value_snapping_item.set_submenu(value_snapping_menu)
-        value_snapping_item.show_all()
-        menu.add(value_snapping_item)
-        
-        sep = Gtk.SeparatorMenuItem()
-        sep.show()
-        menu.add(sep)
-        
-        menu.add(self._get_menu_item(_("Exit Edit"), self._oor_menu_item_activated, "exit" ))
-        
-        menu.popup(None, None, None, None, event.button, event.time)
-
-    def _oor_menu_item_activated(self, widget, data):
-        global _snapping
-        
-        if data == "delete_all_before":
+    def _popover_callback(self, action, variant, data):
+        msg, data_msg = data
+        if msg == "delete_all_before":
             keep_doing = True
             while keep_doing:
                 try:
@@ -1714,8 +1603,7 @@ class TLineKeyFrameEditor:
                         keep_doing = False 
                 except:
                     keep_doing = False
-        
-        elif data == "delete_all_but_last_after":
+        elif msg == "delete_all_but_last_after":
         
             keep_doing = True
             index = 1
@@ -1728,14 +1616,13 @@ class TLineKeyFrameEditor:
                         index += 1
                 except:
                     keep_doing = False
-                    
-        elif data == "zero_next":
-            frame_zero, frame_zero_value = self.keyframes[0]
+        elif msg == "zero_next":
+            frame_zero, frame_zero_value, kf_type = self.keyframes[0]
             frame, value, kf_type = self.keyframes[1]
             self.keyframes.pop(0)
             self.keyframes.insert(0, (frame_zero, value, kf_type))
             self.update_property_value()
-        elif data == "delete_all_after":
+        elif msg == "delete_all_after":
             delete_done = False
             for i in range(0, len(self.keyframes)):
                 frame, value, kf_type = self.keyframes[i]
@@ -1750,33 +1637,40 @@ class TLineKeyFrameEditor:
                     delete_done = True
                 if delete_done:
                     break
-        elif data == "edit_brightness":
-            init_tool_for_clip(edit_data["clip"] , edit_data["track"], BRIGHTNESS_KF_EDIT)
-        elif data == "edit_volume":
-            init_tool_for_clip(edit_data["clip"] , edit_data["track"], VOLUME_KF_EDIT)
-        elif data == "exit":
-            set_no_clip_edit_data()
-        elif data == "playhead_follows":
+        elif msg == "edit_param":
+            params_data = self.get_clip_kftool_editable_params_data()
+            param_data = params_data[int(data_msg)]
+            init_tool_for_clip(edit_data["clip"],  edit_data["track"], PARAM_KF_EDIT, param_data)
+        elif msg == "playhead_follows":
+            new_state = not(action.get_state().get_boolean())
             global _playhead_follow_kf
-            _playhead_follow_kf = widget.get_active()
-        elif data == "1":
-            _snapping = 1
-        elif data == "2":
-            _snapping = 2
-        elif data == "5":
-            _snapping = 5
-
+            _playhead_follow_kf = new_state
+            action.set_state(GLib.Variant.new_boolean(new_state))
+        elif msg == "exit":
+            set_no_clip_edit_data()
+    
         updater.repaint_tline()
 
-    def _param_edit_item_activated(self,  widget, data):
-        init_tool_for_clip(edit_data["clip"],  edit_data["track"], PARAM_KF_EDIT, data)
+    def _snapping_menu_item_item_activated(self, action, new_value_variant):
+        msg = int(new_value_variant.get_string())
+        global _snapping
+        _snapping = msg
+        action.set_state(new_value_variant)
+        guipopoverclip._kftool_popover.hide()
 
-    def _get_menu_item(self, text, callback, data):
-        item = Gtk.MenuItem(text)
-        item.connect("activate", callback, data)
-        item.show()
-        return item
+    def get_clip_kftool_editable_params_data(self):
+        return get_clip_kftool_editable_params_data(edit_data["clip"])
 
+    def get_playback_follows(self):
+        return _playhead_follow_kf
+
+    def get_snapping_value(self):
+        return _snapping
+
+    def _set_playhead_follows(self):
+        global _playhead_follow_kf
+        _playhead_follow_kf = widget.get_active()
+            
     # ---------------------------------- Modify kf curve between two kf ------------------
     def prev_frame_line(self, lx):
         """Find the index of the keyframe before the event.x."""

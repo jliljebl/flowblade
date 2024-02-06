@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,11 +15,11 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import numpy as np
-print("numpy version:", np.version.version)
+#print("numpy version:", np.version.version)
 
 from gi.repository import Gtk, GObject
 
@@ -49,7 +49,8 @@ class ViewEditor(Gtk.Frame):
         self.bg_buf = None
         self.write_out_layers = False
         self.write_file_path = None
-
+        self.write_callback = None
+        
         self.edit_area_update_blocked = False
     
         self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
@@ -66,7 +67,7 @@ class ViewEditor(Gtk.Frame):
         self.last_h_scroll = 0.0
         self.last_v_scroll = 0.0
         
-        self.scroll_window.add_with_viewport(self.edit_area)
+        self.scroll_window.add(self.edit_area)
         self.scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scroll_window.show_all()
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
@@ -243,10 +244,10 @@ class ViewEditor(Gtk.Frame):
     
     # --------------------------------------------------- drawing
     def set_screen_rgb_data(self, screen_rgb_data):
-        # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
+        # MLT Provides images in which R <-> B are switched from what Cairo wants them,
         # so use numpy to switch them and to create a modifiable buffer for Cairo
         buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
-        buf.shape = (self.profile_h + 1, self.profile_w, 4) # +1 in h, seemeed to need it
+        buf.shape = (self.profile_h, self.profile_w, 4)
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]
         b = np.index_exp[:, :, 2]
@@ -294,15 +295,22 @@ class ViewEditor(Gtk.Frame):
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
+        cr.set_antialias(cairo.Antialias.GOOD)
+
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
 
         if self.write_out_layers == True:
+            write_path = self.write_file_path
             img_surface.write_to_png(self.write_file_path)
             self.write_file_path = None # to make sure user components set this every time
             self.write_out_layers = False
             self.set_scale_and_update(current_scale) # return to user set scale
+            if self.write_callback != None:
+                callback = self.write_callback
+                self.write_callback = None
+                callback(write_path)
         else:
             self._draw_guidelines(cr)
         

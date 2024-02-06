@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,23 +22,21 @@
 Module contains objects and methods needed to create render consumers.
 """
 
-
-from gi.repository import Gdk
-
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import time
 import threading
 import xml.dom.minidom
 import os
 import subprocess
-import editorpersistance
 
+import appconsts
+import editorpersistance
 import mltenv
 import respaths
-
+import translations
 
 # File describing existing encoding and quality options
 RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
@@ -63,33 +61,28 @@ QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
-PRESET_GROUP = "presetgroup"
-PRESET_GROUP_H264 = "H.264, HEVC"
-PRESET_GROUP_NVENC = "NVENC"
-PRESET_GROUP_VAAPI = "VAAPI"
-PRESET_GROUP_MPEG = "MPEG"
-PRESET_GROUP_LOSSLESS = "Lossless"
-PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
-PRESET_GROUP_AUDIO = "Audio" 
-PRESET_GROUP_OGG_ETC = "oggwebmetc"
-PRESET_GROUP_ALPHA = "Alpha"
+FFMPEG_GPU_ENC = "ffmpeggpuenc"
+PRESET_GROUP = appconsts.PRESET_GROUP
+PRESET_GROUP_H264 = appconsts.PRESET_GROUP_H264
+PRESET_GROUP_NVENC = appconsts.PRESET_GROUP_NVENC 
+PRESET_GROUP_VAAPI = appconsts.PRESET_GROUP_VAAPI 
+PRESET_GROUP_MPEG = appconsts.PRESET_GROUP_MPEG 
+PRESET_GROUP_LOSSLESS = appconsts.PRESET_GROUP_LOSSLESS
+PRESET_GROUP_IMAGE_SEQUENCE = appconsts.PRESET_GROUP_IMAGE_SEQUENCE
+PRESET_GROUP_AUDIO = appconsts.PRESET_GROUP_AUDIO
+PRESET_GROUP_MISC = appconsts.PRESET_GROUP_MISC 
+PRESET_GROUP_ALPHA = appconsts.PRESET_GROUP_ALPHA 
 
-# ffmpeg arg values somtimes need equals signs in them.
+# ffmpeg arg values sometimes need equals signs in them.
 EQUALS_SIGN_ENCODING = "@#@#"
 
 # GPU encoding availability.
-H_264_NVENC_AVAILABLE = False
-H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
-                    "h264_nvenc", "-f", "rawvideo", "pipe:"]
-HEVC_NVENC_AVAILABLE = False
-HEVC_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
-                    "hevc_nvenc", "-f", "rawvideo", "pipe:"]
-H_264_VAAPI_AVAILABLE = False
-H_264_VAAPI_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
-                    "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
+FFMPEG_TEST = ["ffmpeg", "-version"]
+
+# These are filled here with all possible GPU encodings, and then rendergputest.py 
+# uses these to test and make available GPU encodings.
+NVENC_encs = []
+VAAPI_encs = []
 
 # Default encoding name.
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
@@ -169,6 +162,7 @@ class EncodingOption:
         self.nonuser = _get_attribute(option_node, NON_USER)
         self.quality_qroup_id = _get_attribute(option_node, QGROUP)
         self.quality_options = quality_option_groups[self.quality_qroup_id]
+        self.ffmpeggpuenc =  _get_attribute(option_node, FFMPEG_GPU_ENC)
         try:
             quality_default_index = int(quality_option_groups_default_index[self.quality_qroup_id])
         except KeyError:
@@ -219,7 +213,6 @@ class EncodingOption:
                     arg2 = str(quality_option.replace_map[arg2])
             args_tuples.append((arg1, arg2))
         
-        print("args_tuples", args_tuples)
         return args_tuples
 
     def get_audio_description(self):
@@ -240,23 +233,11 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    # Test GPU rendering availability
-    global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
-    # h264_nvenc
-    ret_code = _test_command(H_264_NVENC_TEST)
+    ret_code = _test_command(FFMPEG_TEST, True)
     if (ret_code == 0):
-        print("h264_nvenc available")
-        H_264_NVENC_AVAILABLE = True
-    # hevc_nvenc
-    ret_code = _test_command(HEVC_NVENC_TEST)
-    if (ret_code == 0):
-        print("hevc_nvenc available")
-        HEVC_NVENC_AVAILABLE = True # NOT USED !
-    # vaapi
-    ret_code = _test_command(H_264_VAAPI_TEST)
-    if (ret_code == 0):
-        print("h264_vaapi available")
-        H_264_VAAPI_AVAILABLE = True
+        print("ffmpeg CLI available")
+    else:
+        print("ffmpeg CLI NOT available")
 
     # Create quality option groups
     global quality_option_groups
@@ -284,11 +265,10 @@ def load_render_profiles():
             else:
                 non_user_encodings.append(encoding_option) 
         else:
-            msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
 
     # Create categorised structure.
-    global categorized_encoding_options
+    global categorized_encoding_options, NVENC_encs, VAAPI_encs
     H264_encs = []
     NVENC_encs = []
     VAAPI_encs = []
@@ -308,7 +288,7 @@ def load_render_profiles():
             VAAPI_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_MPEG:
             MPEG_encs.append((enc.name, enc))
-        elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
+        elif enc.presetgroup == PRESET_GROUP_MISC:
             OGG_ETC_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
             LOSSLESS_encs.append((enc.name, enc))
@@ -320,23 +300,21 @@ def load_render_profiles():
             ALPHA_encs.append((enc.name, enc))
 
     if len(H264_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
-    if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
-        categorized_encoding_options.append((PRESET_GROUP_NVENC, NVENC_encs))
-    if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
-        categorized_encoding_options.append((PRESET_GROUP_VAAPI, VAAPI_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_H264), H264_encs))
     if len(MPEG_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MPEG), MPEG_encs))
     if len(OGG_ETC_encs) > 0:
-        categorized_encoding_options.append(("Ogg, WebM, ProRes, DNxHD", OGG_ETC_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MISC), OGG_ETC_encs))
     if len(LOSSLESS_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_LOSSLESS), LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_IMAGE_SEQUENCE), IMG_SEQ_encs))
     if len(ALPHA_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_ALPHA, ALPHA_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_ALPHA), ALPHA_encs))
     if len(AUDIO_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_AUDIO), AUDIO_encs))
+
+    # If GPU rendering available it is added from rendergputest.py
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
@@ -351,16 +329,29 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
-def _test_command(bash_args_list):
-    process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+def remove_non_working_proxy_encodings(vcodec):
+    global proxy_encodings
+    proxy_encodings = [proxy_enc_opt for proxy_enc_opt in proxy_encodings if proxy_enc_opt.ffmpeggpuenc != vcodec]
+
+def _test_command(bash_args_list, print_output=False):
+    if print_output == False:
+        process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    else:
+        process = subprocess.Popen(bash_args_list)
+    
     out, err = process.communicate()
+    
+    if print_output == True:
+        print(bash_args_list)
+        print("return code:", process.returncode)
+
     return process.returncode
-        
+
 def get_default_render_consumer(file_path, profile):
     return get_render_consumer_for_encoding_and_quality(file_path, profile, 0, 10) # values get their meaning from /res/renderencoding.xml
                                                                                     # first <encodingoption> with 10th quality option
                                                                                     # should be H.264 with 10000 kb/s
-    
+
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,
                                                                        enc_opt_index,
@@ -528,7 +519,7 @@ def _parse_line(line_start, line_end, buf):
 def get_producer_as_tractor(producer, last_frame):
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    track0 = mlt.Playlist(producer.profile())
     multitrack.connect(track0, 0)
     track0.insert(producer, 0, 0, last_frame)
     return tractor
@@ -551,13 +542,8 @@ class FileRenderPlayer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # Uncomment to get debug printing.
-        #import sys
-        #so = se = open("/home/janne/log_renderplayer", 'w', buffering=1)
-        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-        #os.dup2(so.fileno(), sys.stdout.fileno())
         
-        self.consumer.set("plays", 1) # maybe not strictly necessery but default value here seems to  be 'None' which is wrong.
+        self.consumer.set("plays", 1) # maybe not strictly necessary but default value here seems to  be 'None' which is wrong.
         
         self.running = True
         self.has_started_running = True
@@ -634,16 +620,10 @@ class XMLRenderPlayer(threading.Thread):
     def run(self):
         print("Starting XML render")
         player = self.player
-        
-        # Don't try anything if somehow this was started 
-        # while timeline rendering is running
-        if player.is_rendering:
-            print("Can't render XML when another render is already running!")
-            return
 
         # Stop all playback before producer is disconnected
         self.current_playback_frame = player.producer.frame()
-        player.ticker.stop_ticker()
+        player.stop_ticker()
         player.consumer.stop()
         player.producer.set_speed(0)
         player.producer.seek(0)
@@ -712,32 +692,3 @@ class XMLCompoundRenderPlayer(threading.Thread):
         print("XML compound clip render done")
 
         self.render_done_callback(self.file_name, self.media_name)
-
-
-class ProgressWindowThread(threading.Thread):
-    def __init__(self, dialog, progress_bar, clip_renderer, callback):
-        self.dialog = dialog
-        self.progress_bar = progress_bar
-        self.clip_renderer = clip_renderer
-        self.callback = callback
-        threading.Thread.__init__(self)
-    
-    def run(self):        
-        self.running = True
-        
-        while self.running:         
-            render_fraction = self.clip_renderer.get_render_fraction()
-            Gdk.threads_enter()
-            self.progress_bar.set_fraction(render_fraction)
-            pros = int(render_fraction * 100)
-            self.progress_bar.set_text(str(pros) + "%")
-            Gdk.threads_leave()
-            if self.clip_renderer.stopped == True:
-                Gdk.threads_enter()
-                self.progress_bar.set_fraction(1.0)
-                self.progress_bar.set_text("Render Complete!")
-                self.callback(self.dialog, 0)
-                Gdk.threads_leave()
-                self.running = False
-
-            time.sleep(0.33)

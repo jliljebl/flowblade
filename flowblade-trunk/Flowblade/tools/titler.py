@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 import array
 import cairo
 import copy
+import hashlib
 import os
 import pickle
 from PIL import Image, ImageFilter
@@ -45,13 +46,15 @@ import positionbar
 import utils
 import vieweditor
 import vieweditorlayer
+import userfolders
 
 _titler = None
 _titler_data = None
 _titler_lastdir = None
 
+_clip_data = None
+
 _keep_titler_data = True
-_open_saved_in_bin = True
 
 _filling_layer_list = False
 
@@ -81,10 +84,12 @@ VERTICAL = 0
 HORIZONTAL = 1
 
 def show_titler():
-    global _titler_data
+    global _titler_data, _clip_data
     if _titler_data == None:
         _titler_data = TitlerData()
-    
+
+    _clip_data = None
+
     global _titler
     if _titler != None:
         primary_txt = _("Titler is already open")
@@ -96,16 +101,53 @@ def show_titler():
     _titler.load_titler_data()
     _titler.show_current_frame()
 
+def edit_tline_title(clip, track, callback):
+    global _titler
+    if _titler != None:
+        primary_txt = _("Titler is already open")
+        secondary_txt =  _("Only single instance of Titler can be opened.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+        
+    global _titler_data, _clip_data
+    _titler_data = copy.deepcopy(clip.titler_data)
+    _clip_data = (clip, track, callback)
+
+    _titler = Titler()
+    _titler.load_titler_data()
+    _titler.show_current_frame()
+
+def _edit_title_exit(new_title_path):
+    # We need to do this in particular way to get file handle of the created png
+    # released for MLT producer creation, e.g clean_titler_instance() function below.
+    global _titler_data
+
+    new_clip_titler_data = _titler_data
+    _titler_data = None
+    _titler.set_visible(False)
+    _titler.destroy()
+
+    GLib.idle_add(_do_title_edit_callback, new_title_path, new_clip_titler_data)
+
+def _do_title_edit_callback(new_title_path, new_clip_titler_data):
+
+    global _clip_data
+    clip, track, callback = _clip_data
+    _clip_data = None
+
+    callback(clip, track, new_title_path, new_clip_titler_data)
+    
 def close_titler():
     global _titler, _titler_data
     
     _titler.set_visible(False)
+    _titler.destroy()
 
     GLib.idle_add(titler_destroy)
 
 def titler_destroy():
     global _titler, _titler_data
-    _titler.destroy()
+
     _titler = None
 
     if not _keep_titler_data:
@@ -122,6 +164,10 @@ def reset_titler():
         show_titler()
     else:
         _titler_data = None
+
+def clean_titler_instance():
+    global _titler
+    _titler = None
 
 # ------------------------------------------------------------- data
 class TextLayer:
@@ -189,8 +235,7 @@ class TitlerData:
     
     def save(self, save_file_path):
         save_data = copy.copy(self)
-        for layer in save_data.layers:
-            layer.pango_layout = None
+        save_data.destroy_pango_layouts()
         with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(save_data, write_file)
@@ -200,6 +245,10 @@ class TitlerData:
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
 
+    def destroy_pango_layouts(self):
+        for layer in self.layers:
+            layer.pango_layout = None
+                
     def data_compatibility_update(self):
         # We added new stuff for 2.8 and need to update data created with older versions.
         for layer in self.layers:
@@ -231,8 +280,8 @@ class Titler(Gtk.Window):
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
         
-        add_b = Gtk.Button(_("Add"))
-        del_b = Gtk.Button(_("Delete"))
+        add_b = Gtk.Button(label=_("Add"))
+        del_b = Gtk.Button(label=_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
         del_b.connect("clicked", lambda w:self._del_layer_pressed())
         add_del_box = Gtk.HBox()
@@ -274,9 +323,8 @@ class Titler(Gtk.Window):
         self.pos_bar.update_display_from_producer(PLAYER().producer)
         self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
 
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_valign(Gtk.Align.CENTER)
                 
         font_map = PangoCairo.font_map_get_default()
@@ -294,7 +342,7 @@ class Titler(Gtk.Window):
         combo.set_active(0)
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
-        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_increment=float(1))
         self.size_spin = Gtk.SpinButton()
         self.size_spin.set_adjustment(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
@@ -308,9 +356,9 @@ class Titler(Gtk.Window):
         
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
+        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold", 
                                        Gtk.IconSize.BUTTON)
-        italic_icon = Gtk.Image.new_from_stock(Gtk.STOCK_ITALIC, 
+        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic", 
                                        Gtk.IconSize.BUTTON)
         self.bold_font.set_image(bold_icon)
         self.italic_font.set_image(italic_icon)
@@ -320,11 +368,11 @@ class Titler(Gtk.Window):
         self.left_align = Gtk.RadioButton(None)
         self.center_align = Gtk.RadioButton.new_from_widget(self.left_align)
         self.right_align = Gtk.RadioButton.new_from_widget(self.left_align)
-        left_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_LEFT, 
+        left_icon = Gtk.Image.new_from_icon_name("format-justify-left", 
                                        Gtk.IconSize.BUTTON)
-        center_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_CENTER, 
+        center_icon = Gtk.Image.new_from_icon_name("format-justify-center", 
                                        Gtk.IconSize.BUTTON)
-        right_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_RIGHT, 
+        right_icon = Gtk.Image.new_from_icon_name("format-justify-right", 
                                        Gtk.IconSize.BUTTON)
         self.left_align.set_image(left_icon)
         self.center_align.set_image(center_icon)
@@ -357,12 +405,12 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------- Outline Panel
-        outline_size = Gtk.Label(_("Size:"))
+        outline_size = Gtk.Label(label=_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.out_line_color_button.connect("color-set", self._edit_value_changed)
 
-        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_increment=float(1))
         self.out_line_size_spin = Gtk.SpinButton()
         self.out_line_size_spin.set_adjustment(adj2)
         self.out_line_size_spin.connect("changed", self._edit_value_changed)
@@ -383,28 +431,28 @@ class Titler(Gtk.Window):
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
         # -------------------------------------------- Shadow panel 
-        shadow_opacity_label = Gtk.Label(_("Opacity:"))
-        shadow_xoff = Gtk.Label(_("X Off:"))
-        shadow_yoff = Gtk.Label(_("Y Off:"))
-        shadow_blur_label = Gtk.Label(_("Blur:"))
+        shadow_opacity_label = Gtk.Label(label=_("Opacity:"))
+        shadow_xoff = Gtk.Label(label=_("X Off:"))
+        shadow_yoff = Gtk.Label(label=_("Y Off:"))
+        shadow_blur_label = Gtk.Label(label=_("Blur:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
  
-        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_opa_spin.set_adjustment(adj3)
         self.shadow_opa_spin.connect("changed", self._edit_value_changed)
         self.shadow_opa_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_xoff_spin = Gtk.SpinButton()
 
-        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_xoff_spin.set_adjustment(adj4)
         self.shadow_xoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_xoff_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_yoff_spin = Gtk.SpinButton()
 
-        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_yoff_spin.set_adjustment(adj5)
         self.shadow_yoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_yoff_spin.connect("key-press-event", self._key_pressed_on_widget)
@@ -417,7 +465,7 @@ class Titler(Gtk.Window):
         self.shadow_color_button.connect("color-set", self._edit_value_changed)
 
         self.shadow_blur_spin = Gtk.SpinButton()
-        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
+        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_increment=float(1))
         self.shadow_blur_spin.set_adjustment(adj6)
         self.shadow_blur_spin.connect("changed", self._edit_value_changed)
 
@@ -451,7 +499,7 @@ class Titler(Gtk.Window):
         self.gradient_on.set_active(True)
         self.gradient_on.connect("toggled", self._edit_value_changed)
 
-        direction_label = Gtk.Label(_("Gradient Direction:"))
+        direction_label = Gtk.Label(label=_("Gradient Direction:"))
         self.direction_combo = Gtk.ComboBoxText()
         self.direction_combo.append_text(_("Vertical"))
         self.direction_combo.append_text(_("Horizontal"))
@@ -474,39 +522,41 @@ class Titler(Gtk.Window):
         gradient_box.pack_start(Gtk.Label(), True, True, 0)
                 
         # ---------------------------------------------------- Save and Load buttons        
-        load_layers = Gtk.Button(_("Load Layers"))
+        load_layers = Gtk.Button(label=_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
-        save_layers = Gtk.Button(_("Save Layers"))
+        save_layers = Gtk.Button(label=_("Save Layers"))
         save_layers.connect("clicked", lambda w:self._save_layers_pressed())
-        clear_layers = Gtk.Button(_("Clear All"))
+        clear_layers = Gtk.Button(label=_("Clear All"))
         clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
 
         layers_save_buttons_row = Gtk.HBox()
+        layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
-        layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-
+        layers_save_buttons_row.set_margin_right(4)
+        layers_save_buttons_row.set_margin_top(2)
+        
         # ---------------------------------------------------- X, Y pos input
-        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.x_pos_spin = Gtk.SpinButton()
         self.x_pos_spin.set_adjustment(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
         self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
 
-        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.y_pos_spin = Gtk.SpinButton()
         self.y_pos_spin.set_adjustment(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
         self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
 
-        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.rotation_spin = Gtk.SpinButton()
         self.rotation_spin.set_adjustment(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)
         self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
         
         undo_pos = Gtk.Button()
-        undo_icon = Gtk.Image.new_from_stock(Gtk.STOCK_UNDO, 
+        undo_icon = Gtk.Image.new_from_icon_name("edit-undo", 
                                        Gtk.IconSize.BUTTON)
         undo_pos.set_image(undo_icon)
 
@@ -538,10 +588,14 @@ class Titler(Gtk.Window):
         
         positions_box = Gtk.HBox()
         positions_box.pack_start(Gtk.Label(), True, True, 0)
-        positions_box.pack_start(Gtk.Label(label="X:"), False, False, 0)
+        x_label = Gtk.Label(label="X:")
+        x_label.set_margin_end(4)
+        positions_box.pack_start(x_label, False, False, 0)
         positions_box.pack_start(self.x_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
-        positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
+        y_label = Gtk.Label(label="Y:")
+        y_label.set_margin_end(4)
+        positions_box.pack_start(y_label, False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(center_h, False, False, 0)
@@ -551,7 +605,7 @@ class Titler(Gtk.Window):
         controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, True, True, 0)
-        controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
+        #controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
         controls_panel_2.pack_start(font_main_row, False, False, 0)
@@ -579,36 +633,35 @@ class Titler(Gtk.Window):
         controls_panel.pack_start(guiutils.set_margins(notebook, 0,0,10,4), False, False, 0)
         controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), True, True, 0)
- 
+        controls_panel.pack_start(layers_save_buttons_row, False, False, 0)
+         
         view_editor_editor_buttons_row = Gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------------------- Editor buttons
-        keep_label = Gtk.Label(label=_("Keep Layers When Closed"))
-        self.keep_layers_check = Gtk.CheckButton()
-        self.keep_layers_check.set_active(_keep_titler_data)
-        self.keep_layers_check.connect("toggled", self._keep_layers_toggled)
-        
-        open_label = Gtk.Label(label=_("Open Saved Title In Bin"))
-        self.open_in_current_check = Gtk.CheckButton()
-        self.open_in_current_check.set_active(_open_saved_in_bin)
-        self.open_in_current_check.connect("toggled", self._open_saved_in_bin)
+        self.save_action_combo = Gtk.ComboBoxText()
+        self.save_action_combo.append_text(_("Save As Title"))
+        self.save_action_combo.append_text(_("Save As Graphic"))
+        self.save_action_combo.set_active(0)
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:close_titler())
-        save_titles_b = guiutils.get_sized_button(_("Save Title Graphic"), 150, 32)
+        if _clip_data == None:
+            save_text = _("Save Title")
+        else:
+            save_text = _("Update Title")
+        
+        save_titles_b = guiutils.get_sized_button(save_text, 150, 32)
         save_titles_b.connect("clicked", lambda w:self._save_title_pressed())
         
+        self.info_text = Gtk.Label()
+        
         editor_buttons_row = Gtk.HBox()
-        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(self.keep_layers_check, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
-        editor_buttons_row.pack_start(keep_label, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
-        editor_buttons_row.pack_start(open_label, False, False, 0)
+        editor_buttons_row.pack_start(self.info_text, True, True, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        if _clip_data == None:
+            editor_buttons_row.pack_start(self.save_action_combo, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
@@ -637,6 +690,14 @@ class Titler(Gtk.Window):
         self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
     
+    def show_info(self, info_text):
+        self.info_text.set_markup("<small>" + info_text + "</small>")
+        #GLib.timeout_add(2500, self.clear_info)
+
+    def clear_info(self):
+        self.info_text.set_markup("")
+        return False
+        
     def load_titler_data(self):
         # clear and then load layers, and set layer 0 active
         self.view_editor.clear_layers()
@@ -693,7 +754,57 @@ class Titler(Gtk.Window):
         self.show_current_frame()
 
     def _save_title_pressed(self):
-        toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
+        global _titler_data, _clip_data
+
+        if _clip_data != None:
+            # Timeline title edit.
+            md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+            new_title_path = userfolders.get_render_dir() + md_str
+            self.view_editor.write_callback = self.title_write_done
+            self.view_editor.write_layers_to_png(new_title_path)
+        else:
+            if self.save_action_combo.get_active() == 1:
+                toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
+            else:
+                dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
+                                                            _("Select Tile Name"),
+                                                            _("Set Name"),
+                                                            _("Title Name:"),
+                                                            _("Title"))
+                dialog.connect('response', self._titler_item_name_dialog_callback, entry)
+                dialog.show_all()
+
+    def title_write_done(self, new_title_path):
+        GLib.idle_add(_edit_title_exit, new_title_path)
+            
+    def  _titler_item_name_dialog_callback(self, dialog, response_id, entry):
+        if response_id == Gtk.ResponseType.ACCEPT:
+            name = entry.get_text()
+            dialog.destroy()
+            
+            if name == "":
+                name = _("Title")
+            
+            md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+            save_path = userfolders.get_render_dir() + md_str
+
+            self.view_editor.write_layers_to_png(save_path)
+            
+            # Destroy pango layouts as they cannot be pickled and thus cannot be part of savefile where 
+            # this data ends up as a clip.titler_data and mediafile.titler_data properties.
+            # We need deep copy from picledable shallow copy so when pango layers get recreated
+            # for titler they don't end up in save data.
+            title_data_shallow = copy.copy(_titler_data)
+            title_data_shallow.destroy_pango_layouts()
+            title_data = copy.deepcopy(title_data_shallow)
+
+            print("show_info 1")
+            #self.show_info(_("Saved Title") + " '" + name + "'.")
+ 
+            open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
+            open_title_item_thread.start()
+        else:
+            dialog.destroy()
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
@@ -705,10 +816,12 @@ class Titler(Gtk.Window):
                 (dirname, filename) = os.path.split(save_path)
                 global _titler_lastdir
                 _titler_lastdir = dirname
-        
-                if _open_saved_in_bin:
-                    open_file_thread = OpenFileThread(save_path, self.view_editor)
-                    open_file_thread.start()
+
+                print("show_info 2")
+                #self.show_info(_("Saved Graphic."))
+            
+                open_file_thread = OpenFileThread(save_path, self.view_editor)
+                open_file_thread.start()
                 # INFOWINDOW
             except:
                 # INFOWINDOW
@@ -762,10 +875,6 @@ class Titler(Gtk.Window):
     def _keep_layers_toggled(self, widget):
         global _keep_titler_data
         _keep_titler_data = widget.get_active()
-
-    def _open_saved_in_bin(self, widget):
-        global _open_saved_in_bin
-        _open_saved_in_bin = widget.get_active()
 
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin
@@ -864,7 +973,7 @@ class Titler(Gtk.Window):
     def _layer_selection_changed(self, treeview, path, column):
         selected_row = path.get_indices()[0]
 
-        # we're listeneing to "changed" on treeview and get some events (text updated)
+        # we're listening to "changed" on treeview and get some events (text updated)
         # when layer selection was not changed.
         if selected_row == -1:
             return
@@ -916,7 +1025,7 @@ class Titler(Gtk.Window):
 
     def _position_value_changed(self, widget):
         # mouse release when layer is moved causes this method to be called,
-        # but we don't want to do any additinal updates here for that event
+        # but we don't want to do any additional updates here for that event
         # This is only used when user presses arrows in position spins.
         if self.block_updates:
             return
@@ -945,7 +1054,7 @@ class Titler(Gtk.Window):
 
         self._update_active_layout_font_properties()
 
-        # We only wnat to update layer list data model when this called after user typing 
+        # We only want to update layer list data model when this called after user typing 
         if update_layers_list:
             self.layer_list.fill_data_model()
 
@@ -1134,8 +1243,16 @@ class PangoTextLayout:
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, cr, x, y, rotation, xscale, yscale, view_editor):
         cr.save()
+
+        fontmap = PangoCairo.font_map_new()
+        context = fontmap.create_context()
+        font_options = cairo.FontOptions()
+        font_options.set_antialias(cairo.Antialias.GOOD)
+        PangoCairo.context_set_font_options(context, font_options)
+        context.changed()
+
+        layout = Pango.Layout.new(context)
         
-        layout = PangoCairo.create_layout(cr)
         layout.set_text(self.text, -1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
@@ -1153,6 +1270,7 @@ class PangoTextLayout:
             if self.shadow_blur != 0.0:
                 blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, view_editor.profile_w,  view_editor.profile_h)
                 cr_blurred = cairo.Context(blurred_img)
+                cr_blurred.set_antialias(cairo.Antialias.GOOD)
                 transform_cr = cr_blurred # Set draw transform_cr to cotext for newly created image.
             else:
                 transform_cr = cr # Set draw transform_cr to out context.
@@ -1255,10 +1373,9 @@ class TextLayerListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         self.treeview.connect("button-press-event", self.button_press)
@@ -1373,3 +1490,31 @@ class OpenFileThread(threading.Thread):
         
         open_in_bin_thread = projectaction.AddMediaFilesThread([self.filename])
         open_in_bin_thread.start()
+
+
+
+class OpenTitlerItemThread(threading.Thread):
+    
+    def __init__(self, name, filepath, title_data, view_editor):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.filepath = filepath
+        self.view_editor = view_editor
+        self.title_data = title_data
+
+    def run(self):
+        # This makes sure that the file has been written to disk
+        while(self.view_editor.write_out_layers == True):
+            time.sleep(0.1)
+
+        open_in_bin_thread = projectaction.AddTitleItemThread(self.name, self.filepath, self.title_data, self._completed_callback)
+        open_in_bin_thread.start()
+
+    def _completed_callback(self):
+        GLib.idle_add(self._recreate_pango_layers)
+    
+    def _recreate_pango_layers(self):
+        global _titler, _titler_data
+        _titler_data.create_pango_layouts()
+        _titler.load_titler_data()
+        _titler.show_current_frame()

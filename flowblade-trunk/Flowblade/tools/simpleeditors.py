@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ import respaths
 import translations
 import utils
 
-# NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> values because we do not want to import anything into fluxity.py.    
+# NOTE: These need to correspond exactly with fluxity.FluxityContext.<editor> enum values because we do not want to import anything into fluxity.py.    
 SIMPLE_EDITOR_STRING = 0
 SIMPLE_EDITOR_VALUE = 1
 SIMPLE_EDITOR_FLOAT = 2
@@ -77,190 +77,17 @@ SIMPLE_EDITOR_RIGHT_WIDTH = 200
 MONITOR_WIDTH = 600
 MONITOR_HEIGHT = 360
 
-# -------------------------------------------------------------------- Blender container clip program values edit
-def show_blender_container_clip_program_editor(callback, clip, container_action, program_info_json):
-    editor_window = BlenderProgramEditorWindow(callback, clip, container_action, program_info_json)
-
-
-class BlenderProgramEditorWindow(Gtk.Window):
-    def __init__(self, callback, clip, container_action, program_info_json):
-        
-        GObject.GObject.__init__(self)
-        self.connect("delete-event", lambda w, e: self.cancel())
-        
-        self.callback = callback
-        self.clip = clip
-        self.container_action = container_action
-        self.orig_program_info_json = copy.deepcopy(program_info_json) # We need to sabvre this for 'Cancel'because doing a preview updates edited values
-                                                                       # in containeractions.BlenderContainerActions.render_blender_preview().
-         
-        self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
-         
-        # Create panels for objects
-        editors = []
-        blender_objects = program_info_json["objects"]
-        materials = program_info_json["materials"]
-        curves = program_info_json["curves"]
-        
-        self.editors = editors
-        
-        objs_panel = _get_panel_and_create_editors(blender_objects, _("Objects"), editors)
-        materials_panel = _get_panel_and_create_editors(materials, _("Materials"), editors)
-        curves_panel = _get_panel_and_create_editors(curves, _("Curves"), editors)
-        
-        pane = Gtk.VBox(False, 2)
-        if objs_panel != None:
-            pane.pack_start(objs_panel, False, False, 0)
-        if materials_panel != None:
-            pane.pack_start(materials_panel, False, False, 0)
-        if curves_panel != None:
-            pane.pack_start(curves_panel, False, False, 0)
-        
-        # Put in scrollpane if too many editors for screensize.
-        n_editors = len(editors)
-        add_scroll = False
-        if editorstate.screen_size_small_height() == True and n_editors > 4:
-            add_scroll = True
-            h = 500
-        elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
-            add_scroll = True
-            h = 600
-        elif editorstate.screen_size_large_height() == True and n_editors > 6:
-            add_scroll = True
-            h = 700
-            
-        if add_scroll == True:
-            sw = Gtk.ScrolledWindow()
-            sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-            sw.add(pane)
-            sw.set_size_request(400, h)
-
-        if add_scroll == True:
-            editors_panel = sw
-        else:
-            editors_panel = pane
-
-        cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-        cancel_b.connect("clicked", lambda w: self.cancel())
-        save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
-        save_b.connect("clicked", lambda w: self.save())
-        
-        buttons_box = Gtk.HBox(False, 2)
-        buttons_box.pack_start(Gtk.Label(), True, True, 0)
-        buttons_box.pack_start(cancel_b, False, False, 0)
-        buttons_box.pack_start(save_b, False, False, 0)
-
-        self.preview_panel = PreviewPanel(self, clip)
-        
-        preview_box = Gtk.VBox(False, 2)
-        preview_box.pack_start(self.preview_panel, True, True, 0)
-        preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
-        preview_box.pack_start(buttons_box, False, False, 0)
-
-        main_box = Gtk.HBox(False, 2)
-        main_box.pack_start(guiutils.get_named_frame(_("Editors"), editors_panel), False, False, 0)
-        main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
-
-        alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
-
-        self.set_modal(True)
-        self.set_transient_for(gui.editor_window.window)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_title(_("Blender Project Edit - ") + self.container_action.container_data.get_program_name() + ".blend")
-        self.set_resizable(False)
-
-        self.add(alignment)
-        self.show_all()
-
-    def render_preview_frame(self):
-        if self.preview_frame != -1:
-            return # There already is preview render ongoing.
-        self.start_time = time.monotonic()
-
-        self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
-        self.preview_frame = int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
-        self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
-
-    def get_preview_file(self):
-        filled_number_str = str(self.preview_frame).zfill(4)
-        preview_file = self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
-
-        return preview_file
-
-    def preview_render_complete(self):
-        self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
-        self.preview_frame = -1
-        
-        render_time = time.monotonic() - self.start_time
-        time_str = "{0:.2f}".format(round(render_time,2))
-        frame_str = str(int(self.preview_panel.frame_select.get_value()))
-        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") +  frame_str + _(", render time: ") + time_str +  "</small>")
-        self.preview_panel.preview_monitor.queue_draw()
-
-    def cancel(self):
-        self.callback(False, self, self.editors, self.orig_program_info_json)
-
-    def save(self):
-        self.callback(True, self, self.editors, None)
-
-def _get_panel_and_create_editors(objects, pane_title, editors):
-    panels = []
-    for obj in objects:
-        # object is [name, type, editors_list] see blenderprojectinit.py
-        editors_data_list = obj[2]
-        editors_panel = Gtk.VBox(False, 2)
-        for editor_data in editors_data_list:
-            prop_path, label_text, tooltip, editor_type, value = editor_data
-            editor_type = int(editor_type)
-            editor = _get_editor(editor_type, (obj[0], prop_path), label_text, value, tooltip)
-            editor.blender_editor_data = editor_data # We need this the later to apply the changes.
-            editors.append(editor)
-            
-            editors_panel.pack_start(editor, False, False, 0)
-
-        if len(editors_data_list) > 0:
-            if len(obj[1]) > 0:
-                panel_text = obj[0] + " - " + obj[1]
-            else:
-                panel_text = obj[0] 
-            panel = guiutils.get_named_frame(panel_text, editors_panel)
-            panels.append(panel)
-    
-    pane = Gtk.VBox(False, 2)
-    for panel in panels:
-        pane.pack_start(panel, False, False, 0)
-    
-    if len(panels) == 0:
-        return None
-        
-    return guiutils.get_named_frame(pane_title, pane)
-     
-def get_simple_editor_selector(active_index, callback): # used in containerprogramedit.py to create editor for blender programs
-
-    editor_select = Gtk.ComboBoxText()
-    editor_select.append_text(_("String")) # these corespond values above
-    editor_select.append_text(_("Value"))
-    editor_select.append_text(_("Float"))
-    editor_select.append_text(_("Int"))
-    editor_select.append_text(_("Color"))
-    editor_select.set_active(active_index)
-    if callback != None:
-        editor_select.connect("changed", callback)
-    
-    return editor_select
-
-
 
 # -------------------------------------------------------------------- Media Plugin timeline clip editor
-def show_fluxity_container_clip_program_editor(clip, container_action, script_data_object, name_box):
-    editor_panel = FluxityScriptEditorPanel(clip, container_action, script_data_object, name_box)
+def show_fluxity_container_clip_program_editor(clip, action_object, script_data_object, name_box):
+    editor_panel = FluxityScriptEditorPanel(clip, action_object, script_data_object, name_box)
     return editor_panel
 
 class FluxityScriptEditorPanel:
-    def __init__(self, clip, container_action, script_data_object, name_box):
+    def __init__(self, clip, action_object, script_data_object, name_box):
         
         self.clip = clip
-        self.container_action = container_action
+        self.action_object = action_object
         self.script_data_object = copy.deepcopy(script_data_object)
          
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
@@ -268,6 +95,10 @@ class FluxityScriptEditorPanel:
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
+        try:
+            groups = self.script_data_object["groups_list"]
+        except:
+            groups = {}
 
         for editor_data in editors_list:
             name, etype, value = editor_data
@@ -275,15 +106,34 @@ class FluxityScriptEditorPanel:
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
         editors_v_panel = Gtk.VBox(False, 2)
-        for w in self.editor_widgets:        
+        count = 0
+        if len(groups.keys()) > 0:
+            notebook = Gtk.Notebook()
+        else:
+            notebook = None
+        for w in self.editor_widgets:
+            try:
+                group_name = groups[count]
+                group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
+                editors_v_panel = Gtk.VBox(False, 2)
+                notebook.append_page(editors_v_panel, group_label)
+            except:
+                pass # no group in this index
+                
             editors_v_panel.pack_start(w, False, False, 0)
+            count += 1
 
         pane = Gtk.VBox(False, 2)
         pane.pack_start(name_box, False, False, 0)
         if len(self.editor_widgets) != 0:
-            pane.pack_start(editors_v_panel, False, False, 0)
+            if notebook != None:
+                editors_panel = notebook
+            else:
+                editors_panel = editors_v_panel
+            editors_panel.set_margin_top(4)
+            pane.pack_start(editors_panel, False, False, 0)
         else:
-            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -304,27 +154,52 @@ def create_add_media_plugin_editors(script_data_object):
 class AddMediaPluginEditors:
     def __init__(self, script_data_object):
         self.script_data_object = copy.deepcopy(script_data_object)
-         
+        #print(self.script_data_object)
+        
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
          
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
-
+        try:
+            groups = self.script_data_object["groups_list"]
+        except:
+            groups = {}
+        
         for editor_data in editors_list:
             name, type, value = editor_data
             editor_type = int(type)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
         editors_v_panel = Gtk.VBox(False, 2)
-        for w in self.editor_widgets:        
+        count = 0
+        if len(groups.keys()) > 0:
+            notebook = Gtk.Notebook()
+        else:
+            notebook = None
+        for w in self.editor_widgets:
+            try:
+                group_name = groups[str(count)]
+                group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
+                editors_v_panel = Gtk.VBox(False, 2)
+                notebook.append_page(editors_v_panel, group_label)
+            except:
+                pass # no group in this index
+                
             editors_v_panel.pack_start(w, False, False, 0)
+
+            count += 1
 
         pane = Gtk.VBox(False, 2)
         if len(self.editor_widgets) != 0:
-            pane.pack_start(editors_v_panel, False, False, 0)
+            if notebook != None:
+                editors_panel = notebook
+            else:
+                editors_panel = editors_v_panel
+            editors_panel.set_margin_top(4)
+            pane.pack_start(editors_panel, False, False, 0)
         else:
-            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
         # Put in scrollpane if too many editors for screensize.
         n_editors = len(self.editor_widgets )
@@ -400,7 +275,9 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return PangoFontEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_TEXT_AREA:
         return TextAreaEditor(id_data, label_text, value, tooltip)
-    
+    elif editor_type == EDITOR_GROUP_LABEL:
+        return GroupLabel(text)
+        
 class AbstractSimpleEditor(Gtk.HBox):
     
     def __init__(self, id_data, tooltip):
@@ -420,8 +297,15 @@ class AbstractSimpleEditor(Gtk.HBox):
         internal_box.pack_start(Gtk.Label(), True, True, 0)
         internal_box.pack_start(widget, False, False, 0)
 
+        self.set_margins(internal_box)
+
         self.pack_start(internal_box, True, True, 0)
 
+    def set_margins(self, editor_panel):
+        editor_panel.set_margin_top(2)
+        editor_panel.set_margin_start(4)
+        editor_panel.set_margin_end(4)
+        
 class TextEditor(AbstractSimpleEditor):
 
     def __init__(self, id_data, label_text, value, tooltip):
@@ -648,7 +532,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         combo.set_active(0)
         self.widgets.font_select = combo
         #self.font_select.connect("changed", self._edit_value_changed)
-        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_increment=float(1))
         self.widgets.size_spin = Gtk.SpinButton()
         self.widgets.size_spin.set_adjustment(adj)
 
@@ -660,9 +544,9 @@ class PangoFontEditor(AbstractSimpleEditor):
         
         self.widgets.bold_font = Gtk.ToggleButton()
         self.widgets.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
+        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold", 
                                        Gtk.IconSize.BUTTON)
-        italic_icon = Gtk.Image.new_from_stock(Gtk.STOCK_ITALIC, 
+        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic", 
                                        Gtk.IconSize.BUTTON)
         self.widgets.bold_font.set_image(bold_icon)
         self.widgets.italic_font.set_image(italic_icon)
@@ -670,11 +554,11 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.left_align = Gtk.RadioButton(None)
         self.widgets.center_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
         self.widgets.right_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
-        left_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_LEFT, 
+        left_icon = Gtk.Image.new_from_icon_name("format-justify-left", 
                                        Gtk.IconSize.BUTTON)
-        center_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_CENTER, 
+        center_icon = Gtk.Image.new_from_icon_name("format-justify-center", 
                                        Gtk.IconSize.BUTTON)
-        right_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_RIGHT, 
+        right_icon = Gtk.Image.new_from_icon_name("format-justify-right", 
                                        Gtk.IconSize.BUTTON)
         self.widgets.left_align.set_image(left_icon)
         self.widgets.center_align.set_image(center_icon)
@@ -702,11 +586,11 @@ class PangoFontEditor(AbstractSimpleEditor):
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------- Outline Panel
-        outline_size = Gtk.Label(_("Size:"))
+        outline_size = Gtk.Label(label=_("Size:"))
         
         self.widgets.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
 
-        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_increment=float(1))
         self.widgets.out_line_size_spin = Gtk.SpinButton()
         self.widgets.out_line_size_spin.set_adjustment(adj2)
 
@@ -724,24 +608,24 @@ class PangoFontEditor(AbstractSimpleEditor):
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
         # -------------------------------------------- Shadow panel 
-        shadow_opacity_label = Gtk.Label(_("Opacity:"))
-        shadow_xoff = Gtk.Label(_("X Off:"))
-        shadow_yoff = Gtk.Label(_("Y Off:"))
-        shadow_blur_label = Gtk.Label(_("Blur:"))
+        shadow_opacity_label = Gtk.Label(label=_("Opacity:"))
+        shadow_xoff = Gtk.Label(label=_("X Off:"))
+        shadow_yoff = Gtk.Label(label=_("Y Off:"))
+        shadow_blur_label = Gtk.Label(label=_("Blur:"))
         
         self.widgets.shadow_opa_spin = Gtk.SpinButton()
 
-        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_opa_spin.set_adjustment(adj3)
 
         self.widgets.shadow_xoff_spin = Gtk.SpinButton()
 
-        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_xoff_spin.set_adjustment(adj4)
 
         self.widgets.shadow_yoff_spin = Gtk.SpinButton()
 
-        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_yoff_spin.set_adjustment(adj5)
 
         self.widgets.shadow_on = Gtk.CheckButton()
@@ -750,7 +634,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
 
         self.widgets.shadow_blur_spin = Gtk.SpinButton()
-        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
+        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_increment=float(1))
         self.widgets.shadow_blur_spin.set_adjustment(adj6)
 
         shadow_box_1 = Gtk.HBox()
@@ -781,7 +665,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.gradient_on = Gtk.CheckButton()
         self.widgets.gradient_on.set_active(True)
 
-        direction_label = Gtk.Label(_("Gradient Direction:"))
+        direction_label = Gtk.Label(label=_("Gradient Direction:"))
         self.widgets.direction_combo = Gtk.ComboBoxText()
         self.widgets.direction_combo.append_text(_("Vertical"))
         self.widgets.direction_combo.append_text(_("Horizontal"))
@@ -968,6 +852,9 @@ class TextAreaEditor(AbstractSimpleEditor):
 
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
+
+        editor_label = Gtk.Label(label=translations.get_param_name(label_text))
+        editor_label.set_margin_end(12)
         
         self.text_view = Gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -981,8 +868,19 @@ class TextAreaEditor(AbstractSimpleEditor):
 
         self.scroll_frame = Gtk.Frame()
         self.scroll_frame.add(self.sw)
+
+        widget = self.scroll_frame
+        widget.set_tooltip_text (self.tooltip)
+        widget.set_size_request(SIMPLE_EDITOR_RIGHT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
+
+        internal_box = Gtk.HBox(0, False)
+        internal_box.pack_start(editor_label, False, False, 0)
+        internal_box.pack_start(widget, True, True, 0)
+
+        self.set_margins(internal_box)
+
+        self.pack_start(internal_box, True, True, 0)
         
-        self.build_editor(label_text, self.scroll_frame)
         self.editor_type = SIMPLE_EDITOR_TEXT_AREA
 
     def get_value(self):
@@ -1014,8 +912,8 @@ class PreviewPanel(Gtk.VBox):
         self.no_preview_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + NO_PREVIEW_FILE)
 
         # Control row
-        self.frame_display = Gtk.Label(_("Clip Frame"))
-        self.frame_display.set_margin_right(2)
+        self.frame_display = Gtk.Label(label=_("Clip Frame"))
+        self.frame_display.set_margin_end(2)
         
         if length == -1:
             length = clip.clip_out - clip.clip_in
@@ -1023,7 +921,7 @@ class PreviewPanel(Gtk.VBox):
         self.frame_select = Gtk.SpinButton.new_with_range (0, length, 1)
         self.frame_select.set_value(0)
         
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: parent.render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)
@@ -1051,3 +949,7 @@ class PreviewPanel(Gtk.VBox):
             cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.rectangle(0, 0, w, h)
             cr.fill()
+
+
+# ---------------------------------------------------------- Group label editor
+        return GroupLabel(text)

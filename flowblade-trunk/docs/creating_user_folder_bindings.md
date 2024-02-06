@@ -5,58 +5,48 @@ This is a rough guide on how install and run self created MLT bindinds with Flow
 
 Please create pull request against this document if you have corrections or additions to improve this guide.
 
-### Install Flowblade from repository
-See [here](./INSTALLING.md).
+### Install Flowblade from OS repository
+See [here](./INSTALLING.md). This installs the runtime dependecies to run Flowblade and use MLT. *(Note that Flatpak install does not work here because dependencies when installed by Flatpak will not be avilable to the local install of MLT we are creating)*
 
 ### Install MLT build dependencies
-Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update the list if something is found to be missing.
+Here is list of Ubuntu build dependencies. There could be some omissions, please file a pull request to update the list if something is found to be missing.
 
 ```bash
-sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev 
-libavdevice-dev libswscale-dev libvorbis-dev libsamplerate-dev 
-frei0r-plugins-dev libdv-dev libavformat-dev libquicktime-dev 
-libsox-dev libjack-dev ladspa-sdk
+sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev libavdevice-dev libswscale-dev libvorbis-dev libsamplerate-dev frei0r-plugins-dev libdv-dev libavformat-dev libquicktime-dev libsox-dev libjack-dev ladspa-sdk
 ```
 
 ### Create work directory 
 
-Let's call this directory **\<ROOT_DIR\>**. Open terminal in this directory
+Let's call this directory **\<ROOT_DIR\>**. Open terminal in this directory.
 
 ### Clone MLT repository
 ```bash
-git clone git://github.com/mltframework/mlt.git
+git clone https://github.com/mltframework/mlt.git
 ```
 
-### Configure build
+### Create bindings with CMAKE
+
+Since 2023, MLT only builds with CMAKE.
+
+#### Configure and build
+With terminal still open in **\<ROOT_DIR\>**.
 ```bash
-cd mlt
-./configure --prefix=<ROOT_DIR>/build --enable-gpl --enable-gpl3 --swig-languages=python
+cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=OFF -S ./mlt -B ./build
+
+cmake --build ./build --config Release
 ```
 
-### Update bindings file for Python 3
-
-**This is not needed with current MLT repo head anymore.**
-
-Change line in file *\<ROOT_DIR\>/mlt/src/swig/python/build* from:
-
+#### Create a local install
 ```bash
-export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
-```
- to:
- ```bash
-export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
-```
+mkdir install
 
-### Build MLT and bindings
- ```bash
-make 
-make install
-```  
+cmake --install ./build --prefix ./install
+```
 
 ### Set up bindings
 
-1. Copy *mlt.py* and *_mlt.so* from  *\<ROOT_DIR\>/mlt/src/swig/python* into  *../flowblade-trunk* where your repository version Flowblade is installed.
-1. Create launch script in **\<ROOT_DIR\>** to set up MLT variables correctly on launch.
+1. Copy *mlt7.py* and *_mlt7.so* from  *\<ROOT_DIR\>/install/lib/python3.\<current_version\>/dist-packages* into  *../flowblade-trunk* where your repository version Flowblade is installed.
+1. Create a launch script in to set up MLT variables correctly on launch.
 
  ```bash
 #!/bin/sh
@@ -64,18 +54,18 @@ make install
 # Set MLT environment variables to point
 # where you have the binaries and libraries
 # so MLT finds them runtime.
-WORK_DIR=<ROOT_DIR>
+ROOT_DIR=<ROOT_DIR\>
 
-INSTALL_DIR=$WORK_DIR/build
-export PATH=$WORK_DIR/bin:$PATH
+INSTALL_DIR=$ROOT_DIR/install
+export PATH=$INSTALL_DIR/bin:$PATH
 
-export MLT_REPOSITORY=$INSTALL_DIR/lib/mlt
-export MLT_DATA=$INSTALL_DIR/share/mlt
-export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt/profiles
+export MLT_REPOSITORY=$INSTALL_DIR/lib/mlt-7
+export MLT_DATA=$INSTALL_DIR/share/mlt-7
+export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt-7/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
-# Lauch repository Flowblade
-/home/path/to/your/repository/install/flowblade-trunk/flowblade
+# Launch repository Flowblade
+/home/path/to/flowblade/repo/install/flowblade-trunk/flowblade
 ``` 
 
 Launch Flowblade with the script above.

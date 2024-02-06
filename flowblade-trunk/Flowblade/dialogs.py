@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Module builds dialog windows. User input is handled at
 callsites which provide callback methods for response signals.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import locale
 import os
@@ -41,16 +41,19 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import panels
+import projectdatavaultgui
+import projectdatavault
 import renderconsumer
 import respaths
 import shortcuts
 import shortcutsquickeffects
 import utils
+import utilsgtk
 import workflow
 
 
-kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
-kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines
+kb_shortcut_changed_callback = None # Set when dialog launched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog launched, using gloal saves modifying 50+ lines
 shortcuts_combo = None
 scroll_hold_panel = None
 
@@ -58,53 +61,54 @@ def new_project_dialog(callback):
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
 
-    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                         _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
 
     out_profile_combo = guicomponents.get_profiles_combo()
     out_profile_combo.set_selected(default_desc)
-    
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
                                                out_profile_combo.widget,
                                                250)
-
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
     profile_info_box = Gtk.VBox()
     profile_info_box.add(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
-
+    profiles_frame.set_margin_end(18)
+    
     tracks_select = guicomponents.TracksNumbersSelect(appconsts.INIT_V_TRACKS, appconsts.INIT_A_TRACKS)
-
     tracks_vbox = guiutils.get_vbox([tracks_select.widget], False)
-
     tracks_frame = panels.get_named_frame(_("Tracks"), tracks_vbox)
+    tracks_frame.set_margin_end(18)
 
-    vbox = guiutils.get_vbox([profiles_frame, tracks_frame], False)
+    vault_combo = projectdatavaultgui.get_vault_select_combo(projectdatavault.get_active_vault_index())
+    add_vault_button = Gtk.Button(label=_("Create New Data Store"))
+    add_vault_button.connect("clicked", lambda w: projectdatavaultgui.show_create_data_dialog(_create_data_store_callback, vault_combo))
+    add_vault_button.set_margin_start(12)
+    vault_row = Gtk.HBox(False, 8)
+    vault_row.pack_start(vault_combo, True, True, 0)
+    vault_row.pack_start(add_vault_button, False, False, 0)
+    
+    vault_vbox = guiutils.get_vbox([vault_row], False)
+    vault_frame = panels.get_named_frame(_("Data Store"), vault_vbox)
+    
+    ok_button = Gtk.Button(label=_("Ok"))
+    ok_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.ACCEPT, out_profile_combo, tracks_select, vault_combo))
+    cancel_button = Gtk.Button(label=_("Cancel"))
+    cancel_button.connect("clicked", lambda w: callback(dialog, Gtk.ResponseType.REJECT, out_profile_combo, tracks_select, vault_combo))
+    dialog_buttons_box = dialogutils.get_ok_cancel_button_row(ok_button, cancel_button)
+    dialog_buttons_box.set_margin_top(24)
+        
+    vbox = guiutils.get_vbox([profiles_frame, tracks_frame, vault_frame, dialog_buttons_box], False)
+    guiutils.set_margins(vbox, 12, 12, 12, 12)
 
-    alignment = dialogutils.get_default_alignment(vbox)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, tracks_select)
-                   
-    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
+    dialog.set_transient_for(gui.editor_window.window)
+    dialog.set_title(_("New Project"))
+    dialog.set_resizable(False)
+    dialog.add(vbox)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
+
     dialog.show_all()
-
-def xdg_copy_dialog():
-    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, 
-                        None)
-    primary_txt = _("Copying user data to XDG folders")
-    secondary_txt = _("This can take up to a few minutes, please wait...")
-    panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=True)
-    alignment = dialogutils.get_default_alignment(panel)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialog.show_all()
-    return dialog
 
 def _new_project_profile_changed(out_profile_combo, profile_info_box):
     profile_name = out_profile_combo.get_selected()
@@ -118,6 +122,35 @@ def _new_project_profile_changed(out_profile_combo, profile_info_box):
     profile_info_box.add(info_panel)
     profile_info_box.show_all()
     info_panel.show()
+
+def _create_data_store_callback(dialog, response, widgets):
+    if response != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    # Get and verify vault data.
+    data_folder_button, name_entry, vaults_combo = widgets
+    dir_path = data_folder_button.get_filename()
+    user_visible_name = name_entry.get_text() 
+    dialog.destroy()
+                    
+    if not os.listdir(dir_path):
+        pass
+    else:
+        primary_txt = _("Selected folder was not empty!")
+        secondary_txt = _("Can't add non-empty folder as new Project Data Folder.")
+        dialogutils.warning_message(primary_txt, secondary_txt, None)
+        return
+
+    if len(user_visible_name) == 0:
+        user_visible_name = "{:%b-%d-%Y-%H:%M}".format(datetime.datetime.now())
+
+    # Add new vault
+    vaults_obj = projectdatavault.get_vaults_object()
+    vaults_obj.add_user_vault(user_visible_name, dir_path)
+    vaults_obj.save()
+
+    projectdatavaultgui.fill_vaults_combo(vaults_combo, len(vaults_obj.user_vaults_data))
 
 def change_profile_project_dialog(project, callback):
     project_name = project.name.rstrip(".flb")
@@ -217,7 +250,7 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 
     new_file_frame = panels.get_named_frame(_("New Project File"), new_file_vbox)
 
-    save_profile_info =  guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
+    save_profile_info = guiutils.bold_label(_("Project will be saved with profile: ") + match_profile_name)
 
     vbox = guiutils.get_vbox([info_label, guiutils.pad_label(2, 24), text_panel, \
                               guiutils.pad_label(2, 24), save_profile_info, guiutils.pad_label(2, 24), \
@@ -273,6 +306,7 @@ def export_ardour_session_folder_select(callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Export"), Gtk.ResponseType.ACCEPT))
 
+    # project folder
     project_folder = Gtk.FileChooserButton(_("Select Ardour Session Folder"))
     project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
@@ -280,9 +314,17 @@ def export_ardour_session_folder_select(callback):
     project_folder_label = Gtk.Label(label=_("Select Ardour Session Folder:"))
 
     project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
-    
+
+    # sample rate
+    sample_rate_combo = guicomponents.get_ardour_sample_rate_selector()
+
+    sample_rate_label = Gtk.Label(label=_("Sample Rate:"))
+    sample_rate_row = panels.get_two_column_box(sample_rate_label, sample_rate_combo, 250)
+
+
     type_vbox = Gtk.VBox(False, 2)
     type_vbox.pack_start(project_folder_row, False, False, 0)
+    type_vbox.pack_start(sample_rate_row, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
     vbox.add(type_vbox)
@@ -292,7 +334,7 @@ def export_ardour_session_folder_select(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, project_folder)
+    dialog.connect('response', callback, project_folder, sample_rate_combo)
     dialog.show_all()
     
 def load_project_dialog(callback, parent=None, title_text=None):
@@ -428,11 +470,10 @@ def load_layout_data(callback):
     dialog.connect('response', callback)
     dialog.show()
 
-
 def save_media_plugin_plugin_properties(callback, default_name, data):
     parent = gui.editor_window.window
 
-    dialog = Gtk.FileChooserDialog( _("Save Media Plugin Properties"), parent,
+    dialog = Gtk.FileChooserDialog( _("Save Generator Properties"), parent,
                                    Gtk.FileChooserAction.SAVE,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("Save"), Gtk.ResponseType.ACCEPT))
@@ -442,7 +483,7 @@ def save_media_plugin_plugin_properties(callback, default_name, data):
 
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.set_name(_("Flowblade Generator Properties"))
     file_filter.add_pattern("*" + "mediaplugindata")
     dialog.add_filter(file_filter)
     
@@ -451,19 +492,55 @@ def save_media_plugin_plugin_properties(callback, default_name, data):
 
 def load_media_plugin_plugin_properties(callback):
     parent = gui.editor_window.window
-    dialog = Gtk.FileChooserDialog(_("Load Media Plugin Properties"), parent,
+    dialog = Gtk.FileChooserDialog(_("Load Generator Properties"), parent,
                                    Gtk.FileChooserAction.OPEN,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.set_name(_("Flowblade Generator Properties"))
     file_filter.add_pattern("*" + "mediaplugindata")
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()
+
+def get_media_plugin_length(callback, data):
+    dialog = Gtk.Dialog(_("Create Cloned Media Item"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Create"), Gtk.ResponseType.ACCEPT))
+
+    clip, track, item_id, item_data = data
+    LABEL_WIDTH = 200
     
+    name_label = Gtk.Label(label=_("Name:"))
+    name_entry = Gtk.Entry()
+    name_entry.set_text(clip.name)
+
+    length_label = Gtk.Label(label=_("Length in Frames:"))
+    length_spin = Gtk.SpinButton.new_with_range(15, 10000, 1)
+    length_spin.set_value(200)
+
+    name_row = guiutils.get_two_column_box(name_label, name_entry, LABEL_WIDTH)
+    
+    frames_row  = guiutils.get_two_column_box(length_label, length_spin, LABEL_WIDTH)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(name_row, False, False, 0)
+    vbox.pack_start(frames_row, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, data, length_spin, name_entry)
+    dialog.show_all()
+
+
+
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 
@@ -559,7 +636,7 @@ def rendered_clips_no_home_folder_dialog():
 
 def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
     title = _("Save project '") + project_name + _("' before exiting?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, "dialog-information")
 
     dialog = Gtk.Dialog("",
                         parent_window,
@@ -580,7 +657,7 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
 
 def close_confirm_dialog(callback, msg, parent_window, project_name):
     title = _("Save project '") + project_name + _("' before closing project?")
-    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, Gtk.STOCK_QUIT)
+    content = dialogutils.get_warning_message_dialog_panel(title, msg, False, "dialog-information")
     align = dialogutils.get_default_alignment(content)
 
     dialog = Gtk.Dialog("",
@@ -604,8 +681,8 @@ def about_dialog(parent_window):
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="2.8")
-    janne_label = Gtk.Label(label="Copyright 2021 Janne Liljeblad and contributors")
+    ver_label = Gtk.Label(label="2.12.0.2")
+    janne_label = Gtk.Label(label="Copyright 2023 Janne Liljeblad and contributors.")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
@@ -629,9 +706,9 @@ def about_dialog(parent_window):
     # Thanks tab
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
-    up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
+    up_projs2 = Gtk.Label(label="FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
     tools_label = Gtk.Label(label=_("Tools:"))
-    tools_list = Gtk.Label("Geany, Inkscape, Gimp, ack-grep")
+    tools_list = Gtk.Label(label="Geany, Inkscape, Gimp, ack-grep")
 
     up_label.modify_font(Pango.FontDescription("sans bold 12"))
     tools_label.modify_font(Pango.FontDescription("sans bold 12"))
@@ -822,7 +899,7 @@ def _get_items_in_scroll_window(items, rows_count, w, h):
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    sw.add_with_viewport(items_pane)
+    sw.add(items_pane)
     sw.set_size_request(w, h)
     return sw
 
@@ -997,7 +1074,7 @@ def autosave_recovery_dialog(callback, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.set_margin_left(6)
+    dialog.vbox.set_margin_start(6)
     _default_behaviour(dialog)
     dialog.connect('response', callback)
     dialog.show_all()
@@ -1014,9 +1091,9 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     autosaves_view.set_size_request(300, 300)
     autosaves_view.fill_data_model(autosaves)
 
-    delete_all = Gtk.Button(_("Delete all autosaves"))
+    delete_all = Gtk.Button(label=_("Delete all autosaves"))
     delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
-    delete_all_but_selected = Gtk.Button(_("Delete all but selected autosave"))
+    delete_all_but_selected = Gtk.Button(label=_("Delete all but selected autosave"))
     delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
 
     delete_buttons_vbox = Gtk.HBox()
@@ -1041,7 +1118,7 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.set_margin_left(6)
+    dialog.vbox.set_margin_start(6)
     _default_behaviour(dialog)
     dialog.connect('response', response_callback, autosaves_view, autosaves)
     dialog.show_all()
@@ -1061,6 +1138,51 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
     autosaves.append(selected_autosave)
     autosaves_view.fill_data_model(autosaves)
 
+def confirm_track_add_delete(is_add, is_video, v_tracks, a_tracks, callback):
+
+    title = ""
+    action = ""
+    if is_add == True:
+        if is_video == True:
+            title = _("Confirm Adding Video Track")
+            action = _("Add Video Track")
+        else:
+            title = _("Confirm Adding Audio Track")
+            action = _("Add Audio Track")
+    else:
+        if is_video == True:
+            title = _("Confirm Deleting Video Track")
+            action = _("Delete Video Track")
+        else:
+            title = _("Confirm Deleting Audio Track")
+            action = _("Delete Audio Track")
+
+    dialog = Gtk.Dialog(title,  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        action, Gtk.ResponseType.ACCEPT))
+                        
+    info_text = _("<b>Please note:</b>\n") + \
+                "    \u2022" + _(" There is no Undo for this operation\n") + \
+                "    \u2022" + _(" Current Undo Stack will be destroyed\n")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    pad = guiutils.get_pad_label(24, 12)
+
+    tracks_vbox = Gtk.VBox(False, 2)
+    tracks_vbox.pack_start(info_box, False, False, 0)
+    #tracks_vbox.pack_start(pad, False, False, 0)
+
+    alignment = dialogutils.get_alignment2(tracks_vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, v_tracks, a_tracks)
+    dialog.show_all()
+    
 def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1069,9 +1191,8 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
 
     tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
 
-    info_text = _("Please note:\n\n") + \
+    info_text = _("Please note:\n") + \
                 "\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
-                "\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
                 "\u2022" + _(" There is no Undo for this operation\n") + \
                 "\u2022" + _(" Current Undo Stack will be destroyed\n") + \
                 "\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
@@ -1094,6 +1215,81 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog.connect('response', callback, tracks_select)
     dialog.show_all()
 
+def replace_media_dialog(media_file, callback):
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+    dialog.set_title(_("Replace Media Item in Project"))
+    dialog.set_transient_for(gui.editor_window.window)
+
+    info_text = _("Please note:\n\n") + \
+                "\u2022" + _(" It is recommended that you save Project before completing this operation.\n") + \
+                "\u2022" + _(" There is no Undo for this operation.\n") + \
+                "\u2022" + _(" Current Undo Stack will be destroyed.\n") + \
+                "\u2022" + _(" Replacing current media with shorter or othervise unsuitable media may result in\n   crashes or corrupted project data.")
+    info_label = Gtk.Label(label=info_text)
+    info_label.set_use_markup(True)
+    info_box = guiutils.get_left_justified_box([info_label])
+
+    path_row = guiutils.get_left_justified_box([Gtk.Label(label=media_file.path)])
+    file_box = guiutils.get_named_frame(_("Media File To Replace"), path_row, 4)
+    file_box.set_margin_top(24)
+
+    replacement_path_label = Gtk.Label(label=("No Replacement Media Selected"))
+    file_button = Gtk.Button(label=_("Select Replacement File"))
+    file_button.selected_file = ""
+    file_button.connect("clicked", lambda w: GLib.idle_add(_replace_button_clicked, w, dialog, replacement_path_label))
+
+    select_row = guiutils.get_left_justified_box([file_button, replacement_path_label])
+    select_box = guiutils.get_named_frame(_("Replacement Media"), select_row, 4)
+    select_box.set_margin_top(24)
+
+
+    cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+    cancel_b.connect("clicked", lambda w: dialogutils.dialog_destroy(dialog, None))
+    replace_b = guiutils.get_sized_button(_("Replace Media"), 150, 32)
+    replace_b.connect("clicked", lambda w: callback(dialog, media_file, file_button.selected_file))
+    buttons_row = guiutils.get_right_justified_box([cancel_b, replace_b])
+    
+    pad = guiutils.get_pad_label(24, 24)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(info_box, False, False, 0)
+    vbox.pack_start(file_box, False, False, 0)
+    vbox.pack_start(select_box, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.pack_start(buttons_row, False, False, 0)
+
+    guiutils.set_margins(vbox, 12, 12, 12, 12)
+
+    dialog.add(vbox)
+    #dialog.set_default_size(500, 70)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
+    dialog.show_all()
+        
+def _replace_button_clicked(button, parent, path_label):
+
+    dialog = Gtk.FileChooserDialog( _("Select Replament Media"), parent,
+                                   Gtk.FileChooserAction.OPEN, 
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+                                    
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    ff = utilsgtk.get_media_source_file_filter()
+    ff.set_name(_("Media Files"))
+    dialog.add_filter(ff)
+    
+    data = (button, path_label)
+    dialog.connect('response', _replacement_media_selected, data)
+    dialog.show()
+
+def _replacement_media_selected(dialog, response_id, data):
+    res_path = dialog.get_filename()
+    button, path_label = data
+    if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
+        path_label.set_text(res_path)
+        button.selected_file = res_path
+    
+    dialog.destroy()
 
 def clip_length_change_dialog(callback, clip, track):
     dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,
@@ -1249,9 +1445,9 @@ def group_rename_dialog(callback, group_name):
     dialog.connect('response', callback, entry)
     dialog.show_all()
 
-def not_valid_producer_dialog(file_path, parent_window):
+def not_valid_producer_dialog(err, parent_window):
     primary_txt = _("Can't open non-valid media")
-    secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
+    secondary_txt = err.value + "\n\n" + _("File: ") + err.file_path + _("\nis not a valid media file.")
     dialogutils.warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
 def marker_name_dialog(frame_str, callback, rename=False):
@@ -1288,7 +1484,7 @@ def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Add Marker"), Gtk.ResponseType.ACCEPT))
 
-    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(_("Timeline position: ") + tline_frame_str),Gtk.Label()])
+    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(label=_("Timeline position: ") + tline_frame_str),Gtk.Label()])
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1318,11 +1514,13 @@ def alpha_info_msg(callback, filter_name):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Ok"), Gtk.ResponseType.ACCEPT))
 
-    line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
+    label_text = _("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:")
+    line_label = Gtk.Label(label=label_text)
     line_label.set_use_markup(True)
     row1 = guiutils.get_left_justified_box([line_label])
 
-    line_label = Gtk.Label(_("This applies to all <b>Compositing Modes</b> other then <b>Standard Full Track</b>."))
+    label_text = _("This applies to all <b>Compositing Modes</b> other then <b>Standard Full Track</b>.")
+    line_label = Gtk.Label(label=label_text)
     line_label.set_use_markup(True)
     row11 = guiutils.get_left_justified_box([line_label])
     guiutils.set_margins(row11, 12, 0, 0, 0)
@@ -1371,11 +1569,11 @@ def open_image_sequence_dialog(callback, parent_window):
     else:
         file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
-    filt = utils.get_image_sequence_file_filter()
+    filt = utilsgtk.get_image_sequence_file_filter()
     file_chooser.add_filter(filt)
     row1 = guiutils.get_two_column_box(Gtk.Label(label=_("First frame:")), file_chooser, 220)
 
-    adj = Gtk.Adjustment(value=1, lower=1, upper=250, step_incr=1)
+    adj = Gtk.Adjustment(value=1, lower=1, upper=250, step_increment=1)
     frames_per_image = Gtk.SpinButton(adjustment=adj, climb_rate=1.0, digits=0)
     row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Frames per Source Image:")), frames_per_image, 220)
 
@@ -1406,20 +1604,6 @@ def export_edl_dialog(callback, parent_window, project_name):
     dialog.connect('response', callback)
     dialog.show()
 
-def transition_edit_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Add Transition"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
-
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings)
-    dialog.connect('response', callback, widgets, transition_data)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
-
 def transition_re_render_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Rerender Transition"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1429,20 +1613,6 @@ def transition_re_render_dialog(callback, transition_data):
     alignment, encodings_cb, quality_cb, encodings = panels.get_transition_re_render_panel(transition_data)
     widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, transition_data)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
-
-def fade_re_render_dialog(callback, fade_data):
-    dialog = Gtk.Dialog(_("Rerender Fade"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Rerender"), Gtk.ResponseType.ACCEPT))
-
-    alignment, encodings_cb, quality_cb, encodings = panels.get_fade_re_render_panel(fade_data)
-    widgets = (encodings_cb, quality_cb, encodings)
-    dialog.connect('response', callback, widgets, fade_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
@@ -1462,20 +1632,6 @@ def re_render_all_dialog(callback, rerender_list, unrenderable):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def fade_edit_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Add Fade"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
-
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings = panels.get_fade_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings)
-    dialog.connect('response', callback, widgets, transition_data)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
-
 def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback, _kb_menu_callback):
     
     global kb_shortcut_changed_callback, kb_shortcut_dialog, shortcuts_combo
@@ -1487,48 +1643,38 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
                         (_("Close"), Gtk.ResponseType.ACCEPT))
     kb_shortcut_dialog = dialog
     
-    presets_label = guiutils.bold_label(_("Shortcuts Group:"))
+    presets_label = guiutils.bold_label(_("Active Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
-    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
-    hamburger_menu.connect_launched_menu(guicomponents.kb_shortcuts_hamburger_menu)
-    guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
+    button_data = (shortcuts_combo, dialog)
+    
+    add_button = Gtk.Button(label=_("Add Custom Shortcuts Group"))
+    add_button.connect("clicked", _kb_menu_callback, ("add", button_data))
+    add_button.set_margin_top(8)
+    delete_button = Gtk.Button(label=_("Delete Active Custom Shortcuts Group"))
+    delete_button.connect("clicked", _kb_menu_callback, ("delete", button_data))
+
     hbox = Gtk.HBox()
-    hbox.pack_start(hamburger_menu.widget, False, True, 0)
     hbox.pack_start(presets_label, False, True, 0)
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(shortcuts_combo, True, True, 0)
     
     global scroll_hold_panel
     scroll_hold_panel = Gtk.HBox()
-
-    diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
-
-    diff_data = Gtk.Label()
-    diff_data.set_line_wrap(True)
-    diff_data.set_size_request(418, 58)
-    diff_data.set_text(shortcuts.get_diff_to_defaults(editorpersistance.prefs.shortcuts))
-    diff_panel =  Gtk.VBox()
-    diff_panel.pack_start(diff_data, False, False, 0)
-
-    diff_sw = Gtk.ScrolledWindow()
-    diff_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    diff_sw.add_with_viewport(diff_panel)
-    diff_sw.set_size_request(420, 60)
     
     content_panel = Gtk.VBox(False, 2)
     content_panel.pack_start(hbox, False, False, 0)
+    content_panel.pack_start(add_button, False, False, 0)
+    content_panel.pack_start(delete_button, False, False, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     content_panel.pack_start(scroll_hold_panel, True, True, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
-    content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
-    content_panel.pack_start(diff_sw, False, False, 0)
 
     scroll_window = display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
     guicomponents.KBShortcutEditor.edit_ongoing = False
         
-    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, dialog))
     shortcuts_combo.changed_id = changed_id
     
     guiutils.set_margins(content_panel, 12, 12, 12, 12)
@@ -1539,7 +1685,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
-def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
+def _shorcuts_selection_changed(combo, scroll_hold_panel, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
     
     editorpersistance.prefs.shortcuts = selected_xml
@@ -1548,7 +1694,6 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
 
-    diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
 def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
@@ -1565,7 +1710,7 @@ def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    sw.add_with_viewport(pad_panel)
+    sw.add(pad_panel)
     sw.set_size_request(420, 400)
     
     scroll_hold_panel.pack_start(sw, False, False, 0)
@@ -1604,8 +1749,9 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_kb_row(_("DELETE"),  _("Splice Out")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + DELETE"),  _("Lift")), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_filters"), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "sync_all"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "split_selected"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "resync"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "sync_all"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "insert"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "3_point_overwrite"), False, False, 0)
@@ -1625,12 +1771,15 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward_10"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_next"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_prev"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "tline_page_up"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "tline_page_down"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_track_output"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     track_head_vbox = Gtk.VBox()
     track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
     track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
-    
+
     play_vbox = Gtk.VBox()
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
@@ -1740,8 +1889,8 @@ def watermark_dialog(add_callback, remove_callback):
 
     file_path_label = guiutils.bold_label(_("Watermark:") + " ")
 
-    add_button = Gtk.Button(_("Set Watermark File"))
-    remove_button = Gtk.Button(_("Remove Watermark"))
+    add_button = Gtk.Button(label=_("Set Watermark File"))
+    remove_button = Gtk.Button(label=_("Remove Watermark"))
     if editorstate.current_sequence().watermark_file_path == None:
         file_path_value_label = Gtk.Label(label=_("Not Set"))
         add_button.set_sensitive(True)
@@ -1804,7 +1953,7 @@ def media_file_dialog(text, callback, multiple_select, data=None, parent=None, o
     file_select.set_default_response(Gtk.ResponseType.CANCEL)
     file_select.set_select_multiple(multiple_select)
 
-    media_filter = utils.get_media_source_file_filter()
+    media_filter = utilsgtk.get_media_source_file_filter()
     all_filter = Gtk.FileFilter()
     all_filter.set_name(_("All files"))
     all_filter.add_pattern("*.*")
@@ -1865,13 +2014,13 @@ def not_matching_media_info_dialog(project, media_file, callback):
     row1 = guiutils.get_two_column_box(guiutils.bold_label(_("File:")), Gtk.Label(label=media_file.name), 120)
     row2 = guiutils.get_two_column_box(guiutils.bold_label(_("File Profile:")), Gtk.Label(label=match_profile_name), 120)
     row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Project Profile:")), Gtk.Label(label=project_profile_name), 120)
-    row4 = guiutils.get_left_justified_box([Gtk.Label(_("Using a matching profile is recommended.\n\nThis message is only displayed on first media load for Project."))])
+    row4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Using a matching profile is recommended.\n\nThis message is only displayed on first media load for Project."))])
 
     text_panel = Gtk.VBox(False, 2)
     text_panel.pack_start(row1, False, False, 0)
     text_panel.pack_start(row2, False, False, 0)
     text_panel.pack_start(row3, False, False, 0)
-    text_panel.pack_start(Gtk.Label(" "), False, False, 0)
+    text_panel.pack_start(Gtk.Label(label=" "), False, False, 0)
     text_panel.pack_start(row4, False, False, 0)
 
     vbox = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt,
@@ -1922,10 +2071,10 @@ def combine_sequences_dialog(callback):
     seq_select.set_active(0)
 
     row1 = Gtk.HBox(False, 2)
-    row1.pack_start(Gtk.Label(_("Action:")), False, False, 0)
+    row1.pack_start(Gtk.Label(label=_("Action:")), False, False, 0)
     row1.pack_start(action_select, False, False, 0)
     row1.pack_start(guiutils.pad_label(12,2), False, False, 0)
-    row1.pack_start(Gtk.Label(_("Import:")), False, False, 0)
+    row1.pack_start(Gtk.Label(label=_("Import:")), False, False, 0)
     row1.pack_start(seq_select, False, False, 0)
 
     panel = Gtk.VBox(False, 2)
@@ -1945,14 +2094,16 @@ def tline_audio_sync_dialog(callback, data):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Do Audio Sync Move Edit"), Gtk.ResponseType.ACCEPT))
-        
-    media_offsets_label = Gtk.Label(_("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames."))
+    
+    label_text = _("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames.")
+    media_offsets_label = Gtk.Label(label=label_text)
     media_offsets_label.set_use_markup(True)
-    tline_offsets_label = Gtk.Label(_("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."))
+    label_text = _("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames.")
+    tline_offsets_label = Gtk.Label(label=label_text)
     tline_offsets_label.set_use_markup(True)
     
     action_label_text = _("To audio sync clips you need move action origin clip by ") + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
-    action_label = Gtk.Label(action_label_text)
+    action_label = Gtk.Label(label=action_label_text)
     
     panel_vbox = Gtk.VBox(False, 2)
     panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
@@ -2004,7 +2155,7 @@ def set_fade_length_default_dialog(callback, current_value):
     length_spin.set_value(current_value)
     
     hbox = Gtk.HBox(False, 2)
-    hbox.pack_start(Gtk.Label(_("Fade Buttons Fades Default Length:")), False, False, 0)
+    hbox.pack_start(Gtk.Label(label=_("Fade Buttons Fades Default Length:")), False, False, 0)
     hbox.pack_start(length_spin, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
@@ -2020,6 +2171,50 @@ def set_fade_length_default_dialog(callback, current_value):
     dialog.show_all()
         
 def show_no_plugins_in_monitor_dialog():
-    primary_txt = _("No Monitor display available for Media Plugins")
-    secondary_txt = _("Media Plugins with user mutable media are best handled on Timeline.")
+    primary_txt = _("No Monitor display available for Generators")
+    secondary_txt = _("Generators with user mutable media are best handled on Timeline.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def refuse_to_empty_default_notebook_dialog():
+    primary_txt = _("Cannot do the panel move!")
+    secondary_txt = _("It is not possible to move the panel and make the top left notebook empty.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def active_jobs_info(active_jobs_count):
+    primary_txt =  _("There are currenly ") + str(active_jobs_count) + _(" active job/s!")
+    secondary_txt = _("Let active jobs complete or cancel them before closing the application.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def show_dead_compositors(number_of_dead_compositors):
+    primary_txt = _("Unable to load some Compositors!")
+    secondary_txt = _("MLT version 7 removed several services that were used to implement Compositors in Flowblade.\n\nYour Project had ") \
+                    + str(number_of_dead_compositors) + _(" Compositor/s in it that cannot be loaded.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def no_timeline_ranges_dialog():
+    primary_txt = _("Cannot log Ranges from Timelime!")
+    secondary_txt = _("'Range Log' functionality is intented to log areas of interest\nin Media Items.\n\nTo save interesting positions or ranges on Timeline use\nthe 'Timeline Markers' functionality.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def add_compositor_dialog(compositors, callback):
+    dialog = Gtk.Dialog(_("Add Compositor To Clip"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Add Compositor"), Gtk.ResponseType.ACCEPT))
+
+    select_combo = Gtk.ComboBoxText()
+    for comp in compositors:
+        name, compositor_type = comp
+        select_combo.append_text(name)
+    select_combo.set_active(0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.add(select_combo)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, compositors, select_combo)
+    dialog.show_all()

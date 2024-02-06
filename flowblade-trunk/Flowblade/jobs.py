@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,6 +28,10 @@ import subprocess
 import sys
 import time
 import threading
+try:
+    import mlt7 as mlt
+except:
+    import mlt
 
 import appconsts
 import editorlayout
@@ -35,10 +39,12 @@ import editorpersistance
 from editorstate import PROJECT
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import motionheadless
 import persistance
 import proxyheadless
+import renderconsumer
 import respaths
 import userfolders
 import utils
@@ -51,16 +57,20 @@ CANCELLED = 3
 NOT_SET_YET = 0
 CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
-CONTAINER_CLIP_RENDER_BLENDER = 3
+CONTAINER_CLIP_RENDER_BLENDER = 3 # Deprecated
 MOTION_MEDIA_ITEM_RENDER = 4
 PROXY_RENDER = 5
 CONTAINER_CLIP_RENDER_FLUXITY = 6
+
+FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
+FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
+FFMPEG_ATTR_SCREENSIZE_2 = "%SCREEN%SIZE%TWO%"
+FFMPEG_ATTR_PROXYFILE = "%PROXYFILE"
 
 open_media_file_callback = None
 
 _status_polling_thread = None
 
-_hamburger_menu = Gtk.Menu()
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
@@ -69,7 +79,7 @@ _remove_list = [] # objects are removed from GUI with delay to give user time to
 _jobs_render_progress_window = None
 
 
-class JobProxy: # This object represnts job in job queue. 
+class JobProxy: # This object represents job in job queue. 
 
 
     def __init__(self, uid, callback_object):
@@ -96,14 +106,12 @@ class JobProxy: # This object represnts job in job queue.
             return _("G'Mic Clip")
         elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
             return _("Selection Clip")
-        elif self.type == CONTAINER_CLIP_RENDER_BLENDER:
-            return _("Blender Clip")
         elif self.type == MOTION_MEDIA_ITEM_RENDER:
             return _("Motion Clip")
         elif self.type == PROXY_RENDER:
             return _("Proxy Clip")
         elif self.type == CONTAINER_CLIP_RENDER_FLUXITY:
-            return _("Media Plugin Clip")
+            return _("Generator Clip")
             
     def get_progress_str(self):
         if self.progress < 0.0:
@@ -117,7 +125,7 @@ class JobProxy: # This object represnts job in job queue.
         self.callback_object.abort_render()
 
 
-class JobQueueMessage:  # Jobs communicate with job queue by sending these objecs.
+class JobQueueMessage:  # Jobs communicate with job queue by sending these objects.
     
     def __init__(self, uid, job_type, status, progress, text, elapsed):
         self.proxy_uid = uid       
@@ -176,7 +184,7 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
         _jobs[row].text = _("Completed")
         _jobs[row].progress = 1.0
         _remove_list.append(_jobs[row])
-        GObject.timeout_add(4000, _remove_jobs)
+        GLib.timeout_add(4000, _remove_jobs)
         waiting_jobs = _get_jobs_with_status(QUEUED)
         if len(waiting_jobs) > 0:
             waiting_jobs[0].start_render()
@@ -206,7 +214,7 @@ def _cancel_all_jobs():
 
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
-    GObject.timeout_add(4000, _remove_jobs)
+    GLib.timeout_add(4000, _remove_jobs)
         
 def get_jobs_of_type(job_type):
     jobs_of_type = []
@@ -232,7 +240,7 @@ def get_jobs_panel():
     global _jobs_list_view
 
     actions_menu = guicomponents.HamburgerPressLaunch(_menu_action_pressed)
-    actions_menu.connect_launched_menu(_hamburger_menu)
+    actions_menu.do_popover_callback = True
     guiutils.set_margins(actions_menu.widget, 8, 2, 2, 18)
 
     row2 =  Gtk.HBox()
@@ -242,44 +250,20 @@ def get_jobs_panel():
     panel = Gtk.VBox()
     panel.pack_start(_jobs_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 10)
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-        panel.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
             
     return panel
 
-
+def get_active_jobs_count():
+    return len(_jobs)
 
 
 
 # ------------------------------------------------------------- module functions
-def _menu_action_pressed(widget, event):
-    menu = _hamburger_menu
-    guiutils.remove_children(menu)
-    menu.add(guiutils.get_menu_item(_("Cancel Selected Render"), _hamburger_item_activated, "cancel_selected"))
-    menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
+def _menu_action_pressed(launcher, widget, event, data):
+    guipopover.jobs_menu_popover_show(launcher, widget, _hamburger_item_activated)
     
-    guiutils.add_separetor(menu)
-
-    """ Not settable for 2.6, let's see later
-    sequential_render_item = Gtk.CheckMenuItem()
-    sequential_render_item.set_label(_("Render All Jobs Sequentially"))
-    sequential_render_item.set_active(editorpersistance.prefs.render_jobs_sequentially)
-    sequential_render_item.connect("activate", _hamburger_item_activated, "sequential_render")
-    menu.add(sequential_render_item)
-    """
-    
-    open_on_add_item = Gtk.CheckMenuItem()
-    open_on_add_item.set_label(_("Show Jobs Panel on Adding New Job"))
-    open_on_add_item.set_active(editorpersistance.prefs.open_jobs_panel_on_add)
-    open_on_add_item.connect("activate", _hamburger_item_activated, "open_on_add")
-    menu.add(open_on_add_item)
-    
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
-def _hamburger_item_activated(widget, msg):
+def _hamburger_item_activated(action, variant, msg=None):
+    print(msg)
     if msg == "cancel_all":
         _cancel_all_jobs()
 
@@ -298,15 +282,13 @@ def _hamburger_item_activated(widget, msg):
 
         _jobs_list_view.fill_data_model()
         _jobs_list_view.scroll.queue_draw()
-        GObject.timeout_add(4000, _remove_jobs)
+        GLib.timeout_add(4000, _remove_jobs)
         
     elif msg == "open_on_add":
-        editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
+        new_state = not(action.get_state().get_boolean())
+        editorpersistance.prefs.open_jobs_panel_on_add = new_state
         editorpersistance.save()
-
-    elif msg == "sequential_render":
-        editorpersistance.prefs.render_jobs_sequentially = widget.get_active()
-        editorpersistance.save()
+        action.set_state(GLib.Variant.new_boolean(new_state))
 
 def _get_jobs_with_status(status):
     running = []
@@ -347,11 +329,9 @@ class JobsQueueView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
-        self.treeview.set_property("rules_hint", True)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
@@ -403,8 +383,11 @@ class JobsQueueView(Gtk.VBox):
 
         # Build widget graph and display
         self.scroll.add(self.treeview)
-        self.pack_start(self.scroll, True, True, 0)
+        frame = Gtk.Frame()
+        frame.add(self.scroll)
+        self.pack_start(frame, True, True, 0)
         self.scroll.show_all()
+        frame.show_all()
         self.show_all()
 
     def get_selected_row_index(self):
@@ -481,6 +464,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         
         self.write_file = write_file
         self.args = args
+        self.parent_folder = userfolders.get_temp_render_dir() # THis is just used for message passing, output file goes where user decided.
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.write_file)
@@ -498,25 +482,28 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         command_list.append(respaths.LAUNCH_DIR + "flowblademotionheadless")
         for arg in self.args:
             command_list.append(arg)
-
+        parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+        command_list.append(parent_folder_arg)
+            
         subprocess.Popen(command_list)
         
     def update_render_status(self):
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
 
-        Gdk.threads_enter()
-                    
-        if motionheadless.session_render_complete(self.get_session_id()) == True:
+        if motionheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
             #remove_as_status_polling_object(self)
             
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
             
-            motionheadless.delete_session_folders(self.get_session_id())
+            motionheadless.delete_session_folders(self.parent_folder, self.get_session_id())
             
             GLib.idle_add(self.create_media_item)
 
         else:
-            status = motionheadless.get_session_status(self.get_session_id())
+            status = motionheadless.get_session_status(self.parent_folder, self.get_session_id())
             if status != None:
                 fraction, elapsed = status
                 
@@ -534,12 +521,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
-
-        Gdk.threads_leave()
     
     def abort_render(self):
         #remove_as_status_polling_object(self)
-        motionheadless.abort_render(self.get_session_id())
+        motionheadless.abort_render(self.parent_folder, self.get_session_id())
         
     def create_media_item(self):
         open_media_file_callback(self.write_file)
@@ -551,7 +536,8 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         
         AbstractJobQueueObject.__init__(self, session_id, PROXY_RENDER)
         
-        self.render_data = render_data
+        self.render_data = render_data # 'render_data' is proxyediting.ProxyRenderItemData
+        self.parent_folder = userfolders.get_temp_render_dir()
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.render_data.media_file_path)
@@ -563,55 +549,116 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         job_msg.status = RENDERING
         update_job_queue(job_msg)
         
-        # Create command list and launch process.
-        command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
+        enc_opt = renderconsumer.proxy_encodings[self.render_data.enc_index]
         args = self.render_data.get_data_as_args_tuple()
-        for arg in args:
-            command_list.append(arg)
+        if enc_opt.ffmpeggpuenc == None:
+            # MLT proxy rendering
+            self.is_mlt_render = True
             
-        session_arg = "session_id:" + str(self.session_id)
-        command_list.append(session_arg)
+            # Create command list and launch process.
+            command_list = [sys.executable]
+            command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
 
-        subprocess.Popen(command_list)
-    
+
+            # Info print, try to remove later.
+            proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
+            proxy_profile = mlt.Profile(proxy_profile_path)
+            enc_index = int(utils.get_headless_arg_value(args, "enc_index"))
+
+            for arg in args:
+                command_list.append(arg)
+                
+            session_arg = "session_id:" + str(self.session_id)
+            command_list.append(session_arg)
+
+            parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+            command_list.append(parent_folder_arg)
+
+            subprocess.Popen(command_list)
+        else:
+            # FFMPEG CLI proxy rendering.
+            self.is_mlt_render = False
+            
+            # Build ffmpeg CLI string.
+            proxy_attr_str = enc_opt.attr_string
+            # Set scale size.
+            screen_size_str = str(self.render_data.proxy_w) + "x" + str(self.render_data.proxy_h)
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE, screen_size_str)
+            #...or
+            screen_size_str = str(self.render_data.proxy_w) + ":" + str(self.render_data.proxy_h)
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE_2, screen_size_str)
+            # Set source file.
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SOURCEFILE, self.render_data.media_file_path)
+            # Set proxy file.
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_PROXYFILE, self.render_data.proxy_file_path)
+            
+            print(proxy_attr_str)
+            
+            ffmpeg_command = "ffmpeg -i " + str(proxy_attr_str)
+            
+            self.ffmpeg_start = time.monotonic()
+            
+            self.ffmpeg_remnder_thread = FFmpegRenderThread(ffmpeg_command)
+            self.ffmpeg_remnder_thread.start()
+
     def update_render_status(self):
 
-        Gdk.threads_enter()
-                    
-        if proxyheadless.session_render_complete(self.get_session_id()) == True:
+        GLib.idle_add(self._update_from_gui_thread)
             
-            job_msg = self.get_completed_job_message()
-            update_job_queue(job_msg)
-            
-            proxyheadless.delete_session_folders(self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
-            
-            GLib.idle_add(self.proxy_render_complete)
-
-        else:
-            status = proxyheadless.get_session_status(self.get_session_id())
-            if status != None:
-                fraction, elapsed = status
+    def _update_from_gui_thread(self):
+        
+        if self.is_mlt_render == True:
+            if proxyheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
                 
-                self.progress = float(fraction)
-                if self.progress > 1.0:
-                    self.progress = 1.0
+                job_msg = self.get_completed_job_message()
+                update_job_queue(job_msg)
+                
+                proxyheadless.delete_session_folders(self.parent_folder, self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
+                
+                GLib.idle_add(self.proxy_render_complete)
 
-                self.elapsed = float(elapsed)
+            else:
+                status = proxyheadless.get_session_status(self.parent_folder, self.get_session_id())
+                if status != None:
+                    fraction, elapsed = status
+                    
+                    self.progress = float(fraction)
+                    if self.progress > 1.0:
+                        self.progress = 1.0
+
+                    self.elapsed = float(elapsed)
+                    self.text = self.get_job_name()
+
+                    job_msg = self.get_job_queue_message()
+                    update_job_queue(job_msg)
+                else:
+                    # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
+                    pass
+        else:
+            if self.ffmpeg_remnder_thread.completed == True:
+                job_msg = self.get_completed_job_message()
+                update_job_queue(job_msg)
+                GLib.idle_add(self.proxy_render_complete)
+            else:
+                self.elapsed = float(time.monotonic() - self.ffmpeg_start)
+                prog_step = 0.07
+                if PROJECT().profile.height() > 1090:
+                    prog_step = 0.035
+                self.progress += prog_step
+                if self.progress > 1.0:
+                    self.progress = 0.99
+                    
                 self.text = self.get_job_name()
 
                 job_msg = self.get_job_queue_message()
-                
                 update_job_queue(job_msg)
-            else:
-                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
-                pass
-
-        Gdk.threads_leave()
-    
+                    
     def abort_render(self):
-        # remove_as_status_polling_object(self)
-        motionheadless.abort_render(self.get_session_id())
+        if self.is_mlt_render == True:
+            # remove_as_status_polling_object(self)
+            motionheadless.abort_render(self.parent_folder, self.get_session_id())
+        
+        # NOTE: ffmpeg cli render not abortable currently.
         
     def proxy_render_complete(self):
         try:
@@ -633,6 +680,19 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             elif len(proxy_jobs) == 1:
                 self.render_data.do_auto_re_convert_func()
 
+
+class FFmpegRenderThread(threading.Thread):
+    
+    def __init__(self, ffmpeg_command):
+        
+        self.ffmpeg_command = ffmpeg_command
+        self.completed = False
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        os.system(self.ffmpeg_command)
+        self.completed = True 
 
 
 # ----------------------------------------------------------------- polling
@@ -672,165 +732,3 @@ def shutdown_polling():
     
     _status_polling_thread.shutdown()
 
-
-
-# --------------------------------------------------------------- post-close jobs progress 
-def handle_shutdown(autosave_file):
-    # Called just before maybe calling Gtk.main_quit() on app shutdown.
-    if len(_jobs) == 0:
-        # Shutdown polling thread, no jobs so no aborts are done.
-        shutdown_polling()
-        return True # Do Gtk.main_quit()
-        
-    else:
-        # Unfinished jobs, launch progress window to info user after main app closed.
-        print("Launch jobs dialog for unfinished jobs...")
-        global _jobs_render_progress_window
-        _jobs_render_progress_window = JobsRenderProgressWindow(autosave_file)
-        return False  # Do NOT do Gtk.main_quit()
-
-
-class JobsRenderProgressWindow:
-
-    def __init__(self, autosave_file):
-        self.is_shutting_down = False
-        
-        
-        # Window
-        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-        self.window.connect("delete-event", lambda w, e:self.close_window())
-        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
-        self.window.set_icon(app_icon)
-        
-        self.last_saved_job = None
-        self.start_time = time.monotonic()
-        self.autosave_file = autosave_file
-        
-        self.render_progress_bar = Gtk.ProgressBar()
-        self.render_progress_bar.set_text("0 %")
-        
-        prog_align = guiutils.set_margins(self.render_progress_bar, 0, 0, 6, 0)
-        prog_align.set_size_request(550, 30)
-        self.elapsed_value = Gtk.Label()
-        self.current_render_value = Gtk.Label()
-        self.items_value = Gtk.Label()
-        
-        est_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
-        items_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Jobs Remaining Item:"))])
-        current_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Job:"))])
-
-        est_label.set_size_request(250, 20)
-        current_label.set_size_request(250, 20)
-        items_label.set_size_request(250, 20)
-
-        self.status_label = Gtk.Label()
-        self.status_label.set_text(_("Rendering"))
-        cancel_button = Gtk.Button(_("Cancel All Jobs"))
-        cancel_button.connect("clicked", lambda w: self.cancel_all())
-        
-        control_row = Gtk.HBox(False, 0)
-        control_row.pack_start(self.status_label, False, False, 0)
-        control_row.pack_start(Gtk.Label(), True, True, 0)
-        control_row.pack_start(cancel_button, False, False, 0)
-        
-        info_vbox = Gtk.VBox(False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([est_label, self.elapsed_value]), False, False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([items_label, self.items_value]), False, False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([current_label, self.current_render_value]), False, False, 0)
-
-        progress_vbox = Gtk.VBox(False, 2)
-        progress_vbox.pack_start(info_vbox, False, False, 0)
-        progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
-        progress_vbox.pack_start(prog_align, False, False, 0)
-        progress_vbox.pack_start(control_row, False, False, 0)
-
-        alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
-        alignment.show_all()
-
-        # Set pane and show window
-        self.window.add(alignment)
-        self.window.set_title(_("Jobs Render Progress"))
-        self.window.set_position(Gtk.WindowPosition.CENTER)  
-        self.window.show_all()
-    
-    def jobs_completed(self):
-        self.is_shutting_down = True
-        
-        Gdk.threads_enter()
-
-        self.status_label.set_text(_("Renders Complete."))
-
-        self.close_window()
-
-        Gdk.threads_leave()
-
-    def update_render_progress(self):
-        job = _jobs[0]
-        
-        if job.status == COMPLETED and self.last_saved_job != id(job) and self.is_shutting_down == False:
-            
-            Gdk.threads_enter()
-            self.status_label.set_text(_("Saving..."))
-            Gdk.threads_leave()
-            
-            self.last_saved_job = id(job)
-            self.save_project()
-        else:
-            Gdk.threads_enter()
-            self.status_label.set_text(_("Rendering"))
-            Gdk.threads_leave()
-            
-        Gdk.threads_enter()
-
-        elapsed = time.monotonic() - self.start_time
-        elapsed_str= "  " + utils.get_time_str_for_sec_float(elapsed)
-        self.elapsed_value .set_text(elapsed_str)
-        self.current_render_value.set_text(" " + job.text)
-        self.items_value.set_text( " " + str(len(_jobs)))
-        self.render_progress_bar.set_fraction(job.progress)
-        self.render_progress_bar.set_text(str(int(job.progress * 100)) + " %")
-
-        Gdk.threads_leave()
-    
-    def save_project(self):
-        persistance.show_messages = False
-        if PROJECT().last_save_path != None:
-            save_path = PROJECT().last_save_path 
-        else:
-            save_path = userfolders.get_cache_dir() +  self.autosave_file # if user didn't save before exit, save in autosave file to preserve render work somehow.
-
-        persistance.save_project(PROJECT(), save_path)
-            
-    def close_window(self):
-        if len(_jobs) != 0:
-            shutdown_polling()
-        else:
-            _status_polling_thread.abort = True
-
-        self.save_project()
-            
-        Gtk.main_quit()
-
-    def cancel_all(self):
-        self.is_shutting_down = True
-
-        global _jobs
-        _remove_list = []
-        for job in _jobs:
-            if job.status == RENDERING:
-                job.abort_render()
-            job.progress = -1.0
-            job.text = _("Cancelled")
-            job.status = CANCELLED
-            _remove_list.append(job)
-        
-        for  job in _remove_list:
-            if job in _jobs:
-                _jobs.remove(job)
-            else:
-                pass
-
-        global _status_polling_thread
-        _status_polling_thread.abort = True
-        
-        Gtk.main_quit()

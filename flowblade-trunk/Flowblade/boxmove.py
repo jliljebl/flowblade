@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,6 +35,9 @@ box_selection_data = None
 edit_data = None
 entered_from_overwrite = False
 
+# Set at app.py to be movemodes.select_from_box_selection
+set_move_selection_from_box_selection_func = None
+
 def clear_data():
     # These need to cleared when box tool is activated
     global box_selection_data, edit_data
@@ -42,17 +45,20 @@ def clear_data():
     edit_data = None
      
 def mouse_press(event, frame):
+    mouse_press_with_coords(event.x, event.y, frame)
+
+def mouse_press_with_coords(ex, ey, frame):
     global edit_data, box_selection_data
 
     if box_selection_data == None: # mouse action is to select
-        press_point = (event.x, event.y)
+        press_point = (ex, ey)
         
         edit_data = {"action_on":True,
                      "press_point":press_point,
                      "mouse_point":press_point,
                      "box_selection_data":None}
     else: # mouse action is to move
-        if box_selection_data.is_hit(event.x, event.y) == False:
+        if box_selection_data.is_hit(ex, ey) == False:
             # Back to start state if selection box missed
             edit_data = None
             box_selection_data = None
@@ -69,11 +75,11 @@ def mouse_move(x, y, frame):
     global edit_data
     if edit_data == None:
         return
+
     if box_selection_data == None: # mouse action is to select
         edit_data["mouse_point"] = (x, y)
-       
     else: # mouse action is to move
-        delta = frame - edit_data["press_frame"]
+        delta = edit_data["snapped_frame"] - edit_data["press_frame"]
         edit_data["delta"] = delta
 
     tlinewidgets.set_edit_mode_data(edit_data)
@@ -102,10 +108,17 @@ def mouse_release(x, y, frame):
             return 
               
         if box_selection_data.is_empty() == False:
-            edit_data = {"action_on":True,
-                         "press_frame":frame,
-                         "delta":0,
-                         "box_selection_data":box_selection_data}
+            if len(box_selection_data.track_selections) == 1 and entered_from_overwrite == True:
+                # If selection only contains a single track we treat it as a movemode selection range
+                # because that provides the added functionality of moving clips to another track.
+                _exit_to_overwrite()
+                set_move_selection_from_box_selection_func(box_selection_data.track_selections[0])
+                return
+            else:
+                edit_data = {"action_on":True,
+                             "press_frame":frame,
+                             "delta":0,
+                             "box_selection_data":box_selection_data}
         else:
             box_selection_data = None
             edit_data = {"action_on":False,
@@ -152,14 +165,14 @@ def mouse_release(x, y, frame):
     
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
-
+                
 def _exit_to_overwrite():
-    # If we entered box mode from overwite mode empty click, this is used to enter back into overwrite mode.
+    # If we entered box mode from overwrite mode empty click, this is used to enter back into overwrite mode.
     global entered_from_overwrite
     entered_from_overwrite = False
     editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode_data(None)
-    gui.editor_window.set_cursor_to_mode() # This gets set wrong in editevent.tline_canvas_mouse_released() and were putting it back here, 
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # This gets set wrong in editevent.tline_canvas_mouse_released() and were putting it back here, 
                                            # this could be investigated for better solution, this could cause a cursor flash, but on dev system we're not getting it.
     updater.repaint_tline()
 
@@ -189,7 +202,10 @@ class BoxMoveData:
         
         start_frame = tlinewidgets.get_frame(x1)
         end_frame = tlinewidgets.get_frame(x2) 
-        
+
+        if start_frame < 0:
+            start_frame = 0
+
         track_top_index = self.get_bounding_track_index(y1, tlinewidgets.get_track(y1))
         track_bottom_index = self.get_bounding_track_index(y2, tlinewidgets.get_track(y2))
 

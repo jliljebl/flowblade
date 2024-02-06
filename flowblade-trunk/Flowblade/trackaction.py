@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2014 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,33 +22,50 @@
 This module handles track actions; mute, change active state, size change.
 """
 
-from gi.repository import GObject
+from gi.repository import GLib
 
 import appconsts
 import audiomonitoring
 import dialogutils
 import gui
 import guicomponents
+import guipopover
 import editorstate
-#import edit
 import editorpersistance
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
 from editorstate import PLAYER
+import movemodes
+import projectaction
 import snapping
 import tlinewidgets
 import updater
 
+
+_menu_track_index = None
+        
 # --------------------------------------- menu events
-def _track_menu_item_activated(widget, data):
+def _track_menu_item_activated(widget, action, data):
     track, item_id, selection_data = data
     handler = POPUP_HANDLERS[item_id]
     if selection_data == None:
         handler(track)
     else:
         handler(track, selection_data)
+
+def _track_menu_height_activated(action, variant):
+    if variant.get_string() == "highheight":
+        set_track_high_height(_menu_track_index)
+    elif variant.get_string() == "normalheight":
+        set_track_normal_height(_menu_track_index)
+    else:
+        set_track_small_height(_menu_track_index)
         
+    action.set_state(variant)
+    editorpersistance.save()
+    guipopover._tracks_column_popover.hide()
+    
 def lock_track(track_index):
     track = get_track(track_index)
     track.edit_freedom = appconsts.LOCKED
@@ -59,6 +76,31 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
+def toggle_track_output():
+    if movemodes.selected_track == -1:
+        return
+    
+    track = current_sequence().tracks[movemodes.selected_track]
+    
+    if movemodes.selected_track >= current_sequence().first_video_index:
+        # Video tracks
+        if track.mute_state != appconsts.TRACK_MUTE_ALL:
+            new_mute_state = appconsts.TRACK_MUTE_ALL
+        else:
+            new_mute_state = appconsts.TRACK_MUTE_NOTHING
+    else:
+        # Audio tracks
+        if track.mute_state == appconsts.TRACK_MUTE_ALL:
+            new_mute_state = appconsts.TRACK_MUTE_VIDEO
+        else:
+            new_mute_state = appconsts.TRACK_MUTE_ALL
+
+    # Update track mute state
+    current_sequence().set_track_mute_state(movemodes.selected_track, new_mute_state)
+    
+    audiomonitoring.update_mute_states()
+    gui.tline_column.widget.queue_draw()
+            
 def set_track_high_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_HIGH
@@ -72,20 +114,12 @@ def set_track_high_height(track_index, is_retry=False):
         current_paned_pos = gui.editor_window.app_v_paned.get_position()
         new_paned_pos = current_paned_pos - (new_h - h) - 5
         gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
+        GLib.timeout_add(200, lambda: set_track_high_height(track_index, True))
         return False
     
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     
-    if new_h > h:
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
-
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
@@ -105,22 +139,11 @@ def set_track_normal_height(track_index, is_retry=False, is_auto_expand=False):
         current_paned_pos = gui.editor_window.app_v_paned.get_position()
         new_paned_pos = current_paned_pos - (new_h - h) - 5
         gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True, is_auto_expand))
+        GLib.timeout_add(200, lambda: set_track_normal_height(track_index, True, is_auto_expand))
         return False
     
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-    
-    if new_h > h:
-        if is_auto_expand == True:
-            return False
-        
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
 
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
@@ -144,20 +167,41 @@ def maybe_do_auto_expand(tracks_clips_count_before_exit):
         return
 
     if current_sequence().tracks[initial_drop_track_index].height == appconsts.TRACK_HEIGHT_SMALL:
-        GObject.timeout_add(50, lambda: _do_auto_expand(initial_drop_track_index))
+        GLib.timeout_add(50, lambda: _do_auto_expand(initial_drop_track_index))
 
 def _do_auto_expand(initial_drop_track_index):
     set_track_normal_height(initial_drop_track_index, is_retry=False, is_auto_expand=True)
     
 def mute_track(track, new_mute_state):
     # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IT IS NOT AN UNDOABLE EDIT.
-    current_sequence().set_track_mute_state(track.id, new_mute_state)
+    current_sequence().set_track_mute_state(track, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
-def all_tracks_menu_launch_pressed(widget, event):
-    guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
+def all_tracks_menu_launch_pressed(launcher, widget, event):
+    guipopover.all_tracks_menu_show(launcher, widget, _all_tracks_item_activated)
 
-def _all_tracks_item_activated(widget, msg):
+def _all_tracks_item_activated(action, variant, msg):
+    if msg == "addvideo":
+        projectaction.add_video_track()
+        return
+
+    if msg == "addaudio":
+        projectaction.add_audio_track()
+        return
+        
+    if msg == "deletevideo":
+        projectaction.delete_video_track()
+        return
+        
+    if msg == "deleteaudio":
+        projectaction.delete_audio_track()
+        return
+    
+    if msg == "resetheights":
+        current_sequence().minimize_tracks_height()
+        current_sequence().tracks[current_sequence().first_video_index].height = appconsts.TRACK_HEIGHT_NORMAL
+        _tracks_resize_update()
+
     if msg == "min":
         current_sequence().minimize_tracks_height()
         _tracks_resize_update()
@@ -181,11 +225,15 @@ def _all_tracks_item_activated(widget, msg):
         _activate_only_current_top_active()
     
     if msg == "shrink":
-         _tline_vertical_shrink_changed(widget)
-    
+        new_state = not(action.get_state().get_boolean())
+        _tline_vertical_shrink_changed(new_state)
+        action.set_state(GLib.Variant.new_boolean(new_state))
+            
     if msg == "autoexpand_on_drop":
-        editorpersistance.prefs.auto_expand_tracks = widget.get_active()
+        new_state = not(action.get_state().get_boolean())
+        editorpersistance.prefs.auto_expand_tracks = new_state
         editorpersistance.save()
+        action.set_state(GLib.Variant.new_boolean(new_state))
         
 def _tracks_resize_update():
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
@@ -193,8 +241,8 @@ def _tracks_resize_update():
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
-def _tline_vertical_shrink_changed(widget):
-    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = widget.get_active()
+def _tline_vertical_shrink_changed(do_shrink):
+    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = do_shrink
     updater.set_timeline_height()
 
 def _activate_all_tracks():
@@ -212,29 +260,37 @@ def _activate_only_current_top_active():
 
     gui.tline_column.widget.queue_draw()
     
-def audio_levels_menu_launch_pressed(widget, event):
-    guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
+def tline_properties_menu_launch_pressed(launcher, widget, event):
+    guipopover.tline_properties_menu_show(launcher, widget, _tline_properties_item_activated, _tline_mouse_zoom_selected)
 
-# THIS HANDLES MUCH MORE NOW, NAME _audio_levels_item_activated name needs changing
-def _audio_levels_item_activated(widget, msg):
+def _tline_properties_item_activated(action, event, msg):
+    new_state = not(action.get_state().get_boolean())
+    
     if msg == "all":
-        editorstate.display_all_audio_levels = True
-        updater.repaint_tline()
-    elif msg == "on request":
-        editorstate.display_all_audio_levels = False
-        current_sequence().drop_audio_levels()
+        editorstate.display_all_audio_levels = new_state
         updater.repaint_tline()
     elif msg == "snapping":
-        snapping.snapping_on = widget.get_active()
+        snapping.snapping_on = new_state
     elif msg == "scrubbing":
-        editorpersistance.prefs.audio_scrubbing = widget.get_active()
+        editorpersistance.prefs.audio_scrubbing = new_state
         editorpersistance.save()
-        PLAYER().set_scrubbing(widget.get_active())
-        
+        PLAYER().set_scrubbing(new_state)
     else: # media thumbnails
-        editorstate.display_clip_media_thumbnails = widget.get_active()
+        editorstate.display_clip_media_thumbnails = new_state
         updater.repaint_tline()
 
+    action.set_state(GLib.Variant.new_boolean(new_state))
+
+def _tline_mouse_zoom_selected(action, variant):
+    if variant.get_string() == "zoomtoplayhead":
+        editorpersistance.prefs.zoom_to_playhead = True
+    else:
+        editorpersistance.prefs.zoom_to_playhead = False
+
+    action.set_state(variant)
+    editorpersistance.save()
+    guipopover._tline_properties_popover.hide()
+    
 # ------------------------------------------------------------- mouse events
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object
@@ -246,8 +302,12 @@ def track_active_switch_pressed(data):
             track.active = True
         gui.tline_column.widget.queue_draw()
     elif data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
+        global _menu_track_index # popover + gio.actions just wont allow easily packing track to go, so we're going global
+        _menu_track_index = data.track
+        guipopover.tracks_popover_menu_show(data.track, gui.tline_column.widget, \
+                                            data.event.x, data.event.y, \
+                                            _track_menu_item_activated,
+                                            _track_menu_height_activated)
 
 def track_double_click(track_id):
     track = get_track(track_id) # data.track is index, not object
@@ -324,12 +384,13 @@ def track_center_pressed(data):
             gui.tline_column.widget.queue_draw()
     
     if data.event.button == 3:
-        guicomponents.display_tracks_popup_menu(data.event, data.track, \
-                                                _track_menu_item_activated)
+        global _menu_track_index # popover + gio.actions just wont allow easily packing track to go, so we're going global
+        _menu_track_index = data.track
+        guipopover.tracks_popover_menu_show(data.track, gui.tline_column.widget, \
+                                            data.event.x, data.event.y, \
+                                            _track_menu_item_activated,
+                                            _track_menu_height_activated)
 
 POPUP_HANDLERS = {"lock":lock_track,
                   "unlock":unlock_track,
-                  "high_height":set_track_high_height,
-                  "normal_height":set_track_normal_height,
-                  "small_height":set_track_small_height,
                   "mute_track":mute_track}

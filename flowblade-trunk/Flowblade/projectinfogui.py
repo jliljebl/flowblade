@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2013 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,8 +32,6 @@ import utils
 
 widgets = utils.EmptyClass()
 
-PROJECT_INFO_PANEL_HEIGHT = 200
-PROJECT_TOP_LEVEL_PANE_HEIGHT = 150
 
 def get_project_info_panel():
     project_name_label = Gtk.Label(label=PROJECT().name)
@@ -77,14 +75,13 @@ def get_top_level_project_info_panel():
     desc_label.modify_font(Pango.FontDescription(font_desc))
     desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
-    desc_row.set_margin_left(4)
+    desc_row.set_margin_start(4)
+    # We are leaving this for updates for now because smaller window sizes use this reference 'widgets.info_box' still.
     info_box = guicomponents.get_profile_info_reduced_small_box(profile)
-    info_box.set_margin_left(4)
     
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_row, False, True, 0)
     project_info_vbox.pack_start(desc_row, False, True, 0)
-    project_info_vbox.pack_start(info_box, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,0,4,4)
 
     project_info_vbox.set_tooltip_text(guicomponents.get_full_profile_info_text(profile))
@@ -92,12 +89,11 @@ def get_top_level_project_info_panel():
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
-
+ 
     return project_info_vbox
     
 def update_project_info():
     profile = PROJECT().profile
-    #widgets.project_name_label.set_markup(guiutils.bold_text(PROJECT().name))
     widgets.desc_label.set_text(profile.description())
     profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
@@ -105,7 +101,7 @@ def update_project_info():
 def show_project_events_dialog():
     events_list = ProjectEventListView()
     events_list.fill_data_model()
-    events_list.set_size_request(620, 500)
+    events_list.set_size_request(620, 200)
     dialogutils.panel_ok_dialog(_("Project Events"), events_list)
 
 class ProjectEventListView(Gtk.VBox):
@@ -119,10 +115,9 @@ class ProjectEventListView(Gtk.VBox):
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()

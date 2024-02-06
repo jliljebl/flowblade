@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import edit
 import editorlayout
@@ -45,17 +46,13 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
-import tlinerender
 import utils
 
 widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
 
-# Edit polling.
-# We didn't put a layer of indirection to look for and launch events on edits,
-# so now we detect edits by polling. This has no performance impect, n is so small.
-_edit_polling_thread = None
+# Save menuitems handling.
 compositor_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
@@ -63,19 +60,13 @@ compositor_changed_since_last_save = False
 keyframe_editor_widgets = []
 
 
-def shutdown_polling():
-    global _edit_polling_thread
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-        _edit_polling_thread = None
-
 def create_widgets():
     """
     Widgets for editing compositing properties.
     """
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    widgets.hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
 
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
@@ -85,7 +76,6 @@ def create_widgets():
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.add(widgets.value_edit_box)
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
 
 def get_compositor_clip_panel():
     create_widgets()
@@ -127,21 +117,13 @@ def set_compositor(new_compositor):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_COMPOSITORS)
 
-    global _edit_polling_thread
-    # Close old polling
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-    # Start new polling
-    _edit_polling_thread = PropertyChangePollingThread()
-    _edit_polling_thread.start()
-
 def clear_compositor():
     global compositor
     compositor = None
     widgets.compositor_info.set_no_compositor_info()
     _display_compositor_edit_box()
     set_enabled(False)
-    shutdown_polling()
+    # shutdown_polling()
 
 def set_enabled(value):
     widgets.empty_label.set_sensitive(value)
@@ -206,7 +188,7 @@ def _display_compositor_edit_box():
         vbox.show_all()
 
         scroll_window = Gtk.ScrolledWindow()
-        scroll_window.add_with_viewport(vbox)
+        scroll_window.add(vbox)
         scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scroll_window.show_all()
 
@@ -294,7 +276,7 @@ def _display_compositor_edit_box():
     vbox.show_all()
 
     scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(vbox)
+    scroll_window.add(vbox)
     scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     scroll_window.show_all()
 
@@ -324,7 +306,7 @@ def update_kfeditors_positions():
 
 
 def _compositor_uses_fade_buttons(compositor):
-    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatiblity issues.
+    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatibility issues.
     if compositor.transition.info.name  == "##opacity":
         return True
     elif compositor.transition.info.name  == "##pict_in_pict":
@@ -343,10 +325,10 @@ def _compositor_uses_fade_buttons(compositor):
         
     return False
 # ----------------------------------------------------------- hamburger menu
-def _hamburger_launch_pressed(widget, event):
-    guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
+def _hamburger_launch_pressed(launcher, widget, event, data):
+    guipopover.compositor_editor_hamburger_menu_show(launcher, widget, _compositor_hamburger_item_activated)
 
-def _compositor_hamburger_item_activated(widget, msg):
+def _compositor_hamburger_item_activated(action, variant, msg):
     if msg == "save":
         comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
         default_name = comp_name.replace(" ", "_") + _("_compositor_values") + ".data"
@@ -381,7 +363,7 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
         else:
             saved_name_comp_name = mlttransitions.name_for_type[compositor_data.info.name]
             current_comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
-            primary_txt = _("Saved Compositor data not applicaple for this compositor!")
+            primary_txt = _("Saved Compositor data not applicable for this compositor!")
             secondary_txt = _("Saved data is for ") + saved_name_comp_name + " compositor,\n" + _(", current compositor is ") + current_comp_name + "."
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
 
@@ -394,51 +376,6 @@ def _set_fade_length_dialog_callback(dialog, response_id, spin):
         
     dialog.destroy()
 
-class PropertyChangePollingThread(threading.Thread):
-    
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.last_properties = None
-        
-    def run(self):
-        self.running = True
-        while self.running:
-            global compositor
-            if compositor == None:
-                self.shutdown()
-            else:
-                if self.last_properties == None:
-                    self.last_properties = self.get_compositor_properties()
-                
-                new_properties = self.get_compositor_properties()
-                
-                changed = False
-                for new_prop, old_prop in zip(new_properties, self.last_properties):
-                    if new_prop != old_prop:
-                        changed = True
-
-                if changed:
-                    global compositor_changed_since_last_save
-                    compositor_changed_since_last_save = True
-                    tlinerender.get_renderer().timeline_changed()
-
-                self.last_properties = new_properties
-                
-                time.sleep(1.0)
-                
-    def get_compositor_properties(self):
-        compositor_properties = []
-
-        for prop in compositor.transition.properties:
-            compositor_properties.append(copy.deepcopy(prop))
-    
-        compositor_properties.append((copy.deepcopy(compositor.clip_in ), copy.deepcopy(compositor.clip_out)))
-        
-        return compositor_properties
-        
-    def shutdown(self):
-        self.running = False
-        
 
 class CompositorValuesSaveData:
     

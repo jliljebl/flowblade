@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ undo_stack = []
 # no redos.
 index = 0
 
-# Some menu items are set active/deactive based on undo stack state.
+# Some menu items are set active/deactivate based on undo stack state.
 save_item = None
 undo_item = None 
 redo_item = None
@@ -80,7 +80,8 @@ def register_edit(undo_edit):
     undo_stack.append(undo_edit)
     index = index + 1
     
-    save_item.set_sensitive(True) # Disabled at load and save, first edit enables
+    if editorstate.PROJECT().last_save_path != None:
+        save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
 

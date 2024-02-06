@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -107,9 +107,9 @@ class AbstractGlassButtons:
 
         # Dark theme comes with flat buttons
         self.dark_theme = False
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            self.glass_style = False
-            self.dark_theme = True
+
+        self.glass_style = False
+        self.dark_theme = True
 
         self.draw_button_gradients = True # old code artifact, remove (set False at object creation site to kill all gradients)
 
@@ -304,20 +304,19 @@ class PlayerButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
-        # Colorized icons
-        if prefs.colorized_icons is True:
-            icon_color = "_color"
-        else:
-            icon_color = ""
+
         # End of Colorized icons
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
-        play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
-        play_icon = guiutils.get_cairo_image("play_2_s"+ icon_color)
-        stop_icon = guiutils.get_cairo_image("stop_s"+ icon_color)
+        # Force no decorations for player buttons, this cannot be made to work.
+        self.no_decorations = True 
+
+        play_pause_icon = guiutils.get_cairo_image("play_pause_s")
+        play_icon = guiutils.get_cairo_image("play_2_s")
+        stop_icon = guiutils.get_cairo_image("stop_s")
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
         # ------------------------------timeline_start_end_button
@@ -351,12 +350,12 @@ class PlayerButtons(AbstractGlassButtons):
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
                 #  go to start end add 5*size_adj, 5*size_adj,
-                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [7*size_adj, 7*size_adj, 5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 0*size_adj, 6*size_adj, 2*size_adj, 10*size_adj, 4*size_adj]
             else:
                 self.icons = [prev_icon, next_icon, play_icon, stop_icon,
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 2*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 0*size_adj, 6*size_adj, 2*size_adj, 10*size_adj, 4*size_adj]
             # ------------------------------End of timeline_start_end_button
 
         for i in range(0, len(self.icons)):
@@ -434,12 +433,7 @@ class GmicButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
-        # Colorized icons NOT IMPLEMENTED
-        if prefs.colorized_icons is True:
-            icon_color = "_color"
-        else:
-            icon_color = ""
-        # End of Colorized icons
+
         # NOT IMPLEMENTED
         if prefs.double_track_hights:
            size_ind = 1
@@ -536,10 +530,13 @@ class GlassButtonsGroup(AbstractGlassButtons):
         self.image_y_default = image_y_default
         focus_groups[focus_group].append(self.widget)
 
-    def add_button(self, pix_buf, release_callback):
+    def add_button(self, pix_buf, release_callback, image_x=None):
+        if image_x == None:
+            image_x = self.image_x_default
+            
         self.icons.append(pix_buf)
         self.released_callback_funcs.append(release_callback)
-        self.image_x.append(self.image_x_default)
+        self.image_x.append(image_x)
         self.image_y.append(self.image_y_default)
         self.sensitive.append(True)
         self.widget.set_pref_size(len(self.icons) * self.button_width + 2, self.button_height + 2)

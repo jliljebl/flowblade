@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,17 +21,15 @@
 """
 Module loads render options, provides them in displayable form 
 and builds a mlt.Consumer for rendering on request.
-
-Rendering is done in app.player object of class mltplayer.Player
 """
 
 
 from gi.repository import Gtk
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import hashlib
 import os
 import time
@@ -104,11 +102,9 @@ def get_args_vals_list_for_current_selections():
 
 def get_current_gui_selections():
     selections = {}
-    #selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
     selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     selections["encoding_option_name"]  = widgets.encoding_panel.encoding_selector.categorised_combo.get_selected_name() # FIXME
     selections["quality_option_index"]= widgets.encoding_panel.quality_selector.widget.get_active()
-    #selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
@@ -132,14 +128,12 @@ def get_current_gui_selections():
     return selections
 
 def set_saved_gui_selections(selections):
-    #widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
     try:
         enc_op_name = selections["encoding_option_name"]
         widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_op_name)
     except:
         print("Old style encoding option value could not be loaded.")
     widgets.encoding_panel.quality_selector.widget.set_active(selections["quality_option_index"])
-    #widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
     widgets.file_panel.movie_name.set_text(selections["name"])
     widgets.range_cb.set_active(selections["range"])
@@ -188,13 +182,20 @@ def create_widgets():
     Widgets for editing render properties and viewing render progress.
     """
     widgets.file_panel = rendergui.RenderFilePanel()
-    #widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     if (editorstate.SCREEN_HEIGHT > 898):
-        widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
-                                                       _display_selection_in_opts_view,
-                                                       set_default_values_for_widgets)
+        if editorstate.screen_size_large_width() == False:
+            widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
+                                                           _display_selection_in_opts_view,
+                                                           set_default_values_for_widgets)
+        else:
+            widgets.args_panel = rendergui.RenderArgsRow(_save_opts_pressed, _load_opts_pressed,
+                                                           _display_selection_in_opts_view,
+                                                           set_default_values_for_widgets)
+
+
+                 
     else:
         widgets.args_panel = rendergui.RenderArgsPanelSmall(_save_opts_pressed, _load_opts_pressed,
                                                             _display_selection_in_opts_view)
@@ -202,7 +203,7 @@ def create_widgets():
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
-    widgets.queue_button = Gtk.Button(_("To Queue"))
+    widgets.queue_button = Gtk.Button(label=_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     widgets.render_range_panel = rendergui.RenderRangePanel(widgets.range_cb)
 
@@ -226,6 +227,15 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
+def update_encoding_selector():
+    # Lets make doubly sure we're not updating something that soes npt exist.
+    while hasattr(widgets, "encoding_panel") == False:
+        print("no encoding_panel")
+        time.sleep(0.5)
+        
+    widgets.encoding_panel.encoding_selector.categorised_combo.refill(renderconsumer.categorized_encoding_options)
+    widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
+    
 def enable_user_rendering(value):
     widgets.encoding_panel.set_sensitive(value)
     widgets.profile_panel.set_sensitive(value)
@@ -360,11 +370,11 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
             
-            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+            render_full_range = False # consumer won't stop automatically and needs to stopped explicitly
         
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
-        args = ("session_id:" + str(session_id), 
+        args = ("session_id:" + str(session_id),
                 "speed:" + str(speed), 
                 "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
@@ -447,7 +457,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             if start_frame < 0:
                 start_frame = 0
             
-            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+            render_full_range = False # consumer won't stop automatically and needs to stopped explicitly
             
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
@@ -481,7 +491,7 @@ def _REVERSE_render_stop(dialog, response_id):
     
 # ----------------------------------------------------------------------- single track transition render 
 def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
-    # Set render complete callback to availble render stop callback using global variable
+    # Set render complete callback to available render stop callback using global variable
     global transition_render_done_callback
     transition_render_done_callback = transition_render_complete_cb
 
@@ -491,7 +501,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     folder = userfolders.get_render_dir()
 
     file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    write_file = folder + "/"+ file_name + file_ext
+    write_file = folder + file_name + file_ext
 
     # Render consumer
     consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
@@ -511,7 +521,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     progress_bar = Gtk.ProgressBar()
     dialog = rendergui.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
     
-    motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
+    motion_progress_update = guiutils.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
     motion_progress_update.start()
 
 def _transition_render_stop(dialog, response_id):

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,12 +36,12 @@ import gui
 import guiutils
 import respaths
 
-trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unncessary dependencies in gmic.py
+trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unnecessary dependencies in gmic.py
 
 
 # Draw params
-BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, THIS EXPANDS TO FILL
-BAR_HEIGHT = 10 # component height
+BAR_WIDTH = 200 # Just used as an initial value > 0, no effect on window layout.
+BAR_HEIGHT = 12 # component height
 LINE_WIDTH = 3
 LINE_HEIGHT = 6
 LINE_COLOR = (0.3, 0.3, 0.3)
@@ -49,20 +49,19 @@ LINE_COUNT = 11 # Number of range lines
 BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
-DARK_LINE_COLOR = (0.9, 0.9, 0.9)
-DARK_BG_COLOR = (0.3, 0.3, 0.3)
+DARK_LINE_COLOR = (0.5, 0.5, 0.5)
+DARK_BG_COLOR = (0.24, 0.24, 0.24)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
 DARK_SPEED_TEST_COLOR = (0.9, 0.9, 0.9)
-END_PAD = 6 # empty area at both ends in pixels
+END_PAD = 12 # empty area at both ends in pixels
 MARK_CURVE = 5
-MARK_LINE_WIDTH = 4
+MARK_LINE_WIDTH = 5
 MARK_PAD = -1
 
 MARK_COLOR = (0.3, 0.3, 0.3)
-DARK_MARK_COLOR = (0.0, 0.0, 0.0)
-FLOWBLADE_THEME_MARK_COLOR = (1, 1, 1)
+DARK_MARK_COLOR = (0.75, 0.75, 0.75)
 
 PREVIEW_FRAME_COLOR = (0.8, 0.8, 0.9)
 PREVIEW_RANGE_COLOR = (0.4, 0.8, 0.4)
@@ -84,6 +83,7 @@ class PositionBar:
         self.mark_out_norm = -1.0
         self.disabled = False
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
+        self.mouse_press_listener = None # when used by scripttool.py this is used to stop playback
 
         self.handle_trimmodes = handle_trimmodes
 
@@ -92,17 +92,13 @@ class PositionBar:
 
         self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
         self.MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker_yellow.png")
-        
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
-            LINE_COLOR = DARK_LINE_COLOR
-            DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
-            SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
-            MARK_COLOR = DARK_MARK_COLOR
-            SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-                editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
+
+        global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
+        LINE_COLOR = DARK_LINE_COLOR
+        DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
+        SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
+        MARK_COLOR = DARK_MARK_COLOR
+        SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
     
     def set_listener(self, listener):
         self.position_listener = listener
@@ -125,12 +121,32 @@ class PositionBar:
             norm_pos = float(frame_pos) / length
             self._pos = self._get_panel_pos(norm_pos)
         except ZeroDivisionError:
-            self.mark_in_norm = 0
+            self.mark_in_norm = 0 # TODO: Both should be -1? Check.
             self.mark_out_norm = 0
             self._pos = self._get_panel_pos(0)
 
         self.widget.queue_draw()
 
+    def update_display_with_data(self, producer, mark_in, mark_out):
+        self.producer = producer
+        length = producer.get_length() # Get from MLT
+        self.length = length 
+        try:
+            self.mark_in_norm = float(mark_in) / length # Diasables range if mark_in == -1 because self.mark_in_norm < 0
+            self.mark_out_norm = float(mark_out) / length
+            frame_pos = producer.frame()
+            norm_pos = float(frame_pos) / length
+            self._pos = self._get_panel_pos(norm_pos)
+        except ZeroDivisionError:
+            self.mark_in_norm = -1
+            self.mark_out_norm = -1
+            self._pos = self._get_panel_pos(0)
+
+        if self.mark_in_norm < 0 or self.mark_out_norm < 0:
+            self.preview_range = None
+
+        self.widget.queue_draw()
+        
     def clear(self):
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0
@@ -140,19 +156,12 @@ class PositionBar:
         self.widget.queue_draw()
         
     def set_dark_bg_color(self):
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            return
-
         global BG_COLOR
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            r, g, b, a = gui.unpack_gdk_color(gui.get_light_gray_light_color())
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                r, g ,b, a = gui.unpack_gdk_color(gui.get_light_neutral_color())
-            BG_COLOR = (r, g ,b)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            BG_COLOR = DARK_BG_COLOR
         else:
+            # System dark.
             r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
-
             BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
     
     def _get_panel_pos(self, norm_pos):
@@ -162,16 +171,31 @@ class PositionBar:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
+
+        # Draw consts
+        ax = 0
+        ay = 0
+        awidth = w
+        aheight = 12
+        aaspect = 1.0
+        acorner_radius = END_PAD / 2.0
+        aradius = END_PAD / 2.0
+        adegrees = math.pi / 180.0
+
+        self._draw_consts = (ax, ay, awidth, aheight, aaspect, acorner_radius, aradius, adegrees)
         
         # Draw bb
         draw_color = BG_COLOR
         if self.disabled:
             draw_color = DISABLED_BG_COLOR
         cr.set_source_rgb(*draw_color)
-        cr.rectangle(0,0,w,h)
+        self._round_rect_path(cr)
+        #cr.set_source_rgb(0,0,0)
+        #cr.stroke()
+        #cr.rectangle(0,0,w,h)
         cr.fill()
         
         # Draw selected area if marks set
@@ -203,7 +227,7 @@ class PositionBar:
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
 
-        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.markers
+        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.
         if editorstate.timeline_visible():
             try: # this gets attempted on load sotimes before current sequence is available.
                 markers = editorstate.current_sequence().markers
@@ -233,6 +257,12 @@ class PositionBar:
         cr.set_source_surface(self.POINTER_ICON, self._pos - 3, 0)
         cr.paint()
 
+        # Draw outline.
+        self._round_rect_path(cr)
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+        
         # This is only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
@@ -297,6 +327,16 @@ class PositionBar:
         cr.fill_preserve()
         cr.set_source_rgb(0,0,0)
         cr.stroke()
+
+    def _round_rect_path(self, cr):
+        x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
+            
+        cr.new_sub_path()
+        cr.arc (x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc (x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path ()
         
     def _press_event(self, event):
         """
@@ -311,6 +351,8 @@ class PositionBar:
 
         if((event.button == 1)
             or(event.button == 3)):
+            if self.mouse_press_listener != None:
+                self.mouse_press_listener()
             # Set pos to in active range to get normalized pos
             self._pos = self._legalize_x(event.x)
             # Listener calls self.set_normalized_pos()

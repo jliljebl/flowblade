@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,11 +26,21 @@ from gi.repository import Gdk
 
 import appconsts
 import dialogutils
+import gui
 import edit
 from editorstate import current_sequence
+import editorstate
 import tlinewidgets
 import updater
 
+# ------------------------------------- edit mode setting
+def set_default_edit_mode(disable_mouse=False):
+    """
+    We interpret clicks on empty in this tool as request to exit to default edit tool.
+    """
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
+    if disable_mouse:
+        editorstate.timeline_mouse_disabled = True
  
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
@@ -49,13 +59,16 @@ def mouse_release(x, y, frame, state):
 def cut_single_track(event, frame):
     track = tlinewidgets.get_track(event.y)
     if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
+        set_default_edit_mode(True)
         return
 
     if dialogutils.track_lock_check_and_user_info(track):
+        set_default_edit_mode(True)
         return
         
     data = get_cut_data(track, frame)
     if data == None:
+        set_default_edit_mode(True)
         return
 
     action = edit.cut_action(data)
@@ -83,7 +96,7 @@ def get_cut_data(track, frame):
     index = track.get_clip_index_at(int(frame))
     try:
         clip = track.clips[index]            
-        # don't cut blanck clip
+        # don't cut blank clip
         if clip.is_blanck_clip:
             return None
     except Exception:

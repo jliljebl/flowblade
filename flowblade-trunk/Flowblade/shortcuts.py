@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2013 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ def load_shortcut_files():
             print("Shortcuts file " + f + " found, but has incorrect format.")
     
     # Default shortcuts file always goes to index 0
-    if default_shortcuts_file_found == True:# this is a bit unnecessery, it is there unless someone destroys it manually
+    if default_shortcuts_file_found == True:# this is a bit unnecessary, it is there unless someone destroys it manually
         shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
         shortcut_files_display_names.insert(0, "Flowblade Default")
 
@@ -153,7 +153,7 @@ def set_keyboard_shortcuts():
 
 
 def update_custom_shortcuts():
-    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update customn shortcuts.
+    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update custom shortcuts.
     custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
     for custom_prefs_file in custom_files:
         _update_custom_xml_file_nodes_to_default(_get_shortcut_file_fullpath(custom_prefs_file))
@@ -260,7 +260,7 @@ def change_custom_shortcut(code, key_val_name, mods_list, add_event=False):
 
     # Add new element if so ordered.
     if add_event == True:
-        new_event = etree.Element("event")    
+        new_event = etree.Element("event")
         new_event.text = key_val_name
         new_event.set('code', code)
         shortcuts_node = root.find("shortcuts")
@@ -304,19 +304,23 @@ def is_blocked_shortcut(key_val, mods_list):
         if key_val == r_key_val:
             if collections.Counter(mods_list) == collections.Counter(r_mods_list):
                 return True
-                
+
     return False
 
 def get_shortcut_info(root, code):
-    events = root.iter('event')
+    try:
+        events = root.iter('event')
 
-    for event in events:
-        if event.get('code') == code:
-            mod_name = _get_mod_string(event)
-            if mod_name != "":
-                mod_name = mod_name + " + "
-            return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
-    
+        for event in events:
+            if event.get('code') == code:
+                mod_name = _get_mod_string(event)
+                if mod_name != "":
+                    mod_name = mod_name + " + "
+                return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
+    except:
+        print("error in get_shortcut_info, event.text:", event.text)
+        pass
+
     return (None, None)
 
 def get_shortcut_gtk_code(root, code):
@@ -340,19 +344,6 @@ def _get_mod_string(event):
         return ""
     
     return _mod_names[mod]
-
-def get_diff_to_defaults(xml_file):
-    diff_str = ""
-    test_root = get_shortcuts_xml_root_node(xml_file)
-    def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
-    
-    for code, action_name in _keyboard_action_names.items():
-        key_name_test, action_name = get_shortcut_info(test_root, code)
-        key_name_def, action_name = get_shortcut_info(def_root, code)
-        if key_name_def != key_name_test:
-            diff_str = diff_str + action_name + " (" + key_name_test + ")    "
-    
-    return diff_str
 
 def _get_shortcut_file_fullpath(f):
     full_path = respaths.SHORTCUTS_PATH + f
@@ -384,7 +375,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['stop'] = _("Stop")
     _keyboard_action_names['faster'] =  _("Forward Faster")
     _keyboard_action_names['log_range'] = _("Log Marked Clip Range")
-    _keyboard_action_names['resync'] = _("Resync selected Clip or Compositor")
+    _keyboard_action_names['split_selected'] = _("Split Audio Synched")
+    _keyboard_action_names['resync'] = _("Resync Track")
     _keyboard_action_names['delete'] = _("Delete Selected Item")
     _keyboard_action_names['lift'] = _("Lift Selected Item")
     _keyboard_action_names['to_start'] = _("Go To Start")
@@ -421,6 +413,10 @@ def _set_keyboard_action_names():
     _keyboard_action_names['play_pause_loop_marks'] = _("Play / Pause Mark In to Mark Out Loop")
     _keyboard_action_names['trim_start'] = _("Trim Clip Start To Playhead")
     _keyboard_action_names['trim_end'] = _("Trim Clip End To Playhead")
+    _keyboard_action_names['tline_render_request'] = _("Render Timeline Range")
+    _keyboard_action_names['toggle_track_output'] = _('Enable/Disable Selected Clip Track Output')
+    _keyboard_action_names['tline_page_up'] = _('Timeline Vertical Page Up')
+    _keyboard_action_names['tline_page_down'] = _('Timeline Vertical Page Down')
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
@@ -489,7 +485,9 @@ def _set_key_names():
     _key_names['equal'] = _("=")
     _key_names['comma'] = _(",")
     _key_names['period'] = _(".")
-    
+    _key_names['page_up'] = _("Page Up")
+    _key_names['page_down'] = _("Page Down")
+
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")

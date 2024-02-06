@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2021 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,9 +20,8 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('PangoCairo', '1.0')
 
-from gi.repository import GObject, GLib
+from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
@@ -30,10 +29,11 @@ import datetime
 import glob
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
+import pickle
 import shutil
 import subprocess
 import sys
@@ -43,19 +43,20 @@ import webbrowser
 import appconsts
 import atomicfile
 import cairoarea
+import ccrutils
 import dialogutils
 import editorstate
 import editorpersistance
 import fluxity
+import fluxityheadless
 import gui
 import guicomponents
 import guiutils
 import glassbuttons
 import gmicplayer
 import mediaplugin
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
 import mltfilters
 import positionbar
 import processutils
@@ -66,7 +67,9 @@ import translations
 import threading
 import userfolders
 import utils
-
+import utilsgtk
+ 
+SCRIPT_TOOL_SESSION_ID = "scripttool"
 
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
@@ -81,15 +84,20 @@ TICKER_DELAY = 0.25
 _session_id = None
 _last_save_path = None
 
+_app = None
 _window = None
 
 _player = None
+_ticker = None
 _plugin_renderer = None
 
 _script_length = fluxity.DEFAULT_LENGTH
 
+_mark_in = -1
+_mark_out = -1
+
 _current_profile_name = None
-_current_profile_index = None # We necesserily would not need this too.
+_current_profile_index = None # We necessarily would not need this too.
 
 _current_dimensions = None
 _current_fps = None
@@ -100,9 +108,7 @@ _encoding_panel = None
 
 _delay_timeout_id = -1
 
-# GTK3 requires this to be created outside of callback
-_hamburger_menu = Gtk.Menu()
-
+_hamburger_popover = None
 
 #-------------------------------------------------- launch and inits
 def launch_scripttool(launch_data=None):
@@ -137,7 +143,7 @@ def main(root_path, force_launch=False):
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
     print("mlt.LIBMLT_VERSION", mlt.LIBMLT_VERSION)
- 
+  
     global _session_id
     _session_id = int(time.time() * 1000) # good enough
 
@@ -156,78 +162,60 @@ def main(root_path, force_launch=False):
 
     _init_frames_dirs()
 
-    # Load editor prefs and apply themes
+    # Load editor prefs and apply themes images paths.
     editorpersistance.load()
-            
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
     # Init plugins module
     mediaplugin.init()
-
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
-
-    # Set monitor sizes
-    scr_w = Gdk.Screen.width()
-    scr_h = Gdk.Screen.height()
-    editorstate.SCREEN_WIDTH = scr_w
-    editorstate.SCREEN_HEIGHT = scr_h
-    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
-        global MONITOR_WIDTH, MONITOR_HEIGHT
-        MONITOR_WIDTH = 650
-        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
-
-    # Themes
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        respaths.apply_dark_theme()
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
+    # init mlt
+    repo = mltinit.init_with_translations()
 
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
+    # Create app.
+    app = ScriptToolApplication()
+    global _app
+    _app = app
+    app.run(None)
+    
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
+class ScriptToolApplication(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id=None,
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
+    def on_activate(self, data=None):
+        # Set monitor sizes
+        scr_w, scr_h = utilsgtk.get_combined_monitors_size()
+        editorstate.SCREEN_WIDTH = scr_w
+        editorstate.SCREEN_HEIGHT = scr_h
+        if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+            global MONITOR_WIDTH, MONITOR_HEIGHT
+            MONITOR_WIDTH = 650
+            MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
-    gui.load_current_colors()
+        # Themes
+        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.load_current_colors()
 
-    # Get launch profile and init player and display GUI params for it. 
-    global _current_profile_name
-    _current_profile_name = _get_arg_value(sys.argv, "profile_name")
-    _init_player_and_profile_data(_current_profile_name)
+        # Get launch profile and init player and display GUI params for it. 
+        global _current_profile_name
+        _current_profile_name = _get_arg_value(sys.argv, "profile_name")
+        _init_player_and_profile_data(_current_profile_name)
 
-    # Show window.
-    global _window
-    _window = ScriptToolWindow()
-    _window.pos_bar.set_dark_bg_color()
-    _window.update_marks_display()
+        # Show window.
+        global _window
+        _window = ScriptToolWindow()
+        _window.pos_bar.set_dark_bg_color()
+        _window.update_marks_display()
 
-    os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
-    Gdk.flush()
+        os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
 
-    _init_playback()
-    update_length(_script_length)
+        _init_playback()
+        update_length(_script_length)
+        
+        self.add_window(_window)
 
-    Gtk.main()
-    Gdk.threads_leave()
 
 # ------------------------------------------------- folders init
 def _init_frames_dirs():
@@ -250,7 +238,7 @@ def _init_player_and_profile_data(profile_name):
 
 def _init_playback():
     _window.set_fps()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.set_monitor_sizes()
 
     _player.create_sdl_consumer()
@@ -258,26 +246,29 @@ def _init_playback():
 
 def _reinit_init_playback():
     tractor = _get_playback_tractor(_script_length)
-    tractor.mark_in  = -1
-    tractor.mark_out = -1
+    global _mark_in, _mark_out
+    _mark_in  = -1
+    _mark_out = -1
     _player.set_producer(tractor)
     _window.pos_bar.clear()
     _player.seek_frame(0)
 
 def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_frame=-1):
-    # Create tractor and tracks
+    # Create tractor and tracks, in_frame
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    track0 = mlt.Playlist()
+    profile = mltprofiles.get_profile(_current_profile_name)
+    track0 = mlt.Playlist(profile)
     multitrack.connect(track0, 0)
 
     bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
-    profile = mltprofiles.get_profile(_current_profile_name)
-        
-    if range_frame_res_str == None:  # producer displaying 'not rendered' bg image
+
+    
+    # If no producer provided, create producer displaying bg image with plugin icon.
+    if range_frame_res_str == None:
         bg_clip = mlt.Producer(profile, str(bg_path))
         track0.insert(bg_clip, 0, 0, length - 1)
-    else:  # producer displaying frame sequence
+    else:  # Create producer displaying rendered frame sequence.
         indx = 0
         if in_frame > 0:
             bg_clip1 = mlt.Producer(profile, str(bg_path))
@@ -291,7 +282,7 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
         if out_frame < length - 1:
             bg_clip2 = mlt.Producer(profile, str(bg_path))
             track0.insert(bg_clip2, indx, out_frame + 1, length - 1)
-            
+                    
     return tractor
     
 #----------------------------------------------- session folders and files
@@ -342,7 +333,7 @@ def _save_script(file_path):
     _last_save_path = file_path
 
     global _delay_timeout_id
-    _delay_timeout_id = GObject.timeout_add(2000, _clear_info_after_delay)
+    _delay_timeout_id = GLib.timeout_add(2000, _clear_info_after_delay)
 
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Script"), None, 
@@ -380,8 +371,8 @@ def _load_script(filename):
     _reinit_init_playback()
         
 #-------------------------------------------------- menu
-def _hamburger_menu_callback(widget, msg):
-    global _last_save_path
+def _hamburger_menu_callback(msg):
+    global _last_save_path, _plugin_script_path
     if msg == "load_script":
         load_script_dialog(_load_script_dialog_callback)
     elif msg == "save_script":
@@ -398,24 +389,18 @@ def _hamburger_menu_callback(widget, msg):
     elif msg == "docs":
         url = "file://" + respaths.FLUXITY_API_DOC
         webbrowser.open(url)
+    elif msg == "webdocs":
+        url = "http://jliljebl.github.io/flowblade/webhelp/fluxity.html"
+        webbrowser.open(url)
     else:
+        # msg is folder name for plugin data
         script_text = mediaplugin.get_plugin_code(msg)
         _window.script_view.get_buffer().set_text(script_text)
         _window.set_title(_window.tool_name)
         _last_save_path = None
+        _plugin_script_path = mediaplugin.get_plugin_script_path(msg)
         _reinit_init_playback()
-        
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem.new_with_label(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
 
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
 
 #-------------------------------------------------- player buttons
 def prev_pressed(delta=-1):
@@ -427,7 +412,13 @@ def next_pressed(delta=1):
     update_frame_displayers()
 
 def play_pressed():
-    _player.start_playback()
+    if editorpersistance.prefs.play_pause == True:
+        if _player.is_playing():
+            _player.stop_playback()
+        else:
+            _player.start_playback()
+    else:
+        _player.start_playback()
 
 def stop_pressed():
     _player.stop_playback()
@@ -441,46 +432,49 @@ def end_pressed():
     update_frame_displayers()
     
 def mark_in_pressed():
-    _player.producer.mark_in = _player.current_frame()
-    if _player.producer.mark_in > _player.producer.mark_out:
-        _player.producer.mark_out = -1
-
+    global _mark_in, _mark_out 
+    _mark_in = _player.current_frame()
+    if _mark_in > _mark_out:
+        _mark_out = -1
+    
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
 
 def mark_out_pressed():
-    _player.producer.mark_out = _player.current_frame()
-    if _player.producer.mark_out < _player.producer.mark_in:
-        _player.producer.mark_in = -1
+    global _mark_in, _mark_out 
+    _mark_out = _player.current_frame()
+    if _mark_out < _mark_in:
+        _mark_in = -1
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
     
 def marks_clear_pressed():
-    _player.producer.mark_in = -1
-    _player.producer.mark_out = -1
+    global _mark_in, _mark_out 
+    _mark_in = -1
+    _mark_out = -1
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
 
 def to_mark_in_pressed():
-    if _player.producer.mark_in != -1:
-        _player.seek_frame(_player.producer.mark_in)
+    if _mark_in != -1:
+        _player.seek_frame(_mark_in)
     update_frame_displayers()
     
 def to_mark_out_pressed():
-    if _player.producer.mark_out != -1:
-        _player.seek_frame(_player.producer.mark_out)
+    if _mark_out != -1:
+        _player.seek_frame(_mark_out)
     update_frame_displayers()
 
 def update_frame_displayers():
     frame = _player.current_frame()
     _window.tc_display.set_frame(frame)
-    _window.pos_bar.update_display_from_producer(_player.producer)
-
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
+    
 def update_length(new_length):
     global _script_length
     _script_length = new_length
@@ -488,18 +482,16 @@ def update_length(new_length):
     _player.set_producer(new_playback_producer)
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
-
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
+    
 def _ticker_event():
+    GLib.idle_add(_ticker_gui_update)
+
+def _ticker_gui_update():
     frame = _player.current_frame()
     norm_pos = frame / float(_player.get_active_length()) 
-    
-    Gdk.threads_enter()
-                
     _window.tc_display.set_frame(frame)
     _window.pos_bar.set_normalized_pos(norm_pos)
-
-    Gdk.threads_leave()
                 
 
 #-------------------------------------------------- render and preview
@@ -522,8 +514,13 @@ def render_preview_frame():
     frame = _player.current_frame()
     
     _window.out_view.get_buffer().set_text("Rendering...")
+
+    global _mark_in, _mark_out
+    _mark_in = -1
+    _mark_out = -1
+    _window.update_marks_display()
     
-    fctx = fluxity.render_preview_frame(script, _last_save_path, frame, get_session_folder(), _profile_file_path)
+    fctx = fluxity.render_preview_frame(script, _last_save_path, frame, 200, get_session_folder(), _profile_file_path)
     _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
         
     if fctx.error == None:
@@ -531,6 +528,7 @@ def render_preview_frame():
         new_playback_producer = _get_playback_tractor(_script_length, fctx.priv_context.get_preview_frame_path() , 0, _script_length - 1)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
+        _window.pos_bar.update_display_with_data(_player.producer, -1, -1)
 
         _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
 
@@ -545,6 +543,12 @@ def render_preview_frame():
         _window.out_view.get_buffer().set_text(out_text)
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
+        # Display not rendered 
+        #new_playback_producer = _get_playback_tractor(_script_length)
+        #_player.set_producer(new_playback_producer)
+        #_player.seek_frame(frame)
+        #_window.pos_bar.update_display_with_data(_player.producer, -1, -1)
+        
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         out_text = fctx.error
         if len(fctx.log_msg) > 0:
@@ -565,7 +569,7 @@ def render_preview_range():
 
     _window.out_view.get_buffer().set_text("Rendering...")
 
-    range_renderer = FluxityRangeRenderer(script, get_render_frames_dir(), profile_file_path)
+    range_renderer = FluxityRangeRenderer(script, profile_file_path)
     range_renderer.start()
 
 def _encode_settings_clicked():
@@ -600,7 +604,7 @@ def _encode_settings_callback(dialog, response_id):
     dialog.destroy()
 
 def _show_plugin_media_length_change_dialog():
-    dialog = Gtk.Dialog(_("Change Plugin Media Length"), _window,
+    dialog = Gtk.Dialog(_("Change Generator Length"), _window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Ok"), Gtk.ResponseType.ACCEPT))
@@ -610,7 +614,7 @@ def _show_plugin_media_length_change_dialog():
     frames = 200
     max_len = 100000
 
-    frames_label = Gtk.Label(_("Frames:"))
+    frames_label = Gtk.Label(label=_("Frames:"))
     guiutils.set_margins(frames_label, 0, 0, 0, 4)
     frames_spin = Gtk.SpinButton.new_with_range(10, max_len, 1)
     frames_spin.set_value(frames)
@@ -654,8 +658,8 @@ def _shutdown():
     # Delete session folder
     shutil.rmtree(get_session_folder())
     
-    # Exit gtk main loop.
-    Gtk.main_quit()
+    # Close app.
+    _app.quit()
 
 
 #------------------------------------------------- window
@@ -674,11 +678,10 @@ class ScriptToolWindow(Gtk.Window):
             psize = 22
         else:
             psize = 44
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
-        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
+        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed_popover, hamburger_launcher_surface, psize, psize)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
-        self.reload_button = Gtk.Button(_("Reload Script"))
+        self.reload_button = Gtk.Button(label=_("Reload Script"))
         self.reload_button.connect("clicked", lambda w: _reload_script())
         
         self.action_info = Gtk.Label()
@@ -739,13 +742,14 @@ class ScriptToolWindow(Gtk.Window):
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
-        pos_bar_frame = Gtk.Frame()
+        self.pos_bar.mouse_press_listener = self.pos_bar_press_listener
+        
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
-        pos_bar_frame.set_margin_left(6)
-        pos_bar_frame.set_margin_right(2)
+        pos_bar_frame.set_margin_start(6)
+        pos_bar_frame.set_margin_end(2)
                                                   
         self.control_buttons = glassbuttons.PlayerButtons()
         if editorpersistance.prefs.play_pause == False:
@@ -797,9 +801,9 @@ class ScriptToolWindow(Gtk.Window):
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.control_buttons.no_decorations = True 
 
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
-        self.preview_range_button = Gtk.Button(_("Preview Range"))
+        self.preview_range_button = Gtk.Button(label=_("Preview Range"))
         self.preview_range_button.connect("clicked", lambda w: render_preview_range())
         self.preview_range_button.set_sensitive(False)
             
@@ -828,11 +832,11 @@ class ScriptToolWindow(Gtk.Window):
         # Render panel
         self.mark_in_label = guiutils.bold_label(_("Mark In:"))
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
-        self.length_label = guiutils.bold_label(_("Plugin Media Length:"))
+        self.length_label = guiutils.bold_label(_("Generator Media Length:"))
 
-        self.mark_in_info = Gtk.Label("")
-        self.mark_out_info = Gtk.Label("")
-        self.length_info = Gtk.Label("")
+        self.mark_in_info = Gtk.Label(label="")
+        self.mark_out_info = Gtk.Label(label="")
+        self.length_info = Gtk.Label(label="")
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -861,9 +865,10 @@ class ScriptToolWindow(Gtk.Window):
         self.encode_check_label = Gtk.Label(_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
+        self.encode_check.set_margin_end(4)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
 
-        self.encode_settings_button = Gtk.Button(_("Encoding settings"))
+        self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
         self.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
@@ -880,7 +885,7 @@ class ScriptToolWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
-        self.render_percentage = Gtk.Label("")
+        self.render_percentage = Gtk.Label(label="")
 
         self.status_no_render = _("Set Frames Folder for valid render")
          
@@ -932,7 +937,7 @@ class ScriptToolWindow(Gtk.Window):
         preview_render_vbox.pack_start(preview_panel, True, True, 0)
         preview_render_vbox.pack_start(render_vbox, False, False, 0)
         preview_render_vbox.pack_start(editor_buttons_row, False, False, 0)
-        preview_render_vbox.set_margin_left(4)
+        preview_render_vbox.set_margin_start(4)
 
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
@@ -969,7 +974,7 @@ class ScriptToolWindow(Gtk.Window):
         script_vbox = Gtk.Paned.new(Gtk.Orientation.VERTICAL) 
         script_vbox.pack1(script_sw, True, False)
         script_vbox.pack2(out_sw, False, False)
-        script_vbox.set_margin_right(4)
+        script_vbox.set_margin_end(4)
         
 
         # ------------------------------------------------------------ BUILD WINDOW
@@ -994,7 +999,7 @@ class ScriptToolWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.tool_name = _("Flowblade Media Plugin Editor")
+        self.tool_name = _("Generator Script Editor")
         self.set_title(self.tool_name)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
@@ -1002,17 +1007,17 @@ class ScriptToolWindow(Gtk.Window):
 
     def update_marks_display(self):
 
-        if _player.producer.mark_in  == -1:
+        if _mark_in  == -1:
             self.mark_in_info.set_text("-")
         else:
-            self.mark_in_info.set_text(str(_player.producer.mark_in))
+            self.mark_in_info.set_text(str(_mark_in))
         
-        if _player.producer.mark_out == -1:
+        if _mark_out == -1:
             self.mark_out_info.set_text("-")
         else:
-            self.mark_out_info.set_text(str(_player.producer.mark_out))
+            self.mark_out_info.set_text(str(_mark_out))
 
-        if _player.producer.mark_in  == -1 or _player.producer.mark_out == -1:
+        if _mark_in  == -1 or _mark_out == -1:
             self.preview_range_button.set_sensitive(False)
         else:
             self.preview_range_button.set_sensitive(True)
@@ -1039,8 +1044,8 @@ class ScriptToolWindow(Gtk.Window):
             self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
             self.render_button.set_sensitive(False)
         else:
-            start =  _player.producer.mark_in
-            end = _player.producer.mark_out
+            start = _mark_in
+            end = _mark_out
             if start == -1:
                 start = 0
             if end == -1:
@@ -1056,34 +1061,48 @@ class ScriptToolWindow(Gtk.Window):
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
 
-    def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
+    def hamburger_launch_pressed_popover(self, widget, event):
+
+        global _hamburger_popover
+        if _hamburger_popover == None:
+            menu = Gio.Menu.new()
+            
+            app_section = Gio.Menu.new()
+            self.add_menu_action(app_section, _("Open Script") + "...", "open", "load_script")
+            self.add_menu_action(app_section, _("Save Script As"), "save-as", "save_script")
+            self.add_menu_action(app_section, _("Save"), "save", "save")
+            menu.append_section(None, app_section)
+
+            plugin_section = Gio.Menu.new()
+            plugin_submenu = Gio.Menu.new()
+            mediaplugin.fill_media_plugin_sub_menu_gio(_app, plugin_submenu, _hamburger_menu_callback)
+            plugin_section.append_submenu(_("Load Generator Code"), plugin_submenu)
+            menu.append_section(None, plugin_section)
+            
+            length_section = Gio.Menu.new()
+            self.add_menu_action(length_section, _("Change Generator Media Length") + "...", "change-length", "change_length")
+            menu.append_section(None, length_section)
+            
+            api_section = Gio.Menu.new()
+            self.add_menu_action(api_section, _("API Docs") + "...", "apidocs", "docs")
+            self.add_menu_action(api_section, _("API Docs Web") + "...", "apidocsweb", "webdocs")
+            menu.append_section(None, api_section)
+            
+            close_section = Gio.Menu.new()
+            self.add_menu_action(close_section, _("Close") + "..." , "close", "close")
+            menu.append_section(None, close_section)
+            
+            _hamburger_popover = Gtk.Popover.new_from_model(widget, menu)
+            self.hamburger_launcher.connect_launched_menu(_hamburger_popover)
         
-        menu.add(_get_menu_item(_("Open Script") + "...", _hamburger_menu_callback, "load_script" ))
-        menu.add(_get_menu_item(_("Save Script As") + "...", _hamburger_menu_callback, "save_script" ))
-        save_item = _get_menu_item(_("Save"), _hamburger_menu_callback, "save" )
-        if _last_save_path == None:
-            save_item.set_sensitive(False)
-        menu.add(save_item)
-        _add_separetor(menu)
-        plugin_menu_item = Gtk.MenuItem.new_with_label(_("Load Plugin Code"))
-        plugin_menu = Gtk.Menu()
-        mediaplugin.fill_media_plugin_sub_menu(plugin_menu, _hamburger_menu_callback)
-        plugin_menu_item.set_submenu(plugin_menu)
-        plugin_menu_item.show_all()
-        menu.add(plugin_menu_item)
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Change Plugin Media Length") + "...", _hamburger_menu_callback, "change_length" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Render Frame Preview") + "...", _hamburger_menu_callback, "render_preview" ))
-        menu.add(_get_menu_item(_("Render Range Preview") + "...", _hamburger_menu_callback, "render_range_preview" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("API Docs"), _hamburger_menu_callback, "docs" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
+        _hamburger_popover.show()
+
+    def add_menu_action(self, menu, label, item_id, msg_str):
+        menu.append(label, "app." + item_id) 
         
-        menu.popup(None, None, None, None, event.button, event.time)
+        action = Gio.SimpleAction(name=item_id)
+        action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
+        _app.add_action(action)
 
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
@@ -1100,6 +1119,9 @@ class ScriptToolWindow(Gtk.Window):
         self.tc_display.set_frame(frame)
         _player.seek_frame(frame)
         self.pos_bar.widget.queue_draw()
+
+    def pos_bar_press_listener(self):
+        _player.stop_playback()
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -1250,53 +1272,98 @@ def _get_range_render_messages(proc_fctx_dict):
 
 class FluxityRangeRenderer(threading.Thread):
 
-    def __init__(self, script, render_folder, profile_file_path):
+    def __init__(self, script, profile_file_path):
         threading.Thread.__init__(self)
         self.script = script
-        self.render_folder = render_folder
         self.profile_file_path = profile_file_path
+        self.rendering_txt = _("Rendering...")
 
     def run(self):
-        
-        Gdk.threads_enter()
-        _window.out_view.get_buffer().set_text("Rendering...")
-        Gdk.threads_leave()
-            
+        GLib.idle_add(_update_buffer_text, self.rendering_txt)
+
         # GUI quarantees valid range here.
-        in_frame = _player.producer.mark_in
+        in_frame = _mark_in
         self.in_frame = in_frame
-        out_frame = _player.producer.mark_out
-        self.out_frame = out_frame
-
-        # Delete old preview frames.
-        old_files = glob.glob(self.render_folder + "/*")
-        for f in old_files:
-            os.remove(f)
-    
-        # Poll rendering from GDK with timeout events to get access to GDK lock on updates 
-        # to be able to draw immediately.
-        self.frame_render_in_progress = True
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
-    
-        #start_time = time.time()
-        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path)        
-        #end_time = time.time()
-
-        self.frame_render_in_progress = False
-
-        # Get error and log messages.
-        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
+        out_frame = _mark_out
+        self.out_frame = out_frame  
         
+        # TODO: Make user settable
+        generator_length = 200
+            
+        parent_folder = userfolders.get_temp_render_dir()
+    
+        ccrutils.init_session_folders(parent_folder, SCRIPT_TOOL_SESSION_ID)
+        
+        # Create temp script file from text area contents.
+        tmp_script_file = ccrutils.get_session_folder(parent_folder, SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
+            write_file = afw.get_file()
+            f = afw.get_file()
+            f.write(self.script)
+            
+        frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
+        
+        err_msg, edit_data = fluxity.get_script_default_edit_data(self.script, tmp_script_file, frames_folder, self.profile_file_path)
+        if err_msg != None:
+            GLib.idle_add(_show_error, err_msg)
+            return
+
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, generator_length, in_frame, out_frame + 1)
+
+        GLib.timeout_add(200, _preview_render_update, self)
+
+
+def _update_buffer_text(txt):
+    _window.out_view.get_buffer().set_text(txt)
+        
+def _show_error(error_msg):
+    _window.out_view.get_buffer().set_text(error_msg)
+    _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+    _window.pos_bar.preview_range = None
+    _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+    _window.monitors_switcher.queue_draw()
+    _window.preview_monitor.queue_draw()
+    
+    
+def _preview_render_update(render_thread):
+    completed, step, frame_count, progress = _get_render_status(    SCRIPT_TOOL_SESSION_ID, 
+                                                                    render_thread.in_frame,
+                                                                    render_thread.out_frame)
+    if step == -1:
+        # no info available yet.
+        return True
+
+    if completed == True:
+        _preview_range_render_complete(render_thread)
+        return False # This stops repeated calls to this function.
+    else:
+        frame = render_thread.in_frame + frame_count
+
+        _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
+        _window.pos_bar.preview_range = (render_thread.in_frame, frame)
+        _window.pos_bar.widget.queue_draw()
+        return True # Function will be called again.
+
+def _preview_range_render_complete(render_thread):
+        # Get error and log messages.
+        parent_folder = userfolders.get_temp_render_dir()
+        
+        proc_fctx_dict = ccrutils.read_range_render_data(parent_folder, SCRIPT_TOOL_SESSION_ID)
+        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
+
         if error_msg == None:
             frame_file = proc_fctx_dict["0"] # First written file saved here.
+            in_frame, out_frame = render_thread.in_frame, render_thread.out_frame
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
+            frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
+            range_resourse_mlt_path = frames_folder + "/" + resource_name_str
+            
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
 
-            Gdk.threads_enter()
             _window.pos_bar.preview_range = (in_frame, out_frame)
+            _window.pos_bar.update_display_with_data(new_playback_producer, in_frame, out_frame)
 
             _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
             _window.monitors_switcher.queue_draw()
@@ -1309,36 +1376,14 @@ class FluxityRangeRenderer(threading.Thread):
                         
             _window.out_view.get_buffer().set_text(out_text)
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
-
-            Gdk.threads_leave()
         else:
-            Gdk.threads_enter()
-                    
             _window.out_view.get_buffer().set_text(error_msg)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.pos_bar.preview_range = None
             _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
-
-            Gdk.threads_leave()
-
-def _preview_render_update(render_thread):
-    frame = render_thread.in_frame + len(os.listdir(render_thread.render_folder))
-
-    _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
-    _window.pos_bar.preview_range = (render_thread.in_frame, frame)
-    _window.pos_bar.widget.queue_draw()
-
-    if render_thread.frame_render_in_progress == False:
-        frame = render_thread.out_frame
-        _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
-        _window.pos_bar.preview_range = (render_thread.in_frame, frame)
-        _window.pos_bar.widget.queue_draw()
-        return False # This stops repeated calls to this function.
-    else:
-        return True # Function will be called again.
-                
+            
         
 class FluxityPluginRenderer(threading.Thread):
 
@@ -1360,31 +1405,22 @@ class FluxityPluginRenderer(threading.Thread):
             return
         self.render_folder = out_folder
         
-        Gdk.threads_enter()
-        _window.render_status_info.set_markup("")
-        _window.set_widgets_sensitive(False)
-        _window.render_percentage.set_sensitive(True)
-        _window.render_status_info.set_sensitive(True)
-        _window.render_progress_bar.set_sensitive(True)
-        _window.stop_button.set_sensitive(True)
-        _window.render_button.set_sensitive(False)
-        _window.close_button.set_sensitive(False)
-        _window.encode_settings_button.set_sensitive(False)
-        _window.encode_desc.set_sensitive(False)
-        _window.hamburger_launcher.widget.set_sensitive(False)
-        Gdk.threads_leave()
+        GLib.idle_add(self.update_sensitive_state)
         
         # Get render data.
-        in_frame =  _player.producer.mark_in
-        out_frame = _player.producer.mark_out
+        in_frame = _mark_in
+        out_frame = _mark_out
         if in_frame == -1:
             in_frame = 0
         if out_frame == -1:
             out_frame = _player.get_active_length()
 
         self.length = out_frame - in_frame
-        self.mark_in = in_frame
-        self.mark_out = out_frame
+        self.in_frame = in_frame
+        self.out_frame = out_frame
+        
+        # TODO: Make user settable
+        generator_length = 200
         
         # not used !!!
         frame_name = _window.frame_name.get_text()
@@ -1397,34 +1433,53 @@ class FluxityPluginRenderer(threading.Thread):
         for frame_file in os.listdir(out_folder):
             file_path = os.path.join(out_folder, frame_file)
             os.remove(file_path)
-            
-        self.frame_render_in_progress = True
-        self.render_start_time = datetime.datetime.now()
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
+
+        parent_folder = userfolders.get_temp_render_dir()
+        ccrutils.init_session_folders(parent_folder, SCRIPT_TOOL_SESSION_ID)
         
-        # Render frames
-        proc_fctx_dict = fluxity.render_frame_sequence(script_text, _last_save_path, in_frame, out_frame, out_folder, profile_file_path)
+        # Create temp script file from text area contents.
+        tmp_script_file = ccrutils.get_session_folder(parent_folder, SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
+            write_file = afw.get_file()
+            f = afw.get_file()
+            f.write(script_text)
+            
+        frames_folder = ccrutils.get_render_folder_for_session_id(parent_folder, SCRIPT_TOOL_SESSION_ID)
+        
+        err_msg, edit_data = fluxity.get_script_default_edit_data(script_text, tmp_script_file, frames_folder, profile_file_path)
+        if err_msg != None:
+            GLib.idle_add(_show_error, err_msg)
+            return
 
-        self.frame_render_in_progress = False # Stops GUI updates.
+        self.frames_render_in_prgress = True
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, generator_length, in_frame, out_frame + 1)
+        
+        self.render_start_time = datetime.datetime.now()
+        GLib.timeout_add(150, _output_render_update, self)
 
-        # Get error and log messages.
+        # Block until we have frames
+        while self.frames_render_in_prgress == True:
+            time.sleep(0.3)
+        
+        if self.abort == True:
+            return
+        
+        parent_folder = userfolders.get_temp_render_dir()
+        
+        proc_fctx_dict = ccrutils.read_range_render_data(parent_folder, SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         # Set GUI state and exit on error.
         if error_msg != None:
-            Gdk.threads_enter()
-            _window.out_view.get_buffer().set_text(error_msg)
-            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            _window.monitors_switcher.queue_draw()
-            _window.preview_monitor.queue_draw()
-            self.set_render_stopped_gui_state()
-            Gdk.threads_leave()
-            
+            GLib.idle_add(self.set_gui_for_exit_error, error_msg)
             return
-                    
+
+        # Frames are in container clips SCRIPT_TOOL_SESSION_ID folder,
+        # need to copy them where out was wanted
+        self.copy_frames(frames_folder, out_folder)
+
         # Render video
         if _window.encode_check.get_active() == True:
-
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
@@ -1447,37 +1502,41 @@ class FluxityPluginRenderer(threading.Thread):
 
             while self.render_player.stopped == False:
                 if self.abort == True:
-                    Gdk.threads_enter()
-                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-                    _window.render_progress_bar.set_fraction(0.0)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self.show_progress, "<small>" + _("Render stopped!") + "</small>", 0.0, False)
                     return
                   
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
-                    
-                Gdk.threads_enter()
-                _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-                _window.render_progress_bar.set_fraction(fraction)
-                Gdk.threads_leave()
+
+                GLib.idle_add(self.show_progress, "<small>" + update_info + "</small>", fraction, False)
                 
                 time.sleep(0.3)
 
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
-        self.set_render_stopped_gui_state()
-        Gdk.threads_leave()
+            GLib.idle_add(self.show_progress, "<small>" + _("Render complete!") + "</small>", 1.0, True)
+
+    def copy_frames(self, frames_folder, out_folder):
+        # Copy frames
+        rendered_frames = os.listdir(frames_folder)
+        for frame in rendered_frames:
+            frame_file_name = os.path.join(frames_folder, frame)
+            shutil.copy(frame_file_name, out_folder)
 
     def abort_render(self):
         self.abort = True
-
-        if self.script_renderer != None:
-             self.script_renderer.abort_rendering()
+        self.frames_render_in_prgress = False
+        parent_folder = userfolders.get_temp_render_dir()
+        ccrutils.abort_render(parent_folder, SCRIPT_TOOL_SESSION_ID)
 
         self.shutdown()
                          
         _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
         self.set_render_stopped_gui_state()
+
+    def show_progress(self, persentage, fraction, set_stopped):
+        _window.render_percentage.set_markup(persentage)
+        _window.render_progress_bar.set_fraction(fraction)
+        if set_stopped:
+            self.set_render_stopped_gui_state()
 
     def set_render_stopped_gui_state(self):
         _window.render_progress_bar.set_fraction(0.0)
@@ -1490,40 +1549,115 @@ class FluxityPluginRenderer(threading.Thread):
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)
 
+    def update_sensitive_state(self):
+        _window.render_status_info.set_markup("")
+        _window.set_widgets_sensitive(False)
+        _window.render_percentage.set_sensitive(True)
+        _window.render_status_info.set_sensitive(True)
+        _window.render_progress_bar.set_sensitive(True)
+        _window.stop_button.set_sensitive(True)
+        _window.render_button.set_sensitive(False)
+        _window.close_button.set_sensitive(False)
+        _window.encode_settings_button.set_sensitive(False)
+        _window.encode_desc.set_sensitive(False)
+        _window.hamburger_launcher.widget.set_sensitive(False)
+    
+    def set_gui_for_exit_error(self, error_msg):
+        _window.out_view.get_buffer().set_text(error_msg)
+        _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
+        self.set_render_stopped_gui_state()
+            
     def shutdown(self):        
         if self.render_player != None:
             self.render_player.shutdown()        
 
 
 def _output_render_update(render_thread):
-    folder_files = os.listdir(render_thread.render_folder)
-
-    added_files = []
-    for f in folder_files:
-        st = os.stat(render_thread.render_folder + "/" + f)
-        mtime = datetime.datetime.fromtimestamp(st.st_mtime)
-        
-        if mtime > render_thread.render_start_time:
-            added_files.append(f)
-
-    frame = render_thread.mark_in + len(added_files)
-    if frame - render_thread.mark_in < 0:
-        frame = render_thread.length # hack fix, producer suddenly changes the frame it thinks it is in
-    else:
-        frame = frame - render_thread.mark_in # producer returns original clip frames
-
-    update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(render_thread.length)
-
-    _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-    _window.render_progress_bar.set_fraction(float(frame + 1)/float(render_thread.length))
+    completed, step, frame_count, progress = _get_render_status(    SCRIPT_TOOL_SESSION_ID, 
+                                                                    render_thread.in_frame,
+                                                                    render_thread.out_frame)
+    if step == -1:
+        # no info available yet.
+        return True
 
     if render_thread.abort == True:
         return False # This stops repeated calls to this function.
 
-    if render_thread.frame_render_in_progress == False:
+    if completed == True:
+        render_thread.frames_render_in_prgress = False
         _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
         _window.render_progress_bar.set_fraction(0.0)
+        if _window.encode_check.get_active() != True:
+            render_thread.set_render_stopped_gui_state()
         return False # This stops repeated calls to this function.
     else:
+        update_info = _("Writing clip frame: ") + str(frame_count) + "/" +  str(render_thread.length)
+        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+        _window.render_progress_bar.set_fraction(progress)
         return True # Function will be called again.
 
+def _launch_headless_render(session_id, script_path, edit_data, frames_folder, generator_length, range_in, range_out):
+
+    parent_folder = userfolders.get_temp_render_dir()
+    
+    ccrutils.init_session_folders(parent_folder, session_id)
+    fluxityheadless.clear_flag_files(parent_folder, session_id)
+
+    # Delete old rendered frames.
+    old_files = glob.glob(frames_folder + "/*")
+    for f in old_files:
+        os.remove(f)
+            
+    # We need data to be available for render process, 
+    # create video_render_data object with default values if not available.
+    profile = mltprofiles.get_profile(_current_profile_name)
+    render_data = toolsencoding.create_container_clip_default_render_data_object(profile)
+
+    render_data.do_video_render = False 
+
+    fluxityheadless.set_render_data(parent_folder, session_id, render_data)
+
+    ccrutils.write_misc_session_data(parent_folder, session_id, "fluxity_plugin_edit_data", edit_data)
+    
+    args = ("session_id:" + session_id,
+            "parent_folder:" + parent_folder,
+            "script:" + script_path,
+            "generator_length:" + str(generator_length),
+            "range_in:" + str(range_in),
+            "range_out:"+ str(range_out),
+            "profile_desc:" + _current_profile_name.replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
+
+    # Create command list and launch process.
+    command_list = [sys.executable]
+    command_list.append(respaths.LAUNCH_DIR + "flowbladefluxityheadless")
+    for arg in args:
+        command_list.append(arg)
+
+    subprocess.Popen(command_list)
+
+def _get_render_status(session_id, render_range_in, render_range_out):
+    # Returns tuple (completed, step, progress)
+    parent_folder = userfolders.get_temp_render_dir()
+    
+    if fluxityheadless.session_render_complete(parent_folder, session_id) == True:
+        return (True, None, None, None)
+    else:
+        status = fluxityheadless.get_session_status(parent_folder, session_id)
+        if status != None:
+            step, frame, length, elapsed = status
+            frame = int(frame)
+            render_length = render_range_out - render_range_in
+            progress = float(frame)/float(render_length)
+
+            # Hacks to fix how gmiplayer.FramesRangeWriter works.
+            # We would need to patch to G'mic Tool to not need this but this is easier.
+            if progress < 0.0:
+                progress = 1.0
+            elif progress > 1.0:
+                progress = 1.0
+                    
+            return (False, step, frame, progress)
+        else:
+            return (False, -1, -1, -1)

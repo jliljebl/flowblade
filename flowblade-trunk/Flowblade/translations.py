@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import gettext
 import locale
 import os
 
+import appconsts
 import respaths
 import editorpersistance
 import editorstate
@@ -35,6 +36,8 @@ param_names = {}
 combo_options = {}
 plugin_groups = {}
 plugin_names = {}
+encoder_groups = {}
+plugin_editor_groups = {}
 
 def init_languages():
     langs = []
@@ -98,7 +101,7 @@ def init_languages():
     # Un-comment for translations tests
     #lang = gettext.translation(APP_NAME, locale_path, languages=["ru"], fallback=True)
 
-    lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
+    lang.install(APP_NAME) # makes _() a built-in available in all modules without imports
 
 def get_filter_name(f_name):
     try:
@@ -135,8 +138,12 @@ def get_plugin_group_name(group_name):
         return plugin_groups[group_name]
     except KeyError:
         return group_name
-        
-plugin_groups
+
+def get_encoder_group_name(group_name):
+    try:
+        return encoder_groups[group_name]
+    except KeyError:
+        return group_name
 
 def load_filters_translations():
 
@@ -154,8 +161,20 @@ def load_filters_translations():
     filter_groups["Edge"] = _("Edge")
     filter_groups["Fix"] = _("Fix")
     filter_groups["Artistic"] = _("Artistic")
-    filter_groups["Fade In / Out"] = _("Fade In / Out")
+    filter_groups["Fade"] = _("Fade")
     filter_groups["Blend"] = _("Blend")
+
+    global encoder_groups
+    encoder_groups[appconsts.PRESET_GROUP] = "presetgroup"
+    encoder_groups[appconsts.PRESET_GROUP_H264] = _("H.264, HEVC")
+    encoder_groups[appconsts.PRESET_GROUP_NVENC] = _("NVENC")
+    encoder_groups[appconsts.PRESET_GROUP_VAAPI] = _("VAAPI")
+    encoder_groups[appconsts.PRESET_GROUP_MPEG] = _("MPEG")
+    encoder_groups[appconsts.PRESET_GROUP_LOSSLESS] = _("Lossless")
+    encoder_groups[appconsts.PRESET_GROUP_IMAGE_SEQUENCE] = _("Image Sequence")
+    encoder_groups[appconsts.PRESET_GROUP_AUDIO] = _("Audio") 
+    encoder_groups[appconsts.PRESET_GROUP_MISC] = _("WebM, ProRes, DNxHD")
+    encoder_groups[appconsts.PRESET_GROUP_ALPHA] = _("Alpha")
 
     # filter names
     global filter_names
@@ -205,6 +224,7 @@ def load_filters_translations():
     filter_names["Grain"]= _("Grain")
 
     filter_names["Grayscale"]= _("Grayscale")
+    filter_names["Grayscale Luminance"]= _("Grayscale Luminance")
     filter_names["Contrast"]= _("Contrast")
     filter_names["Saturation"]= _("Saturation")
     filter_names["Invert"]= _("Invert")
@@ -246,10 +266,9 @@ def load_filters_translations():
     filter_names["Shear"]= _("Shear")
     filter_names["Translate"]= _("Translate")
 
-    # 0.8 added
     filter_names["Color Select"]= _("Color Select")
     filter_names["Alpha Modify"]= _("Alpha Modify")
-    filter_names["Spill Supress"]= _("Spill Supress")
+    filter_names["Spill Suppress"]= _("Spill Suppress")
     filter_names["RGB Noise"]= _("RGB Noise")
     filter_names["Box Blur"]= _("Box Blur")
     filter_names["IRR Blur"]= _("IRR Blur")
@@ -304,6 +323,8 @@ def load_filters_translations():
     filter_names["Glitch"] = _("Glitch")
     filter_names["Trails"] = _("Trails")
     filter_names["Blend Mode"] = _("Blend Mode")
+    filter_names["Unpremultiply"] = _("Unpremultiply")
+    filter_names["Fade To Black In / Out"] = _("Fade To Black In / Out")
     
     # param names
     global param_names
@@ -361,7 +382,7 @@ def load_filters_translations():
     param_names["Roomsize"] = _("Roomsize")
     param_names["Reverb time(s)"] = _("Reverb time(s)")
     param_names["Damping"] = _("Damping")
-    param_names["Input bandwith"] = _("Input bandwith")
+    param_names["Input bandwidth"] = _("Input bandwidth")
     param_names["Dry signal level(dB)"] = _("Dry signal level(dB)")
     param_names["Early reflection level(dB)"] = _("Early reflection level(dB)")
     param_names["Tail level(dB)"] = _("Tail level(dB)")
@@ -426,8 +447,8 @@ def load_filters_translations():
     param_names["Develop dur."] = _("Develop dur.")
     param_names["Triplevel"] = _("Triplevel")
     param_names["Difference Space"] = _("Difference Space")
-    param_names["Block width"] = _("Block width")
-    param_names["Block height"] = _("Block height")
+    param_names["Block Width"] = _("Block Width")
+    param_names["Block Height"] = _("Block Height")
     param_names["Size"] = _("Size")
     param_names["Noise"] = _("Noise")
     param_names["Contrast"] = _("Contrast")
@@ -467,7 +488,6 @@ def load_filters_translations():
     param_names["Spatial"] = _("Spatial")
     param_names["Temporal"] = _("Temporal")
     param_names["Amount"] = _("Amount")
-    param_names["Size"] = _("Size")
     param_names["Border width"] = _("Border width")
     param_names["Phase Incr."] = _("Phase Incr.")
     param_names["Zoom"] = _("Zoom")
@@ -498,7 +518,7 @@ def load_filters_translations():
     param_names["R/A/Hue"] = _("R/A/Hue")
     param_names["G/B/Chroma"] = _("G/B/Chroma")
     param_names["B/I/I"] = _("B/I/I")
-    param_names["Supress"] = _("Supress")
+    param_names["Suppress"] = _("Suppress")
     param_names["Horizontal"] = _("Horizontal")
     param_names["Vertical"] = _("Vertical")
     param_names["Type"] = _("Type")
@@ -566,7 +586,6 @@ def load_filters_translations():
     param_names["Shear X"] = _("Shear X")
     param_names["Shear Y"] = _("Shear Y")
     param_names["Distort"] = _("Distort")
-    param_names["Opacity"] = _("Opacity")
     param_names["Wipe Type"] = _("Wipe Type")
     param_names["Invert"] = _("Invert")
     param_names["Softness"] = _("Softness")
@@ -618,8 +637,9 @@ def load_filters_translations():
     param_names["Darker"] = _("Darker")
     param_names["Lighter"] = _("Lighter")
     param_names["Frames"] = _("Frames")
-    param_names["Height"] = _("Height")
-    param_names["Shift"] = _("Shift")
+    param_names["Glitch frequency"] = _("Glitch Frequency")
+    param_names["Shift intensity"] = _("Shift Intensity")
+    param_names["Color glitching intensity"] = _("Color Intensity")
     # From version 2.10 onwards Media Plugins editable parameters names go here too.
     param_names["Speed"] = _("Speed")
     param_names["Speed Variation %"] = _("Speed Variation %")
@@ -628,13 +648,51 @@ def load_filters_translations():
     param_names["Hue Change"] = _("Hue Change")
     param_names["Font"] = _("Font")
     param_names["Text"] = _("Text")
+    param_names["Animation Type In"] = _("Animation Type In")
+    param_names["Animation Type Out"] = _("Animation Type Out")
     param_names["Animation Type"] = _("Animation Type")
     param_names["Steps Per Frame"] = _("Steps Per Frame")
     param_names["Line Gap"] = _("Line Gap")
     param_names["Colors"] = _("Colors")
     param_names["User Hue"] = _("User Hue")
     param_names["Length"] = _("Length")
-    
+    param_names["Random Seed"] = _("Random Seed")
+    param_names["Lines Delay Frames"] = _("Lines Delay Frames")
+    param_names["Movement In"] = _("Movement In")
+    param_names["Movement Out"] = _("Movement Out")
+    param_names["Frames In"] = _("Frames In")
+    param_names["Frames Out"] = _("Frames Out")
+    param_names["Steps In"] = _("Steps In")
+    param_names["Steps Out"] = _("Steps Out")
+    param_names["Fade In Frames"] = _("Fade In Frames")
+    param_names["Fade Out Frames"] = _("Fade Out Frames")
+    param_names["Background"] = _("Background")
+    param_names["Background Pad"] = _("Background Pad")
+    param_names["Background Color"] = _("Background Color")
+    param_names["Background Opacity"] = _("Background Opacity")
+    param_names["Line Y Offset"] = _("Line Y Offset")
+    param_names["Color Variation"] = _("Color Variation")
+    param_names["Shadow Opacity"] = _("Shadow Opacity")
+    param_names["Shadow Offset"] = _("Shadow Offset")
+    param_names["Background Frames Out"] = _("Background Frames Out")
+    param_names["Background Anim Out"] = _("Background Anim Out")
+    param_names["Background Frames In"] = _("Background Frames In")
+    param_names["Background Anim In"] = _("Background Anim In")
+    param_names["Background Line Width"] = _("Background Line Width")
+    param_names["Fade Out Type"] = _("Fade Out Type")
+    param_names["Centering"] = _("Centering")
+    param_names["Reveal Horizontal"] = _("Reveal Horizontal")
+    param_names["Reveal Vertical"] = _("Reveal Vertical")
+    param_names["Reveal Left"] = _("Reveal Left")
+    param_names["Reveal Right"] = _("Reveal Right")
+    param_names["Fade In Type"] = _("Fade In Type")
+    param_names["Image"] = _("Image")
+    param_names["RMP-peak"] = _("RMP-peak")
+    param_names["Relese(ms)"] = _("Relese(ms)")
+    param_names["Ratio"] = _("Ratio")
+    param_names["Knee Radius(dB)"] = _("Knee Radius(dB)")
+    param_names["Makeup gain(dB)"] = _("Makeup gain(dB)")
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -732,16 +790,68 @@ def load_filters_translations():
     combo_options["Mondrian"] = _("Mondrian")
     combo_options["Pastels"] = _("Pastels")
     combo_options["User Hue"] = _("User Hue")
+    combo_options["Light"] = _("Light")
+    combo_options["Earthy"] = _("Earthy")
+    combo_options["Neon"] = _("Neon")
     combo_options["Left To Right"] = _("Left To Right")
     combo_options["Right To Left"] = _("Right To Left")
-    
+    combo_options["Ease In"] = _("Ease In")
+    combo_options["Ease Out"] = _("Ease Out")
+    combo_options["Stepped"] = _("Stepped")
+    combo_options["From Left Clipped"] = _("From Left Clipped")
+    combo_options["From Right Clipped"] = _("From Right Clipped")
+    combo_options["From Down Clipped"] = _("From Down Clipped")
+    combo_options["From Left"] = _("From Left")
+    combo_options["From Right"] = _("From Right")
+    combo_options["From Up"] = _("From Up")
+    combo_options["From Down"] = _("From Down")
+    combo_options["To Left Clipped"] = _("To Left Clipped")
+    combo_options["To Right Clipped"] = _("To Right Clipped")
+    combo_options["To Up Clipped"] = _("To Up Clipped")
+    combo_options["To Down Clipped"] = _("To Down Clipped")
+    combo_options["To Left"] = _("To Left")
+    combo_options["To Right"] = _("To Right")
+    combo_options["To Up"] = _("To Up")
+    combo_options["To Down"] = _("To Down")
+    combo_options["No Background"] = _("No Background")
+    combo_options["Solid"] = _("Solid")
+    combo_options["Lines"] = _("Lines")
+    combo_options["Lines Word Length"] = _("Lines Word Length")
+    combo_options["Letters"] = _("Letters")
+    combo_options["Words"] = _("Words")
+    combo_options["Lines"] = _("Lines")
+    combo_options["Off"] = _("Off")
+    combo_options["Center"] = _("Center")
+    combo_options["Center Horizontal"] = _("Center Horizontal")
+    combo_options["Center Vertical"] = _("Center Vertical")
+    combo_options["Compact Linear"] = _("Compact Linear")
+    combo_options["Lines Word Length Solid"] = _("Lines Word Length Solid")
+    combo_options["Lines Solid Screen Width"] = _("Lines Solid Screen Width")
+    combo_options["Horizontal Lines"] = _("Horizontal Lines")
+    combo_options["Underline"] = _("Underline")
+    combo_options["Strikethrought"] = _("Strikethrought")
+    combo_options["Lines Solid"] = _("Lines Solid")
+    combo_options["Diagonal"] = _("Diagonal")
+    combo_options["XDiagonal"] = _("XDiagonal")
+    combo_options["Left"] = _("Left")
+    combo_options["Right"] = _("Right")
     
     # Added for 2.10
-    plugin_groups["Animation Plugins"] = _("Animations Plugins")
-    plugin_groups["Cover Transition Plugins"] = _("Cover Transition Plugins")
-    plugin_groups["Text Plugins"] = _("Text Plugins")
+    global plugin_groups
+    plugin_groups["Backgrounds"] = _("Backgrounds")
+    plugin_groups["Cover Transitions"] = _("Cover Transitions")
+    plugin_groups["Animated Texts"] = _("Animated Texts")
     
+    global plugin_names
     plugin_names["Lines Sweep"] = _("Lines Sweep")
     plugin_names["Hex Colors"] = _("Hex Colors")
-    plugin_names["Floating Balls"] = _("Floating Balls")
+    plugin_names["Floating Boxes"] = _("Floating Boxes")
     plugin_names["Typewriter"] = _("Typewriter")
+    plugin_names["Multiline Text"] = _("Multiline Text")
+    plugin_names["Hex Overlay"] = _("Hex Overlay")
+
+    global plugin_editor_groups
+    plugin_editor_groups["Text"] = _("Text")
+    plugin_editor_groups["Animation"] = _("Animation")
+    plugin_editor_groups["Background"] = _("Background")
+

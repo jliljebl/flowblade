@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@ Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 
 import appconsts
@@ -35,7 +35,7 @@ import mltfilters
 import mlttransitions
 import mltrefhold
 import patternproducer
-import tlinerender
+import tlineypage
 import utils
 
 # Media types for tracks or clips
@@ -237,7 +237,7 @@ class Sequence:
         Creates a MLT playlist object, adds project
         data and adds to tracks list.
         """
-        new_track = mlt.Playlist()
+        new_track = mlt.Playlist(self.profile)
 
         self._add_track_attributes(new_track, track_type)
         new_track.is_sync_track = False
@@ -260,7 +260,7 @@ class Sequence:
         
         return new_track
 
-    def _add_track_attributes(self, track, type):                
+    def _add_track_attributes(self, track, type):
         # Add data attr
         track.type = type
         track.sequence = self
@@ -330,7 +330,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def maximize_video_tracks_height(self, allocation):
         self.minimize_tracks_height()
@@ -338,7 +338,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def maximize_audio_tracks_height(self, allocation):
         self.minimize_tracks_height()
@@ -346,7 +346,7 @@ class Sequence:
             track = self.tracks[i]
             track.height = TRACK_HEIGHT_NORMAL
     
-        self.resize_tracks_to_fit(allocation)
+        tlineypage.vertical_size_update(allocation)
 
     def get_tracks_height(self):
         h = 0
@@ -377,10 +377,14 @@ class Sequence:
         pan_filter.set("start", value)
         track.attach(pan_filter)
         track.pan_filter = pan_filter 
-
+            
     def set_track_pan_value(self, track, value):
-        track.pan_filter.set("start", str(value))
-        track.audio_pan = value
+        if hasattr(track, "pan_filter") == False or track.pan_filter == None:
+            self.add_track_pan_filter(track, value)
+            track.audio_pan = value
+        else:
+            track.pan_filter.set("start", str(value))
+            track.audio_pan = value
     
     def remove_track_pan_filter(self, track):
         # This method is used for master too, and called with tractor then
@@ -440,6 +444,8 @@ class Sequence:
         if ttl != None:
             producer.set("ttl", str(ttl))
 
+        producer.set("mute_on_pause", str(1))
+
         return producer
 
     def create_slowmotion_producer(self, path, speed):
@@ -496,11 +502,12 @@ class Sequence:
         clip.color = None # None means that clip type default color is displayed
         clip.markers = []
         clip.container_data = None
-        
+        clip.titler_data = None # titler_data != None defines clips as a title clip that can be edited in Titler.
+
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
         if orig_clip.is_blanck_clip == True:
-            # Blank clips are created by adding a blank clip into MLT track and that is not approprite here,
+            # Blank clips are created by adding a blank clip into MLT track and that is not appropriate here,
             # so blank clips are represent by their length as int.
             return orig_clip.clip_length()
         return self.create_clone_clip(orig_clip)
@@ -614,11 +621,6 @@ class Sequence:
         return compositor
 
     def restack_compositors(self):
-        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
-            # we should only see this on sequence creation and adding removing tracks for COMPOSITING_MODE_STANDARD_FULL_TRACK
-            # remove this later
-            print("restacking compositors!")
-
         self.sort_compositors()
 
         new_compositors = []
@@ -695,13 +697,13 @@ class Sequence:
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
 
     def destroy_compositors(self):
-        # This can be called when undo stack destroyd too.
+        # This can be called when undo stack destroyed too.
         for compositor in self.compositors:
             self.field.disconnect_service(compositor.transition.mlt_transition)
         self.compositors = []
 
     def add_full_track_compositors(self):
-        print("Adding full track compositors")
+        #print("Adding full track compositors")
         
         for i in range(self.first_video_index, len(self.tracks) - 1):
             track = self.tracks[i]
@@ -718,7 +720,7 @@ class Sequence:
             self.add_compositor(compositor)
         
         self.restack_compositors()
-        print("Adding full track compositors DONE")
+        #print("Adding full track compositors DONE")
     
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
@@ -800,7 +802,7 @@ class Sequence:
 
     def hide_hidden_clips(self):
         """
-        Called to temporarely remove hidden clips for trim mode loop playback
+        Called to temporarily remove hidden clips for trim mode loop playback
         """
         self.tracks[-1].clear()
         self._unmute_editable()
@@ -843,7 +845,7 @@ class Sequence:
         self._unmute_editable()
 
     def update_edit_tracks_length(self):
-        # Needed for timeline renderering updates
+        # Needed for timeline rendering updates
         self.seq_len = 0 
         for i in range(1, len(self.tracks) - 1):
             track_len = self.tracks[i].get_length()
@@ -858,11 +860,9 @@ class Sequence:
         seq_len = self.seq_len
         if seq_len < 1:
             seq_len = 1
-        
-        tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
 
     def fix_v1_for_render(self): 
-        # This is a workaround to fix Issue #941 with H248 encoder not being able handle 
+        # This is a workaround to fix Issue #941 with H248 encoder not being able to handle 
         # blanks and crashing or losing working audio. Underlying reason still 
         # not known.
         track_v1 = self.tracks[self.first_video_index]
@@ -882,7 +882,7 @@ class Sequence:
             edit.append_clip(track_v1, white_clip, white_clip.clip_in, white_clip.clip_out)
 
     def get_seq_range_frame(self, frame):
-        # Needed for timeline renderering updates
+        # Needed for timeline rendering updates
         if frame >= (self.seq_len - 1):
             return self.seq_len - 1
         else:
@@ -979,7 +979,7 @@ class Sequence:
                 track_id += 1
                 continue
             elif track_id == len(self.tracks) - 2:
-                # This shold not happen because track heights should be set up so that minimized app 
+                # This should not happen because track heights should be set up so that minimized app 
                 fix_next = False
                 print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
             else:

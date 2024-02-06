@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2020 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,11 +19,10 @@
 """
 
 """
-This module holds funtions that maintain campatibility between project savefiles
+This module holds functions that maintain compatibility between project savefiles
 created by different versions of application.
-
-Refactoring to move code here is an ongoing effort.
 """
+
 import appconsts
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
@@ -44,7 +43,11 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     if type(media_file).__name__ == "ContainerClipMediaItem":
         if not hasattr(media_file, "current_frame"):
             media_file.current_frame = 0
-        
+
+    # Add titler data if not found.
+    if not hasattr(media_file, "titler_data"):
+        media_file.titler_data = None
+
 def FIX_MISSING_CLIP_ATTRS(clip):
     # Add color attribute if not found
     if not hasattr(clip, "color"):
@@ -62,12 +65,18 @@ def FIX_MISSING_CLIP_ATTRS(clip):
     if not hasattr(clip, "container_data"):
         clip.container_data = None
 
+    # Add container data if not found.
+    if not hasattr(clip, "titler_data"):
+        clip.titler_data = None
+
 def FIX_MISSING_FILTER_ATTRS(filter):
     if not hasattr(filter.info, "filter_mask_filter"):
         filter.info.filter_mask_filter = None
-            
+    if not hasattr(filter.info, "extra_editors_args"):
+        filter.info.extra_editors_args = {}
+
 def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
-    # Keeping backwards compability
+    # Keeping backwards compatibility
     if not hasattr(compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
         compositor.obey_autofollow = True
 
@@ -78,7 +87,7 @@ def FIX_MISSING_SEQUENCE_ATTRS(seq):
 def FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq):
     # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->, we just convert it 
     # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE.
-    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW or seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
 def FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq):
@@ -95,3 +104,7 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if(not hasattr(project, "update_media_lengths_on_load")):
         project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
                                                     # 1.10 needed that data for the first time and required recreating it correctly for older projects
+
+    if(not hasattr(project, "vault_folder")):
+        project.vault_folder = None
+        project.project_data_id = None

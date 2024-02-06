@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,9 +21,10 @@
 """
 Module contains GUI update routines.
 """
-from gi.repository import GObject
+
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 import appconsts
 import clipeffectseditor
@@ -39,9 +40,11 @@ from editorstate import timeline_visible
 import editorpersistance
 import kftoolmode
 import monitorevent
+import mediaplugin
 import utils
 import respaths
 import tlinewidgets
+import tlineypage
 
 page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
                  # so use this to have page size
@@ -113,31 +116,24 @@ def refresh_player(e):
     if not player_refresh_enabled:
         player_refresh_enabled = True
         return
-    # Refreshing while rendering overwrites file on disk and loses 
-    # previous rendered data. 
-    if PLAYER().is_rendering:
-        return
 
     PLAYER().refresh()
 
 # --------------------------------- window 
 def window_resized():
-    try:
-        # Resize track heights so that all tracks are displayed
-        current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
-        
-        # Place clips in the middle of timeline canvas after window resize
-        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    #try:
+    # Set page offset.
+    tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
+    
+    # Place clips in the middle of timeline canvas after window resize
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-        repaint_tline()
+    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+    repaint_tline()
 
-        return False
-    except:
-        GObject.timeout_add(200, window_resized)
-        print("window resized FAILED")
-        return False
+    return False
 
+    
 # --------------------------------- timeline
 # --- REPAINT
 def repaint_tline():
@@ -147,7 +143,6 @@ def repaint_tline():
     gui.tline_canvas.widget.queue_draw()
     gui.tline_column.widget.queue_draw()
     gui.tline_scale.widget.queue_draw()
-    gui.tline_render_strip.widget.queue_draw()
 
 # --- SCROLL AND LENGTH EVENTS
 def update_tline_scrollbar():
@@ -213,6 +208,13 @@ def center_tline_to_current_frame():
     pos = tlinewidgets.get_pos_for_tline_centered_to_current_frame()
     gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
 
+def center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom):
+    """
+    Sets scroll widget adjustment to place current frame in the middle of display.
+    """
+    pos = tlinewidgets.get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom)
+    gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
+    
 def init_tline_scale():
     """
     Calculates and sets first scale quaranteed to display full view 
@@ -233,12 +235,16 @@ def update_pix_per_frame_full_view():
     length = current_sequence().get_length() + (20.0 + current_sequence().get_length() * 0.1) # We added some length to make there always be some space after sequence end to to drag and drop.
     pix_per_frame_full_view = float(gui.tline_canvas.widget.get_allocation().width) / length
 
-def set_info_icon(info_icon_id):
-    if info_icon_id == None:
-        widget = Gtk.Label()
+def set_info_icon(info_icon_id, icon_gtk_image=None):
+    if icon_gtk_image == None:
+        if info_icon_id == None:
+            widget = Gtk.Label()
+        else:
+            widget = Gtk.Image.new_from_icon_name(info_icon_id, Gtk.IconSize.MENU)
     else:
-        widget = Gtk.Image.new_from_stock(info_icon_id, Gtk.IconSize.MENU)
-    
+        widget = icon_gtk_image
+        widget.set_margin_start(4)
+
     gui.tline_info.remove(gui.tline_info.info_contents)
     gui.tline_info.add(widget)
     gui.tline_info.info_contents = widget
@@ -249,30 +255,45 @@ def zoom_in():
     """
     Zooms in in the timeline view.
     """
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame *= 1.0 / SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame > PIX_PER_FRAME_MAX:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
 
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
 
 def zoom_out():
     """
     Zooms out in the timeline view.
     """
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame *= SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame < PIX_PER_FRAME_MIN:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    tline_scrolled(gui.tline_scroll.get_adjustment())
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
     
 def zoom_max():
+    mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
+    
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
     update_tline_scrollbar()
-    center_tline_to_current_frame()
+    if editorpersistance.prefs.zoom_to_playhead == True:
+        center_tline_to_current_frame()
+    else:
+        center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
 
 def zoom_project_length():
     tlinewidgets.pos = 0
@@ -281,18 +302,24 @@ def zoom_project_length():
     repaint_tline()
     update_tline_scrollbar()
 
+def init_tline_view():
+    zoom_project_length()
+    tlinewidgets.pos = 0
+    repaint_tline()
+    update_tline_scrollbar()
+    
 def mouse_scroll_zoom(event):
-    do_zoom = True
+    do_scroll = True
     if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
+            do_scroll = False
     else:
         if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
+            do_scroll = False
 
-    if do_zoom == True: # Uh, were doing scroll here.
+    if do_scroll == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
-        incr = adj.get_step_increment()
+        incr = adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)
         if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
             incr = -incr
         if event.direction == Gdk.ScrollDirection.UP:
@@ -322,15 +349,16 @@ def set_timeline_height():
         tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
         set_v_paned = True
 
-    gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
+    gui.tline_canvas.widget.set_size_request(tlinewidgets.MINIMUM_WIDTH, tlinewidgets.HEIGHT)
     gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
     
     if set_v_paned == True:
         new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
         gui.editor_window.app_v_paned.set_position(new_pos)
-    
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+
+    tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+
     gui.tline_column.init_listeners()
     repaint_tline()
 
@@ -363,7 +391,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         editorstate.tline_shadow_frame = saved_timeline_pos
 
     # If we're already displaying monitor clip we stop consumer 
-    # to supress timeline flashing between monitor clips
+    # to suppress timeline flashing between monitor clips
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.stop()
 
@@ -500,10 +528,7 @@ def _get_marks_range_info(mark_in, mark_out):
 
 def switch_monitor_display():
     monitorevent.stop_pressed()
-    if editorstate.MONITOR_MEDIA_FILE() == None:
-        return
-    if editorstate._timeline_displayed == True:
-        gui.monitor_switch.widget.queue_draw()
+    gui.monitor_switch.toggle()
 
 def display_tline_cut_frame(track, index):
     """
@@ -540,7 +565,7 @@ def set_and_display_monitor_media_file(media_file):
         display_clip_in_monitor(clip_monitor_currently_active = True)
 
 
-# --------------------------------------- frame displayes
+# --------------------------------------- frame displayers
 def update_frame_displayers(frame):
     """
     Display frame position in position bar and time code display.
@@ -573,8 +598,9 @@ def update_position_bar():
 def update_kf_editors_positions():
     clipeffectseditor.update_kfeditors_positions()
 
-def clear_effects_editor_clip():
+def clear_editor_panel():
     clipeffectseditor.clear_clip()
+    mediaplugin.clear_clip()
 
 # ----------------------------------------- marks
 def display_marks_tc():
@@ -587,19 +613,24 @@ def display_marks_tc():
 def clear_clip_from_editors(clip):
     if clipeffectseditor.clip_is_being_edited(clip):
         clipeffectseditor.clear_clip()
-
+    if mediaplugin.clip_is_being_edited(clip):
+        mediaplugin.clear_clip()
+    
 def open_clip_in_effects_editor(data):
     clip, track, item_id, x = data
     frame = tlinewidgets.get_frame(x)
     index = current_sequence().get_clip_index(track, frame)
 
     clipeffectseditor.set_clip(clip, track, index)
-
+    
+    clip_start_frame = track.clip_start(index)
+    PLAYER().seek_frame(clip_start_frame)
+        
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """
     Called when user selects trim mode.
-    This does not actually set GUI, just makes sure we are displaying timeline since we are ready to strart trimmng sometring in it.
+    This does not actually set GUI, just makes sure we are displaying timeline since we are ready to start trimming something in it.
     """
     display_sequence_in_monitor()
 
@@ -619,14 +650,38 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     render_fade = ui.get_widget('/MenuBar/EditMenu/AddFade')
     if range_start == -1:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(False)
     elif range_start == range_end:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(True)
     elif range_start == range_end - 1:
         render_transition.set_sensitive(True)
-        render_fade.set_sensitive(False)
     else:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(False)
 
+# ----------------------------------------------------- bins
+def update_current_bin_files_count():
+    # Get index for selected bin
+    selection = gui.editor_window.bin_list_view.treeview.get_selection()
+    (model, rows) = selection.get_selected_rows()
+    if len(rows) == 0:
+        return
+    row = max(rows[0])
+    
+    value = str(len(PROJECT().bins[row].file_ids))
+
+    tree_path = Gtk.TreePath.new_from_string(str(row))
+    store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
+    
+    gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+
+def update_bin_files_count(bin):
+    # Get index for selected bin
+    bin_index = PROJECT().bins.index(bin)
+
+    
+    value = str(len(PROJECT().bins[bin_index].file_ids))
+
+    tree_path = Gtk.TreePath.new_from_string(str(bin_index))
+    store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
+    
+    gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+    

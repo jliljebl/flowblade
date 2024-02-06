@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 """
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import threading
 import time
 
@@ -35,27 +35,27 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     fraction, elapsed = msg.split(" ")
     return (fraction, elapsed)
     
-def abort_render(session_id):
-    ccrutils.abort_render(session_id)
+def abort_render(parent_folder, session_id):
+    ccrutils.abort_render(parent_folder, session_id)
 
-def delete_session_folders(session_id):
-     ccrutils.delete_internal_folders(session_id)
+def delete_session_folders(parent_folder, session_id):
+     ccrutils.delete_internal_folders(parent_folder, session_id)
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, speed, write_file, profile_desc, encoding_option_index, 
+def main(root_path, session_id, parent_folder, speed, write_file, profile_desc, encoding_option_index, 
          quality_option_index, source_path, render_full_range, start_frame, end_frame):
         
-    mltheadlessutils.mlt_env_init(root_path, session_id)
+    mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
     _render_thread = MotionClipHeadlessRunnerThread(speed, write_file, profile_desc, encoding_option_index,

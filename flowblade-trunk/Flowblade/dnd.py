@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,12 +56,14 @@ URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 drag_data = None 
 drag_source = None
 
+# We start drag from out of timeline manually and need to finish it ourselves too.
+tline_out_drag_context = None
+
 # Drag icons
 clip_icon = None
 empty_icon = None
 
-# Callback functions
-add_current_effect = None
+# Callback functions. These are set at app.monkeypatch_callbacks().
 display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None
@@ -121,6 +123,7 @@ def connect_video_monitor(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
+    
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
@@ -129,9 +132,12 @@ def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
                          Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
     
-def connect_range_log(treeview):
+def connect_range_log(treeview, range_log_drop_on_monitor_callback):
+    global range_log_drop_on_monitor
+    range_log_drop_on_monitor = range_log_drop_on_monitor_callback
+    
     treeview.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
-                           [CLIPS_DND_TARGET], 
+                           [CLIPS_DND_TARGET, MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
     treeview.connect("drag_data_get", _range_log_drag_data_get)
     treeview.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
@@ -141,11 +147,19 @@ def connect_range_log(treeview):
     treeview.drag_source_set_icon_pixbuf(clip_icon)
     
 def start_tline_clips_out_drag(event, clips, widget):
+
+    global tline_out_drag_context
+    if tline_out_drag_context != None:
+        return
+    
     global drag_data
     drag_data = clips
     target_list = Gtk.TargetList.new([RANGE_DND_TARGET])
-    context = widget.drag_begin(target_list, Gdk.DragAction.COPY, 1, event)
+    tline_out_drag_context = widget.drag_begin_with_coordinates(target_list, Gdk.DragAction.COPY, 1, event, -1, -1)
 
+def clear_tline_out_drag_context():
+    global tline_out_drag_context
+    tline_out_drag_context = None
 
 # ------------------------------------------------- handlers for drag events
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
@@ -178,14 +192,20 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source
     drag_source = SOURCE_EFFECTS_TREE
-
+    context.finish(True, False, timestamp)
+    
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     if drag_data == None: # A user error drag from monitor to monitor
         return
-    media_file = drag_data[0].media_file
-    display_monitor_media_file(media_file)
-    gui.pos_bar.widget.grab_focus()
+
+    try:
+        # Drag from media panel
+        media_file = drag_data[0].media_file
+        display_monitor_media_file(media_file)
+        gui.pos_bar.widget.grab_focus()
+    except:
+        range_log_drop_on_monitor(max(drag_data[0].get_indices())) # drag_data is Gtk.TreePath
 
 def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
@@ -223,7 +243,7 @@ def _save_monitor_media(widget, context, selection, target_id, timestamp):
         return False
 
     return True
-    
+
 def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
     if drag_data == None:
         context.finish(True, False, timestamp)
@@ -252,3 +272,5 @@ def _on_range_drop(widget, context, x, y, timestamp):
     range_log_items_log_drop(drag_data)
 
     context.finish(True, False, timestamp)
+
+    

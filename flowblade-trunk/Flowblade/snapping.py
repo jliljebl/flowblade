@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,13 +49,13 @@ def get_snapped_x(x, track, edit_data):
     frame = _get_frame_for_x_func(x)
     
     global _playhead_frame
-    _playhead_frame = PLAYER().current_frame() # This is a constant overhead for every mouse move, 
+    _playhead_frame = PLAYER().current_frame() # This is a constant overhead for every mouse move event, 
                                                # if 'producer.frame()' is expensive or unstable (locking) for MLT this can be bad. 
 
     # Do snaps for relevant edit modes.
     if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
         if editorstate.overwrite_mode_box == True:
-            return x
+            return _overwrite_box_snap(x, track, frame, edit_data)
         return _overwrite_move_snap(x, track, frame, edit_data)
     elif EDIT_MODE() == editorstate.CLIP_END_DRAG:
         return _object_end_drag_snap(x, track, frame, edit_data)
@@ -180,19 +180,56 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
+    #print(edit_data)
     press_frame = edit_data["press_frame"]
     first_clip_start = edit_data["first_clip_start"]
     first_clip_frame = first_clip_start + (frame - press_frame)
     first_clip_x = _get_x_for_frame_func(first_clip_frame)
-
+    last_clip_frame = first_clip_frame + edit_data["moving_length"]
+    last_clip_x = _get_x_for_frame_func(last_clip_frame)
+    
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
     if snapped_x == -1:
         snapped_x = _playhead_snap(x, first_clip_x)
-                    
+    if snapped_x == -1:
+        snapped_x = _three_track_snap(track, x, last_clip_frame, last_clip_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, last_clip_x)
+        
     # Return either original x or snapped x
     return return_snapped_x_or_x(snapped_x, x)
 
+def _overwrite_box_snap(x, track, frame, edit_data):
+
+    if edit_data == None:
+        return x
+
+    s_data = edit_data["box_selection_data"]
+
+    if s_data == None:
+        return x
+        
+    frame_1 = s_data.topleft_frame + frame - edit_data["press_frame"]
+    frame_2 = frame_1 + s_data.width_frames
+    
+    frame_1_x = _get_x_for_frame_func(frame_1)
+    frame_2_x = _get_x_for_frame_func(frame_2)
+    
+    snapped_x = -1 # if value stays same till end, no snapping has happened.
+    snapped_x = _three_track_snap(track, x, frame_1, frame_1_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, frame_1_x)
+    if snapped_x == -1:
+        snapped_x = _three_track_snap(track, x, frame_2, frame_2_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, frame_2_x)
+
+    return_x = return_snapped_x_or_x(snapped_x, x)
+    edit_data["snapped_frame"] = _get_frame_for_x_func(return_x) # We need to calculate move delta with snapped value.
+    
+    return return_x
+ 
 def _object_end_drag_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x

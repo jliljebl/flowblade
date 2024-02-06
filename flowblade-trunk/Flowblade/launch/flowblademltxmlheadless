@@ -28,6 +28,7 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
     
     session_id = _get_arg_value(sys.argv, "session_id")
+    parent_folder = _get_arg_value(sys.argv, "parent_folder")
     xml_file_path = _get_arg_value(sys.argv, "xml_file_path")
     range_in = _get_arg_value(sys.argv, "range_in")
     range_out = _get_arg_value(sys.argv, "range_out")
@@ -40,7 +41,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-mltxmlheadless.main(modules_path, session_id, xml_file_path, range_in, range_out, profile_desc)
+mltxmlheadless.main(modules_path, session_id, parent_folder, xml_file_path, range_in, range_out, profile_desc)
 
 
 

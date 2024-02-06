@@ -1,7 +1,16 @@
-![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**PROJECT ON BREAK**
-**I'm looking forward to continue development some time in the future, but there will not be updates for the next few months.**
+
+
+![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
+
+**Fix for non-working video preview issue.**
+
+**Start application from terminal with command:**
+
+```
+SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
+```
+**More info on Issue here: [Issue #1134](https://github.com/jliljebl/flowblade/issues/1134)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
@@ -9,7 +18,7 @@
 4. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
 5. [Docs](https://github.com/jliljebl/flowblade#docs)
 6. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
-7. [Forum, Webpage](https://github.com/jliljebl/flowblade#forum-webpage)
+7. [Webpage](https://github.com/jliljebl/flowblade#webpage)
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
@@ -18,46 +27,51 @@ Flowblade is a **multitrack non-linear video editor** for Linux released under *
 
 With Flowblade Movie Editor you can compose movies from video clips, audio clips and graphics files. Clips can be cut at the desired frames, filters can be added to clips, and you can create multilayer composite images using compositor objects.
 
-Flowblade offers a configurable workflow - toolset, its order, default tool and certain timeline behaviours are user settable.
-
-# Features
+# Features Overview
 
 **Editing:**
-
-* 11 editing tools, 9 of which can be selected to the working set
+* Toolset with 6 editing tools available
 * 4 methods to insert / overwrite / append clips on the timeline
-* Drag'n'Drop clips on the timeline
-* Clip and compositor parenting with other clips
+* Drag'n'Drop clips on the timeline from Clip monitor and media panel
+* Clip parenting and audio synchronizing
 * Max. 9 combined video and audio tracks available
+* Large set of user configurable 
 
 **Image compositing:**
+* Standard Track Compositing workflow 
+    * Fades, transition and alpha channel manipulation achieved using with filters
+    * Blend mode is settable per clip
+* Compositor based workflow
+    * Multiple compositors available. Mix, zoom, move and rotate source video with keyframed animation tools
+    * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
+* 40+ pattern wipes, user created patterns can be used also
 
-* 10 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
-* 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
-* 40+ pattern wipes. 
-
-**Image and audio filtering:**
-
+**Image and audio filters:**
 * 50+ image filters: color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
 * 30+ audio filters: keyframed volume mixing, echo, reverb, distort, etc.
 
+**Advanced features:**
+* **Generators:** Powerful media generator plugin framework available to create e.g. animated texts and backgrounds.
+* **Range Log:** Save and edit clip in/out ranges to easily utilize best parts of your material
+* **G'Mic Tool:** Create media with beatiful, complex effects not available in any other editor
+* **Text Tool:** Create text plates with a handy purpose build tool with large set of features like text shadow, outline etc.
+* **Batch Encoding:** Render multiple output clips automatically 
+* **Media re-linking:** Fix projects with missing media to be editable again.
+  
 **Supported editable media types:**
-
 * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
 * JPEG, PNG, TGA, TIFF graphics file types
 * SVG vector graphics
 * Numbered frame sequences 
 
 **Output encoding:**
-
 * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
+* GPU Vaapi and NVENC encoders available
 * User can define rendering by setting FFMpeg args individually
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
-
-**Next release:** February 15th 2022.
+**Latest release:** Flowblade Movie Editor 2.12.0.2 was released in December 2023.
 
 # Installing Flowblade
 
@@ -79,19 +93,10 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
 
-# Screenshots
-[Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
+# Screenshot
+[Screenshot 2.10](./flowblade-trunk/docs/Screenshot-2-10.png)
 
-[Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
-
-[Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
-
-These are in the repository */docs* folder.
-
-# Forum, Webpage
-
-For questions and discussion on Flowblade we have a [User Forum](https://github.com/jliljebl/flowblade-forum).
-
+# Webpage
 [The project webpage is here](http://jliljebl.github.io/flowblade/). 
 
 # Contact

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 """
 
 """
-Module holds references to GUI widgets and offers some helper fuctions used in GUI creation.
+Module holds references to GUI widgets and offers some helper functions used in GUI creation.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 
 import pickle
 
@@ -41,7 +41,7 @@ editor_window = None
 editmenu = None
 
 # Project data lists and related views.
-media_list_view = None
+media_list_view = None # This is guicomponents.MediaPanel (not the treeview)
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None
@@ -77,18 +77,14 @@ notebook_buttons = None
 
 sequence_editor_b = None
 
+tline_cursor_manager = None
+
 
 # Theme colors
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
-_UBUNTU_COLORS = ((0.949020, 0.945098, 0.941176), (0.172, 0.172, 0.172), (0.941, 0.466, 0.274, 0.9), (0.951, 0.30, 0.0, 0.9), "Ubuntu")
-_GNOME_COLORS = ((0.929412, 0.929412, 0.929412), (0.172, 0.172, 0.172), (0.28627451, 0.560784314, 0.843137255), (0.192, 0.361, 0.608), "Gnome")
-_MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), (0.556862745, 0.678431373, 0.439215686), (0.556862745, 0.678431373, 0.439215686), "Linux Mint")
-_ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.065, 0.342, 0.66), (0.065, 0.342, 0.66), "Flowblade Theme")
 
-_THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOWBLADE_COLORS)
-
-_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
+_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # NOTE: WE CAN REMOVE THIS Used to communicate theme colors to tools like gmic.py running on separate process
 
 LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
 LIGHT_GRAY_THEME_BG = (0.153, 0.153, 0.188, 1.0)
@@ -109,7 +105,8 @@ def capture_references(new_editor_window):
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, effect_select_list_view, effect_select_combo_box, \
     project_info_vbox, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
+    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip, \
+    tline_cursor_manager
 
     editor_window = new_editor_window
 
@@ -129,7 +126,6 @@ def capture_references(new_editor_window):
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
-    tline_render_strip = editor_window.tline_render_strip
     tline_scroll = editor_window.tline_scroller
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
@@ -140,8 +136,11 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-def enable_save():
-    editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+    tline_cursor_manager = editor_window.tline_cursor_manager
+
+def enable_save(project):
+    if project.last_save_path != None:
+        editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
 # returns Gdk.RGBA color
 def get_bg_color():
@@ -174,62 +173,15 @@ def set_theme_colors():
     # this is first called.
     global _selected_bg_color, _bg_color, _button_colors, _bg_unmodified_normal
 
-    fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
-    theme_colors = _THEME_COLORS[fallback_theme_colors]
+    # THEMECOLORS
 
-    # Try to detect selected color and set from fallback if fails
-    style = editor_window.bin_list_view.get_style_context()
-    sel_bg_color = style.get_background_color(Gtk.StateFlags.SELECTED)
+    theme_colors = _FLOWBLADE_COLORS
+    c = theme_colors[3]
+    _selected_bg_color = Gdk.RGBA(*c)
+    c = theme_colors[1]
+    _bg_color = Gdk.RGBA(*c)
+    _button_colors = Gdk.RGBA(*c)
 
-    r, g, b, a = unpack_gdk_color(sel_bg_color)
-    if r == 0.0 and g == 0.0 and b == 0.0:
-        print("Selected color NOT detected")
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            c = theme_colors[2]
-        else:
-            c = theme_colors[3]
-        _selected_bg_color = Gdk.RGBA(*c)
-    else:
-        print("Selected color detected")
-        _selected_bg_color = sel_bg_color
-
-    # Try to detect bg color and set frow fallback if fails
-    style = editor_window.window.get_style_context()
-    bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-
-    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probably not necessary anymore
-
-    r, g, b, a = unpack_gdk_color(bg_color)
-
-    if r == 0.0 and g == 0.0 and b == 0.0:
-        print("BG color NOT detected")
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            c = theme_colors[0]
-        else:
-            c = theme_colors[1]
-        _bg_color = Gdk.RGBA(*c)
-        _button_colors = Gdk.RGBA(*c)
-    else:
-        print("BG color detected")
-        _bg_color = bg_color
-        _button_colors = bg_color
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        theme_colors = _THEME_COLORS[4]
-        c = theme_colors[3]
-        _selected_bg_color = Gdk.RGBA(*c) 
-
-    # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
-    editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-    editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-        editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
-        editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
-    
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
@@ -264,26 +216,48 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print(path_str)
 
-def apply_gtk_css(theme):
-    gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
-        print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
-    else:
-        print("Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22")
-        editorpersistance.prefs.theme = appconsts.LIGHT_THEME
+def apply_theme(theme):
+    Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+    
+    # We dropped these themes and need to force change the pref for them.
+    if theme == appconsts.FLOWBLADE_THEME or theme == appconsts.FLOWBLADE_THEME_GRAY:
+        editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+        theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         editorpersistance.save()
-        return False
         
+    if theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        apply_gtk_css()
+            
+def apply_gtk_css():        
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-    if theme == appconsts.FLOWBLADE_THEME:
-        css_path = "/res/css/gtk-flowblade-dark.css"
-    elif theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        css_path = "/res/css3/gtk-flowblade-dark.css"
-    else: # appconsts.FLOWBLADE_THEME_GRAY
-        css_path = "/res/css2/gtk-flowblade-dark.css"
+    css_path = "/res/css3/gtk-flowblade-dark.css"
+
     provider.load_from_path(respaths.ROOT_PATH + css_path)
 
     return True
+
+def get_default_filter_icon():
+    return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
+    
+def get_filter_group_icons(default_icon):
+    group_icons = {}
+    group_icons["Color"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color.png")
+    group_icons["Color Effect"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color_filter.png")
+    group_icons["Audio"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter.png")
+    group_icons["Audio Filter"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter_sin.png")
+    group_icons["Blur"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blur_filter.png")
+    group_icons["Distort"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "distort_filter.png")
+    group_icons["Alpha"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "alpha_filter.png")
+    group_icons["Movement"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "movement_filter.png")
+    group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
+    group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
+    group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
+    group_icons["Fade"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
+    group_icons["Artistic"] = default_icon
+    group_icons["FILTER_MASK"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
+    group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
+
+    return group_icons

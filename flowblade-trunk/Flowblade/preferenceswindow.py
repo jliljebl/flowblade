@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2013 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,8 +29,10 @@ import gui
 import guiutils
 import mltprofiles
 import multiprocessing
-import utils
 import usbhid
+import utils
+import utilsgtk
+
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -60,8 +62,14 @@ def preferences_dialog():
     notebook.append_page(jog_shuttle_panel, Gtk.Label(label=_("Jog/Shuttle")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
+<<<<<<< HEAD
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
         performance_widgets, jog_shuttle_widgets))
+=======
+    dialog.connect('response', _preferences_dialog_callback, 
+                    (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, 
+                    view_pref_widgets, performance_widgets))
+>>>>>>> master
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -98,7 +106,7 @@ def _general_options_panel():
     for profile in profiles:
         default_profile_combo.append_text(profile[0])
     default_profile_combo.set_active(mltprofiles.get_default_profile_index())
-    spin_adj = Gtk.Adjustment(value=prefs.undos_max, lower=editorpersistance.UNDO_STACK_MIN, upper=editorpersistance.UNDO_STACK_MAX, step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.undos_max, lower=editorpersistance.UNDO_STACK_MIN, upper=editorpersistance.UNDO_STACK_MAX, step_increment=1)
     undo_max_spin = Gtk.SpinButton.new_with_range(editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
     undo_max_spin.set_adjustment(spin_adj)
     undo_max_spin.set_numeric(True)
@@ -165,7 +173,7 @@ def _edit_prefs_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
-    spin_adj = Gtk.Adjustment(value=prefs.default_grfx_length, lower=1, upper=15000, step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.default_grfx_length, lower=1, upper=15000, step_increment=1)
     gfx_length_spin = Gtk.SpinButton()
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
@@ -204,6 +212,13 @@ def _edit_prefs_panel():
     auto_render_plugins = Gtk.CheckButton()
     auto_render_plugins.set_active(prefs.auto_render_media_plugins)
 
+    dnd_action = Gtk.ComboBoxText()
+    dnd_action.append_text(_("Always Overwrite Blanks"))
+    dnd_action.append_text(_("Overwrite Blanks on non-V1 Tracks"))
+    dnd_action.append_text(_("Always Insert"))
+    dnd_action.set_active(editorpersistance.prefs.dnd_action) # appconsts values correspond with order here.
+
+    row17 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Drag-and-Drop Action:")), dnd_action, PREFERENCES_LEFT))
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
@@ -211,9 +226,10 @@ def _edit_prefs_panel():
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Horizontal Scroll Direction:")), hor_scroll_dir, PREFERENCES_LEFT))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
-    row16 = _row(guiutils.get_checkbox_row_box(auto_render_plugins, Gtk.Label(label=_("Autorender Media Plugins"))))
-
+    row16 = _row(guiutils.get_checkbox_row_box(auto_render_plugins, Gtk.Label(label=_("Autorender Generators"))))
+    
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row17, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
@@ -229,7 +245,7 @@ def _edit_prefs_panel():
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
                   mouse_scroll_action, hide_file_ext_button, hor_scroll_dir,
-                  effects_editor_clip_load, auto_render_plugins)
+                  effects_editor_clip_load, auto_render_plugins, dnd_action)
 
 def _playback_prefs_panel():
     prefs = editorpersistance.prefs
@@ -256,25 +272,25 @@ def _playback_prefs_panel():
 
     # Apr-2017 - SvdB - For FF/Rev speed options
     if hasattr(prefs, 'ffwd_rev_shift'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_increment=1)
     ffwd_rev_shift_spin = Gtk.SpinButton()
     ffwd_rev_shift_spin.set_adjustment(spin_adj)
     ffwd_rev_shift_spin.set_numeric(True)
 
     if hasattr(prefs, 'ffwd_rev_ctrl'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_ctrl, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_ctrl, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=10, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=10, lower=1, upper=10, step_increment=1)
     ffwd_rev_ctrl_spin = Gtk.SpinButton()
     ffwd_rev_ctrl_spin.set_adjustment(spin_adj)
     ffwd_rev_ctrl_spin.set_numeric(True)
 
     if hasattr(prefs, 'ffwd_rev_caps'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_increment=1)
     ffwd_rev_caps_spin = Gtk.SpinButton()
     ffwd_rev_caps_spin.set_adjustment(spin_adj)
     ffwd_rev_caps_spin.set_numeric(True)
@@ -338,7 +354,7 @@ def _view_prefs_panel():
     force_language_combo.append_text(_("Polish"))
     force_language_combo.append_text(_("Russian"))
     force_language_combo.append_text(_("Spanish"))
-    force_language_combo.append_text(_("Ukranian"))
+    force_language_combo.append_text(_("Ukrainian"))
     # THIS NEEDS TO BE UPDATED WHEN LANGUAGES ARE ADDED!!!
     lang_list = ["None","English","zh_CN","zh_TW","cs","fr","de","hu","it","pl","ru","es","uk"]
     active_index = lang_list.index(prefs.force_language)
@@ -351,46 +367,6 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     show_full_file_names = Gtk.CheckButton()
     show_full_file_names.set_active(prefs.show_full_file_names)
-
-    # --------------------------------- Colorized icons
-    colorized_icons = Gtk.CheckButton()
-    colorized_icons.set_active(prefs.colorized_icons)
-    # ------------------------------------ End of Colorized icons
-
-    buttons_combo = Gtk.ComboBoxText()
-    buttons_combo.append_text(_("Glass"))
-    buttons_combo.append_text(_("Simple"))
-    buttons_combo.append_text(_("No Decorations"))
-    buttons_combo.set_active( prefs.buttons_style )
-
-    dark_combo = Gtk.ComboBoxText()
-    dark_combo.append_text(_("Flowblade Theme Neutral"))
-    dark_combo.append_text(_("Flowblade Theme Gray"))
-    dark_combo.append_text(_("Flowblade Theme Blue"))
-    dark_combo.append_text(_("Dark Theme"))
-    dark_combo.append_text(_("Light Theme"))
-    # The displayed options indeces do not correspond with theme const values.
-    if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-        index = 1
-    elif prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        index = 0
-    else:
-        index = int(prefs.theme) + 2
-    
-    dark_combo.set_active(index)
-
-    theme_combo = Gtk.ComboBoxText()
-    for theme in gui._THEME_COLORS:
-        theme_combo.append_text(theme[4])
-    theme_combo.set_active(prefs.theme_fallback_colors)
-
-    audio_levels_combo = Gtk.ComboBoxText()
-    audio_levels_combo.append_text(_("Display All Levels"))
-    audio_levels_combo.append_text(_("Display Levels On Request"))
-    if prefs.display_all_audio_levels == True:
-        audio_levels_combo.set_active(0)
-    else:
-        audio_levels_combo.set_active(1)
 
     window_mode_combo = Gtk.ComboBoxText()
     window_mode_combo.append_text(_("Single Window"))
@@ -412,12 +388,14 @@ def _view_prefs_panel():
     top_row_layout.append_text(_("2 panels always"))
     top_row_layout.set_active(prefs.top_row_layout)
 
-    monitors_data = utils.get_display_monitors_size_data()
+    monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
-    combined_w, combined_h = monitors_data[0]
+
+    combined_w, combined_h = utilsgtk.get_combined_monitors_size()
+            
     layout_monitor.append_text(_("Full Display area: ") + str(combined_w) + " x " + str(combined_h))
-    if len(monitors_data) >= 3:
-        for monitor_index in range(1, len(monitors_data)):
+    if len(monitors_data) >= 2:
+        for monitor_index in range(0, len(monitors_data)):
             monitor_w, monitor_h = monitors_data[monitor_index]
             layout_monitor.append_text(_("Monitor ") + str(monitor_index) + ": " + str(monitor_w) + " x " + str(monitor_h))
     layout_monitor.set_active(prefs.layout_display_index)
@@ -425,35 +403,25 @@ def _view_prefs_panel():
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
-    row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
-    row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
-    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
-    row5 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
-    row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
-                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
+    return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
+                  tracks_combo, top_row_layout, layout_monitor)
 
 
 
@@ -467,10 +435,10 @@ def _performance_panel():
     # Allow Frame Dropping should help getting real time output on low performance computers.
     prefs = editorpersistance.prefs
 
-    warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DIALOG)
+    warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.DIALOG)
     warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
 
-    spin_adj = Gtk.Adjustment(value=prefs.perf_render_threads, lower=1, upper=multiprocessing.cpu_count(), step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.perf_render_threads, lower=1, upper=multiprocessing.cpu_count(), step_increment=1)
     perf_render_threads = Gtk.SpinButton(adjustment=spin_adj)
     #perf_render_threads.set_adjustment(spin_adj)
     perf_render_threads.set_numeric(True)

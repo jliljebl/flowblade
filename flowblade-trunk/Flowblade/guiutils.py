@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,16 +21,15 @@
 """
 Module contains utility methods for creating GUI objects.
 """
-
+import cairo
 import time
 import threading
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 from gi.repository import GdkPixbuf
 
 import appconsts
-import cairo # Aug-2019 - SvdB - BB
-import editorpersistance # Aug-2019 - SvdB - BB
+import editorpersistance
 import respaths
 import translations
 
@@ -187,10 +186,7 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
-             new_name = img_name[:-6] + "@2_color"
-        else:
-            new_name = img_name + "@2"
+        new_name = img_name + "@2"
     else:
         new_name = img_name
 
@@ -380,13 +376,11 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
 def get_panel_etched_frame(panel):
     frame = Gtk.Frame()
     frame.add(panel)
-    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
     set_margins(frame, 0, 0, 1, 0)
     return frame
 
 def get_empty_panel_etched_frame():
     frame = Gtk.Frame()
-    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
     set_margins(frame, 0, 0, 1, 0)
     return frame
     
@@ -412,8 +406,8 @@ def get_sized_button(button_label, w, h, clicked_listener=None):
 
 def get_render_button():
     render_button = Gtk.Button()
-    render_icon = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_RECORD, 
-                                           Gtk.IconSize.BUTTON)
+    render_icon = Gtk.Image.new_from_icon_name( "media-record", 
+                                                Gtk.IconSize.BUTTON)
     render_button_box = Gtk.HBox()
     render_button_box.pack_start(get_pad_label(10, 10), False, False, 0)
     render_button_box.pack_start(render_icon, False, False, 0)
@@ -433,7 +427,7 @@ def get_menu_item(text, callback, data, sensitive=True):
 
 def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
     img = get_image(image_name)
-    text_label = Gtk.Label(text)
+    text_label = Gtk.Label(label=text)
     
     hbox = Gtk.HBox()
     hbox.pack_start(pad_label(4, 4), False, False, 0)
@@ -480,9 +474,9 @@ def get_gtk_image_from_file(source_path, image_height):
 
 def set_margins(widget, t, b, l, r):
     widget.set_margin_top(t)
-    widget.set_margin_left(l)
+    widget.set_margin_start(l)
     widget.set_margin_bottom(b)
-    widget.set_margin_right(r)
+    widget.set_margin_end(r)
     
     return widget
 
@@ -494,17 +488,59 @@ def remove_children(container):
     for child in children:
         container.remove(child)
 
-class PulseThread(threading.Thread):
+class PulseEvent:
     def __init__(self, proress_bar):
-        threading.Thread.__init__(self)
         self.proress_bar = proress_bar
-
-    def run(self):
         self.exited = False
         self.running = True
-        while self.running:
-            Gdk.threads_enter()
+        
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 100, self._do_pulse)
+                
+    def _do_pulse(self):
+        if self.running:
             self.proress_bar.pulse()
-            Gdk.threads_leave()
-            time.sleep(0.1)
-        self.exited = True
+            return True
+        else:
+            self.exited = True
+            return False
+
+
+def update_text_idle(text_widget, msg):
+    GLib.idle_add(_do_update_text, text_widget, msg)
+
+def _do_update_text(text_widget, msg):
+    text_widget.set_text(msg)
+
+
+class ProgressWindowThread(threading.Thread):
+    def __init__(self, dialog, progress_bar, clip_renderer, callback):
+        self.dialog = dialog
+        self.progress_bar = progress_bar
+        self.clip_renderer = clip_renderer
+        self.callback = callback
+        threading.Thread.__init__(self)
+    
+    def run(self):        
+        self.running = True
+        
+        while self.running:         
+
+            GLib.idle_add(self._update_progress_bar)
+
+            if self.clip_renderer.stopped == True:
+                self.running = False
+                GLib.idle_add(self._render_complete)
+
+            time.sleep(0.33)
+    
+    def _update_progress_bar(self):
+        render_fraction = self.clip_renderer.get_render_fraction()
+        self.progress_bar.set_fraction(render_fraction)
+        pros = int(render_fraction * 100)
+        self.progress_bar.set_text(str(pros) + "%")
+    
+    def _render_complete(self):
+        self.progress_bar.set_fraction(1.0)
+        self.progress_bar.set_text("Render Complete!")
+        self.callback(self.dialog, 0)
+    

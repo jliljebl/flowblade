@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,10 +22,9 @@
 Module handles keyevents.
 """
 
-from gi.repository import Gdk
+from gi.repository import Gdk, Gtk
 
 import appconsts
-import audiowaveform
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -44,7 +43,6 @@ import modesetting
 import monitorevent
 import movemodes
 import multitrimmode
-# Apr-2017 - SvdB
 import shortcuts
 import shortcutsquickeffects
 import re
@@ -52,8 +50,9 @@ import render
 import rotomask
 import targetactions
 import tlineaction
-import tlinerender
 import tlinewidgets
+import tlineypage
+import trackaction
 import trimmodes
 import updater
 import projectaction
@@ -101,12 +100,10 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
-    # Handle ESCAPE
+
+    # Handle ESCAPE.
     if event.keyval == Gdk.KEY_Escape:
-        if audiowaveform.waveform_thread != None:
-            audiowaveform.waveform_thread.abort_rendering()
-            return True
-        elif editorstate.current_is_move_mode() == False:
+        if editorstate.current_is_move_mode() == False:
             modesetting.set_default_edit_mode()
             return True
         elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
@@ -121,7 +118,7 @@ def key_down(widget, event):
     # Compositor editors keyevents
     was_handled = _handle_geometry_editor_keys(event)
     if was_handled:
-        # Stop widget focus from travelling if arrow key pressed
+        # Stop widget focus from travelling if arrow key pressed.
         gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
 
@@ -131,17 +128,17 @@ def key_down(widget, event):
         gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
 
-    # If timeline widgets are in focus timeline keyevents are available
+    # If timeline widgets are in focus timeline keyevents are available.
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
         if was_handled:
             # Stop widget focus from travelling if arrow key pressed for next frame
-            # by stopping signal
+            # by stopping signal.
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
 
     # Insert shortcut keys need more focus then timeline shortcuts.
-    # these may already have been handled in timeline focus events
+    # these may already have been handled in timeline focus events.
     was_handled = _handle_extended_monitor_focus_events(event)
     if was_handled:
         # Stop event handling here
@@ -151,13 +148,13 @@ def key_down(widget, event):
     if was_handled:
         return True
 
-    # Pressing timeline button obivously leaves user expecting
-    # to have focus in timeline
+    # Pressing timeline button obviously leaves user expecting
+    # to have focus in timeline.
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
         _handle_tline_key_event(event)
         return True
 
-    # Events that are available when monitor displays clip
+    # Events that are available when monitor displays clip.
     if gui.monitor_switch.widget.has_focus() and (not timeline_visible()):
         _handle_clip_key_event(event)
         return True
@@ -166,7 +163,7 @@ def key_down(widget, event):
         _handle_clip_key_event(event)
         return True
         
-    #  Handle non-timeline delete 
+    #  Handle non-timeline delete .
     if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
 
@@ -186,7 +183,7 @@ def key_down(widget, event):
         _move_to_end()
         return True
 
-    # Select all with CTRL + A in media panel
+    # Select all with CTRL + A in media panel.
     if event.keyval == Gdk.KEY_a:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None:
@@ -198,10 +195,10 @@ def key_down(widget, event):
         return True
 
     #debug.test help 
-    if event.keyval == Gdk.KEY_F12:
-        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            rotomask.show_rotomask()
-        return True
+    #if event.keyval == Gdk.KEY_F12:
+    #    if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+    #        rotomask.show_rotomask()
+    #    return True
 
     # Key event was not handled here.
     return False
@@ -316,8 +313,17 @@ def _handle_tline_key_event(event):
     if action == 'trim_end':
         tlineaction.trim_end_pressed()
         return True
+<<<<<<< HEAD
 
     # Key bindings for keyboard trimming
+=======
+    if action == 'toggle_track_output':
+        trackaction.toggle_track_output()
+        return True
+
+        
+    # Key bindings for keyboard trimming.
+>>>>>>> master
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
             trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
@@ -344,14 +350,14 @@ def _handle_tline_key_event(event):
             return True
     
     if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
-        multitrimmode.enter_pressed()
+        modesetting.multitrim_mode_pressed()
         return True
 
     was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)
     if was_handled == True:
         return True
 
-    # Key bindings for MOVE MODES and _NO_EDIT modes
+    # Key bindings for MOVE MODES and _NO_EDIT modes.
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
         if action == 'next_cut':
             if editorstate.timeline_visible():
@@ -378,7 +384,7 @@ def _handle_tline_key_event(event):
                  return True
         # Apr-2017 - SvdB - Add different speeds for different modifiers
         # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
-        # will MULTIPLY all speeds
+        # will MULTIPLY all speeds.
         # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK
         if action == 'prev_frame' or action == 'next_frame':
             if action == 'prev_frame':
@@ -423,14 +429,17 @@ def _handle_tline_key_event(event):
             medialog.log_range_clicked()
             return True
         if action == 'resync':
-            tlineaction.resync_button_pressed()
+            tlineaction.resync_track_button_pressed()
+            return True
+        if action == 'split_selected':
+            tlineaction.split_audio_synched_button_pressed()
             return True
         if action == 'delete':
             if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
                 kftoolmode.delete_active_keyframe()
             else:
                 # Clip selection and compositor selection are mutually exclusive, 
-                # so max one one these will actually delete something
+                # so max one one these will actually delete something.
                 tlineaction.splice_out_button_pressed()
                 compositormodes.delete_current_selection()
         if action == 'lift':
@@ -452,14 +461,14 @@ def _handle_tline_key_event(event):
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.set_default_edit_tool()
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
             PLAYER().seek_frame(0)
             _move_to_beginning()
             return True
         if action == 'to_end':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.set_default_edit_tool()
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
             PLAYER().seek_end()
             _move_to_end()
             return True
@@ -468,7 +477,7 @@ def _handle_tline_key_event(event):
 
 def _handle_extended_monitor_focus_events(event):
     # This function was added to get a subset of events only to work when monitor has focus
-    # Apr-2017 - SvdB - For keyboard shortcuts
+    # Apr-2017 - SvdB - For keyboard shortcuts.
     action = _get_shortcut_action(event)
 
     # We're dropping monitor window in 2 window mode as part of timeline focus
@@ -522,18 +531,18 @@ def _handle_extended_monitor_focus_events(event):
         
 # Apr-2017 - SvdB
 def _get_shortcut_action(event):
-    # Get the name of the key pressed
+    # Get the name of the key pressed.
     key_name = Gdk.keyval_name(event.keyval).lower()
 
     # Check if this key is in the dictionary.
     state = event.get_state()
     # Now we have a key and a key state we need to check if it is a shortcut.
-    # If it IS a shortcut we need to determine what action to take
+    # If it IS a shortcut we need to determine what action to take.
     if key_name in shortcuts._keyboard_actions:
         # Now get the associated dictionary
         _secondary_dict = shortcuts._keyboard_actions[key_name]
         # In order to check for all available combinations of Ctrl+Alt etc (CTRL+ALT should be the same as ALT_CTRL)
-        # we do a SORT on the string. So both CTRL+ALT and ALT+CTRL will become +ACLLRTT and can be easily compared
+        # we do a SORT on the string. So both CTRL+ALT and ALT+CTRL will become +ACLLRTT and can be easily compared.
         modifier = ""
         if state & Gdk.ModifierType.CONTROL_MASK:
             modifier = "CTRL"
@@ -561,11 +570,17 @@ def _get_shortcut_action(event):
             except:
                 action = 'None'
         return action
-    # We didn't find an action, so return nothing 
+    # We didn't find an action, so return nothing.
     return 'None'
 
 def _handle_configurable_global_events(event):
     action = _get_shortcut_action(event)
+    if action == 'tline_page_up':
+        tlineypage.page_up_key()
+        return True
+    if action == 'tline_page_down':
+        tlineypage.page_down_key()
+        return True
     if action == 'open_next':
         projectaction.open_next_media_item_in_monitor()
         return True
@@ -581,8 +596,8 @@ def _handle_clip_key_event(event):
         action = _get_shortcut_action(event)
         # Apr-2017 - SvdB - Add different speeds for different modifiers
         # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
-        # will MULTIPLY all speeds
-        # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK
+        # will MULTIPLY all speeds.
+        # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK.
         
         prefs = editorpersistance.prefs
         if action == 'prev_frame' or action == 'next_frame':
@@ -686,11 +701,6 @@ def _handle_delete():
     # Delete media log event
     if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
         medialog.delete_selected()
-        return True
-
-    # Delete tline render segment
-    if gui.tline_render_strip.widget.has_focus() == True:
-        tlinerender.get_renderer().delete_selected_segment()
         return True
     
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
@@ -799,6 +809,26 @@ def _move_to_end():
     updater.update_tline_scrollbar()
 
 # ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
+def cut_action():
+    if _timeline_has_focus() == False:
+        # Try to cut text to clipboard because user pressed CTRL + X.
+        if gui.media_list_view.widget.get_focus_child() != None:
+            projectaction.cut_media_files()
+            return True
+                    
+        # Try to extract text to clipboard because user pressed CTRL + C.
+        copy_source = gui.editor_window.window.get_focus()
+        try:
+            display = Gdk.Display.get_default()
+            cb = Gtk.Clipboard.get_default(display)
+            copy_source.get_buffer().cut_clipboard(cb, True)
+            return True
+        except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
+            return False
+    else:
+        tlineaction.do_timeline_objects_copy(False)
+        return True
+        
 def copy_action():
     if _timeline_has_focus() == False:
         filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
@@ -807,34 +837,62 @@ def copy_action():
             value = filter_kf_editor.get_copy_kf_value()
             save_data = (appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA, (value, filter_kf_editor))
             editorstate.set_copy_paste_objects(save_data) 
+            return True
         elif geom_kf_editor != None:
             value = geom_kf_editor.get_copy_kf_value() 
             save_data = (appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA, (value, geom_kf_editor))
-            editorstate.set_copy_paste_objects(save_data) 
+            editorstate.set_copy_paste_objects(save_data)
+            return True
         else:
-            # Try to extract text to clipboard because user pressed CTRL + C
+            # Try to extract text to clipboard because user pressed CTRL + C.
             copy_source = gui.editor_window.window.get_focus()
             try:
-                copy_source.copy_clipboard()
-            except:# selected widget was not a Gtk.Editable that can provide text to clipboard
-                pass
+                display = Gdk.Display.get_default()
+                cb = Gtk.Clipboard.get_default (display)
+                copy_source.get_buffer().copy_clipboard(cb)
+                return True
+            except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
+                return False
     else:
         tlineaction.do_timeline_objects_copy()
+        return True
 
 def paste_action():
     if _timeline_has_focus() == False:
         copy_paste_object = editorstate.get_copy_paste_objects()
         if copy_paste_object == None:
-            return
+            _attempt_default_paste()
+            return False
         data_type, paste_data = editorstate.get_copy_paste_objects()
         if data_type == appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA:
             value, kf_editor = paste_data
             kf_editor.paste_kf_value(value)
+            return True
         elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
             value, geom_editor = paste_data
             geom_editor.paste_kf_value(value)
+            return True
+        elif data_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
+            projectaction.paste_media_files()
+            return True
+        
+        return False
     else:
         tlineaction.do_timeline_objects_paste()
+        _attempt_default_paste()
+        return True
+
+def _attempt_default_paste():
+    # Try to extract text to clipboard because user pressed CTRL + C.
+    paste_target = gui.editor_window.window.get_focus()
+    try:
+        display = Gdk.Display.get_default()
+        clipboard = Gtk.Clipboard.get_default(display)
+        paste_target.get_buffer().paste_clipboard(clipboard, None, True)
+        return True
+    except:# selected widget cannot be pasted into
+        return False
+                
 
 def change_single_shortcut(code, event, shortcut_label):
     key_val_name = Gdk.keyval_name(event.keyval).lower()

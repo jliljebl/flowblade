@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import threading
 import time
 
@@ -48,31 +48,31 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
-def clear_flag_files(session_id):
-    ccrutils.clear_flag_files(session_id)
+def clear_flag_files(parent_folder, session_id):
+    ccrutils.clear_flag_files(parent_folder, session_id)
 
-def set_render_data(session_id, video_render_data):
-    ccrutils.set_render_data(session_id, video_render_data)
+def set_render_data(parent_folder, session_id, video_render_data):
+    ccrutils.set_render_data(parent_folder, session_id, video_render_data)
     
-def session_render_complete(session_id):
-    return ccrutils.session_render_complete(session_id)
+def session_render_complete(parent_folder, session_id):
+    return ccrutils.session_render_complete(parent_folder, session_id)
 
-def get_session_status(session_id):
-    msg = ccrutils.get_session_status_message(session_id)
+def get_session_status(parent_folder, session_id):
+    msg = ccrutils.get_session_status_message(parent_folder, session_id)
     if msg == None:
         return None
     fraction, elapsed = msg.split(" ")
     return (fraction, elapsed)
     
-def abort_render(session_id):
+def abort_render(parent_folder, session_id):
     ccrutils.abort_render(session_id)
 
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc):
+def main(root_path, session_id, parent_folder, xml_file_path, range_in, range_out, profile_desc):
     
-    render_data = mltheadlessutils.mlt_env_init(root_path, session_id)
+    render_data = mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
     _render_thread = MLTXMLHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
@@ -106,7 +106,7 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
         # Video clip consumer
         if self.render_data.do_video_render == True:
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
 

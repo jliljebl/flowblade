@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,20 +22,22 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 
-from gi.repository import GLib
+from gi.repository import GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
+import copy
 import cairo
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import webbrowser
 
@@ -49,20 +51,17 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
-import mltfilters
 import positionbar
 import processutils
 import respaths
 import renderconsumer
 import toolguicomponents
 import toolsencoding
-import translations
-import threading
 import userfolders
 import utils
+import utilsgtk
 
 import gmicplayer
 import gmicscript
@@ -77,6 +76,7 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 _gmic_found = False
 _session_id = None
 
+_app = None
 _window = None
 
 _player = None
@@ -96,8 +96,12 @@ _startup_data = None
 
 _encoding_panel = None
 
-# GTK3 requires this to be created outside of callback
-_hamburger_menu = Gtk.Menu()
+
+_hamburger_popover = None
+_hamburger_popover_menu = None
+_script_popover = None
+_script_popover_menu = None
+
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
@@ -177,77 +181,60 @@ def main(root_path, force_launch=False):
 
     init_frames_dirs()
 
-    # Load editor prefs and apply themes
+    # Load editor prefs and apply themes images paths.
     editorpersistance.load()
-            
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
-    # Load preset gmic scripts
-    gmicscript.load_preset_scripts_xml()
+    # Create app.
+    app = GMicApplication()
+    global _app
+    _app = app
+    app.run(None)
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
-
-    # Set monitor sizes
-    scr_w = Gdk.Screen.width()
-    scr_h = Gdk.Screen.height()
-    editorstate.SCREEN_WIDTH = scr_w
-    editorstate.SCREEN_HEIGHT = scr_h
-    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
-        global MONITOR_WIDTH, MONITOR_HEIGHT
-        MONITOR_WIDTH = 650
-        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
-
-    # Themes
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        respaths.apply_dark_theme()
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
+class GMicApplication(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id=None,
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
+    def on_activate(self, data=None):
+        # Set monitor sizes
+        scr_w, scr_h = utilsgtk.get_combined_monitors_size()
+        editorstate.SCREEN_WIDTH = scr_w
+        editorstate.SCREEN_HEIGHT = scr_h
+        if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+            global MONITOR_WIDTH, MONITOR_HEIGHT
+            MONITOR_WIDTH = 650
+            MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
-    gui.load_current_colors()
-    
-    global _window
-    _window = GmicWindow()
-    _window.pos_bar.set_dark_bg_color()
-
-    os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
-    Gdk.flush()
-
-    # Start with a clip loaded if data provided
-    if len(sys.argv) > 1:
-        path = _get_arg_value(sys.argv, "path")
-        mark_in = int(_get_arg_value(sys.argv, "clip_in"))
-        mark_out = int(_get_arg_value(sys.argv, "clip_out"))
-        global _startup_data
-        _startup_data = (path, mark_in, mark_out)
-        GLib.idle_add(_load_startup_data)
+        # Themes
+        gui.apply_theme(editorpersistance.prefs.theme)
         
-    Gtk.main()
-    Gdk.threads_leave()
+        # Init mlt.
+        repo = mltinit.init_with_translations()
+
+        # Load preset gmic scripts
+        gmicscript.load_preset_scripts_xml()
+        
+        gui.load_current_colors()
+        
+        global _window
+        _window = GmicWindow()
+        _window.pos_bar.set_dark_bg_color()
+
+        os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
+
+        # Start with a clip loaded if data provided
+        if len(sys.argv) > 1:
+            path = _get_arg_value(sys.argv, "path")
+            mark_in = int(_get_arg_value(sys.argv, "clip_in"))
+            mark_out = int(_get_arg_value(sys.argv, "clip_out"))
+            global _startup_data
+            _startup_data = (path, mark_in, mark_out)
+            GLib.idle_add(_load_startup_data)
+        
+        self.add_window(_window)
+
 
 def _load_startup_data():
     path, mark_in, mark_out = _startup_data
@@ -293,7 +280,7 @@ def open_clip_dialog():
     file_select.set_default_response(Gtk.ResponseType.CANCEL)
     file_select.set_select_multiple(False)
 
-    media_filter = utils.get_video_source_file_filter()
+    media_filter = utilsgtk.get_video_source_file_filter()
     file_select.add_filter(media_filter)
 
     if _last_load_file != None:
@@ -366,10 +353,7 @@ def _finish_clip_open():
 
 
 #-------------------------------------------------- script setting and save/load
-def script_menu_lauched(launcher, event):
-    gmicscript.show_menu(event, script_menu_item_selected)
-
-def script_menu_item_selected(item, script):
+def script_menu_item_selected(widget, action, script):
     if _window.action_select.get_active() == False:
         _window.script_view.get_buffer().set_text(script.script)
     else:
@@ -422,25 +406,13 @@ def _load_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 #-------------------------------------------------- menu
-def _hamburger_menu_callback(widget, msg):
+def _hamburger_menu_callback(widget, action, msg):
     if msg == "load":
         open_clip_dialog()
     elif msg == "close":
         _shutdown()
     elif msg == "docs":
         webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
-
-def _get_menu_item(text, callback, data, sensitive=True):
-    item = Gtk.MenuItem.new_with_label(text)
-    item.connect("activate", callback, data)
-    item.show()
-    item.set_sensitive(sensitive)
-    return item
-
-def _add_separetor(menu):
-    sep = Gtk.SeparatorMenuItem()
-    sep.show()
-    menu.add(sep)
 
 #-------------------------------------------------- player buttons
 def prev_pressed(delta=-1):
@@ -502,8 +474,28 @@ def update_frame_displayers():
 
 #-------------------------------------------------- render and preview
 def render_output():
+    buf = _window.script_view.get_buffer()
+    user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+
+    out_folder = _window.out_folder.get_filenames()[0] + "/"
+    if out_folder == (os.path.expanduser("~") + "/"):
+        return
+
+    _window.render_status_info.set_markup("")
+    _window.set_widgets_sensitive(False)
+    _window.render_percentage.set_sensitive(True)
+    _window.render_status_info.set_sensitive(True)
+    _window.render_progress_bar.set_sensitive(True)
+    _window.stop_button.set_sensitive(True)
+    _window.render_button.set_sensitive(False)
+    _window.close_button.set_sensitive(False)
+    _window.encode_settings_button.set_sensitive(False)
+    _window.encode_desc.set_sensitive(False)
+    _window.hamburger_launcher.widget.set_sensitive(False)
+    _window.load_button.set_sensitive(False)
+        
     global _effect_renderer
-    _effect_renderer = GmicEffectRendererer()
+    _effect_renderer = GmicEffectRendererer(user_script, out_folder)
     _effect_renderer.start()
 
 def abort_render():
@@ -515,8 +507,13 @@ def render_preview_frame():
     _window.preview_monitor.queue_draw()
     
 def render_current_frame_preview():
+    _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
+    
+    buf = _window.script_view.get_buffer()
+    view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+    
     global _preview_render
-    _preview_render = GmicPreviewRendererer()
+    _preview_render = GmicPreviewRendererer(view_text)
     _preview_render.start()
 
 def _encode_settings_clicked():
@@ -561,9 +558,9 @@ def _shutdown():
 
     # Delete session folder
     shutil.rmtree(get_session_folder())
-    
-    # Exit gtk main loop.
-    Gtk.main_quit()
+
+    # Close app.
+    _app.quit()
 
 
 #------------------------------------------------- window
@@ -579,10 +576,10 @@ class GmicWindow(Gtk.Window):
         else:
             psize = 44
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
-        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
+        #self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
-        self.load_button = Gtk.Button(_("Load Clip"))
+        self.load_button = Gtk.Button(label=_("Load Clip"))
         self.load_button.connect("clicked", lambda w: open_clip_dialog())
 
         self.media_info = Gtk.Label()
@@ -640,13 +637,12 @@ class GmicWindow(Gtk.Window):
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
-        pos_bar_frame = Gtk.Frame()
+        pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_margin_top(10)
         pos_bar_frame.set_margin_bottom(9)
-        pos_bar_frame.set_margin_left(6)
-        pos_bar_frame.set_margin_right(2)
+        pos_bar_frame.set_margin_start(6)
+        pos_bar_frame.set_margin_end(2)
     
         if editorpersistance.prefs.double_track_hights == True:
             pos_bar_frame_temp = Gtk.VBox(False, 0)
@@ -667,7 +663,7 @@ class GmicWindow(Gtk.Window):
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.control_buttons.no_decorations = True 
         
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)
@@ -688,14 +684,15 @@ class GmicWindow(Gtk.Window):
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
-        self.present_event_box.connect("button-press-event",  script_menu_lauched)
+        self.present_event_box.connect("button-press-event",  self.script_menu_lauched)
 
-        self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
+        self.script_menu = toolguicomponents.PressLaunch(self.script_menu_lauched)
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
+        self.action_select.set_margin_end(4)
                 
-        self.action_label = Gtk.Label(_("Add to Script"))
+        self.action_label = Gtk.Label(label=_("Add to Script"))
 
         preset_row = Gtk.HBox(False, 2)
         preset_row.pack_start(self.present_event_box, False, False, 0)
@@ -739,9 +736,9 @@ class GmicWindow(Gtk.Window):
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
         self.length_label = guiutils.bold_label(_("Length:"))
         
-        self.mark_in_info = Gtk.Label("-")
-        self.mark_out_info = Gtk.Label("-")
-        self.length_info = Gtk.Label("-")
+        self.mark_in_info = Gtk.Label(label="-")
+        self.mark_out_info = Gtk.Label(label="-")
+        self.length_info = Gtk.Label(label="-")
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -766,12 +763,13 @@ class GmicWindow(Gtk.Window):
                             self.out_folder, guiutils.pad_label(24, 2), self.frame_name, \
                             guiutils.pad_label(2, 2), self.extension_label])
 
-        self.encode_check_label = Gtk.Label(_("Encode Video"))
+        self.encode_check_label = Gtk.Label(label=_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
+        self.encode_check.set_margin_end(4)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
         
-        self.encode_settings_button = Gtk.Button(_("Encoding settings"))
+        self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
         self.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
@@ -788,7 +786,7 @@ class GmicWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
-        self.render_percentage = Gtk.Label("")
+        self.render_percentage = Gtk.Label(label="")
         
         self.status_no_render = _("Set Mark In, Mark Out and Frames Folder for valid render")
          
@@ -833,9 +831,9 @@ class GmicWindow(Gtk.Window):
         script_work_panel.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         script_work_panel.pack_start(render_vbox, True, True, 0)
 
-        self.load_script = Gtk.Button(_("Load Script"))
+        self.load_script = Gtk.Button(label=_("Load Script"))
         self.load_script.connect("clicked", lambda w:load_script_dialog(_load_script_dialog_callback))
-        self.save_script = Gtk.Button(_("Save Script"))
+        self.save_script = Gtk.Button(label=_("Save Script"))
         self.save_script.connect("clicked", lambda w:save_script_dialog(_save_script_dialog_callback))
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
@@ -923,16 +921,50 @@ class GmicWindow(Gtk.Window):
         self.update_render_status_info()
 
     def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
         
-        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
-        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
-        
-        menu.popup(None, None, None, None, event.button, event.time)
+        global _hamburger_popover, _hamburger_popover_menu
+    
+        _hamburger_popover_menu = toolguicomponents.menu_clear_or_create(_hamburger_popover_menu)
 
+        main_section = Gio.Menu.new()    
+        toolguicomponents.add_menu_action(_app, main_section, _("Load Clip"),  "mainmenu.load", "load", _hamburger_menu_callback)
+        toolguicomponents.add_menu_action(_app, main_section, _("G'Mic Webpage"),  "mainmenu.docs", "docs", _hamburger_menu_callback)
+        _hamburger_popover_menu.append_section(None, main_section)
+
+        close_section = Gio.Menu.new()    
+        toolguicomponents.add_menu_action(_app, close_section, _("Close"),  "mainmenu.close", "close", _hamburger_menu_callback)
+        _hamburger_popover_menu.append_section(None, close_section)
+        
+        _hamburger_popover = Gtk.Popover.new_from_model(widget, _hamburger_popover_menu)
+        self.hamburger_launcher.connect_launched_menu(_hamburger_popover)
+        _hamburger_popover.show()
+
+    def script_menu_lauched(self, widget, event):
+        
+        global _script_popover, _script_popover_menu
+    
+        _script_popover_menu = toolguicomponents.menu_clear_or_create(_script_popover_menu)
+
+        script_groups = gmicscript.get_script_groups()
+
+        for script_group in script_groups:
+            group_name, group = script_group
+            
+            sub_menu = Gio.Menu.new()
+            _script_popover_menu.append_submenu(group_name, sub_menu)
+
+            for script in group:
+                label = script.name
+                item_id = script.name.lower().replace(" ", "_")
+                sub_menu.append(label, "app." + item_id) 
+                
+                action = Gio.SimpleAction(name=item_id)
+                action.connect("activate", script_menu_item_selected, script)
+                _app.add_action(action)
+
+        _script_popover = Gtk.Popover.new_from_model(widget, _script_popover_menu)
+        _script_popover.show()
+    
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
@@ -1095,8 +1127,9 @@ def _global_key_down_listener(widget, event):
 #------------------------------------------------- render threads
 class GmicPreviewRendererer(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, view_text):
         threading.Thread.__init__(self)
+        self.view_text = view_text
 
     def run(self):
         start_time = time.time()
@@ -1106,21 +1139,12 @@ class GmicPreviewRendererer(threading.Thread):
             shutil.copyfile(get_current_frame_file(), get_preview_file())
         except IOError:
             # We have failed to extract a png file from source file
-            Gdk.threads_enter()
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-            _window.out_view.get_buffer().set_text("Extracting PNG frames from this file failed!")
-            Gdk.threads_leave()
+            GLib.idle_add(self._update_buffer)
             return
-            
-        Gdk.threads_enter()
-        _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
-        buf = _window.script_view.get_buffer()
-        view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        Gdk.threads_leave()
     
         # Create command list and launch process.
         command_list = [editorstate.gmic_path, get_current_frame_file()]
-        user_script_commands = view_text.split(" ")
+        user_script_commands = self.view_text.split(" ")
         command_list.extend(user_script_commands)
         command_list.append("-output")
         command_list.append(get_preview_file())
@@ -1138,13 +1162,10 @@ class GmicPreviewRendererer(threading.Thread):
 
         global _current_preview_surface
         _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
+    
+        GLib.idle_add(self._preview_render_done_update, p, out, start_time)
 
-        Gdk.threads_enter()
-        if p.returncode != 0:
-           _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-        else:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            
+    def _preview_render_done_update(self, p, out, start_time):
         _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
 
         render_time = time.time() - start_time
@@ -1153,13 +1174,18 @@ class GmicPreviewRendererer(threading.Thread):
             utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + _(", render time: ") + time_str +  "</small>" )
             
         _window.preview_monitor.queue_draw()
-        Gdk.threads_leave()
 
+    def _update_buffer():
+        _window.out_view.get_buffer().set_text(_("Extracting PNG frames from this file failed!"))
+
+            
 
 class GmicEffectRendererer(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, user_script, out_folder):
         threading.Thread.__init__(self)
+        self.user_script = user_script
+        self.out_folder = out_folder
 
     def run(self):
         self.render_player = None
@@ -1168,26 +1194,6 @@ class GmicEffectRendererer(threading.Thread):
         self.abort = False
         self.script_renderer = None
         
-        # Refuse to render into user home folder
-        out_folder = _window.out_folder.get_filenames()[0] + "/"
-        if out_folder == (os.path.expanduser("~") + "/"):
-            return
-        
-        Gdk.threads_enter()
-        _window.render_status_info.set_markup("")
-        _window.set_widgets_sensitive(False)
-        _window.render_percentage.set_sensitive(True)
-        _window.render_status_info.set_sensitive(True)
-        _window.render_progress_bar.set_sensitive(True)
-        _window.stop_button.set_sensitive(True)
-        _window.render_button.set_sensitive(False)
-        _window.close_button.set_sensitive(False)
-        _window.encode_settings_button.set_sensitive(False)
-        _window.encode_desc.set_sensitive(False)
-        _window.hamburger_launcher.widget.set_sensitive(False)
-        _window.load_button.set_sensitive(False)
-        Gdk.threads_leave()
-            
         # Delete old preview frames
         folder = get_render_frames_dir()
         for frame_file in os.listdir(folder):
@@ -1210,20 +1216,15 @@ class GmicEffectRendererer(threading.Thread):
             return
         
         # Render effect for frames
-        # Get user script 
-        Gdk.threads_enter()
-        buf = _window.script_view.get_buffer()
-        user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        _window.render_percentage.set_markup("<small>" + _("Waiting for frames write to complete...") + "</small>")
-        Gdk.threads_leave()
-
+        GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Waiting for frames write to complete...") + "</small>", None)
+         
         while len(os.listdir(folder)) != self.length:
             time.sleep(0.5)
         
         # Render frames with gmic script
-        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   user_script, 
+        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   self.user_script, 
                                                                         folder,
-                                                                        out_folder,
+                                                                        self.out_folder,
                                                                         frame_name,
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback)
@@ -1239,9 +1240,9 @@ class GmicEffectRendererer(threading.Thread):
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
             
             # Render producer
-            frame_file = out_folder + frame_name + "_0000.png"
+            frame_file = self.out_folder + frame_name + "_0000.png"
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            resource_path = out_folder + "/" + resource_name_str
+            resource_path = self.out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
             clip_frames = os.listdir(get_render_frames_dir())
 
@@ -1252,28 +1253,23 @@ class GmicEffectRendererer(threading.Thread):
 
             while self.render_player.stopped == False:
                 if self.abort == True:
-                    Gdk.threads_enter()
-                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-                    _window.render_progress_bar.set_fraction(0.0)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Render stopped!") + "</small>", 0.0)
                     return
                 
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
                 
-                Gdk.threads_enter()
-                _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-                _window.render_progress_bar.set_fraction(fraction)
-                Gdk.threads_leave()
+                GLib.idle_add(self._show_percentage_and_fraction, update_info, fraction)
                 
                 time.sleep(0.3)
 
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
+        GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Render complete!") + "</small>", None)
         self.set_render_stopped_gui_state()
-        Gdk.threads_leave()
         
     def frames_update(self, frame):
+        GLib.idle_add(self._do_frames_update, frame)
+
+    def _do_frames_update(self, frame):
         if frame - self.mark_in < 0:
             frame = self.length # hack fix, producer suddenly changes the frame it thinks it is in
         else:
@@ -1281,43 +1277,36 @@ class GmicEffectRendererer(threading.Thread):
         
         update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(self.length)
 
-        Gdk.threads_enter()
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")
         _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
-        Gdk.threads_leave()
 
     def script_render_update_callback(self, frame_count):
-        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
+        GLib.idle_add(self._do_script_render_update_callback_gui, frame_count)
 
-        Gdk.threads_enter()
+    def _do_script_render_update_callback_gui(self, frame_count):
+        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")
         _window.render_progress_bar.set_fraction(float(frame_count)/float(self.length))
-        Gdk.threads_leave()
 
     def script_render_output_callback(self, p, out):
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_script_render_output_callback_gui, p, out)
+        
+    def _do_script_render_output_callback_gui(self, p, out):
         _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
         if p.returncode != 0:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
             _window.render_percentage.set_text(_("Render error!"))
-            Gdk.threads_leave()
-            return
         else:
             _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            Gdk.threads_leave()
 
-    def abort_render(self):
-        self.abort = True
-
-        if self.script_renderer != None:
-             self.script_renderer.abort_rendering()
-
-        self.shutdown()
-                         
-        _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-        self.set_render_stopped_gui_state()
+    def _show_percentage_and_fraction(self, percentage, fraction):
+        _window.render_percentage.set_markup(percentage) #"<small>" + update_info + "</small>")
+        if fraction != None:
+            _window.render_progress_bar.set_fraction(fraction)
 
     def set_render_stopped_gui_state(self):
+        GLib.idle_add(self._do_set_render_stopped_gui_state)
+        
+    def _do_set_render_stopped_gui_state(self):
         _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
         _window.stop_button.set_sensitive(False)
@@ -1329,10 +1318,20 @@ class GmicEffectRendererer(threading.Thread):
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)
 
+    def abort_render(self):
+        self.abort = True
+
+        if self.script_renderer != None:
+             self.script_renderer.abort_rendering()
+
+        self.shutdown()
+                         
+        _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
+        self.set_render_stopped_gui_state()
+        
     def shutdown(self):
         if self.frames_range_writer != None:
             self.frames_range_writer.shutdown()
         
         if self.render_player != None:
             self.render_player.shutdown()        
-

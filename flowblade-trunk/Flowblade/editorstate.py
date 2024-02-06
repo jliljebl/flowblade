@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Module holds current global editor state.
 
 Accessor methods are there mainly to improve code readability elsewhere.
 
-We're using BIG_METHOD_NAMES() for state objects. This is a bit unusual
+We're using BIG_METHOD_NAMES() for some state objects. This is a bit unusual,
 but looks good when reading code.
 """
 
@@ -50,6 +50,9 @@ MULTI_TRIM = 15
 # SDL version (Not used currently)
 SDL_1 = 1
 SDL_2 = 2
+
+# Gtk.Application object for main app. 
+app = None
 
 # Project being edited
 project = None
@@ -96,7 +99,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "2.8.0"
+appversion = "2.12.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 RUNNING_FROM_FLATPAK = 2
@@ -139,6 +142,9 @@ steal_frames = True
 # Timeline rendering
 tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
+# Timeline view mode
+tline_view_mode = 0 # sequence.PROGRAM_OUT_MODE
+
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
 
@@ -174,6 +180,9 @@ def current_tline_frame():
         return PLAYER().current_frame()
     else:
         return tline_shadow_frame
+
+def APP():
+    return app
 
 def PROJECT():
     return project
@@ -225,10 +234,9 @@ def mlt_version_is_greater_correct(test_version):
     return False
 
 def runtime_version_greater_then_test_version(test_version, runtime_version):
-    runtime_ver = runtime_version.split(".")
-    test_ver = test_version.split(".")
-    
-    if runtime_ver[0] > test_ver[0]:
+    runtime_ver = list(map(int, runtime_version.split(".")))
+    test_ver = list(map(int, test_version.split(".")))
+    if int(runtime_ver[0]) > int(test_ver[0]):
         return True
     elif runtime_ver[0] == test_ver[0]:
         if runtime_ver[1] > test_ver[1]:
@@ -246,6 +254,10 @@ def set_copy_paste_objects(objs):
 def get_copy_paste_objects():
     return _copy_paste_objects
 
+def clear_copy_paste_objects():
+    global _copy_paste_objects
+    _copy_paste_objects = None
+
 def screen_size_small_height():
     if SCREEN_HEIGHT < 901:
         return True
@@ -261,6 +273,12 @@ def screen_size_small_width():
     else:
         return False
 
+def screen_size_large_width():
+    if SCREEN_WIDTH > 1670:
+        return True
+    else:
+        return False
+        
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
@@ -293,7 +311,3 @@ def set_mouse_current_non_drag_pos(x, y):
     global last_mouse_x, last_mouse_y
     last_mouse_x = x
     last_mouse_y = y
-    
-
-        
-         

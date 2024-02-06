@@ -6,6 +6,16 @@
     <!-- NOTE: If range_out arg is not set, values will converted to be in normalized range 0-1 -->
 
     <!-- ALPHA -->
+    <filter id="frei0r.alpha0ps_alphagrad">
+        <name>Alpha Gradient</name>
+        <group>Alpha</group>  
+        <property name="Position" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0.5</property>
+        <property name="Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Grad!width">0=0.5</property>
+        <property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0.5</property>
+        <property name="Min" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0</property>
+        <property name="Max" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=1</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
     <filter id="frei0r.alphagrad">
         <name>Alpha Gradient</name>
         <group>Alpha</group>  
@@ -40,6 +50,20 @@
         <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
+    <filter id="frei0r.alpha0ps_alphaspot">
+        <name>Alpha Shape</name>
+        <group>Alpha</group>
+        <property name="Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
+        <property name="Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
+        <property name="Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
+        <property name="Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.5</property>
+        <property name="Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.5</property>
+        <property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Tilt">0=0.5</property>
+        <property name="Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.2</property>
+        <property name="Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
+        <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
     <filter id="shape">
         <name>File Luma to Alpha</name>
         <group>Alpha</group>  
@@ -53,16 +77,26 @@
     </filter>
     <filter id="shape">
         <name>Wipe</name>
-        <group>Alpha</group>
+        <group>Blend</group>
         <property name="resource" args="editor=filter_wipe_select exptype=filter_wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
-        <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">50.0</property>
+        <property name="mix" args="range_in=0,100 range_out=0,100 value_replacement=wipe_in_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Mix">0=0</property>
         <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
         <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="use_luminance" args="editor=no_editor">1</property>
         <property name="use_mix" args="editor=no_editor">1</property>
         <property name="audio_match" args="editor=no_editor">0</property>
     </filter>
-   <filter id="frei0r.alpha0ps">
+    <filter id="frei0r.alpha0ps">
+         <name>Alpha Modify</name>
+         <group>Alpha</group>  
+         <property name="Display" args="editor=no_editor">0.0</property>
+         <property name="Display input alpha" args="editor=no_editor">0</property>
+         <property name="Operation" args="editor=combobox exptype=default cbopts=Shave:0.21,Shrink!Hard:0.36,Shrink!Soft:0.50,Grow!Hard:0.64,Grow!Soft:0.79">0.21</property>
+         <property name="Threshold" args="editor=no_editor">0.5</property>
+         <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 displayname=Amount">0.5</property>
+         <property name="Invert" args="editor=booleancheckbox displayname=Invert">0</property>
+    </filter>
+   <filter id="frei0r.alpha0ps_alpha0ps">
         <name>Alpha Modify</name>
         <group>Alpha</group>  
         <property name="Display" args="editor=no_editor">0.0</property>
@@ -86,9 +120,9 @@
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="frei0r.spillsupress">
-        <name>Spill Supress</name>
+        <name>Spill Suppress</name>
         <group>Alpha</group>  
-        <property name="supresstype" args="editor=combobox displayname=Supress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
+        <property name="supresstype" args="editor=combobox displayname=Suppress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
     </filter>
     <filter id="lumakey">
         <name>Luma Key</name>
@@ -123,28 +157,46 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
+    <filter id="frei0r.premultiply">
+        <name>Unpremultiply</name>
+        <group>Alpha</group>   
+        <property name="threads" args="editor=no_editor">0</property>
+        <property name="0" args="editor=no_editor">1</property>
+    </filter>
+
+
+
     <!-- FADES -->
     <filter id="brightness">
         <name>Fade In</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
     <filter id="brightness">
         <name>Fade Out</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
     <filter id="brightness">
         <name>Fade In / Fade Out</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
+    <filter id="brightness">
+        <name>Fade To Black In / Out</name>
+        <group>Fade</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Image">0=1</property>
+        <property name="alpha" args="editor=no_editor">1</property>
+    </filter>
+
+
     <!-- FILTER MASK FILTERS -->
     <filter id="mask_start"  filtermaskfilter="Alpha Shape">
         <name>Mask - Begin</name>
@@ -176,20 +228,10 @@
         <property name="transition" args="editor=no_editor exptype=not_parsed">frei0r.composition</property>
         <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgb24a</property>
     </filter>
-    
-    
+
+
+
     <!-- AUDIO -->
-    <!-- DEPRECATED, replaced by non-multipart filter below 31.10.2020.  
-    <filter id="volume" multipart="true">
-        <name>Volume</name>
-        <group>Audio</group>
-        <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
-        <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
-        <property name="track" args="editor=no_editor">0</property>
-        <property name="gain" args="editor=no_editor">1</property> 
-        <property name="end" args="editor=no_editor">1</property> 
-    </filter> 
-    -->
     <filter id="volume">
       <name>Volume</name>
       <group>Audio</group>
@@ -197,15 +239,6 @@
       <property name="max_gain" args="editor=no_editor">20dB</property>
       <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume!dB">0=0.0</property>
     </filter>
-    <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
-    <filter id="panner" multipart="true">
-        <name>Pan Keyframed</name>
-        <group>Audio</group>
-        <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor_release range_in=-100,100 exptype=multipart_keyframe displayname=Left/Right">"0=0.5"</multipartproperty>
-        <property name="start" args="editor=no_editor">0.5</property>
-        <property name="end" args="editor=no_editor">0.5</property>   
-    </filter>
-    -->
     <filter id="panner">
         <name>Pan</name>
         <group>Audio</group>
@@ -242,6 +275,26 @@
         <property name="max_gain" args="range_in=0,30 range_out=0,30 editor=ladspa_slider displayname=Max!Gain">15.0</property>
         <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
         <property name="max_rate" args="editor=no_editor">3.0</property>
+    </filter>
+    <filter id="ladspa.1410">
+        <name>Noise Gate</name>
+        <group>Audio</group> 
+        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=ladspa_slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
+        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
+        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
+        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
+        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
+        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
+        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
+        <property name="7" args="editor=no_editor">0</property>
+        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+    </filter>
+    <filter id="channelswap">
+      <name>Channel Copy</name>
+      <group>Audio</group> 
+      <property name="from" args="editor=combobox displayname=Copy!Channel!From exptype=default cbopts=Left:0,Right:1">0</property>
+      <property name="to" args="editor=combobox displayname=Copy!Channel!To exptype=default cbopts=Left:0,Right:1">1</property>
+      <property name="swap" args="editor=no_editor">0</property>
     </filter>
 
 
@@ -345,23 +398,10 @@
         <property name="0" args="range_in=1,300 range_out=1,300 editor=ladspa_slider displayname=Roomsize">75.75</property>
         <property name="1" args="range_in=0.1,30 range_out=0.1,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Reverb!time(s)">7.575</property>
         <property name="2" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Damping">0.5</property>
-        <property name="3" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Input!bandwith">0.75</property>
+        <property name="3" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Input!bandwidth">0.75</property>
         <property name="4" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Dry!signal!level(dB)">-70.0</property>
         <property name="5" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Early!reflection!level(dB)">0.0</property>
         <property name="6" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Tail!level(dB)">-17.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
-    </filter>
-    <filter id="ladspa.1410">
-        <name>Noise Gate</name>
-        <group>Audio Filter</group> 
-        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=ladspa_slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
-        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
-        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
-        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
-        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
-        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
-        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
-        <property name="7" args="editor=no_editor">0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1892">
@@ -452,8 +492,18 @@
         <property name="5" args="range_in=-20,0 range_out=-20,0 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Output!attenuation(dB)">0.0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
     </filter>
-
-
+    <filter id="ladspa.1882">
+        <name>Compressor</name>
+        <group>Audio Filter</group>
+        <extraeditor name="infotips" args="header=Compressor"></extraeditor> 
+        <property name="0" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=RMP-peak">0</property>
+        <property name="1" args="range_in=1.5,400 range_out=1.5,400 editor=ladspa_slider displayname=Attack(ms)">100</property>
+        <property name="2" args="range_in=2,800 range_out=2,800 editor=ladspa_slider displayname=Relese(ms)">400</property>
+        <property name="3" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Threshold(dB)">0</property>
+        <property name="4" args="range_in=1,20 range_out=1,20 editor=ladspa_slider displayname=Ratio">1</property>
+        <property name="5" args="range_in=1,10 range_out=1,10 editor=ladspa_slider displayname=Knee!Radius(dB)">3.25</property>
+        <property name="6" args="range_in=0,24 range_out=0,24 editor=ladspa_slider displayname=Makeup!gain(dB)">0</property>
+    </filter>
 
     <!-- ARTISTIC -->
     <filter id="charcoal">
@@ -507,22 +557,11 @@
         <name>Scanlines</name>
         <group>Artistic</group>
     </filter>
-    <!--
-    <filter id="frei0r.keyspillm0pup">
-        <name>KeySpill</name>
-        <group>Artistic</group>
-    </filter>
-    <filter id="frei0r.medians">
-        <name>medians</name>
-        <group>Artistic</group>
-        <property name="Type" args="editor=combobox cbopts=Cross5:Cross5, Square3x3:Square3x3">Cross5</property>
-    </filter>
-    -->
     <filter id="frei0r.rgbsplit0r">
         <name>RGB Shift</name>
         <group>Artistic</group>
       <property name="0" args="range_in=-100,100 displayname=Horizontal">0.4</property>
-      <property name="1" args="range_in=-100,100 displayname=Verical">0.4</property>
+      <property name="1" args="range_in=-100,100 displayname=Vertical">0.4</property>
     </filter>
     <filter id="frei0r.cartoon">
         <name>Cartoon</name>
@@ -579,11 +618,24 @@
     <filter id="frei0r.glitch0r">
         <name>Glitch</name>
         <group>Artistic</group>
-        <property name="0" args="range_in=0,100 range_out=0,1.0 displayname=Frequency">0.5</property>
-        <property name="1" args="range_in=0,100 range_out=0,1.0 displayname=Height">0.5</property>
-        <property name="2" args="range_in=0,100 range_out=0,1.0 displayname=Shift">0.5</property>
-        <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color">0.5</property>
+        <property name="0" args="range_in=0,100 range_out=0,1.0 displayname=Glitch!Frequency">0.5</property>
+        <property name="1" args="range_in=0,100 range_out=0,1.0 displayname=Block!Height">0.5</property>
+        <property name="2" args="range_in=0,100 range_out=0,1.0 displayname=Shift!Intensity">0.5</property>
+        <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color!Intensity">0.5</property>
     </filter>
+    <filter id="frei0r.edgeglow">
+        <name>Edge Glow</name>
+        <group>Artistic</group>
+        <property name="lthresh" args="range_in=0,100 range_out=0,1 displayname=Edge!Lightning">0.5</property>
+        <property name="lupscale" args="range_in=0,100 range_out=0,1 displayname=Edge!Brightness">0.5</property>
+        <property name="lredscale" args="range_in=0,100 range_out=0,1 displayname=Non-Edge!Brightness">0.0</property>
+    </filter>
+    <filter id="frei0r.sobel">
+        <name>Sobel</name>
+        <group>Artistic</group>
+    </filter>
+
+
 
     <!-- BLEND -->
     <filter id="cairoblend_mode">
@@ -592,12 +644,14 @@
         <property name="mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
     </filter>
 
+
+
     <!-- BLUR -->
     <filter id="frei0r.pixeliz0r">
         <name>Pixelize</name>
         <group>Blur</group>
-        <property name="BlockSizeX" args="range_in=1,SCREENSIZE_WIDTH range_out=NORMALIZED_FLOAT step=1.0 displayname=Block!width">0.1</property>
-        <property name="BlockSizeY" args="range_in=1,SCREENSIZE_HEIGHT range_out=NORMALIZED_FLOAT step=1.0 displayname=Block!height">0.1</property>
+        <property name="BlockSizeX" args="range_in=1,SCREENSIZE_WIDTH range_out=NORMALIZED_FLOAT step=1.0 displayname=Block!Width">0.1</property>
+        <property name="BlockSizeY" args="range_in=1,SCREENSIZE_HEIGHT range_out=NORMALIZED_FLOAT step=1.0 displayname=Block!Height">0.1</property>
     </filter>
     <filter id="frei0r.squareblur">
         <name>Blur</name>
@@ -625,10 +679,13 @@
     </filter>
 
 
-
     <!-- COLOR -->
     <filter id="greyscale">
         <name>Grayscale</name>
+        <group>Color</group>
+    </filter>
+    <filter id="frei0r.bw0r">
+        <name>Grayscale Luminance</name>
         <group>Color</group>
     </filter>
     <filter id="frei0r.contrast0r">
@@ -920,9 +977,9 @@
     <filter id="mirror">
         <name>Mirror</name>
         <group>Distort</group>
-        <property name="mirror" args="displayname=Axis editor=combobox exptype=default cbopts=Horizontal:horizontal,Vertical:vertical">horizontal</property>
+        <property name="mirror" args="displayname=Axis editor=combobox exptype=default cbopts=Horizontal:horizontal,Vertical:vertical,Diagonal:diagonal,XDiagonal:xdiagonal">horizontal</property>
         <property name="reverse" args="displayname=Invert editor=booleancheckbox">0</property>
-    </filter>
+    </filter> 
     <filter id="frei0r.nosync0r">
         <name>V Sync</name>
         <group>Distort</group>
@@ -935,44 +992,28 @@
         <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
     </filter>
     
-    <!-- for some reason avfilter.perspective gives errors:
+    <!-- For some reason avfilter.perspective gives errors:
             [filter avfilter.perspective] Unexpected return format
             [filter avfilter.perspective] Cannot get frame from buffer sink
         if initialized with SCREENSIZE_WIDTH and SCREENSIZE_HEIGHT.
         
-        However, if set to these values later it works.
+        However, if these values are set to later everything works.
         
-        Workaround is that we initilize it with hard coded values
+        Workaround is that we initialize it with hard coded values.
     -->
     <filter id="avfilter.perspective">
         <name>Perspective</name>
         <group>Distort</group>
-        <property name="av.x0" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x0">10</property>
-        <property name="av.y0" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y0">10</property>
-        <property name="av.x1" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x1">500</property>
+        <property name="av.sense" args="editor=combobox exptype=default cbopts=Source:0,Destination:1 displayname=Sense">0</property>
+        <property name="av.x0" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x0">0</property>
+        <property name="av.y0" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y0">0</property>
+        <property name="av.x1" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x1">SCREENSIZE_WIDTH</property>
         <property name="av.y1" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y1">0</property>
         <property name="av.x2" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x2">0</property>
-        <property name="av.y2" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y2">400</property>
-        <property name="av.x3" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x3">550</property>
-        <property name="av.y3" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y3">420</property>
+        <property name="av.y2" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y2">SCREENSIZE_HEIGHT</property>
+        <property name="av.x3" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x3">SCREENSIZE_WIDTH</property>
+        <property name="av.y3" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y3">SCREENSIZE_HEIGHT</property>
     </filter>
-    
-    
-    
-    <!-- EDGE -->
-    <filter id="frei0r.edgeglow">
-        <name>Edge Glow</name>
-        <group>Edge</group>
-        <property name="lthresh" args="range_in=0,100 range_out=0,1 displayname=Edge!Lightning">0.5</property>
-        <property name="lupscale" args="range_in=0,100 range_out=0,1 displayname=Edge!Brightness">0.5</property>
-        <property name="lredscale" args="range_in=0,100 range_out=0,1 displayname=Non-Edge!Brightness">0.0</property>
-    </filter>
-    <filter id="frei0r.sobel">
-        <name>Sobel</name>
-        <group>Edge</group>
-    </filter>
-
-
 
     <!-- FIX -->
     <filter id="frei0r.hqdn3d">
@@ -1045,46 +1086,47 @@
     <filter id="affine">
         <name>Position Scale</name>
         <group>Transform</group>
-            <property name="transition.fill" args="editor=no_editor">1</property>
-            <property name="transition.distort" args="editor=no_editor">1</property>
-            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
-            <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
-            <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
-            <property name="transition.threads" args="editor=no_editor">0</property>
-            <property name="transition.repeat_off" args="editor=no_editor">1</property>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">1</property>
+        <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.repeat_off" args="editor=no_editor">1</property>
     </filter>
     <filter id="affine">
         <name>Rotate</name>
         <group>Transform</group>
-            <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
-            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
-            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
-            <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
+        <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+        <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+        <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+        <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
     <filter id="affine">
         <name>Shear</name>
         <group>Transform</group>
-            <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-            <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
-            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
-            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
-          <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
+        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
+        <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+        <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+        <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+        <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
 
-    <!-- compositor filters that are not displayed to user, not used currently -->
-    <filter id="frei0r.mask0mate">
-        <name>##crop</name>
-        <group>COMPOSITOR_FILTER</group>
-        <property name="Left" args="range_in=0,100">0.0</property>
-        <property name="Right" args="range_in=0,100">0.0</property>
-        <property name="Top" args="range_in=0,100">0.0</property>
-        <property name="Bottom" args="range_in=0,100">0.0</property>
-        <property name="Invert" args="editor=booleancheckbox">1</property>
-        <property name="Blur" args="range_in=0,100">0</property>
-   </filter>
-   
+    <filter id="affine">
+        <name>Position Scale Rotate</name>
+        <group>Transform</group>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">0</property>
+        <property name="transition.rect" args="editor=no_editor exptype=not_parsed">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">middle</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">center</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
+        <extraeditor name="filter_rotation_geometry_editor"></extraeditor> 
+    </filter>
+ 
 </filters>

@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@
 from gi.repository import Gtk, Gdk
 from gi.repository import GLib, GObject
 
-from editorstate import PLAYER
 import editorstate
+from editorstate import PLAYER
+from editorstate import PROJECT
 import gui
 import guicomponents
 import guiutils
@@ -116,7 +117,7 @@ class RotoMaskEditor(Gtk.Window):
         # mask type param was added later, we need handle it not existing.
         if self.get_mask_type() == -1:
             self.set_mask_type(vieweditorshape.LINE_MASK)
-            self.set_mask_type_on_init = False # but we don't want to destroy user's curve masks. THis is not complety back wards compatible stuff can get destroyed on second load.
+            self.set_mask_type_on_init = False # but we don't want to destroy user's curve masks. THis is not completely back wards compatible stuff can get destroyed on second load.
         else:
             self.set_mask_type_on_init = True
             
@@ -152,7 +153,7 @@ class RotoMaskEditor(Gtk.Window):
         timeline_box.set_margin_top(6)
         timeline_box.set_margin_bottom(6)
 
-        mask_type_label = Gtk.Label(_("Mask Type:"))
+        mask_type_label = Gtk.Label(label=_("Mask Type:"))
         mask_type_combo_box = Gtk.ComboBoxText()
         mask_type_combo_box.append_text(_("Curve Mask"))
         mask_type_combo_box.append_text(_("Line Mask"))
@@ -163,7 +164,7 @@ class RotoMaskEditor(Gtk.Window):
         allow_adding_check = Gtk.CheckButton()
         allow_adding_check.set_active(False) # This shows value of self.roto_mask_layer.allow_adding_points, False is default
         allow_adding_check.connect("toggled", self.allow_adding_toggled)
-        allow_adding_label = Gtk.Label(_("Allow to add / delete points in closed masks"))
+        allow_adding_label = Gtk.Label(label=_("Allow to add / delete points in closed masks"))
         
         save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
@@ -288,7 +289,7 @@ class RotoMaskEditor(Gtk.Window):
 
     def update_effects_editor_value_labels(self):
         self.value_labels[0].set_text(str(len(self.kf_editor.clip_editor.keyframes)))
-        kf, curve_points = self.kf_editor.clip_editor.keyframes[0] # We always have one
+        kf, curve_points, kf_type = self.kf_editor.clip_editor.keyframes[0] # We always have one
         self.value_labels[1].set_text(str(len(curve_points)))
     
     def _kf_mode_clicked(self, kf_button):
@@ -357,4 +358,7 @@ class RotoMaskEditor(Gtk.Window):
             self.mask_create_freeze = True
 
         self.kf_editor.set_editor_sensitive(not self.mask_create_freeze)
-                
+
+    def enable_save(self):
+        if PROJECT().last_save_path != None:
+            gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)

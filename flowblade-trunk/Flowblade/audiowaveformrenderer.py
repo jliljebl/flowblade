@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,33 +19,37 @@
 """
 
 """
-Modules handles creating and caching audio waveform images for clips.
+Modules handles caching audio waveform images for clips.
 """
+
+import gi
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk # We need to import Gtk first because this module is
+                              # loaded in a new process for rendering and Gtk import seemimgly 
+                              # defines _Gdk_ version.
+from gi.repository import GLib
+from gi.repository import Gdk
 
 import locale
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import pickle
 import subprocess
 import sys
 import threading
 
-import gi
-gi.require_version('Gdk', '3.0') 
-from gi.repository import Gdk
-
 import appconsts
 import atomicfile
 import editorpersistance
 import editorstate
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
-import mltfilters
 import processutils
+import projectdatavault
 import renderconsumer
 import respaths
 import translations
@@ -89,8 +93,12 @@ def get_waveform_data(clip):
         _waveforms[clip.path] = waveform
         return waveform
     else:
+        # We keep queueing everything that does not have waveform data.
+        # If something gets queued twice, we will not attempt to render it twice
+        # because we find it in _render_already_requested list.
         global _queued_waveform_renders
         _queued_waveform_renders.append(clip.path)
+
         return None
     
 # ------------------------------------------------- launching render
@@ -118,6 +126,7 @@ def launch_audio_levels_rendering(file_names):
                 _render_already_requested.append(media_file)
                 rendered_media = rendered_media + FILE_SEPARATOR + media_file
 
+    # Renders have already been requested for all missing waveform data.
     if rendered_media == "":
         return
     
@@ -130,7 +139,7 @@ def launch_audio_levels_rendering(file_names):
     single_render_launch_thread.start()
 
 def _get_levels_file_path(media_file_path, profile):
-    return userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
+    return userfolders.get_audio_levels_dir() + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
  
 
 class AudioRenderLaunchThread(threading.Thread):
@@ -140,19 +149,22 @@ class AudioRenderLaunchThread(threading.Thread):
         self.profile_desc = profile_desc
 
     def run(self):
+        project_data_path = projectdatavault.get_project_data_folder()
+        
         # Launch render process and wait for it to end
         FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
         # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
-                  self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
+                  self.rendered_media, self.profile_desc, respaths.ROOT_PATH, project_data_path], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
         self.process.wait()
-        
-        Gdk.threads_enter()
-        updater.repaint_tline()
-        Gdk.threads_leave()
 
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _repaint)
 
+def _repaint():
+    updater.repaint_tline()
+    return False
+    
 # --------------------------------------------------------- rendering
 def main():
     # Set paths.
@@ -166,32 +178,14 @@ def main():
     
     # Set folders paths
     userfolders.init()
-    
+    project_data_path = sys.argv[4]
+    projectdatavault.init(project_data_path)
+
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
     profile_desc = sys.argv[2]
     profile = mltprofiles.get_profile(profile_desc) # not used, but will provide useful info if crashes.
         

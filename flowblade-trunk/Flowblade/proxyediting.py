@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
 """
 import hashlib
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import os
 import threading
 import time
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, GLib
 
 import app
 import appconsts
@@ -72,7 +72,7 @@ class ProxyRenderItemData:
         self.proxy_profile_desc = proxy_profile_desc
         self.lookup_path = lookup_path # For img seqs only
         
-        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py
+        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py.
         self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
 
     def get_data_as_args_tuple(self):
@@ -125,7 +125,6 @@ class ProxyRenderRunnerThread(threading.Thread):
                                                 None)
             else:
 
-
                 asset_folder, asset_file_name = os.path.split(media_file.path)
                 lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
                 lookup_path = asset_folder + "/" + lookup_filename
@@ -140,14 +139,13 @@ class ProxyRenderRunnerThread(threading.Thread):
                 
             proxy_render_items.append(item_data)
         
-        Gdk.threads_enter()
+        GLib.idle_add(self._create_job_queue_objects, proxy_render_items)
         
+    def _create_job_queue_objects(self, proxy_render_items):
         for proxy_render_data_item in proxy_render_items:
             session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
             job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
             job_queue_object.add_to_queue()
-            
-        Gdk.threads_leave()
 
     def abort(self):
         render_thread.shutdown()
@@ -225,8 +223,8 @@ class ProxyManagerDialog:
         self.convert_progress_bar = Gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
-        self.use_button = Gtk.Button(_("Use Proxy Media"))
-        self.dont_use_button = Gtk.Button(_("Use Original Media"))
+        self.use_button = Gtk.Button(label=_("Use Proxy Media"))
+        self.dont_use_button = Gtk.Button(label=_("Use Original Media"))
         self.set_convert_buttons_state()
         self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
         self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
@@ -347,7 +345,7 @@ class ProxyRenderIssuesWindow:
   
             proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
             if proxy_mode == appconsts.USE_PROXY_MEDIA:
-                info_label = Gtk.Label(_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
+                info_label = Gtk.Label(label=_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
                 info_label.set_use_markup(True)
                 info_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), info_label])
 
@@ -406,12 +404,6 @@ class ProxyRenderIssuesWindow:
 def show_proxy_manager_dialog():
     global manager_window
     manager_window = ProxyManagerDialog()
-
-def set_menu_to_proxy_state():
-    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
-        gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(True)
-    else:
-        gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(False)
 
 def create_proxy_files_pressed(render_all=False):
     media_files = []
@@ -604,14 +596,12 @@ def _auto_re_convert_after_proxy_render_in_proxy_mode():
     # Open saved temp project
     app.stop_autosave()
 
-    Gdk.threads_enter()
-    app.open_project(project)
-    Gdk.threads_leave()
+    GLib.idle_add(_open_project, project)
 
+def _open_project(project):
+    app.open_project(project)
     app.start_autosave()
-    
     editorstate.update_current_proxy_paths()
-    
     persistance.show_messages = True
 
 def _converting_proxy_mode_done():
@@ -623,7 +613,6 @@ def _converting_proxy_mode_done():
     manager_window.update_proxy_mode_display()
     gui.media_list_view.widget.queue_draw()
     gui.tline_left_corner.update_gui()
-    set_menu_to_proxy_state()
     
 
 class ProxyProjectLoadThread(threading.Thread):
@@ -636,15 +625,17 @@ class ProxyProjectLoadThread(threading.Thread):
         self.mark_out = mark_out
     
     def run(self):
-        pulse_runner = guiutils.PulseThread(self.progressbar)
-        pulse_runner.start()
+        GLib.idle_add(self._do_proxy_project_load)
+    
+    def _do_proxy_project_load(self):
+        pulse_runner = guiutils.PulseEvent(self.progressbar)
         time.sleep(2.0)
         persistance.show_messages = False
         try:
-            Gdk.threads_enter()
+
             project = persistance.load_project(self.proxy_project_path)
             sequence.set_track_counts(project)
-            Gdk.threads_leave()
+
         except persistance.FileProducerNotFoundError as e:
             print("did not find file:", e)
 
@@ -656,9 +647,7 @@ class ProxyProjectLoadThread(threading.Thread):
     
         app.stop_autosave()
 
-        Gdk.threads_enter()
         app.open_project(project)
-        Gdk.threads_leave()
 
         # Loaded project has been converted, set proxy mode to correct mode 
         if project.proxy_data.proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
@@ -672,10 +661,8 @@ class ProxyProjectLoadThread(threading.Thread):
         load_thread = None
         persistance.show_messages = True
 
-        Gdk.threads_enter()
         selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
         if selections != None:
             render.set_saved_gui_selections(selections)
         _converting_proxy_mode_done()
-        Gdk.threads_leave()
 

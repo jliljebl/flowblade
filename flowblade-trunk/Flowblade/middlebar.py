@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2014 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ import gui
 import guicomponents
 import guiutils
 import scripttool
+import singletracktransition
 import titler
 import tlineaction
 import updater
@@ -201,12 +202,13 @@ def _create_buttons(editor_window):
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
 
-    surface = guiutils.get_cairo_image("workflow")
-    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
-    editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
+    #surface = guiutils.get_cairo_image("workflow")
+    #editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
+    #editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window)
+        editor_window.tline_cursor_manager.set_tool_selector_to_mode(editor_window.tool_selector)
     else:
         editor_window.tool_selector = None
 
@@ -215,17 +217,11 @@ def _create_buttons(editor_window):
     else:
         no_decorations = False
 
-    # Colorized icons
-    if prefs.colorized_icons is True:
-        icon_color = "_color"
-    else:
-        icon_color = ""
-    # End of Colorized icons
-
+    # Zoom buttons
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in" + icon_color), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out" + icon_color), updater.zoom_out)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length" + icon_color), updater.zoom_project_length)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in"), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out, 8*size_adj)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length"), updater.zoom_project_length, 6*size_adj - 1)
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
@@ -233,19 +229,19 @@ def _create_buttons(editor_window):
     
     # Cut and dissolve
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
-    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve" + icon_color), tlineaction.add_transition_pressed)
-    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut" + icon_color), tlineaction.cut_pressed)
-    tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), singletracktransition.add_transition_pressed)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
+    tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
     editor_window.edit_buttons.show_prelight_icons()
     
     # Delete buttons
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out" + icon_color), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift" + icon_color), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete" + icon_color), tlineaction.ripple_delete_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range" + icon_color), tlineaction.delete_range_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out"), tlineaction.splice_out_button_pressed, 10*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed, 9*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed, 4*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed, 4*size_adj)
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
@@ -253,38 +249,39 @@ def _create_buttons(editor_window):
     
     # Resync and split audio
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio" + icon_color), tlineaction.split_audio_button_pressed)
-    tooltips = [_("Resync Selected"), _("Split Audio")]
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio"), tlineaction.split_audio_synched_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
+    tooltips = [_("Split Audio Synched"),  _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clip")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
     
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range" + icon_color), tlineaction.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip" + icon_color), tlineaction.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip" + icon_color), tlineaction.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip" + icon_color), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range"), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
     tooltips = [_("Overwrite Range"), _("Overwrite Clip - T"), _("Insert Clip - Y"), _("Append Clip - U")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     editor_window.monitor_insert_buttons.show_prelight_icons()
     
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28*size_adj, 23*size_adj, 2*size_adj, 2*size_adj, 7*size_adj)
-    editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo" + icon_color), undo.do_undo_and_repaint)
-    editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo" + icon_color), undo.do_redo_and_repaint)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
     tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
     editor_window.undo_redo.show_prelight_icons()
     
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30*size_adj, 23*size_adj, 2*size_adj, 14*size_adj, 7*size_adj)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer" + icon_color), audiomonitoring.show_audio_monitor)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler" + icon_color), titler.show_titler)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic" + icon_color), gmic.launch_gmic)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_fluxity" + icon_color), scripttool.launch_scripttool)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue" + icon_color), lambda :batchrendering.launch_batch_rendering())
-    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Media Plugin Editor"), _("Batch Render Queue")]
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer"), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler"), titler.show_titler)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic"), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_fluxity"), scripttool.launch_scripttool)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue"), lambda :batchrendering.launch_batch_rendering())
+    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Generator Plugin Script Editor"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
     editor_window.tools_buttons.show_prelight_icons()
@@ -298,7 +295,7 @@ def create_tool_selector(editor_window):
     if editorpersistance.prefs.double_track_hights:
        size_adj = 2
       
-    tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+    tool_selector = guicomponents.ToolSelector(editor_window.tline_cursor_manager.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
     tool_selector.connect_launched_menu(workflow._tools_menu)
     return tool_selector
 
@@ -310,16 +307,16 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
 
-    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        if editorstate.SCREEN_WIDTH > 1919:
-            buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
+        if editorstate.SCREEN_WIDTH > 1600:
+            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
         else:
-            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we cant afford additional 60px if w < 1920
+            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we can't afford additional 60px if w < 1600
             
     if editorstate.screen_size_small_width() == False:
         pad_w = 30
@@ -359,7 +356,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     left_panel.pack_start(Gtk.Label(), True, True, 0)
 
     middle_panel = Gtk.HBox(False, 0)
-    middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
+    #middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     middle_panel.pack_start(w.big_TC, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
@@ -390,13 +387,16 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
         pad_w = 5
             
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
+        if editorstate.SCREEN_WIDTH > 1600:
+            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
+        else:
+            buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
 
     buttons_row.pack_start(get_buttons_group(0), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
@@ -523,7 +523,7 @@ def _get_conf_panel():
     layout_frame = guiutils.get_named_frame(_("Layout"), layout_row)
     
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    choice = Gtk.Label(_("Set button group active state and position."))
+    choice = Gtk.Label(label=_("Set button group active state and position."))
     
     toolbar_list_box = Gtk.ListBox()
     toolbar_list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
@@ -616,7 +616,7 @@ def draw_listbox(vbox):
         but.set_active(current_active_flags[row_number])
         but.connect("toggled", toggle_click, row_number)
         box.pack_start(but, False, False, 0)
-        lab = Gtk.Label(gui_object_names[current_buttons_list[row_number]])
+        lab = Gtk.Label(label=gui_object_names[current_buttons_list[row_number]])
         box.pack_start(lab, True, True, 0)
         row.add(box)
         toolbar_list_box.add(row)

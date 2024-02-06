@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,11 +24,12 @@ Module contains objects used to capture project data.
 import cairo
 import datetime
 try:
-    import mlt
-except:
     import mlt7 as mlt
+except:
+    import mlt
 import hashlib
 import os
+import shutil
 
 from gi.repository import GdkPixbuf
 
@@ -49,7 +50,6 @@ SAVEFILE_VERSION = 5 # This has freezed at 5 for long time,
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
-PROXIES_DIR = "/proxies/"
  
 # Project events
 EVENT_CREATED_BY_NEW_DIALOG = 0
@@ -66,7 +66,7 @@ thumbnailer = None
 # Default values for project properties.
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
-                                      appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last rendered transition render selections data
                                       appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10}  
 
 # Flag used to decide if user should be prompt to save project on project exit.
@@ -98,6 +98,9 @@ class Project:
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
 
+        self.vault_folder = None
+        self.project_data_id = None
+
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
         # c_seq is the currently edited Sequence
@@ -109,7 +112,17 @@ class Project:
         self.c_bin = self.bins[0]
         
         self.init_thumbnailer()
-    
+
+    def create_vault_folder_data(self, vault_dir):
+        # This is called just once when Project is created for the first time.
+        # All versions of project that are saved after this is called one time 
+        # on creation time use this same data and therefore save project data in the same place.
+        self.vault_folder = vault_dir
+        
+        md_key = str(datetime.datetime.now()) + str(os.urandom(16))
+        md_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
+        self.project_data_id = md_str
+
     def init_thumbnailer(self):
         global thumbnailer
         thumbnailer = Thumbnailer()
@@ -136,9 +149,14 @@ class Project:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnailer.get_file_length(file_path)
             info = None
-        else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
+        else: # For non-audio we need write a thumbnail file and get file length while we're at it
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
+        # Refuse files giving "fps_den" == 0, these have been seen in the wild.
+        if media_type == appconsts.VIDEO and info["fps_den"] == 0.0: 
+            msg = _("Video file gives value 0 for 'fps_den' property.")
+            raise ProducerNotValidError(msg, file_path)
+        
         # Hide file extension if enabled in user preferences
         clip_name = file_name
         if editorpersistance.prefs.hide_file_ext == True:
@@ -157,6 +175,26 @@ class Project:
         self._add_media_object(media_object, target_bin)
         
         return media_object
+
+    def add_title_item(self, name, file_path, title_data, target_bin):
+        (directory, file_name) = os.path.split(file_path)
+        (fn, ext) = os.path.splitext(file_name)
+
+        # Get media type
+        media_type = appconsts.IMAGE
+
+        # Get length and icon
+        (icon_path, length, info) = thumbnailer.write_image(file_path)
+        
+        clip_name = name
+
+        # Create media file object
+        media_object = MediaFile(self.next_media_file_id, file_path, 
+                                 clip_name, media_type, length, icon_path, info)
+        media_object.ttl = None
+        media_object.titler_data = title_data
+
+        self._add_media_object(media_object, target_bin)
 
     def add_pattern_producer_media_object(self, media_object):
         self._add_media_object(media_object)
@@ -191,6 +229,13 @@ class Project:
 
         return False
 
+    def get_bin_for_media_file_id(self, media_file_id):
+        for bin in self.bins:
+            for file_id in bin.file_ids:
+                if file_id == media_file_id:
+                    return bin
+        return None
+        
     def get_media_file_for_path(self, file_path):
         for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
@@ -253,7 +298,7 @@ class Project:
         self.add_named_sequence(name)
         
     def add_named_sequence(self, name):
-        seq = sequence.Sequence(self.profile, editorpersistance.prefs.default_compositing_mode)
+        seq = sequence.Sequence(self.profile, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK)
         seq.create_default_tracks()
         seq.name = name
         self.sequences.append(seq)
@@ -366,7 +411,8 @@ class MediaFile:
         self.current_frame = 0
 
         self.container_data = None
-
+        self.titler_data = None
+        
         self.info = info
 
         # Set default length for graphics files
@@ -403,7 +449,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
+        return str(userfolders.get_proxies_dir() + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
         folder, file_name = os.path.split(self.path)
@@ -411,7 +457,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/"+ appconsts.PROXIES_DIR + md_str + "/" + file_name)
+        return str(userfolders.get_proxies_dir() + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
@@ -449,7 +495,7 @@ class MediaFile:
 
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.
-    # This is kept for project file backwards compatiblity,
+    # This is kept for project file backwards compatibility,
     # unpickle fails for color clips if this isn't here.
     # kill 2016-ish
     def __init__(self, id, name, gdk_color_str):
@@ -484,8 +530,10 @@ class Bin:
         
         
 class ProducerNotValidError(Exception):
-    def __init__(self, value):
+    def __init__(self, value, file_path):
         self.value = value
+        self.file_path = file_path
+
     def __str__(self):
         return repr(self.value)
 
@@ -503,20 +551,20 @@ class Thumbnailer:
         """
         # Get data
         md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-        thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+        thumbnail_path = userfolders.get_thumbnail_dir() + md_str + ".png"
+        render_image_path = userfolders.get_cache_dir() + "thumbnail%03d.png"
 
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 
-                                     thumbnail_path)
+                                     render_image_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")
 
         # Create one frame producer
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.is_valid() == False:
-            raise ProducerNotValidError(file_path)
-        #if producer.get("seekable") == "0": lets see about this
-        #    raise ProducerNotValidError("Video file not seekable, cannot be edited. Transcode to another format.\n\n" + file_path)
+            msg = _("MLT reports that file is not a valid media producer.")
+            raise ProducerNotValidError(msg, file_path)
             
         info = utils.get_file_producer_info(producer)
 
@@ -528,6 +576,9 @@ class Thumbnailer:
         consumer.connect(producer)
         consumer.run()
         
+        # consumer.run() blocks until done so the thubnailfile is now ready to be copied.
+        shutil.copyfile(userfolders.get_cache_dir() + "thumbnail001.png", thumbnail_path)
+        
         return (thumbnail_path, length, info)
 
     def get_file_length(self, file_path):
@@ -536,7 +587,8 @@ class Thumbnailer:
 
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.get("seekable") == "0":
-            raise ProducerNotValidError("Audio file not seekable, cannot be edited.\n\n" + file_path)
+            msg = _("Audio file not seekable, cannot be edited.\n\n")
+            raise ProducerNotValidError(msg, file_path)
         return producer.get_length()
 
 
