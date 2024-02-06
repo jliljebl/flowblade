@@ -306,7 +306,7 @@ class ClipFilterStack:
             stack_item = FilterStackItem(filter_object, edit_panel, self)
             self.filter_stack.append(stack_item)
             self.widget.pack_start(stack_item.widget, False, False, 0)
-        
+
         self.widget.show_all()
 
     def get_filters(self):
