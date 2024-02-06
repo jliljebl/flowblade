@@ -111,6 +111,7 @@ import sequence
 import shortcuts
 import shortcutsquickeffects
 import snapping
+import targetactions
 import threading
 import titler
 import tlinewidgets
@@ -120,6 +121,7 @@ import translations
 import undo
 import updater
 import usbhid
+import usbhiddrivers
 import userfolders
 import utils
 import utilsgtk
@@ -477,6 +479,10 @@ def monkeypatch_callbacks():
     boxmove.set_move_selection_from_box_selection_func = movemodes.select_from_box_selection
 
     toolsintegration.get_popover_clip_data_func = clipmenuaction.get_popover_clip_data
+
+    usbhiddrivers.targetactions_get_handler_by_name_func = targetactions.get_handler_by_name
+    usbhiddrivers.targetactions_move_player_position_func = targetactions.move_player_position
+    usbhiddrivers.targetactions_variable_speed_playback_func = targetactions.variable_speed_playback
 
     # These provide clues for possible further refactoring.
 
