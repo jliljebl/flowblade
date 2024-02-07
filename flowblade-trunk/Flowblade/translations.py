@@ -692,6 +692,7 @@ def load_filters_translations():
     param_names["Ratio"] = _("Ratio")
     param_names["Knee Radius(dB)"] = _("Knee Radius(dB)")
     param_names["Makeup gain(dB)"] = _("Makeup gain(dB)")
+    param_names["Velocity"] = _("Velocity")
 
     # Combo options
     global combo_options

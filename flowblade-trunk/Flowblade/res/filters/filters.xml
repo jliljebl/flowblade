@@ -947,8 +947,10 @@
     <filter id="frei0r.distort0r">
         <name>Waves</name>
         <group>Distort</group>
-        <property name="Amplitude" args="range_in=-100,100 range_out=-1,1">0.0</property>
-        <property name="Frequency" args="range_in=-100,100 range_out=-0.5,0.5">0.0</property>
+        <property name="0" args="range_in=-100,100 range_out=-1,1 displayname=Amplitude">0.2</property>
+        <property name="1" args="range_in=-100,100 range_out=-0.5,0.5 displayname=Frequency">0.04</property>
+        <property name="2" args="editor=no_editor">1</property>
+        <property name="3" args="range_in=0,100 range_out=0.0,1.0 displayname=Velocity">0.0</property>
     </filter>
     <filter id="frei0r.defish0r">
         <name>Lens Defisher</name>
