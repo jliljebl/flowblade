@@ -993,16 +993,15 @@
         <property name="rows" args="range_in=1,20 displayname=Rows">0.1</property>
         <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
     </filter>
-    
-    <!-- For some reason avfilter.perspective gives errors:
-            [filter avfilter.perspective] Unexpected return format
-            [filter avfilter.perspective] Cannot get frame from buffer sink
-        if initialized with SCREENSIZE_WIDTH and SCREENSIZE_HEIGHT.
-        
-        However, if these values are set to later everything works.
-        
-        Workaround is that we initialize it with hard coded values.
-    -->
+    <filter id="frei0r.elastic_scale">
+        <name>Elastic</name>
+        <group>Distort</group>
+        <property name="threads" args="editor=no_editor">0</property>
+        <property name="0" args="range_in=0,100 range_out=0.0,1.0 displayname=Center">0.5</property>
+        <property name="1" args="range_in=0,100 range_out=0.0,1.0 displayname=Width">0.2</property>
+        <property name="2" args="range_in=0,100 range_out=0.0,1.0 displayname=Linear!Scale">0.7</property>
+        <property name="3" args="range_in=0,100 range_out=0.0,1.0 displayname=Non-Linear!Scale">0.7</property>
+    </filter>
     <filter id="avfilter.perspective">
         <name>Perspective</name>
         <group>Distort</group>
@@ -1016,7 +1015,7 @@
         <property name="av.x3" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x3">SCREENSIZE_WIDTH</property>
         <property name="av.y3" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y3">SCREENSIZE_HEIGHT</property>
     </filter>
-
+ 
     <!-- FIX -->
     <filter id="frei0r.hqdn3d">
         <name>Denoise</name>
