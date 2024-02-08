@@ -696,7 +696,7 @@ def load_filters_translations():
     param_names["Velocity"] = _("Velocity")
     param_names["Center"] = _("Center")
     param_names["Width"] = _("Width")
-    param_names["Linear Scale"] = _("Linear Scale"")
+    param_names["Linear Scale"] = _("Linear Scale")
     param_names["Non-Linear Scale"] = _("Non-Linear Scale")
 
     # Combo options
