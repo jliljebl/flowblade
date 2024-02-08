@@ -234,17 +234,17 @@ def _clip_color(data):
     if clip_color == "default":
         clip.color = None
     elif clip_color == "red":
-         clip.color = (1, 0, 0)
+         clip.color = (0.8, 0.2, 0.2)
     elif clip_color == "green":
-         clip.color = (0, 1, 0)
+         clip.color = (0.2 * 0.6, 0.8 * 0.6, 0.2 * 0.6)
     elif clip_color == "blue":
-         clip.color = (0.2, 0.2, 0.9)
+         clip.color = (0.2 * 0.6, 0.2 * 0.6, 0.9 * 0.6)
     elif clip_color == "orange":
-        clip.color =(0.929, 0.545, 0.376)
+        clip.color =(0.929 * 0.6, 0.545 * 0.6, 0.376 * 0.6)
     elif clip_color == "brown":
         clip.color = (0.521, 0.352, 0.317)
     elif clip_color == "olive":
-        clip.color = (0.5, 0.55, 0.5)
+        clip.color = (0.4 * 0.8, 0.45 * 0.8, 0.4 * 0.8)
 
     updater.repaint_tline()
 

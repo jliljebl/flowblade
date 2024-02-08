@@ -1760,7 +1760,16 @@ class TimeLineCanvas:
                 # Select color
                 clip_bg_col = None
                 if clip.color != None:
-                    cr.set_source_rgb(*clip.color)
+                    r,g,b = clip.color
+                    grad_col1 = (1, r, g, b, 1.0)
+                    grad_col2 = get_multiplied_grad(0, 1, grad_col1, GRAD_MULTIPLIER)
+                    if clip.selected:
+                         grad_col1 = get_multiplied_grad(1, 1, grad_col1, 1.2)
+                         grad_col2 = get_multiplied_grad(0, 1, grad_col2, 1.2)
+                    grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                    grad.add_color_stop_rgba(*grad_col1)
+                    grad.add_color_stop_rgba(*grad_col2)
+                    cr.set_source(grad)
                     clip_bg_col = clip.color
                 elif clip.is_blanck_clip:
                     if clip.selected:

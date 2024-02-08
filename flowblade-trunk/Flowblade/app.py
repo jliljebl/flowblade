@@ -185,7 +185,7 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    # Create user folders if needed and determine if we're using xdg or dotfile user folders.
+    # Create user folders if needed.
     userfolders.init()
 
     # Set paths.
@@ -193,6 +193,7 @@ def main(root_path):
 
     # Load editor prefs and list of recent projects.
     editorpersistance.load()
+
     # Force custom theme. NOTE: See if possible to use Adwaita Dark after GTK 4 port.
     editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
 
@@ -220,7 +221,7 @@ class FlowbladeApplication(Gtk.Application):
         translations.load_filters_translations()
         mlttransitions.init_module()
 
-        # Keyboard shortcuts
+        # Keyboard shortcuts.
         shortcuts.update_custom_shortcuts()
         shortcuts.load_shortcut_files()
         shortcuts.load_shortcuts()
