@@ -325,6 +325,7 @@ def load_filters_translations():
     filter_names["Blend Mode"] = _("Blend Mode")
     filter_names["Unpremultiply"] = _("Unpremultiply")
     filter_names["Fade To Black In / Out"] = _("Fade To Black In / Out")
+    filter_names["Elastic"] = _("Elastic")
     
     # param names
     global param_names
@@ -692,6 +693,11 @@ def load_filters_translations():
     param_names["Ratio"] = _("Ratio")
     param_names["Knee Radius(dB)"] = _("Knee Radius(dB)")
     param_names["Makeup gain(dB)"] = _("Makeup gain(dB)")
+    param_names["Velocity"] = _("Velocity")
+    param_names["Center"] = _("Center")
+    param_names["Width"] = _("Width")
+    param_names["Linear Scale"] = _("Linear Scale"")
+    param_names["Non-Linear Scale"] = _("Non-Linear Scale")
 
     # Combo options
     global combo_options
