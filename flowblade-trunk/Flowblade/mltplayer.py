@@ -40,13 +40,14 @@ import updater
 
 TICKER_DELAY = 250 # in millis
 RENDER_TICKER_DELAY = 0.05
+SLOWMO_FRAME_DELAY = 0.1
 
 class Player:
     
     def __init__(self, profile):
 
         self.init_for_profile(profile)
-        
+        self.last_slowmo_seektime = 0.0
         self.start_ticker()
             
     def init_for_profile(self, profile):
@@ -204,7 +205,15 @@ class Player:
         frame = self.producer.frame() + delta
         # Seek frame
         self.seek_frame(frame)
-    
+
+    def slowmo_seek_delta(self, delta):
+        now = time.time()
+        if (now - self.last_slowmo_seektime) > SLOWMO_FRAME_DELAY:
+            self.last_slowmo_seektime = now
+            frame = self.producer.frame() + delta
+            # Seek frame
+            self.seek_frame(frame)
+
     def seek_frame(self, frame, update_gui=True):
         # Force range
         length = self.get_active_length()

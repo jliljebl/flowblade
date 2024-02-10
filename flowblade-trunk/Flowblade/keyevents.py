@@ -386,11 +386,14 @@ def _handle_tline_key_event(event):
                 seek_amount = -1
             else:
                 seek_amount = 1
+
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().slowmo_seek_delta(seek_amount)
+                return True
                 
             if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_shift
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
+
             if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_caps
             PLAYER().seek_delta(seek_amount)
@@ -600,10 +603,13 @@ def _handle_clip_key_event(event):
                 seek_amount = -1
             else:
                 seek_amount = 1
+            
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().slowmo_seek_delta(seek_amount)
+                return True
+                
             if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_shift
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
             if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_caps
             PLAYER().seek_delta(seek_amount)
@@ -775,10 +781,13 @@ def _handle_effects_editor_keys(event):
                 seek_amount = -1
             else:
                 seek_amount = 1
+            
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                PLAYER().slowmo_seek_delta(seek_amount)
+                return True
+                
             if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_shift
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
             if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
                 seek_amount = seek_amount * prefs.ffwd_rev_caps
             PLAYER().seek_delta(seek_amount)

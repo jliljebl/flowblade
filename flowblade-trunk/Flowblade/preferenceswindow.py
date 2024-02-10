@@ -275,14 +275,6 @@ def _playback_prefs_panel():
     ffwd_rev_shift_spin.set_adjustment(spin_adj)
     ffwd_rev_shift_spin.set_numeric(True)
 
-    if hasattr(prefs, 'ffwd_rev_ctrl'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_ctrl, lower=1, upper=10, step_increment=1)
-    else:
-        spin_adj = Gtk.Adjustment(value=10, lower=1, upper=10, step_increment=1)
-    ffwd_rev_ctrl_spin = Gtk.SpinButton()
-    ffwd_rev_ctrl_spin.set_adjustment(spin_adj)
-    ffwd_rev_ctrl_spin.set_numeric(True)
-
     if hasattr(prefs, 'ffwd_rev_caps'):
         spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_increment=1)
     else:
@@ -304,8 +296,6 @@ def _playback_prefs_panel():
         "E.g. if Shift is set to " + str(prefs.ffwd_rev_shift) + " and Ctrl to " + str(prefs.ffwd_rev_ctrl) + \
         ", holding Shift + Ctrl will result in up to " + str(prefs.ffwd_rev_shift * prefs.ffwd_rev_ctrl) + "x speed.\n" \
         "(Effective maximum speed depends on underlying software and/or hardware limitations)"))
-    row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Control Key:")), ffwd_rev_ctrl_spin, PREFERENCES_LEFT))
-    row15.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is held (Only using KEYS)."))
     row16 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Caps Lock Key:")), ffwd_rev_caps_spin, PREFERENCES_LEFT))
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     row17 = _row(guiutils.get_checkbox_row_box(follow_move_range, Gtk.Label(label=_("Move Timeline to follow Playback"))))
@@ -319,7 +309,6 @@ def _playback_prefs_panel():
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
-    vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
 
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -328,7 +317,7 @@ def _playback_prefs_panel():
 
     return vbox, (auto_center_on_stop,
                   play_pause_button, timeline_start_end_button, auto_center_on_updown,
-                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
+                  ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs

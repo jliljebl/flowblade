@@ -193,7 +193,7 @@ class LoadThread(threading.Thread):
                 editorstate.project.name = os.path.basename(self.filename)
                 _save_project_in_last_saved_path()
         else:
-            print("autosave load")
+            pass
 
         self.dialog.destroy()
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle

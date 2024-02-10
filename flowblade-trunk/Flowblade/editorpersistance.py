@@ -189,7 +189,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
 
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
-    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
+    ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, window_mode_combo, full_names, double_track_hights, \
     top_row_layout, layout_monitor = view_prefs_widgets
@@ -221,7 +221,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.single_click_effects_editor_load = (effects_editor_clip_load.get_active() == 1)
     # Apr-2017 - SvdB - ffwd / rev values
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
-    prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     prefs.loop_clips = loop_clips.get_active()
 
@@ -338,8 +337,8 @@ class EditorPreferences:
         self.show_full_file_names = False
         self.center_on_arrow_move = True
         # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed.
-        self.ffwd_rev_shift = 1
-        self.ffwd_rev_ctrl = 10
+        self.ffwd_rev_shift = 10
+        self.ffwd_rev_ctrl = 10 # DEPRECATED, CTRL + arrow now does 10 fps slowmo playback
         self.ffwd_rev_caps = 1
         self.shortcuts = "flowblade.xml"
         self.double_track_hights = False
