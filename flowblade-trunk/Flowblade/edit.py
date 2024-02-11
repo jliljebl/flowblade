@@ -1637,6 +1637,26 @@ def _trim_last_clip_end_redo(self):
         self.first_do = False
         self.undo_done_callback(self.track)
 
+#------------------ TRIM IMAGE BEYOND CURRENT LENGHT
+def trim_image_end_beyond_max_length_action(data):
+    action = EditAction(_trim_image_end_beyond_max_length_undo,_trim_image_end_beyond_max_length_redo, data)
+    action.exit_active_trimmode_on_edit = False
+    return action
+
+def _trim_image_end_beyond_max_length_undo(self):
+    _remove_clip(self.track, self.index)
+    self.clip.set("length", int(self.old_length))
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out - self.delta)
+
+def _trim_image_end_beyond_max_length_redo(self):
+    self.old_length = self.clip.get_length()
+    new_length = self.clip.clip_out + self.delta
+    _remove_clip(self.track, self.index)
+    self.clip.set("length", int(new_length))
+    _insert_clip(self.track, self.clip, self.index,
+                 self.clip.clip_in, self.clip.clip_out + self.delta)
+
 #------------------ SET CLIP LENGTH
 # "track","clip","index","length"
 # Trims end of clip

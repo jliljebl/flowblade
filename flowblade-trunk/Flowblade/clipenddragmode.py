@@ -82,6 +82,7 @@ def maybe_init_for_mouse_press(event, frame):
     _edit_data = {}
     _edit_data["track"] = track
     _edit_data["clip_index"] = clip_index
+    _edit_data["clip_media_type"] = clip.media_type
     _edit_data["frame"] = frame
     _edit_data["press_frame"] = frame
     _edit_data["editing_clip_end"] = editing_clip_end
@@ -128,7 +129,27 @@ def mouse_release(x, y, frame, state):
     # Dragging clip end
     if _edit_data["editing_clip_end"] == True:
         delta = frame - orig_out
-         # next clip is not blank or last clip
+        # Image clip end can be dragged to create a clip of any length.
+        if _edit_data["clip_media_type"] == appconsts.IMAGE:
+            if clip.clip_in + delta > clip.get_length():
+                # We have dragged clip end to create a producer longer 
+                # then current producer length.
+                #
+                # For length changing drags we only do inserts,
+                # no blank covering.
+                data = {"track":track,
+                        "index":clip_index,
+                        "clip":clip,
+                        "delta":delta}
+                action = edit.trim_image_end_beyond_max_length_action(data)
+                action.do_edit()
+
+                _exit_clip_end_drag()
+
+                updater.repaint_tline()
+                return
+
+        # next clip is not blank or last clip
         if ((clip_index == len(track.clips) - 1) or 
             (track.clips[clip_index + 1].is_blanck_clip == False)):
             data = {"track":track,
@@ -180,7 +201,7 @@ def mouse_release(x, y, frame, state):
     _exit_clip_end_drag()
 
     updater.repaint_tline()
-
+        
 def _exit_clip_end_drag(): 
     # Go back to enter mode
     editorstate.edit_mode = _enter_mode
@@ -195,13 +216,16 @@ def _legalize_frame(frame):
     end = _edit_data["bound_end"]
 
     if _edit_data["editing_clip_end"] == True:
-        if frame > end:
-            frame = end
+        # Images end can be dragged to be of any length.
+        if _edit_data["clip_media_type"] != appconsts.IMAGE:
+            if frame > end:
+                frame = end
         if frame < (start + 1):
             frame = start + 1
     else:
         if frame > end - 1:
             frame = end - 1
+
         if frame < start:
             frame = start
     

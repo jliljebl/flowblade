@@ -645,7 +645,11 @@ def fill_track_mlt(mlt_track, py_track):
                             clip.container_data.clear_rendered_media()
 
             mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
-            
+
+            # Image clips longer then 15000 frames need to have their length property set.
+            if clip.media_type == appconsts.IMAGE and clip.clip_out > 15000:
+                mlt_clip.set("length", int(clip.clip_out - 1)) # -1, out is inclusive
+
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
 
