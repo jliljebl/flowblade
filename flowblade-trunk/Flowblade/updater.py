@@ -50,9 +50,10 @@ page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
                  # so use this to have page size
 
 # Scale constants
-PIX_PER_FRAME_MAX = 20.0
-PIX_PER_FRAME_MIN = 0.001
+
 SCALE_MULTIPLIER = 0.66
+PIX_PER_FRAME_MAX = 20.0 * 1.0 / SCALE_MULTIPLIER
+PIX_PER_FRAME_MIN = 0.001
 
 # Trim edit loop playback
 TRIM_EDIT_PRE_ROLL = 25
@@ -220,7 +221,7 @@ def init_tline_scale():
     Calculates and sets first scale quaranteed to display full view 
     when starting from PIX_PER_FRAME_MAX with SCALE_MULTIPLIER steps.
     """
-    pix_per_frame = PIX_PER_FRAME_MAX
+    pix_per_frame = PIX_PER_FRAME_MAX * SCALE_MULTIPLIER
     while pix_per_frame > pix_per_frame_full_view:
         pix_per_frame *= SCALE_MULTIPLIER
         
