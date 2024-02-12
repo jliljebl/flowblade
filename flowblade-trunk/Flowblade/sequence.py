@@ -534,7 +534,11 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
-    
+
+        # Image clips longer then 15000 frames need to have their length property set.
+        if clip.media_type == appconsts.IMAGE and clip.clip_out > 15000:
+            clone_clip.set("length", int(clip.clip_out - 1)) # -1, out is inclusive
+
     def copy_filters(self, clip, clone_clip):
         for f in clip.filters:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
