@@ -2220,3 +2220,22 @@ def add_compositor_dialog(compositors, callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, compositors, select_combo)
     dialog.show_all()
+
+def set_bin_grfx_default_length_dialog(bin, current_default_length, callback):
+    title = _("Set Bin Graphics Default Length")
+    accept_text = _("Set")
+    
+    label_text = _("Set graphics default length for {}:").format(bin.name)
+    value_spin = Gtk.SpinButton.new_with_range(1, 15000, 1)
+    value_spin.set_value(current_default_length)
+
+    info_label = Gtk.Label(label=label_text)
+    info_label.set_margin_right(4)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(info_label, False, False, 0)
+    hbox.pack_start(value_spin, False, False, 0)
+
+    panel = dialogutils.get_alignment2(hbox)
+
+    dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, value_spin)

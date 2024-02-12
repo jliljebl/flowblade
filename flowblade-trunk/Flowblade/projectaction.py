@@ -949,6 +949,13 @@ def _hamburger_menu_item_selected(action, variant, msg):
         append_all_media_clips_into_timeline()
     elif msg == "append selected":
         append_selected_media_clips_into_timeline()
+    elif msg == "reverse order":
+        reverse_current_bin_media_order()
+    elif msg == "set bin default":
+        current_default_length = PROJECT().get_current_bin_graphics_default_length()
+        dialogs.set_bin_grfx_default_length_dialog( current_bin(),
+                                                    current_default_length,
+                                                    _set_bin_grfx_default_length_callback)
     else:
         target_bin_index = int(msg)
         
@@ -1593,7 +1600,9 @@ def _append_media_files(media_files):
         new_clip.clip_in = 0
         new_clip.clip_out = new_clip.get_length() - 1
         if new_clip.media_type == appconsts.IMAGE:
-            in_fr, out_fr, default_grfx_length = editorpersistance.get_graphics_default_in_out_length()
+            default_grfx_length = PROJECT().get_current_bin_graphics_default_length()
+            in_fr = (new_clip.get_length() - 1) // 2 - (default_grfx_length // 2)
+            out_fr = in_fr + default_grfx_length - 1
             new_clip.clip_in = in_fr
             new_clip.clip_out = out_fr
 
@@ -1752,7 +1761,18 @@ def move_files_to_bin(new_bin, moved_files):
     
     gui.editor_window.bin_info.display_bin_info()
     
-    
+def reverse_current_bin_media_order():
+    current_bin().file_ids.reverse()
+    gui.media_list_view.fill_data_model()
+
+
+def _set_bin_grfx_default_length_callback(dialog, response_id, value_spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        new_default_len = value_spin.get_value()
+        PROJECT().set_current_bin_graphics_default_length(int(new_default_len))
+
+    dialog.destroy()
+
 # ------------------------------------ sequences
 def change_edit_sequence():
     selection = gui.sequence_list_view.treeview.get_selection()
@@ -1818,7 +1838,6 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     sequence.VIDEO_TRACKS_COUNT = v_tracks
 
     # Add new sequence.
-    print("new seq", name)
     PROJECT().add_named_sequence(name)
 
     gui.sequence_list_view.fill_data_model()
@@ -1970,8 +1989,6 @@ def _add_delete_track_dialog_callback(dialog, response_id, v_tracks, a_tracks):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
-
-    print(v_tracks)
 
     dialog.destroy()
     _do_tracks_count_change(v_tracks, a_tracks)

@@ -22,6 +22,8 @@
 This module holds functions that maintain compatibility between project savefiles
 created by different versions of application.
 """
+import hashlib
+import os
 
 import appconsts
 
@@ -108,3 +110,11 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if(not hasattr(project, "vault_folder")):
         project.vault_folder = None
         project.project_data_id = None
+
+    if(not hasattr(project, "bins_graphics_default_lengths")):
+        project.bins_graphics_default_lengths = {}
+
+def FIX_MISSING_BIN_ATTRS(bin):
+    if(not hasattr(bin, "uid")):
+        bin.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    

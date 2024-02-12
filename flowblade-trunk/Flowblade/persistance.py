@@ -482,7 +482,12 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     all_clips = {}
     sync_clips = []
-
+    
+    # Bins need fix for added attr.
+    for bin in project.bins:
+        persistancecompat.FIX_MISSING_BIN_ATTRS(bin)
+    persistancecompat.FIX_MISSING_BIN_ATTRS(project.c_bin)
+ 
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
         for k, media_file in project.media_files.items():
