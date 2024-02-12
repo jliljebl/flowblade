@@ -949,6 +949,8 @@ def _hamburger_menu_item_selected(action, variant, msg):
         append_all_media_clips_into_timeline()
     elif msg == "append selected":
         append_selected_media_clips_into_timeline()
+    elif msg == "reverse order":
+        reverse_current_bin_media_order()
     else:
         target_bin_index = int(msg)
         
@@ -1752,7 +1754,10 @@ def move_files_to_bin(new_bin, moved_files):
     
     gui.editor_window.bin_info.display_bin_info()
     
-    
+def reverse_current_bin_media_order():
+    current_bin().file_ids.reverse()
+    gui.media_list_view.fill_data_model()
+
 # ------------------------------------ sequences
 def change_edit_sequence():
     selection = gui.sequence_list_view.treeview.get_selection()

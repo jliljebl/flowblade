@@ -457,6 +457,11 @@ def media_hamburger_popover_show(launcher, widget, callback):
     add_menu_action(proxy_section, _("Render Proxy Files For All Media"), "mediapanel.proxyall", "render all proxies", callback)
     _media_panel_hamburger_menu.append_section(None, proxy_section)
 
+
+    order_section = Gio.Menu.new()
+    add_menu_action(order_section, _("Reverse Items Order"), "mediapanel.reverseorder", "reverse order", callback)
+    _media_panel_hamburger_menu.append_section(None, order_section)
+    
     select_section = Gio.Menu.new()
     add_menu_action(select_section, _("Select All"), "mediapanel.selectall", "select all", callback)
     add_menu_action(select_section, _("Select None"), "mediapanel.selectnone",  "select none", callback)
