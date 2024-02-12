@@ -84,6 +84,7 @@ class Project:
         self.profile = profile
         self.profile_desc = profile.description()
         self.bins = []
+        self.bins_graphics_default_lengths = {} # Bin.uid -> default length
         self.media_files = {} # MediaFile.id(key) -> MediaFile object(value)
         self.sequences = []
         self.next_media_file_id = 0 
@@ -296,7 +297,16 @@ class Project:
         """
         name = _("sequence_") + str(self.next_seq_number)
         self.add_named_sequence(name)
-        
+
+    def get_current_bin_graphics_default_length(self):
+        try:
+            return self.bins_graphics_default_lengths[self.c_bin.uid]
+        except:
+            return editorpersistance.prefs.default_grfx_length
+
+    def set_current_bin_graphics_default_length(self, default_length):
+        self.bins_graphics_default_lengths[self.c_bin.uid] = default_length
+            
     def add_named_sequence(self, name):
         seq = sequence.Sequence(self.profile, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK)
         seq.create_default_tracks()
@@ -523,12 +533,13 @@ class Bin:
     Group of media files
     """
     def __init__(self, name="name"):
-        self.name  = name # Displayed name
+        self.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        self.name = name # Displayed name
         self.file_ids = [] # List of media files ids in the bin.
                            # Ids are increasing integers given in 
                            # Project.add_media_file(...)
-        
-        
+
+
 class ProducerNotValidError(Exception):
     def __init__(self, value, file_path):
         self.value = value

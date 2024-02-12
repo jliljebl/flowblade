@@ -45,6 +45,7 @@ import edit
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
+from editorstate import PROJECT
 from editorstate import timeline_visible
 from editorstate import EDIT_MODE
 import editorpersistance
@@ -69,7 +70,7 @@ compositor_menu_item_activated = None
 set_compositor_data = None
 
 # ----------------------------- module funcs
-def do_clip_insert(track, new_clip, tline_pos):
+def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
     index = _get_insert_index(track, tline_pos)
 
     # Can't put audio media on video track 
@@ -80,12 +81,18 @@ def do_clip_insert(track, new_clip, tline_pos):
 
     movemodes.clear_selected_clips()
     
+    clip_in = new_clip.mark_in
+    clip_out = new_clip.mark_out
+    if use_clip_in == True:
+        clip_in = new_clip.clip_in
+        clip_out = new_clip.clip_out
+    
     # Do edit
     data = {"track":track,
             "clip":new_clip,
             "index":index,
-            "clip_in":new_clip.mark_in,
-            "clip_out":new_clip.mark_out}
+            "clip_in":clip_in,
+            "clip_out":clip_out}
     action = edit.insert_action(data)
     action.do_edit()
     
@@ -557,12 +564,13 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
 
     # Set clip in and out
     if use_marks == False:
+        # This probably dead code, use_marks=False always?
         new_clip.mark_in = 0
         new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
 
         if media_file.type == appconsts.IMAGE_SEQUENCE:
             new_clip.mark_out = media_file.length
-    else:    
+    else: 
         # Media types that do not have length determined by content.
         if new_clip.media_type == appconsts.IMAGE or new_clip.media_type == appconsts.PATTERN_PRODUCER:
 
@@ -594,6 +602,16 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
                 if media_file.type == appconsts.IMAGE_SEQUENCE:
                     new_clip.mark_out = media_file.length
 
+    # Images fom media panel get bin default length.
+    use_clip_in = False
+    if dnd.drag_source != dnd.SOURCE_MONITOR_WIDGET and  new_clip.media_type == appconsts.IMAGE:
+        default_grfx_length = PROJECT().get_current_bin_graphics_default_length()
+        in_fr = (new_clip.get_length() - 1) // 2 - (default_grfx_length // 2)
+        out_fr = in_fr + default_grfx_length - 1
+        new_clip.clip_in = in_fr
+        new_clip.clip_out = out_fr
+        use_clip_in = True
+        
     # Non-insert DND actions
     if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
         if track.id != current_sequence().first_video_track().id:
@@ -609,7 +627,7 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             gui.media_list_view.clear_selection()
             return
             
-    do_clip_insert(track, new_clip, frame)
+    do_clip_insert(track, new_clip, frame, use_clip_in)
     gui.media_list_view.clear_selection()
                 
     maybe_autorender_plugin(new_clip)
