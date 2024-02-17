@@ -30,14 +30,14 @@ for root, dirnames, filenames in os.walk(src_dir):
 
         for line in lines:
             
-            replaced_line = line.replace(' Gtk.VBox', ' gtkbox.vbox')
+            replaced_line = line.replace(' Gtk.VBox', ' gtkbox.VBox')
             if line != replaced_line:
                 print(filename, replaced_line)
                 line_count += 1
                 changed_files.append(file_path)
                 line = replaced_line
 
-            replaced_line = line.replace(' Gtk.HBox', ' gtkbox.hbox')
+            replaced_line = line.replace(' Gtk.HBox', ' gtkbox.HBox')
             if line != replaced_line:
                 print(filename, replaced_line)
                 line_count += 1
@@ -53,6 +53,4 @@ for root, dirnames, filenames in os.walk(src_dir):
 print(line_count)
 print(set(changed_files))
 
-
-        #print(file_path, "file done")
 
