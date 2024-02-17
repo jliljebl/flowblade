@@ -21,18 +21,20 @@ for root, dirnames, filenames in os.walk(src_dir):
         
         file_path = os.path.join(root, filename)
         
+        print(file_path)
+        
         lines = None
         new_lines = []
         changed = False
 
         with open(file_path, "rt") as f:
-          lines = f.readlines()
+            lines = f.readlines()
 
         for line in lines:
             
             replaced_line = line.replace(' Gtk.VBox', ' gtkbox.VBox')
             if line != replaced_line:
-                print(filename, replaced_line)
+                #print(filename, replaced_line)
                 line_count += 1
                 changed_files.append(file_path)
                 line = replaced_line
@@ -40,7 +42,7 @@ for root, dirnames, filenames in os.walk(src_dir):
 
             replaced_line = line.replace(' Gtk.HBox', ' gtkbox.HBox')
             if line != replaced_line:
-                print(filename, replaced_line)
+                #print(filename, replaced_line)
                 line_count += 1
                 changed_files.append(file_path)
                 line = replaced_line
@@ -49,34 +51,43 @@ for root, dirnames, filenames in os.walk(src_dir):
             new_lines.append(line)
         
         if changed == True:
-            f = open(file_path, "a")
-            f.writelines(new_lines)
-            f.close()
+            with open(file_path, "w") as f:
+                f.writelines(new_lines)  
 
 
-changed_files = set(changed_files)
-print(changed_files)
 
-for cfile in changed_files:
-    print(cfile)
-    lines = None
-    new_lines = []
-    with open(cfile, "rt") as f:
-        lines = f.readlines()
 
-    for i in range(0, len(lines)):
-        line = lines[i]
-        new_lines.append(line)
-        if line.startswith("from gi.repository import"):
-            print(line)
-            if "Gtk" in line:
-                print("Kkkk")
-                new_lines.append("import gtkbox")
+for root, dirnames, filenames in os.walk(src_dir):
+    for filename in filenames:
+        
+        if filename.endswith(".py") == False:
+            continue
 
-    print(new_lines)
-    
-    f = open(cfile, "a")
-    f.writelines(new_lines)
-    f.close()
+        file_path = os.path.join(root, filename)
+        
+        lines = None
+        new_lines = []
+        changed = False
+
+        with open(file_path, "rt") as f:
+            lines = f.readlines()
+
+        print(file_path)
+        
+        changed = False
+        for line in lines:
+            new_lines.append(line)
+            if line.startswith("from gi.repository import") and changed == False:
+                print(line)
+                if "Gtk" in line:
+                    print("line has Gtk import")
+                    new_lines.append("import gtkbox\n")
+                    changed = True
+
+        if changed == True:
+            with open(file_path, "w") as f:
+                print("Witing lines")
+                f.writelines(new_lines)  
+
 
 
