@@ -59,6 +59,7 @@ print(changed_files)
 
 for cfile in changed_files:
     print(cfile)
+    lines = None
     new_lines = []
     with open(cfile, "rt") as f:
         lines = f.readlines()
@@ -72,7 +73,8 @@ for cfile in changed_files:
                 print("Kkkk")
                 new_lines.append("import gtkbox")
 
-            
+    print(new_lines)
+    
     f = open(cfile, "a")
     f.writelines(new_lines)
     f.close()
