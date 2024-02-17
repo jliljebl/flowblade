@@ -59,19 +59,22 @@ print(changed_files)
 
 for cfile in changed_files:
     print(cfile)
+    new_lines = []
     with open(cfile, "rt") as f:
         lines = f.readlines()
 
     for i in range(0, len(lines)):
         line = lines[i]
-        if line.startswith("from gi.repository import")
+        new_lines.append(line)
+        if line.startswith("from gi.repository import"):
             print(line)
             if "Gtk" in line:
-                lines.insert(i + 1, "import gtkbox")
-                break
+                print("Kkkk")
+                new_lines.append("import gtkbox")
+
             
     f = open(cfile, "a")
-    f.writelines(lines)
+    f.writelines(new_lines)
     f.close()
 
 
