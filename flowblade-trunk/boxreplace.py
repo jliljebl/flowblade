@@ -36,6 +36,7 @@ for root, dirnames, filenames in os.walk(src_dir):
                 line_count += 1
                 changed_files.append(file_path)
                 line = replaced_line
+                changed = True
 
             replaced_line = line.replace(' Gtk.HBox', ' gtkbox.HBox')
             if line != replaced_line:
@@ -43,14 +44,31 @@ for root, dirnames, filenames in os.walk(src_dir):
                 line_count += 1
                 changed_files.append(file_path)
                 line = replaced_line
+                changed = True
 
             new_lines.append(line)
+        
+        if changed == True:
+            f = open(file_path, "a")
+            f.writelines(new_lines)
+            f.close()
 
-        f = open(file_path, "a")
-        f.writelines(new_lines)
-        f.close()
 
-print(line_count)
-print(set(changed_files))
+changed_files = set(changed_files))
+
+for cfile in changed_files:
+
+    with open(cfile, "rt") as f:
+      lines = f.readlines()
+
+    for i in range(0, len(lines)):
+        line = lines[i]
+        if line.startswith("from gi.repository import") and ("Gtk" in line):
+            lines.insert(i + 1, "import gtkbox")
+            break
+            
+    f = open(cfile, "a")
+    f.writelines(lines)
+    f.close()
 
 

@@ -1,6 +1,6 @@
 """
     Flowblade Movie Editor is a nonlinear video editor.
-    Copyright 2023 Janne Liljeblad.
+    Copyright 2024 Janne Liljeblad.
 
     This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
