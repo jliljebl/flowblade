@@ -54,18 +54,21 @@ for root, dirnames, filenames in os.walk(src_dir):
             f.close()
 
 
-changed_files = set(changed_files))
+changed_files = set(changed_files)
+print(changed_files)
 
 for cfile in changed_files:
-
+    print(cfile)
     with open(cfile, "rt") as f:
-      lines = f.readlines()
+        lines = f.readlines()
 
     for i in range(0, len(lines)):
         line = lines[i]
-        if line.startswith("from gi.repository import") and ("Gtk" in line):
-            lines.insert(i + 1, "import gtkbox")
-            break
+        if line.startswith("from gi.repository import")
+            print(line)
+            if "Gtk" in line:
+                lines.insert(i + 1, "import gtkbox")
+                break
             
     f = open(cfile, "a")
     f.writelines(lines)
