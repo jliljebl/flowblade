@@ -186,10 +186,10 @@ def key_down(widget, event):
     # Select all with CTRL + A in media panel.
     if event.keyval == Gdk.KEY_a:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None:
+            if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None: 
                 gui.media_list_view.select_all()
                 return True
-        
+
     if event.keyval == Gdk.KEY_F11:
         menuactions.toggle_fullscreen()
         return True
@@ -585,6 +585,10 @@ def _handle_configurable_global_events(event):
     if action == 'open_prev':
         projectaction.open_prev_media_item_in_monitor()
         return True
+    if action == "append_from_bin":
+        if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None: 
+            projectaction.append_selected_media_clips_into_timeline()
+            return True
 
     return False
     
