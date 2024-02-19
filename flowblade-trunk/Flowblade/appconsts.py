@@ -73,7 +73,7 @@ TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 25 # DEPRECATED
 
 # Main layout minimum heights. Changing these will have effect on layout.
-TOP_ROW_HEIGHT = 300
+TOP_ROW_HEIGHT = 270
 TLINE_HEIGHT = 260
 
 # Main layout minimum widths. Changing these will have effect on layout.
