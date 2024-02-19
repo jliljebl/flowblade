@@ -989,7 +989,7 @@ def do_timeline_objects_paste():
         # So that multiple copies with CTRL+V can be made
         new_clips = []
         for clip in paste_clips:
-            if isinstance(clip, int): # blanks, these represented as int's.
+            if isinstance(clip, int): # blanks, these are represented as int's.
                 new_clip = clip 
             else: # media clips
                 new_clip = current_sequence().create_clone_clip(clip)

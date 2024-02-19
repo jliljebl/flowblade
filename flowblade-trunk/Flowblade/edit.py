@@ -449,6 +449,11 @@ class ConsolidatedEditAction:
     def do_consolidated_edit(self):
         # There is 1 - n edits in these,
         # and they are assumed to be all of the same type.
+        # ...well, they need to have properties:
+        #    .exit_active_trimmode_on_edit
+        #    .turn_on_stop_for_edit
+        #    .exit_active_trimmode_on_edit
+        # same for all the consolidated edits for this to work reliably.
         if self.edit_actions[0].exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
 
