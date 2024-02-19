@@ -1011,12 +1011,64 @@ def _insert_multiple_redo(self):
     for i in range(0, len(self.clips)):
         add_clip = self.clips[i]
         index = self.index + i
-        if isinstance(add_clip, int): # blanks, these represented as int's
+        if isinstance(add_clip, int): # blanks, are these represented as int's
             _insert_blank(self.track, index, add_clip)
         else: # media clips
             _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
 
+# --------------------------------------- INSERT MULTIPLE AFTER TRACK END
+# "track","clips","blank_length"
+def insert_multiple_after_end_action(data):
+    action = EditAction(_insert_multiple_after_end_undo, _insert_multiple_after_end_redo, data)
+    return action
 
+def _insert_multiple_after_end_undo(self):
+    for i in range(0, len(self.clips)):
+        _remove_clip(self.track, self.index)
+
+    _remove_clip(self.track, self.index)
+        
+def _insert_multiple_after_end_redo(self):
+    self.index = len(self.track.clips)
+    _insert_blank(self.track, self.index, self.blank_length)
+    
+    for i in range(0, len(self.clips)):
+        add_clip = self.clips[i]
+        index = self.index + i + 1
+        if isinstance(add_clip, int): # blanks, these are represented as int's
+            _insert_blank(self.track, index, add_clip)
+        else: # media clips
+            _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
+
+# --------------------------------------- INSERT MULTIPLE ON BLANK
+# "track","clips","index","blank_cut_frame"
+def insert_multiple_on_blank_action(data):
+    action = EditAction(_insert_multiple_on_blank_undo, _insert_multiple_on_blank_redo, data)
+    return action
+
+def _insert_multiple_on_blank_undo(self):
+    for i in range(0, len(self.clips)):
+        _remove_clip(self.track, self.index + 1)
+
+    # Remove cut blank halves
+    _remove_clip(self.track, self.index)
+    _remove_clip(self.track, self.index)
+
+    _insert_blank(self.track, self.index, self.orig_blank_length)
+        
+def _insert_multiple_on_blank_redo(self):
+    blank_clip = self.track.clips[self.index]
+    self.orig_blank_length = blank_clip.clip_out - blank_clip.clip_in
+    _cut_blank(self.track, self.index, self.blank_cut_frame, blank_clip)
+    
+    for i in range(0, len(self.clips)):
+        add_clip = self.clips[i]
+        index = self.index + i + 1
+        if isinstance(add_clip, int): # blanks, these are represented as int's
+            _insert_blank(self.track, index, add_clip)
+        else: # media clips
+            _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
+            
 #-------------------- MULTITRACK INSERT MOVE
 # "track","to_track","insert_index","selected_range_in","selected_range_out"
 # "move_edit_done_func"

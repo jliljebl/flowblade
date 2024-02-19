@@ -115,7 +115,7 @@ def _current_tline_frame():
     return editorstate.current_tline_frame()
 
 # ---------------------------------- edit button events
-def cut_pressed():
+def cut_pressed(use_as_action_build_func=False):
     if not timeline_visible():
         updater.display_sequence_in_monitor()   
 
@@ -162,7 +162,10 @@ def cut_pressed():
                 "clip":clip,
                 "clip_cut_frame":clip_frame}
         action = edit.cut_action(data)
-        action.do_edit()
+        if use_as_action_build_func == True:
+            return action
+        else:
+            action.do_edit()
    
     updater.repaint_tline()
 
@@ -996,8 +999,49 @@ def do_timeline_objects_paste():
             new_clips.append(new_clip)
         editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, new_clips))
 
-        # Paste clips
-        editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
+        # Can't put audio media on video track
+        for new_clip in new_clips:
+            if isinstance(new_clip, int):
+                continue
+            if ((new_clip.media_type == appconsts.AUDIO)
+               and (track.type == appconsts.VIDEO)):        
+                _display_no_audio_on_video_msg(track)
+                return
+
+        paste_on_blank = (track.clips[track.get_clip_index_at(tline_pos)].is_blanck_clip == True)
+        paste_on_cut = (current_sequence().get_closest_cut_frame(track.id, tline_pos) == tline_pos)
+        
+        # Paste clips.
+        # Clips are pasted after track content end.
+        if track.get_length() < tline_pos:
+            blank_length = tline_pos - track.get_length() 
+            # Do edit
+            data = {"track":track,
+                    "clips":new_clips,
+                    "blank_length":blank_length}
+            action = edit.insert_multiple_after_end_action(data)
+            action.do_edit()
+        # Clips are pasted on blank.
+        elif paste_on_blank == True and paste_on_cut == False:
+            index = editevent._get_insert_index(track, tline_pos)
+            blank_cut_frame = tline_pos - current_sequence().get_closest_cut_frame(track.id, tline_pos)
+            data = {"track":track,
+                    "clips":new_clips,
+                    "index":index,
+                    "blank_cut_frame":blank_cut_frame}
+            action = edit.insert_multiple_on_blank_action(data)
+            action.do_edit()
+        # Clips are pasted on cut or clip.
+        else:
+            if paste_on_cut == True:
+                editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
+            else:
+                cut_action = cut_pressed(True)
+                multi_insert_action = editevent.do_multiple_clip_insert(track, paste_clips, tline_pos, True)
+                actions = [cut_action, multi_insert_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
+                #editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
     else:
         # Paste clips
         editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)

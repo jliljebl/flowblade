@@ -98,15 +98,19 @@ def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
     
     updater.display_tline_cut_frame(track, index)
 
-def do_multiple_clip_insert(track, clips, tline_pos):
+def do_multiple_clip_insert(track, clips, tline_pos, use_as_action_build_func_for_paste=False):
     index = _get_insert_index(track, tline_pos)
+    
+    if use_as_action_build_func_for_paste == True:
+        # For this use case there happens a cut before the insert is done.
+        index += 1
     
     # Can't put audio media on video track
     for new_clip in clips:
         if isinstance(new_clip, int):
             continue
         if ((new_clip.media_type == appconsts.AUDIO)
-           and (track.type == appconsts.VIDEO)):        
+           and (track.type == appconsts.VIDEO)):
             _display_no_audio_on_video_msg(track)
             return
 
@@ -117,6 +121,8 @@ def do_multiple_clip_insert(track, clips, tline_pos):
             "clips":clips,
             "index":index}
     action = edit.insert_multiple_action(data)
+    if use_as_action_build_func_for_paste == True:
+        return action
     action.do_edit()
 
     updater.display_tline_cut_frame(track, index)
@@ -124,7 +130,7 @@ def do_multiple_clip_insert(track, clips, tline_pos):
 def  _attempt_dnd_overwrite(track, clip, frame):
     # Can't put audio media on video track 
     if ((clip.media_type == appconsts.AUDIO)
-       and (track.type == appconsts.VIDEO)):        
+       and (track.type == appconsts.VIDEO)):
         return
 
     # Dropping on first available frame after last clip is append 
