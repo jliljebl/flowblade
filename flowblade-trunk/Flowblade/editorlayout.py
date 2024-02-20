@@ -164,7 +164,7 @@ def top_level_project_panel():
     
 # ----------------------------------------------------------- INIT
 def init_layout_data():
-    global _panel_positions, _positions_names, _panels_names, _position_notebooks
+    global _panel_positions, _positions_names, _panels_names, _position_notebooks, PANEL_MINIMUM_SIZES
     _panel_positions = editorpersistance.prefs.panel_positions
 
     # Use default panels positions if nothing available yet or too small screen, 
@@ -205,7 +205,10 @@ def init_layout_data():
         if appconsts.PANEL_PROJECT in _panel_positions:
             _panel_positions[appconsts.PANEL_PROJECT_SMALL_SCREEN] = appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT
             del(_panel_positions[appconsts.PANEL_PROJECT])
-            
+    
+    # Apply Filter Select panel width pref.
+    PANEL_MINIMUM_SIZES[appconsts.PANEL_FILTER_SELECT] = (editorpersistance.prefs.filter_select_width, appconsts.TLINE_HEIGHT)
+
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Default Notebook"),

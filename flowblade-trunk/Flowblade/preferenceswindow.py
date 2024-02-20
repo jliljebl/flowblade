@@ -385,6 +385,11 @@ def _view_prefs_panel():
             layout_monitor.append_text(_("Monitor ") + str(monitor_index) + ": " + str(monitor_w) + " x " + str(monitor_h))
     layout_monitor.set_active(prefs.layout_display_index)
 
+    spin_adj = Gtk.Adjustment(value=prefs.filter_select_width, lower=editorpersistance.FILTER_SELECT_WIDTH_MIN, upper=editorpersistance.FILTER_SELECT_WIDTH_MAX, step_increment=1)
+    filter_select_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.FILTER_SELECT_WIDTH_MIN, editorpersistance.FILTER_SELECT_WIDTH_MAX, 1)
+    filter_select_width_spin.set_adjustment(spin_adj)
+    filter_select_width_spin.set_numeric(True)
+    
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
@@ -392,6 +397,7 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
+    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Filter Select panel width:")), filter_select_width_spin, PREFERENCES_LEFT))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -401,12 +407,13 @@ def _view_prefs_panel():
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, top_row_layout, layout_monitor)
+                  tracks_combo, top_row_layout, layout_monitor, filter_select_width_spin)
 
 
 

@@ -40,6 +40,8 @@ MAX_RECENT_PROJS = 15
 UNDO_STACK_DEFAULT = 30
 UNDO_STACK_MIN = 10
 UNDO_STACK_MAX = 100
+FILTER_SELECT_WIDTH_MIN = 220
+FILTER_SELECT_WIDTH_MAX = 350
 
 GLASS_STYLE = 0
 SIMPLE_STYLE = 1
@@ -173,18 +175,11 @@ def get_recent_projects():
     return proj_list
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
-    # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
-    # Unpack widgets
-    # Toolbar preferences panel for free elements and order
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets, jog_shuttle_widgets = widgets_tuples_tuple
-    # End of Toolbar preferences panel for free elements and order
-
-    # Aug-2019 - SvdB - AS - added autosave_combo
+    
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
-        autosave_combo, render_folder_select, disk_cache_warning_combo = gen_opts_widgets
+    autosave_combo, render_folder_select, disk_cache_warning_combo = gen_opts_widgets
 
-    # Jul-2016 - SvdB - Added play_pause_button
-    # Apr-2017 - SvdB - Added ffwd / rev values
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
     hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
 
@@ -192,9 +187,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, window_mode_combo, full_names, double_track_hights, \
-    top_row_layout, layout_monitor = view_prefs_widgets
+    top_row_layout, layout_monitor, filter_select_width_spin = view_prefs_widgets
 
-    # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
 
     usbhid_enabled_check, usbhid_config_combo = jog_shuttle_widgets
@@ -210,7 +204,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.trans_cover_delete = cover_delete.get_active()
 
-    # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
 # ------------------------------ timeline_start_end_button
     prefs.timeline_start_end = timeline_start_end_button.get_active()
@@ -219,7 +212,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
     prefs.single_click_effects_editor_load = (effects_editor_clip_load.get_active() == 1)
-    # Apr-2017 - SvdB - ffwd / rev values
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     prefs.loop_clips = loop_clips.get_active()
@@ -229,16 +221,13 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.display_splash_screen = disp_splash.get_active()
 
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
-    # Jan-2017 - SvdB
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
     prefs.perf_drop_frames = perf_drop_frames.get_active()
-    # Feb-2017 - SvdB - for full file names
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.top_row_layout = top_row_layout.get_active()
-    # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
     prefs.layout_display_index = layout_monitor.get_active()
     if len(render_folder_select.get_filenames()) != 0:
@@ -258,9 +247,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
             prefs.usbhid_config = usbhid_config_metadata_list[usbhid_config_index - 1].device_config_name
         else:
             prefs.usbhid_config = None
-
+    # --------------------------------- USB HID END
     prefs.dnd_action = dnd_action.get_active()
-    
+    prefs.filter_select_width = int(filter_select_width_spin.get_value())
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -385,4 +374,4 @@ class EditorPreferences:
         self.usbhid_enabled = False
         self.usbhid_config = None
         self.zoom_to_playhead = True
-
+        self.filter_select_width = 220
