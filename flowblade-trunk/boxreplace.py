@@ -79,13 +79,15 @@ def _append_line_after(starts_string, sub_string, append_line):
                 with open(file_path, "w") as f:
                     f.writelines(new_lines)  
    
-    print("Files changed with added line: " + append_line + " " + str(files_changed_count))             
+    print("Files changed with added line: " + append_line + " " + str(files_changed_count))
 
 
 _substring_replace(' Gtk.VBox', ' gtkbox.VBox')
 _substring_replace(' Gtk.HBox', ' gtkbox.HBox')
 
 _append_line_after("from gi.repository import", "Gtk", "import gtkbox")
+
+_substring_replace("gi.require_version('Gtk', '3.0')","gi.require_version('Gtk', '4.0')")
 
 
 
