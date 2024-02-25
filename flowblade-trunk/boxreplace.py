@@ -103,4 +103,5 @@ _substring_replace("gi.require_version('Gtk', '3.0')","gi.require_version('Gtk',
 _substring_replace('class RenderQueueView(Gtk.VBox):', 'class RenderQueueView(Gtk.Box):')
 _insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
 
-
+_substring_replace('class ProfileInfoBox(Gtk.VBox):', 'class ProfileInfoBox(Gtk.Box):')
+_insert_line_after('class ProfileInfoBox(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
