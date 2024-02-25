@@ -35,3 +35,12 @@ def VBox(homogeneous=False, spacing=0):
      box.set_homogeneous(homogeneous)
      return box
 
+def set_default_vertical(box):
+    box.set_homogeneous(False)
+    box.set_spacing(0)
+    box.set_orientation(Gtk.Orientation.VERTICAL)
+
+def set_default_horizontal(box):
+    box.set_homogeneous(False)
+    box.set_spacing(0)
+    box.set_orientation(Gtk.Orientation.HORIZONTAL)

@@ -90,5 +90,7 @@ _append_line_after("from gi.repository import", "Gtk", "import gtkbox")
 _substring_replace("gi.require_version('Gtk', '3.0')","gi.require_version('Gtk', '4.0')")
 
 
+_substring_replace('class RenderQueueView(Gtk.VBox):', 'class RenderQueueView(Gtk.Box):')
+
 
 
