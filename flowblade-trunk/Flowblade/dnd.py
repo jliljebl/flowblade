@@ -44,12 +44,12 @@ SOURCE_RANGE_LOG = "range log"
 MEDIA_ICON_WIDTH = 20
 MEDIA_ICON_HEIGHT = 15
 
-MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
-EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
-CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
-RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
-CLIP_EFFECTS_DND_TARGET = Gtk.TargetEntry.new('clip_effect', Gtk.TargetFlags.SAME_APP, 0)
-URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
+#MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
+#EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
+#CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
+#RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
+#CLIP_EFFECTS_DND_TARGET = Gtk.TargetEntry.new('clip_effect', Gtk.TargetFlags.SAME_APP, 0)
+#URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 
 
 # These are used to hold data needed on drag drop instead of the API provided by GtkSelectionData.
