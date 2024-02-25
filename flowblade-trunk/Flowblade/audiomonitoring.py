@@ -123,7 +123,7 @@ def init(profile):
             METER_LIGHTS = 100
             METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
         else:
-            METER_SLOT_H = 275
+            METER_SLOT_H = 250
             CONTROL_SLOT_H = 240
             METER_LIGHTS = 82
             METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP

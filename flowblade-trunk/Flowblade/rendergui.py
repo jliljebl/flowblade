@@ -617,7 +617,8 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
             render_panel.pack_start(Gtk.Label(), True, True, 0)
     else:
         render_panel.pack_start(encoding_panel, False, False, 0)
-        render_panel.pack_start(Gtk.Label(), True, True, 0)
+        if editorstate.SCREEN_HEIGHT > 800:
+            render_panel.pack_start(Gtk.Label(), True, True, 0)
     
     # Stop panel **width** popping when/if GPU renders added.
     render_panel.set_size_request(300, 30)
@@ -756,7 +757,7 @@ class RenderEncodingPanel():
     
     def __init__(self, extension_label):
         self.quality_selector = RenderQualitySelector()
-        self.quality_selector.widget.set_size_request(110, 34)
+        self.quality_selector.widget.set_size_request(110, 20)
         self.quality_selector.update_quality_selection(0)
         self.audio_desc = Gtk.Label()
         self.encoding_selector = RenderEncodingSelector(self.quality_selector,
