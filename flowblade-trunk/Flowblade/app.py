@@ -299,8 +299,8 @@ class FlowbladeApplication(Gtk.Application):
         rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
 
         # Splash screen
-        if editorpersistance.prefs.display_splash_screen == True: 
-            show_splash_screen()
+        #if editorpersistance.prefs.display_splash_screen == True: 
+        #    show_splash_screen()
             
         # Save assoc file path if found in arguments.
         global assoc_file_path
