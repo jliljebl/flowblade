@@ -383,7 +383,7 @@ class BinTreeView(Gtk.VBox):
         self.treeview.append_column(self.item_count_col)
 
         # Build widget graph and display
-        self.scroll.add(self.treeview)
+        self.scroll.set_child(self.treeview)
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
