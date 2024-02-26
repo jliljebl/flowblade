@@ -133,8 +133,8 @@ class EditorWindow:
         #self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
         # Init application main menu.
-        self.ui = Gtk.UIManager()
-        self._init_app_menu(self.ui)
+        #self.ui = Gtk.UIManager()
+        #self._init_app_menu(self.ui)
 
         # Create all panels and gui components.
         self._init_gui_components()
