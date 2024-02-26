@@ -50,12 +50,12 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self._draw_func = func_draw
         self.connect('draw', self._draw_event)
 
-        self.connect('button-press-event', self._button_press_event)
-        self.connect('button-release-event', self._button_release_event)
-        self.connect('motion-notify-event', self._motion_notify_event)
-        self.connect('enter-notify-event', self._enter_notify_event)
-        self.connect('leave-notify-event', self._leave_notify_event)
-        self.connect("scroll-event", self._mouse_scroll_event)
+        #self.connect('button-press-event', self._button_press_event)
+        #self.connect('button-release-event', self._button_release_event)
+        #self.connect('motion-notify-event', self._motion_notify_event)
+        #self.connect('enter-notify-event', self._enter_notify_event)
+        #self.connect('leave-notify-event', self._leave_notify_event)
+        #self.connect("scroll-event", self._mouse_scroll_event)
 
         # Signal handler funcs. These are monkeypatched as needed on codes sites
         # that create the objects.

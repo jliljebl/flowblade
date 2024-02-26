@@ -216,7 +216,7 @@ class ToolDockItem:
         guiutils.set_margins(tool_img, 5, 5, 9, 7)
 
         self.widget = Gtk.EventBox()
-        self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
+        #self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
 
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
         if editorpersistance.prefs.show_tool_tooltips:

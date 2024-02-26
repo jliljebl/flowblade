@@ -350,7 +350,7 @@ class BinTreeView(Gtk.VBox):
 
         # TreeView
         self.treeview = Gtk.TreeView(model=self.storemodel)
-        self.treeview.connect('button-press-event', self._button_press_event)
+        #self.treeview.connect('button-press-event', self._button_press_event)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
@@ -387,7 +387,7 @@ class BinTreeView(Gtk.VBox):
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
-        self.scroll.connect('button-press-event', self._button_press_event)
+        #self.scroll.connect('button-press-event', self._button_press_event)
 
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
@@ -493,7 +493,7 @@ class SequenceListView(ImageTextImageListView):
     def __init__(self, seq_name_edited_cb, sequence_popup_cb, double_click_cb):
         ImageTextImageListView.__init__(self)
         self.sequence_popup_cb = sequence_popup_cb
-        self.treeview.connect('button-press-event', self._button_press_event)
+        #self.treeview.connect('button-press-event', self._button_press_event)
 
         self.double_click_cb = double_click_cb
         self.double_click_counter = 0 # We get 2 events for double click, we use this to only do one callback
@@ -508,7 +508,7 @@ class SequenceListView(ImageTextImageListView):
                                  seq_name_edited_cb,
                                  (self.storemodel, 1))
 
-        self.scroll.connect('button-press-event', self._button_press_event)
+        #self.scroll.connect('button-press-event', self._button_press_event)
         
     def fill_data_model(self):
         """
@@ -1385,7 +1385,7 @@ class MediaPanel():
 
     def _get_empty_filler(self, widget=None):
         filler = Gtk.EventBox()
-        filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
+        #filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
         if widget == None:
             filler.add(Gtk.Label())
         else:
@@ -1406,8 +1406,8 @@ class MediaObjectWidget:
         self.selected_color = (r, g, b, 1.0)
 
         self.widget = Gtk.EventBox()
-        self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
-        self.widget.connect("button-release-event", lambda w,e: release_callback(self, w, e))
+        #self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
+        #self.widget.connect("button-release-event", lambda w,e: release_callback(self, w, e))
         self.widget.dnd_media_widget_attr = True # this is used to identify widget at dnd drop
         self.widget.set_can_focus(True)
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
@@ -1837,7 +1837,7 @@ class BigTCDisplay:
         global TC_COLOR
         TC_COLOR = (0.55, 0.55, 0.55)
 
-        self.widget.connect("button-press-event", self._button_press)
+        #self.widget.connect("button-press-event", self._button_press)
         self.widget.set_margin_top(1)
 
     def _draw(self, event, cr, allocation):

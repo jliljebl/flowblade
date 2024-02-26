@@ -1378,7 +1378,7 @@ class TextLayerListView(Gtk.VBox):
         self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
-        self.treeview.connect("button-press-event", self.button_press)
+        #self.treeview.connect("button-press-event", self.button_press)
         self.treeview.set_activate_on_single_click(True)
         self.treeview.connect("row-activated", selection_changed_cb)
          

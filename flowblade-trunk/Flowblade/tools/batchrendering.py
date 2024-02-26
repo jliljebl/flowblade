@@ -994,7 +994,7 @@ class RenderQueueView(Gtk.VBox):
         self.treeview.append_column(self.text_col_4)
 
         # popup menu
-        self.treeview.connect("button-press-event", self.on_treeview_button_press_event)
+        #self.treeview.connect("button-press-event", self.on_treeview_button_press_event)
 
         # Build widget graph and display
         self.scroll.add(self.treeview)

@@ -277,7 +277,7 @@ class MediaRelinkListView(Gtk.VBox):
         self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
-        self.treeview.connect("button-press-event", self.row_pressed)
+        #self.treeview.connect("button-press-event", self.row_pressed)
 
         # Column views
         self.missing_text = _("Missing Media File Path")

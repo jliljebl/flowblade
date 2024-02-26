@@ -528,8 +528,8 @@ def _get_color_selector(editable_property):
 def _color_selector_picker_toggled(picker_button, editable_property, color_button, info_label):
     gdk_window = gui.editor_window.window.get_window()
     if picker_button.get_active() == True:
-        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button, info_label)
-        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button, info_label)
+        #editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button, info_label)
+        #editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button, info_label)
         info_label.set_markup("<small>" + _("Click Monitor to Select Color") + "</small>")
     else:
         _maybe_disconnect_color_picker_listeners(editable_property)
