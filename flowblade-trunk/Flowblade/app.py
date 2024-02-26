@@ -925,6 +925,7 @@ def xdg_data_dir_changed_dialog():
 # ------------------------------------------------------- small and multiple screens
 # We need a bit more stuff because having multiple monitors can mix up setting draw parameters.
 def _set_screen_size_data():
+    """
     monitor_data = utilsgtk.get_display_monitors_size_data()
     combined_w, combined_h = utilsgtk.get_combined_monitors_size()
     layout_display_index = editorpersistance.prefs.layout_display_index
@@ -952,9 +953,9 @@ def _set_screen_size_data():
         else:
             # Selected monitor data is available and monitor is usable as layout monitor.
             print("Using monitor " + str(layout_display_index) + " for layout: " + str(scr_w) + " x " + str(scr_h))
-    
-    editorstate.SCREEN_WIDTH = scr_w
-    editorstate.SCREEN_HEIGHT = scr_h
+    """
+    editorstate.SCREEN_WIDTH = 1920
+    editorstate.SCREEN_HEIGHT = 1080
     
     print("Small height:", editorstate.screen_size_small_height())
     print("Small width:",  editorstate.screen_size_small_width())
