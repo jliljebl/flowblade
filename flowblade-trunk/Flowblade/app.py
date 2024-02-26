@@ -960,7 +960,7 @@ def _set_screen_size_data():
     print("Small height:", editorstate.screen_size_small_height())
     print("Small width:",  editorstate.screen_size_small_width())
 
-    return (scr_w, scr_h)
+    return (1920, 1080)
 
 # Adjust gui parameters for smaller screens.
 def _set_draw_params():    
