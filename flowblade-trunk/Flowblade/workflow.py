@@ -65,7 +65,7 @@ _TOOLS_DATA = None
 _TOOL_TIPS = None
 _PREFS_TOOL_TIPS = None
 
-_tools_menu = Gtk.Menu()
+#_tools_menu = Gtk.Menu()
 
 
 # Tool items in dock if used.
