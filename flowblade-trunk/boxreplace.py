@@ -106,8 +106,8 @@ _insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox
 _substring_replace('class ProfileInfoBox(Gtk.VBox):', 'class ProfileInfoBox(Gtk.Box):')
 _insert_line_after('class ProfileInfoBox(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
 
-_substring_replace('class PositionNumericalEntries(Gtk.HBox):', 'class PositionNumericalEntries(Gtk.Hox):')
-_insert_line_after('class PositionNumericalEntries(Gtk.Hox):', 'Gtk.Box', '        gtkbox.set_default_horizontal(self)', 5, True)
+_substring_replace('class PositionNumericalEntries(Gtk.HBox):', 'class PositionNumericalEntries(Gtk.Box):')
+_insert_line_after('class PositionNumericalEntries(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_horizontal(self)', 5, True)
 
 _substring_replace('class ScaleSelector(Gtk.VBox):', 'class ScaleSelector(Gtk.Box):')
 _insert_line_after('class ScaleSelector(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
