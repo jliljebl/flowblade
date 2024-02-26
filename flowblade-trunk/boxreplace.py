@@ -45,7 +45,7 @@ def _substring_replace(sub_string, replace_string):
                 with open(file_path, "w") as f:
                     f.writelines(new_lines)  
 
-    print("Changed lines for ", replace_string, line_count)
+    print("Changed line/s into: ", replace_string, line_count)
 
 
 def _insert_line_after(starts_string, sub_string, append_line, lines_in_between=0, show_files=False):
@@ -105,3 +105,31 @@ _insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox
 
 _substring_replace('class ProfileInfoBox(Gtk.VBox):', 'class ProfileInfoBox(Gtk.Box):')
 _insert_line_after('class ProfileInfoBox(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
+
+
+vboxes = ["class ImageTextTextListView(Gtk.VBox):", "class TextTextListView(Gtk.VBox):",
+"class MultiTextColumnListView(Gtk.VBox):", "class MultiTextColumnListView(Gtk.VBox):",
+"class BinTreeView(Gtk.VBox):","class ImageTextImageListView(Gtk.VBox):",
+"class FilterSwitchListView(Gtk.VBox):","class TextListView(Gtk.VBox):",
+"class JobsQueueView(Gtk.VBox):","class AbstractKeyFrameEditor(Gtk.VBox):",
+"class RotoMaskKeyFrameEditor(Gtk.VBox):","class MediaRelinkListView(Gtk.VBox):",
+"class MediaLogListView(Gtk.VBox):","class ProjectEventListView(Gtk.VBox):",
+"class PreviewPanel(Gtk.VBox):","class TextLayerListView(Gtk.VBox):",
+"class ScaleSelector(Gtk.VBox):"]
+
+for vbox in vboxes:
+    fixed_box = vbox.replace("VBox", "Box")
+    _substring_replace(vbox, fixed_box)
+    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
+
+hboxes = ["class ClipInfoPanel(Gtk.HBox):","class CompositorInfoPanel(Gtk.HBox):",
+"class PluginInfoPanel(Gtk.HBox):", "class BinInfoPanel(Gtk.HBox):",
+"class ClipEditorButtonsRow(Gtk.HBox):", "class GeometryEditorButtonsRow(Gtk.HBox):",
+"class PositionNumericalEntries(Gtk.HBox):","class FadeLengthEditor(Gtk.HBox):",
+"class AbstractSimpleEditor(Gtk.HBox):"]
+
+for hbox in hboxes: 
+    fixed_box = hbox.replace("HBox", "Box")
+    _substring_replace(hbox, fixed_box)
+    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.set_default_horizontal(self)', 5, True)
+
