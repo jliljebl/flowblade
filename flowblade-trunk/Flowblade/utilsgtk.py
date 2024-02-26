@@ -64,6 +64,7 @@ class GtkTicker:
 def get_display_monitors_size_data():
     monitors_size_data = []
     
+    """
     display = Gdk.Display.get_default()
     num_monitors = display.get_n_monitors() # Get number of monitors.
 
@@ -71,8 +72,9 @@ def get_display_monitors_size_data():
         monitor = display.get_monitor(monitor_index)
         geom = monitor.get_geometry()
         monitors_size_data.append((geom.width, geom.height))
-    
-    return monitors_size_data
+    """
+    return [(1920, 1080)]
+    #return monitors_size_data
 
 def get_combined_monitors_size():
     monitor_data = get_display_monitors_size_data()
