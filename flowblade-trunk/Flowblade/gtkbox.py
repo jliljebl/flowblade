@@ -28,6 +28,7 @@ from gi.repository import Gtk
 def HBox(homogeneous=False, spacing=0):
      box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, spacing)
      box.set_homogeneous(homogeneous)
+     box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
      return box
 
 def VBox(homogeneous=False, spacing=0):
@@ -39,8 +40,13 @@ def set_default_vertical(box):
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.VERTICAL)
+    
+    
 
 def set_default_horizontal(box):
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.HORIZONTAL)
+    
+def _pack_start(box, child, expand, fill, padding):
+    print(type(box))
