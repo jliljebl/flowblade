@@ -127,10 +127,10 @@ class EditorWindow:
             self.window2.connect("delete-event", lambda w, e:app.shutdown())
 
         # To ask confirmation for shutdown
-        self.window.connect("delete-event", lambda w, e:app.shutdown())
+        #self.window.connect("delete-event", lambda w, e:app.shutdown())
 
         # Player consumer has to be stopped and started when window resized
-        self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
+        #self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
         # Init application main menu.
         self.ui = Gtk.UIManager()
