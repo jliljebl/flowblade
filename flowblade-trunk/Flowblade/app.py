@@ -248,7 +248,7 @@ class FlowbladeApplication(Gtk.Application):
             return
 
         # Apply custom themes.
-        gui.apply_theme(editorpersistance.prefs.theme)
+        #gui.apply_theme(editorpersistance.prefs.theme)
 
         try:
             Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
