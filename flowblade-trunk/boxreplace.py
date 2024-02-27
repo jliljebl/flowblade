@@ -184,3 +184,6 @@ _comment_out_with_substring("add_events", False)
 
 _substring_replace(".add(", ".set_child(")
 
+_comment_out_with_substring("override_font", False)
+
+
