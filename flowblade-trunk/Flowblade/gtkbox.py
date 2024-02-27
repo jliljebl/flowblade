@@ -37,12 +37,14 @@ def VBox(homogeneous=False, spacing=0):
      box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
      return box
 
-def set_default_vertical(box):
+def build_vertical(box):
+    box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.VERTICAL)
 
-def set_default_horizontal(box):
+def build_horizontal(box):
+    box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.HORIZONTAL)

@@ -101,16 +101,16 @@ _substring_replace("gi.require_version('Gtk', '3.0')","gi.require_version('Gtk',
 
 
 _substring_replace('class RenderQueueView(Gtk.VBox):', 'class RenderQueueView(Gtk.Box):')
-_insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
+_insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox.build_vertical(self)', 5, True)
 
 _substring_replace('class ProfileInfoBox(Gtk.VBox):', 'class ProfileInfoBox(Gtk.Box):')
-_insert_line_after('class ProfileInfoBox(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
+_insert_line_after('class ProfileInfoBox(Gtk.Box):', 'Gtk.Box', '        gtkbox.build_vertical(self)', 5, True)
 
 _substring_replace('class PositionNumericalEntries(Gtk.HBox):', 'class PositionNumericalEntries(Gtk.Box):')
-_insert_line_after('class PositionNumericalEntries(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_horizontal(self)', 5, True)
+_insert_line_after('class PositionNumericalEntries(Gtk.Box):', 'Gtk.Box', '        gtkbox.build_horizontal(self)', 5, True)
 
 _substring_replace('class ScaleSelector(Gtk.VBox):', 'class ScaleSelector(Gtk.Box):')
-_insert_line_after('class ScaleSelector(Gtk.Box):', 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 5, True)
+_insert_line_after('class ScaleSelector(Gtk.Box):', 'Gtk.Box', '        gtkbox.build_vertical(self)', 5, True)
 
 vboxes = ["class ImageTextTextListView(Gtk.VBox):", "class TextTextListView(Gtk.VBox):",
 "class MultiTextColumnListView(Gtk.VBox):", "class MultiTextColumnListView(Gtk.VBox):",
@@ -124,7 +124,7 @@ vboxes = ["class ImageTextTextListView(Gtk.VBox):", "class TextTextListView(Gtk.
 for vbox in vboxes:
     fixed_box = vbox.replace("VBox", "Box")
     _substring_replace(vbox, fixed_box)
-    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.set_default_vertical(self)', 8, True)
+    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.build_vertical(self)', 8, True)
 
 hboxes = ["class ClipInfoPanel(Gtk.HBox):","class CompositorInfoPanel(Gtk.HBox):",
 "class PluginInfoPanel(Gtk.HBox):", "class BinInfoPanel(Gtk.HBox):",
@@ -135,8 +135,7 @@ hboxes = ["class ClipInfoPanel(Gtk.HBox):","class CompositorInfoPanel(Gtk.HBox):
 for hbox in hboxes: 
     fixed_box = hbox.replace("HBox", "Box")
     _substring_replace(hbox, fixed_box)
-    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.set_default_horizontal(self)', 8, True)
-
+    _insert_line_after(fixed_box, 'Gtk.Box', '        gtkbox.build_horizontal(self)', 8, True)
 
 _substring_replace("class TimeLineScroller(Gtk.HScrollbar):", "class TimeLineScroller(Gtk.Scrollbar):")
 _insert_line_after('class TimeLineScroller(Gtk.Scrollbar):', 'Gtk.Scrollbar', '        self.set_orientation (Gtk.Orientation.HORIZONTAL)', 10, True)
