@@ -55,7 +55,11 @@ def _pack_start(box, child, expand, fill, padding):
 def get_file_chooser_button():
     b = Gtk.Button.new_with_label("File Chooser")
     b.set_action = lambda a : _set_action(a)
+    b.set_current_folder = lambda fp : _set_current_folder(fp)
     return b
 
 def _set_action(action):
+    pass
+    
+def _set_current_folder(file_path):
     pass
