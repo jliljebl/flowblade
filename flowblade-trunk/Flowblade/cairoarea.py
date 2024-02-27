@@ -48,7 +48,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         # Connect signal listeners
         self._draw_func = func_draw
-        self.connect('draw', self._draw_event)
+        #self.connect('draw', self._draw_event)
 
         #self.connect('button-press-event', self._button_press_event)
         #self.connect('button-release-event', self._button_release_event)
