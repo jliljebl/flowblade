@@ -73,7 +73,7 @@ def line_end_replace(sub_string, replace_string):
                 replaced_line = line.replace(sub_string, replace_string)
                 if line != replaced_line:
                     replace_index = line.find(sub_string)
-                    replaced_line = line[0:replace_index] + replace_string
+                    replaced_line = line[0:replace_index] + replace_string + "\n"
                     line_count += 1
                     changed_files.append(file_path)
                     line = replaced_line
