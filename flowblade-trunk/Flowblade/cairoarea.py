@@ -70,6 +70,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.grab_focus_on_press = True
 
     def add_pointer_motion_mask(self):
+        pass
         self.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
 
     def set_pref_size(self, pref_width, pref_height):
