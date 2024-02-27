@@ -635,8 +635,7 @@ class EditorWindow:
             self.tline_cursor_manager.tline_cursor_leave,
             self.tline_cursor_manager.tline_cursor_enter)
 
-        dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop,
-                          editevent.tline_media_drop)
+        dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop, editevent.tline_media_drop)
 
         # Y Scroll
         self.tline_y_page = tlinewidgets.TimeLineYPage(tlineypage.page_up, tlineypage.page_down)
