@@ -53,4 +53,9 @@ def _pack_start(box, child, expand, fill, padding):
     print(type(box))
 
 def get_file_chooser_button():
+    b = Gtk.Button.new_with_label("File Chooser")
+    b.set_action = lambda a : _set_action(a)
     return Gtk.Button.new_with_label("File Chooser")
+
+def _set_action(action):
+    pass
