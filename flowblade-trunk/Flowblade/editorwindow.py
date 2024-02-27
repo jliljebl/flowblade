@@ -352,7 +352,7 @@ class EditorWindow:
         # Smallest screens always get bins in same panel as media, others get top level project panel if selected
         if editorlayout.top_level_project_panel() == True:
             self.mm_paned = Gtk.HBox()
-            self.mm_paned.add(media_panel)
+            self.mm_paned.append(media_panel)
 
         else:
             self.mm_paned = Gtk.HPaned()
