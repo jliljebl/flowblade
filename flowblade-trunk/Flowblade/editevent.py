@@ -622,14 +622,16 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
         use_clip_in = True
         
     # Non-insert DND actions
-    if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
+    #if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
+    if True:
         if track.id != current_sequence().first_video_track().id:
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
                 maybe_autorender_plugin(new_clip)
                 gui.media_list_view.clear_selection()
                 return
-    elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
+    #elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
+    elif False:
         drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
         if drop_done == True:
             maybe_autorender_plugin(new_clip)
