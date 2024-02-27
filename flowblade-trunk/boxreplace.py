@@ -224,4 +224,4 @@ _substring_replace(".add(", ".set_child(")
 _comment_out_with_substring("override_font", False)
 _comment_out_with_substring("modify_font", False)
 
-line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button")
+line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
