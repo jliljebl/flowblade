@@ -11,6 +11,8 @@ import sys
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 src_dir = launch_dir + "/Flowblade"
 
+def _first_non_whitespace_index(s):
+    return len(s) - len(s.lstrip())
 
 def _substring_replace(sub_string, replace_string):
     line_count = 0
@@ -91,6 +93,42 @@ def _insert_line_after(starts_string, sub_string, append_line, lines_in_between=
     if show_files == True:
         print(changed_files)
 
+def _comment_out_with_substring(sub_string, show_files=False):
+    changed_files = []
+    for root, dirnames, filenames in os.walk(src_dir):
+        for filename in filenames:
+            
+            if filename.endswith(".py") == False:
+                continue
+            
+            file_path = os.path.join(root, filename)
+            
+            lines = None
+            new_lines = []
+            changed = False
+
+            with open(file_path, "rt") as f:
+                lines = f.readlines()
+
+            for line in lines:
+                if sub_string in line:
+                    non_white_index = _first_non_whitespace_index(line)
+                    if non_white_index == -1:
+                        fix_line = "#" + line
+                    else:
+                        fix_line = line[:non_white_index] + "#" + line[non_white_index:]
+                    line = fix_line
+                    changed = True
+                new_lines.append(line)
+            
+            if changed == True:
+                changed_files.append(file_path)
+                with open(file_path, "w") as f:
+                    f.writelines(new_lines)  
+
+    print("Commented out files_count: ", len(changed_files))
+    if show_files == True:
+        print(changed_files)
 
 _substring_replace(' Gtk.VBox', ' gtkbox.VBox')
 _substring_replace(' Gtk.HBox', ' gtkbox.HBox')
@@ -140,3 +178,4 @@ for hbox in hboxes:
 _substring_replace("class TimeLineScroller(Gtk.HScrollbar):", "class TimeLineScroller(Gtk.Scrollbar):")
 _insert_line_after('class TimeLineScroller(Gtk.Scrollbar):', 'Gtk.Scrollbar', '        self.set_orientation (Gtk.Orientation.HORIZONTAL)', 10, True)
 
+_comment_out_with_substring("show_all", False)
