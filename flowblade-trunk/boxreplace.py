@@ -180,3 +180,4 @@ _insert_line_after('class TimeLineScroller(Gtk.Scrollbar):', 'Gtk.Scrollbar', ' 
 
 _comment_out_with_substring("show_all", False)
 _comment_out_with_substring("dnd.", False)
+_comment_out_with_substring("add_events", False)
