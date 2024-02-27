@@ -85,7 +85,7 @@ def line_end_replace(sub_string, replace_string):
                 with open(file_path, "w") as f:
                     f.writelines(new_lines)  
 
-    print("Changed line/s into: ", replace_string, line_count)
+    print("Changed line/s ends into: ", replace_string, line_count)
     
 def _insert_line_after(starts_string, sub_string, append_line, lines_in_between=0, show_files=False):
     files_changed_count = 0
