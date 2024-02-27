@@ -50,6 +50,43 @@ def _substring_replace(sub_string, replace_string):
     print("Changed line/s into: ", replace_string, line_count)
 
 
+def line_end_replace(sub_string, replace_string):
+    line_count = 0
+    changed_files = []
+    for root, dirnames, filenames in os.walk(src_dir):
+        for filename in filenames:
+            
+            if filename.endswith(".py") == False:
+                continue
+            
+            file_path = os.path.join(root, filename)
+            
+            lines = None
+            new_lines = []
+            changed = False
+
+            with open(file_path, "rt") as f:
+                lines = f.readlines()
+
+            for line in lines:
+                
+                replaced_line = line.replace(sub_string, replace_string)
+                if line != replaced_line:
+                    replace_index = line.find(sub_string)
+                    replaced_line = line[0:replace_index] + replace_string
+                    line_count += 1
+                    changed_files.append(file_path)
+                    line = replaced_line
+                    changed = True
+
+                new_lines.append(line)
+            
+            if changed == True:
+                with open(file_path, "w") as f:
+                    f.writelines(new_lines)  
+
+    print("Changed line/s into: ", replace_string, line_count)
+    
 def _insert_line_after(starts_string, sub_string, append_line, lines_in_between=0, show_files=False):
     files_changed_count = 0
 
@@ -187,3 +224,4 @@ _substring_replace(".add(", ".set_child(")
 _comment_out_with_substring("override_font", False)
 _comment_out_with_substring("modify_font", False)
 
+line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button")

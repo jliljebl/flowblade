@@ -51,3 +51,6 @@ def build_horizontal(box):
     
 def _pack_start(box, child, expand, fill, padding):
     print(type(box))
+
+def get_file_chooser_button():
+    return Gtk.Button.new_with_label("File Chooser")
