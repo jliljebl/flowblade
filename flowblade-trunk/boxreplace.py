@@ -126,7 +126,7 @@ def _comment_out_with_substring(sub_string, show_files=False):
                 with open(file_path, "w") as f:
                     f.writelines(new_lines)  
 
-    print("Commented out files_count: ", len(changed_files))
+    print("Commented out files count for string: ", sub_string, len(changed_files))
     if show_files == True:
         print(changed_files)
 
@@ -185,5 +185,5 @@ _comment_out_with_substring("add_events", False)
 _substring_replace(".add(", ".set_child(")
 
 _comment_out_with_substring("override_font", False)
-
+_comment_out_with_substring("modify_font", False)
 
