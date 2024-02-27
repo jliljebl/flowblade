@@ -179,3 +179,4 @@ _substring_replace("class TimeLineScroller(Gtk.HScrollbar):", "class TimeLineScr
 _insert_line_after('class TimeLineScroller(Gtk.Scrollbar):', 'Gtk.Scrollbar', '        self.set_orientation (Gtk.Orientation.HORIZONTAL)', 10, True)
 
 _comment_out_with_substring("show_all", False)
+_comment_out_with_substring("dnd.", False)
