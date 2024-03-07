@@ -35,7 +35,6 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 * Drag'n'Drop clips on the timeline from Clip monitor and media panel
 * Clip parenting and audio synchronizing
 * Max. 9 combined video and audio tracks available
-* Large set of user configurable 
 
 **Image compositing:**
 * Standard Track Compositing workflow 
