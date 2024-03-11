@@ -271,5 +271,5 @@ _comment_out_with_substring("modify_font", False)
 
 _line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
 
-_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label()", "self.append(Gtk.Label())")   	
+_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label())", "self.append(Gtk.Label())")   	
 
