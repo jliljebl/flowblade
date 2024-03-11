@@ -172,7 +172,7 @@ def _file_line_replace(target_filename, line_number, sub_string, replace_string)
     changed_files = []
     for root, dirnames, filenames in os.walk(src_dir):
         for filename in filenames:
-            
+            print(filename)
             if filename.endswith(".py") == False:
                 continue
             if filename != target_filename:
@@ -266,5 +266,5 @@ _comment_out_with_substring("modify_font", False)
 
 _line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
 
-_file_line_replace("rendergui", 566, "self.set_child(Gtk.Label()", "self.append(Gtk.Label()")   	
+_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label()", "self.append(Gtk.Label())")   	
 
