@@ -172,12 +172,14 @@ def _file_line_replace(target_filename, line_number, sub_string, replace_string)
     changed_files = []
     for root, dirnames, filenames in os.walk(src_dir):
         for filename in filenames:
-            print(filename)
+
             if filename.endswith(".py") == False:
                 continue
+            print(filename)
             if filename != target_filename:
                 continue
-             
+            
+            print("ATTEMPTING file", filename)
             file_path = os.path.join(root, filename)
             
             lines = None
@@ -189,9 +191,12 @@ def _file_line_replace(target_filename, line_number, sub_string, replace_string)
 
             for i in range(0, len(lines)):
                 line = lines[i]
-                if i == line_number + 1: # editors give line numbers starting with 1
+                if i > line_number - 2 and i < line_number + 2: # line numbers move around a bit.
+                    print("line", i)
                     replaced_line = line.replace(sub_string, replace_string)
+                    print(line, replaced_line)
                     if line != replaced_line:
+                        print("line change", replaced_line)
                         line_count += 1
                         changed_files.append(file_path)
                         line = replaced_line
