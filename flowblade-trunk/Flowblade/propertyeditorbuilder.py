@@ -511,7 +511,7 @@ def _get_color_selector(editable_property):
     color_button.connect("color-set", editable_property.color_selected)
 
     picker_button = Gtk.ToggleButton()
-    picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
+    picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER))
 
     info_label = Gtk.Label()
     

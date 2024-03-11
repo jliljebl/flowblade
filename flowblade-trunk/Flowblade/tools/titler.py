@@ -356,10 +356,8 @@ class Titler(Gtk.Window):
         
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold", 
-                                       Gtk.IconSize.BUTTON)
-        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic", 
-                                       Gtk.IconSize.BUTTON)
+        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold")
+        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic")
         self.bold_font.set_image(bold_icon)
         self.italic_font.set_image(italic_icon)
         self.bold_font.connect("clicked", self._edit_value_changed)
@@ -368,12 +366,9 @@ class Titler(Gtk.Window):
         self.left_align = Gtk.RadioButton(None)
         self.center_align = Gtk.RadioButton.new_from_widget(self.left_align)
         self.right_align = Gtk.RadioButton.new_from_widget(self.left_align)
-        left_icon = Gtk.Image.new_from_icon_name("format-justify-left", 
-                                       Gtk.IconSize.BUTTON)
-        center_icon = Gtk.Image.new_from_icon_name("format-justify-center", 
-                                       Gtk.IconSize.BUTTON)
-        right_icon = Gtk.Image.new_from_icon_name("format-justify-right", 
-                                       Gtk.IconSize.BUTTON)
+        left_icon = Gtk.Image.new_from_icon_name("format-justify-left")
+        center_icon = Gtk.Image.new_from_icon_name("format-justify-center")
+        right_icon = Gtk.Image.new_from_icon_name("format-justify-right")
         self.left_align.set_image(left_icon)
         self.center_align.set_image(center_icon)
         self.right_align.set_image(right_icon)
@@ -556,8 +551,7 @@ class Titler(Gtk.Window):
         self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
         
         undo_pos = Gtk.Button()
-        undo_icon = Gtk.Image.new_from_icon_name("edit-undo", 
-                                       Gtk.IconSize.BUTTON)
+        undo_icon = Gtk.Image.new_from_icon_name("edit-undo")
         undo_pos.set_image(undo_icon)
 
         # ------------------------------------------------- Timeline controls

@@ -71,7 +71,7 @@ class DiskFolderManagementPanel:
             self.destroy_button.set_sensitive(False)
         button_area.pack_start(self.destroy_button, True, True, 0)
         if self.warning_level == PROJECT_DATA_WARNING:
-            warning_icon = Gtk.Image.new_from_icon_name(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.SMALL_TOOLBAR)
+            warning_icon = Gtk.Image.new_from_icon_name(Gtk.STOCK_DIALOG_WARNING)
             warning_icon.set_tooltip_text( _("Destroying this data may change contents of existing\nprojects and make some projects unopenable."))
             button_area.pack_start(warning_icon, False, False, 0)
         else:

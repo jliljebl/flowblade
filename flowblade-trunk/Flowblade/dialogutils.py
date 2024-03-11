@@ -145,7 +145,7 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     if alternative_icon != None:
         icon = alternative_icon
 
-    warning_icon = Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.DIALOG)
+    warning_icon = Gtk.Image.new_from_icon_name(icon)
     icon_box = Gtk.VBox(False, 2)
     icon_box.pack_start(warning_icon, False, False, 0)
     icon_box.pack_start(Gtk.Label(), True, True, 0)

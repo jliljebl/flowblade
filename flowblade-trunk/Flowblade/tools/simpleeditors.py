@@ -544,22 +544,17 @@ class PangoFontEditor(AbstractSimpleEditor):
         
         self.widgets.bold_font = Gtk.ToggleButton()
         self.widgets.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold", 
-                                       Gtk.IconSize.BUTTON)
-        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic", 
-                                       Gtk.IconSize.BUTTON)
+        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold")
+        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic")
         self.widgets.bold_font.set_image(bold_icon)
         self.widgets.italic_font.set_image(italic_icon)
         
         self.widgets.left_align = Gtk.RadioButton(None)
         self.widgets.center_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
         self.widgets.right_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
-        left_icon = Gtk.Image.new_from_icon_name("format-justify-left", 
-                                       Gtk.IconSize.BUTTON)
-        center_icon = Gtk.Image.new_from_icon_name("format-justify-center", 
-                                       Gtk.IconSize.BUTTON)
-        right_icon = Gtk.Image.new_from_icon_name("format-justify-right", 
-                                       Gtk.IconSize.BUTTON)
+        left_icon = Gtk.Image.new_from_icon_name("format-justify-left")
+        center_icon = Gtk.Image.new_from_icon_name("format-justify-center")
+        right_icon = Gtk.Image.new_from_icon_name("format-justify-right")
         self.widgets.left_align.set_image(left_icon)
         self.widgets.center_align.set_image(center_icon)
         self.widgets.right_align.set_image(right_icon)
