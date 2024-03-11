@@ -271,4 +271,4 @@ _file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label())", "self.app
 _substring_replace("self.args_popover = Gtk.Popover.new(self.args_edit_launch.widget)", "self.args_popover = Gtk.Popover.new()")
 _insert_line_after("        self.args_popover", "self.args_popover", "        self.args_popover.set_default_widget(self.args_edit_launch.widget)", 0, False)
 
-
+_substring_replace("Gtk.IconSize.BUTTON", "Gtk.IconSize.NORMAL")
