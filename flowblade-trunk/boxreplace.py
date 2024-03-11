@@ -271,5 +271,9 @@ _comment_out_with_substring("modify_font", False)
 
 _line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
 
-_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label())", "self.append(Gtk.Label())")   	
+_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label())", "self.append(Gtk.Label())")
+
+_substring_replace("self.args_popover = Gtk.Popover.new(self.args_edit_launch.widget)", "self.args_popover = Gtk.Popover.new()")
+_insert_line_after("        self.args_popover", "self.args_popover", "        self.args_popover.set_default_widget(self.args_edit_launch.widget)", 0, False)
+
 
