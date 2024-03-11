@@ -50,7 +50,7 @@ def _substring_replace(sub_string, replace_string):
     print("Changed line/s into: ", replace_string, line_count)
 
 
-def line_end_replace(sub_string, replace_string):
+def _line_end_replace(sub_string, replace_string):
     line_count = 0
     changed_files = []
     for root, dirnames, filenames in os.walk(src_dir):
@@ -167,6 +167,46 @@ def _comment_out_with_substring(sub_string, show_files=False):
     if show_files == True:
         print(changed_files)
 
+def _file_line_replace(target_filename, line_number, sub_string, replace_string):
+    line_count = 0
+    changed_files = []
+    for root, dirnames, filenames in os.walk(src_dir):
+        for filename in filenames:
+            
+            if filename.endswith(".py") == False:
+                continue
+            if filename != target_filename:
+                continue
+             
+            file_path = os.path.join(root, filename)
+            
+            lines = None
+            new_lines = []
+            changed = False
+
+            with open(file_path, "rt") as f:
+                lines = f.readlines()
+
+            for i in range(0, len(lines)):
+                line = lines[i]
+                if i == line_number + 1: # editors give line numbers starting with 1
+                    replaced_line = line.replace(sub_string, replace_string)
+                    if line != replaced_line:
+                        line_count += 1
+                        changed_files.append(file_path)
+                        line = replaced_line
+                        changed = True
+
+                new_lines.append(line)
+            
+            if changed == True:
+                with open(file_path, "w") as f:
+                    f.writelines(new_lines)  
+    if len(changed_files) == 1:
+        print("Changed line ", str(line_number) ," in file ", target_filename, "into: ", replace_string)
+    else:
+        print("ERROR: ", target_filename, line_number, sub_string, replace_string)
+
 _substring_replace(' Gtk.VBox', ' gtkbox.VBox')
 _substring_replace(' Gtk.HBox', ' gtkbox.HBox')
 
@@ -224,4 +264,7 @@ _substring_replace(".add(", ".set_child(")
 _comment_out_with_substring("override_font", False)
 _comment_out_with_substring("modify_font", False)
 
-line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
+_line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
+
+_file_line_replace("rendergui", 566, "self.set_child(Gtk.Label()", "self.append(Gtk.Label()")   	
+
