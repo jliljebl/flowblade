@@ -312,3 +312,4 @@ _comment_out_with_substring('editor_window.uimanager.get_widget', False, True)
 
 _comment_out_with_substring("key-press-event", False, True)
 
+_comment_out_with_substring("gui.editor_window.uimanager")
