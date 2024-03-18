@@ -48,9 +48,16 @@ def build_horizontal(box):
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.HORIZONTAL)
+
+def EventBox():
+    box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, spacing)
+    box.add = lambda widget: _event_box_add(box, widget)
     
 def _pack_start(box, child, expand, fill, padding):
     print(type(box))
+
+def _event_box_add(box, widget):
+    box.append(widget)
 
 def get_file_chooser_button():
     b = Gtk.Button.new_with_label("File Chooser")
