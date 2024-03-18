@@ -784,5 +784,5 @@ def _create_group_select():
     group_view_select.set_tooltip_text(_("Select viewed Range Log Items Group"))
 
     widgets.group_view_select = group_view_select
-    widgets.group_box.add(widgets.group_view_select)
+    widgets.group_box.append(widgets.group_view_select)
     widgets.group_view_select.show()
