@@ -730,30 +730,20 @@ class BatchRenderWindow:
         self.render_progress_bar.set_text(self.not_rendering_txt)
 
         self.remove_selected = Gtk.Button(label=_("Delete Selected"))
-        self.remove_selected.connect("clicked", 
-                                     lambda w, e: self.remove_selected_clicked(), 
-                                     None)
+        self.remove_selected.connect("clicked", lambda w, e: self.remove_selected_clicked(), None)
         self.remove_finished = Gtk.Button(label=_("Delete Finished"))
-        self.remove_finished.connect("clicked", 
-                                     lambda w, e: self.remove_finished_clicked(), 
-                                     None)
+        self.remove_finished.connect("clicked", lambda w, e: self.remove_finished_clicked(), None)
 
         self.reload_button = Gtk.Button(label=_("Reload Queue"))
-        self.reload_button.connect("clicked", 
-                                     lambda w, e: self.reload_queue(), 
-                                     None)
+        self.reload_button.connect("clicked", lambda w, e: self.reload_queue(), None)
 
 
         self.render_button = guiutils.get_render_button()
-        self.render_button.connect("clicked", 
-                                   lambda w, e: self.launch_render(), 
-                                   None)
+        self.render_button.connect("clicked", lambda w, e: self.launch_render(), None)
                                          
         self.stop_render_button = Gtk.Button(label=_("Stop Render"))
         self.stop_render_button.set_sensitive(False)
-        self.stop_render_button.connect("clicked", 
-                                   lambda w, e: self.abort_render(), 
-                                   None)
+        self.stop_render_button.connect("clicked", lambda w, e: self.abort_render(), None)
 
         button_row =  Gtk.HBox(False, 0)
         button_row.pack_start(self.remove_selected, False, False, 0)

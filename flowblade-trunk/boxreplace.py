@@ -130,7 +130,7 @@ def _insert_line_after(starts_string, sub_string, append_line, lines_in_between=
     if show_files == True:
         print(changed_files)
 
-def _comment_out_with_substring(sub_string, show_files=False):
+def _comment_out_with_substring(sub_string, show_files=False, is_pass_line=False):
     changed_files = []
     for root, dirnames, filenames in os.walk(src_dir):
         for filename in filenames:
@@ -153,7 +153,10 @@ def _comment_out_with_substring(sub_string, show_files=False):
                     if non_white_index == -1:
                         fix_line = "#" + line
                     else:
-                        fix_line = line[:non_white_index] + "#" + line[non_white_index:]
+                        if is_pass_line == False:
+                            fix_line = line[:non_white_index] + "#" + line[non_white_index:]
+                        else:
+                            fix_line = line[:non_white_index] + "pass #" + line[non_white_index:]
                     line = fix_line
                     changed = True
                 new_lines.append(line)
@@ -272,3 +275,6 @@ _substring_replace("self.args_popover = Gtk.Popover.new(self.args_edit_launch.wi
 _insert_line_after("        self.args_popover", "self.args_popover", "        self.args_popover.set_default_widget(self.args_edit_launch.widget)", 0, False)
 
 _substring_replace("Gtk.IconSize.BUTTON", "Gtk.IconSize.NORMAL")
+
+
+_comment_out_with_substring('connect("clicked"', True, True)
