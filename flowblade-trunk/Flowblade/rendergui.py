@@ -599,17 +599,13 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
 
         if editorstate.screen_size_large_width() == True:
 
-            render_widgets.queue_button.connect("clicked", 
-                                                 to_queue_clicked_cb, 
-                                                 None)
+            render_widgets.queue_button.connect("clicked", to_queue_clicked_cb, None)
 
-            render_widgets.render_button.connect("clicked", 
-                                                 render_clicked_cb, 
-                                                 None)
+            render_widgets.render_button.connect("clicked", render_clicked_cb, None)
             buttons_panel = Gtk.HBox()
             buttons_panel.pack_start(Gtk.Label(), True, True, 0)
             buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
-            buttons_panel.pack_start(render_widgets.render_button, False, False, 0)                                         
+            buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
 
             render_panel.pack_start(Gtk.Label(), True, True, 0)
             render_panel.pack_start(buttons_panel, False, False, 0)
