@@ -58,11 +58,20 @@ def EventBox():
     return box
 
 def HPaned():
-    return Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
+    paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
+    paned.pack1 = lambda child, resize, shrink: _pack1(paned, child, resize, shrink)
+    paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
+    return paned
 
 def _pack_start(box, child, expand, fill, padding):
     print(type(box))
 
+def _pack1(paned, child, resize, shrink):
+    paned.set_start_child(child)
+
+def _pack2(paned, child, resize, shrink):
+    paned.set_end_child(child)
+    
 def _clear_box(box):
     first_child = box.get_first_child()
     while first_child != None:
