@@ -290,4 +290,4 @@ _comment_out_with_substring('connect("focus-out-event"')
 
 _comment_out_with_substring('.connect_launched_menu(workflow._tools_menu)')
 
-_comment_out_with_substring("override_background_color")
+_comment_out_with_substring("override_background_color", False, True)
