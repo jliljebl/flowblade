@@ -287,3 +287,5 @@ _substring_replace(' Gdk.Color', ' Gdk.RGBA')
 _comment_out_with_substring("modify_bg", False)
 
 _comment_out_with_substring('connect("focus-out-event"')
+
+_comment_out_with_substring('.connect_launched_menu(workflow._tools_menu)')
