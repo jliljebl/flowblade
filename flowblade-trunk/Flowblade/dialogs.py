@@ -71,7 +71,7 @@ def new_project_dialog(callback):
                                                250)
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
     profile_info_box = Gtk.VBox()
-    profile_info_box.add(profile_info_panel)
+    profile_info_box.append(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("Profile"), profiles_vbox)
     profiles_frame.set_margin_end(18)
@@ -119,7 +119,7 @@ def _new_project_profile_changed(out_profile_combo, profile_info_box):
         profile_info_box.remove(child)
 
     info_panel = guicomponents.get_profile_info_box(profile, True)
-    profile_info_box.add(info_panel)
+    profile_info_box.append(info_panel)
     profile_info_box.show_all()
     info_panel.show()
 
@@ -176,7 +176,7 @@ def change_profile_project_dialog(project, callback):
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
     profile_info_box = Gtk.VBox()
-    profile_info_box.add(profile_info_panel)
+    profile_info_box.append(profile_info_panel)
     profiles_vbox = guiutils.get_vbox([profile_select,profile_info_box], False)
     profiles_frame = panels.get_named_frame(_("New Profile"), profiles_vbox)
 
@@ -290,7 +290,7 @@ def save_backup_snapshot(name, callback):
     type_vbox.pack_start(compact_name_entry_row, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
-    vbox.add(type_vbox)
+    vbox.append(type_vbox)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
@@ -327,7 +327,7 @@ def export_ardour_session_folder_select(callback):
     type_vbox.pack_start(sample_rate_row, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
-    vbox.add(type_vbox)
+    vbox.append(type_vbox)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
@@ -2211,7 +2211,7 @@ def add_compositor_dialog(compositors, callback):
     select_combo.set_active(0)
 
     vbox = Gtk.VBox(False, 2)
-    vbox.add(select_combo)
+    vbox.append(select_combo)
 
     alignment = dialogutils.get_default_alignment(vbox)
 
