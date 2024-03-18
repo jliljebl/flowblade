@@ -295,3 +295,5 @@ _comment_out_with_substring("override_background_color", False, True)
 _substring_replace('pack_end', 'pack_start')
 
 _substring_replace(' Gtk.HPaned', ' gtkbox.HPaned')
+
+_substring_replace(' Gtk.VPaned', ' gtkbox.VPaned')
