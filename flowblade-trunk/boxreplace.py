@@ -308,4 +308,7 @@ _comment_out_with_substring('self.window.set_position', False, True)
 
 _comment_out_with_substring('self.window2.resize', False, True)
 
+_comment_out_with_substring('editor_window.uimanager.get_widget', False, True)
+
+
 
