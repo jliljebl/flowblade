@@ -110,8 +110,7 @@ class MediaLinkerWindow(Gtk.Window):
         self.set_icon(app_icon)
 
         load_button = Gtk.Button(label=_("Load Project For Relinking"))
-        load_button.connect("clicked",
-                            lambda w: self.load_button_clicked())
+        load_button.connect("clicked", lambda w: self.load_button_clicked())
         self.load_button = load_button
         project_row = Gtk.HBox(False, 2)
         project_row.pack_start(load_button, False, False, 0)
