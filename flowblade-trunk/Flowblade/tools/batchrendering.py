@@ -1434,9 +1434,7 @@ class SingleRenderWindow:
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
 
         self.stop_render_button = Gtk.Button(label=_("Stop Render"))
-        self.stop_render_button.connect("clicked", 
-                                   lambda w, e: _start_single_render_shutdown(), 
-                                   None)
+        self.stop_render_button.connect("clicked", lambda w, e: _start_single_render_shutdown(), None)
 
         self.render_progress_bar = Gtk.ProgressBar()
         self.progress_label = Gtk.Label("0 %")
