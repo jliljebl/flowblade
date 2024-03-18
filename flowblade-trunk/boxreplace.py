@@ -283,3 +283,5 @@ _comment_out_with_substring("set_image", False, True)
 _substring_replace(' Gtk.EventBox', ' gtkbox.EventBox')
 
 _substring_replace(' Gdk.Color', ' Gdk.RGBA')
+
+_comment_out_with_substring("modify_bg", False)
