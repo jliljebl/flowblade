@@ -50,7 +50,7 @@ def build_horizontal(box):
     box.set_orientation(Gtk.Orientation.HORIZONTAL)
 
 def EventBox():
-    box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, spacing)
+    box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
     box.add = lambda widget: _event_box_add(box, widget)
     
 def _pack_start(box, child, expand, fill, padding):
