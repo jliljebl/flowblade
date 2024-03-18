@@ -2237,8 +2237,7 @@ class TimeLineLeftBottom:
         self.update_gui()
 
     def update_gui(self):
-        for child in self.widget.get_children():
-            self.widget.remove(child)
+        self.widget.clear_children()
         
         self.widget.pack_start(Gtk.Label(), True, True, 0)
 
