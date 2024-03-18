@@ -584,7 +584,7 @@ class EditorWindow:
 
         self.tline_info = Gtk.HBox()
         info_contents = Gtk.Label()
-        self.tline_info.add(info_contents)
+        self.tline_info.append(info_contents)
         self.tline_info.info_contents = info_contents # this switched and saved as member of its container
         info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
