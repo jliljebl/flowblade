@@ -39,6 +39,18 @@ def VBox(homogeneous=False, spacing=0):
      box.clear_children = lambda : _clear_box(box)
      return box
 
+def build_vertical(box):
+    box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+    box.set_homogeneous(False)
+    box.set_spacing(0)
+    box.set_orientation(Gtk.Orientation.VERTICAL)
+
+def build_horizontal(box):
+    box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+    box.set_homogeneous(False)
+    box.set_spacing(0)
+    box.set_orientation(Gtk.Orientation.HORIZONTAL)
+
 def EventBox():
     box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
     box.add = lambda widget: _event_box_add(box, widget)
