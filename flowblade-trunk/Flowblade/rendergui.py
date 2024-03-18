@@ -641,13 +641,9 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
     buttons_panel.pack_start(Gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
 
-    render_widgets.queue_button.connect("clicked", 
-                                         to_queue_clicked_cb, 
-                                         None)
+    render_widgets.queue_button.connect("clicked", to_queue_clicked_cb, None)
 
-    render_widgets.render_button.connect("clicked", 
-                                         render_clicked_cb, 
-                                         None)
+    render_widgets.render_button.connect("clicked", render_clicked_cb, None)
 
     render_panel = Gtk.VBox()
     if small_height:
