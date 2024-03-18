@@ -302,4 +302,6 @@ _comment_out_with_substring('self.menubar', False, True)
 
 _comment_out_with_substring('self._init_view_menu', False)
 
+_comment_out_with_substring('self.window.resize', False)
+
 
