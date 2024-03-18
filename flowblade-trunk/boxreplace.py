@@ -285,3 +285,5 @@ _substring_replace(' Gtk.EventBox', ' gtkbox.EventBox')
 _substring_replace(' Gdk.Color', ' Gdk.RGBA')
 
 _comment_out_with_substring("modify_bg", False)
+
+_comment_out_with_substring('connect("focus-out-event"')
