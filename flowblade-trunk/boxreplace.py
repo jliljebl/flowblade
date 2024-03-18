@@ -299,3 +299,7 @@ _substring_replace(' Gtk.HPaned', ' gtkbox.HPaned')
 _substring_replace(' Gtk.VPaned', ' gtkbox.VPaned')
 
 _comment_out_with_substring('self.menubar', False, True)
+
+_comment_out_with_substring('self._init_view_menu', False)
+
+
