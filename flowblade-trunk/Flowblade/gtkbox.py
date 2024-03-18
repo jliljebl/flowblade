@@ -57,6 +57,9 @@ def EventBox():
     box.set_child = lambda widget: _event_box_add(box, widget)
     return box
 
+def HPaned(Gtk.Orientation.HORIZONTAL):
+    return Gtk.Paned.new()
+
 def _pack_start(box, child, expand, fill, padding):
     print(type(box))
 
