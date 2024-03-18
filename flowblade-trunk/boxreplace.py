@@ -276,5 +276,6 @@ _insert_line_after("        self.args_popover", "self.args_popover", "        se
 
 _substring_replace("Gtk.IconSize.BUTTON", "Gtk.IconSize.NORMAL")
 
-
 _comment_out_with_substring('connect("clicked"', False, True)
+
+_comment_out_with_substring("set_image", False, True)
