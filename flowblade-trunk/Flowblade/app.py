@@ -345,19 +345,19 @@ class FlowbladeApplication(Gtk.Application):
 
         # Create player object.
         create_player()
-
+        print("moip")
         # Create main window and make widgeta available from gui.py.
         create_gui()
-
+        print("moip")
         # Inits widgets with project data.
         init_project_gui()
-
+        print("moip")
         # Inits widgets with current sequence data.
         init_sequence_gui()
         print("moip")
         # Launch player now that data and gui exist.
         launch_player()
-
+        print("moip")
         # Editor and modules need some more initializing.
         init_editor_state()
         print("moip")
