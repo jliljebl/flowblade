@@ -426,9 +426,9 @@ class FlowbladeApplication(Gtk.Application):
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()
     
+        print("HALOOO1")
         self.add_window(_window)
-
-
+        print("HALOOO2")
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
