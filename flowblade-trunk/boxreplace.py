@@ -316,4 +316,7 @@ _comment_out_with_substring("gui.editor_window.uimanager", False, True)
 
 _substring_replace("get_children()[0]", "get_first_child()")
 
+_comment_out_with_substring('self.uimanager', False)
+
+_comment_out_with_substring('gui.editor_window.init_compositing_mode_menu()')
 
