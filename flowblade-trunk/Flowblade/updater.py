@@ -235,7 +235,9 @@ def update_pix_per_frame_full_view():
     """
     global pix_per_frame_full_view
     length = current_sequence().get_length() + (20.0 + current_sequence().get_length() * 0.1) # We added some length to make there always be some space after sequence end to to drag and drop.
-    pix_per_frame_full_view = float(gui.tline_canvas.widget.get_allocation().width) / length
+    print("length", length, "alloc", float(gui.tline_canvas.widget.get_allocation().width))
+    
+    pix_per_frame_full_view =  1900.0 / length #float(gui.tline_canvas.widget.get_allocation().width) / length
 
 def set_info_icon(info_icon_id, icon_gtk_image=None):
     if icon_gtk_image == None:
