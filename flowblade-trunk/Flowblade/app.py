@@ -625,15 +625,18 @@ def init_sequence_gui():
     print("int seq 1")
     # Set correct compositing mode menu item selected.
     gui.editor_window.init_compositing_mode_menu()
+    print("int seq 2")
     gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
-
+    print("int seq 3")
     # Set initial timeline scale draw params.
     editorstate.current_sequence().update_length()
-
+    print("int seq 4")
     updater.update_pix_per_frame_full_view()
+    print("int seq 5")
     updater.init_tline_scale()
+    print("int seq 6")
     updater.repaint_tline()
-    print("int seq 1")
+    print("int seq end")
     
 def init_editor_state():
     """
