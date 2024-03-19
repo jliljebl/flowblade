@@ -622,6 +622,7 @@ def init_sequence_gui():
     Called after project load or changing current sequence 
     to initialize interface.
     """
+    print("int seq 1")
     # Set correct compositing mode menu item selected.
     gui.editor_window.init_compositing_mode_menu()
     gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
@@ -632,7 +633,8 @@ def init_sequence_gui():
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
     updater.repaint_tline()
-
+    print("int seq 1")
+    
 def init_editor_state():
     """
     Called after project load or changing current sequence 
