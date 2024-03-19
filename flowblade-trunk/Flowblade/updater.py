@@ -222,6 +222,7 @@ def init_tline_scale():
     when starting from PIX_PER_FRAME_MAX with SCALE_MULTIPLIER steps.
     """
     pix_per_frame = PIX_PER_FRAME_MAX * SCALE_MULTIPLIER
+    print(pix_per_frame, pix_per_frame_full_view)
     while pix_per_frame > pix_per_frame_full_view:
         pix_per_frame *= SCALE_MULTIPLIER
         
