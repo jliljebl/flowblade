@@ -40,14 +40,14 @@ def VBox(homogeneous=False, spacing=0):
      return box
 
 def build_vertical(box):
-    box.pack_start_v = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+    box.pack_start = lambda child, expand, fill, padding: _pack_start_v(box, child, expand, fill, padding)
     box.clear_children = lambda : _clear_box(box)
     box.set_homogeneous(False)
     box.set_spacing(0)
     box.set_orientation(Gtk.Orientation.VERTICAL)
 
 def build_horizontal(box):
-    box.pack_start_h = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+    box.pack_start = lambda child, expand, fill, padding: _pack_start_h(box, child, expand, fill, padding)
     box.clear_children = lambda : _clear_box(box)
     box.set_homogeneous(False)
     box.set_spacing(0)
