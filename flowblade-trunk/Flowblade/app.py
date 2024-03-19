@@ -337,8 +337,9 @@ class FlowbladeApplication(Gtk.Application):
 
         # Check for tools and init tools integration.
         gmic.test_availablity()
+        print("moip")
         toolsintegration.init()
-
+        print("moip")
         # Media Plugins a.k.a Generators.
         mediaplugin.init()
 
@@ -353,23 +354,23 @@ class FlowbladeApplication(Gtk.Application):
 
         # Inits widgets with current sequence data.
         init_sequence_gui()
-
+        print("moip")
         # Launch player now that data and gui exist.
         launch_player()
 
         # Editor and modules need some more initializing.
         init_editor_state()
-
+        print("moip")
         # Save Gtk.Window reference.
         global _window
         _window = gui.editor_window.window
-        
+        print("moip")
         # Tracks need to be re-centered if window is resized.
         # Connect listener for this now that the tline panel size allocation is sure to be available.
         global window_resize_id, window_state_id
         window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
         window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
-
+        print("moip")
         # Get existing autosave files
         autosave_files = get_autosave_files()
         print("-5 HALOOO")
