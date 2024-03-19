@@ -372,7 +372,7 @@ class FlowbladeApplication(Gtk.Application):
 
         # Get existing autosave files
         autosave_files = get_autosave_files()
-
+        print("-5 HALOOO")
         # Show splash
         if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
             global splash_timeout_id
@@ -383,7 +383,7 @@ class FlowbladeApplication(Gtk.Application):
 
         # Every running instance has unique autosave file which is deleted at exit
         set_instance_autosave_id()
-
+        print("-4 HALOOO")
         # Existence of autosave file hints that program was exited abnormally.
         if check_crash == True and len(autosave_files) > 0:
             global recovery_in_progress
@@ -395,7 +395,7 @@ class FlowbladeApplication(Gtk.Application):
                 GLib.timeout_add(10, autosaves_many_recovery_dialog)
         else:
             start_autosave()
-
+        print("-3 HALOOO")
         projectaction.clear_changed_since_last_save_flags()
         
         # We prefer to monkeypatch some callbacks into some modules, usually to
@@ -417,12 +417,12 @@ class FlowbladeApplication(Gtk.Application):
         
         # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
         Gtk.Settings.get_default().set_property("gtk-error-bell", False)
-        
+        print("-2 HALOOO")
         global disk_cache_timeout_id
         disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
         editorstate.app = self
-
+        print("-1 HALOOO")
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()
     
