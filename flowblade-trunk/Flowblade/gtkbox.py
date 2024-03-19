@@ -91,7 +91,7 @@ def _clear_box(box):
     first_child = box.get_first_child()
     while first_child != None:
         box.remove(first_child)
-        first_child = box.first_child()
+        first_child = box.get_first_child()
 
 def _event_box_add(box, widget):
     box.append(widget)
