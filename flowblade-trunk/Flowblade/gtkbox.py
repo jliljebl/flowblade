@@ -28,14 +28,14 @@ from gi.repository import Gtk
 def HBox(homogeneous=False, spacing=0):
      box = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, spacing)
      box.set_homogeneous(homogeneous)
-     box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+     box.pack_start = lambda child, expand, fill, padding: _pack_start_h(box, child, expand, fill, padding)
      box.clear_children = lambda : _clear_box(box)
      return box
 
 def VBox(homogeneous=False, spacing=0):
      box = Gtk.Box.new(Gtk.Orientation.VERTICAL, spacing)
      box.set_homogeneous(homogeneous)
-     box.pack_start = lambda child, expand, fill, padding: _pack_start(box, child, expand, fill, padding)
+     box.pack_start = lambda child, expand, fill, padding: _pack_start_v(box, child, expand, fill, padding)
      box.clear_children = lambda : _clear_box(box)
      return box
 
@@ -69,9 +69,16 @@ def VPaned():
     paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
     return paned
     
-def _pack_start(box, child, expand, fill, padding):
+def _pack_start_h(box, child, expand, fill, padding):
     print(type(box))
+    child.set_hexpand(expand)
+    box.append(child)
 
+def _pack_start_v(box, child, expand, fill, padding):
+    print(type(box))
+    child.set_vexpand(expand)
+    box.append(child)
+    
 def _pack1(paned, child, resize, shrink):
     paned.set_start_child(child)
 
