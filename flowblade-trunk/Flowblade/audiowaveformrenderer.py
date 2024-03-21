@@ -62,6 +62,8 @@ RIGHT_CHANNEL = "_audio_level.1"
 
 FILE_SEPARATOR = "#&#file:"
 
+OLD_STYLE_DATA_LAYOUT_PROJECT = "#&#OLD_STYLE_DATA_LAYOUT_PROJECT#&#"
+
 _waveforms = {} # Memory cache for waveform data
 _queued_waveform_renders = [] # Media queued for render during one timeline repaint
 _render_already_requested = [] # Files that have been sent to rendering since last project load
@@ -150,10 +152,12 @@ class AudioRenderLaunchThread(threading.Thread):
 
     def run(self):
         project_data_path = projectdatavault.get_project_data_folder()
-        
+        if project_data_path == None:
+            project_data_path = OLD_STYLE_DATA_LAYOUT_PROJECT
+
         # Launch render process and wait for it to end
         FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
-        # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
+
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH, project_data_path], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -179,6 +183,8 @@ def main():
     # Set folders paths
     userfolders.init()
     project_data_path = sys.argv[4]
+    if project_data_path == OLD_STYLE_DATA_LAYOUT_PROJECT:
+        project_data_path = None
     projectdatavault.init(project_data_path)
 
     # Load editor prefs and list of recent projects
