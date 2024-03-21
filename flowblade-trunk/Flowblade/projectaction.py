@@ -561,8 +561,11 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
 
     new_project = projectdata.get_default_project()
+    vault_folder = projectdatavault.get_active_vault_folder()
+    new_project.create_vault_folder_data(vault_folder)
     app.open_project(new_project)
-    
+    projectdatavault.create_project_data_folders()
+
 def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=None):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
     updater.set_info_icon("document-open")
