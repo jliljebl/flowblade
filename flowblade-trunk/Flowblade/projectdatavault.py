@@ -208,7 +208,12 @@ def create_project_data_folders():
         pickle.dump(project_label, write_file)
         
 def project_saved(project_path):
-    savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
+    try:
+        savefiles_path = get_project_data_folder() + SAVE_FILES_FILE
+    except:
+        print("Old data layout project saved at:", project_path)
+        return
+        
     savefiles_list = utils.unpickle(savefiles_path)
     savefiles_list.append((project_path, datetime.datetime.now()))
 
