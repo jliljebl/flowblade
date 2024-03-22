@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-07 12:16+0200\n"
+"POT-Creation-Date: 2024-03-22 07:57+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -85,11 +85,11 @@ msgstr "MLT változat: "
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr ""
 
-#: app.py:1088 projectaction.py:552 projectaction.py:751
+#: app.py:1088 projectaction.py:552 projectaction.py:754
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:1089 projectaction.py:553 projectaction.py:752
+#: app.py:1089 projectaction.py:553 projectaction.py:755
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -212,48 +212,48 @@ msgid ""
 "No duplicate media items were added to project."
 msgstr ""
 
-#: projectaction.py:764
+#: projectaction.py:767
 msgid "Project not found on disk"
 msgstr "A projekt nem található a lemezen"
 
-#: projectaction.py:765
+#: projectaction.py:768
 msgid "Project can't be loaded."
 msgstr "A projekt nem tölthető be."
 
-#: projectaction.py:773
+#: projectaction.py:776
 msgid "Project has not been saved since it was opened."
 msgstr "A projekt még nem volt mentve a megnyitás óta."
 
-#: projectaction.py:778
+#: projectaction.py:781
 msgid "Project was saved less than a minute ago."
 msgstr "A projekt kevesebb mint egy perce volt mentve"
 
-#: projectaction.py:781
+#: projectaction.py:784
 msgid "Project was saved one minute ago."
 msgstr "A projekt egy perce volt mentve."
 
-#: projectaction.py:783
+#: projectaction.py:786
 msgid "Project was saved "
 msgstr "A projekt mentése "
 
-#: projectaction.py:783
+#: projectaction.py:786
 msgid " minutes ago."
 msgstr " perce történt."
 
-#: projectaction.py:811
+#: projectaction.py:814
 #, fuzzy
 msgid "Render target file exists!"
 msgstr "Renderelendő tartomány nincs meghatározva!"
 
-#: projectaction.py:812
+#: projectaction.py:815
 msgid "Confirm overwriting existing file."
 msgstr ""
 
-#: projectaction.py:818
+#: projectaction.py:821
 msgid "Project is currently using proxy media!"
 msgstr ""
 
-#: projectaction.py:819
+#: projectaction.py:822
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -262,47 +262,47 @@ msgid ""
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
 
-#: projectaction.py:911
+#: projectaction.py:914
 msgid "Render launch failed!"
 msgstr "Nem sikerült elindítani a renderelést!"
 
-#: projectaction.py:912 projectaction.py:926 tools/batchrendering.py:360
+#: projectaction.py:915 projectaction.py:929 tools/batchrendering.py:360
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: projectaction.py:925
+#: projectaction.py:928
 msgid "Adding item to render queue failed!"
 msgstr "Nem sikerült hozzáadni az elemet a renderelés várólistájához!"
 
-#: projectaction.py:993
+#: projectaction.py:996
 msgid "Open.."
 msgstr "Megnyitás..."
 
-#: projectaction.py:1022
+#: projectaction.py:1025
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr ""
 
-#: projectaction.py:1023
+#: projectaction.py:1026
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
 "Last non-matching MLT XML file had Profile: "
 msgstr ""
 
-#: projectaction.py:1043
+#: projectaction.py:1046
 msgid "No file was selected"
 msgstr "Nem lett fájl kiválasztva"
 
-#: projectaction.py:1043
+#: projectaction.py:1046
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Válasszon egy sorszámozott fájlt, hogy képsorozatot adjon a projekthez."
 
-#: projectaction.py:1051
+#: projectaction.py:1054
 msgid "Not a sequence file!"
 msgstr "Nem jelenetfájl!"
 
-#: projectaction.py:1051
+#: projectaction.py:1054
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -310,90 +310,90 @@ msgstr ""
 "A kiválasztott fájl nem tartalmaz számot a nevében,\n"
 "így nem is lehet képsorozat része."
 
-#: projectaction.py:1208
+#: projectaction.py:1211
 msgid "Cannot complete media replace action"
 msgstr ""
 
-#: projectaction.py:1209
+#: projectaction.py:1212
 msgid "Original and replace media are not of the same media type."
 msgstr ""
 
-#: projectaction.py:1313 projectaction.py:1315 projectaction.py:1324
-#: projectaction.py:1332 projectaction.py:1339 tools/batchrendering.py:1098
+#: projectaction.py:1316 projectaction.py:1318 projectaction.py:1327
+#: projectaction.py:1335 projectaction.py:1342 tools/batchrendering.py:1098
 #: clipmenuaction.py:206 clipmenuaction.py:208
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1328 guicomponents.py:1764 guicomponents.py:1799
+#: projectaction.py:1331 guicomponents.py:1764 guicomponents.py:1799
 #: projectdatavaultgui.py:314 projectdatavaultgui.py:467
 msgid "Yes"
 msgstr "Igen"
 
-#: projectaction.py:1330 guicomponents.py:1766 guicomponents.py:1801
+#: projectaction.py:1333 guicomponents.py:1766 guicomponents.py:1801
 #: projectdatavaultgui.py:469
 msgid "No"
 msgstr "Nem"
 
-#: projectaction.py:1396
+#: projectaction.py:1399
 msgid "Select Project for Media Import"
 msgstr "Projektfájl kiválasztása média importálásához"
 
-#: projectaction.py:1442
+#: projectaction.py:1445
 #, fuzzy
 msgid "selection_"
 msgstr "Kiválasztott betöltése"
 
-#: projectaction.py:1443
+#: projectaction.py:1446
 #, fuzzy
 msgid "Save Selection Container Clip"
 msgstr "Szín klip létrehozása"
 
-#: projectaction.py:1500 projectaction.py:1523 projectaction.py:1810
-#: projectaction.py:1826 projectdata.py:298 tlineaction.py:283
+#: projectaction.py:1503 projectaction.py:1526 projectaction.py:1813
+#: projectaction.py:1829 projectdata.py:298 tlineaction.py:283
 msgid "sequence_"
 msgstr "jelenet_"
 
-#: projectaction.py:1501
+#: projectaction.py:1504
 #, fuzzy
 msgid "Save Sequence Container Clip"
 msgstr "Képsorozatból álló klip hozzáadása"
 
-#: projectaction.py:1524
+#: projectaction.py:1527
 #, fuzzy
 msgid "Save Sequence Compound Clip"
 msgstr "Képsorozatból álló klip hozzáadása"
 
-#: projectaction.py:1550
+#: projectaction.py:1553
 #, fuzzy
 msgid "frame_"
 msgstr "képkocka"
 
-#: projectaction.py:1551
+#: projectaction.py:1554
 #, fuzzy
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Képsorozatból álló klip hozzáadása"
 
-#: projectaction.py:1684
+#: projectaction.py:1687
 msgid "Can't remove a non-empty bin"
 msgstr "Nem üres rekeszek nem törölhetők"
 
-#: projectaction.py:1685
+#: projectaction.py:1688
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Törölnie kell minden fájlt a rekeszből a rekesz törlése előtt."
 
-#: projectaction.py:1693
+#: projectaction.py:1696
 msgid "Can't remove last bin"
 msgstr "Az utolsó rekesz nem törölhető"
 
-#: projectaction.py:1694
+#: projectaction.py:1697
 msgid "There must always exist at least one bin."
 msgstr "Legalább egy rekesznek léteznie kell."
 
-#: projectaction.py:1783
+#: projectaction.py:1786
 msgid "Selected sequence is already being edited"
 msgstr "A kiválasztott jelenet már szerkesztés alatt áll"
 
-#: projectaction.py:1784
+#: projectaction.py:1787
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -401,7 +401,7 @@ msgstr ""
 "Válasszon egy másik jelenetet. Kattintson a hozzáadás gombra\n"
 "új jelenet létrehozásához."
 
-#: projectaction.py:1864
+#: projectaction.py:1867
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -409,46 +409,46 @@ msgstr ""
 "Biztosan törölni akarja\n"
 "a jelenetet: '"
 
-#: projectaction.py:1864
+#: projectaction.py:1867
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1865
+#: projectaction.py:1868
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Ez a művelet nem vonható vissza. A jelenet véglegesen elvész."
 
-#: projectaction.py:1891
+#: projectaction.py:1894
 msgid "Can't remove last sequence"
 msgstr "Az utolsó jelenet nem törölhető"
 
-#: projectaction.py:1892
+#: projectaction.py:1895
 msgid "There must always exist at least one sequence."
 msgstr "Mindig kell léteznie legalább egy jelenetnek."
 
-#: projectaction.py:1974
+#: projectaction.py:1977
 #, fuzzy
 msgid "Can't add a new Track"
 msgstr "Zárolt sáv nem szerkeszthető"
 
-#: projectaction.py:1975
+#: projectaction.py:1978
 msgid "Sequence already has 21 tracks, which is the maximum number allowed."
-msgstr ""
-
-#: projectaction.py:1980
-#, fuzzy
-msgid "Can't delete Video Track"
-msgstr "Videosávok maximalizálása"
-
-#: projectaction.py:1981
-msgid "Sequence has to have one Video Track."
 msgstr ""
 
 #: projectaction.py:1983
 #, fuzzy
+msgid "Can't delete Video Track"
+msgstr "Videosávok maximalizálása"
+
+#: projectaction.py:1984
+msgid "Sequence has to have one Video Track."
+msgstr ""
+
+#: projectaction.py:1986
+#, fuzzy
 msgid "Can't delete Audio Track"
 msgstr "Hangsávok maximalizálása"
 
-#: projectaction.py:1984
+#: projectaction.py:1987
 msgid "There are no Audio Tracks to delete."
 msgstr ""
 
