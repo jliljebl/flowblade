@@ -542,14 +542,17 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     else:
         current_sequence().display_trim_clip(None, clip_start, clip.create_data, None) # pattern producer
 
-    PLAYER().seek_frame(edit_frame)
+    if edit_data["to_side_being_edited"] == False and gui.monitor_widget.is_active(True) == True:
+        fix_delta = -1
+    else:
+        fix_delta = 0
+    
+    PLAYER().seek_frame(edit_frame + fix_delta)
     return True
 
 def oneroll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in one roll mode.
-    
-    WE ARE HITTING THIS FROM MULTITRIM ONLY, NOT TRIM TOOL because we remove non-quick enter edits.
     """
     global mouse_disabled, submode
     

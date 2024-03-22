@@ -271,7 +271,7 @@ class MonitorWidget:
             self.match_not_updateble = True
             self.create_pattern_producer_match_frame()
             return
-            
+
         self.match_frame = match_clip.clip_in
         self.match_not_updateble = False
         data = (match_clip.path, match_clip.clip_in, MATCH_FRAME, self.match_frame_write_complete)
@@ -488,11 +488,11 @@ class MonitorWidget:
     def one_roll_mouse_release(self, edit_tline_frame, edit_delta):
         if self.is_active() == False:
             return
-            
         self.edit_tline_frame = edit_tline_frame
         if self.view == START_TRIM_VIEW: # were computing displayed edit side TC 
                                          # from current_tline_frame - clip_start_frame and clip_start_frame changes now if START_TRIM_VIEW
             self.edit_clip_start_on_tline = self.edit_clip_start_on_tline - edit_delta
+
         self.edit_delta = None
         self.bottom_edge_panel.queue_draw()
     
