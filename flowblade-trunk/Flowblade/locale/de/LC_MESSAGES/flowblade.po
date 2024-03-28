@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-22 07:57+0200\n"
+"POT-Creation-Date: 2024-03-28 11:18+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Martin Wielebinski <blueray.mw@gmail.com>\n"
 "Language-Team: German\n"
@@ -8551,11 +8551,11 @@ msgstr ""
 "Sie können stattdessen die Werkzeuge <b>Bewegen</b> oder <b>Rollen</b> "
 "verwenden."
 
-#: trimmodes.py:1054
+#: trimmodes.py:1057
 msgid "Initializing Roll tool failed"
 msgstr "Initialisieren des Rollen-Werkzeugs ist fehlgeschlagen"
 
-#: trimmodes.py:1055
+#: trimmodes.py:1058
 msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."

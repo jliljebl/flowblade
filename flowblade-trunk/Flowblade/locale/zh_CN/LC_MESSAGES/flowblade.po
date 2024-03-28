@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-22 07:57+0200\n"
+"POT-Creation-Date: 2024-03-28 11:18+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -8441,11 +8441,11 @@ msgstr "Can't use Trim tool on blank clips."
 msgid "You can use <b>Move</b> or <b>Roll</b> tools instead."
 msgstr "You can use <b>Move</b> or <b>Roll</b> tools instead."
 
-#: trimmodes.py:1054
+#: trimmodes.py:1057
 msgid "Initializing Roll tool failed"
 msgstr "Initializing Roll tool failed"
 
-#: trimmodes.py:1055
+#: trimmodes.py:1058
 msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."

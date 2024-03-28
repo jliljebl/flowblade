@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-22 07:57+0200\n"
+"POT-Creation-Date: 2024-03-28 11:18+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -8647,11 +8647,11 @@ msgstr ""
 msgid "You can use <b>Move</b> or <b>Roll</b> tools instead."
 msgstr ""
 
-#: trimmodes.py:1054
+#: trimmodes.py:1057
 msgid "Initializing Roll tool failed"
 msgstr ""
 
-#: trimmodes.py:1055
+#: trimmodes.py:1058
 msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."

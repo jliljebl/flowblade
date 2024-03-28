@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-22 07:57+0200\n"
+"POT-Creation-Date: 2024-03-28 11:18+0200\n"
 "PO-Revision-Date: 2020-12-14 14:52+0100\n"
 "Last-Translator: Jean-Paul Favier <favijep@laposte.net>\n"
 "Language-Team: French\n"
@@ -8495,12 +8495,12 @@ msgstr ""
 "Vous pouvez utiliser les outils de manipulation <b>Déplacer</b> ou "
 "<b>Déplacer un raccord</b> à la place."
 
-#: trimmodes.py:1054
+#: trimmodes.py:1057
 msgid "Initializing Roll tool failed"
 msgstr ""
 "L'initialisation de l'outil de manipulation Déplacer un raccord a échoué"
 
-#: trimmodes.py:1055
+#: trimmodes.py:1058
 msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."
