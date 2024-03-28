@@ -195,6 +195,336 @@ Filter masking allows for one or more filters to be applied only on some user de
 <li> You can drag and drop filters in and out of the masked range of filter stack.</li>
 <ul>
 
+<h2>6. Jog / Shuttle Support</h2>
+
+
+<h3>Overview</h3>
+
+<p>
+Flowblade has a USB Human Input Device subsystem, which is capable of
+supporting selected USB jog/shuttle devices.
+</p>
+
+<p>
+A jog/shuttle gives you an additional way to navigate through your timeline
+using a dedicated hardware control interface, in addition to the keyboard and
+mouse.
+</p>
+<p>
+Turning the jog wheel moves the playback location forward and backward, one
+frame at a time.
+</p>
+<p>
+Turning the shuttle left or right engages variable speed playback, in forward
+or reverse. The farther you turn the ring, the faster it goes.
+</p>
+<p>
+Additionally, most jog/shuttle devices have keys which can be mapped to
+various actions within the program. Each supported device has default key
+mappings, which can also be customized.
+</p>
+
+<h3>Supported Devices</h3>
+
+<table>
+<thead>
+<tr>
+<th>Manufacturer Device Name</th><th>Flowblade Device Name</th><th>Config File</th>
+</tr>
+</thead>
+<tr>
+<td>Contour Design ShuttlePRO v2</td><td>Contour Design ShuttlePRO v2</td><td>contour_design_shuttlepro_v2.xml</td>
+</tr>
+<tr>
+<td>Contour Design ShuttleXpress</td><td>Contour Design ShuttleXpress</td><td>contour_design_shuttlexpress.xml</td>
+</tr>
+<tr>
+<td>Contour A/V Solutions SpaceShuttle</td><td>Contour Design ShuttleXpress</td><td>contour_design_shuttlexpress.xml</td>
+</tr>
+</table>
+
+<h3>Enabling Jog / Shuttle Support</h3>
+<p>
+Jog/shuttle support is not on by default in Flowblade, and must be enabled.
+</p>
+<p>
+Additionally, Flowblade will not be able to access the USB device without
+a small amount of operating system configuration to grant permissions so that
+Flowblade is allowed to use the device.
+</p>
+<h4>Enable Device Permissions</h4>
+<p>
+In order for Flowblade to be able to read from the USB device, it is
+necessary to tell your operating system to grant permissions on the device
+to non-root users.
+</p>
+<p>
+On Linux, this is done by adding a udev rules configuration file that
+instructs the udev subsystem to enable additional access to your device.
+</p>
+<p>
+Become the root user, and create a new text file at
+`/etc/udev/rules.d/90-flowblade.rules` with the following contents:
+</p>
+
+<div class="note">
+<p># Grant unprivileged users access to USB HID jog/shuttle devices</p>
+
+<p># Contour Design ShuttleXpress, Contour A/V Solutions SpaceShuttle</p>
+<p>ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0020", MODE="0666"</p>
+
+<p># Contour Design ShuttlePRO v2</p>
+<p>ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0030", MODE="0666"</p>
+</div>
+
+<p>
+It may be necessary to reboot your computer after this step. This only
+needs to be done once. It is also possible to tell the udev subsystem
+to reload the config file instead of rebooting, but this is left as an
+exercise for the reader.
+</p>
+<p>
+<b>Don't forget to drop your root privileges after this step, before starting
+Flowblade! Do not run Flowblade as root!</b>
+</p>
+
+<h4>Tell Flowblade to Use the Device</h4>
+
+<p>
+The next step is opening Flowblade, and enabling your device.
+</p>
+<p>
+Go to the <b>Edit</b> menu, select <b>Preferences</b>, and then navigate over
+to the <b>Jog/Shuttle</b> tab.
+</p>
+<p>
+Check the <b>USB Jog/Shuttle Enabled</b> checkbox.
+</p>
+<p>
+In the <b>Device</b> pull down menu, select the device driver that you wish to
+use. The entries in this menu correspond to the <b>Flowblade Device Name</b> in
+the <b>Supported Devices</b> section above.
+</p>
+<p>
+Press <b>OK</b> to close the <b>Preferences</b> window.
+</p>
+<p>
+After this, it will be necessary to exit Flowblade and restart it.
+</p>
+<p>
+At this point, the USB jog/shuttle configuration is part of your saved
+Flowblade preferences. You will now be able to use the program with or
+without the jog/shuttle, without any further configuration necessary.
+</p>
+<p>
+Please note that Flowblade will only check for the presence of the USB device
+at startup, so make sure to have the device plugged in before you start
+Flowblade if you want to use it.
+</p>
+
+<h3>Custom Key Mappings</h3>
+
+<p>
+Flowblade ships with XML config files that provide default key mappings
+between the keys on your USB jog/shuttle device, and various actions in
+Flowblade. It is possible to customize these mappings, by copying the
+appropriate file into the correct user preferences directory, and modifying
+the local copy.
+</p>
+<p>
+The precise location of these config files can vary depending on how you
+have installed Flowblade. You want to find the `res/usbhid` directory
+under the Flowblade installation. From there, you will want to copy the config
+file for your particular USB jog/shuttle device to a location in your local
+user preferences directory.
+</p>
+<p>
+For example, if you installed Flowblade on Ubuntu using the OS packaging
+system, and you have a Contour Design ShuttleXpress, then you would want to
+copy the
+`/usr/share/flowblade/Flowblade/res/usbhid/contour_design_shuttlexpress.xml`
+file into
+`.local/share/flowblade/user_usbhid/contour_design_shuttlexpress.xml` under
+your home directory.
+</p>
+<p>
+Open up the new local copy of the file under your home directory in a text
+editor. You will see more information in the comments of the file about how
+the keys are laid out on your particular device. Under the _keymap_ section
+of the config file, you can edit the _code_ settings to point to different
+_target actions_ that Flowblade can perform, for each of the keys on the
+device.
+</p>
+<p>
+Once your file is complete, save and close the file, and start Flowblade.
+Now your new custom key mappings will be in effect every time you run the
+program.
+</p>
+<p>
+Take care not to introduce any XML errors into the file, or Flowblade will
+not be able to process it correctly.
+</p>
+<p>
+See the next section for all of the target actions that can be mapped to
+the keys on your device.
+</p>
+<h4>Available Target Actions</h4>
+
+<table>
+<thead>
+<tr>
+<th>Target Action               </th><th> Description</th>
+</tr>
+</thead>
+<tr>
+<td>3_point_overwrite           </td><td> Three Point Overwrite
+</tr>
+<tr>
+<td>add_marker                  </td><td> Add Marker</td>
+</tr>
+<tr>
+<td>append                       </td><td>Append</td>
+</tr>
+<tr>
+<td>append_from_bin              </td><td> Append Selected Media From Bin</td>
+</tr>
+<tr>
+<td>clear_io_marks               </td><td> Clear In/Out Marks</td>
+</tr>
+<tr>
+<td>clear_mark_in                </td><td> Clear Mark In</td>
+</tr>
+<tr>
+<td>clear_mark_out               </td><td> Clear Mark Out</td>
+</tr>
+<tr>
+<td>cut                          </td><td> Cut Active Tracks</td>
+</tr>
+<tr>
+<td>cut_all                      </td><td> Cut All Tracks</td>
+</tr>
+<tr>
+<td>delete                       </td><td> Delete</td>
+</tr>
+<tr>
+<td>display_clip_in_monitor      </td><td> Display Clip In Monitor</td>
+</tr>
+<tr>
+<td>display_sequence_in_monitor  </td><td> Display Current Sequence In Monitor</td>
+</tr>
+<tr>
+<td>enter_edit                   </td><td> Enter Editing Mode</td>
+</tr>
+<tr>
+<td>faster                       </td><td> Faster</td>
+</tr>
+<tr>
+<td>insert                       </td><td> Insert</td>
+</tr>
+<tr>
+<td>lift                         </td><td> Lift</td>
+</tr>
+<tr>
+<td>log_range                    </td><td> Log Range</td>
+</tr>
+<tr>
+<td>mark_in                      </td><td> Mark In</td>
+</tr>
+<tr>
+<td>mark_out                     </td><td> Mark Out</td>
+</tr>
+<tr>
+<td>next_cut                     </td><td> Go To Next Cut</td>
+</tr>
+<tr>
+<td>next_frame                   </td><td> Go To Next Frame</td>
+</tr>
+<tr>
+<td>nudge_back                   </td><td> Nudge Move Selection Back 1 Frame</td>
+</tr>
+<tr>
+<td>nudge_back_10                </td><td> Nudge Move Selection Back 10 Frames</td>
+</tr>
+<tr>
+<td>nudge_forward                </td><td> Nudge Move Selection Forward 1 Frame</td>
+</tr>
+<tr>
+<td>nudge_forward_10             </td><td> Nudge Move Selection Forward 10 Frames</td>
+</tr>
+<tr>
+<td>open_next                    </td><td> Open Next Media Item In Monitor</td>
+</tr>
+<tr>
+<td>open_prev                    </td><td> Open Previous Media Item In Monitor</td>
+</tr>
+<tr>
+<td>overwrite_range              </td><td> Overwrite Range</td>
+</tr>
+<tr>
+<td>play                         </td><td> Play</td>
+</tr>
+<tr>
+<td>play_pause                   </td><td> Play / Pause</td>
+</tr>
+<tr>
+<td>play_pause_loop_marks        </td><td> Play / Pause Mark In to Mark Out Loop</td>
+</tr>
+<tr>
+<td>prev_cut                     </td><td> Go To Previous Cut</td>
+</tr>
+<tr>
+<td>prev_frame                   </td><td> Go To Previous Frame</td>
+</tr>
+<tr>
+<td>resync                       </td><td> Resynchronization</td>
+</tr>
+<tr>
+<td>select_next                  </td><td> Open Next Clip In Filter Editor</td>
+</tr>
+<tr>
+<td>select_prev                  </td><td> Open Previous Clip In Filter Editor</td>
+</tr>
+<tr>
+<td>sequence_split               </td><td> Sequence Split</td>
+</tr>
+<tr>
+<td>slower                       </td><td> Slower</td>
+</tr>
+<tr>
+<td>stop                         </td><td> Stop</td>
+</tr>
+<tr>
+<td>switch_monitor               </td><td> Switch Monitor Display</td>
+</tr>
+<tr>
+<td>to_end                      </td><td> Go To End</td>
+</tr>
+<tr>
+<td>toggle_ripple                </td><td> Toggle Ripple</td>
+</tr>
+<tr>
+<td>to_mark_in                   </td><td> Go To Mark In</td>
+</tr>
+<tr>
+<td>to_mark_out                  </td><td> Go To Mark Out</td>
+</tr>
+<tr>
+<td>to_start                     </td><td> Go To Start</td>
+</tr>
+<tr>
+<td>trim_end                     </td><td> Trim Clip End To Playhead</td>
+</tr>
+<tr>
+<td>trim_start                   </td><td> Trim Clip Start To Playhead</td>
+</tr>
+<tr>
+<td>zoom_in                      </td><td> Zoom In</td>
+</tr>
+<tr>
+<td>zoom_out                     </td><td> Zoom Out</td>
+</tr>
+</table>
+
 </div>
 </div>
 
