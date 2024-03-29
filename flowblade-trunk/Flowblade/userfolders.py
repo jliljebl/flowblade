@@ -164,9 +164,10 @@ def _maybe_create_xdg_dirs():
     # Cache individual folders
     if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUTOSAVE_DIR)
+    if not os.path.exists(get_cache_dir() + appconsts.THUMBNAILS_DIR):
+        os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
         os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
-    
     if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
 
