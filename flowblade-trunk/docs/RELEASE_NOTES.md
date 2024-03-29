@@ -4,7 +4,7 @@
 ## FLOWBLADE 2.14
 Date: March 29, 2024
 
-Flewblade 2.14 comes with many long asked for features such as editable titles slowmo playback, and with a larges single contribution in project history enabling using USB shuttle devices. 
+Flewblade 2.14 comes with many long asked for features such as editable titles and slowmo playback, and with a largest single contribution in project history enabling using USB shuttle devices. 
 
 ### USB JOG/SHUTTLE SUPPORT
 
