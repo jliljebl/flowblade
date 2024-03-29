@@ -135,7 +135,7 @@ SNAP_ICON = None
 KEYBOARD_ICON = None
 CLOSE_MATCH_ICON = None
 COMPOSITOR_ICON = None
-
+TITLE_ICON = None
 TC_POINTER_HEAD = None
 
 # tc frame scale consts
@@ -346,7 +346,7 @@ def load_icons_and_set_colors():
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
     LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON, \
-    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE 
+    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE, TITLE_ICON 
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -365,7 +365,8 @@ def load_icons_and_set_colors():
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
-
+    TITLE_ICON = guiutils.get_cairo_image("open_titler")
+        
     MARKER_ICON = _load_pixbuf("marker_yellow.png")
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
@@ -2050,7 +2051,10 @@ class TimeLineCanvas:
                                          cairo.FONT_SLANT_NORMAL,
                                          cairo.FONT_WEIGHT_BOLD)
                     cr.set_font_size(10)
-                    cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
+                    if clip.titler_data == None:
+                        cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
+                    else:
+                        cr.move_to(scale_in + TEXT_X + 20, y + text_y)
                     cr.show_text(clip.name.upper())
                     
                     cr.restore()
@@ -2076,7 +2080,13 @@ class TimeLineCanvas:
                     iy = y + int(track_height) / 2 - 7
                     cr.set_source_surface(icon, ix, iy)
                     cr.paint()
-
+                if clip.titler_data != None:
+                    icon = TITLE_ICON
+                    ix = TEXT_X
+                    iy = y + int(track_height) / 2 - 7
+                    cr.set_source_surface(icon, int(scale_in) + ix, iy)
+                    cr.paint()
+                    
             # Save sync children data.
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
