@@ -141,11 +141,6 @@ def _maybe_create_xdg_dirs():
     if not os.path.exists(get_data_dir() + appconsts.USER_PROFILES_DIR):
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
 
-    """
-    Legacy data folders where data was kept prior to 2.12.
-    These can be accessed if existing after 2.12, but will not be created anymore
-    when applications are installed fresh.
-    
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
     if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
@@ -154,7 +149,6 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
     if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
         os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
-    """
 
     if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
         os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
@@ -170,20 +164,12 @@ def _maybe_create_xdg_dirs():
     # Cache individual folders
     if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUTOSAVE_DIR)
-    """
-    Legacy data folder.
-    
-    if not os.path.exists(get_cache_dir() + appconsts.THUMBNAILS_DIR):
-        os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
-    """
     if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
         os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
-    """
-    Legacy data folder.
     
     if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
-    """
+
     if not os.path.exists(get_cache_dir() + appconsts.TRIM_VIEW_DIR):
         os.mkdir(get_cache_dir() + appconsts.TRIM_VIEW_DIR)
     if not os.path.exists(get_cache_dir() + appconsts.BATCH_DIR):
