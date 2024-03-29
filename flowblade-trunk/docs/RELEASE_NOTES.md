@@ -1,6 +1,99 @@
 # Release Notes
 
 
+## FLOWBLADE 2.14
+Date: March 29, 2024
+
+Flewblade 2.14 comes with many long asked for features such as editable titles slowmo playback, and with a larges single contribution in project history enabling using USB shuttle devices. 
+
+### USB JOG/SHUTTLE SUPPORT
+
+After some delay we merged **Usb jog/shuttle** feature developed by **Nathan Rosenquist**. This was a major contribution with about 2K lines of code needed to get things going. Intially we have support for three devices available, **Contour Design ShuttlePRO v2, Contour Design ShuttleXpress, Contour A/V Solutions SpaceShuttle**.
+
+Documentation on activating the feature and adding support for new devices here: http://jliljebl.github.io/flowblade/webhelp/advanced.html#6._Jog_/_Shuttle_Support
+
+Please report any issues with Flatpak using this feature, as the release Flatpak was not tested with USB devices (I don't own any).
+
+Distro packagers, please see info on the needed configuration file addition (*/etc/udev/rules.d/90-flowblade.rules*) described in the link to docs above.
+
+### EDITABLE TITLE CLIPS
+
+The **Titler** tool now creates **Title Media Items**. Clips on timeline created from **Title Media Items** can edited with **Titler**, text and all its properties can changed as wished.
+
+### OTHER NEW FEATURES
+
+- **Switch to do clip paste on playhead position.** Previous we did paste on the nearest cut on target track, but doing paste as insert exactly on plyhead position is the established action pattern on popular video editors and we now do that as well.
+  
+- **Graphics clips can now be dragged to be arbitrarily long**. The previous underlying restrictions on doing this were no longer in place.
+  
+- **Slowmo playback is now available**. *CTRL + Left/Right Arrow* keys when held down now do forward/back playback at 10fps.
+  
+
+### FILTERS UPDATES
+
+- Added **Position Scale Rotate** filter with a GUI editor.
+  
+- Added new **Elastic** distort filter.
+  
+- Added new **Compressor** audio filter
+  
+- **Waves** filter was updated with effect animation now available.
+  
+- Slider values can now be edited with mouse over scrolling. Relevant code provided by **schauveau**.
+  
+- Add *'sense'* property to avfilter.perspective.
+  
+- Fixed value replace for SCREENSIZE_WIDTH and SCREENSIZE_HEIGHT when used as range limits for editors.
+  
+- Fixed reset for filters the to do a value replace when initializing.
+  
+- Added a link to some editors providing additional information on their usage.
+  
+
+### OTHER CONTRIBUTIONS
+
+- **schauveau** did some exellent research and provided a solution for Issue #1134 with failing playback on many latest systems.
+
+### GTK4 WORK
+
+We have removed almost all instances of *Gtk.Menu*. We spend some time to do a mostly scripted test conversion to fully explore the needed changes. The required work seems quite doable, and we will be able to do large parts of conversion work with scripts, but there were some show stoppers that need to be addressed relating to the fact that GTK4 no longer has per widget XWindows. Currently it is looking that GTK4 port will land sometime in 2025.
+
+### SMALL FEATURES AND BUG FIXES
+
+- Make Filter Select panel width configurable via a preference.
+  
+- Switch to keyboard shortcut *Alt + A* for appending selected media on timeline.
+  
+- Add reverse Media Items order in a Bin feature.
+  
+- Add a default graphics length per Bin feature.
+  
+- Add one more zoom step to make working with single frame clips easier.
+  
+- Fix GPU rendering with hevc_nvenc encoding to keep working with ffmpeg >= 6.0.
+  
+- Fix scripttool for new fluxity API.
+  
+- Fix generator validation render bug.
+  
+- Fix single track transition re-render.
+  
+- Fix layout for 768px height screens.
+  
+- Fix selectable clip colors and their gradients and selection colors.
+  
+- Fix gpu test render log names.
+  
+- Fix for start side trim view post-release display.
+  
+- Fix audio levels rendering for old datalayout projects
+  
+- Fix Projects data layouts after using close
+  
+- Fix CTRL + S saving for old data layout projects
+  
+- Add infotip for filter Perspective
+
 **Hotfix releases since 2.12 initial release:**
 
 ## Flowblade 2.12.0.2 
