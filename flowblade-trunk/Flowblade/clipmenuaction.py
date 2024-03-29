@@ -422,6 +422,7 @@ def _title_edit_callback(clip, track, new_title_path, new_titler_data):
         time.sleep(0.3)
     
     new_clip = current_sequence().create_file_producer_clip(new_title_path, None, False, clip.ttl) # file producer
+    new_clip.name = clip.name
 
     current_sequence().clone_clip_and_filters(clip, new_clip)
     new_titler_data.destroy_pango_layouts()
