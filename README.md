@@ -16,7 +16,7 @@
 7. [Webpage](https://github.com/jliljebl/flowblade#webpage)
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
-**NOTE: Fix for non-working video preview issue.**
+**--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
 **Start application from terminal with command:**
 
@@ -24,6 +24,8 @@
 SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
 ```
 **More info on Issue here: [Issue #1134](https://github.com/jliljebl/flowblade/issues/1134)**
+
+**--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
 # Introduction
 
