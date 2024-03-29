@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 11:18+0200\n"
+"POT-Creation-Date: 2024-03-29 14:48+0200\n"
 "PO-Revision-Date: 2023-06-20 15:06+0300\n"
 "Last-Translator: Смольянинов Николай <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: ru\n"
@@ -8285,15 +8285,15 @@ msgstr "<control><alt><shift>"
 msgid "<control>"
 msgstr "<control>"
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:554
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "Недостаточно извлечённых кадров для заполнения пробела"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:555 clipmenuaction.py:584
 msgid "Requested edit can't be done."
 msgstr "Нельзя выполнить запрошенную операцию."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:583
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "В следующем клипе нет извлечённых кадров для заполнения пробела"
 
@@ -10015,6 +10015,12 @@ msgstr "Удалить все ключевые кадры за клипом"
 
 #: guipopoverclip.py:720
 msgid "No additional Keyframe Tool editable Params"
+msgstr ""
+
+#: tlinewidgets.py:2866
+msgid ""
+"Up - Page Up\n"
+"Down - Page Down"
 msgstr ""
 
 #~ msgid "Delete Compositor/s"

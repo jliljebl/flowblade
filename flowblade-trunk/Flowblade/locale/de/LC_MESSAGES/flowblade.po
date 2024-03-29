@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 11:18+0200\n"
+"POT-Creation-Date: 2024-03-29 14:48+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Martin Wielebinski <blueray.mw@gmail.com>\n"
 "Language-Team: German\n"
@@ -8513,17 +8513,17 @@ msgstr ""
 msgid "<control>"
 msgstr ""
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:554
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr ""
 "Der vorherige Clip hat nicht genug Material, um den leeren Bereich zu "
 "überdecken"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:555 clipmenuaction.py:584
 msgid "Requested edit can't be done."
 msgstr "Bearbeitung kann nicht ausgeführt werden."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:583
 msgid "Next clip does not have enough material to cover blank area"
 msgstr ""
 "Der nächste Clip hat nicht genug Material, um den leeren Bereich zu "
@@ -10288,6 +10288,12 @@ msgstr "Löschen Sie alle Schlüsselbilder nach dem Clip-Bereich"
 
 #: guipopoverclip.py:720
 msgid "No additional Keyframe Tool editable Params"
+msgstr ""
+
+#: tlinewidgets.py:2866
+msgid ""
+"Up - Page Up\n"
+"Down - Page Down"
 msgstr ""
 
 #~ msgid "Delete Compositor/s"

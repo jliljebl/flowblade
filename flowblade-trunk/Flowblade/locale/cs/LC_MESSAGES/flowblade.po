@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 11:18+0200\n"
+"POT-Creation-Date: 2024-03-29 14:48+0200\n"
 "PO-Revision-Date: 2021-02-28 16:18+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -8418,15 +8418,15 @@ msgstr "<control><alt><shift>"
 msgid "<control>"
 msgstr "<control>"
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:554
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "Předchozí záběr nemá dostatek materiálu na pokrytí prázdné oblasti"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:555 clipmenuaction.py:584
 msgid "Requested edit can't be done."
 msgstr "Požadované úpravy nelze udělat."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:583
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "Další záběr nemá dostatek materiálu na pokrytí prázdné oblasti"
 
@@ -10182,6 +10182,12 @@ msgstr "Smazat všechny klíčové snímky po rozsahu záběru"
 
 #: guipopoverclip.py:720
 msgid "No additional Keyframe Tool editable Params"
+msgstr ""
+
+#: tlinewidgets.py:2866
+msgid ""
+"Up - Page Up\n"
+"Down - Page Down"
 msgstr ""
 
 #~ msgid "Delete Compositor/s"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 11:18+0200\n"
+"POT-Creation-Date: 2024-03-29 14:48+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -8409,15 +8409,15 @@ msgstr ""
 msgid "<control>"
 msgstr "Control"
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:554
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "前一个剪辑没有足够的信息覆盖空白区域"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:555 clipmenuaction.py:584
 msgid "Requested edit can't be done."
 msgstr "Requested edit can't be done."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:583
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "下一个剪辑没有足够的信息覆盖空白区域"
 
@@ -10178,6 +10178,12 @@ msgstr "Delete all Keyframes after Clip Range"
 
 #: guipopoverclip.py:720
 msgid "No additional Keyframe Tool editable Params"
+msgstr ""
+
+#: tlinewidgets.py:2866
+msgid ""
+"Up - Page Up\n"
+"Down - Page Down"
 msgstr ""
 
 #~ msgid "Delete Compositor/s"

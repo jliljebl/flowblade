@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 11:18+0200\n"
+"POT-Creation-Date: 2024-03-29 14:48+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -8756,16 +8756,16 @@ msgstr ""
 msgid "<control>"
 msgstr "Control + N"
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:554
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr ""
 "Clip anterior no tiene suficiente material para cubrir el área en blanco"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:555 clipmenuaction.py:584
 msgid "Requested edit can't be done."
 msgstr "Edición solicitada no se puede hacer."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:583
 msgid "Next clip does not have enough material to cover blank area"
 msgstr ""
 "Clip siguiente no tiene suficiente material para cubrir el área en blanco"
@@ -10542,6 +10542,12 @@ msgstr ""
 
 #: guipopoverclip.py:720
 msgid "No additional Keyframe Tool editable Params"
+msgstr ""
+
+#: tlinewidgets.py:2866
+msgid ""
+"Up - Page Up\n"
+"Down - Page Down"
 msgstr ""
 
 #, fuzzy
