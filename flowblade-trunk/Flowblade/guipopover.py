@@ -1013,7 +1013,7 @@ class ToolMenuItem:
 
     def _enter_notify_event(self, widget, event):
         color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
-        color.parse("#363636")
+        color.parse("#393939")
         self.widget.override_background_color(Gtk.StateType.NORMAL, color)
         
     def _leave_notify_event(self, widget, event):
