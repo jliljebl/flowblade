@@ -38,6 +38,7 @@ import editorlayout
 import editorpersistance
 import editorstate
 import gui
+import guipopover
 import guiutils
 import modesetting
 import projectdata
@@ -73,17 +74,17 @@ dock_items = None
 
 def init_data():
     global _TOOLS_DATA, _TOOL_TIPS, _PREFS_TOOL_TIPS
-    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
-                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Move"), "overwrite_cursor.png"),
-                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),                   # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
-                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png"),                   # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
-                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png"),                     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
-                    appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png"),
-                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),              # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
-                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
-                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png"),
-                    appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png"),
-                    appconsts.TLINE_TOOL_MULTI_TRIM:    (_("Multitrim"), "multitrim_cursor.png")
+    _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png", "editools.insert"),
+                    appconsts.TLINE_TOOL_OVERWRITE:     (_("Move"), "overwrite_cursor.png", "editools.overwrite"),
+                    appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png", "editools.trim"),                         # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_ROLL:          (_("Roll"), "tworoll_cursor.png", "editools.roll"),                         # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_SLIP:          (_("Slip"), "slide_cursor.png", "editools.slip"),                           # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_SPACER:        (_("Spacer"), "multimove_cursor.png", "editools.spacer"),
+                    appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png", "editools.box"),                     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png", "editools.rippletrim"),     # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+                    appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png", "editools.cut"),
+                    appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png", "editools.kftool"),
+                    appconsts.TLINE_TOOL_MULTI_TRIM:    (_("Multitrim"), "multitrim_cursor.png", "editools.multitrim")
                   }
                   
     _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
@@ -117,6 +118,16 @@ def get_tline_tool_working_set():
     
 # --------------------------------------------------------------- tools menu
 def get_tline_tool_popup_menu(event, callback):
+    toolsdata = []
+    
+    kb_shortcut_number = 1
+    for tool_id in editorpersistance.prefs.active_tools:
+        tool_name, tool_icon_file, action_item_id = _TOOLS_DATA[tool_id]
+        toolpopover_data = (tool_name, tool_icon_file, action_item_id, tool_id)
+        toolsdata.append(toolpopover_data)
+            
+    guipopover.edittools_popover_custom_show(gui.editor_window.tool_selector, toolsdata, gui.editor_window.tool_selector.widget, callback)
+    """
     menu = _tools_menu
     guiutils.remove_children(menu)
 
@@ -138,7 +149,8 @@ def get_tline_tool_popup_menu(event, callback):
     menu.connect("hide", lambda w : _tools_menu_hidden(w, menu_items))
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
-
+    """
+    
 def _tools_menu_hidden(tools_menu, menu_items):
     # needed to make number 1-9 work elsewhere in the application
     for menu_item in menu_items:

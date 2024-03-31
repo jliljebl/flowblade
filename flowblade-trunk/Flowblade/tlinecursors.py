@@ -233,7 +233,7 @@ class TLineCursorManager:
     def mode_selector_pressed(self, selector, event):
         workflow.get_tline_tool_popup_menu(event, self.tool_selector_item_activated)
 
-    def tool_selector_item_activated(self, selector, tool):
+    def tool_selector_item_activated(self, widget, action,  tool):
         if tool == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
         if tool == appconsts.TLINE_TOOL_OVERWRITE:
