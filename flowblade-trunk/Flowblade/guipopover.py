@@ -955,16 +955,23 @@ def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
     global _edittools_popover
     
     vbox = Gtk.VBox()
+    kb_shortcut = 1
     for tool in toolsdata:
         label_text, icon_name, item_id, data = tool
-        label = Gtk.Label.new(label_text)
+        label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
         tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
+        tool_img.set_size_request(30, 22)
+        kb_shortcut_label = Gtk.Label.new(str(kb_shortcut))
+        kb_shortcut_label.set_size_request(22, 22)
+        guiutils.set_margins(kb_shortcut_label, 0,0,12,2)
         hbox = Gtk.HBox()
         hbox.pack_start(tool_img, False, False, 0)
         hbox.pack_start(label, True, True, 0)
+        hbox.pack_start(kb_shortcut_label, False, False, 0)
         hbox.show_all()
         guiutils.set_margins(hbox, 4,0,4,4)
         vbox.pack_start(hbox, False, False, 0)
+        kb_shortcut += 1
 
     vbox.show_all()
     guiutils.set_margins(vbox, 0,4,0,0)
