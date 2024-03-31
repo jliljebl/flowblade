@@ -84,13 +84,7 @@ tline_cursor_manager = None
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.065, 0.342, 0.66), (0.065, 0.342, 0.66), "Flowblade Theme")
 
-_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # NOTE: WE CAN REMOVE THIS Used to communicate theme colors to tools like gmic.py running on separate process
-
-LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
-LIGHT_GRAY_THEME_BG = (0.153, 0.153, 0.188, 1.0)
-LIGHT_NEUTRAL_THEME_NEUTRAL = ((68.0/255.0), (68.0/255.0), (68.0/255.0), 1.0)
 MID_NEUTRAL_THEME_NEUTRAL= ((54.0/255.0), (54.0/255.0), (54.0/255.0), 1.0)
-DARKER_NEUTRAL_THEME_NEUTRAL = ((48.0/255.0), (48.0/255.0), (48.0/255.0), 1.0)
 
 _selected_bg_color = None
 _bg_color = None
@@ -169,27 +163,6 @@ def set_theme_colors():
 
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
-
-def save_current_colors():
-    # Used to communicate theme colors to tools like gmic.py running on separate process
-    colors = (unpack_gdk_color(_selected_bg_color), unpack_gdk_color(_bg_color), unpack_gdk_color(_button_colors))
-    save_file_path = _colors_data_path()
-    with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
-        write_file = afw.get_file()
-        pickle.dump(colors, write_file)
-
-def load_current_colors():
-    load_path = _colors_data_path()
-    colors = utils.unpickle(load_path)
-    
-    sel, bg, button = colors
-    global _selected_bg_color, _bg_color, _button_colors
-    _selected_bg_color = Gdk.RGBA(*sel)
-    _bg_color = Gdk.RGBA(*bg)
-    _button_colors = Gdk.RGBA(*button)
-
-def _colors_data_path():
-    return userfolders.get_cache_dir() + _CURRENT_THEME_COLORS_FILE
   
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()

@@ -112,8 +112,6 @@ _hamburger_popover = None
 
 #-------------------------------------------------- launch and inits
 def launch_scripttool(launch_data=None):
-    gui.save_current_colors()
-
     # no args yet
     args = ["profile_name:" + editorstate.PROJECT().profile.description()]
         
@@ -196,7 +194,6 @@ class ScriptToolApplication(Gtk.Application):
 
         # Themes
         gui.apply_theme(editorpersistance.prefs.theme)
-        gui.load_current_colors()
 
         # Get launch profile and init player and display GUI params for it. 
         global _current_profile_name

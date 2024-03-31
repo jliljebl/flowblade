@@ -129,8 +129,6 @@ def launch_gmic(launch_data=None):
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
-    gui.save_current_colors()
-
     # Handle launching with clip data
     args = None
     if launch_data != None:
@@ -215,8 +213,6 @@ class GMicApplication(Gtk.Application):
 
         # Load preset gmic scripts
         gmicscript.load_preset_scripts_xml()
-        
-        gui.load_current_colors()
         
         global _window
         _window = GmicWindow()
