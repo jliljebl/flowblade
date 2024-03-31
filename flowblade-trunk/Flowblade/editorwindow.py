@@ -287,9 +287,7 @@ class EditorWindow:
                 menu_vbox.pack_start(monitor_source_box, False, False, 0)
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(tline_info_box, True, True, 0)
-            
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+            menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
         else:
             menubar_box.pack_start(self.tools_buttons.widget, False, False, 0)
             menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
@@ -575,8 +573,7 @@ class EditorWindow:
         self.edit_buttons_frame.add(self.edit_buttons_row)
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+        self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
             
     def _init_tline(self):
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
@@ -1056,8 +1053,8 @@ class EditorWindow:
 
         # Get menu bar
         self.menubar = self.ui.get_widget('/MenuBar')
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+        self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+
         # Set reference to UI manager and acclegroup
         self.uimanager = ui
         self.accel_group = accel_group

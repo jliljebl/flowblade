@@ -150,23 +150,8 @@ def get_bg_color():
 def get_selected_bg_color():
     return _selected_bg_color
 
-def get_light_gray_light_color():
-    return Gdk.RGBA(*LIGHT_GRAY_THEME_GRAY)
-    
-def get_light_gray_bg_in_cairo_rgb():
-    return LIGHT_GRAY_THEME_BG
-
-def get_light_neutral_color():
-    return Gdk.RGBA(*LIGHT_NEUTRAL_THEME_NEUTRAL)
-
 def get_mid_neutral_color():
     return Gdk.RGBA(*MID_NEUTRAL_THEME_NEUTRAL)
-    
-def get_darker_neutral_color():
-    return Gdk.RGBA(*DARKER_NEUTRAL_THEME_NEUTRAL)
-    
-def get_bg_unmodified_normal_color():
-    return _bg_unmodified_normal
 
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when
@@ -225,8 +210,7 @@ def apply_theme(theme):
         theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         editorpersistance.save()
         
-    if theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        apply_gtk_css()
+    apply_gtk_css()
             
 def apply_gtk_css():        
     provider = Gtk.CssProvider.new()

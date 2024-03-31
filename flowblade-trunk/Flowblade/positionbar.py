@@ -157,13 +157,8 @@ class PositionBar:
         
     def set_dark_bg_color(self):
         global BG_COLOR
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            BG_COLOR = DARK_BG_COLOR
-        else:
-            # System dark.
-            r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-            BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
-    
+        BG_COLOR = DARK_BG_COLOR
+
     def _get_panel_pos(self, norm_pos):
         return END_PAD + int(norm_pos * 
                (self.widget.get_allocation().width - 2 * END_PAD))

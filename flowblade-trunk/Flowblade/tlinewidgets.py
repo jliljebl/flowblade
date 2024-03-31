@@ -434,12 +434,8 @@ def set_tracks_double_height_consts():
 def set_dark_bg_color():
     global BG_COLOR
     
-    r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
-    BG_COLOR = get_multiplied_color((r, g, b), 1.25)
-    
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
+    r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())    
+    BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
 
 def _load_pixbuf(icon_name, double_for_double_track_heights=False):
     if double_for_double_track_heights == True:
@@ -2405,18 +2401,9 @@ class TimeLineColumn:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            cr.set_source_rgb(*THEME_NEUTRAL_COLUMN_BG_COLOR)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-        elif editorpersistance.prefs.theme == appconsts.DARK_THEME:
-            cr.set_source_rgba(*DARK_THEME_COLUMN_BG)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-        else:
-            cr.set_source_rgb(*BG_COLOR)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
+        cr.set_source_rgb(*THEME_NEUTRAL_COLUMN_BG_COLOR)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
 
         # This can get called during loads by expose events.
         if editorstate.project_is_loading == True:
@@ -2834,18 +2821,11 @@ class TimeLineFrameScale:
         cr.stroke()
         
     def _get_dark_theme_grad(self, h):
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(1, r, g, b, 1)
-            grad.add_color_stop_rgba(0, r, g, b, 1)
-        else:
-            r, g, b, a  = gui.get_bg_color()
+        r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
+        grad = cairo.LinearGradient (0, 0, 0, h)
+        grad.add_color_stop_rgba(1, r, g, b, 1)
+        grad.add_color_stop_rgba(0, r, g, b, 1)
 
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(1, r, g, b, 1)
-            grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
-        
         return grad
 
 
