@@ -33,6 +33,7 @@ import boxmove
 import editorstate
 import editorpersistance
 import gui
+import guipopover
 import guiutils
 import modesetting
 import respaths
@@ -233,7 +234,7 @@ class TLineCursorManager:
     def mode_selector_pressed(self, selector, event):
         workflow.get_tline_tool_popup_menu(event, self.tool_selector_item_activated)
 
-    def tool_selector_item_activated(self, selector, tool):
+    def tool_selector_item_activated(self, widget, action,  tool):
         if tool == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
         if tool == appconsts.TLINE_TOOL_OVERWRITE:
@@ -259,6 +260,7 @@ class TLineCursorManager:
 
         self.set_cursor_to_mode()
         self.set_tool_selector_to_mode()
+        guipopover.hide_edittools_popover()
 
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:

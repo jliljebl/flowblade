@@ -20,6 +20,8 @@
 
 from gi.repository import Gio, Gtk, GLib, Gdk
 
+import copy
+
 import appconsts
 from editorstate import APP
 from editorstate import current_sequence
@@ -27,6 +29,8 @@ from editorstate import PROJECT
 import editorpersistance
 import editorstate
 import gui
+import guiutils
+import respaths
 import snapping
 import translations
 import utils
@@ -92,7 +96,8 @@ _render_args_popover = None
 _render_args_menu = None
 _kf_popover = None
 _kf_menu = None
-
+_edittools_popover = None
+_edittools_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -107,6 +112,17 @@ def add_menu_action(menu, label, item_id, data, callback, active=True, app=None)
     else:
         app.add_action(action)
 
+    return action
+
+def add_menu_action_icon(menu, label, icon, item_id, data, callback):
+    menu_item = Gio.MenuItem.new(label, "app." + item_id)
+    menu_item.set_icon(icon)
+    menu.append_item(menu_item)
+
+    action = Gio.SimpleAction(name=item_id)
+    action.connect("activate", callback, data)
+    APP().add_action(action)
+    
     return action
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
@@ -150,8 +166,9 @@ def menu_clear_or_create(menu):
     
     return menu
 
-def new_popover(widget, menu, launcher):
+def new_popover(widget, menu, launcher, position_type=Gtk.PositionType.TOP):
     popover = Gtk.Popover.new_from_model(widget, menu)
+    popover.set_position(Gtk.PositionType(position_type))
     launcher.connect_launched_menu(popover)
     popover.show()
 
@@ -921,3 +938,89 @@ def render_args_popover_show(launcher, widget, callback):
     _render_args_menu.append_section(None, reset_section)
     
     _render_args_popover = new_popover(widget, _render_args_menu, launcher)
+
+def edittools_popover_show(launcher, toolsdata, widget, callback):
+    global _edittools_popover, _edittools_menu
+    _edittools_menu = menu_clear_or_create(_edittools_menu)
+    print("toolsdata", toolsdata)
+    main_section = Gio.Menu.new()
+    for tool in toolsdata:
+        label, icon_name, item_id, data = tool
+        icon = Gio.FileIcon.new(Gio.File.new_for_path(respaths.IMAGE_PATH + icon_name))
+        add_menu_action_icon(main_section, label, icon, item_id, data, callback)
+
+    _edittools_menu.append_section(None, main_section)
+
+    _edittools_popover = new_popover(widget, _edittools_menu, launcher, Gtk.PositionType.BOTTOM)
+
+def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
+    global _edittools_popover
+    
+    vbox = Gtk.VBox()
+    kb_shortcut = 1
+    tool_ids = []
+    for tool in toolsdata:
+        label_text, icon_name, item_id, data, tooltip = tool
+        tool_ids.append(data)
+        label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
+        
+        tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
+        tool_img.set_size_request(30, 22)
+        
+        kb_shortcut_label = Gtk.Label.new(str(kb_shortcut))
+        kb_shortcut_label.set_size_request(22, 22)
+        guiutils.set_margins(kb_shortcut_label, 0,0,12,2)
+        
+        hbox = Gtk.HBox()
+        hbox.pack_start(tool_img, False, False, 0)
+        hbox.pack_start(label, True, True, 0)
+        hbox.pack_start(kb_shortcut_label, False, False, 0)
+        hbox.show_all()
+
+        menu_item = ToolMenuItem(data, hbox, tooltip, callback)
+
+        guiutils.set_margins(menu_item.widget, 4, 0, 4, 4)
+        vbox.pack_start(menu_item.widget, False, False, 0)
+        kb_shortcut += 1
+
+    vbox.show_all()
+    guiutils.set_margins(vbox, 0,4,0,0)
+        
+    _edittools_popover = Gtk.Popover.new(widget)
+    _edittools_popover.add(vbox)
+    _edittools_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    _edittools_popover.connect("closed", lambda w: _shut_down_prelight(launcher))
+    _edittools_popover.show()
+
+def _shut_down_prelight(launcher):
+    launcher.shut_prelight()
+ 
+class ToolMenuItem:
+    
+    def __init__(self, tool_id, hbox, tooltip, callback):
+        color = gui.get_bg_color()
+        self.tool_id = tool_id
+        self.hbox = hbox
+        self.widget = Gtk.EventBox()
+        self.widget.connect("button-press-event", lambda w,e: callback(w, e, self.tool_id))
+        self.widget.connect('enter-notify-event', self._enter_notify_event)
+        self.widget.connect('leave-notify-event', self._leave_notify_event)
+        self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.widget.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK)
+        self.widget.add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK)
+        self.widget.set_tooltip_markup(tooltip)
+        self.widget.add(hbox)
+
+    def _enter_notify_event(self, widget, event):
+        color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
+        color.parse("#363636")
+        self.widget.override_background_color(Gtk.StateType.NORMAL, color)
+        
+    def _leave_notify_event(self, widget, event):
+        color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
+        color.parse("#292929")
+        self.widget.override_background_color(Gtk.StateType.NORMAL, color)
+
+def hide_edittools_popover():
+    global _edittools_popover
+    _edittools_popover.hide()
