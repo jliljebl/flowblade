@@ -123,7 +123,7 @@ def get_tline_tool_popup_menu(event, callback):
     kb_shortcut_number = 1
     for tool_id in editorpersistance.prefs.active_tools:
         tool_name, tool_icon_file, action_item_id = _TOOLS_DATA[tool_id]
-        toolpopover_data = (tool_name, tool_icon_file, action_item_id, tool_id)
+        toolpopover_data = (tool_name, tool_icon_file, action_item_id, tool_id, _get_tooltip_text(tool_id))
         toolsdata.append(toolpopover_data)
             
     guipopover.edittools_popover_custom_show(gui.editor_window.tool_selector, toolsdata, gui.editor_window.tool_selector.widget, callback)

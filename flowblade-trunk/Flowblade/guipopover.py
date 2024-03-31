@@ -20,6 +20,8 @@
 
 from gi.repository import Gio, Gtk, GLib, Gdk
 
+import copy
+
 import appconsts
 from editorstate import APP
 from editorstate import current_sequence
@@ -956,21 +958,29 @@ def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
     
     vbox = Gtk.VBox()
     kb_shortcut = 1
+    tool_ids = []
     for tool in toolsdata:
-        label_text, icon_name, item_id, data = tool
+        label_text, icon_name, item_id, data, tooltip = tool
+        tool_ids.append(data)
         label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
+        
         tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
         tool_img.set_size_request(30, 22)
+        
         kb_shortcut_label = Gtk.Label.new(str(kb_shortcut))
         kb_shortcut_label.set_size_request(22, 22)
         guiutils.set_margins(kb_shortcut_label, 0,0,12,2)
+        
         hbox = Gtk.HBox()
         hbox.pack_start(tool_img, False, False, 0)
         hbox.pack_start(label, True, True, 0)
         hbox.pack_start(kb_shortcut_label, False, False, 0)
         hbox.show_all()
-        guiutils.set_margins(hbox, 4,0,4,4)
-        vbox.pack_start(hbox, False, False, 0)
+
+        menu_item = ToolMenuItem(data, hbox, tooltip, callback)
+
+        guiutils.set_margins(menu_item.widget, 4, 0, 4, 4)
+        vbox.pack_start(menu_item.widget, False, False, 0)
         kb_shortcut += 1
 
     vbox.show_all()
@@ -979,4 +989,22 @@ def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
     _edittools_popover = Gtk.Popover.new(widget)
     _edittools_popover.add(vbox)
     _edittools_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    _edittools_popover.connect("closed", lambda w: _shut_down_prelight(launcher))
     _edittools_popover.show()
+
+def _shut_down_prelight(launcher):
+    launcher.shut_prelight()
+ 
+class ToolMenuItem:
+    
+    def __init__(self, tool_id, hbox, tooltip, callback):
+        self.tool_id = tool_id
+        self.widget = Gtk.EventBox()
+        self.widget.connect("button-press-event", lambda w,e: callback(w, e, self.tool_id))
+        self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.widget.set_tooltip_markup(tooltip)
+        self.widget.add(hbox)
+
+def hide_edittools_popover():
+    global _edittools_popover
+    _edittools_popover.hide()

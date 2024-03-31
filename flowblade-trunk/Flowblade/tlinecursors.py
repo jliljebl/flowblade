@@ -33,6 +33,7 @@ import boxmove
 import editorstate
 import editorpersistance
 import gui
+import guipopover
 import guiutils
 import modesetting
 import respaths
@@ -259,6 +260,7 @@ class TLineCursorManager:
 
         self.set_cursor_to_mode()
         self.set_tool_selector_to_mode()
+        guipopover.hide_edittools_popover()
 
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:

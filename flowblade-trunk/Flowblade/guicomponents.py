@@ -2490,7 +2490,11 @@ class PressLaunch:
             
         self.prelight_on = False
         self.widget.queue_draw()
-    
+
+    def shut_prelight(self):
+        self.prelight_on = False
+        self.widget.queue_draw()
+
     def enter_notify_listener(self, event):
         self.prelight_on = True 
         self.widget.queue_draw()
