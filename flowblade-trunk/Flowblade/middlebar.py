@@ -296,7 +296,6 @@ def create_tool_selector(editor_window):
        size_adj = 2
       
     tool_selector = guicomponents.ToolSelector(editor_window.tline_cursor_manager.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
-    tool_selector.connect_launched_menu(workflow._tools_menu)
     return tool_selector
 
 def re_create_tool_selector(editor_window):
