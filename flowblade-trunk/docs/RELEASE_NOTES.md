@@ -12,8 +12,6 @@ After some delay we merged **Usb jog/shuttle** feature developed by **Nathan Ros
 
 Documentation on activating the feature and adding support for new devices here: http://jliljebl.github.io/flowblade/webhelp/advanced.html#6._Jog_/_Shuttle_Support
 
-Please report any issues with Flatpak using this feature, as the release Flatpak was not tested with USB devices (I don't own any).
-
 Distro packagers, please see info on the needed configuration file addition (*/etc/udev/rules.d/90-flowblade.rules*) described in the link to docs above.
 
 ### EDITABLE TITLE CLIPS
