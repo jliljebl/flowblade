@@ -66,9 +66,6 @@ _TOOLS_DATA = None
 _TOOL_TIPS = None
 _PREFS_TOOL_TIPS = None
 
-_tools_menu = Gtk.Menu()
-
-
 # Tool items in dock if used.
 dock_items = None
 
@@ -127,29 +124,6 @@ def get_tline_tool_popup_menu(event, callback):
         toolsdata.append(toolpopover_data)
             
     guipopover.edittools_popover_custom_show(gui.editor_window.tool_selector, toolsdata, gui.editor_window.tool_selector.widget, callback)
-    """
-    menu = _tools_menu
-    guiutils.remove_children(menu)
-
-    menu.set_accel_group(gui.editor_window.accel_group)
-    menu.set_take_focus(False)
-    menu_items = []
-    
-    kb_shortcut_number = 1
-    for tool_id in editorpersistance.prefs.active_tools:
-        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
-
-        menu_item = _get_image_menu_item(tool_icon_file, tool_name, callback, tool_id)
-        accel_path = "<Actions>/WindowActions/TOOL_ACTION_KEY_" + str(kb_shortcut_number)
-        menu_item.set_accel_path(accel_path)
-        menu.add(menu_item)
-        menu_items.append(menu_item)
-        kb_shortcut_number = kb_shortcut_number + 1
-
-    menu.connect("hide", lambda w : _tools_menu_hidden(w, menu_items))
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-    """
     
 def _tools_menu_hidden(tools_menu, menu_items):
     # needed to make number 1-9 work elsewhere in the application
