@@ -998,12 +998,28 @@ def _shut_down_prelight(launcher):
 class ToolMenuItem:
     
     def __init__(self, tool_id, hbox, tooltip, callback):
+        color = gui.get_bg_color()
         self.tool_id = tool_id
+        self.hbox = hbox
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: callback(w, e, self.tool_id))
+        self.widget.connect('enter-notify-event', self._enter_notify_event)
+        self.widget.connect('leave-notify-event', self._leave_notify_event)
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.widget.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK)
+        self.widget.add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK)
         self.widget.set_tooltip_markup(tooltip)
         self.widget.add(hbox)
+
+    def _enter_notify_event(self, widget, event):
+        color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
+        color.parse("#363636")
+        self.widget.override_background_color(Gtk.StateType.NORMAL, color)
+        
+    def _leave_notify_event(self, widget, event):
+        color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
+        color.parse("#292929")
+        self.widget.override_background_color(Gtk.StateType.NORMAL, color)
 
 def hide_edittools_popover():
     global _edittools_popover
