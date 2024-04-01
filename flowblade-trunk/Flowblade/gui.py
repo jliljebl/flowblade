@@ -41,7 +41,7 @@ editor_window = None
 editmenu = None
 
 # Project data lists and related views.
-media_list_view = None # This is guicomponents.MediaPanel (not the treeview)
+media_list_view = None # This is guicomponents.MediaPanel (not a treeview)
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None

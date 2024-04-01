@@ -98,6 +98,8 @@ _kf_popover = None
 _kf_menu = None
 _edittools_popover = None
 _edittools_menu = None
+_rated_section = None
+_rated_submenu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -541,7 +543,7 @@ def file_filter_popover_show(launcher, widget, callback):
 
     _file_filter_popover = new_popover(widget, _file_filter_menu, launcher)
 
-def media_file_popover_show(media_file, widget, x, y, callback):
+def media_file_popover_show(media_file, widget, x, y, callback, callback_rating):
     global _media_file_popover, _media_file_menu
 
     _media_file_menu = menu_clear_or_create(_media_file_menu)
@@ -564,6 +566,16 @@ def media_file_popover_show(media_file, widget, x, y, callback):
         add_menu_action(monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", media_file), callback)
         _media_file_menu.append_section(None, monitor_section)
 
+    items_data =[(_("Unrated"), "unrated"), (_("Favorite"), "favorite"), \
+                (_("Bad"), "bad")]
+    active_index = media_file.rating # Items indexes correspond with appconst values.
+    global _rated_section, _rated_submenu
+    _rated_section = menu_clear_or_create(_rated_section)
+    _rated_submenu = menu_clear_or_create(_rated_submenu)
+    add_menu_action_all_items_radio(_rated_submenu, items_data, "mediapanel.mediafile", active_index, callback_rating)
+    _rated_section.append_submenu(_("Rating"), _rated_submenu)
+    _media_file_menu.append_section(None, _rated_section)
+    
     if media_file.type != appconsts.PATTERN_PRODUCER:
         properties_section = Gio.Menu.new()
         add_menu_action(properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", media_file), callback)

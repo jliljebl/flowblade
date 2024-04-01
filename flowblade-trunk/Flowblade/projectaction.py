@@ -104,6 +104,7 @@ force_proxy = False
 # This is needed to pass only one event for double click, double init for monitor click possibly somewhat unstable
 _media_panel_double_click_counter = 0
 
+_popover_media_file = None
 
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
@@ -2236,7 +2237,9 @@ def do_compositing_mode_change(new_compositing_mode):
 
 # --------------------------------------------------------- pop-up menus
 def media_file_popover_mouse_right_pressed(widget, media_file, event):
-    guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected)
+    global _popover_media_file # we need this for media_file_menu_rating_item_selected()
+    _popover_media_file = media_file 
+    guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected, media_file_menu_rating_item_selected)
     
 def media_file_menu_item_selected(action, variant, data):
     item_id, media_file = data
@@ -2262,7 +2265,21 @@ def media_file_menu_item_selected(action, variant, data):
         media_file.create_icon()
     if item_id == "Replace":
         replace_media_file(media_file)
-        
+
+def media_file_menu_rating_item_selected(action, variant):
+    global _popover_media_file
+    if variant.get_string() == "unrated":
+        _popover_media_file.rating = appconsts.MEDIA_FILE_UNRATED
+    elif variant.get_string() == "favorite":
+        _popover_media_file.rating = appconsts.MEDIA_FILE_FAVORITE
+    else:
+        _popover_media_file.rating = appconsts.MEDIA_FILE_BAD
+
+    action.set_state(variant)
+    editorpersistance.save()
+    guipopover._media_file_popover.hide()
+    gui.media_list_view.widget.queue_draw()
+
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))

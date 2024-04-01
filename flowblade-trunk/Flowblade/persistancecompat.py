@@ -50,6 +50,9 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     if not hasattr(media_file, "titler_data"):
         media_file.titler_data = None
 
+    if not hasattr(media_file, "rating"):
+        media_file.rating = appconsts.MEDIA_FILE_UNRATED
+
 def FIX_MISSING_CLIP_ATTRS(clip):
     # Add color attribute if not found
     if not hasattr(clip, "color"):

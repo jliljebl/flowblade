@@ -1467,6 +1467,18 @@ class MediaObjectWidget:
         cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
 
+        # Draw rating indicator if needed.
+        if self.media_file.rating == appconsts.MEDIA_FILE_FAVORITE:
+            info_color = (0.2, 0.8, 0.2)
+        elif self.media_file.rating == appconsts.MEDIA_FILE_BAD:
+            info_color = (0.85, 0.25, 0.25)
+        if self.media_file.rating != appconsts.MEDIA_FILE_UNRATED:
+            cr.set_line_width(3.0)
+            cr.set_source_rgb(*info_color)
+            cr.move_to(0, h - 9.5)
+            cr.line_to(w, h - 9.5)
+            cr.stroke()
+            
         cr.reset_clip()
         cr.set_source_rgba(0,0,0,0.3)
         

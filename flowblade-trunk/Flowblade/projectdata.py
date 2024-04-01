@@ -424,7 +424,8 @@ class MediaFile:
         self.titler_data = None
         
         self.info = info
-
+        self.rating = appconsts.MEDIA_FILE_UNRATED
+        
         # Set default length for graphics files
         (f_name, ext) = os.path.splitext(self.name)
         if utils.file_extension_is_graphics_file(ext) and self.type != appconsts.IMAGE_SEQUENCE:
