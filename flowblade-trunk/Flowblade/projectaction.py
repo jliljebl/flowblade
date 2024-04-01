@@ -1376,7 +1376,13 @@ def media_filtering_select_pressed(launcher, widget, event):
     guipopover.file_filter_popover_show(launcher, widget,  _media_filtering_selector_item_activated)
 
 def _media_filtering_selector_item_activated(action, new_value_variant):
-    index = int( new_value_variant.get_string())
+    try:
+        index = int( new_value_variant.get_string())
+    except:
+        # This is ratings selection
+        _ratings_filtering_item_activated(action, new_value_variant)
+        return
+
     gui.media_view_filter_selector.set_pixbuf(index)
     
     # Const values at appconst,py correspond with indexes here.
@@ -1385,7 +1391,21 @@ def _media_filtering_selector_item_activated(action, new_value_variant):
 
     action.set_state(new_value_variant)
     guipopover._file_filter_popover.hide()
-    
+
+def _ratings_filtering_item_activated(action, new_value_variant):
+    if new_value_variant.get_string() == "hide_bad":
+        editorstate.media_view_ratings_filter = appconsts.MEDIA_RATINGS_HIDE_BAD
+    elif new_value_variant.get_string() == "show_favorites":
+        editorstate.media_view_ratings_filter = appconsts.MEDIA_RATINGS_SHOW_FAVORITES
+    else:
+        editorstate.media_view_ratings_filter = appconsts.MEDIA_RATINGS_SHOW_ALL
+
+    gui.media_list_view.fill_data_model()
+
+    action.set_state(new_value_variant)
+    guipopover._file_filter_popover.hide()
+    gui.editor_window.bin_info.display_bin_info() 
+
 def columns_count_launch_pressed(launcher, widget, event):
     guipopover.columns_count_popupover_show(launcher, widget, _columns_count_item_selected)
     

@@ -71,6 +71,7 @@ overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
 media_view_filter = appconsts.SHOW_ALL_FILES
+media_view_ratings_filter = appconsts.MEDIA_RATINGS_SHOW_ALL
 
 # Media file displayed in monitor when 'Clip' is pressed 
 _monitor_media_file = None

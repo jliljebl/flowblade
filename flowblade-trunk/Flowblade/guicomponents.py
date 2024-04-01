@@ -1059,26 +1059,50 @@ class BinInfoPanel(Gtk.HBox):
         info_col_3.pack_start(self.items_value, False, False, 0)
         info_col_3.pack_start(Gtk.Label(), True, True, 0)
 
+        self.ratings_filtering_info = Gtk.Label()
+        self.ratings_filtering_info.set_sensitive(False)
+
+        all_image = guiutils.get_image("show_all_ratings")
+        all_image.set_tooltip_text(_("Show All Ratings"))
+        favorites_image = guiutils.get_image("show_favorites")
+        favorites_image.set_tooltip_text(_("Show Favorites"))
+        bad_image = guiutils.get_image("hide_bad")
+        bad_image.set_tooltip_text(_("Hide Bad"))
+        self.image_box = Gtk.Stack.new() 	
+        self.image_box.add_named (all_image, "show_all_ratings")
+        self.image_box.add_named (favorites_image, "show_favorites")
+        self.image_box.add_named (bad_image, "hide_bad")
+        self.image_box.set_visible_child_name("show_all_ratings")
+
         self.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         self.pack_start(info_col_2, False, False, 0)
         self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
         self.pack_start(info_col_3, False, False, 0)
+        self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
+        self.pack_start(self.image_box, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
-
+        
         self.set_spacing(4)
 
     def display_bin_info(self):        
         self.bin_name.set_text("<b>" + editorstate.PROJECT().c_bin.name + "</b>")
         self.items.set_text(_("<b>Items:</b>") + " ")
         self.items_value.set_text(str(len(editorstate.PROJECT().c_bin.file_ids)))
-        
+
+        if editorstate.media_view_ratings_filter == appconsts.MEDIA_RATINGS_SHOW_ALL:
+            self.image_box.set_visible_child_name("show_all_ratings")
+        elif editorstate.media_view_ratings_filter == appconsts.MEDIA_RATINGS_SHOW_FAVORITES:
+            self.image_box.set_visible_child_name("show_favorites")
+        else:
+            self.image_box.set_visible_child_name("hide_bad")
+
         self._set_use_mark_up()
 
     def _set_use_mark_up(self):
         self.bin_name.set_use_markup(True)
         self.items.set_use_markup(True)
         self.items_value.set_use_markup(True)
-
+        self.ratings_filtering_info.set_use_markup(True) 
 
         
 # -------------------------------------------- media select panel
