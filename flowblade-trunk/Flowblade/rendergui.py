@@ -1275,6 +1275,4 @@ class RenderArgsEditWindow(Gtk.Window):
         self.set_title(_("Render Args"))
         self.show_all()
         self.set_resizable(False)
-        self.set_keep_above(True) # Perhaps configurable later
 
-    

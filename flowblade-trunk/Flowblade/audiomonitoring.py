@@ -386,7 +386,6 @@ class AudioMonitorWindow(Gtk.Window):
         self.set_title(_("Audio Mixer"))
         self.show_all()
         self.set_resizable(False)
-        self.set_keep_above(True) # Perhaps configurable later
 
     def update_tracks_mute_states(self):
         for i in range(1, len(self.gain_controls)):

@@ -888,7 +888,6 @@ def show_splash_screen():
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
 
     splash_screen.add(img)
-    splash_screen.set_keep_above(True)
     splash_screen.set_size_request(598, 258) # Smaller then img.
 
     splash_screen.set_resizable(False)

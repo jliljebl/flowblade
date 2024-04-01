@@ -1025,8 +1025,6 @@ def _text_info_prograss_dialog(title):
     dialog.set_default_size(400, 70)
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
-
-    dialog.set_keep_above(True) # Perhaps configurable later
     
     # Make refs available for updates
     dialog.progress_bar = progress_bar
