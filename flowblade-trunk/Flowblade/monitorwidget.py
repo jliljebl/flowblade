@@ -110,8 +110,6 @@ class MonitorWidget:
 
         black_box = Gtk.EventBox()
         black_box.add(Gtk.Label())
-        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         self.monitor = black_box
 
         self.right_display = cairoarea.CairoDrawableArea2(1, 1, self._draw_match_frame_right, use_widget_bg=False)

@@ -593,8 +593,6 @@ class GmicWindow(Gtk.Window):
         # Clip monitor
         black_box = Gtk.EventBox()
         black_box.add(Gtk.Label())
-        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         self.monitor = black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                   # is used to position and scale SDL overlay that actually displays video.
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
