@@ -1353,7 +1353,7 @@ class MediaPanel():
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
 
-            # Filter view
+            # Filter view file type.
             if ((editorstate.media_view_filter == appconsts.SHOW_VIDEO_FILES)
                 and (media_file.type != appconsts.VIDEO)):
                 continue
@@ -1369,11 +1369,17 @@ class MediaPanel():
             if ((editorstate.media_view_filter == appconsts.SHOW_PATTERN_PRODUCERS)
                 and (media_file.type != appconsts.PATTERN_PRODUCER)):
                 continue
-
             if ((editorstate.media_view_filter == appconsts.SHOW_UNUSED_FILES)
                 and (media_file not in unused_list)):
                 continue
-
+            # Filter view ratings.
+            if ((editorstate.media_view_ratings_filter == appconsts.MEDIA_RATINGS_HIDE_BAD)
+                and (media_file.rating == appconsts.MEDIA_FILE_BAD)):
+                continue
+            if ((editorstate.media_view_ratings_filter == appconsts.MEDIA_RATINGS_SHOW_FAVORITES)
+                and (media_file.rating != appconsts.MEDIA_FILE_FAVORITE)):
+                continue
+                
             media_object = MediaObjectWidget(media_file, 
                                             self.media_object_selected, 
                                             self.release_on_media_object, 
