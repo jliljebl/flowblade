@@ -1,6 +1,9 @@
 # Release Notes
 
 
+## FLOWBLADE 2.14.0.1
+Fix monitors size detection for multiple monitors.
+
 ## FLOWBLADE 2.14
 Date: March 29, 2024
 
