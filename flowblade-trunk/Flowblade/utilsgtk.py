@@ -77,12 +77,16 @@ def get_display_monitors_size_data():
 def get_combined_monitors_size():
     monitor_data = get_display_monitors_size_data()
     combined_w, combined_h = 0, 0
+    
+    # We are using largest screen height
+    disp_h_largest = 0
     for disp_w, disp_h in monitor_data:
         combined_w += disp_w
-        combined_h += disp_h
-    
-    return (combined_w, combined_h)
-        
+        if disp_h > disp_h_largest:
+            disp_h_largest = disp_h
+
+    return (combined_w, disp_h_largest)
+
 def get_media_source_file_filter(include_audio=True):
     # No idea if these actually play or not, except images mime types
     f = Gtk.FileFilter()
