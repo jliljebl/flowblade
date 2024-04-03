@@ -106,7 +106,7 @@ def get_tline_tool_working_set():
     
     kb_shortcut_number = 1
     for tool_id in editorpersistance.prefs.active_tools:
-        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
+        tool_name, tool_icon_file, action_item_id = _TOOLS_DATA[tool_id]
         tools.append((tool_name, kb_shortcut_number))
 
         kb_shortcut_number = kb_shortcut_number + 1
@@ -157,7 +157,7 @@ def get_tline_tool_dock():
     dock_items = []
     kb_shortcut_number = 1
     for tool_id in editorpersistance.prefs.active_tools:
-        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
+        tool_name, tool_icon_file, action_item_id = _TOOLS_DATA[tool_id]
 
         dock_item = _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id)
         dock.pack_start(dock_item.widget, False, False, 0)
