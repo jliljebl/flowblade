@@ -187,7 +187,7 @@ def _tool_dock_item_press(tool_id, tool_dock_item):
     for item in dock_items:
         item.set_item_color(False)
     tool_dock_item.set_item_color(True)
-    gui.editor_window.tline_cursor_manager.tool_selector_item_activated(None, tool_id)
+    gui.editor_window.tline_cursor_manager.tool_selector_item_activated(None, None, tool_id)
 
 def set_default_tool_dock_item_selected():
     for item in dock_items:
@@ -214,7 +214,9 @@ class ToolDockItem:
         if selected == True:
             self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
         else:
-            self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+            color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
+            color.parse("#292929")
+            self.widget.override_background_color(Gtk.StateType.NORMAL, color)
 
 
 # ------------------------------------------------------------- keyboard shortcuts

@@ -260,7 +260,10 @@ class TLineCursorManager:
 
         self.set_cursor_to_mode()
         self.set_tool_selector_to_mode()
-        guipopover.hide_edittools_popover()
+        try:
+            guipopover.hide_edittools_popover()
+        except:
+            pass # If called from tool dock the might not exist.
 
     def set_cursor_to_mode(self):
         if editorstate.cursor_on_tline == True:
