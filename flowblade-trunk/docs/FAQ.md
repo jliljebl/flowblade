@@ -46,9 +46,18 @@ To maintain sync and playback both Project Profile and Render Profile both need 
 
 Flowblade does not run natively on Wayland yet, but there are few ways to get Flowblade running.
 
+Typical error you get is:
+
+```
+AttributeError: 'GdkWaylandWindow' object has no attribute 'get_xid'. Did you mean: 'get_width'?
+
+```
+**Solutions**
+
 1. Start Flowblade from terminal with command:
 
+```
     GDK_BACKEND=x11 flowblade
-
+```
 
 2. Use X11 session when running Flowblade
