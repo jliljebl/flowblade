@@ -25,6 +25,7 @@ from gi.repository import Pango, PangoCairo, Gtk
 from gi.repository import Gdk, GLib
 
 import cairo
+import copy
 import math
 
 import appconsts
@@ -91,6 +92,7 @@ POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2 # Not used currently
 KF_DRAG_FRAME_ZERO_KF = 3
 KF_DRAG_BETWEEN_TWO = 4
+KF_DRAG_MULTIPLE = 5
 
 DRAG_MIN_Y = 4 # To make start value slightly magnetic, makes easier to move position without changing value.
   
@@ -1165,16 +1167,22 @@ class TLineKeyFrameEditor:
             return
 
         if hit_kf == - 1:
-            self.edit_value =  self.get_snapped_value(ly)
+            self.edit_value = self.get_snapped_value(ly)
         else:
             frame, value, kf_type = self.keyframes[hit_kf]
-            self.edit_value =  self.get_snapped_value(ly)
+            self.edit_value = self.get_snapped_value(ly)
             self.current_clip_frame = frame
         if hit_kf == 0:
             self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
         elif hit_kf != -1:
-            self.current_mouse_action = KF_DRAG
-            
+            if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+                self.current_mouse_action = KF_DRAG_MULTIPLE
+                self.mouse_drag_kfs_copy = copy.deepcopy(self.keyframes)
+                self.mouse_drag_start_frame = self.keyframes[self.active_kf_index][0]
+                self.mouse_drag_start_value = self.get_snapped_value(ly)
+            else:
+                self.current_mouse_action = KF_DRAG
+
             prev_frame, val, kf_type = self.keyframes[hit_kf - 1]
             self.drag_min = prev_frame  + 1
             try:
@@ -1182,7 +1190,10 @@ class TLineKeyFrameEditor:
                 self.drag_max = next_frame - 1
             except:
                 self.drag_max = self.clip_in + self.clip_length
-                
+
+            if self.current_mouse_action == KF_DRAG_MULTIPLE:
+                self.drag_max = self.clip_in + self.clip_length
+                                
         updater.repaint_tline()
 
     def motion_notify_event(self, x, y, state):
@@ -1203,7 +1214,9 @@ class TLineKeyFrameEditor:
             self.current_clip_frame = frame
             self.clip_editor_frame_changed(self.current_clip_frame)
             updater.repaint_tline()
-        elif self.current_mouse_action == KF_DRAG or self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
+        elif self.current_mouse_action == KF_DRAG or \
+             self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF or \
+             self.current_mouse_action == KF_DRAG_MULTIPLE:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
                 frame = 0
@@ -1214,6 +1227,19 @@ class TLineKeyFrameEditor:
                 self.set_active_kf_frame_and_value(frame, value)
             else:
                 self.set_active_kf_frame_and_value(frame, self.edit_value)
+        
+            if self.current_mouse_action == KF_DRAG_MULTIPLE:
+                for kf_index in range(self.active_kf_index + 1, len(self.keyframes)):
+                    start_frame = self.mouse_drag_kfs_copy[kf_index][0]
+                    frame_delta = frame - self.mouse_drag_start_frame
+                    start_value = self.mouse_drag_kfs_copy[kf_index][1]
+                    if self.value_drag_on == True:        
+                        value_delta = value - self.mouse_drag_start_value
+                        legal_value = self.get_legalized_value(start_value + value_delta)
+                        self.set_kf_frame_and_value(kf_index, start_frame + frame_delta, legal_value)
+                    else:
+                        self.set_kf_frame_and_value(kf_index, start_frame + frame_delta, start_value)
+
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
@@ -1254,6 +1280,17 @@ class TLineKeyFrameEditor:
                 self.set_active_kf_frame_and_value(frame, self.edit_value)
                 self.hack_fix_for_zero_one_keyframe_problem()
 
+            if self.current_mouse_action == KF_DRAG_MULTIPLE:
+                for kf_index in range(self.active_kf_index + 1, len(self.keyframes)):
+                    start_frame = self.mouse_drag_kfs_copy[kf_index][0]
+                    frame_delta = frame - self.mouse_drag_start_frame
+                    start_value = self.mouse_drag_kfs_copy[kf_index][1]
+                    if self.value_drag_on == True:        
+                        value_delta = value - self.mouse_drag_start_value
+                        self.set_kf_frame_and_value(kf_index, start_frame + frame_delta, start_value + value_delta)
+                    else:
+                        self.set_kf_frame_and_value(kf_index, start_frame + frame_delta, start_value)
+
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
@@ -1274,6 +1311,17 @@ class TLineKeyFrameEditor:
         elif  _snapping == 5:
             value = round(value / 5.0) * 5
         
+        return value
+
+    def get_legalized_value(self, value):
+        editable_property = edit_data["editable_property"] 
+        adjustment = editable_property.get_input_range_adjustment()
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper()
+        if value < lower:
+            value = lower 
+        if value > upper:
+            value = upper 
         return value
 
     def update_between_drag_keyframes_values(self, value):
@@ -1398,6 +1446,10 @@ class TLineKeyFrameEditor:
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, new_value, kf_type))
 
+    def set_kf_frame_and_value(self, kf_index, new_frame, new_value):
+        frame, val, kf_type = self.keyframes.pop(kf_index)
+        self.keyframes.insert(kf_index,(new_frame, new_value, kf_type))
+        
     def set_active_kf_type(self, new_type):
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(frame, val, new_type))
