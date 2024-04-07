@@ -1807,6 +1807,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     kfs_vbox = Gtk.VBox()
     kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)
     kfs_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Keyframe Value")), False, False, 0)
+    kfs_vbox.pack_start(_get_kb_row(_("Control + Mouse Drag"), _("Move all keyframes after selected")), False, False, 0)
     kfs = guiutils.get_named_frame(_("Keyframe and Geometry Editor"), kfs_vbox)
     
     geom_vbox = Gtk.VBox()
@@ -1821,7 +1822,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     geom_vbox.pack_start(_get_kb_row(_("Shift + Control + Left Arrow "), _("Scale Down More")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Shift + Control + Right Arrow"), _("Scale Up More")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
-    geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
+    geom = guiutils.get_named_frame(_("Geometry Editor GUI Panel"), geom_vbox)
 
     roto_vbox = Gtk.VBox()
     roto_vbox.pack_start(_get_kb_row(_("Delete"), _("Deletes Selected Handle")), False, False, 0)
