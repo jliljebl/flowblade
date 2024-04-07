@@ -28,8 +28,9 @@ of callbacks to parent objects, this makes the design sometimes a bit difficult 
 """
 
 import cairo
+import copy
 
-from gi.repository import Gtk, GObject, Gio
+from gi.repository import Gtk, GObject, Gio, Gdk
 from gi.repository import Pango, PangoCairo
 
 import appconsts
@@ -87,6 +88,7 @@ DARK_MULTIPLIER = 0.74
 KF_DRAG = 0
 POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2
+KF_DRAG_MULTI = 3
 
 # Icons.
 ACTIVE_KF_ICON = None
@@ -151,6 +153,8 @@ class ClipKeyFrameEditor:
         else:
             self.clip_in = 0
         self.current_clip_frame = self.clip_in
+        self.mouse_drag_kfs_copy = None
+        self.mouse_drag_start_frame = -99
 
         self.keyframes = [(0, 0.0)]
         self.active_kf_index = 0
@@ -356,7 +360,12 @@ class ClipKeyFrameEditor:
             if hit_kf == 0:
                 self.current_mouse_action = KF_DRAG_DISABLED
             else:
-                self.current_mouse_action = KF_DRAG
+                if event.get_state() & Gdk.ModifierType.SHIFT_MASK:
+                    self.current_mouse_action = KF_DRAG_MULTI
+                    self.mouse_drag_kfs_copy = copy.deepcopy(self.keyframes)
+                    self.mouse_drag_start_frame = self.current_clip_frame
+                else:
+                    self.current_mouse_action = KF_DRAG
                 
                 self.drag_start_x = event.x
                 
@@ -367,7 +376,11 @@ class ClipKeyFrameEditor:
                     self.drag_max = next_frame - 1
                 except:
                     self.drag_max = self.clip_in + self.clip_length
-
+                
+                # Multi drag gets same drag_max as last frame drag.
+                if self.current_mouse_action == KF_DRAG_MULTI:
+                    self.drag_max = self.clip_in + self.clip_length
+                    
             self.widget.queue_draw()
             
     def _motion_notify_event(self, x, y, state):
@@ -388,7 +401,19 @@ class ClipKeyFrameEditor:
             self.current_clip_frame = frame
             self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
             self.parent_editor.active_keyframe_changed()
+        elif self.current_mouse_action == KF_DRAG_MULTI:
+            frame = self._get_drag_frame(lx)
+            self.set_active_kf_frame(frame)
+            self.current_clip_frame = frame
 
+            for kf_index in range(self.active_kf_index + 1, len(self.keyframes)):
+                frame_delta = self.current_clip_frame - self.mouse_drag_start_frame
+                start_frame, value, type = self.mouse_drag_kfs_copy[kf_index]
+                self.set_kf_frame(kf_index, start_frame + frame_delta)
+ 
+            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
+            self.parent_editor.active_keyframe_changed()
+            
         self.widget.queue_draw()
         
         if self.mouse_listener != None:
@@ -411,6 +436,21 @@ class ClipKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             self.set_active_kf_frame(frame)
             self.current_clip_frame = frame
+            self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
+            self.parent_editor.active_keyframe_changed()
+            self.parent_editor.update_property_value()
+            self.parent_editor.update_slider_value_display(frame)   
+        elif self.current_mouse_action == KF_DRAG_MULTI:
+            frame = self._get_drag_frame(lx)
+            self.set_active_kf_frame(frame)
+            self.current_clip_frame = frame
+
+            for kf_index in range(self.active_kf_index + 1, len(self.keyframes)):
+                
+                frame_delta = self.current_clip_frame - self.mouse_drag_start_frame
+                start_frame, value, type = self.mouse_drag_kfs_copy[kf_index]
+                self.set_kf_frame(kf_index, start_frame + frame_delta)
+ 
             self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
             self.parent_editor.active_keyframe_changed()
             self.parent_editor.update_property_value()
@@ -610,6 +650,10 @@ class ClipKeyFrameEditor:
     def set_active_kf_frame(self, new_frame):
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
+
+    def set_kf_frame(self, kf_index, new_frame):
+        frame, val, kf_type = self.keyframes.pop(kf_index)
+        self.keyframes.insert(kf_index,(new_frame, val, kf_type))
         
     # 'oor' means out-of-range, these are for handling keyframes that are not in
     # current clip range.
