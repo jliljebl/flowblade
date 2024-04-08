@@ -46,6 +46,7 @@ directly to the various parts of the program they want to control.
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
+from editorstate import PROJECT
 
 import compositormodes
 import editorpersistance
@@ -122,7 +123,11 @@ def variable_speed_playback(speed):
     if editorstate.timeline_visible():
         trimmodes.set_no_edit_trim_mode()
 
-    PLAYER().start_variable_speed_playback(speed)
+    if abs(speed) > 0.0 and abs(speed) < 1.0:
+        fps = float(PROJECT().profile.frame_rate_num()) / float(PROJECT().profile.frame_rate_den())
+        PLAYER().start_timer_slowmo_playback(speed, fps)
+    else:
+        PLAYER().start_variable_speed_playback(speed)
 
     return True
 
