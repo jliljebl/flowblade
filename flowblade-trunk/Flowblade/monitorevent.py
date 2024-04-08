@@ -160,7 +160,6 @@ def l_pressed():
         
     new_speed = JKL_SPEEDS[jkl_index]
     
-    print(jkl_index,JKL_SLOWMO_FORWARD_INDEX )
     if jkl_index == JKL_SLOWMO_FORWARD_INDEX:
         fps = float(PROJECT().profile.frame_rate_num()) / float(PROJECT().profile.frame_rate_den())
         PLAYER().start_timer_slowmo_playback(new_speed, fps)

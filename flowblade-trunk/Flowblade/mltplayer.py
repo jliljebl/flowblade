@@ -163,7 +163,6 @@ class Player:
         self.slowmo_ticker.start_ticker()
     
     def _slowmo_plyback_ticker_event(self, speed):
-        print("-- slowmo ticker event")
         if speed > 0.0:
             self.seek_delta_from_timer_slowmo(1)
         else:
