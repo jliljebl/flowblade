@@ -261,7 +261,7 @@ class PositionBar:
         # This is only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
-            speed = editorstate.PLAYER().producer.get_speed()
+            speed = editorstate.PLAYER().get_speed()
             if speed != 1.0 and speed != 0.0:
                 cr.set_source_rgb(*SPEED_TEST_COLOR)
                 cr.select_font_face ("sans-serif",

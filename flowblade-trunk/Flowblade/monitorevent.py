@@ -28,6 +28,7 @@ import dialogutils
 import editorpersistance
 import editorstate
 from editorstate import PLAYER
+from editorstate import PROJECT
 from editorstate import current_sequence
 from editorstate import timeline_visible
 from editorstate import EDIT_MODE
@@ -44,8 +45,10 @@ import updater
 FF_REW_SPEED = 3.0
 
 
-JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, 0.0, 1.0, 1.8, 3.0, 5.0, 8.0]
-JKL_STOPPED_INDEX = 4
+JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, -0.35, 0.0, 0.35, 1.0, 1.8, 3.0, 5.0, 8.0]
+JKL_STOPPED_INDEX = 5
+JKL_SLOWMO_FORWARD_INDEX = 6
+JKL_SLOWMO_BACKWARD_INDEX = 4
 
 # ---------------------------------------- playback
 # Some events have different meanings depending on edit mode and
@@ -130,7 +133,12 @@ def j_pressed():
     if jkl_index < 0:
         jkl_index = 0
     new_speed = JKL_SPEEDS[jkl_index]
-    PLAYER().start_variable_speed_playback(new_speed)
+
+    if jkl_index == JKL_SLOWMO_BACKWARD_INDEX:
+        fps = float(PROJECT().profile.frame_rate_num()) / float(PROJECT().profile.frame_rate_den())
+        PLAYER().start_timer_slowmo_playback(new_speed, fps)
+    else:
+        PLAYER().start_variable_speed_playback(new_speed)
 
 def k_pressed():
     if timeline_visible():
@@ -149,12 +157,18 @@ def l_pressed():
 
     if jkl_index == len(JKL_SPEEDS):
         jkl_index = len(JKL_SPEEDS) - 1
+        
     new_speed = JKL_SPEEDS[jkl_index]
-    PLAYER().start_variable_speed_playback(new_speed)
-
+    
+    print(jkl_index,JKL_SLOWMO_FORWARD_INDEX )
+    if jkl_index == JKL_SLOWMO_FORWARD_INDEX:
+        fps = float(PROJECT().profile.frame_rate_num()) / float(PROJECT().profile.frame_rate_den())
+        PLAYER().start_timer_slowmo_playback(new_speed, fps)
+    else:
+        PLAYER().start_variable_speed_playback(new_speed)
 
 def _get_jkl_speed_index():
-    speed = PLAYER().producer.get_speed()
+    speed = PLAYER().get_speed()
     if speed  < -8.0:
         return 0
 

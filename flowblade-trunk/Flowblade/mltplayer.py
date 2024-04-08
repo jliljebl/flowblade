@@ -48,6 +48,7 @@ class Player:
 
         self.init_for_profile(profile)
         self.last_slowmo_seektime = 0.0
+        self.slowmo_ticker = None
         self.start_ticker()
             
     def init_for_profile(self, profile):
@@ -100,10 +101,15 @@ class Player:
         self.connect_and_start()
 
     def refresh(self): # Window events need this to get picture back
+        self.stop_timer_slowmo_playback()
+
         self.consumer.stop()
         self.consumer.start()
         
     def is_stopped(self):
+        if self.slowmo_ticker != None:
+            return False
+            
         return (self.producer.get_speed() == 0)
         
     def stop_consumer(self):
@@ -114,9 +120,8 @@ class Player:
         """
         Connects current procer and consumer and
         """
-        #if self.consumer == None:
-        #    return 
-
+        self.stop_timer_slowmo_playback()
+        
         self.consumer.purge()
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
@@ -125,23 +130,57 @@ class Player:
     def start_playback(self):
         """
         Starts playback from current producer
-        """        
+        """
+        self.stop_timer_slowmo_playback()
+        
         self.producer.set_speed(1)
         self.stop_ticker()
         self.start_ticker()
+
+    def get_speed(self):
+        if self.slowmo_ticker != None:
+            return self.slowmo_ticker.data
         
+        return self.producer.get_speed()
+
     def start_variable_speed_playback(self, speed):
         """
         Starts playback from current producer
         """
+        self.stop_timer_slowmo_playback()
+        
         self.producer.set_speed(speed)
         self.stop_ticker()
         self.start_ticker()
+
+    def start_timer_slowmo_playback(self, speed, fps):
+        self.stop_timer_slowmo_playback()
+        
+        frames = speed * fps
+        update_delay = abs(int(1000.0 / frames))
+        
+        self.slowmo_ticker = utilsgtk.GtkTicker(self._slowmo_plyback_ticker_event, update_delay, speed)
+        self.slowmo_ticker.start_ticker()
+    
+    def _slowmo_plyback_ticker_event(self, speed):
+        print("-- slowmo ticker event")
+        if speed > 0.0:
+            self.seek_delta_from_timer_slowmo(1)
+        else:
+            self.seek_delta_from_timer_slowmo(-1)
+
+    def stop_timer_slowmo_playback(self):
+        if self.slowmo_ticker != None:
+            self.stop_ticker()
+            self.slowmo_ticker.destroy_ticker()
+            self.slowmo_ticker = None
 
     def stop_playback(self):
         """
         Stops playback from current producer
         """
+        self.stop_timer_slowmo_playback()
+        
         self.loop_start = -1 # User possibly goes into marks looping but stops without Control key.
         self.loop_end = -1
         self.is_looping = False
@@ -151,6 +190,8 @@ class Player:
         updater.update_frame_displayers(self.producer.frame())
 
     def start_loop_playback(self, cut_frame, loop_half_length, track_length):
+        self.stop_timer_slowmo_playback()
+        
         self.loop_start = cut_frame - loop_half_length
         self.loop_end = cut_frame + loop_half_length
         if self.loop_start < 0:
@@ -164,6 +205,8 @@ class Player:
         self.start_ticker()
 
     def start_loop_playback_range(self, range_in, range_out):
+        self.stop_timer_slowmo_playback()
+        
         seq_len = self.producer.get_length()
         if range_in >= seq_len:
             return
@@ -183,6 +226,8 @@ class Player:
         """
         Stops playback from current producer
         """
+        self.stop_timer_slowmo_playback()
+        
         self.loop_start = -1
         self.loop_end = -1
         self.is_looping = False
@@ -197,16 +242,28 @@ class Player:
         return self.producer.frame()
     
     def seek_position_normalized(self, pos, length):
+        self.stop_timer_slowmo_playback()
+        
         frame_number = pos * length
         self.seek_frame(int(frame_number)) 
 
     def seek_delta(self, delta):
+        self.stop_timer_slowmo_playback()
+        
         # Get new frame
         frame = self.producer.frame() + delta
         # Seek frame
         self.seek_frame(frame)
 
+    def seek_delta_from_timer_slowmo(self, delta):
+        # Get new frame
+        frame = self.producer.frame() + delta
+        # Seek frame
+        self.seek_frame(frame, True, False)
+        
     def slowmo_seek_delta(self, delta):
+        self.stop_timer_slowmo_playback()
+        
         now = time.time()
         if (now - self.last_slowmo_seektime) > SLOWMO_FRAME_DELAY:
             self.last_slowmo_seektime = now
@@ -214,7 +271,10 @@ class Player:
             # Seek frame
             self.seek_frame(frame)
 
-    def seek_frame(self, frame, update_gui=True):
+    def seek_frame(self, frame, update_gui=True, stop_slowmo_timer=True):
+        if stop_slowmo_timer == True:
+            self.stop_timer_slowmo_playback()
+        
         # Force range
         length = self.get_active_length()
         if frame < 0:
@@ -231,11 +291,15 @@ class Player:
             updater.update_frame_displayers(frame)
 
     def seek_end(self, update_gui=True):
+        self.stop_timer_slowmo_playback()
+        
         length = self.get_active_length()
         last_frame = length - 1
         self.seek_frame(last_frame, update_gui)
 
     def seek_and_get_rgb_frame(self, frame, update_gui=True):
+        self.stop_timer_slowmo_playback()
+        
         # Force range
         length = self.get_active_length()
         if frame < 0:
@@ -263,6 +327,9 @@ class Player:
             self.seek_frame(new_seq_len)
 
     def is_playing(self):
+        if self.slowmo_ticker != None:
+            return True
+
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self, unused_data):
@@ -277,7 +344,8 @@ class Player:
 
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
-            self.stop_ticker()
+            if self.slowmo_ticker == None:
+                self.stop_ticker()
 
         # If we're out of active range seek end.
         if current_frame >= self.get_active_length():
@@ -311,6 +379,7 @@ class Player:
 
     def shutdown(self):
         self.stop_ticker()
+        self.stop_timer_slowmo_playback()
         self.producer.set_speed(0)
         self.consumer.stop()
 
@@ -320,3 +389,10 @@ class Player:
     
     def stop_ticker(self):
         self.ticker.destroy_ticker()
+
+
+    
+    
+
+
+        
