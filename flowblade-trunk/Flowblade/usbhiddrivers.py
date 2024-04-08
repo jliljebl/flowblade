@@ -374,7 +374,6 @@ class ContourDesignShuttle(UsbHidDriver):
 
         # map of shuttle encoder values -> variable playback speeds
         shuttle_encoder_value_playback_speed_map = {
-            248: -32.0,
             249: -16.0,
             250:  -8.0,
             251:  -5.0,
@@ -390,7 +389,6 @@ class ContourDesignShuttle(UsbHidDriver):
               5:   5.0,
               6:   8.0,
               7:  16.0,
-              8:  32.0,
         }
 
         # jog
