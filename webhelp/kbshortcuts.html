@@ -71,7 +71,7 @@ h1, h2, h3, h4, h5, h6 {
 <td>Delete</td>
 </tr>
 <tr>
-<td>ESCAPE</td>
+<td>Escape</td>
 <td>Stop Rendering Audio Levels</td>
 </tr>
 <tr>
@@ -153,11 +153,19 @@ h1, h2, h3, h4, h5, h6 {
 <td>Cut All Tracks</td>
 </tr>
 <tr>
-<td>DELETE</td>
+<td>Q</td>
+<td>Trim Clip Start to Playhead</td>
+</tr>
+<tr>
+<td>W</td>
+<td>Trim Clip End to Playhead</td>
+</tr>
+<tr>
+<td>Delete</td>
 <td>Splice Out</td>
 </tr>
 <tr>
-<td>Control + DELETE</td>
+<td>Control + Delete</td>
 <td>Lift</td>
 </tr>
 <tr>
@@ -166,11 +174,15 @@ h1, h2, h3, h4, h5, h6 {
 </tr>
 <tr>
 <td>Alt + S</td>
-<td>Sync Compositor</td>
+<td>Split Audio Synched</td>
 </tr>
 <tr>
 <td>Alt + R</td>
-<td>Resync</td>
+<td>Resync Track</td>
+</tr>
+<tr>
+<td>Control + Alt + S</td>
+<td>Sync all Compositors</td>
 </tr>
 <tr>
 <td>Y</td>
@@ -189,7 +201,7 @@ h1, h2, h3, h4, h5, h6 {
 <td>Overwrite Range</td>
 </tr>
 <tr>
-<td>A</td>
+<td>Alt + A</td>
 <td>Append Selected Media From Bin</td>
 </tr>
 <tr>
@@ -205,18 +217,6 @@ h1, h2, h3, h4, h5, h6 {
 <td>Paste Clips</td>
 </tr>
 <tr>
-<td>Alt R</td>
-<td>Toggle Ripple Mode</td>
-</tr>
-<tr>
-<td>S</td>
-<td>Resynchronization</td>
-</tr>
-<tr>
-<td>Control +L</td>
-<td>Log Range</td>
-</tr>
-<tr>
 <td>Left Arrow</td>
 <td>Prev Frame Trim Edit</td>
 </tr>
@@ -225,11 +225,11 @@ h1, h2, h3, h4, h5, h6 {
 <td>Next Frame Trim Edit</td>
 </tr>
 <tr>
-<td>Control + Left Arrow</td>
+<td>Shift + Left Arrow</td>
 <td>Back 10 Frames Trim Edit</td>
 </tr>
 <tr>
-<td>Control + Right Arrow</td>
+<td>Shift + Right Arrow</td>
 <td>Forward 10 Frames Trim Edit</td>
 </tr>
 <tr>
@@ -251,6 +251,25 @@ h1, h2, h3, h4, h5, h6 {
 <tr>
 <td>Control + .</td>
 <td>Nudge Move Selection Forward 10 Frames</td>
+</tr>
+<tr>
+<td>Alt + Up Arrow</td>
+<td>Open Next Clip In Filter Editor</td>
+</tr>
+<td>Alt + Down Arrow</td>
+<td>Open Previous Clip In Filter Editor</td>
+</tr>
+</tr>
+<td>Page Up</td>
+<td>Timeline Vertical Page Up</td>
+</tr>
+</tr>
+<td>Page Down</td>
+<td>Timeline Vertical Page Down</td>
+</tr>
+</tr>
+<td>Control + D</td>
+<td>Enable/Disable selected Clip track output</td>
 </tr>
 </tbody>
 </table>
@@ -299,6 +318,10 @@ h1, h2, h3, h4, h5, h6 {
 <td>Faster</td>
 </tr>
 <tr>
+<td>Control + Space</td>
+<td>Play/Pause Mark In to Mark Out loop</td>
+</tr>
+<tr>
 <td>Left Arrow</td>
 <td>Go To Previous Frame</td>
 </tr>
@@ -308,11 +331,18 @@ h1, h2, h3, h4, h5, h6 {
 </tr>
 <tr>
 <td>Control + Left Arrow</td>
-<td>Move Back 10 Frames</td>
+<td>Move Back at 10 fps slowmo</td>
 </tr>
 <tr>
 <td>Control + Right Arrow</td>
-<td>Move Forward 10 Frames</td>
+<td>Move Forward at 10 fps slowmo</td>
+</tr>
+<td>Shift + Left Arrow</td>
+<td>Move Back 10 frames</td>
+</tr>
+<tr>
+<td>Shift + Right Arrow</td>
+<td>Move Forward at 10 frames</td>
 </tr>
 <tr>
 <td>Down Arrow</td>
@@ -338,10 +368,6 @@ h1, h2, h3, h4, h5, h6 {
 <td>Alt + O</td>
 <td>To Mark Out</td>
 </tr>
-<tr>
-<td>Alt + K</td>
-<td>Clear In/Out Marks</td>
-</tr>
 </tbody>
 </table>
 
@@ -362,6 +388,10 @@ h1, h2, h3, h4, h5, h6 {
 <tr>
 <td>Control + V</td>
 <td>Paste Keyframe Value</td>
+</tr>
+<tr>
+<td>Control + Left Mouse</td>
+<td>Move selected keyframe and all keyframes after it</td>
 </tr>
 </tbody>
 </table>
