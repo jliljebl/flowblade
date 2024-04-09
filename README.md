@@ -62,6 +62,7 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 * **Text Tool:** Create text plates with a handy purpose build tool with large set of features like text shadow, outline etc.
 * **Batch Encoding:** Render multiple output clips automatically 
 * **Media re-linking:** Fix projects with missing media to be editable again.
+* **USB Shuttle playback control:** Control playback with all the most popular USB Shuttle/Jog devices available on market.
   
 **Supported editable media types:**
 * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
