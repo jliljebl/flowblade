@@ -504,7 +504,21 @@
         <property name="5" args="range_in=1,10 range_out=1,10 editor=ladspa_slider displayname=Knee!Radius(dB)">3.25</property>
         <property name="6" args="range_in=0,24 range_out=0,24 editor=ladspa_slider displayname=Makeup!gain(dB)">0</property>
     </filter>
-
+    <filter id="rbpitch">
+        <name>Rubberband Octave Shift</name>
+        <group>Audio Filter</group>
+        <property name="octaveshift" args="range_in=-3.3,3.3 range_out=-3.3,3.3 step=0.01 scale_digits=2 editor=slider displayname=Octave!Shift">0</property>
+        <property name="stretch" args="editor=booleancheckbox displayname=Stretch">0</property>
+        <property name="latency" args="range_in=0,2000 range_out=0,2000 editor=ladspa_slider displayname=Latency!ms">0</property>
+    </filter>
+    <filter id="rbpitch">
+        <name>Rubberband Pitch Scale</name>
+        <group>Audio Filter</group>
+        <property name="pitchscale" args="range_in=-0.1,10.0 range_out=-0.1,10.0 step=0.01 scale_digits=2 editor=slider displayname=Pitch!Scale">1</property>
+        <property name="stretch" args="editor=booleancheckbox displayname=Stretch">0</property>
+        <property name="latency" args="range_in=0,2000 range_out=0,2000 editor=ladspa_slider displayname=Latency!ms">0</property>
+    </filter>
+    
     <!-- ARTISTIC -->
     <filter id="charcoal">
         <name>Charcoal</name>

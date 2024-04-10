@@ -326,6 +326,8 @@ def load_filters_translations():
     filter_names["Unpremultiply"] = _("Unpremultiply")
     filter_names["Fade To Black In / Out"] = _("Fade To Black In / Out")
     filter_names["Elastic"] = _("Elastic")
+    filter_names["Rubberband Octave Shift"] = _("Rubberband Octave Shift")
+    filter_names["Rubberband Pitch Scale"] = _("Rubberband Pitch Scale")
     
     # param names
     global param_names
@@ -698,6 +700,10 @@ def load_filters_translations():
     param_names["Width"] = _("Width")
     param_names["Linear Scale"] = _("Linear Scale")
     param_names["Non-Linear Scale"] = _("Non-Linear Scale")
+    param_names["Latency ms"] = _("Latency ms")
+    param_names["Stretch"] = _("Stretch")
+    param_names["Pitch Scale"] = _("Pitch Scale")
+    param_names["Octave Shift"] = _("Octave Shift")
 
     # Combo options
     global combo_options
