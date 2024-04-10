@@ -17,6 +17,8 @@
 <br/>
 <div id="toccontent">
 
+
+<!-------------------------------------------------------------------- ALPHA -->
 <h2>Alpha</h2>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Alpha Gradient</div>
@@ -29,14 +31,14 @@
         <div class="filter-property"><b>Property: </b>Operation   <div class="filter-value">0.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Crop</div>
+        <div class="filter-name"><b>Filter: </b>Alpha Modify</div>
 
-        <div class="filter-property"><b>Property: </b>Left   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Right   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Top   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Bottom   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Display   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Display input alpha   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Operation   <div class="filter-value">0.21</div></div>
+        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">0</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Alpha Shape</div>
@@ -53,14 +55,10 @@
         <div class="filter-property"><b>Property: </b>Operation   <div class="filter-value">0.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Alpha Modify</div>
+        <div class="filter-name"><b>Filter: </b>Chroma Key</div>
 
-        <div class="filter-property"><b>Property: </b>Display   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Display input alpha   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Operation   <div class="filter-value">0.21</div></div>
-        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Key Color   <div class="filter-value">#00ff00</div></div>
+        <div class="filter-property"><b>Property: </b>Variance   <div class="filter-value">0.15</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Color Select</div>
@@ -76,9 +74,21 @@
         <div class="filter-property"><b>Property: </b>Operation   <div class="filter-value">0.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Spill Suppress</div>
+        <div class="filter-name"><b>Filter: </b>Crop</div>
 
-        <div class="filter-property"><b>Property: </b>Suppress exptype=default cbopts=Green:0.0,Blue:1.0   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Left   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Right   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Top   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Bottom   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>File Luma to Alpha</div>
+        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">25.65</div></div>
+        <div class="filter-property"><b>Property: </b>Softness   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Select!file  <div class="filter-value">""</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Luma Key</div>
@@ -89,14 +99,195 @@
         <div class="filter-property"><b>Property: </b>Post-Level   <div class="filter-value">255</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Chroma Key</div>
+        <div class="filter-name"><b>Filter: </b>Opacity</div>
+        <div class="filter-property"><b>Property: </b>Opacity   <div class="filter-value">0=1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>RotoMask</div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Spill Suppress</div>
 
-        <div class="filter-property"><b>Property: </b>Key Color   <div class="filter-value">#00ff00</div></div>
-        <div class="filter-property"><b>Property: </b>Variance   <div class="filter-value">0.15</div></div>
+        <div class="filter-property"><b>Property: </b>Suppress exptype=default cbopts=Green:0.0,Blue:1.0   <div class="filter-value">0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Unpremultiply</div>
 </div>
 
-<!-- AUDIO -->
+
+
+<!----------------------------------------------------------------- ARTISTIC -->
+<h2>Artistic</h2>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Cartoon</div>
+
+        <div class="filter-property"><b>Property: </b>Triplevel   <div class="filter-value">0.999</div></div>
+        <div class="filter-property"><b>Property: </b>Difference Space   <div class="filter-value">0.004</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Charcoal</div>
+
+        <div class="filter-property"><b>Property: </b>X Scatter   <div class="filter-value">2</div></div>
+        <div class="filter-property"><b>Property: </b>Y Scatter   <div class="filter-value">2</div></div>
+        <div class="filter-property"><b>Property: </b>Scale   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Mix   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Color Halftone</div>
+
+        <div class="filter-property"><b>Property: </b>Dot Radius   <div class="filter-value">0.4</div></div>
+        <div class="filter-property"><b>Property: </b>Cyan Angle   <div class="filter-value">0.3</div></div>
+        <div class="filter-property"><b>Property: </b>Magenta Angle   <div class="filter-value">0.45</div></div>
+        <div class="filter-property"><b>Property: </b>Yellow Angle   <div class="filter-value">0.25</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Dither</div>
+
+        <div class="filter-property"><b>Property: </b>Levels   <div class="filter-value">0.2</div></div>
+        <div class="filter-property"><b>Property: </b>Matrix Type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0   <div class="filter-value">1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Dust</div>
+        <div class="filter-property"><b>Property: </b>Max Diameter <div class="filter-value">2</div></div>
+        <div class="filter-property"><b>Property: </b>Max Count<div class="filter-value">4</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Edge Glow</div>
+
+        <div class="filter-property"><b>Property: </b>Edge Lightning   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Edge Brightness   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Non-Edge Brightness   <div class="filter-value">0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Emboss</div>
+
+        <div class="filter-property"><b>Property: </b>Azimuth   <div class="filter-value">0.2</div></div>
+        <div class="filter-property"><b>Property: </b>Lightness   <div class="filter-value">0.33</div></div>
+        <div class="filter-property"><b>Property: </b>Bump Height   <div class="filter-value">0.24</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Glitch</div>
+        <div class="filter-property"><b>Property: </b>Glitch Frequency <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Block Height <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Shift Intensity  <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Color Intensity  <div class="filter-value">0.5</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Glow</div>
+
+        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Grain</div>
+
+        <div class="filter-property"><b>Property: </b>Noise   <div class="filter-value">40</div></div>
+        <div class="filter-property"><b>Property: </b>Contrast   <div class="filter-value">100</div></div>
+        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">85</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Lines</div>
+        <div class="filter-property"><b>Property: </b>Line Width <div class="filter-value">2</div></div>
+        <div class="filter-property"><b>Property: </b>Number<div class="filter-value">4</div></div>
+        <div class="filter-property"><b>Property: </b>Darker <div class="filter-value">20</div></div>
+        <div class="filter-property"><b>Property: </b>Lighter<div class="filter-value">20</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Old Film</div>
+
+        <div class="filter-property"><b>Property: </b>Delta   <div class="filter-value">14</div></div>
+        <div class="filter-property"><b>Property: </b>Duration   <div class="filter-value">20</div></div>
+        <div class="filter-property"><b>Property: </b>Bright. up   <div class="filter-value">20</div></div>
+        <div class="filter-property"><b>Property: </b>Bright. down   <div class="filter-value">30</div></div>
+        <div class="filter-property"><b>Property: </b>Bright. dur.   <div class="filter-value">70</div></div>
+        <div class="filter-property"><b>Property: </b>Develop up   <div class="filter-value">60</div></div>
+        <div class="filter-property"><b>Property: </b>Develop down   <div class="filter-value">20</div></div>
+        <div class="filter-property"><b>Property: </b>Develop dur.   <div class="filter-value">70</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>RGB Shift</div>
+        <div class="filter-property"><b>Property: </b>Horizontal <div class="filter-value">0.4</div></div>
+        <div class="filter-property"><b>Property: </b>Vertical<div class="filter-value">0.4</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Scanlines</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Sobel</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Soft Glow</div>
+
+        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">0.75</div></div>
+        <div class="filter-property"><b>Property: </b>Sharpness   <div class="filter-value">0.85</div></div>
+        <div class="filter-property"><b>Property: </b>Blend Type   <div class="filter-value">0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Vignette</div>
+
+        <div class="filter-property"><b>Property: </b>Aspect   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Center Size   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Softness   <div class="filter-value">0=0.2</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Vignette Advanced</div>
+
+        <div class="filter-property"><b>Property: </b>Smooth <div class="filter-value">0.8</div></div>
+        <div class="filter-property"><b>Property: </b>Radius <div class="filter-value">0.2</div></div>
+        <div class="filter-property"><b>Property: </b>Pos X <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Pos Y <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Opacity <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Fade <div class="filter-value">1.0</div></div>
+</div>
+
+
+<!-------------------------------------------------------------------- AUDIO -->
 <h2>Audio</h2>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Channel Copy</div>
+
+        <div class="filter-property"><b>Property: </b>Copy!Channel!From  <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Copy!Channel!To   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Mono to Stereo</div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Noise Gate</div>
+        <div class="filter-property"><b>Filter: </b>LF keyfilter(Hz)<div class="filter-value">33.6</div></div>
+        <div class="filter-property"><b>Filter: </b>HF keyfilter(Hz)<div class="filter-value">23520.0</div></div>
+        <div class="filter-property"><b>Filter: </b>Threshold(dB)<div class="filter-value">-70.0</div></div>
+        <div class="filter-property"><b>Filter: </b>Attack(ms)<div class="filter-value">250.0</div></div>
+        <div class="filter-property"><b>Filter: </b>Hold(ms)<div class="filter-value">1500.0</div></div>
+        <div class="filter-property"><b>Filter: </b>Decay(ms)<div class="filter-value">2000.0</div></div>
+        <div class="filter-property"><b>Filter: </b>Range(dB)<div class="filter-value">-90.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Normalize</div>
+        <div class="filter-property"><b>Property: </b>Target Loudness"   <div class="filter-value"></div>-23.0</div>
+        <div class="filter-property"><b>Property: </b>Analysis Length"   <div class="filter-value"></div>10</div>
+        <div class="filter-property"><b>Property: </b>Max Gain   <div class="filter-value"></div>15.0</div>
+        <div class="filter-property"><b>Property: </b>Min Gain   <div class="filter-value"></div>-15.0</div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pan</div>
+        <div class="filter-property"><b>Property: </b>Left/Right   <div class="filter-value">0.5</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pan Right Channel</div>
+        <div class="filter-property"><b>Property: </b>Left/Right   <div class="filter-value">0=1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pan Left Channel</div>
+        <div class="filter-property"><b>Property: </b>Left/Right   <div class="filter-value">0=0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Swap Channels</div>
+</div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Volume</div>
 
@@ -105,63 +296,39 @@
         <div class="filter-property"><b>Property: </b>track   <div class="filter-value">0</div></div>
         <div class="filter-property"><b>Property: </b>end   <div class="filter-value">1</div></div>
 </div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Pan</div>
-        <div class="filter-property"><b>Property: </b>Left/Right   <div class="filter-value">0.5</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Pan Keyframed</div>
-        <div class="filter-property"><b>Property: </b>start   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>end   <div class="filter-value">0.5</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Mono to Stereo</div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Swap Channels</div>
-</div>
 
 
-
-
+<!------------------------------------------------------------- AUDIO FILTER -->
 <h2>Audio Filter</h2>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Pitchshifter - AM</div>
+        <div class="filter-name"><b>Filter: </b>Bandpass</div>
 
-        <div class="filter-property"><b>Property: </b>Pitch Shift   <div class="filter-value">1.0</div></div>
-        <div class="filter-property"><b>Property: </b>Buffer Size   <div class="filter-value">4</div></div>
+        <div class="filter-property"><b>Property: </b>Center Frequency(Hz)   <div class="filter-value">300.0</div></div>
+        <div class="filter-property"><b>Property: </b>Bandwidth(Hz)   <div class="filter-value">300.0</div></div>
+        <div class="filter-property"><b>Property: </b>Stages   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Chorus - Multivoice</div>
+
+        <div class="filter-property"><b>Property: </b>Number of voices   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Delay base(ms)   <div class="filter-value">10.0</div></div>
+        <div class="filter-property"><b>Property: </b>Voice separation(ms)   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Detune(%)   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Oscillation frequency(Hz)   <div class="filter-value">9.0</div></div>
+        <div class="filter-property"><b>Property: </b>Output attenuation(dB)   <div class="filter-value">0.0</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Distort - Barry's Satan</div>
+        <div class="filter-name"><b>Filter: </b>Compressor</div>
 
-        <div class="filter-property"><b>Property: </b>Decay Time(samples)   <div class="filter-value">30</div></div>
-        <div class="filter-property"><b>Property: </b>Knee Point(dB)   <div class="filter-value">-30</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Frequency Shift - Bode/Moog</div>
-
-        <div class="filter-property"><b>Property: </b>Frequency shift   <div class="filter-value">100</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Equalize - DJ 3-band</div>
-
-        <div class="filter-property"><b>Property: </b>Low Gain(dB)   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Mid Gain(dB)   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>High Gain(dB)   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Flanger - DJ</div>
-
-        <div class="filter-property"><b>Property: </b>0   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Oscillation period(s)   <div class="filter-value">1.0</div></div>
-        <div class="filter-property"><b>Property: </b>Oscillation depth(ms)   <div class="filter-value">4.0</div></div>
-        <div class="filter-property"><b>Property: </b>Feedback%   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>RMP-peak"  <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Attack(ms)  <div class="filter-value">100</div></div>
+        <div class="filter-property"><b>Property: </b>Relese(ms)  <div class="filter-value">400</div></div>
+        <div class="filter-property"><b>Property: </b>Threshold(dB)"  <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Ratio  <div class="filter-value"></div>1</div>
+        <div class="filter-property"><b>Property: </b>Knee!Radius(dB)  <div class="filter-value">3.25</div></div>
+        <div class="filter-property"><b>Property: </b>Makeup!gain(dB)  <div class="filter-value">0</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Declipper</div>
@@ -185,6 +352,13 @@
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
+        <div class="filter-name"><b>Filter: </b>Distort - Barry's Satan</div>
+
+        <div class="filter-property"><b>Property: </b>Decay Time(samples)   <div class="filter-value">30</div></div>
+        <div class="filter-property"><b>Property: </b>Knee Point(dB)   <div class="filter-value">-30</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
         <div class="filter-name"><b>Filter: </b>Distort - Diode Processor</div>
 
         <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">1.0</div></div>
@@ -198,62 +372,25 @@
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Highpass - Butterworth</div>
+        <div class="filter-name"><b>Filter: </b>Distort - Pointer cast</div>
 
-        <div class="filter-property"><b>Property: </b>Cutoff Frequency(Hz)   <div class="filter-value">500</div></div>
-        <div class="filter-property"><b>Property: </b>Resonance   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Effect cutoff(Hz)   <div class="filter-value">500</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet mix   <div class="filter-value">0.5</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Lowpass - Butterworth</div>
+        <div class="filter-name"><b>Filter: </b>Distort - Sinus Wavewrap</div>
 
-        <div class="filter-property"><b>Property: </b>Cutoff Frequency(Hz)   <div class="filter-value">500</div></div>
-        <div class="filter-property"><b>Property: </b>Resonance   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">5.0</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>GSM Simulator</div>
+        <div class="filter-name"><b>Filter: </b>Equalize - DJ 3-band</div>
 
-        <div class="filter-property"><b>Property: </b>0   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Passes   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Error Rate   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Reverb - GVerb</div>
-
-        <div class="filter-property"><b>Property: </b>Roomsize   <div class="filter-value">75.75</div></div>
-        <div class="filter-property"><b>Property: </b>Reverb time(s)   <div class="filter-value">7.575</div></div>
-        <div class="filter-property"><b>Property: </b>Damping   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Input bandwidth   <div class="filter-value">0.75</div></div>
-        <div class="filter-property"><b>Property: </b>Dry signal level(dB)   <div class="filter-value">-70.0</div></div>
-        <div class="filter-property"><b>Property: </b>Early reflection level(dB)   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Tail level(dB)   <div class="filter-value">-17.5</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Noise Gate</div>
-        <div class="filter-property"><b>Filter: </b>LF keyfilter(Hz)<div class="filter-value">33.6</div></div>
-        <div class="filter-property"><b>Filter: </b>HF keyfilter(Hz)<div class="filter-value">23520.0</div></div>
-        <div class="filter-property"><b>Filter: </b>Threshold(dB)<div class="filter-value">-70.0</div></div>
-        <div class="filter-property"><b>Filter: </b>Attack(ms)<div class="filter-value">250.0</div></div>
-        <div class="filter-property"><b>Filter: </b>Hold(ms)<div class="filter-value">1500.0</div></div>
-        <div class="filter-property"><b>Filter: </b>Decay(ms)<div class="filter-value">2000.0</div></div>
-        <div class="filter-property"><b>Filter: </b>Range(dB)<div class="filter-value">-90.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Bandpass</div>
-
-        <div class="filter-property"><b>Property: </b>Center Frequency(Hz)   <div class="filter-value">300.0</div></div>
-        <div class="filter-property"><b>Property: </b>Bandwidth(Hz)   <div class="filter-value">300.0</div></div>
-        <div class="filter-property"><b>Property: </b>Stages   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Pitchscaler - High Quality</div>
-
-        <div class="filter-property"><b>Property: </b>Pitch-coefficient   <div class="filter-value">1.0</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Low Gain(dB)   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Mid Gain(dB)   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>High Gain(dB)   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Equalize - Multiband</div>
@@ -276,19 +413,54 @@
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Reverb - Plate</div>
+        <div class="filter-name"><b>Filter: </b>Flanger - DJ</div>
 
-        <div class="filter-property"><b>Property: </b>Reverb time   <div class="filter-value">4.25</div></div>
-        <div class="filter-property"><b>Property: </b>Damping   <div class="filter-value">0.25</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet mix   <div class="filter-value">0.66</div></div>
+        <div class="filter-property"><b>Property: </b>0   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Oscillation period(s)   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Oscillation depth(ms)   <div class="filter-value">4.0</div></div>
+        <div class="filter-property"><b>Property: </b>Feedback%   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Frequency Shift - Bode/Moog</div>
+
+        <div class="filter-property"><b>Property: </b>Frequency shift   <div class="filter-value">100</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>GSM Simulator</div>
+
+        <div class="filter-property"><b>Property: </b>0   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Passes   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Error Rate   <div class="filter-value">0</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Distort - Pointer cast</div>
+        <div class="filter-name"><b>Filter: </b>Highpass - Butterworth</div>
 
-        <div class="filter-property"><b>Property: </b>Effect cutoff(Hz)   <div class="filter-value">500</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet mix   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Cutoff Frequency(Hz)   <div class="filter-value">500</div></div>
+        <div class="filter-property"><b>Property: </b>Resonance   <div class="filter-value">0.5</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Lowpass - Butterworth</div>
+
+        <div class="filter-property"><b>Property: </b>Cutoff Frequency(Hz)   <div class="filter-value">500</div></div>
+        <div class="filter-property"><b>Property: </b>Resonance   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pitchscaler - High Quality</div>
+
+        <div class="filter-property"><b>Property: </b>Pitch-coefficient   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pitchshifter - AM</div>
+
+        <div class="filter-property"><b>Property: </b>Pitch Shift   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Buffer Size   <div class="filter-value">4</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Rate Shifter</div>
@@ -297,15 +469,42 @@
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Signal Shifter</div>
+        <div class="filter-name"><b>Filter: </b>Reverb - GVerb</div>
 
-        <div class="filter-property"><b>Property: </b>Sift   <div class="filter-value">20</div></div>
+        <div class="filter-property"><b>Property: </b>Roomsize   <div class="filter-value">75.75</div></div>
+        <div class="filter-property"><b>Property: </b>Reverb time(s)   <div class="filter-value">7.575</div></div>
+        <div class="filter-property"><b>Property: </b>Damping   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Input bandwidth   <div class="filter-value">0.75</div></div>
+        <div class="filter-property"><b>Property: </b>Dry signal level(dB)   <div class="filter-value">-70.0</div></div>
+        <div class="filter-property"><b>Property: </b>Early reflection level(dB)   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Tail level(dB)   <div class="filter-value">-17.5</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Distort - Sinus Wavewrap</div>
+        <div class="filter-name"><b>Filter: </b>Reverb - Plate</div>
 
-        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">5.0</div></div>
+        <div class="filter-property"><b>Property: </b>Reverb time   <div class="filter-value">4.25</div></div>
+        <div class="filter-property"><b>Property: </b>Damping   <div class="filter-value">0.25</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet mix   <div class="filter-value">0.66</div></div>
+        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
+</div>
+
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Rubberband Pitch Scale</div>
+        <div class="filter-property"><b>Property: </b>Pitch Scale   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Stretch <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Latency ms   <div class="filter-value">0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Rubberband Octave Shift</div>
+        <div class="filter-property"><b>Property: </b>Octave Shift   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Stretch <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Latency ms   <div class="filter-value">0</div></div>
+</filter>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Signal Shifter</div>
+
+        <div class="filter-property"><b>Property: </b>Sift   <div class="filter-value">20</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
 <div class="filter">
@@ -318,122 +517,32 @@
         <div class="filter-property"><b>Property: </b>Wear   <div class="filter-value">0</div></div>
         <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1.0</div></div>
 </div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Chorus - Multivoice</div>
 
-        <div class="filter-property"><b>Property: </b>Number of voices   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Delay base(ms)   <div class="filter-value">10.0</div></div>
-        <div class="filter-property"><b>Property: </b>Voice separation(ms)   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Detune(%)   <div class="filter-value">1.0</div></div>
-        <div class="filter-property"><b>Property: </b>Oscillation frequency(Hz)   <div class="filter-value">9.0</div></div>
-        <div class="filter-property"><b>Property: </b>Output attenuation(dB)   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Dry/Wet   <div class="filter-value">1</div></div>
+
+
+
+<!-------------------------------------------------------------------- BLEND -->
+<h2>Blend</h2>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Blend Mode</div>
+
+        <div class="filter-property"><b>Property: </b>Blend Mode  <div class="filter-value">normal</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Wipe</div>
+
+        <div class="filter-property"><b>Property: </b>Wipe Type  <div class="filter-value">WIPE_PATHbi-linear_y.pgm</div></div>
+        <div class="filter-property"><b>Property: </b>Mix  <div class="filter-value">0=0</div></div>
+        <div class="filter-property"><b>Property: </b>Softness  <div class="filter-value">0</div></div>
 </div>
 
 
-
-<!-- ARTISTIC -->
-<h2>Artistic</h2>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Charcoal</div>
-
-        <div class="filter-property"><b>Property: </b>X Scatter   <div class="filter-value">2</div></div>
-        <div class="filter-property"><b>Property: </b>Y Scatter   <div class="filter-value">2</div></div>
-        <div class="filter-property"><b>Property: </b>Scale   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Mix   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Invert   <div class="filter-value">0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Glow</div>
-
-        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Old Film</div>
-
-        <div class="filter-property"><b>Property: </b>Delta   <div class="filter-value">14</div></div>
-        <div class="filter-property"><b>Property: </b>Duration   <div class="filter-value">20</div></div>
-        <div class="filter-property"><b>Property: </b>Bright. up   <div class="filter-value">20</div></div>
-        <div class="filter-property"><b>Property: </b>Bright. down   <div class="filter-value">30</div></div>
-        <div class="filter-property"><b>Property: </b>Bright. dur.   <div class="filter-value">70</div></div>
-        <div class="filter-property"><b>Property: </b>Develop up   <div class="filter-value">60</div></div>
-        <div class="filter-property"><b>Property: </b>Develop down   <div class="filter-value">20</div></div>
-        <div class="filter-property"><b>Property: </b>Develop dur.   <div class="filter-value">70</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Scanlines</div>
-
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Cartoon</div>
-
-        <div class="filter-property"><b>Property: </b>Triplevel   <div class="filter-value">0.999</div></div>
-        <div class="filter-property"><b>Property: </b>Difference Space   <div class="filter-value">0.004</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Vignette</div>
-
-        <div class="filter-property"><b>Property: </b>Aspect   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Center Size   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Softness   <div class="filter-value">0=0.2</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Emboss</div>
-
-        <div class="filter-property"><b>Property: </b>Azimuth   <div class="filter-value">0.2</div></div>
-        <div class="filter-property"><b>Property: </b>Lightness   <div class="filter-value">0.33</div></div>
-        <div class="filter-property"><b>Property: </b>Bump Height   <div class="filter-value">0.24</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Dither</div>
-
-        <div class="filter-property"><b>Property: </b>Levels   <div class="filter-value">0.2</div></div>
-        <div class="filter-property"><b>Property: </b>Matrix Type exptype=default cbopts=magic2x2:0.0,magic4x4:0.12,ordered4x4:0.23,lines4x4:0.34,halftone6x6:0.45,ordered6x6:0.56,ordered8x8:0.67,cluster3:0.78,cluster4:0.89,cluster8:1.0   <div class="filter-value">1.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Color Halftone</div>
-
-        <div class="filter-property"><b>Property: </b>Dot Radius   <div class="filter-value">0.4</div></div>
-        <div class="filter-property"><b>Property: </b>Cyan Angle   <div class="filter-value">0.3</div></div>
-        <div class="filter-property"><b>Property: </b>Magenta Angle   <div class="filter-value">0.45</div></div>
-        <div class="filter-property"><b>Property: </b>Yellow Angle   <div class="filter-value">0.25</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Soft Glow</div>
-
-        <div class="filter-property"><b>Property: </b>Blur   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">0.75</div></div>
-        <div class="filter-property"><b>Property: </b>Sharpness   <div class="filter-value">0.85</div></div>
-        <div class="filter-property"><b>Property: </b>Blend Type   <div class="filter-value">0.0</div></div>
-</div>
-
-
-<!-- BLUR -->
+<!--------------------------------------------------------------------- BLUR -->
 <h2>Blur</h2>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Pixelize</div>
-
-        <div class="filter-property"><b>Property: </b>Block Width   <div class="filter-value">0.1</div></div>
-        <div class="filter-property"><b>Property: </b>Block Height   <div class="filter-value">0.1</div></div>
-</div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Blur</div>
 
         <div class="filter-property"><b>Property: </b>Size   <div class="filter-value">"0=0.0"</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Grain</div>
-
-        <div class="filter-property"><b>Property: </b>Noise   <div class="filter-value">40</div></div>
-        <div class="filter-property"><b>Property: </b>Contrast   <div class="filter-value">100</div></div>
-        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">85</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>IRR Blur</div>
-
-        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0.25</div></div>
-        <div class="filter-property"><b>Property: </b>Type   <div class="filter-value">0.8</div></div>
-        <div class="filter-property"><b>Property: </b>Edge   <div class="filter-value">1</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Box Blur</div>
@@ -443,36 +552,74 @@
         <div class="filter-property"><b>Property: </b>Vertical   <div class="filter-value">7</div></div>
 </div>
 <div class="filter">
+        <div class="filter-name"><b>Filter: </b>IRR Blur</div>
+
+        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0.25</div></div>
+        <div class="filter-property"><b>Property: </b>Type   <div class="filter-value">0.8</div></div>
+        <div class="filter-property"><b>Property: </b>Edge   <div class="filter-value">1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Pixelize</div>
+
+        <div class="filter-property"><b>Property: </b>Block Width   <div class="filter-value">0.1</div></div>
+        <div class="filter-property"><b>Property: </b>Block Height   <div class="filter-value">0.1</div></div>
+</div>
+<div class="filter">
         <div class="filter-name"><b>Filter: </b>RGB Noise</div>
 
         <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0.2</div></div>
 </div>
 
-<!-- COLOR -->
+
+
+
+<!-------------------------------------------------------------------- COLOR -->
 <h2>Color</h2>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Grayscale</div>
+        <div class="filter-name"><b>Filter: </b>Brightness</div>
 
+        <div class="filter-property"><b>Property: </b>level   <div class="filter-value">"0=1.0"</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Contrast</div>
+        <div class="filter-name"><b>Filter: </b>Color Adjustment</div>
 
-        <div class="filter-property"><b>Property: </b>Contrast   <div class="filter-value">"0=0.5"</div></div>
+        <div class="filter-property"><b>Property: </b>R   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>G   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>B   <div class="filter-value">0=0.5</div></div>
+        <div class="filter-property"><b>Property: </b>hue   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>saturation   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Luma Band editor=combobox exptype=default cbopts=Shadows:0.0,Midtones:0.5,Highlights:1.0   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Keep luma   <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Alpha controlled   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Luma formula   <div class="filter-value">0.0</div></div>
+<extraeditor name="colorbox"></extraeditor>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Saturation</div>
+        <div class="filter-name"><b>Filter: </b>Color Channel Mixer</div>
 
-        <div class="filter-property"><b>Property: </b>Saturation   <div class="filter-value">"0=0.125"</div></div>
+        <div class="filter-property"><b>Property: </b>Red Ch. Red Gain <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Red Ch. Green Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Red Ch. Blue Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Green Ch. Red Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Green Ch. Green Gain <div class="filter-value">1</div></div>
+        <div class="filter-property"><b>Property: </b>Green Ch. Blue Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Blue Ch. Red Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Blue Ch. Green Gain <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Blue Ch. Blue Gain <div class="filter-value">1</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Invert</div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Lift Gain Gamma</div>
+        <div class="filter-name"><b>Filter: </b>Color Grading</div>
 
-        <div class="filter-property"><b>Property: </b>Lift   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Gain   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Gamma   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>R_table   <div class="filter-value">LINEAR</div></div>
+        <div class="filter-property"><b>Property: </b>G_table   <div class="filter-value">LINEAR</div></div>
+        <div class="filter-property"><b>Property: </b>B_table   <div class="filter-value">LINEAR</div></div>
+        <div class="filter-property"><b>Property: </b>shadow_hue   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>mid_hue   <div class="filter-value">0.33</div></div>
+        <div class="filter-property"><b>Property: </b>hi_hue   <div class="filter-value">0.66</div></div>
+        <div class="filter-property"><b>Property: </b>shadow_saturation   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>mid_saturation   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>hi_saturation   <div class="filter-value">0.5</div></div>
+<extraeditor name="color_corrector"></extraeditor>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Color Lift Gain Gamma</div>
@@ -494,39 +641,11 @@
 <extraeditor name="colorlgg"></extraeditor>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Hue</div>
+        <div class="filter-name"><b>Filter: </b>Contrast</div>
 
-        <div class="filter-property"><b>Property: </b>Hue   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Contrast   <div class="filter-value">"0=0.5"</div></div>
 </div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Brightness</div>
 
-        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">0.5</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Brightness Keyframed</div>
-
-<multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Brightness</div>
-
-        <div class="filter-property"><b>Property: </b>level   <div class="filter-value">"0=1.0"</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Color Grading</div>
-
-        <div class="filter-property"><b>Property: </b>R_table   <div class="filter-value">LINEAR</div></div>
-        <div class="filter-property"><b>Property: </b>G_table   <div class="filter-value">LINEAR</div></div>
-        <div class="filter-property"><b>Property: </b>B_table   <div class="filter-value">LINEAR</div></div>
-        <div class="filter-property"><b>Property: </b>shadow_hue   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>mid_hue   <div class="filter-value">0.33</div></div>
-        <div class="filter-property"><b>Property: </b>hi_hue   <div class="filter-value">0.66</div></div>
-        <div class="filter-property"><b>Property: </b>shadow_saturation   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>mid_saturation   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>hi_saturation   <div class="filter-value">0.5</div></div>
-<extraeditor name="color_corrector"></extraeditor>
-</div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Curves</div>
 
@@ -540,6 +659,18 @@
 <extraeditor name="crcurves"></extraeditor>
 </div>
 <div class="filter">
+        <div class="filter-name"><b>Filter: </b>Grayscale</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Grayscale Luminance</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Invert</div>
+</div>
+
+<div class="filter">
         <div class="filter-name"><b>Filter: </b>Levels</div>
 
         <div class="filter-property"><b>Property: </b>Channel editor=combobox exptype=default cbopts=Luma:0.3,Red:0.0,Green:0.1,Blue:0.2   <div class="filter-value">0.3</div></div>
@@ -551,34 +682,21 @@
         <div class="filter-property"><b>Property: </b>White output   <div class="filter-value">0=1</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>RGB Adjustment</div>
+        <div class="filter-name"><b>Filter: </b>Lift Gain Gamma</div>
 
-        <div class="filter-property"><b>Property: </b>Red   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Green   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Blue   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Action editor=combobox exptype=default cbopts=Add Constant:0.0,Change Gamma:0.5,Multiply:1.0   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Keep Luma   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Alpha controlled   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Luma Formula   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Lift   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Gain   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Gamma   <div class="filter-value">0.0</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Color Adjustment</div>
+        <div class="filter-name"><b>Filter: </b>Lut3D</div>
 
-        <div class="filter-property"><b>Property: </b>R   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>G   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>B   <div class="filter-value">0=0.5</div></div>
-        <div class="filter-property"><b>Property: </b>hue   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>saturation   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Luma Band editor=combobox exptype=default cbopts=Shadows:0.0,Midtones:0.5,Highlights:1.0   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Keep luma   <div class="filter-value">1</div></div>
-        <div class="filter-property"><b>Property: </b>Alpha controlled   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Luma formula   <div class="filter-value">0.0</div></div>
-<extraeditor name="colorbox"></extraeditor>
+        <div class="filter-property"><b>Property: </b>Select!.cube file  <div class="filter-value">""</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Gamma</div>
+        <div class="filter-name"><b>Filter: </b>Saturation</div>
 
-        <div class="filter-property"><b>Property: </b>Gamma   <div class="filter-value">1.00</div></div>
+        <div class="filter-property"><b>Property: </b>Saturation   <div class="filter-value">"0=0.125"</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>White Balance</div>
@@ -588,14 +706,10 @@
 </div>
 
 
-<!-- COLOR EFFECT -->
-<h2>Color Effect</h2>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Color Clustering</div>
 
-        <div class="filter-property"><b>Property: </b>Num   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Dist. weight   <div class="filter-value">0.5</div></div>
-</div>
+
+<!------------------------------------------------------------- COLOR EFFECT -->
+<h2>Color Effect</h2>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Chroma Hold</div>
 
@@ -603,24 +717,10 @@
         <div class="filter-property"><b>Property: </b>Variance   <div class="filter-value">0.01</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Three Layer</div>
+        <div class="filter-name"><b>Filter: </b>Color Clustering</div>
 
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Threshold0r</div>
-
-        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">0=0.5</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Technicolor</div>
-
-        <div class="filter-property"><b>Property: </b>Red Saturation   <div class="filter-value">200</div></div>
-        <div class="filter-property"><b>Property: </b>Yellow Saturation   <div class="filter-value">200</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Primaries</div>
-
-        <div class="filter-property"><b>Property: </b>Factor   <div class="filter-value">32</div></div>
+        <div class="filter-property"><b>Property: </b>Num   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Dist. weight   <div class="filter-value">0.5</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Color Distance</div>
@@ -628,38 +728,9 @@
         <div class="filter-property"><b>Property: </b>Source color   <div class="filter-value">#000000</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Threshold</div>
-
-        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">125.0</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Posterize</div>
-
-        <div class="filter-property"><b>Property: </b>Levels   <div class="filter-value">0.093</div></div>
-</div>
-<div class="filter">
         <div class="filter-name"><b>Filter: </b>Color Tap</div>
 
         <div class="filter-property"><b>Property: </b>Effect <div class="filter-value">xpro</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Newspaper</div>
-
-        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">0.75</div></div>
-        <div class="filter-property"><b>Property: </b>Sharpness   <div class="filter-value">0.85</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Sepia</div>
-
-        <div class="filter-property"><b>Property: </b>U   <div class="filter-value">75</div></div>
-        <div class="filter-property"><b>Property: </b>V   <div class="filter-value">150</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Tint</div>
-
-        <div class="filter-property"><b>Property: </b>Black   <div class="filter-value">#000000</div></div>
-        <div class="filter-property"><b>Property: </b>White   <div class="filter-value">#ff8080</div></div>
-        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0=0.25</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Colorize</div>
@@ -668,15 +739,95 @@
         <div class="filter-property"><b>Property: </b>Saturation   <div class="filter-value">0.5</div></div>
         <div class="filter-property"><b>Property: </b>Lightness   <div class="filter-value">0.5</div></div>
 </div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Gradient Tint</div>
+
+        <div class="filter-property"><b>Property: </b>Start Color   <div class="filter-value">#ff0000</div></div>
+        <div class="filter-property"><b>Property: </b>End Color   <div class="filter-value">#0000ff</div></div>
+        <div class="filter-property"><b>Property: </b>Blend Mode   <div class="filter-value">normal</div></div>
+        <div class="filter-property"><b>Property: </b>Start Opacity <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>End Opacity <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Start X <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Start Y <div class="filter-value">0.8</div></div>
+        <div class="filter-property"><b>Property: </b>End X <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>End Y <div class="filter-value">0.2</div></div>
+        <div class="filter-property"><b>Property: </b>Gradient Type  <div class="filter-value">gradient_linear</div></div>
+        <div class="filter-property"><b>Property: </b>Radial Offset <div class="filter-value">0.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Newspaper</div>
+
+        <div class="filter-property"><b>Property: </b>Brightness   <div class="filter-value">0.75</div></div>
+        <div class="filter-property"><b>Property: </b>Sharpness   <div class="filter-value">0.85</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Posterize</div>
+
+        <div class="filter-property"><b>Property: </b>Levels   <div class="filter-value">0.093</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Primaries</div>
+
+        <div class="filter-property"><b>Property: </b>Factor   <div class="filter-value">32</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Sepia</div>
+
+        <div class="filter-property"><b>Property: </b>U   <div class="filter-value">75</div></div>
+        <div class="filter-property"><b>Property: </b>V   <div class="filter-value">150</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Technicolor</div>
+
+        <div class="filter-property"><b>Property: </b>Red Saturation   <div class="filter-value">200</div></div>
+        <div class="filter-property"><b>Property: </b>Yellow Saturation   <div class="filter-value">200</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Three Layer</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Threshold</div>
+
+        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">125.0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Threshold0r</div>
+
+        <div class="filter-property"><b>Property: </b>Threshold   <div class="filter-value">0=0.5</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Tint</div>
+
+        <div class="filter-property"><b>Property: </b>Black   <div class="filter-value">#000000</div></div>
+        <div class="filter-property"><b>Property: </b>White   <div class="filter-value">#ff8080</div></div>
+        <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0=0.25</div></div>
+</div>
 
 
-<!-- DISTORT -->
+
+
+
+<!------------------------------------------------------------------ DISTORT -->
 <h2>Distort</h2>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Waves</div>
+        <div class="filter-name"><b>Filter: </b>Elastic</div>
 
-        <div class="filter-property"><b>Property: </b>Amplitude   <div class="filter-value">0.0</div></div>
-        <div class="filter-property"><b>Property: </b>Frequency   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Center   <div class="filter-value">0.5</div></div>
+        <div class="filter-property"><b>Property: </b>Width   <div class="filter-value">0.2</div></div>
+        <div class="filter-property"><b>Property: </b>Linear Scale   <div class="filter-value">0.7</div></div>
+        <div class="filter-property"><b>Property: </b>Non-Linear Scale   <div class="filter-value">0.7</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Flip</div>
+
+        <div class="filter-property"><b>Property: </b>Flip editor=combobox exptype=default cbopts=Horizontal:flip,Vertical:flop   <div class="filter-value">flip</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Image Grid</div>
+
+        <div class="filter-property"><b>Property: </b>Rows   <div class="filter-value">0.1</div></div>
+        <div class="filter-property"><b>Property: </b>Columns   <div class="filter-value">0.1</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Lens Correction</div>
@@ -687,9 +838,13 @@
         <div class="filter-property"><b>Property: </b>Edges Correct   <div class="filter-value">0.5</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Flip</div>
+        <div class="filter-name"><b>Filter: </b>Lens Defisher</div>
 
-        <div class="filter-property"><b>Property: </b>Flip editor=combobox exptype=default cbopts=Horizontal:flip,Vertical:flop   <div class="filter-value">flip</div></div>
+        <div class="filter-property"><b>Property: </b>Input Pixel Aspect Ratio  <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Direction   <div class="filter-value">1.0</div></div>
+        <div class="filter-property"><b>Property: </b>Lens Projection   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Interpolator   <div class="filter-value">0.17</div></div>
+        <div class="filter-property"><b>Property: </b>Strength   <div class="filter-value">0.3</div></div>
 </div>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Mirror</div>
@@ -698,35 +853,57 @@
         <div class="filter-property"><b>Property: </b>Invert editor=booleancheckbox   <div class="filter-value">0</div></div>
 </div>
 <div class="filter">
+        <div class="filter-name"><b>Filter: </b>Perspective</div>
+
+        <div class="filter-property"><b>Property: </b>Sense <div class="filter-value"></div></div>
+        <div class="filter-property"><b>Property: </b>x0 <div class="filter-value"></div>0</div>
+        <div class="filter-property"><b>Property: </b>y0 <div class="filter-value"></div>0</div>
+        <div class="filter-property"><b>Property: </b>x1 <div class="filter-value"></div>SCREENSIZE_WIDTH</div>
+        <div class="filter-property"><b>Property: </b>y1 <div class="filter-value"></div>0</div>
+        <div class="filter-property"><b>Property: </b>x2 <div class="filter-value"></div>0</div>
+        <div class="filter-property"><b>Property: </b>y2 <div class="filter-value"></div>SCREENSIZE_HEIGHT</div>
+        <div class="filter-property"><b>Property: </b>x3 <div class="filter-value"></div>SCREENSIZE_WIDTH</div>
+        <div class="filter-property"><b>Property: </b>y3 <div class="filter-value"></div>SCREENSIZE_HEIGHT</div>
+
+</div>
+<div class="filter">
         <div class="filter-name"><b>Filter: </b>V Sync</div>
 
         <div class="filter-property"><b>Property: </b>Position   <div class="filter-value">0.5</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Image Grid</div>
+        <div class="filter-name"><b>Filter: </b>Waves</div>
 
-        <div class="filter-property"><b>Property: </b>Rows   <div class="filter-value">0.1</div></div>
-        <div class="filter-property"><b>Property: </b>Columns   <div class="filter-value">0.1</div></div>
+        <div class="filter-property"><b>Property: </b>Amplitude   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Frequency   <div class="filter-value">0.0</div></div>
 </div>
 
 
-<!-- EDGE -->
-<h2>Edge</h2>
+<!--------------------------------------------------------------------- FADE -->
+<h2>Fade</h2>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Edge Glow</div>
+        <div class="filter-name"><b>Filter: </b>Fade In</div>
 
-        <div class="filter-property"><b>Property: </b>Edge Lightning   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Edge Brightness   <div class="filter-value">0.5</div></div>
-        <div class="filter-property"><b>Property: </b>Non-Edge Brightness   <div class="filter-value">0.0</div></div>
+        <div class="filter-property"><b>Property: </b>Opacity   <div class="filter-value">0=1</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Sobel</div>
+        <div class="filter-name"><b>Filter: </b>Fade Out</div>
 
+        <div class="filter-property"><b>Property: </b>Opacity   <div class="filter-value">0=1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Fade In / Out</div>
+
+        <div class="filter-property"><b>Property: </b>Opacity   <div class="filter-value">0=1</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Fade To Black In / Out</div>
+
+        <div class="filter-property"><b>Property: </b>Image   <div class="filter-value">0=1</div></div>
 </div>
 
 
-
-<!-- FIX -->
+<!---------------------------------------------------------------------- FIX -->
 <h2>Fix</h2>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Denoise</div>
@@ -735,34 +912,41 @@
         <div class="filter-property"><b>Property: </b>Temporal   <div class="filter-value">0=0</div></div>
 </div>
 <div class="filter">
+        <div class="filter-name"><b>Filter: </b>Letterbox</div>
+
+        <div class="filter-property"><b>Property: </b>Border width   <div class="filter-value">0.2</div></div>
+</div>
+<div class="filter">
         <div class="filter-name"><b>Filter: </b>Sharpness</div>
 
         <div class="filter-property"><b>Property: </b>Amount   <div class="filter-value">0=0.5</div></div>
         <div class="filter-property"><b>Property: </b>Size   <div class="filter-value">0=0.5</div></div>
 </div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Letterbox</div>
-
-        <div class="filter-property"><b>Property: </b>Border width   <div class="filter-value">0.2</div></div>
-</div>
-<!-- crashes on app exit, add when fixed
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Timecode</div>
-
-        <div class="filter-property"><b>Property: </b>halign   <div class="filter-value">centre</div></div>
-        <div class="filter-property"><b>Property: </b>valign   <div class="filter-value">bottom</div></div>
-        <div class="filter-property"><b>Property: </b>fgcolour   <div class="filter-value">#ffffff</div></div>
-        <div class="filter-property"><b>Property: </b>olcolour   <div class="filter-value">#000000</div></div>
-        <div class="filter-property"><b>Property: </b>outline   <div class="filter-value">1</div></div>
-</div>
--->
 
 
 
-<!-- MOVEMENT -->
+
+
+<!----------------------------------------------------------------- MOVEMENT -->
 <h2>Movement</h2>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Baltan</div>
+
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Choppy</div>
+
+        <div class="filter-property"><b>Property: </b>Frames   <div class="filter-value">5</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Freeze</div>
+
+        <div class="filter-property"><b>Property: </b>Freeze Frame   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Freeze After   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>Freeze Before   <div class="filter-value">0</div></div>
+</div>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Nervous</div>
 
 </div>
 <div class="filter">
@@ -772,21 +956,24 @@
         <div class="filter-property"><b>Property: </b>Zoom   <div class="filter-value">0=0.202</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Nervous</div>
+        <div class="filter-name"><b>Filter: </b>Trails</div>
 
+        <div class="filter-property"><b>Property: </b>Frames   <div class="filter-value">15</div></div>
+</div>
+
+
+<!---------------------------------------------------------------- TRANSFORM -->
+<h2>Transform</h2>
+<div class="filter">
+        <div class="filter-name"><b>Filter: </b>Position Scale</div>
+
+        <div class="filter-property"><b>Property: </b>filter_rect_geometry_editor   <div class="filter-value">""</div></div>
 </div>
 <div class="filter">
-        <div class="filter-name"><b>Filter: </b>Freeze</div>
+        <div class="filter-name"><b>Filter: </b>Position Scale Rotate</div>
 
-        <div class="filter-property"><b>Property: </b>Freeze Frame   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Freeze After   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Freeze Before   <div class="filter-value">0</div></div>
+        <div class="filter-property"><b>Property: </b>filter_rotation_geometry_editor  <div class="filter-value">""</div></div>
 </div>
-
-
-
-<!-- TRANSFORM -->
-<h2>Transform</h2>
 <div class="filter">
         <div class="filter-name"><b>Filter: </b>Rotate</div>
 
@@ -801,21 +988,8 @@
         <div class="filter-property"><b>Property: </b>Shear Y   <div class="filter-value">0</div></div>
         <div class="filter-property"><b>Property: </b>transition.geometry   <div class="filter-value">0=0/0:SCREENSIZE:100</div></div>
 </div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Translate</div>
 
-        <div class="filter-property"><b>Property: </b>transition.geometry   <div class="filter-value">0=0/0:SCREENSIZE:100</div></div>
-</div>
-<div class="filter">
-        <div class="filter-name"><b>Filter: </b>Affine</div>
 
-        <div class="filter-property"><b>Property: </b>Scale X   <div class="filter-value">"0=1.0"</div></div>
-        <div class="filter-property"><b>Property: </b>Scale Y   <div class="filter-value">"0=1.0"</div></div>
-        <div class="filter-property"><b>Property: </b>Shear X   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Shear Y   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>Angle   <div class="filter-value">0</div></div>
-        <div class="filter-property"><b>Property: </b>transition.geometry   <div class="filter-value">0=0/0:SCREENSIZE:100</div></div>
-</div>
 
 </div>
 
