@@ -31,12 +31,15 @@ import appconsts
 import cairo
 import cairoarea
 import editorpersistance
+from editorstate import PROJECT
 import guiutils
 import guicomponents
 import glassbuttons
+import jobs
 import lutfilter
 import respaths
 import translations
+import utils
 
 SHADOW = 0
 MID = 1
@@ -1159,13 +1162,54 @@ class ColorBandSelector:
 
 class InfoAndTipsEditor:
     
-        def __init__(self, uri, link_text):
-            self.uri = uri
-            self.widget = Gtk.LinkButton.new_with_label(uri, link_text)
-            self.widget.connect("activate-link", self._open_info)
-            self.widget.set_margin_top(24)
-            self.widget.set_margin_bottom(4)
+    def __init__(self, uri, link_text):
+        self.uri = uri
+        self.widget = Gtk.LinkButton.new_with_label(uri, link_text)
+        self.widget.connect("activate-link", self._open_info)
+        self.widget.set_margin_top(24)
+        self.widget.set_margin_bottom(4)
 
-        def _open_info(self, widget):
-            webbrowser.open(self.uri)
-            return True
+    def _open_info(self, widget):
+        webbrowser.open(self.uri)
+        return True
+
+
+class AnylyzeStabileFilterEditor:
+    def __init__(self, filter, editable_properties):
+        self.filter = filter
+        self.editable_properties = editable_properties
+        self.widget = Gtk.HBox()
+        self.button = Gtk.Button(label=("Analyze video"))
+        self.button.connect("clicked", self.analyze_button_clicked)
+        self.no_data_text = "<small>" + _("No stabilizing data") + "</small>"
+        self.loaded_data_text = "<small>" + _("Stabilizing data loaded") + "</small>"
+        prop_name, prop_value, prop_type = filter.non_mlt_properties[0]
+        if prop_value == appconsts.FILE_PATH_NOT_SET:
+            text = self.no_data_text 
+        else:
+            text = self.loaded_data_text 
+        self.info_label = Gtk.Label(label=text)
+        self.info_label.set_use_markup(True)
+        self.info_label.set_margin_right(4)
+        self.widget.pack_start(self.info_label, False, False, 0) 
+        self.widget.pack_start(self.button, False, False, 0) 
+
+    def analyze_button_clicked(self, button):
+        session_id = utils.create_render_session_uid()
+        profile_desc = PROJECT().profile_desc.replace(" ", "_")
+        clip_path = self.editable_properties[0].clip.path
+        accuracy_prop = [ep for ep in self.editable_properties if ep.name == "accuracy"][0]
+        shakiness_prop = [ep for ep in self.editable_properties if ep.name == "shakiness"][0]
+        
+        args = ("session_id:" + str(session_id),
+                "profile_desc:" + str(profile_desc),
+                "clip_path:" + str(clip_path),
+                "shakiness:" + str(shakiness_prop.value),
+                "accuracy:" + str(accuracy_prop.value))
+
+        job = jobs.StablizeDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args)
+        job.add_to_queue()
+    
+    def analysis_complete(self):
+        self.info_label.set_text(self.loaded_data_text)
+        self.info_label.queue_draw()

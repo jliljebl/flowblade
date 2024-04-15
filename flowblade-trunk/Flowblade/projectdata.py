@@ -270,6 +270,29 @@ class Project:
 
         self.c_bin.file_ids.pop(media_file.id)
 
+
+    def get_unused_media(self):
+        # Create path -> media item dict
+        path_to_media_object = {}
+        for key, media_item in list(self.media_files.items()):
+            if hasattr(media_item, "path") and media_item.path != "" and media_item.path != None:
+                path_to_media_object[media_item.path] = media_item
+        
+        # Remove all items from created dict that have a clip with same path on any of the sequences
+        for seq in self.sequences:
+            for track in seq.tracks:
+                for clip in track.clips:
+                    try:
+                        path_to_media_object.pop(clip.path)
+                    except:
+                        pass
+    
+        # Create a list of unused media objects
+        unused = []
+        for path, media_item in list(path_to_media_object.items()):
+            unused.append(media_item)
+        return unused
+    
     def get_current_proxy_paths(self):
         paths_dict = {}
         for idkey, media_file in list(self.media_files.items()):

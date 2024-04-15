@@ -291,7 +291,7 @@ def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None
                                                                                        # This also needs to be available after adjustment is set to not lose exiting value for build dummy value 
     return (get_two_column_editor_row(name, hbox), hslider, spin)
     
-def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
+def get_non_property_slider_row(lower, upper, step, value=0, listener=None, scale_digits=0):
     hslider = Gtk.HScale()
     hslider.set_draw_value(False)
 
@@ -308,6 +308,9 @@ def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
 
+    hslider.set_digits(scale_digits)
+    spin.set_digits(scale_digits)
+    
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(hslider, True, True, 0)
     hbox.pack_start(spin, False, False, 4)

@@ -1098,7 +1098,31 @@
         <property name="av.frames" args="range_in=0,30 range_out=0,30 step=1.0 displayname=Frames">15</property>
         <property name="av.weights" args="editor=no_editor exptype=not_parsed">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19</property>
     </filter>
-    
+    <filter id="vidstab">
+        <name>Stabilize</name>
+        <group>Movement</group>
+        <property name="filename" args="editor=no_editor exptype=not_parsed">vidstab.trf</property>
+        <property name="shakiness" args="range_in=1,10 range_out=1,10 step=1.0 displayname=Shakiness">4</property>
+        <property name="accuracy" args="range_in=1,15 range_out=1,15 step=1.0 displayname=Accuracy">4</property>
+        <property name="stepsize" args="editor=no_editor exptype=not_parsed">6</property>
+        <property name="algo" args="editor=no_editor exptype=not_parsed">1</property>
+        <property name="mincontrast" args="editor=no_editor exptype=not_parsed">0.3</property>
+        <property name="show" args="editor=no_editor exptype=not_parsed">0</property>
+        <property name="tripod" args="editor=no_editor exptype=not_parsed">0</property>
+        <property name="smoothing" args="range_in=0,100 range_out=0,100 step=1.0 displayname=Smoothing">15</property>
+        <property name="maxshift" args="editor=no_editor exptype=not_parsed">-1</property>
+        <property name="maxangle" args="editor=no_editor exptype=not_parsed">-1</property>
+        <property name="crop" args="editor=no_editor exptype=not_parsed">0</property>
+        <property name="invert" args="editor=no_editor exptype=not_parsed">0</property>
+        <property name="relative" args="editor=no_editor exptype=not_parsed">1</property>
+        <property name="zoom" args="range_in=-500,500 range_out=-500,500 step=1.0 displayname=Zoom">0</property>
+        <property name="optzoom" args="editor=no_editor exptype=not_parsed">1</property>
+        <property name="zoomspeed" args="editor=no_editor exptype=not_parsed">0.25</property>
+        <property name="reload" args="editor=no_editor exptype=not_parsed">0</property>
+        <property name="analyze" args="editor=no_editor exptype=not_parsed">0</property>
+        <propertynonmlt name="results_save_data" args="editor=no_editor exptype=not_parsed">!!##PATHNOTSET##!!</propertynonmlt>
+        <extraeditor name="analyzestabilize"></extraeditor> 
+    </filter>
 
     <!-- TRANSFORM -->
     <filter id="affine">

@@ -81,7 +81,7 @@ COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single r
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
 INFOANDTIPS = "infotips"                                    # Displays link to docs Info & Tips page 
-
+ANALYZE_STABILIZE = "analyzestabilize"                      # Launches stabilizing analyzis for clip
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
 # We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
@@ -1027,6 +1027,16 @@ def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_
     vbox.no_separator = True
     return vbox
 
+def _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index):
+    analyze_editor = extraeditors.AnylyzeStabileFilterEditor(filt, editable_properties)
+    
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    hbox.pack_start(analyze_editor.widget, False, False, 0)
+    hbox.no_separator = True
+    return hbox
+    
+                                
 def _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index):
     color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
     vbox = Gtk.VBox(False, 4)
@@ -1265,6 +1275,8 @@ EDITOR_ROW_CREATORS = { \
                                 _create_filter_roto_geom_editor(filt, editable_properties,  editor_name, track, clip_index),
     INFOANDTIPS: lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_infotips_editor(filt, editable_properties, editor_name, track, clip_index),
+    ANALYZE_STABILIZE: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }

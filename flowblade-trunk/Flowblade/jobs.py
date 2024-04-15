@@ -46,6 +46,7 @@ import persistance
 import proxyheadless
 import renderconsumer
 import respaths
+import stabilizeheadless
 import userfolders
 import utils
 
@@ -61,6 +62,7 @@ CONTAINER_CLIP_RENDER_BLENDER = 3 # Deprecated
 MOTION_MEDIA_ITEM_RENDER = 4
 PROXY_RENDER = 5
 CONTAINER_CLIP_RENDER_FLUXITY = 6
+STABILIZE_DATA_RENDER = 7
 
 FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
 FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
@@ -112,7 +114,9 @@ class JobProxy: # This object represents job in job queue.
             return _("Proxy Clip")
         elif self.type == CONTAINER_CLIP_RENDER_FLUXITY:
             return _("Generator Clip")
-            
+        elif self.type == STABILIZE_DATA_RENDER:
+            return _("Stabilizing Data")
+                        
     def get_progress_str(self):
         if self.progress < 0.0:
             return "-"
@@ -529,6 +533,91 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
     def create_media_item(self):
         open_media_file_callback(self.write_file)
  
+
+class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, filter, editable_properties, analyze_editor, args):
+        
+        AbstractJobQueueObject.__init__(self, session_id, STABILIZE_DATA_RENDER)
+        
+        self.analyze_editor = analyze_editor
+        self.filter = filter
+        self.editable_properties = editable_properties
+        self.args = args
+        self.parent_folder = userfolders.get_temp_render_dir() # This is used for message passing, output file goes to path given by 'write_file'.
+
+    def get_job_name(self):
+        return _("Stabilizing data Render")
+        
+    def start_render(self):
+        
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
+        
+        # Set writefile.
+        data_file_uid = utils.get_uid_path_part_str()
+        self.write_file = userfolders.get_render_dir() + data_file_uid + appconsts.STABILIZE_DATA_EXTENSION
+        print(self.write_file)
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladestabilizeheadless")
+        for arg in self.args:
+            command_list.append(arg)
+        parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+        command_list.append(parent_folder_arg)
+        write_file_arg = "write_file:" + str(self.write_file)
+        command_list.append(write_file_arg)
+        
+        subprocess.Popen(command_list)
+        
+    def update_render_status(self):
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
+
+        if stabilizeheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
+            #remove_as_status_polling_object(self)
+            
+            job_msg = self.get_completed_job_message()
+            update_job_queue(job_msg)
+            
+            stabilizeheadless.delete_session_folders(self.parent_folder, self.get_session_id())
+            
+            GLib.idle_add(self.update_filter_and_gui)
+
+        else:
+            status = stabilizeheadless.get_session_status(self.parent_folder, self.get_session_id())
+            if status != None:
+                fraction, elapsed = status
+                
+                self.progress = float(fraction)
+                if self.progress > 1.0:
+                    # A fix for how progress is calculated because producers can render a bit longer then required.
+                    self.progress = 1.0
+
+                self.elapsed = float(elapsed)
+                self.text = self.get_job_name()
+                
+                job_msg = self.get_job_queue_message()
+                
+                update_job_queue(job_msg)
+            else:
+                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
+                pass
+
+    def update_filter_and_gui(self):
+        self.filter.mlt_filter.set("results", str(self.write_file))
+        # We have only one of these, so just recreate list.
+        self.filter.non_mlt_properties = [("results_save_data",  str(self.write_file),  appconsts.PROP_EXPRESSION)]
+        self.analyze_editor.analysis_complete()
+        
+    def abort_render(self):
+        #remove_as_status_polling_object(self)
+        stabilizeheadless.abort_render(self.parent_folder, self.get_session_id())
+
+
 
 class ProxyRenderJobQueueObject(AbstractJobQueueObject):
 

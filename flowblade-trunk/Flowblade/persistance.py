@@ -706,6 +706,12 @@ def fill_filters_mlt(mlt_clip, sequence):
             filter_object = mltfilters.FilterObject(py_filter.info)
             filter_object.__dict__.update(py_filter.__dict__)
             filter_object.create_mlt_filter(sequence.profile)
+            # Vidstab needs special casing because MLT does not take even 'None' value for prop 'results'
+            # without attempting to load a non-existing stabilize data file.
+            if filter_object.info.mlt_service_id == "vidstab":
+                prop_name, prop_value, prop_type = filter_object.non_mlt_properties[0]
+                if prop_value != appconsts.FILE_PATH_NOT_SET:
+                    filter_object.mlt_filter.set("results", str(prop_value))
             mlt_clip.attach(filter_object.mlt_filter)
         else:
             filter_object = mltfilters.MultipartFilterObject(py_filter.info)

@@ -55,12 +55,10 @@ import mltfilters
 import mltprofiles
 import mlttransitions
 import monitorwidget
-import projectaction
+import projectaction # removing causes circular imports
 import respaths
 import renderconsumer
 import shortcuts
-import snapping
-import toolsintegration
 import translations
 import utils
 
@@ -1348,7 +1346,7 @@ class MediaPanel():
         dnd.connect_media_drop_widget(row_box)
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
 
-        unused_list = projectaction.unused_media()
+        unused_list = PROJECT().get_unused_media()
 
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]

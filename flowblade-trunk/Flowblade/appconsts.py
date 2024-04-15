@@ -381,3 +381,9 @@ MEDIA_FILE_BAD = 2
 MEDIA_RATINGS_SHOW_ALL = 0
 MEDIA_RATINGS_SHOW_FAVORITES = 1
 MEDIA_RATINGS_HIDE_BAD = 2
+
+# Extension for data file
+STABILIZE_DATA_EXTENSION = ".stabdata"
+
+# magic value for file path property that has not been set yet.
+FILE_PATH_NOT_SET = "!!##PATHNOTSET##!!"

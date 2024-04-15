@@ -57,7 +57,7 @@ def node_list_to_properties_array(node_list):
     properties = []
     for node in node_list:
         p_name = node.getAttribute(NAME)
-        p_value = node.firstChild.nodeValue # Crash here, is 'exptype' set in string value param args in filters.xml?
+        p_value = node.firstChild.nodeValue # If crash here, check if 'exptype' set in string value param args in filters.xml.
         p_type = _property_type(p_value)
         properties.append((p_name, p_value, p_type))
     return properties

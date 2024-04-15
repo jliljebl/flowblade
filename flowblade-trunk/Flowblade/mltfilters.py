@@ -376,7 +376,7 @@ def load_filters_xml(services):
             global _volume_filter_info
             _volume_filter_info = filter_info
 
-        if filter_info.mlt_service_id == "shape": # we need this filter to do mutes so save reference to it
+        if filter_info.mlt_service_id == "shape":
             global _shape_filter_info
             _shape_filter_info = filter_info
 
