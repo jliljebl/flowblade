@@ -54,8 +54,6 @@ def delete_session_folders(parent_folder, session_id):
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness):
     
-    ccrutils.prints_to_log_file("/home/janne/stabilizelog")
-    
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
