@@ -60,7 +60,6 @@ def main(root_path, session_id, parent_folder, profile_desc, write_file, clip_pa
     _render_thread = StabilizeHeadlessRunnerThread(profile_desc, write_file, clip_path, accuracy, shakiness)
     _render_thread.start()
 
-       
 
 class StabilizeHeadlessRunnerThread(threading.Thread):
 
