@@ -75,6 +75,7 @@ FILE_TYPES = "file_types"                                   # list of files type
 FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
 TEXT_ENTRY = "text_entry"                                   # Text editor
 ROTOMASK = "rotomask"                                       # Displays info and launches rotomask window
+NO_KF_RECT = "no_keyframes_rect"                            # keyframeeditor.GeometryNoKeyframes, no keyframes here, machinery for creating this type GUI editors just assumes keyframes
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -82,6 +83,7 @@ REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single r
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
 INFOANDTIPS = "infotips"                                    # Displays link to docs Info & Tips page 
 ANALYZE_STABILIZE = "analyzestabilize"                      # Launches stabilizing analyzis for clip
+ANALYZE_MOTION = "analyzemotion"                            # Launches motion tracking analyzis for clip
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
 # We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
@@ -991,6 +993,9 @@ def _create_color_grader(filt, editable_properties, editor_name, track, clip_ind
 def _get_filter_rect_geom_editor(ep):
     return keyframeeditor.FilterRectGeometryEditor(ep)
 
+def _get_no_kf_rect_geom_editor(ep):
+    return keyframeeditor.GeometryNoKeyframes(ep)
+
 def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
@@ -1028,14 +1033,22 @@ def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_
     return vbox
 
 def _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index):
-    analyze_editor = extraeditors.AnylyzeStabileFilterEditor(filt, editable_properties)
+    analyze_editor = extraeditors.AnylyzeStabilizeFilterEditor(filt, editable_properties)
     
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(analyze_editor.widget, False, False, 0)
     hbox.no_separator = True
     return hbox
+
+def _create_anylaze_motion_editor(filt, editable_properties, editor_name, track, clip_index):
+    analyze_editor = extraeditors.AnylyzeMotionTrackingFilterEditor(filt, editable_properties)
     
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    hbox.pack_start(analyze_editor.widget, False, False, 0)
+    hbox.no_separator = True
+    return hbox
                                 
 def _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index):
     color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
@@ -1277,7 +1290,10 @@ EDITOR_ROW_CREATORS = { \
                                 _create_infotips_editor(filt, editable_properties, editor_name, track, clip_index),
     ANALYZE_STABILIZE: lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index),
+    ANALYZE_MOTION: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_anylaze_motion_editor(filt, editable_properties, editor_name, track, clip_index),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
+    NO_KF_RECT: lambda ep : _get_no_kf_rect_geom_editor(ep),
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
 

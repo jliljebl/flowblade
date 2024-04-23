@@ -78,6 +78,7 @@ FILTER_WIPE_RESOURCE = "filter_wipe_resource"               # /path/to/resource.
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
 PLAIN_STRING = "plain_string"                               # String is just string, for text input
+RECT_NO_KF = "rect_no_kf"                                     # x y w h
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
@@ -997,6 +998,21 @@ class FileResourceProperty(EditableProperty):
             self.write_value(str(""))
 
 
+class RectNoKeyframes(EditableProperty):
+
+    def write_out_keyframes(self, keyframes):
+        print("write out keyframes")
+        
+        val_str = ""
+        kf =  keyframes[0]
+        frame, rect, opac, kf_type = kf
+                        
+        val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
+        val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
+
+        self.write_value(val_str)
+
+
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
@@ -1077,9 +1093,10 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     FILTER_WIPE_RESOURCE : lambda params : FilterWipeResourceProperty(params),
-    FILE_RESOURCE : lambda params :FileResourceProperty(params),
-    ROTO_JSON  : lambda params :RotoJSONProperty(params),
-    LUT_TABLE : lambda params  : LUTTableProperty(params),
+    FILE_RESOURCE : lambda params : FileResourceProperty(params),
+    ROTO_JSON  : lambda params : RotoJSONProperty(params),
+    LUT_TABLE : lambda params : LUTTableProperty(params),
+    RECT_NO_KF : lambda params : RectNoKeyframes(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     AFFINE_SCALE : lambda params : AffineScaleProperty(params) }

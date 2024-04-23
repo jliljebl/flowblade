@@ -373,7 +373,7 @@ PRESET_GROUP_AUDIO = "Audio"
 PRESET_GROUP_MISC = "webmetc"
 PRESET_GROUP_ALPHA = "Alpha"
 
-# Media file ratings
+# Media file ratings.
 MEDIA_FILE_UNRATED = 0
 MEDIA_FILE_FAVORITE = 1
 MEDIA_FILE_BAD = 2
@@ -382,8 +382,9 @@ MEDIA_RATINGS_SHOW_ALL = 0
 MEDIA_RATINGS_SHOW_FAVORITES = 1
 MEDIA_RATINGS_HIDE_BAD = 2
 
-# Extension for data file
+# Extensions for data files.
 STABILIZE_DATA_EXTENSION = ".stabdata"
+MOTION_TRACKING_DATA_EXTENSION = ".trackdata"
 
 # magic value for file path property that has not been set yet.
 FILE_PATH_NOT_SET = "!!##PATHNOTSET##!!"

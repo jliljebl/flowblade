@@ -316,7 +316,7 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
 
 def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
+    # Parse "composite:geometry" properties value string into (frame, source_rect, opacity, kf_type)
     # keyframe tuples.
     new_keyframes = []
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
@@ -342,6 +342,22 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
         add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)), kf_type)
         new_keyframes.append(add_kf)
     
+    return new_keyframes
+
+def rect_NO_keyframes_value_string_to_geom_kf_array(rect_str, out_to_in_func):
+    # Parse "x y w h" properties value string into single (0, source_rect, 1.0, appconsts.KEYFRAME_LINEAR)
+    # keyframe tuple.
+    new_keyframes = []
+    value_str = rect_str.strip('"') # expressions have sometimes quotes that need to go away
+    values = rect_str.split(' ')
+    x = values[0]
+    y = values[1]
+    w = values[2] 
+    h = values[3] 
+    source_rect = [int(x), int(y), int(w), int(h)] # x, y, width, height
+    add_kf = (0, source_rect, 1.0, appconsts.KEYFRAME_LINEAR)
+    new_keyframes.append(add_kf)
+
     return new_keyframes
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):

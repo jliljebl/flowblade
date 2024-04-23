@@ -1855,7 +1855,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view()
 
     def slider_value_changed(self, adjustment):
-        print (adjustment)
+        pass
 
     def get_clip_editor_keyframes(self):
         keyframes = []
@@ -2052,7 +2052,97 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.update_property_value()
 
 
+class GeometryNoKeyframes(Gtk.VBox):
+    """
+    Here we need a geometry editor without keyframes, so we just use a single keyframe at 0
+    and do no-op for some of the updates. 
+    """
 
+    def __init__(self, editable_property, use_clip_in=True):
+        # editable_property is KeyFrameProperty
+        GObject.GObject.__init__(self)
+        self.initializing = True # Hack against too early for on slider listener
+        
+        self.set_homogeneous(False)
+        self.set_spacing(2)
+        self.editable_property = editable_property
+        self.clip_tline_pos = editable_property.get_clip_tline_pos()
+        
+        #self.use_clip_in = False
+        #self.clip_in = 0
+                    
+        self.geom_kf_edit = keyframeeditcanvas.BoxEditCanvas(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.rect_NO_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+    
+        # Create components
+        self.geom_buttons_row = GeometryEditorButtonsRow(self, True)
+        
+        g_frame = Gtk.Frame()
+        g_frame.add(self.geom_kf_edit.widget)
+             
+        #self.buttons_row = ClipEditorButtonsRow(self, True, False)
+
+        #self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, self.geom_buttons_row)
+        
+      
+        # Build gui
+        self.pack_start(g_frame, False, False, 0)
+        self.pack_start(self.geom_buttons_row, False, False, 0)
+
+        orig_tline_frame = PLAYER().current_frame()
+
+        self.geom_kf_edit.add_keyframe(0)
+        
+        self.active_keyframe_changed() # to do update gui to current values
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
+
+        # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
+        self.display_tline_frame(orig_tline_frame)
+        PLAYER().seek_frame(orig_tline_frame)
+            
+        self.queue_draw()
+        
+    def slider_value_changed(self, adjustment):
+        print("slider_value_changed")
+
+    def active_keyframe_changed(self):
+        self.update_editor_view_with_frame(0, False)
+
+    def update_editor_view_with_frame(self, frame, seek_tline_frame=True):
+        self.geom_kf_edit.set_clip_frame(0)
+
+    def view_size_changed(self, selected_index):
+        y_fract = GEOM_EDITOR_SIZES[selected_index]
+        print("view_size_changed", y_fract)
+        self.geom_kf_edit.set_view_size(y_fract)
+        self.update_editor_view_with_frame(0)
+        self.queue_draw()
+        
+    def display_tline_frame(self, tline_frame):
+        print("display_tline_frame")
+
+    def geometry_edit_started(self): # callback from geom_kf_edit
+        print("geometry_edit_started")
+
+    def update_request_from_geom_editor(self):
+        print("update_request_from_geom_editor")
+        
+    def geometry_edit_finished(self): # callback from geom_kf_edit
+        self.geom_kf_edit.set_keyframe_to_edit_shape(0)
+        #self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        self.update_property_value()
+        #self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        #self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+
+    def update_property_value(self):
+        self.editable_property.write_out_keyframes(self.geom_kf_edit.keyframes)
+        
+        
 class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
 
     def __init__(self, editable_property, use_clip_in=True):
