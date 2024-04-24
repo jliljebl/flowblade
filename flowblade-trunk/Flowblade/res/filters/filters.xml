@@ -1137,7 +1137,20 @@
         <propertynonmlt name="results_save_data" args="editor=no_editor exptype=not_parsed">!!##PATHNOTSET##!!</propertynonmlt>
         <extraeditor name="analyzemotion"></extraeditor> 
     </filter>
-
+    <filter id="affine">
+        <name>Motion Tracking Apply</name>
+        <group>Movement</group>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">0</property>
+        <property name="transition.rect" args="editor=no_editor exptype=not_parsed">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">middle</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">center</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
+        <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
+        <propertynonmlt name="xoff" args="range_in=-SCREENSIZE_WIDTH,SCREENSIZE_WIDTH range_out=-SCREENSIZE_WIDTH,SCREENSIZE_WIDTH displayname=X!Offset">0</propertynonmlt>
+        <propertynonmlt name="yoff" args="editor=no_editor">0</propertynonmlt>
+    </filter>
     <!-- TRANSFORM -->
     <filter id="affine">
         <name>Position Scale</name>
