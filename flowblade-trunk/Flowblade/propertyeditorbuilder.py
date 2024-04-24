@@ -1279,7 +1279,7 @@ EDITOR_ROW_CREATORS = { \
     CR_CURVES: lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index),
     COLOR_BOX: lambda filt, editable_properties, editor_name, track, clip_index: \
-                                _create_colorbox_editor(filt, editable_properties),
+                                _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_index),
     COLOR_LGG: lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index),
     ROTOMASK: lambda filt, editable_properties, editor_name, track, clip_index: \
