@@ -1,6 +1,10 @@
 # Release Notes
 
 
+
+## FLOWBLADE 2.14.0.2
+Fix Color Adjustment filter regression.
+
 ## FLOWBLADE 2.14.0.1
 Fix monitors size detection for multiple monitors.
 
