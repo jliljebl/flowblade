@@ -1148,8 +1148,10 @@
         <property name="transition.threads" args="editor=no_editor">0</property>
         <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
         <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
-        <propertynonmlt name="xoff" args="range_in=-SCREENSIZE_WIDTH,SCREENSIZE_WIDTH range_out=-SCREENSIZE_WIDTH,SCREENSIZE_WIDTH displayname=X!Offset">0</propertynonmlt>
+        <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
+        <propertynonmlt name="xoff" args="editor=no_editor">0</propertynonmlt>
         <propertynonmlt name="yoff" args="editor=no_editor">0</propertynonmlt>
+        <propertynonmlt name="interpretation" args="editor=no_editor exptype=not_parsed">absolute</propertynonmlt>
     </filter>
     <!-- TRANSFORM -->
     <filter id="affine">
