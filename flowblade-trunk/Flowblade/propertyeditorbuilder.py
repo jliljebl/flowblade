@@ -145,7 +145,15 @@ def get_filter_extra_editor_rows(filt, editable_properties, track, clip_index):
 
     return rows
 
-
+def get_non_mlt_property_editor_row(non_mlt_editable_property, editor):
+    """
+    Returns GUI component to edit provided non-mlt editable property.
+    """
+    create_func = EDITOR_ROW_CREATORS[editor]
+    row = create_func(non_mlt_editable_property)
+    row.set_margin_top(4)
+    return row
+    
 
     
 # ------------------------------------------------- gui builders
@@ -1052,7 +1060,19 @@ def _create_anylaze_motion_editor(filt, editable_properties, editor_name, track,
     return hbox
 
 def _create_apply_motion_editor(filt, editable_properties, editor_name, track, clip_index):
-    editor = extraeditors.ApplyMotionTrackingFilterEditor(filt, editable_properties)
+    filter_index = editable_properties[0].filter_index
+    clip = editable_properties[0].clip
+    non_mlt_properties = propertyedit.get_non_mlt_editable_properties(clip, filt, filter_index)
+    xoff_prop = [ep for ep in non_mlt_properties if ep.name == "xoff"][0]
+    xoff_prop_editor = get_non_mlt_property_editor_row(xoff_prop, LADSPA_SLIDER)
+    yoff_prop = [ep for ep in non_mlt_properties if ep.name == "yoff"][0]
+    yoff_prop_editor = get_non_mlt_property_editor_row(yoff_prop, LADSPA_SLIDER)
+    interpretation_prop = [ep for ep in non_mlt_properties if ep.name == "interpretation"][0]
+    interpretation_prop_editor = get_non_mlt_property_editor_row(interpretation_prop, COMBO_BOX)
+    size_prop = [ep for ep in non_mlt_properties if ep.name == "size"][0]
+    size_prop_editor = get_non_mlt_property_editor_row(size_prop, COMBO_BOX)
+    
+    editor = extraeditors.ApplyMotionTrackingFilterEditor(filt, editable_properties, [interpretation_prop_editor, xoff_prop_editor, yoff_prop_editor, size_prop_editor], non_mlt_properties)
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(editor.widget, True, True, 0)
     #hbox.no_separator = True

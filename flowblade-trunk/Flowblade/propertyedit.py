@@ -487,7 +487,7 @@ class NonMltEditableProperty(AbstractProperty):
         return self.clip.filters[self.filter_index]
 
     def write_value(self, val):
-        pass # There has not defined need for this.
+        pass # There is no defined need for this.
 
     def write_number_value(self, numb):
         self.write_property_value(str(numb))

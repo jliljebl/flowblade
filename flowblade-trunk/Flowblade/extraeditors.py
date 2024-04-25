@@ -1300,9 +1300,11 @@ class AnalyzeMotionTrackingFilterEditor:
 
 
 class ApplyMotionTrackingFilterEditor:
-    def __init__(self, filter, editable_properties):
+    def __init__(self, filter, editable_properties, non_mlt_editors, non_mlt_properties):
         self.filter = filter
         self.editable_properties = editable_properties
+        self.non_mlt_editors = non_mlt_editors
+        self.non_mlt_properties = non_mlt_properties
 
         select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
         select_label.set_margin_right(4)
@@ -1312,6 +1314,7 @@ class ApplyMotionTrackingFilterEditor:
         hbox1 = Gtk.HBox()
         hbox1.pack_start(select_label, False, False, 0) 
         hbox1.pack_start(self.data_select_combo, True, True, 0)
+        hbox1.set_margin_bottom(24)
 
         self.info_label = Gtk.Label("<small>No Tracking Data Applied</small>")
         self.info_label.set_use_markup(True)
@@ -1324,12 +1327,15 @@ class ApplyMotionTrackingFilterEditor:
         hbox2.pack_start(Gtk.Label(), True, True, 0) 
         hbox2.pack_start(self.info_label, False, False, 0) 
         hbox2.pack_start(self.button, False, False, 0)
-        hbox2.set_margin_top(4)
-
+        hbox2.set_margin_top(24)
+        hbox2.set_margin_bottom(24)
+        
         self.widget = Gtk.VBox()
         self.widget.pack_start(hbox1, False, False, 0)
+        for row in self.non_mlt_editors:
+            self.widget.pack_start(row, False, False, 0)
         self.widget.pack_start(hbox2, False, False, 0)
-        
+
     def apply_tracking(self, button):
         tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
         motiontracking.apply_tracking(tracking_data_id, self.filter, self.editable_properties)
