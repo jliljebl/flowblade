@@ -561,7 +561,7 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
         update_job_queue(job_msg)
         
         # Set writefile.
-        data_file_uid = utils.get_uid_path_part_str()
+        data_file_uid = utils.get_uid_str()
         self.write_file = userfolders.get_render_dir() + data_file_uid + appconsts.STABILIZE_DATA_EXTENSION
         print(self.write_file)
         # Create command list and launch process.
@@ -624,7 +624,7 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
 
 class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
 
-    def __init__(self, session_id, filter, editable_properties, analyze_editor, args):
+    def __init__(self, session_id, filter, editable_properties, analyze_editor, args, data_label):
         
         AbstractJobQueueObject.__init__(self, session_id, MOTION_TRACKING_DATA_RENDER)
         
@@ -632,6 +632,7 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         self.filter = filter
         self.editable_properties = editable_properties
         self.args = args
+        self.data_label = data_label
         self.parent_folder = userfolders.get_temp_render_dir() # This is used for message passing, output file goes to path given by 'write_file'.
 
     def get_job_name(self):
@@ -645,18 +646,23 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         update_job_queue(job_msg)
         
         # Set writefile.
-        data_file_uid = utils.get_uid_path_part_str()
-        self.write_file = userfolders.get_temp_render_dir() + data_file_uid + ".xml"
-        print(self.write_file)
+        self.write_file = userfolders.get_temp_render_dir() + utils.get_uid_str() + ".xml"
+
+        # Set tracking data file path.
+        self.data_file_path = userfolders.get_render_dir() +  utils.get_uid_str() + appconsts.MOTION_TRACKING_DATA_EXTENSION
+            
         # Create command list and launch process.
         command_list = [sys.executable]
         command_list.append(respaths.LAUNCH_DIR + "flowbladetrackingheadless")
         for arg in self.args:
             command_list.append(arg)
+            
         parent_folder_arg = "parent_folder:" + str(self.parent_folder)
         command_list.append(parent_folder_arg)
         write_file_arg = "write_file:" + str(self.write_file)
         command_list.append(write_file_arg)
+        data_file_arg = "data_file_path:" + str(self.data_file_path)
+        command_list.append(data_file_arg)
         
         subprocess.Popen(command_list)
         
@@ -666,7 +672,6 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
     def _update_from_gui_thread(self):
 
         if stabilizeheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
-            #remove_as_status_polling_object(self)
             
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
@@ -695,16 +700,14 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
 
-    def update_filter_and_gui(self):
-        """
-        self.filter.mlt_filter.set("results", str(self.write_file))
-        # We have only one of these, so just recreate list.
-        self.filter.non_mlt_properties = [("results_save_data",  str(self.write_file),  appconsts.PROP_EXPRESSION)]
-        self.analyze_editor.analysis_complete()
-        """
-        
+    def update_filter_and_gui(self):        
+        final_label = PROJECT().add_tracking_data(self.data_label, self.data_file_path)
+        try:
+            self.analyze_editor.analysis_complete(final_label)
+        except:
+            pass # Editor may have been deleted while endering.
+
     def abort_render(self):
-        #remove_as_status_polling_object(self)
         trackingheadless.abort_render(self.parent_folder, self.get_session_id())
 
 

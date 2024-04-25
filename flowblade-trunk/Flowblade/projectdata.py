@@ -98,6 +98,7 @@ class Project:
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
+        self.tracking_data = {}
 
         self.vault_folder = None
         self.project_data_id = None
@@ -419,7 +420,26 @@ class Project:
     def set_project_property(self, property_name, value):
         self.project_properties[property_name] = value
 
-            
+    def add_tracking_data(self, data_label, data_file_path):
+        data_uid = utils.get_uid_str()
+        
+        # Get unique data label
+        add_number = 1
+        final_label = data_label
+        while self._tracking_data_label_exists(final_label):
+            final_label = data_label + "-" + str(add_number)
+            add_number += 1
+        
+        self.tracking_data[data_uid] = (final_label, data_file_path)
+        return final_label
+
+    def _tracking_data_label_exists(self, data_label):
+        for item in self.tracking_data.items():
+            label, data_path = item
+            if data_label == label:
+                return True
+        return False
+
 class MediaFile:
     """
     Media file that can added to and edited in Sequence.

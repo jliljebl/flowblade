@@ -84,6 +84,7 @@ ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single
 INFOANDTIPS = "infotips"                                    # Displays link to docs Info & Tips page 
 ANALYZE_STABILIZE = "analyzestabilize"                      # Launches stabilizing analyzis for clip
 ANALYZE_MOTION = "analyzemotion"                            # Launches motion tracking analyzis for clip
+APPLY_MOTION = "applymotion"
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
 # We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
@@ -1033,7 +1034,7 @@ def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_
     return vbox
 
 def _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index):
-    analyze_editor = extraeditors.AnylyzeStabilizeFilterEditor(filt, editable_properties)
+    analyze_editor = extraeditors.AnalyzeStabilizeFilterEditor(filt, editable_properties)
     
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
@@ -1042,14 +1043,23 @@ def _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track
     return hbox
 
 def _create_anylaze_motion_editor(filt, editable_properties, editor_name, track, clip_index):
-    analyze_editor = extraeditors.AnylyzeMotionTrackingFilterEditor(filt, editable_properties)
+    analyze_editor = extraeditors.AnalyzeMotionTrackingFilterEditor(filt, editable_properties)
     
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     hbox.pack_start(analyze_editor.widget, False, False, 0)
     hbox.no_separator = True
     return hbox
-                                
+
+def _create_apply_motion_editor(filt, editable_properties, editor_name, track, clip_index):
+    editor = extraeditors.ApplyMotionTrackingFilterEditor(filt, editable_properties)
+    hbox = Gtk.HBox(False, 4)
+    hbox.pack_start(editor.widget, True, True, 0)
+    #hbox.no_separator = True
+    return hbox
+    
+    return extraeditors.ApplyMotionTrackingFilterEditor(filt, editable_properties)
+                
 def _create_color_lgg_editor(filt, editable_properties, editor_name, track, clip_index):
     color_lgg_editor = extraeditors.ColorLGGFilterEditor(editable_properties)
     vbox = Gtk.VBox(False, 4)
@@ -1292,6 +1302,8 @@ EDITOR_ROW_CREATORS = { \
                                 _create_anylaze_stabile_editor(filt, editable_properties, editor_name, track, clip_index),
     ANALYZE_MOTION: lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_anylaze_motion_editor(filt, editable_properties, editor_name, track, clip_index),
+    APPLY_MOTION: lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_apply_motion_editor(filt, editable_properties, editor_name, track, clip_index),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     NO_KF_RECT: lambda ep : _get_no_kf_rect_geom_editor(ep),
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)

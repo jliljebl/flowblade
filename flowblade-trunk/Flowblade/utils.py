@@ -634,7 +634,7 @@ def get_disk_size_str(size):
         return str(int(size)) + " B"
 
 def create_render_session_uid():
-    return hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    return  get_uid_str()
 
-def get_uid_path_part_str():
+def get_uid_str():
     return hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()

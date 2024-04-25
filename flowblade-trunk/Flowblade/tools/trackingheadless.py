@@ -22,9 +22,11 @@ try:
     import mlt7 as mlt
 except:
     import mlt
+import os
 import threading
 import time
 
+import atomicfile
 import ccrutils
 import mltheadlessutils
 import mltprofiles
@@ -102,7 +104,7 @@ class TrackingHeadlessRunnerThread(threading.Thread):
 
         # Get render consumer
         print(self.data_file_path,"self.data_file_path")
-        xml_consumer = mlt.Consumer(profile, "xml", str(self.data_file_path))
+        xml_consumer = mlt.Consumer(profile, "xml", str(self.write_file))
         xml_consumer.set("all", "1")
         xml_consumer.set("real_time", "-1")
 
@@ -124,6 +126,15 @@ class TrackingHeadlessRunnerThread(threading.Thread):
             self.render_update(render_fraction)
             time.sleep(0.3)
         
+        # Write out results.
+        results = tracker_filter.get("results")
+        with atomicfile.AtomicFileWriter(self.data_file_path, "w") as afw:
+            f = afw.get_file()
+            f.write(results)
+        
+        # Delete temp file.
+        os.remove(self.write_file)
+
         # Write out completed flag file.
         ccrutils.write_completed_message()
 

@@ -108,7 +108,7 @@ def FIX_MISSING_PROJECT_ATTRS(project):
 
     if(not hasattr(project, "update_media_lengths_on_load")):
         project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
-                                                    # 1.10 needed that data for the first time and required recreating it correctly for older projects
+                                                    # 1.10 needed that data for the first time and required recreating it correctly for older projects.
 
     if(not hasattr(project, "vault_folder")):
         project.vault_folder = None
@@ -117,6 +117,9 @@ def FIX_MISSING_PROJECT_ATTRS(project):
     if(not hasattr(project, "bins_graphics_default_lengths")):
         project.bins_graphics_default_lengths = {}
 
+    if(not hasattr(project, "tracking_data")):
+        project.tracking_data = {}
+        
 def FIX_MISSING_BIN_ATTRS(bin):
     if(not hasattr(bin, "uid")):
         bin.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()

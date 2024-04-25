@@ -23,6 +23,7 @@ This module contains complex property editors.
 """
 
 import math
+import os
 import webbrowser
 
 from gi.repository import Gtk
@@ -37,6 +38,7 @@ import guicomponents
 import glassbuttons
 import jobs
 import lutfilter
+import motiontracking
 import respaths
 import translations
 import utils
@@ -1174,12 +1176,12 @@ class InfoAndTipsEditor:
         return True
 
 
-class AnylyzeStabilizeFilterEditor:
+class AnalyzeStabilizeFilterEditor:
     def __init__(self, filter, editable_properties):
         self.filter = filter
         self.editable_properties = editable_properties
         self.widget = Gtk.HBox()
-        self.button = Gtk.Button(label=("Analyze video"))
+        self.button = Gtk.Button(label=_("Analyze video"))
         self.button.connect("clicked", self.analyze_button_clicked)
         self.no_data_text = "<small>" + _("No stabilizing data") + "</small>"
         self.loaded_data_text = "<small>" + _("Stabilizing data loaded") + "</small>"
@@ -1216,32 +1218,59 @@ class AnylyzeStabilizeFilterEditor:
 
 
 
-class AnylyzeMotionTrackingFilterEditor:
+class AnalyzeMotionTrackingFilterEditor:
     def __init__(self, filter, editable_properties):
         self.filter = filter
         self.editable_properties = editable_properties
-        self.widget = Gtk.HBox()
-        self.button = Gtk.Button(label=("Create Motion Tracking Data"))
+
+        label_info_label = Gtk.Label(label=_("Motion Tracking Data Label:"))
+        label_info_label.set_margin_right(4)
+
+        def_label = self.get_default_data_label()
+        
+        self.label_entry = Gtk.Entry()
+        self.label_entry.set_width_chars(28)
+        self.label_entry.set_text(def_label)
+        self.label_entry.set_activates_default(True)
+
+        hbox1 = Gtk.HBox()
+        hbox1.pack_start(label_info_label, False, False, 0) 
+        hbox1.pack_start(self.label_entry, True, True, 0)
+        
+        self.button = Gtk.Button(label=_("Create Motion Tracking Data"))
         self.button.connect("clicked", self.analyze_button_clicked)
-        self.no_data_text = "<small>" + _("") + "</small>"
-        self.loaded_data_text = "<small>" + _("Motion Tracking Data data created") + "</small>"
-        prop_name, prop_value, prop_type = filter.non_mlt_properties[0]
-        if prop_value == appconsts.FILE_PATH_NOT_SET:
-            text = self.no_data_text 
-        else:
-            text = self.loaded_data_text 
-        self.info_label = Gtk.Label(label=text)
+
+        self.info_label = Gtk.Label("")
         self.info_label.set_use_markup(True)
         self.info_label.set_margin_right(4)
-        self.widget.pack_start(self.info_label, False, False, 0) 
-        self.widget.pack_start(self.button, False, False, 0) 
+        
+        hbox2 = Gtk.HBox()
+        hbox2.pack_start(Gtk.Label(), True, True, 0) 
+        hbox2.pack_start(self.info_label, False, False, 0) 
+        hbox2.pack_start(self.button, False, False, 0)
+        hbox2.set_margin_top(4)
+
+        self.widget = Gtk.VBox()
+        
+        self.widget.pack_start(hbox1, False, False, 0) 
+        self.widget.pack_start(hbox2, False, False, 0) 
+        
         self.widget.set_margin_top(24)
-        self.widget.set_margin_bottom(12)
+        self.widget.set_margin_bottom(24)
+
+    def get_default_data_label(self):
+        clip_path = self.editable_properties[0].clip.path
+        file_name = os.path.splitext(os.path.basename(clip_path))[0]
+        if len(file_name) < 8:
+            def_file_part = file_name
+        else:
+            def_file_part = file_name[:8]
+        
+        return def_file_part + "-" + _("tracking")
         
     def analyze_button_clicked(self, button):
         session_id = utils.create_render_session_uid()
         profile_desc = PROJECT().profile_desc.replace(" ", "_")
-        data_file_path = "/home/janne/motion.xml" #self.editable_properties[0].clip.path
         clip_path = self.editable_properties[0].clip.path
         step_prop = [ep for ep in self.editable_properties if ep.name == "steps"][0]
         algo_prop = [ep for ep in self.editable_properties if ep.name == "algo"][0]
@@ -1251,14 +1280,57 @@ class AnylyzeMotionTrackingFilterEditor:
         args = ("session_id:" + str(session_id),
                 "profile_desc:" + str(profile_desc),
                 "clip_path:" + clip_path,
-                "data_file_path:" + str(data_file_path),
                 "rect:" + str(rect_value),
                 "algo:" + str(algo_prop.value),
                 "step:" + str(step_prop.value))
 
-        job = jobs.MotionTrackingDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args)
+        data_label = self.label_entry.get_text()
+        if len(data_label) == 0:
+            data_label = self.get_default_data_label()
+        
+        job = jobs.MotionTrackingDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args, data_label)
         job.add_to_queue()
 
-    def analysis_complete(self):
-        self.info_label.set_text(self.loaded_data_text)
+    def analysis_complete(self, final_label):
+        create_info_text = "<small>" + _("Motion Tracking Data created: ") + final_label + "</small>"
+        self.info_label.set_text(create_info_text)
+        self.info_label.set_use_markup(True)
         self.info_label.queue_draw()
+
+
+
+class ApplyMotionTrackingFilterEditor:
+    def __init__(self, filter, editable_properties):
+        self.filter = filter
+        self.editable_properties = editable_properties
+
+        select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
+        select_label.set_margin_right(4)
+
+        self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"))
+
+        hbox1 = Gtk.HBox()
+        hbox1.pack_start(select_label, False, False, 0) 
+        hbox1.pack_start(self.data_select_combo, True, True, 0)
+
+        self.info_label = Gtk.Label("<small>No Tracking Data Applied</small>")
+        self.info_label.set_use_markup(True)
+        self.info_label.set_margin_right(4)
+
+        self.button = Gtk.Button(label=_("Apply Motion Tracking Data"))
+        self.button.connect("clicked", self.apply_tracking)
+
+        hbox2 = Gtk.HBox()
+        hbox2.pack_start(Gtk.Label(), True, True, 0) 
+        hbox2.pack_start(self.info_label, False, False, 0) 
+        hbox2.pack_start(self.button, False, False, 0)
+        hbox2.set_margin_top(4)
+
+        self.widget = Gtk.VBox()
+        self.widget.pack_start(hbox1, False, False, 0)
+        self.widget.pack_start(hbox2, False, False, 0)
+        
+    def apply_tracking(self, button):
+        tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
+        motiontracking.apply_tracking(tracking_data_id, self.filter, self.editable_properties)
+

@@ -1152,6 +1152,7 @@
         <propertynonmlt name="xoff" args="editor=no_editor">0</propertynonmlt>
         <propertynonmlt name="yoff" args="editor=no_editor">0</propertynonmlt>
         <propertynonmlt name="interpretation" args="editor=no_editor exptype=not_parsed">absolute</propertynonmlt>
+        <extraeditor name="applymotion"></extraeditor> 
     </filter>
     <!-- TRANSFORM -->
     <filter id="affine">
