@@ -777,7 +777,9 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
         # Create NonMltEditableProperty wrappers for properties
         non_mlteditable_properties = propertyedit.get_non_mlt_editable_properties( clip, 
                                                                                    filter_object,
-                                                                                   filter_index)
+                                                                                   filter_index,
+                                                                                   track,
+                                                                                   clip_index)
 
         # Extra editors. Editable properties may have already been created 
         # with "editor=no_editor" and now extra editors may be created to edit those

@@ -24,6 +24,13 @@ from editorstate import PROJECT
 import utils
 
 
+# Values correspond with values in filters.xml
+COORDINATES_ABSOLUTE = "absolute"
+COORDINATES_TOP_LEFT_JUSTIFIED = "topleft"
+SIZE_NOT_SCALED = "notscaled"
+SIZE_SCALED = "scaled"
+
+
 def get_tracking_data_select_combo(empty_text):
     tdata_select_combo = Gtk.ComboBoxText()
     tdata_keys = []
@@ -40,16 +47,19 @@ def get_tracking_data_select_combo(empty_text):
     return (tdata_keys, tdata_select_combo)
 
 
-def apply_tracking(tracking_data_id, filter, editable_properties):
+def apply_tracking(tracking_data_id, filter, editable_properties, xoff, yoff, interpretation, size, clip_in):
     data_lable, data_path = PROJECT().tracking_data[tracking_data_id]
-    
+ 
     f = open(data_path, "r")
     results = f.read()
     f.close()
-    
+
     kf_list = get_kf_list_from_tracking_data(results)
-    trans_rect_value = get_transition_rect_str_from_kf_list(kf_list)
-    print(trans_rect_value)
+    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in)
+    
+    
+    trans_rect_value = get_transition_rect_str_from_kf_list(kf_list_user)
+    #print(trans_rect_value)
 
     trans_rect_prop = [ep for ep in editable_properties if ep.name == "transition.rect"][0]
     trans_rect_prop.write_value(trans_rect_value)
@@ -66,8 +76,45 @@ def get_kf_list_from_tracking_data(results):
         kf = (int(kf_parts[0]), int(rect_tokens[0]), int(rect_tokens[1]), int(rect_tokens[2]), int(rect_tokens[3]))
         kf_list.append(kf)
     
-    print(kf_list)
+    #print(kf_list)
     return kf_list
+
+def get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in):
+    kf_list_user = []
+    
+    #print("BBBB", xoff, yoff, interpretation, size, clip_in)
+     
+    # Get first kf data
+    frame, x, y, w, h = kf_list[0]
+        
+    # Apply position interpretation to offsets
+    if interpretation == COORDINATES_TOP_LEFT_JUSTIFIED:
+        xoff -= x
+        yoff -= y
+    
+    # Apply selected scaling.
+    if size == SIZE_NOT_SCALED:
+        source_width = w
+        source_height = h
+    else:
+        source_width = w
+        source_height = h
+
+    # Apply tracking starting from 'clip_in' frame.
+    if clip_in != 0:
+        kf = (frame, x + xoff, y + yoff, source_width, source_height)
+        kf_list_user.append(kf)
+        frame_add = clip_in
+    else:
+        frame_add = 0
+
+    # Create user kf list
+    for kf in kf_list:
+        frame, x, y, w, h = kf
+        kf = (frame + frame_add, x + xoff, y + yoff, source_width, source_height)
+        kf_list_user.append(kf)
+
+    return kf_list_user
 
 def get_transition_rect_str_from_kf_list(kf_list):
     transition_rect = ""
@@ -78,10 +125,3 @@ def get_transition_rect_str_from_kf_list(kf_list):
     transition_rect.rstrip(";")
     
     return transition_rect
-    
-"""
-        <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
-        <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
-"""
-
-        

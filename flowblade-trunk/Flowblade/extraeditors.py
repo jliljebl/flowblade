@@ -1338,5 +1338,12 @@ class ApplyMotionTrackingFilterEditor:
 
     def apply_tracking(self, button):
         tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
-        motiontracking.apply_tracking(tracking_data_id, self.filter, self.editable_properties)
+        xoff = [ep for ep in self.non_mlt_properties if ep.name == "xoff"][0].value
+        yoff = [ep for ep in self.non_mlt_properties if ep.name == "yoff"][0].value
+        interpretation = [ep for ep in self.non_mlt_properties if ep.name == "interpretation"][0].value
+        size = [ep for ep in self.non_mlt_properties if ep.name == "size"][0].value
+        clip_in = self.editable_properties[0].clip.clip_in
+
+        motiontracking.apply_tracking(  tracking_data_id, self.filter, self.editable_properties, 
+                                        int(float(xoff)), int(float(yoff)), interpretation, size, clip_in)
 

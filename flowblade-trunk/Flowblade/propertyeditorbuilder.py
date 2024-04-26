@@ -1062,10 +1062,12 @@ def _create_anylaze_motion_editor(filt, editable_properties, editor_name, track,
 def _create_apply_motion_editor(filt, editable_properties, editor_name, track, clip_index):
     filter_index = editable_properties[0].filter_index
     clip = editable_properties[0].clip
-    non_mlt_properties = propertyedit.get_non_mlt_editable_properties(clip, filt, filter_index)
+    non_mlt_properties = propertyedit.get_non_mlt_editable_properties(clip, filt, filter_index, track, clip_index)
     xoff_prop = [ep for ep in non_mlt_properties if ep.name == "xoff"][0]
+    xoff_prop.write_adjustment_values = True
     xoff_prop_editor = get_non_mlt_property_editor_row(xoff_prop, LADSPA_SLIDER)
     yoff_prop = [ep for ep in non_mlt_properties if ep.name == "yoff"][0]
+    yoff_prop.write_adjustment_values = True
     yoff_prop_editor = get_non_mlt_property_editor_row(yoff_prop, LADSPA_SLIDER)
     interpretation_prop = [ep for ep in non_mlt_properties if ep.name == "interpretation"][0]
     interpretation_prop_editor = get_non_mlt_property_editor_row(interpretation_prop, COMBO_BOX)

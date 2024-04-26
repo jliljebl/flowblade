@@ -181,7 +181,7 @@ def get_transition_editable_properties(compositor):
     
     return editable_properties
 
-def get_non_mlt_editable_properties(clip, filter_object, filter_index):
+def get_non_mlt_editable_properties(clip, filter_object, filter_index, track, clip_index):
     editable_properties = []
     for i in range(0, len(filter_object.non_mlt_properties)):
         prop = filter_object.non_mlt_properties[i]
@@ -196,6 +196,8 @@ def get_non_mlt_editable_properties(clip, filter_object, filter_index):
                 filter_object.info.property_args[p_name] = args_str
 
         ep = NonMltEditableProperty(prop, args_str, clip, filter_index, i)
+        ep.track = track
+        ep.clip_index = clip_index
         editable_properties.append(ep)
     
     return editable_properties
@@ -468,6 +470,8 @@ class NonMltEditableProperty(AbstractProperty):
     """
     A wrapper for editable persistent properties that do not write out values to MLT objects.
     Values of these are used to compute values that _are_ written to MLT.
+    
+    NOTE: WHEN USED WITH EDITORS should be noted that all values are strings.
     """
     def __init__(self, prop, args_str, clip, filter_index, non_mlt_property_index):
         AbstractProperty.__init__(self, args_str)
@@ -476,18 +480,26 @@ class NonMltEditableProperty(AbstractProperty):
         self.filter_index = filter_index
         self.non_mlt_property_index = non_mlt_property_index
         self.adjustment_listener = None # External listener that may be monkeypathched here
-
+        self.write_adjustment_values = False # We are having this to avoid possible regressions when adding more editing capabilities to 
+                                             # NonMltEditableProperty objects for 2.16, some earlier functionality could assume
+                                             # that this is not happening.
+                                             
     def adjustment_value_changed(self, adjustment):
         if self.adjustment_listener != None:
             value = adjustment.get_value()
             out_value = self.get_out_value(value)
             self.adjustment_listener(self, out_value)
-        
+        else:
+            if self.write_adjustment_values == True:
+                value = adjustment.get_value()
+                out_value = self.get_out_value(value)
+                self.write_number_value(out_value)
+            
     def _get_filter_object(self):
         return self.clip.filters[self.filter_index]
 
     def write_value(self, val):
-        pass # There is no defined need for this.
+        self.write_property_value(val)
 
     def write_number_value(self, numb):
         self.write_property_value(str(numb))
