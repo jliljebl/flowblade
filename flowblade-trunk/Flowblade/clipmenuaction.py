@@ -104,7 +104,7 @@ def display_clip_menu(y, event, frame):
         movemodes.select_blank_range(track, pressed_clip)
 
     global _popover_clip_data
-    _popover_clip_data = (pressed_clip, track,  event.x)
+    _popover_clip_data = (pressed_clip, track, event.x)
             
     if track.type == appconsts.VIDEO:
         if not_multi_selection == True:

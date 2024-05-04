@@ -22,6 +22,9 @@
 This module contains complex property editors.
 """
 
+from PIL import Image
+
+from datetime import datetime
 import math
 import os
 import webbrowser
@@ -1343,7 +1346,27 @@ class ApplyMotionTrackingFilterEditor:
         interpretation = [ep for ep in self.non_mlt_properties if ep.name == "interpretation"][0].value
         size = [ep for ep in self.non_mlt_properties if ep.name == "size"][0].value
         clip_in = self.editable_properties[0].clip.clip_in
-
+        
+        info = utils.get_file_producer_info(self.editable_properties[0].clip)
+        source_w = int(info["width"])
+        source_h = int(info["height"])
+        if self.editable_properties[0].clip.media_type == appconsts.IMAGE:
+            graphic_img = Image.open(self.editable_properties[0].clip.path)
+            source_w, source_h = graphic_img.size
+            
         motiontracking.apply_tracking(  tracking_data_id, self.filter, self.editable_properties, 
-                                        int(float(xoff)), int(float(yoff)), interpretation, size, clip_in)
+                                        int(float(xoff)), int(float(yoff)), interpretation, size, clip_in,
+                                        source_w, source_h)
+        
+        selected_tracking_data_prop = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0]
+        selected_tracking_data_prop.write_value(tracking_data_id)
 
+        date_str = datetime.now().strftime('%y.%m - %H:%M:%S')
+        last_applied_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0]
+        last_applied_tracking_data.write_value(date_str)
+
+        self.info_label.set_text("<small>" + _("Last applied ") + date_str + "</small>")
+        self.info_label.set_use_markup(True)
+        self.info_label.queue_draw()
+
+        

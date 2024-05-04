@@ -47,7 +47,9 @@ def get_tracking_data_select_combo(empty_text):
     return (tdata_keys, tdata_select_combo)
 
 
-def apply_tracking(tracking_data_id, filter, editable_properties, xoff, yoff, interpretation, size, clip_in):
+def apply_tracking( tracking_data_id, filter, editable_properties, 
+                    xoff, yoff, interpretation, size, clip_in,
+                    source_width, source_height):
     data_lable, data_path = PROJECT().tracking_data[tracking_data_id]
  
     f = open(data_path, "r")
@@ -55,11 +57,9 @@ def apply_tracking(tracking_data_id, filter, editable_properties, xoff, yoff, in
     f.close()
 
     kf_list = get_kf_list_from_tracking_data(results)
-    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in)
-    
+    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in, source_width, source_height)
     
     trans_rect_value = get_transition_rect_str_from_kf_list(kf_list_user)
-    #print(trans_rect_value)
 
     trans_rect_prop = [ep for ep in editable_properties if ep.name == "transition.rect"][0]
     trans_rect_prop.write_value(trans_rect_value)
@@ -75,14 +75,11 @@ def get_kf_list_from_tracking_data(results):
         rect_tokens = kf_parts[1].split(" ")
         kf = (int(kf_parts[0]), int(rect_tokens[0]), int(rect_tokens[1]), int(rect_tokens[2]), int(rect_tokens[3]))
         kf_list.append(kf)
-    
-    #print(kf_list)
+
     return kf_list
 
-def get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in):
+def get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in, clip_source_width, clip_source_height):
     kf_list_user = []
-    
-    #print("BBBB", xoff, yoff, interpretation, size, clip_in)
      
     # Get first kf data
     frame, x, y, w, h = kf_list[0]
@@ -94,8 +91,8 @@ def get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in):
     
     # Apply selected scaling.
     if size == SIZE_NOT_SCALED:
-        source_width = w
-        source_height = h
+        source_width = clip_source_width
+        source_height = clip_source_height
     else:
         source_width = w
         source_height = h
