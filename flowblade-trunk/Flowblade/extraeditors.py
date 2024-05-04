@@ -1320,6 +1320,9 @@ class ApplyMotionTrackingFilterEditor:
         hbox1.set_margin_bottom(24)
 
         self.info_label = Gtk.Label("<small>No Tracking Data Applied</small>")
+        last_applied_date_str = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0].value
+        if last_applied_date_str != appconsts.TRACKING_DATA_NOT_SET:
+            self.show_last_applied_date(last_applied_date_str)
         self.info_label.set_use_markup(True)
         self.info_label.set_margin_right(4)
 
@@ -1364,7 +1367,9 @@ class ApplyMotionTrackingFilterEditor:
         date_str = datetime.now().strftime('%y.%m - %H:%M:%S')
         last_applied_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0]
         last_applied_tracking_data.write_value(date_str)
+        self.show_last_applied_date(date_str)
 
+    def show_last_applied_date(self, date_str):
         self.info_label.set_text("<small>" + _("Last applied ") + date_str + "</small>")
         self.info_label.set_use_markup(True)
         self.info_label.queue_draw()

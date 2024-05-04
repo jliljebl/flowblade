@@ -386,5 +386,7 @@ MEDIA_RATINGS_HIDE_BAD = 2
 STABILIZE_DATA_EXTENSION = ".stabdata"
 MOTION_TRACKING_DATA_EXTENSION = ".trackdata"
 
-# magic value for file path property that has not been set yet.
+# magic values string propertie that have not been set yet.
 FILE_PATH_NOT_SET = "!!##PATHNOTSET##!!"
+TRACKING_DATA_NOT_SET = "!!##TRACKINGDATANOTSET##!!"
+
