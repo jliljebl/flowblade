@@ -1312,7 +1312,8 @@ class ApplyMotionTrackingFilterEditor:
         select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
         select_label.set_margin_right(4)
 
-        self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"))
+        selected_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0].value
+        self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"), selected_tracking_data)
 
         hbox1 = Gtk.HBox()
         hbox1.pack_start(select_label, False, False, 0) 

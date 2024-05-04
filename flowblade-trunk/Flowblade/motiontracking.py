@@ -31,19 +31,27 @@ SIZE_NOT_SCALED = "notscaled"
 SIZE_SCALED = "scaled"
 
 
-def get_tracking_data_select_combo(empty_text):
+def get_tracking_data_select_combo(empty_text, current_selection_id):
     tdata_select_combo = Gtk.ComboBoxText()
     tdata_keys = []
+    current_selection_index = -1
+    indx = 0
     if len(PROJECT().tracking_data) > 0:
         for key, tdata in PROJECT().tracking_data.items():
             label, file = tdata
             tdata_select_combo.append_text(label)
             tdata_keys.append(key)
+            if key == current_selection_id:
+                current_selection_index = indx
+            indx += 1
     else:
         tdata_select_combo.append_text(empty_text)
         tdata_keys.append(None)
 
-    tdata_select_combo.set_active(0)
+    if current_selection_index == -1:
+        tdata_select_combo.set_active(0)
+    else:
+        tdata_select_combo.set_active(current_selection_index)
     return (tdata_keys, tdata_select_combo)
 
 
