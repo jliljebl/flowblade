@@ -955,6 +955,8 @@ def _hamburger_menu_item_selected(action, variant, msg):
         append_selected_media_clips_into_timeline()
     elif msg == "reverse order":
         reverse_current_bin_media_order()
+    elif msg == "move to clicked":
+        gui.media_list_view.init_move()
     elif msg == "set bin default":
         current_default_length = PROJECT().get_current_bin_graphics_default_length()
         dialogs.set_bin_grfx_default_length_dialog( current_bin(),

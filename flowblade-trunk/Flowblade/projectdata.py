@@ -21,6 +21,7 @@
 """
 Module contains objects used to capture project data.
 """
+
 import cairo
 import datetime
 try:
@@ -85,7 +86,7 @@ class Project:
         self.profile_desc = profile.description()
         self.bins = []
         self.bins_graphics_default_lengths = {} # Bin.uid -> default length
-        self.media_files = {} # MediaFile.id(key) -> MediaFile object(value)
+        self.media_files = {} # MediaFile.id(key) -> MediaFile object.
         self.sequences = []
         self.next_media_file_id = 0 
         self.next_bin_number = 1 # This is for creating name for new bin 

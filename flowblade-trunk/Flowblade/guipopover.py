@@ -479,6 +479,7 @@ def media_hamburger_popover_show(launcher, widget, callback):
     _media_panel_hamburger_menu.append_section(None, proxy_section)
 
     order_section = Gio.Menu.new()
+    add_menu_action(order_section, _("Move Selected Items To Clicked Position..."), "mediapanel.movetoclicked", "move to clicked", callback)
     add_menu_action(order_section, _("Reverse Items Order"), "mediapanel.reverseorder", "reverse order", callback)
     _media_panel_hamburger_menu.append_section(None, order_section)
 

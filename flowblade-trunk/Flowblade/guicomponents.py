@@ -1105,8 +1105,11 @@ class BinInfoPanel(Gtk.HBox):
         
 # -------------------------------------------- media select panel
 class MediaPanel():
+    
+    NORMAL_MODE = 0
+    MOVE_MODE = 1
+    
     def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
-        # Aug-2019 - SvdB - BB
         self.widget = Gtk.VBox()
         self.widget.set_name("darker-bg-widget")
         self.row_widgets = []
@@ -1121,6 +1124,9 @@ class MediaPanel():
         self.last_pressed = None
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
+        self.mode = MediaPanel.NORMAL_MODE
+        self.ignore_relese_for_move = False
+            
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, \
         pattern_icon, profile_warning_icon, unused_icon, generator_icon, gmic_icon, \
         selection_icon, title_icon
@@ -1151,6 +1157,10 @@ class MediaPanel():
         else:
             return False
  
+    def init_move(self):
+        self.mode = MediaPanel.MOVE_MODE
+        self.widget.queue_draw()
+        
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_release = True
@@ -1167,6 +1177,12 @@ class MediaPanel():
             self.last_event_time = now
             return
         self.last_event_time = now
+
+        if self.mode == MediaPanel.MOVE_MODE:
+            self.mode = MediaPanel.NORMAL_MODE
+            self.last_pressed = media_object
+            self.do_clicked_move()
+            return
 
         widget.grab_focus()
 
@@ -1237,6 +1253,10 @@ class MediaPanel():
         self.widget.queue_draw()
 
     def release_on_media_object(self, media_object, widget, event):
+        if self.ignore_relese_for_move == True:
+            self.ignore_relese_for_move = False
+            return
+        
         if self.last_ctrl_selected_media_object == media_object:
             self.last_ctrl_selected_media_object = None
             return
@@ -1300,6 +1320,37 @@ class MediaPanel():
 
         self.widget.queue_draw()
 
+    def do_clicked_move(self):
+        # We need this savad because fill_data_model() clears selection.
+        selected_length = len(self.selected_objects)
+        first_item_id = self.selected_objects[0].media_file.id
+        
+        # Remove from list
+        for move_file_widget in self.selected_objects:
+            pop_index = current_bin().file_ids.index(move_file_widget.media_file.id)
+            current_bin().file_ids.pop(pop_index)
+
+        # Put back
+        insert_index = current_bin().file_ids.index(self.last_pressed.media_file.id)
+        for move_file_widget in self.selected_objects:
+            current_bin().file_ids.insert(insert_index, move_file_widget.media_file.id)
+            insert_index += 1
+
+        self.fill_data_model() # This also clears selections.
+
+        # Select new range
+        start = current_bin().file_ids.index(first_item_id)
+        end = start + selected_length
+        for i in range(start, end):
+            file_id = current_bin().file_ids[i]
+            m_file = PROJECT().media_files[file_id]
+            m_obj = self.widget_for_mediafile[m_file]
+
+            self.selected_objects.append(m_obj)
+
+        self.ignore_relese_for_move = True
+        self.widget.queue_draw()
+        
     def columns_changed(self, columns):
         self.columns = columns
         editorpersistance.prefs.media_columns = self.columns
@@ -1378,7 +1429,8 @@ class MediaPanel():
                 and (media_file.rating != appconsts.MEDIA_FILE_FAVORITE)):
                 continue
                 
-            media_object = MediaObjectWidget(media_file, 
+            media_object = MediaObjectWidget(media_file,
+                                            self, 
                                             self.media_object_selected, 
                                             self.release_on_media_object, 
                                             self.monitor_indicator,
@@ -1423,8 +1475,9 @@ class MediaPanel():
 
 class MediaObjectWidget:
 
-    def __init__(self, media_file, selected_callback, release_callback, indicator_icon, is_selected_test):
+    def __init__(self, media_file, panel, selected_callback, release_callback, indicator_icon, is_selected_test):
         self.media_file = media_file
+        self.panel = panel
         self.selected_callback = selected_callback
         self.is_selected_test = is_selected_test
         self.indicator_icon = indicator_icon
@@ -1432,6 +1485,7 @@ class MediaObjectWidget:
 
         r, g, b = utils.cairo_color_from_gdk_color(gui.get_selected_bg_color())
         self.selected_color = (r, g, b, 1.0)
+        self.move_color  = (0.5, 0.5, 0.5, 1.0)
 
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
@@ -1514,6 +1568,9 @@ class MediaObjectWidget:
         if self.is_selected_test(self):
             cr.set_source_rgba(*self.selected_color)
 
+            if self.panel.mode == MediaPanel.MOVE_MODE:
+                cr.set_source_rgba(*self.move_color)
+
         # Indicate CTRL+X cut items that have not been pasted yet
         # with red outline.
         copy_paste_data = editorstate.get_copy_paste_objects()
@@ -1522,7 +1579,7 @@ class MediaObjectWidget:
             if object_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
                 if self.media_file.id in file_ids:
                     cr.set_source_rgba(1,0,0,0.3)
-        cr.set_line_width(2.0)
+        cr.set_line_width(3.0)
         self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
         cr.stroke()
         
@@ -1596,6 +1653,16 @@ class MediaObjectWidget:
                 cr.set_source_surface(pattern_icon, 6, 6)
                 cr.paint()
 
+        if self.is_selected_test(self):
+            if self.panel.mode == MediaPanel.MOVE_MODE:          
+                cr.set_source_rgba(0.5, 0.5, 0.5, 0.5)
+            else:
+                r, g, b, a = self.selected_color                     
+                cr.set_source_rgba(r, g, b, 0.3)     
+                                    
+            self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
+            cr.fill()
+                
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = math.pi / 180.0
 
