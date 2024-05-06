@@ -414,7 +414,7 @@ class EditableProperty(AbstractProperty):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
-        
+
     def write_mlt_property_str_value(self, str_value):
         # mlt property value
         filter_object = self._get_filter_object()
@@ -1013,12 +1013,10 @@ class FileResourceProperty(EditableProperty):
 class RectNoKeyframes(EditableProperty):
 
     def write_out_keyframes(self, keyframes):
-        print("write out keyframes")
-        
         val_str = ""
         kf =  keyframes[0]
         frame, rect, opac, kf_type = kf
-                        
+
         val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
         val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
 

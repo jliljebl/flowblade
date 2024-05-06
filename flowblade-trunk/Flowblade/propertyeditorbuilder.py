@@ -823,9 +823,9 @@ def _get_file_select_editor(editable_property):
     editor_row.pack_start(file_select_button, False, False, 0)
 
     dialog.connect('response', editable_property.dialog_response_callback)
-    
+
     return editor_row
-    
+
 def _get_image_file_select_editor(editable_property):
     """
     Returns GUI component for selecting image producing file

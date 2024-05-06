@@ -191,7 +191,7 @@
         <name>Mask - Begin</name>
         <group>FILTER_MASK</group>  
         <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.alphaspot</property>
-        <property name="filter.Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
+        <property name="filter.Shape" args="editor=combobox exptype=default displayname=Shape cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
         <property name="filter.Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
         <property name="filter.Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
         <property name="filter.Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.3</property>
@@ -211,11 +211,49 @@
         <property name="filter.prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
         <property name="filter.postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
     </filter>
+    <filter id="mask_start" filtermaskfilter="Image Alpha">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">shape</property>
+        <property name="filter.mix" args="editor=no_editor">25.65</property>
+        <property name="filter.softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+        <property name="filter.invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="filter.use_luminance" args="editor=no_editor">0</property>
+        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
+        <property name="filter.use_mix" args="editor=no_editor">1</property>
+        <property name="filter.audio_match" args="editor=no_editor">0</property>
+    </filter>
+    <filter id="mask_start" filtermaskfilter="Image Luma">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">shape</property>
+        <property name="filter.mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">25.65</property>
+        <property name="filter.softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+        <property name="filter.invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="filter.use_luminance" args="editor=no_editor">1</property>
+        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
+        <property name="filter.use_mix" args="editor=no_editor">1</property>
+        <property name="filter.audio_match" args="editor=no_editor">0</property>
+    </filter>
+    <filter id="mask_start" filtermaskfilter="Color Select">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.select0r</property>  
+        <property name="filter.Color to select" args="editor=color_select exptype=color displayname=Color">#00ff00</property>
+        <property name="filter.Invert selection"  args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="filter.Selection subspace" args="editor=combobox exptype=default cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
+        <property name="filter.Delta R / A / Hue" args="range_in=0,100 displayname=R/A/Hue">0.2</property>
+        <property name="filter.Delta G / B / Chroma" args="range_in=0,100 displayname=G/B/Chroma">0.2</property>
+        <property name="filter.Delta B / I / I" args="range_in=0,100 displayname=B/I/I">0.2</property>
+        <property name="filter.Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0 displayname=Edge!Mode">0.0</property>
+        <property name="filter.Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
+        <property name="filter.Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
     <filter id="mask_apply" filtermaskfilter="Mask - End">
         <name>Mask - End</name>
         <group>FILTER_MASK</group>  
         <property name="transition" args="editor=no_editor exptype=not_parsed">frei0r.composition</property>
-        <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgb24a</property>
+        <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgba</property>
     </filter>
 
 
@@ -875,7 +913,7 @@
         <property name="6" args="editor=slider range_in=0,100 displayname=Start!Y">0.8</property>
         <property name="7" args="editor=slider range_in=0,100 displayname=End!X">0.5</property>
         <property name="8" args="editor=slider range_in=0,100 displayname=End!Y">0.2</property>
-           <property name="0" args="editor=combobox displayname=Gradient!Type exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
+        <property name="0" args="editor=combobox displayname=Gradient!Type exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
         <property name="9" args="editor=slider range_in=0,100 displayname=Radial!Offset">0.0</property>
     </filter>
     <filter id="frei0r.cluster">
