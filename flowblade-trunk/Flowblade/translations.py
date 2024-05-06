@@ -328,7 +328,7 @@ def load_filters_translations():
     filter_names["Elastic"] = _("Elastic")
     filter_names["Rubberband Octave Shift"] = _("Rubberband Octave Shift")
     filter_names["Rubberband Pitch Scale"] = _("Rubberband Pitch Scale")
-    filter_names["Image Luma"] _("Image Luma")
+    filter_names["Image Luma"] =  _("Image Luma")
     filter_names["Image Alpha"] = _("Image Alpha")
     # param names
     global param_names
