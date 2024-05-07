@@ -1007,8 +1007,11 @@ def do_timeline_objects_paste():
                and (track.type == appconsts.VIDEO)):        
                 _display_no_audio_on_video_msg(track)
                 return
-
-        paste_on_blank = (track.clips[track.get_clip_index_at(tline_pos)].is_blanck_clip == True)
+        
+        try:
+            paste_on_blank = (track.clips[track.get_clip_index_at(tline_pos)].is_blanck_clip == True)
+        except:
+            paste_on_blank = False
         paste_on_cut = (current_sequence().get_closest_cut_frame(track.id, tline_pos) == tline_pos)
         
         # Paste clips.
