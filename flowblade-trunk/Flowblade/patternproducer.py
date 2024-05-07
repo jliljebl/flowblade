@@ -172,6 +172,7 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         self.type = appconsts.PATTERN_PRODUCER
         self.icon = None
         self.patter_producer_type = UNDEFINED # extending sets value
+        self.rating = appconsts.MEDIA_FILE_UNRATED
 
         self.mark_in = -1
         self.mark_out = -1

@@ -425,6 +425,7 @@ class ContainerClipMediaItem:
         self.type = container_data.unrendered_type
         self.icon = None # cairo.ImageSurface
         self.icon_path = None
+        self.rating = appconsts.MEDIA_FILE_UNRATED
         
         self.mark_in = -1
         self.mark_out = -1
