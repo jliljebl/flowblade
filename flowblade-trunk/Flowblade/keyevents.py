@@ -589,6 +589,8 @@ def _handle_configurable_global_events(event):
         if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None: 
             projectaction.append_selected_media_clips_into_timeline()
             return True
+    if action == "move_media":
+        gui.media_list_view.init_move()
 
     return False
     

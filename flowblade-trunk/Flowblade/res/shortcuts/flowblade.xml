@@ -102,5 +102,6 @@
     <event code='toggle_track_output' name='Selected Clip Track Out Enabled/Disabled' modifiers='CTRL'>d</event>
     <event code='tline_page_up' name='Timeline Vertical Page Up'>page_up</event>
     <event code='tline_page_down' name='Timeline Vertical Page Down'>page_down</event>
+    <event code='move_media' name='Move Selected Media items' modifiers='ALT'>m</event>
   </shortcuts>
 </flowblade>

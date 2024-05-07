@@ -417,7 +417,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['toggle_track_output'] = _('Enable/Disable Selected Clip Track Output')
     _keyboard_action_names['tline_page_up'] = _('Timeline Vertical Page Up')
     _keyboard_action_names['tline_page_down'] = _('Timeline Vertical Page Down')
-
+    _keyboard_action_names['move_media'] = _('Move Selected Media Items')
+    
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate
