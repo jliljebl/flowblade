@@ -1709,7 +1709,10 @@ def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     sw.add(pad_panel)
-    sw.set_size_request(420, 400)
+    if editorstate.screen_size_small_height() == True:
+        sw.set_size_request(420, 450)
+    else:
+        sw.set_size_request(420, 550)
     
     scroll_hold_panel.pack_start(sw, False, False, 0)
     scroll_hold_panel.show_all()
@@ -1802,8 +1805,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
     tools_vbox = Gtk.VBox()
     for tool_name, kb_shortcut in tool_set:
-            tools_vbox.pack_start(_get_kb_row(tool_name, kb_shortcut), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
+        tools_vbox.pack_start(_get_kb_row(kb_shortcut, tool_name), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-6"), _("Same as 1-6")), False, False, 0)
     tools = guiutils.get_named_frame(_("Edit Tools"), tools_vbox)
 
     kfs_vbox = Gtk.VBox()
@@ -1866,17 +1869,17 @@ def _get_dynamic_kb_row(root_node, code):
 
 def _get_kb_row(msg1, msg2, edit_launch=None):
     label1 = Gtk.Label(label=msg1)
-    label2 = Gtk.Label(label=msg2)
+    label2 = guiutils.bold_label(str(msg2))
     if edit_launch == None:
         widget = Gtk.Label()
     else:
         widget = edit_launch.widget
         edit_launch.set_shortcut_label(label1)
         
-    KB_SHORTCUT_ROW_WIDTH = 500
-    KB_SHORTCUT_ROW_HEIGHT = 22
+    KB_SHORTCUT_ROW_WIDTH = 600
+    KB_SHORTCUT_ROW_HEIGHT = 28
 
-    row = guiutils.get_three_column_box(label1, label2, widget, 170, 48)
+    row = guiutils.get_three_column_box(label1, guiutils.get_left_justified_box([label2]), widget, 240, 48)
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
