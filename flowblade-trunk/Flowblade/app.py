@@ -263,9 +263,9 @@ class FlowbladeApplication(Gtk.Application):
         _set_draw_params()
 
         # Refuse to run on too small screen.
-        #if scr_w < 1151 or scr_h < 767:
-        #    _too_small_screen_exit()
-        #    return
+        if scr_w < 1151 or scr_h < 767:
+            _too_small_screen_exit()
+            return
 
         # Init MLT framework
         repo = mlt.Factory().init()
