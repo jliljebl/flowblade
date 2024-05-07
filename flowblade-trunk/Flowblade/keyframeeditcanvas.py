@@ -364,6 +364,7 @@ class AbstractEditCanvas:
             # keyframe frame 0 cannot be removed
             return
         self.keyframes.pop(keyframe_index)
+        self._update_shape()
 
     def _frame_has_keyframe(self, frame):
         for i in range(0, len(self.keyframes)):
