@@ -196,7 +196,104 @@ Filter masking allows for one or more filters to be applied only on some user de
 <ul>
 </ol>
 
-<h2>6. Jog / Shuttle Support</h2>
+<h2>6. Motion Tracking</h2>
+<p>
+    When creating a motion tracking effect we are always dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
+</p>
+<p>
+    Flowblade implements motion tracking by providing two filters:
+</p>
+<ul>
+<li> <b>Motion Tracking Create</b> This filter creates the tracking data based on region of image and algorithm selected by the user.</li>
+<li> <b>Motion Tracking Apply</b> This filter applies tracking data on another image to follow the image element that was the source of the tracking data.
+</ul>
+<p>
+    Motion tracking data can also be applied to <b>Filter Mask Alpha Shape</b>, see below.
+</p>
+
+<h3>Filter: Motion Tracking Create</h3>
+<p>
+    Add this filter to clip that contains the image element you wish to track.
+</p>
+<h4>Parameters</h4>
+<p>
+    <b>Rectancle GUI Editor</b> Set the red rectangle on the image element you wish to track. 
+</p>
+<p>
+    Tracking always starts from first frame of clip, so use the first frame to position the rectangle.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut clip at that point to create a new clip that has the first frame at the position you wish the tracking to start.
+</p>
+<p>
+    <b>Keyframe Step</b> This sets the interval in frames between keyframes in the created tracking data. So e.g. value 5 creates a keyframe every 5 frames.
+</p>
+<p>
+    <b>Algorithm</b> Algorithm used to create the tracking data.
+</p>
+
+<ul>
+<li>
+<b>KCF - Kernelized Correlation Filters</b> Accuracy and speed better than MIL. This also reports tracking failure better than MIL. Does not recover from full occlusion.
+</li>
+<li>
+<b>MIL - Multiple Instance Learning</b> Performance is quite good, can work when presented with partial occlusion. Tracking failure not reported reliably. Does not recover from full occlusion.
+</li>
+<li>
+<b>MEDIANFLOW</b> 
+Excellent tracking failure reporting. Works very well when the motion is predictable and there is no occlusion. Fails under large motion.
+</li>
+<li>
+<b>MOSSE - Minimum Output Sum of Squared Error</b> MOSSE tracker is robust to variations in lighting, scale, pose, and non-rigid deformations. It also detects occlusion and can pause and resume where it left off when the object reappears.
+</li>
+</ul>
+
+<p>
+    <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter.
+</p>
+
+<h3>Filter: Motion Tracking Apply</h3>
+<p>
+    Add this filter to the clip that contains the image that you wish to make follow the tracked image elemnet.
+</p>
+<p>
+    Place the clip with tracking image on top of the clip with tracked image and apply croppping if necessery.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image elemnt you wish to track.
+</p>
+<p>
+    Tracking always starts from first frame of clip.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
+</p>
+<p>
+    <b>Tracking Coords Interpretation</b> 
+</p>
+<ul>
+<li>
+<b>Absolute</b> Places the top left corner of the image to the top left corner of the tracking data box.
+</li>
+<li>
+<b>Top Left Justified</b> Places the top left corner of image to the top left corner of screen in the first frame of tracking, and then moves image relatively as specified by tracking data. This is useful e.g. when making a text created in <b>Titler</b> that is placed initially correctly keep position when tracking data is applied.
+</ul>
+<p>
+    <b>X Offset</b> Moves image in the horizontal direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Y Offset</b> Moves image in the vertical direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Size</b> If set to <b>Scale To Box</b> image is scaled to fit the box defined by tracking data.
+</p>
+<p>
+    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as motion of the clip.
+</p>
+
+<h2>7. Jog / Shuttle Support</h2>
 
 
 <h3>Overview</h3>
