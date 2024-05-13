@@ -921,7 +921,7 @@ msgstr "_Pomoc"
 
 #: editorwindow.py:893
 msgid "Contents"
-msgstr "Treść"
+msgstr "Treść lokalna"
 
 #: editorwindow.py:894
 msgid "Contents Web"
@@ -8759,7 +8759,7 @@ msgstr "Niewidoczny"
 
 #: editorlayout.py:220
 msgid "Top Row Project Panel Default"
-msgstr "Panel projektu w górnym rzędzie, domyślnie"
+msgstr "Panel projektu w górnym rzędzie, domyślny"
 
 #: editorlayout.py:224
 msgid "Media"
@@ -8823,7 +8823,7 @@ msgstr "Pozycje zakładek"
 
 #: editorlayout.py:536 guipopover.py:352
 msgid "Layout Monitor Left"
-msgstr "Monitor układu po lewej stronie"
+msgstr "Układ — Monitor z lewej"
 
 #: editorlayout.py:539 guipopover.py:353
 msgid "Layout Monitor Center"
