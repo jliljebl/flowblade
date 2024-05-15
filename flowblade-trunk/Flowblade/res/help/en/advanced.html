@@ -178,7 +178,9 @@ In Flowblade Movie Editor you can <b>set a clip's positions to follow another cl
 <li> Resync Audio as needed.</li>
 </ul>
 
+<a name="filtermasking"></a>
 <h2>5. Filter Masking</h2>
+
 <p>
 Filter masking allows for one or more filters to be applied only on some user defined part of image</b>.
 </p>
@@ -190,7 +192,7 @@ Filter masking allows for one or more filters to be applied only on some user de
 
 <ol>
 <li> Click Filter Mask Menu launch button and select if you wish to apply mask on one or all filters.</li>
-<li> In submenu select mask <b>Alpha Shape</b>, <b>Luma Key</b>, <b>Image Alpha</b>, <b>Image Luma</b> or <b>Color Select</b>.</li>
+<li> In submenu select mask <b>Alpha Shape</b>, <b>Alpha Shape Motion Tracked</b>, <b>Luma Key</b>, <b>Image Alpha</b>, <b>Image Luma</b> or <b>Color Select</b>.</li>
 <li> Edit mask parameters in filter edit panel for <b>Mask - Begin</b> filter.</li>
 <li> You can drag and drop filters in and out of the masked range of filter stack.</li>
 <ul>
@@ -198,17 +200,20 @@ Filter masking allows for one or more filters to be applied only on some user de
 
 <h2>6. Motion Tracking</h2>
 <p>
-    When creating a motion tracking effect we are always dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
+    When creating a motion tracking effect we are usually dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
 </p>
 <p>
-    Flowblade implements motion tracking by providing two filters:
+When using motion tracking to create a tracking filter mask, then both tracking data source clip and the clip that has masked filter applied are usually the same clip. 
+</p>
+<p>
+    Flowblade implements motion tracking by providing two filters and a filter mask. Filters are:
 </p>
 <ul>
 <li> <b>Motion Tracking Create</b> This filter creates the tracking data based on region of image and algorithm selected by the user.</li>
 <li> <b>Motion Tracking Apply</b> This filter applies tracking data on another image to follow the image element that was the source of the tracking data.
 </ul>
 <p>
-    Motion tracking data can also be applied to <b>Filter Mask Alpha Shape</b>, see below.
+    Motion tracked masked filtering uses <b>Filter Mask: Alpha Shape Motion Tracked</b>, see below.
 </p>
 
 <h3>Filter: Motion Tracking Create</h3>
@@ -291,6 +296,46 @@ Excellent tracking failure reporting. Works very well when the motion is predict
 </p>
 <p>
     <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as motion of the clip.
+</p>
+
+
+<h3>Filter Mask: Alpha Shape Motion Tracked</h3>
+<p>
+Add this Filter Mask to clip that contains the image element you wish to apply masked filtering on.
+</p>
+
+<p>
+A typical use would be to e.g. blur a person's face to make them unregnizable.
+</p>
+
+<h4>Adding Filter Mask</h4>
+
+<p>
+See above how to <a href="#filtermasking">add a Filter Mask</a>. Select Filter Mask <b>Alpha Shape Motion Tracked</b>. 
+</p>
+
+
+<h4>Parameters</h4>
+<p>
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image elemnt you wish to track.
+</p>
+<p>
+    Tracking always starts from first frame of clip.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
+</p>
+<p>
+    <b>X Offset</b> Moves filtered area in the horizontal direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Y Offset</b> Moves filtered area in the vertical direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Scale</b> Makes filtered area smaller or larger.
+</p>
+<p>
+    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as a Filter Mask.
 </p>
 
 <h2>7. Jog / Shuttle Support</h2>
