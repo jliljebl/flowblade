@@ -19,7 +19,7 @@
 """
 
 """
-Module handles Multitrim tool functionality. 
+Module handles Multitrim tool functionality. Individual trimmodes are implemented in trimmodes.py module.
 """
 
 import appconsts

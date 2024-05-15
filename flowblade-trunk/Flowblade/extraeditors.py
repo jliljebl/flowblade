@@ -1375,4 +1375,60 @@ class ApplyMotionTrackingFilterEditor:
         self.info_label.set_use_markup(True)
         self.info_label.queue_draw()
 
+
+class FilterMaskApplyMotionTrackingEditor:
+    def __init__(self, filter, editable_properties, non_mlt_properties):
+        self.filter = filter
+        self.editable_properties = editable_properties
+        self.non_mlt_properties = non_mlt_properties
+
+        select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
+        select_label.set_margin_right(4)
+
+        selected_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0].value
+        self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"), selected_tracking_data)
+
+        hbox1 = Gtk.HBox()
+        hbox1.pack_start(select_label, False, False, 0) 
+        hbox1.pack_start(self.data_select_combo, True, True, 0)
+        hbox1.set_margin_bottom(24)
+
+        self.info_label = Gtk.Label("<small>No Tracking Data Applied</small>")
+        last_applied_date_str = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0].value
+        if last_applied_date_str != appconsts.TRACKING_DATA_NOT_SET:
+            self.show_last_applied_date(last_applied_date_str)
+        self.info_label.set_use_markup(True)
+        self.info_label.set_margin_right(4)
+
+        self.button = Gtk.Button(label=_("Apply Motion Tracking Data"))
+        self.button.connect("clicked", self.apply_tracking)
+
+        hbox2 = Gtk.HBox()
+        hbox2.pack_start(Gtk.Label(), True, True, 0) 
+        hbox2.pack_start(self.info_label, False, False, 0) 
+        hbox2.pack_start(self.button, False, False, 0)
+        hbox2.set_margin_top(24)
+        hbox2.set_margin_bottom(24)
         
+        self.widget = Gtk.VBox()
+        self.widget.pack_start(hbox1, False, False, 0)
+        self.widget.pack_start(hbox2, False, False, 0)
+
+    def apply_tracking(self, button):
+        tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
+        clip_in = self.editable_properties[0].clip.clip_in
+            
+        motiontracking.apply_filter_mask_tracking(tracking_data_id, self.filter, self.editable_properties, clip_in)
+        
+        selected_tracking_data_prop = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0]
+        selected_tracking_data_prop.write_value(tracking_data_id)
+
+        date_str = datetime.now().strftime('%y.%m - %H:%M:%S')
+        last_applied_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0]
+        last_applied_tracking_data.write_value(date_str)
+        self.show_last_applied_date(date_str)
+
+    def show_last_applied_date(self, date_str):
+        self.info_label.set_text("<small>" + _("Last applied ") + date_str + "</small>")
+        self.info_label.set_use_markup(True)
+        self.info_label.queue_draw()

@@ -23,6 +23,9 @@ from gi.repository import Gtk
 from editorstate import PROJECT
 import utils
 
+"""
+Module contains functions used to implement motion tracking feature.
+"""
 
 # Values correspond with values in filters.xml
 COORDINATES_ABSOLUTE = "absolute"
@@ -53,7 +56,6 @@ def get_tracking_data_select_combo(empty_text, current_selection_id):
     else:
         tdata_select_combo.set_active(current_selection_index)
     return (tdata_keys, tdata_select_combo)
-
 
 def apply_tracking( tracking_data_id, filter, editable_properties, 
                     xoff, yoff, interpretation, size, clip_in,
@@ -130,3 +132,54 @@ def get_transition_rect_str_from_kf_list(kf_list):
     transition_rect.rstrip(";")
     
     return transition_rect
+
+def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties, clip_in):
+    data_lable, data_path = PROJECT().tracking_data[tracking_data_id]
+ 
+    f = open(data_path, "r")
+    results = f.read()
+    f.close()
+
+    kf_list = get_kf_list_from_tracking_data(results)
+    kf_list_user = get_user_edits_kf_list(kf_list, 0, 0, COORDINATES_ABSOLUTE, SIZE_SCALED, clip_in, -1, -1)
+
+    profile_w = PROJECT().profile.width()
+    profile_h = PROJECT().profile.height()
+
+    position_x_str = ""
+    position_y_str = ""
+
+    for kf in kf_list_user:
+        frame, x, y, w, h = kf
+        xn = (float(x) + float(w / 2.0)) / float(profile_w)
+        yn = (float(y) + float(h / 2.0)) / float(profile_h)
+        position_x_str += str(frame) + "~=" + str(xn) + ";"
+        position_y_str += str(frame) + "~=" + str(yn) + ";"
+
+    size_x_str = str((float(w) / float(profile_w)) / 2.0)
+    size_y_str = str((float(h) / float(profile_h)) / 2.0)
+    
+    position_x_str.rstrip(";")
+    position_y_str.rstrip(";")
+    
+    print("pox:",position_x_str)
+    print("poy:",position_y_str)
+    print("six:",size_x_str)
+    print("siy:",size_y_str)
+
+    size_x_prop = [ep for ep in editable_properties if ep.name == "filter.Position X"][0]
+    size_y_prop = [ep for ep in editable_properties if ep.name == "filter.Position Y"][0]
+    position_x_prop = [ep for ep in editable_properties if ep.name == "filter.Size X"][0]
+    position_y_prop = [ep for ep in editable_properties if ep.name == "filter.Size Y"][0]
+
+    size_x_prop.write_value(position_x_str)
+    size_y_prop.write_value(position_y_str)
+    position_x_prop.write_value(size_x_str)
+    position_y_prop.write_value(size_y_str)
+
+"""
+            <property name="filter.Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
+            <property name="filter.Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
+            <property name="filter.Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.3</property>
+            <property name="filter.Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.3</property>
+"""
