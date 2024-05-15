@@ -1085,8 +1085,17 @@ def _create_apply_filter_mask_motion_editor(filt, editable_properties, editor_na
     filter_index = editable_properties[0].filter_index
     clip = editable_properties[0].clip
     non_mlt_properties = propertyedit.get_non_mlt_editable_properties(clip, filt, filter_index, track, clip_index)
+    xoff_prop = [ep for ep in non_mlt_properties if ep.name == "xoff"][0]
+    xoff_prop.write_adjustment_values = True
+    xoff_prop_editor = get_non_mlt_property_editor_row(xoff_prop, LADSPA_SLIDER)
+    yoff_prop = [ep for ep in non_mlt_properties if ep.name == "yoff"][0]
+    yoff_prop.write_adjustment_values = True
+    yoff_prop_editor = get_non_mlt_property_editor_row(yoff_prop, LADSPA_SLIDER)
+    scale_prop = [ep for ep in non_mlt_properties if ep.name == "scale"][0]
+    scale_prop.write_adjustment_values = True
+    scale_prop_editor = get_non_mlt_property_editor_row(scale_prop, LADSPA_SLIDER)
     
-    editor = extraeditors.FilterMaskApplyMotionTrackingEditor(filt, editable_properties, non_mlt_properties)
+    editor = extraeditors.FilterMaskApplyMotionTrackingEditor(filt, editable_properties, [xoff_prop_editor, yoff_prop_editor, scale_prop_editor], non_mlt_properties)
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(editor.widget, True, True, 0)
 

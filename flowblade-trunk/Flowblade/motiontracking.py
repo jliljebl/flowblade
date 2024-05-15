@@ -133,7 +133,7 @@ def get_transition_rect_str_from_kf_list(kf_list):
     
     return transition_rect
 
-def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties, clip_in):
+def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties,  xoff, yoff, scale, clip_in):
     data_lable, data_path = PROJECT().tracking_data[tracking_data_id]
  
     f = open(data_path, "r")
@@ -141,31 +141,30 @@ def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties, c
     f.close()
 
     kf_list = get_kf_list_from_tracking_data(results)
-    kf_list_user = get_user_edits_kf_list(kf_list, 0, 0, COORDINATES_ABSOLUTE, SIZE_SCALED, clip_in, -1, -1)
+    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, COORDINATES_ABSOLUTE, SIZE_SCALED, clip_in, -1, -1)
 
-    profile_w = PROJECT().profile.width()
-    profile_h = PROJECT().profile.height()
+    profile_w = float(PROJECT().profile.width())
+    profile_h = float(PROJECT().profile.height())
 
     position_x_str = ""
     position_y_str = ""
 
     for kf in kf_list_user:
         frame, x, y, w, h = kf
-        xn = (float(x) + float(w / 2.0)) / float(profile_w)
-        yn = (float(y) + float(h / 2.0)) / float(profile_h)
+        x = float(x)
+        y = float(y)
+        w = float(w)
+        h = float(h)
+        xn = (x + (w / 2.0)) / profile_w
+        yn = (y + (h / 2.0)) / profile_h
         position_x_str += str(frame) + "~=" + str(xn) + ";"
         position_y_str += str(frame) + "~=" + str(yn) + ";"
 
-    size_x_str = str((float(w) / float(profile_w)) / 2.0)
-    size_y_str = str((float(h) / float(profile_h)) / 2.0)
+    size_x_str = str( ((w * scale) / profile_w) / 2.0)
+    size_y_str = str( ((h * scale) / profile_h) / 2.0)
     
     position_x_str.rstrip(";")
     position_y_str.rstrip(";")
-    
-    print("pox:",position_x_str)
-    print("poy:",position_y_str)
-    print("six:",size_x_str)
-    print("siy:",size_y_str)
 
     size_x_prop = [ep for ep in editable_properties if ep.name == "filter.Position X"][0]
     size_y_prop = [ep for ep in editable_properties if ep.name == "filter.Position Y"][0]
@@ -176,10 +175,3 @@ def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties, c
     size_y_prop.write_value(position_y_str)
     position_x_prop.write_value(size_x_str)
     position_y_prop.write_value(size_y_str)
-
-"""
-            <property name="filter.Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
-            <property name="filter.Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
-            <property name="filter.Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.3</property>
-            <property name="filter.Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.3</property>
-"""

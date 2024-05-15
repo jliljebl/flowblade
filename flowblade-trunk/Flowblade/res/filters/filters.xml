@@ -206,6 +206,27 @@
         <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
         <extraeditor name="applyfiltermaskmotion"></extraeditor> 
     </filter>
+    <filter id="mask_start"  filtermaskfilter="Alpha Shape Motion Tracked">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.alphaspot</property>
+        <property name="filter.Shape" args="editor=combobox exptype=default displayname=Shape cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
+        <property name="filter.Position X" args="editor=no_editor exptype=keyframe_hcs">0=0.5</property>
+        <property name="filter.Position Y" args="editor=no_editor exptype=keyframe_hcs">0=0.5</property>
+        <property name="filter.Size X" args="editor=no_editor exptype=default">0.3</property>
+        <property name="filter.Size Y" args="editor=no_editor exptype=default">0.3</property>
+        <property name="filter.Tilt" args="editor=no_editor exptype=default">0.5</property>
+        <property name="filter.Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.0</property>
+        <property name="filter.Min" args="editor=no_editor exptype=default">0</property>
+        <property name="filter.Max" args="editor=no_editor exptype=default">1</property>
+        <property name="filter.Operation" args="editor=no_editor exptype=default">0.0</property>
+        <propertynonmlt name="xoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=X!Offset">0</propertynonmlt>
+        <propertynonmlt name="yoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=Y!Offset">0</propertynonmlt>
+        <propertynonmlt name="scale" args="editor=no_editor exptype=default range_in=20,400 range_out=20,400 displayname=Scale!%">100</propertynonmlt>
+        <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
+        <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
+        <extraeditor name="applyfiltermaskmotion"></extraeditor> 
+    </filter>
     <filter id="mask_start" filtermaskfilter="Luma Key">
         <name>Mask - Begin</name>
         <group>FILTER_MASK</group>  
@@ -1191,8 +1212,8 @@
         <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
         <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
         <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
-        <propertynonmlt name="xoff" args="editor=no_editor range_in=-2000,2000 range_out=-2000,2000 displayname=X!Offset">0</propertynonmlt>
-        <propertynonmlt name="yoff" args="editor=no_editor range_in=-2000,2000 range_out=-2000,2000 displayname=Y!Offset">0</propertynonmlt>
+        <propertynonmlt name="xoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=X!Offset">0</propertynonmlt>
+        <propertynonmlt name="yoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=Y!Offset">0</propertynonmlt>
         <propertynonmlt name="interpretation" args="editor=no_editor cbopts=Absolute:absolute,Top!Left!Justified:topleft displayname=Tracking!Coords!Interpretation exptype=not_parsed">absolute</propertynonmlt>
         <propertynonmlt name="size" args="editor=no_editor cbopts=Not!Scaled:notscaled,Scaled!To!Box:scaled displayname=Size exptype=not_parsed">notscaled</propertynonmlt>
         <extraeditor name="applymotion"></extraeditor> 

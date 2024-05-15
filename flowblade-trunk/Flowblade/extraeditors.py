@@ -1377,11 +1377,12 @@ class ApplyMotionTrackingFilterEditor:
 
 
 class FilterMaskApplyMotionTrackingEditor:
-    def __init__(self, filter, editable_properties, non_mlt_properties):
+    def __init__(self, filter, editable_properties, non_mlt_editors, non_mlt_properties):
         self.filter = filter
         self.editable_properties = editable_properties
         self.non_mlt_properties = non_mlt_properties
-
+        self.non_mlt_editors = non_mlt_editors
+        
         select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
         select_label.set_margin_right(4)
 
@@ -1412,13 +1413,18 @@ class FilterMaskApplyMotionTrackingEditor:
         
         self.widget = Gtk.VBox()
         self.widget.pack_start(hbox1, False, False, 0)
+        for row in self.non_mlt_editors:
+            self.widget.pack_start(row, False, False, 0)
         self.widget.pack_start(hbox2, False, False, 0)
 
     def apply_tracking(self, button):
         tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
         clip_in = self.editable_properties[0].clip.clip_in
-            
-        motiontracking.apply_filter_mask_tracking(tracking_data_id, self.filter, self.editable_properties, clip_in)
+        xoff = [ep for ep in self.non_mlt_properties if ep.name == "xoff"][0].value
+        yoff = [ep for ep in self.non_mlt_properties if ep.name == "yoff"][0].value
+        scale = [ep for ep in self.non_mlt_properties if ep.name == "scale"][0].value
+
+        motiontracking.apply_filter_mask_tracking(tracking_data_id, self.filter, self.editable_properties, int(float(xoff)), int(float(yoff)), float(scale) / 100.0, clip_in)
         
         selected_tracking_data_prop = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0]
         selected_tracking_data_prop.write_value(tracking_data_id)
