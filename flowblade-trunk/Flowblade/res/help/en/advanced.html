@@ -38,7 +38,7 @@ It is possible to import full contents of another Sequence into Sequence current
 </ul>
 <li> Select a Sequence to Import</li>
 <ul>
-<li> <b>Note that you obviously need atleast two Sequences to exist to do any import actions.</b></li>
+<li> <b>Note that you obviously need at least two Sequences to exist to do any import actions.</b></li>
 </ul>
 <li> Press <b>Import</b> button to execute import.</li>
 </ol>
@@ -135,7 +135,8 @@ In Flowblade Movie Editor you can <b>set a clip's positions to follow another cl
 
 <h3>Main points</h3>
 <ul>
-<li>Sync relations are set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
+<li>Sync relations are between two clips set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
+<li>Splitting audio with <b>Audio Split Synched </b> creates sync relation between original clip and split audio clip.</li>
 <li><b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.</li>
 <li><b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.</li>
 <li><b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
@@ -187,14 +188,14 @@ Filter masking allows for one or more filters to be applied only on some user de
 
 <img src="filter_mask.png">
 <p>
-<i>Filter masking menu launch button above 'Add Filter Mask' tootip, Mask - Begin and Mask - End filters defining which filters are masked, on the right image with masked Sepia filter.</i>
+<i>1) Filter masking menu launch button above red triangle, 2) Filters editor after adding mask with all filter edit panels minified. Mask - Begin and Mask - End filters define which filters are masked.</i>
 </p>
 
 <ol>
 <li> Click Filter Mask Menu launch button and select if you wish to apply mask on one or all filters.</li>
 <li> In submenu select mask <b>Alpha Shape</b>, <b>Alpha Shape Motion Tracked</b>, <b>Luma Key</b>, <b>Image Alpha</b>, <b>Image Luma</b> or <b>Color Select</b>.</li>
 <li> Edit mask parameters in filter edit panel for <b>Mask - Begin</b> filter.</li>
-<li> You can drag and drop filters in and out of the masked range of filter stack.</li>
+<li> You can movefilters in and out of the masked range of filter stack.</li>
 <ul>
 </ol>
 
@@ -203,7 +204,7 @@ Filter masking allows for one or more filters to be applied only on some user de
     When creating a motion tracking effect we are usually dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
 </p>
 <p>
-When using motion tracking to create a tracking filter mask, then both tracking data source clip and the clip that has masked filter applied are usually the same clip. 
+When using motion tracking to create a tracking filter mask, then both tracking data source clip and the clip that has the masked filter applied are usually the same clip. 
 </p>
 <p>
     Flowblade implements motion tracking by providing two filters and a filter mask. Filters are:
@@ -254,7 +255,7 @@ Excellent tracking failure reporting. Works very well when the motion is predict
 </ul>
 
 <p>
-    <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter.
+    <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter or <b>Filter Mask: Alpha Shape Motion Tracked</b>.
 </p>
 
 <h3>Filter: Motion Tracking Apply</h3>
@@ -262,12 +263,12 @@ Excellent tracking failure reporting. Works very well when the motion is predict
     Add this filter to the clip that contains the image that you wish to make follow the tracked image elemnet.
 </p>
 <p>
-    Place the clip with tracking image on top of the clip with tracked image and apply croppping if necessery.
+    Place the clip with tracking image on top of the clip with tracked image and apply cropping if necessary.
 </p>
 
 <h4>Parameters</h4>
 <p>
-    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image elemnt you wish to track.
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
 </p>
 <p>
     Tracking always starts from first frame of clip.
@@ -305,7 +306,7 @@ Add this Filter Mask to clip that contains the image element you wish to apply m
 </p>
 
 <p>
-A typical use would be to e.g. blur a person's face to make them unregnizable.
+A typical use would be to e.g. blur a person's face to make them unrecognizable.
 </p>
 
 <h4>Adding Filter Mask</h4>
@@ -317,7 +318,7 @@ See above how to <a href="#filtermasking">add a Filter Mask</a>. Select Filter M
 
 <h4>Parameters</h4>
 <p>
-    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image elemnt you wish to track.
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
 </p>
 <p>
     Tracking always starts from first frame of clip.
