@@ -130,6 +130,8 @@ def _clip_popover_menu_item_activated(action, variant, data):
     clip, track, x = _popover_clip_data
     handler = POPUP_HANDLERS[item_id]
     handler_data = (clip, track, item_id, item_data)
+    if item_id == "set_master":
+        handler_data = (clip, track, item_id, x)
     handler(handler_data)
 
 def compositor_menu_item_activated(action, variant, action_id):
