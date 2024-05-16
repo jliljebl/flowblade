@@ -3,9 +3,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**NEW RELEASE 2.14 AVAILABLE!**
-**[Release notes available here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
-
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
