@@ -824,7 +824,7 @@ class EditorWindow:
             ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
+            ('ResyncSelected', None, _('Resync Track'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:singletracktransition.add_transition_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), clear_filters_shortcut, None, lambda a:clipmenuaction.clear_filters()),
