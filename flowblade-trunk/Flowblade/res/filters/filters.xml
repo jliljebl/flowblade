@@ -1162,8 +1162,9 @@
         <name>Stabilize</name>
         <group>Movement</group>
         <property name="filename" args="editor=no_editor exptype=not_parsed">vidstab.trf</property>
-        <property name="shakiness" args="range_in=1,10 range_out=1,10 step=1.0 displayname=Shakiness">4</property>
-        <property name="accuracy" args="range_in=1,15 range_out=1,15 step=1.0 displayname=Accuracy">4</property>
+        <property name="shakiness" args="range_in=1,10 range_out=1,10 step=1.0 displayname=Analysis!Shakiness">4</property>
+        <property name="accuracy" args="range_in=1,15 range_out=1,15 step=1.0 displayname=Analysis!Accuracy">4</property>
+        <extraeditor name="analyzestabilize"></extraeditor> 
         <property name="stepsize" args="editor=no_editor exptype=not_parsed">6</property>
         <property name="algo" args="editor=no_editor exptype=not_parsed">1</property>
         <property name="mincontrast" args="editor=no_editor exptype=not_parsed">0.3</property>
@@ -1181,7 +1182,6 @@
         <property name="reload" args="editor=no_editor exptype=not_parsed">0</property>
         <property name="analyze" args="editor=no_editor exptype=not_parsed">0</property>
         <propertynonmlt name="results_save_data" args="editor=no_editor exptype=not_parsed">!!##PATHNOTSET##!!</propertynonmlt>
-        <extraeditor name="analyzestabilize"></extraeditor> 
     </filter>
     <filter id="opencv.tracker">
         <name>Motion Tracking Create</name>

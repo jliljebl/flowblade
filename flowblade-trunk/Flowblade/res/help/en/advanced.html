@@ -355,7 +355,36 @@ See above how to <a href="#filtermasking">add a Filter Mask</a>. Select Filter M
     <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as a Filter Mask.
 </p>
 
-<h2>7. Jog / Shuttle Support</h2>
+
+
+<h2>8. Stabilizing</h2>
+<p>
+    In Flowblade stabilizing a video clip is implemented using filter <b>Stabilize</b> available in filter category <b>Movement</b>. 
+</p>
+<p>
+    This filter requires two passes. The first pass performs analysis and stores the result internally in a file. After completed analysis stabilizing can be applied using the created data.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Analysis Shakiness</b> Used during analysis. How shaky the video is.
+</p>
+<p>
+    <b>Accuracy</b> Used during analysis. The accuracy of shakiness detection.
+</p>
+<p>
+    <b>Smoothing</b> Used during application. Number of frames for lowpass filtering (2N + 1 frames).
+
+</p>
+<p>
+    <b>Zoom</b> Used during application. Additional zoom amount.
+</P>
+<p>
+    <b>Analyze Video</b> Pressing this button analyzis video and saves the created data internally. Upon completion stabilizing is applied and can be controlled using <b>Smoothing</b> and <b>Zoom</b> parameters.
+</p>
+
+
+<h2>9. Jog / Shuttle Support</h2>
 
 
 <h3>Overview</h3>
