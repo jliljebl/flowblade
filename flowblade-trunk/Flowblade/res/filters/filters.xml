@@ -201,7 +201,7 @@
         <property name="filter.Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.0</property>
         <property name="filter.Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
         <property name="filter.Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
-        <property name="filter.Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
+        <property name="filter.Operation" args="editor=combobox exptype=default displayname=Operation cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="mask_start"  filtermaskfilter="Alpha Shape Motion Tracked">
         <name>Mask - Begin</name>
@@ -263,13 +263,13 @@
         <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.select0r</property>  
         <property name="filter.Color to select" args="editor=color_select exptype=color displayname=Color">#00ff00</property>
         <property name="filter.Invert selection"  args="editor=booleancheckbox displayname=Invert">0</property>
-        <property name="filter.Selection subspace" args="editor=combobox exptype=default cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
+        <property name="filter.Selection subspace" args="editor=combobox exptype=default displayname=Selection!subspace cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
         <property name="filter.Delta R / A / Hue" args="range_in=0,100 displayname=R/A/Hue">0.2</property>
         <property name="filter.Delta G / B / Chroma" args="range_in=0,100 displayname=G/B/Chroma">0.2</property>
         <property name="filter.Delta B / I / I" args="range_in=0,100 displayname=B/I/I">0.2</property>
         <property name="filter.Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0 displayname=Edge!Mode">0.0</property>
         <property name="filter.Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
-        <property name="filter.Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
+        <property name="filter.Operation" args="editor=combobox exptype=default displayname=Operation cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="mask_apply" filtermaskfilter="Mask - End">
         <name>Mask - End</name>

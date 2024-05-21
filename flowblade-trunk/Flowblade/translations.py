@@ -330,6 +330,10 @@ def load_filters_translations():
     filter_names["Rubberband Pitch Scale"] = _("Rubberband Pitch Scale")
     filter_names["Image Luma"] =  _("Image Luma")
     filter_names["Image Alpha"] = _("Image Alpha")
+    filter_names["Stabilize"] = _("Stabilize")
+    filter_names["Motion Tracking Apply"] = _("Motion Tracking Apply")
+    filter_names["Motion Tracking Create"] = _("Motion Tracking Create")
+    filter_names["Alpha Shape Motion Tracked"]= _("Alpha Shape Motion Tracked")
     # param names
     global param_names
 
@@ -705,6 +709,15 @@ def load_filters_translations():
     param_names["Stretch"] = _("Stretch")
     param_names["Pitch Scale"] = _("Pitch Scale")
     param_names["Octave Shift"] = _("Octave Shift")
+    param_names["Keyframe Step"] = _("Keyframe Step")
+    param_names["Algorithm"] = _("Algorithm")
+    param_names["X Offset"] = _("X Offset")
+    param_names["Y Offset"] = _("Y Offset")
+    param_names["Scale %"] = _("Scale %")
+    param_names["Smoothing"] = _("Smoothing")
+    param_names["Analysis Accuracy"] = _("Analysis Accuracy")
+    param_names["Analysis Shakiness"] = _("Analysis Shakiness")
+    param_names["Tracking Coords Interpretation"] = _("Tracking Coords Interpretation")
 
     # Combo options
     global combo_options
@@ -848,7 +861,11 @@ def load_filters_translations():
     combo_options["XDiagonal"] = _("XDiagonal")
     combo_options["Left"] = _("Left")
     combo_options["Right"] = _("Right")
-    
+    combo_options["Absolute"] = _("Absolute")
+    combo_options["Top Left Justified"] = _("Top Left Justified")
+    combo_options["Not Scaled"] = _("Not Scaled")
+    combo_options["Scaled To Box"] = _("Scaled To Box")
+
     # Added for 2.10
     global plugin_groups
     plugin_groups["Backgrounds"] = _("Backgrounds")
