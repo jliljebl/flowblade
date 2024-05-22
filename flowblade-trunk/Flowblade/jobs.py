@@ -538,6 +538,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         open_media_file_callback(self.write_file)
  
 
+
 class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
 
     def __init__(self, session_id, filter, editable_properties, analyze_editor, args):

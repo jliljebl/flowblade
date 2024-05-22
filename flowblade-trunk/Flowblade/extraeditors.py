@@ -1199,6 +1199,9 @@ class AnalyzeStabilizeFilterEditor:
         self.widget.pack_start(self.info_label, False, False, 0) 
         self.widget.pack_start(self.button, False, False, 0) 
 
+        self.widget.set_margin_top(24)
+        self.widget.set_margin_bottom(24)
+
     def analyze_button_clicked(self, button):
         session_id = utils.create_render_session_uid()
         profile_desc = PROJECT().profile_desc.replace(" ", "_")
@@ -1217,6 +1220,7 @@ class AnalyzeStabilizeFilterEditor:
     
     def analysis_complete(self):
         self.info_label.set_text(self.loaded_data_text)
+        self.info_label.set_use_markup(True)
         self.info_label.queue_draw()
 
 
