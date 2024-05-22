@@ -233,27 +233,27 @@
         <property name="filter.prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
         <property name="filter.postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
     </filter>
-    <filter id="mask_start" filtermaskfilter="Image Alpha">
+    <filter id="mask_start" filtermaskfilter="Video/Image File Alpha">
         <name>Mask - Begin</name>
-        <group>FILTER_MASK</group>  
+        <group>FILTER_MASK</group>
         <property name="filter" args="editor=no_editor exptype=not_parsed">shape</property>
+        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="filter.mix" args="editor=no_editor">25.65</property>
         <property name="filter.softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
         <property name="filter.invert" args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="filter.use_luminance" args="editor=no_editor">0</property>
-        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="filter.use_mix" args="editor=no_editor">1</property>
         <property name="filter.audio_match" args="editor=no_editor">0</property>
     </filter>
-    <filter id="mask_start" filtermaskfilter="Image Luma">
+    <filter id="mask_start" filtermaskfilter="Video/Image File Luma">
         <name>Mask - Begin</name>
         <group>FILTER_MASK</group>  
         <property name="filter" args="editor=no_editor exptype=not_parsed">shape</property>
+        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="filter.mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">25.65</property>
         <property name="filter.softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
         <property name="filter.invert" args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="filter.use_luminance" args="editor=no_editor">1</property>
-        <property name="filter.resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="filter.use_mix" args="editor=no_editor">1</property>
         <property name="filter.audio_match" args="editor=no_editor">0</property>
     </filter>
