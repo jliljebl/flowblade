@@ -386,6 +386,10 @@ class ClipFilterStack:
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.expander.set_expanded(True)
 
+    def set_filter_item_minified(self, filter_index):
+        filter_stack_item = self.filter_stack[filter_index]
+        filter_stack_item.expander.set_expanded(False)
+        
     def set_all_filters_expanded_state(self, expanded):
         for i in range(0, len(self.filter_stack)):
             stack_item = self.filter_stack[i]
@@ -911,7 +915,7 @@ def _filter_mask_item_activated(action, variant, data):
 
     set_clip(clip, track, clip_index)
     _filter_stack.set_filter_item_expanded(current_filter_index + 1)
-
+    _filter_stack.set_filter_item_minified(current_filter_index + 2)
 
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(launcher, widget, event, data):

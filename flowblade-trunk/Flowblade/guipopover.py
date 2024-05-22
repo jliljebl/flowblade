@@ -929,7 +929,7 @@ def filter_mask_popover_show(launcher, widget, callback, filter_names, filter_ms
     _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
 
     _filter_mask_menu.append_section(None, main_section)
-    _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher)
+    _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher, Gtk.PositionType.BOTTOM)
 
 def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, callback):
 
