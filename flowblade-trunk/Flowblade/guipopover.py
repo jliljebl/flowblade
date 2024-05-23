@@ -90,6 +90,9 @@ _log_event_popover = None
 _log_event_menu = None
 _filter_mask_popover = None
 _filter_mask_menu = None
+_filter_mask_main_section = None
+_filter_mask_add_selected_sub_menu = None
+_filter_mask_add_all_sub_menu = None
 _filter_add_popover = None
 _filter_add_menu = None
 _render_args_popover = None
@@ -916,19 +919,29 @@ def _add_filter_mask_submenu_items(sub_menu, filter_index, filter_names, filter_
         add_menu_action(sub_menu, label, item_id, data, callback)
 
 def filter_mask_popover_show(launcher, widget, callback, filter_names, filter_msgs, filter_index):
-    global _filter_mask_popover, _filter_mask_menu
-    _filter_mask_menu = menu_clear_or_create(_filter_mask_menu)
+    global _filter_mask_popover, _filter_mask_menu, _filter_mask_main_section, \
+    _filter_mask_add_selected_sub_menu, _filter_mask_add_all_sub_menu
 
-    main_section = Gio.Menu.new()
-    add_selected_sub_menu = Gio.Menu.new()
-    main_section.append_submenu(_("Add Filter Mask on Selected Filter"), add_selected_sub_menu)
-    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, False, callback)
+    if _filter_mask_menu == None:
+        _filter_mask_menu = menu_clear_or_create(_filter_mask_menu)
 
-    add_selected_sub_menu = Gio.Menu.new()
-    main_section.append_submenu(_("Add Filter Mask on All Filters"), add_selected_sub_menu)
-    _add_filter_mask_submenu_items(add_selected_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
+        _filter_mask_main_section = Gio.Menu.new()
+        _filter_mask_add_selected_sub_menu = Gio.Menu.new()
+        _filter_mask_main_section.append_submenu(_("Add Filter Mask on Selected Filter"), _filter_mask_add_selected_sub_menu)
+        _add_filter_mask_submenu_items(_filter_mask_add_selected_sub_menu, filter_index, filter_names, filter_msgs, False, callback)
 
-    _filter_mask_menu.append_section(None, main_section)
+        _filter_mask_add_all_sub_menu = Gio.Menu.new()
+        _filter_mask_main_section.append_submenu(_("Add Filter Mask on All Filters"), _filter_mask_add_all_sub_menu)
+        _add_filter_mask_submenu_items(_filter_mask_add_all_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
+
+        _filter_mask_menu.append_section(None, _filter_mask_main_section)
+    else:
+        _filter_mask_add_selected_sub_menu = menu_clear_or_create(_filter_mask_add_selected_sub_menu)
+        _add_filter_mask_submenu_items(_filter_mask_add_selected_sub_menu, filter_index, filter_names, filter_msgs, False, callback)
+
+        _filter_mask_add_all_sub_menu = menu_clear_or_create(_filter_mask_add_all_sub_menu)
+        _add_filter_mask_submenu_items(_filter_mask_add_all_sub_menu, filter_index, filter_names, filter_msgs, True, callback)
+        
     _filter_mask_popover = new_popover(widget, _filter_mask_menu, launcher, Gtk.PositionType.BOTTOM)
 
 def filter_add_popover_show(launcher, widget, clip, track, x, mltfiltersgroups, callback):
@@ -982,7 +995,6 @@ def render_args_popover_show(launcher, widget, callback):
 def edittools_popover_show(launcher, toolsdata, widget, callback):
     global _edittools_popover, _edittools_menu
     _edittools_menu = menu_clear_or_create(_edittools_menu)
-    print("toolsdata", toolsdata)
     main_section = Gio.Menu.new()
     for tool in toolsdata:
         label, icon_name, item_id, data = tool
