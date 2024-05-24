@@ -40,6 +40,7 @@ import editorstate
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
+import extraeditors
 import gui
 import guicomponents
 import guipopover
@@ -472,14 +473,6 @@ def set_clip(clip, track, clip_index, show_tab=True):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
 
-    #global _edit_polling_thread
-    # Close old polling
-    #if _edit_polling_thread != None:
-    #    _edit_polling_thread.shutdown()
-    # Start new polling
-    #_edit_polling_thread = PropertyChangePollingThread()
-    #_edit_polling_thread.start()
-
 def refresh_clip():
     if _filter_stack == None:
         return 
@@ -577,7 +570,6 @@ def clear_clip():
     show_text_in_edit_area(_("No Clip"))
 
     set_enabled(False)
-    # shutdown_polling()
 
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
@@ -615,14 +607,6 @@ def update_stack(clip, track, clip_index):
     widgets.value_edit_frame.add(scroll_window)
 
     widgets.value_edit_box = scroll_window
-
-"""
-def update_stack_changed_blocked():
-    global _block_changed_update
-    _block_changed_update = True
-    update_stack()
-    _block_changed_update = False
-"""
 
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
@@ -778,6 +762,14 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
             
+            # Some editors need to be accessed by extraeditors for controlling their state.
+            try:
+                name = ep.args[propertyedit.ACCESSABLE_EDITOR]
+                filter_index = ep.filter_index
+                extraeditors.accessable_editors[name + ":" + str(filter_index)] = editor_row
+            except Exception as e:
+                pass
+
         # Create NonMltEditableProperty wrappers for properties
         non_mlteditable_properties = propertyedit.get_non_mlt_editable_properties( clip, 
                                                                                    filter_object,

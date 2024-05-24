@@ -95,6 +95,9 @@ CIRCLE_GRAD_2 = (0, 0.8, 0.8, 0.8, 1)
 FX_GRAD_1 = (0, 1.0, 1.0, 1.0, 0.4)
 FX_GRAD_2 = (1, 0.3, 0.3, 0.3, 0.4)
 
+
+accessable_editors = {}
+
 def _p(name):
     try:
         return translations.param_names[name]
@@ -168,7 +171,6 @@ def _draw_select_line(cr, x, y):
     cr.move_to(x + 0.5, y)
     cr.line_to(x + 0.5, y + height)
     cr.stroke()
-
 
 def _draw_cursor_indicator(cr, x, y, radius):
     degrees = math.pi / 180.0
@@ -1228,8 +1230,18 @@ class AnalyzeStabilizeFilterEditor:
 class AnalyzeMotionTrackingFilterEditor:
     def __init__(self, filter, editable_properties):
         self.filter = filter
+        # We need to turn this because otherwise filter keeps attemting to 
+        # analyze tracking continuosly. We want analyzing to happen in the 
+        # dedecated process and only results be displayed.
+        # ...aaand this only has effect if we have some results?
+        self.filter.mlt_filter.set("analyze", "0")
+
         self.editable_properties = editable_properties
 
+        # We need acces to GUI box editor to control its state.
+        box_editor_key ="trackerrect" + ":" + str(editable_properties[0].filter_index)
+        self.box_gui_editor = accessable_editors[box_editor_key]
+        
         label_info_label = Gtk.Label(label=_("Motion Tracking Data Label:"))
         label_info_label.set_margin_right(4)
 
@@ -1247,21 +1259,33 @@ class AnalyzeMotionTrackingFilterEditor:
         self.button = Gtk.Button(label=_("Create Motion Tracking Data"))
         self.button.connect("clicked", self.analyze_button_clicked)
 
+        self.clear_button = Gtk.Button(label=_("Clear Data"))
+        self.clear_button.connect("clicked", self.clear_button_clicked)
+        
         self.info_label = Gtk.Label("")
         self.info_label.set_use_markup(True)
         self.info_label.set_margin_right(4)
-        
+
         hbox2 = Gtk.HBox()
         hbox2.pack_start(Gtk.Label(), True, True, 0) 
         hbox2.pack_start(self.info_label, False, False, 0) 
-        hbox2.pack_start(self.button, False, False, 0)
         hbox2.set_margin_top(4)
+        
+        hbox3 = Gtk.HBox()
+        hbox3.pack_start(self.clear_button, False, False, 0)
+        hbox3.pack_start(Gtk.Label(), True, True, 0) 
+        hbox3.pack_start(self.button, False, False, 0)
+        hbox3.set_margin_top(4)
 
-        self.widget = Gtk.VBox()
+        vbox = Gtk.VBox()
         
-        self.widget.pack_start(hbox1, False, False, 0) 
-        self.widget.pack_start(hbox2, False, False, 0) 
-        
+        vbox.pack_start(hbox1, False, False, 0) 
+        vbox.pack_start(hbox2, False, False, 0)
+        vbox.pack_start(hbox3, False, False, 0)
+
+        self.widget = Gtk.HBox()
+        self.widget.pack_start(vbox, True, True, 0)
+
         self.widget.set_margin_top(24)
         self.widget.set_margin_bottom(24)
 
@@ -1298,13 +1322,33 @@ class AnalyzeMotionTrackingFilterEditor:
         job = jobs.MotionTrackingDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args, data_label)
         job.add_to_queue()
 
-    def analysis_complete(self, final_label):
-        create_info_text = "<small>" + _("Motion Tracking Data created: ") + final_label + "</small>"
-        self.info_label.set_text(create_info_text)
-        self.info_label.set_use_markup(True)
-        self.info_label.queue_draw()
+    def analysis_complete(self, final_label, data_file_path):
+        f = open(data_file_path, 'r')
+        results = f.read()
+        f.close()
 
+        self.filter.mlt_filter.set("results", results)
+        self.filter.mlt_filter.set("reload", "1")
+        self.filter.mlt_filter.set("shape_color", "#00ff00")
 
+        try:
+            create_info_text = "<small>" + _("Motion Tracking Data created: ") + final_label + "</small>"
+            self.info_label.set_text(create_info_text)
+            self.info_label.set_use_markup(True)
+            self.info_label.queue_draw()
+            self.box_gui_editor.geom_kf_edit.active = False
+            self.box_gui_editor.geom_kf_edit.queue_draw()
+        except:
+            pass
+
+    def clear_button_clicked(self, button):
+        #print(self.filter.mlt_filter.get("results"))
+        #print(self.filter.mlt_filter.get("rect"))
+        self.filter.mlt_filter.set("analyze", "0")
+        self.filter.mlt_filter.set("results", "")
+        self.filter.mlt_filter.set("reload", "1")
+        self.filter.mlt_filter.set("shape_color", "#aa2222")
+        self.filter.mlt_filter.set("analyze", "0")
 
 class ApplyMotionTrackingFilterEditor:
     def __init__(self, filter, editable_properties, non_mlt_editors, non_mlt_properties):

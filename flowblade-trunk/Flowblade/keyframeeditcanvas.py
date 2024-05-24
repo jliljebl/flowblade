@@ -276,6 +276,8 @@ class AbstractEditCanvas:
         self.source_height = -1 # unscaled source image height, set later
         
         self.coords = None # Calculated later when we have allocation available
+
+        self.active = True # used to disable if needed.
         
     def init_editor(self, source_width, source_height, y_fract):
         self.source_width = source_width 
@@ -541,6 +543,11 @@ class AbstractEditCanvas:
         
         self._draw_edit_shape(cr, allocation)
 
+        if self.active == False:
+            cr.set_source_rgba(0.75, 0.75, 0.77, 0.5)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
+    
     def _draw_edge(self, cr, rect):
         cr.set_line_width(1.0)
         cr.set_source_rgb(0, 0, 0)

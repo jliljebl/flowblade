@@ -49,6 +49,7 @@ EDITOR = "editor"                                           # editor used to edi
 DISPLAY_NAME = "displayname"                                # name of property that is displayed to user
 MULTIPART_START_PROP = "multistartprop"                     # Value used to set multipart value at part start
 MULTIPART_END_PROP = "multiendprop"                         # Value used to set multipart value at part end
+ACCESSABLE_EDITOR = "access_editor"                          # Editor is placed in extraeditors.py global structure for access.
 
 # ranges values                                             expression is replaced with 
 NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0

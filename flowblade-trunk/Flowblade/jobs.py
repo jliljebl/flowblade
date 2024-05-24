@@ -640,7 +640,6 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         return _("Tracking Data Render")
         
     def start_render(self):
-        
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
         job_msg.status = RENDERING
@@ -701,12 +700,9 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
 
-    def update_filter_and_gui(self):        
+    def update_filter_and_gui(self):    
         final_label = PROJECT().add_tracking_data(self.data_label, self.data_file_path)
-        try:
-            self.analyze_editor.analysis_complete(final_label)
-        except:
-            pass # Editor may have been deleted while endering.
+        self.analyze_editor.analysis_complete(final_label, self.data_file_path)
 
     def abort_render(self):
         trackingheadless.abort_render(self.parent_folder, self.get_session_id())
