@@ -762,7 +762,19 @@ def _handle_geometry_editor_keys(event):
 def _handle_effects_editor_keys(event):
     action = _get_shortcut_action(event)
     focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
+
+                        
     if focus_editor != None:
+        if focus_editor.get_focus_child() != None:
+            if focus_editor.__class__ == keyframeeditor.FilterRectGeometryEditor or \
+                focus_editor.__class__ == keyframeeditor.FilterRotatingGeometryEditor or \
+                focus_editor.__class__ == keyframeeditor.GeometryNoKeyframes:
+                if ((event.keyval == Gdk.KEY_Left) 
+                    or (event.keyval == Gdk.KEY_Right)
+                    or (event.keyval == Gdk.KEY_Up)
+                    or (event.keyval == Gdk.KEY_Down)):
+                    focus_editor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
+                    return True
         if action == 'play':
             targetactions.play()
             return True

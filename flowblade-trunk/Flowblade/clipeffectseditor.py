@@ -786,6 +786,12 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+            if hasattr(editor_row, "kf_edit_geom_editor"):
+                # kf_edit_geom_editor is keyframeeditor.FilterRotatingGeometryEditor,
+                # the widget that actually needs to be updated.
+                # editor_row is just Gtk.VBox.
+                keyframe_editor_widgets.append(editor_row.kf_edit_geom_editor)
+                filter_keyframe_editor_widgets.append(editor_row.kf_edit_geom_editor)
     else:
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()

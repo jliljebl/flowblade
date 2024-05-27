@@ -1871,6 +1871,22 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             keyframes.append(clip_kf)
         return keyframes
 
+    def arrow_edit(self, keyval, CTRL_DOWN, SHIFT_DOWN):
+        if CTRL_DOWN:
+            delta = 10
+        else:
+            delta = 1
+        
+        if SHIFT_DOWN == False: # Move 
+            self.geom_kf_edit.handle_arrow_edit(keyval, delta)
+        else: # Scale
+            self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
+            
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        self.update_property_value()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        
     def view_size_changed(self, selected_index):
         y_fract = GEOM_EDITOR_SIZES[selected_index]
         self.geom_kf_edit.set_view_size(y_fract)

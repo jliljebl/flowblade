@@ -1021,13 +1021,14 @@ def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, trac
                                 track, 
                                 clip_index)
 
-    kf_edit = keyframeeditor.FilterRotatingGeometryEditor(kf_editable_property)
+    kf_edit_geom_editor = keyframeeditor.FilterRotatingGeometryEditor(kf_editable_property)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(Gtk.Label("haloo"), False, False, 0)
-    vbox.pack_start(kf_edit, False, False, 0)
+    vbox.pack_start(kf_edit_geom_editor, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
+    vbox.kf_edit_geom_editor = kf_edit_geom_editor
     return vbox
 
 def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_index):
