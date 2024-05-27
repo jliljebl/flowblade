@@ -1193,7 +1193,7 @@
         <property name="blur" args="editor=no_editor exptype=not_parsed">0</property>
         <property name="blur_type" args="editor=no_editor exptype=not_parsed">0</property>
         <property name="steps" args="editor=ladspa_slider range_in=1,10 range_out=1,10 displayname=Keyframe!Step">5</property>
-        <property name="algo" args="editor=combobox displayname=Algorithm exptype=default cbopts=KCF:KCF,MIL:MIL,MEDIANFLOW:MEDIANFLOW,MOSSE:MOSSE,CSRT:CSRT">KCF</property>
+        <property name="algo" args="editor=combobox displayname=Algorithm exptype=default cbopts=KCF:KCF,MIL:MIL,MEDIANFLOW:MEDIANFLOW,MOSSE:MOSSE,CSRT:CSRT">CSRT</property>
         <propertynonmlt name="results_save_data" args="editor=no_editor exptype=not_parsed">!!##PATHNOTSET##!!</propertynonmlt>
         <extraeditor name="analyzemotion"></extraeditor> 
     </filter>
