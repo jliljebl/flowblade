@@ -268,11 +268,23 @@ Excellent tracking failure reporting. Works very well when the motion is predict
 <li>
 <b>MOSSE - Minimum Output Sum of Squared Error</b> MOSSE tracker is robust to variations in lighting, scale, pose, and non-rigid deformations. It also detects occlusion and can pause and resume where it left off when the object reappears.
 </li>
+<li>
+<b>CSRT</b> Among these algorithms CSRT often shows comparatively better accuracy and resistance to overlapping by other objects. Speed is quite low, and operation is unstable when the object is lost.
+</li>
 </ul>
-
 <p>
     <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter or <b>Filter Mask: Alpha Shape Motion Tracked</b>.
 </p>
+
+<h4>Workflow</h4>
+<ol>
+<li>Make sure playhead is on the first frame of the tracked clip.</li>
+<li>Place red rectangle on top of the tracked image element.</li>
+<li>Set parameters and give the data to be created an identifying name.</li>
+<li>Press <b>Create Motion Tracking Data</b> and wait for the data render to complete.</li>
+<li>Check results by moving the playhead around.</li>
+<li>Press <b>Clear Data</b> button if you wish to try again with different parameters or tracking area definition.</li>
+</ol>
 
 <h3>Filter: Motion Tracking Apply</h3>
 <p>
