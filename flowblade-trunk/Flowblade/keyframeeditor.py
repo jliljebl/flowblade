@@ -2174,6 +2174,8 @@ class GeometryNoKeyframes(Gtk.VBox):
         
         self.geom_kf_edit.widget.queue_draw()
 
+    def update_clip_pos(self):
+        pass
 
 
 class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
