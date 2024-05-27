@@ -2152,8 +2152,30 @@ class GeometryNoKeyframes(Gtk.VBox):
 
     def update_property_value(self):
         self.editable_property.write_out_keyframes(self.geom_kf_edit.keyframes)
+
+    def update_slider_value_display(self, frame):
+        pass
+
+    def arrow_edit(self, keyval, CTRL_DOWN, SHIFT_DOWN):
+        if CTRL_DOWN:
+            delta = 10
+        else:
+            delta = 1
         
+        if SHIFT_DOWN == False: # Move
+            self.geom_kf_edit.handle_arrow_edit(keyval, delta)
+        else: # Scale
+            self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
+
+        self.geom_kf_edit.set_keyframe_to_edit_shape(0)
+        self.geom_kf_edit.set_clip_frame(0)
         
+        self.update_property_value()
+        
+        self.geom_kf_edit.widget.queue_draw()
+
+
+
 class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
 
     def __init__(self, editable_property, use_clip_in=True):

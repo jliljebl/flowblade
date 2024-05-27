@@ -749,6 +749,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
                 or (editor_type == propertyeditorbuilder.FILTER_RECT_GEOM_EDITOR)
+                or (editor_type == propertyeditorbuilder.NO_KF_RECT)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE_FILTER)):
                     keyframe_editor_widgets.append(editor_row)
                     filter_keyframe_editor_widgets.append(editor_row)
