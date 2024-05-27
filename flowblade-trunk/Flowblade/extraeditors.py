@@ -1238,11 +1238,11 @@ class AnalyzeMotionTrackingFilterEditor:
 
         self.editable_properties = editable_properties
 
-        # We need acces to GUI box editor to control its state.
+        # We need access to GUI box editor to control its state.
         box_editor_key ="trackerrect" + ":" + str(editable_properties[0].filter_index)
         self.box_gui_editor = accessable_editors[box_editor_key]
         
-        label_info_label = Gtk.Label(label=_("Motion Tracking Data Label:"))
+        label_info_label = Gtk.Label(label=_("Tracking Data Label:"))
         label_info_label.set_margin_right(4)
 
         def_label = self.get_default_data_label()
@@ -1288,7 +1288,9 @@ class AnalyzeMotionTrackingFilterEditor:
 
         self.widget.set_margin_top(24)
         self.widget.set_margin_bottom(24)
-
+        
+        self.set_buttons_state()
+            
     def get_default_data_label(self):
         clip_path = self.editable_properties[0].clip.path
         file_name = os.path.splitext(os.path.basename(clip_path))[0]
@@ -1337,18 +1339,31 @@ class AnalyzeMotionTrackingFilterEditor:
             self.info_label.set_use_markup(True)
             self.info_label.queue_draw()
             self.box_gui_editor.geom_kf_edit.active = False
-            self.box_gui_editor.geom_kf_edit.queue_draw()
-        except:
-            pass
+            self.box_gui_editor.geom_kf_edit.widget.queue_draw()
+            self.set_buttons_state()
+        except Exception as e :
+            # GUI might havenn destoyed during rendering.
+            print(e)
 
     def clear_button_clicked(self, button):
-        #print(self.filter.mlt_filter.get("results"))
-        #print(self.filter.mlt_filter.get("rect"))
         self.filter.mlt_filter.set("analyze", "0")
         self.filter.mlt_filter.set("results", "")
         self.filter.mlt_filter.set("reload", "1")
         self.filter.mlt_filter.set("shape_color", "#aa2222")
         self.filter.mlt_filter.set("analyze", "0")
+        self.box_gui_editor.geom_kf_edit.active = True
+        self.box_gui_editor.geom_kf_edit.widget.queue_draw()
+        self.set_buttons_state()
+
+    def set_buttons_state(self):
+        results = self.filter.mlt_filter.get("results") 
+        if results == None or len(results) == 0:
+            self.button.set_sensitive(True)
+            self.clear_button.set_sensitive(False)
+        else:
+            self.button.set_sensitive(False)
+            self.clear_button.set_sensitive(True)
+        
 
 class ApplyMotionTrackingFilterEditor:
     def __init__(self, filter, editable_properties, non_mlt_editors, non_mlt_properties):

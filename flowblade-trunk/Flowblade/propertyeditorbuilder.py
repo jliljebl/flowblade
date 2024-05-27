@@ -136,13 +136,10 @@ def get_filter_extra_editor_rows(filt, editable_properties, track, clip_index):
     extra_editors = filt.info.extra_editors
     rows = []
     for editor_name in extra_editors:
-        try:
-            create_func = EDITOR_ROW_CREATORS[editor_name]
-            editor_row = create_func(filt, editable_properties, editor_name, track, clip_index)
-            
-            rows.append(editor_row)
-        except KeyError:
-            print("get_filter_extra_editor_rows fail with:" + editor_name)
+        create_func = EDITOR_ROW_CREATORS[editor_name]
+        editor_row = create_func(filt, editable_properties, editor_name, track, clip_index)
+        
+        rows.append(editor_row)
 
     return rows
 

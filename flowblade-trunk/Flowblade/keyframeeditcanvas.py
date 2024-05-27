@@ -19,7 +19,7 @@
 """
 
 """
-Module contains GUI widgets used edit geometries on canvas with a mouse.
+Module contains GUI widgets used to edit geometries on canvas with a mouse.
 """
 
 import copy
@@ -424,6 +424,9 @@ class AbstractEditCanvas:
         """
         Mouse button callback
         """
+        if self.active == False:
+            return
+
         self.current_mouse_hit = self._check_shape_hit(event.x, event.y)
         if self.current_mouse_hit == NO_HIT:
             return
@@ -446,6 +449,9 @@ class AbstractEditCanvas:
         """
         Mouse move callback
         """
+        if self.active == False:
+            return
+            
         if self.current_mouse_hit == NO_HIT:
             return
         
@@ -470,6 +476,9 @@ class AbstractEditCanvas:
         print("_shape__motion_notify_event not impl")
 
     def _release_event(self, event):
+        if self.active == False:
+            return
+
         global _shift_down 
         _shift_down = None
         
@@ -544,7 +553,7 @@ class AbstractEditCanvas:
         self._draw_edit_shape(cr, allocation)
 
         if self.active == False:
-            cr.set_source_rgba(0.75, 0.75, 0.77, 0.5)
+            cr.set_source_rgba(0.75, 0.75, 0.77, 0.65)
             cr.rectangle(0, 0, w, h)
             cr.fill()
     
