@@ -854,7 +854,9 @@ class KeyFrameFilterRotatingGeometryProperty:
     def write_filter_object_property(self, str_value):
         pass
 
-
+    def update_clip_index(self):
+        self.clip_index = self.track.clips.index(self.clip)
+        
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
