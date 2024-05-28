@@ -45,11 +45,11 @@ There are two parameters that can be selected for a new project:
 <ul style="list-style-type:none">
 <li> <b>Project Profile</b> Project Profile determines frame rate per second, image size in pixels and pixel aspect ratio.</li>
 <li> <b>Tracks count</b> Select the number of video and audio tracks that are used in the project. This can be changed later, but the operation destroys the Undo / Redo stack and all the Timeline Clips that do not fit in the newly created version of the Sequence.</li>
+<li> <b>Data Store</b> Thumbnails, Generator and Rendered Transitions, stabilizing and motion tracking data, proxy files etc. are stored here in a <b>Data Store</b>, see chapter: <a href="datastores.html">Data Stores</a>.
+
+
 </ul>
 
-<div class="note">
-Video material is internally scaled to profile dimensions, so selecting Project Profile with smaller pixel dimensions than the rendered output leads to decreased quality.
-</div>
 <div class="note">
 Flowblade Movie Editor handles image data internally as YUV420 frames, so the encoding associated with a given profile has no affect on quality before rendering.
 </div>
@@ -70,8 +70,8 @@ For complex projects it is sometimes best to use multiple sequences for creating
 <b>Adding Sequences:</b>
 </p>
 <ul>
-<li> <b>3 panel layout:</b> Press <b>Right Mouse</b> popup menu on Sequences area and select menu item <b>Add New Sequence</b>..</li>
-<li> <b>2 panel layout:</b> Press <b>Right Mouse</b> popup menu in the <b>Project</b> tab <b>Sequences</b> area and select menu item <b>Add New Sequence</b>.</li>
+<li> <b>Default layout:</b> Press <b>Right Mouse</b> popup menu on Sequences area and select menu item <b>Add New Sequence</b>..</li>
+<li> <b>Small screen layout:</b> Press <b>Right Mouse</b> popup menu in the <b>Project</b> tab <b>Sequences</b> area and select menu item <b>Add New Sequence</b>.</li>
 <li> Or select  <b>Project -> Sequence -> Add New Sequence</b> from application menu.</li>
 </ul>
 
@@ -110,13 +110,10 @@ Flowblade Movie Editor holds files in <b>Media</b> tab. Files are listed in unna
 <li> Flowblade <b>saves references</b> to media files used in a project as <b>absolute paths</b>.</li>
 <li> If a media is <b>not found on load</b>, Flowblade attempts to find a media file with the same name in subfolders relative to the project file.</li>
 <li> If all media used by a project is saved in subfolders relative to project file, <b>project file and media can moved as a unit</b> and the project will load successfully after data is copied to a different place</li>
-<li> <b>Rendered files</b> like transitions <b>are saved by default in a hidden folder</b> <i><home folder>/.flowblade/rendered_clips/</i>.</li>
-<li> Menu item <b>File->Save Backup Snapshot...</b> saves project file, all media and rendered files in a single folder that can saved as unit and and project can always be loaded using this data </li>
+<li> <b>Rendered files</b> like transitions are saved by default in a <b>Data Store</b>, see chapter: <a href="datastores.html">Data Stores</a>.</li>
 <li> <b>Load order</b> between absolute and relative paths can be set in preferences window</li>
 <li> <b>Media Relinker</b> tool can be used to fix problems that may occur </li>
-
 </ul>
-<p><b>NOTE:</b> Information given here only applies to version 0.18 and above.</p>
 </div>
 
 <h3>Working with Bins</h3>
@@ -129,8 +126,8 @@ In video editing a bin is a named location for storing media. The term is used i
     <b>Adding a Bin:</b>
 <p>
 <ul>
-<li> <b>3 panel layout:</b> Press <b>Right Mouse</b> on Bin area to launch a popup menu and select menu item <b>Add Bin</b>.</li>
-<li> <b>2 panel layout:</b> Press <b>Right Mouse</b> in the <b>Media</b> tab <b>Bins</b> panel to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> <b>Default layout:</b> Press <b>Right Mouse</b> on Bin area to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> <b>Small screen layout:</b> Press <b>Right Mouse</b> in the <b>Media</b> tab <b>Bins</b> panel to launch a popup menu and select menu item <b>Add Bin</b>.</li>
 <li> Or select  <b>Project -> Bin -> Add Bin</b> from application menu.</li>
 </ul>
 
@@ -145,6 +142,15 @@ In video editing a bin is a named location for storing media. The term is used i
 
 </div>
 
+<h4>Filtering Bin View</h4>
+<p>
+    Bins can be mede to display only subset of media items thei contain. Press on filtering button in <b>Media Panel</b> bottom row next <b>Hamburger</b> and <b>columns</b> buttons.
+<p>
+    <ul>
+    <li> <b>Filtering by media type.</b> Select one of options <i>All Files, Video Files Audio Files, Graphics Files, Image Sequences, Pattern Producers, Unused Files</i>.</li>
+    <li> <b>Filtering by ratings.</b> Select one of options in submenu <i>Ratings</i>, either <i>Show All Ratings, Show Favorites, Hide bad</i>. Each media item can be given a rating in context popover submenu <i>Rating</i>.</li>
+    </ul>
+    
 <h3>Using Timeline</h3>
 
 <h4>Scrolling Timeline</h4>

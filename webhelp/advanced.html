@@ -9,7 +9,7 @@
 <body>
 
 <div id="content">
-<img src="header_text_5.png" >
+<img src="header_text_5.png">
 
 <script src="tocgen.js"></script>
 
@@ -38,7 +38,7 @@ It is possible to import full contents of another Sequence into Sequence current
 </ul>
 <li> Select a Sequence to Import</li>
 <ul>
-<li> <b>Note that you obviously need atleast two Sequences to exist to do any import actions.</b></li>
+<li> <b>Note that you obviously need at least two Sequences to exist to do any import actions.</b></li>
 </ul>
 <li> Press <b>Import</b> button to execute import.</li>
 </ol>
@@ -76,7 +76,7 @@ This enables you to do simplified version of multicam editing on the timeline.
 
 <ol>
 <li> Open context menu with <b>Right Mouse</b> on Clip you wish to sync with some other clip.</li>
-<li> Select menu item <b>Select Clip to Audio Sync With...</b>. The cursor changes to a targeting cross.</li>
+<li> Select menu item <b>Audio->Select Clip to Audio Sync With...</b>. The cursor changes to a targeting cross.</li>
 <li> Click on Clip you wish to audio sync with.</li>
 <li> A dialog opens giving info on the sync action that is to be done to sync clips.</li>
 <li> Press <b>Do Audio Sync Move Edit</b> button to do the syncing edit.</li>
@@ -127,7 +127,7 @@ In Flowblade motion effects are achieved by <b>rendering slow / fast motion  or 
 <li> Click <b>Render</b> button to create a new reverse Clip</li>
 </ol>
 
-<h2>4. Clip Parenting</h2>
+<h2>4. Synched Audio Splits and Clip Parenting</h2>
 
 <p>
 In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
@@ -135,67 +135,275 @@ In Flowblade Movie Editor you can <b>set a clip's positions to follow another cl
 
 <h3>Main points</h3>
 <ul>
-<li>Sync relations are set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
+<li>Sync relations are between two clips set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
+<li>Splitting audio with <b>Audio Split Synched </b> creates sync relation between original clip and split audio clip.</li>
 <li><b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.</li>
 <li><b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.</li>
 <li><b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
 </li>
 </ul>
-<h3>Setting Sync Parent</h3>
-<ol>
-<li> Click <b>Right Mouse</b> on clip and select Select Sync Parent Clip... on any clip NOT on track V1.</li>
-<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
-<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
-<li> Sync State Stripe appears on the Sync Child Clip. Sync State Indicator Stripes on Clips:</li>
+
+<h3>4.1 Audio Split Syncing</h3>
+<ul>
+<li> Click <b>Right Mouse</b> on clip in track V1 and select  <b>Audio Edit->Select Sync Parent Clip...</b>.</li>
+<li> Now you e.g. can use <b>Multitrim</b> tool to create J or L audio edits.</li>
+<li> Sync State Box appears on the Sync Child Clip.</li>
 <ul>
 <li> Green means that clip is in sync with parent.</li>
 <li> Red means that clip is NOT in sync with parent.</li>
-<li> Gray means that Sync Parent Clip is no longer on track V1.</li>
+<li> Displayed number gives info on how many frames clip positions are away from being synched.</li>
+</ul>
+</ul>
+<h4>Resyncing Sync Child Clips</h4>
+<ul>
+<li> Select from application menu <b>Edit->Resync Track</b> to resync all clips in the track containing currently selected clip.</li>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
+<li> Press <b>Resync Track Containing Selected Clip</b> Button to resync all clips in the track containing currently selected clip.</li>
+<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
+</ul>
+
+<h3>4.2 Clip Parenting</h3>
+<h4>Setting Sync Parent</h4>
+<ol>
+<li> Click <b>Right Mouse</b> on clip and select <b>Audio Edit->Select Sync Parent Clip...</b> on any cideo clip with audio NOT on track V1.</li>
+<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
+<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
+<li> Sync State Box appears on the Sync Child Clip.</li>
+<ul>
+<li> Green means that clip is in sync with parent.</li>
+<li> Red means that clip is NOT in sync with parent.</li>
+<li> Displayed number gives info on how many frames clip positions are away from being synched.</li>
 </ul>
 </ol>
 
-<h3>Resyncing Sync Child Clips</h3>
+<h4>Resyncing Sync Child Clips</h4>
 <ul>
-<li> Select <b>Edit - >Resync Selected to resync</b> from application menu selected Sync Child Clips.</li>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Resync</b> from popup menu to resync single clip.</li>
-<li> Press <b>Resync Selected</b> Bbtton to resync selected Sync Child Clips.</li>
+<li> Select from application menu <b>Edit->Resync Track</b> to resync all clips in the track containing currently selected clip.</li>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
+<li> Press <b>Resync Track Containing Selected Clip</b> Button to resync all clips in the track containing currently selected clip.</li>
+<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
 </ul>
 
-<h3> Clearing Sync Parent Relations </h3>
+<h4> Clearing Sync Parent Relations </h4>
 <ul>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select Clear Sync Relation.</li>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Clear Sync Relation</b>.</li>
 </ul>
 
-<h3>Syncing Composited Clips</h3>
+<h4>Syncing Composited Clips</h4 >
 <ul>
 <li> If appropriate set all clips that are part of a multitrack composite synched to the same clip.</li>
 </ul>
 
-<h3>Audio Split Syncing</h3>
-<ul>
-<li> Click <b>Right Mouse</b> on clip in track V1 and select Split Audio Synched.</li>
-<li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
-<li> Resync Audio as needed.</li>
-</ul>
 
+<a name="filtermasking"></a>
 <h2>5. Filter Masking</h2>
+
 <p>
 Filter masking allows for one or more filters to be applied only on some user defined part of image</b>.
 </p>
 
 <img src="filter_mask.png">
 <p>
-<i>Filter masking menu launch button above 'Add Filter Mask' tootip, Mask - Begin and Mask - End filters defining which filters are masked, on the right image with masked Sepia filter.</i>
+<i>1) Filter masking menu launch button above red triangle, 2) Filters editor after adding mask with all filter edit panels minified. Mask - Begin and Mask - End filters define which filters are masked.</i>
 </p>
 
 <ol>
 <li> Click Filter Mask Menu launch button and select if you wish to apply mask on one or all filters.</li>
-<li> In submenu select between <b>Alpha Shape</b> and <b>Luma Key</b> masks.</li>
+<li> In submenu select mask <b>Alpha Shape</b>, <b>Alpha Shape Motion Tracked</b>, <b>Luma Key</b>, <b>Video/Image File Alpha</b>, <b>Video/Image File Luma</b> or <b>Color Select</b>.</li>
 <li> Edit mask parameters in filter edit panel for <b>Mask - Begin</b> filter.</li>
-<li> You can drag and drop filters in and out of the masked range of filter stack.</li>
+<li> You can movefilters in and out of the masked range of filter stack.</li>
 <ul>
+</ol>
 
-<h2>6. Jog / Shuttle Support</h2>
+<h2>6. Motion Tracking</h2>
+<p>
+    When creating a motion tracking effect we are usually dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
+</p>
+<p>
+When using motion tracking to create a tracking filter mask, then both tracking data source clip and the clip that has the masked filter applied are usually the same clip. 
+</p>
+<p>
+    Flowblade implements motion tracking by providing two filters and a filter mask. Filters are:
+</p>
+<ul>
+<li> <b>Motion Tracking Create</b> This filter creates the tracking data based on region of image and algorithm selected by the user.</li>
+<li> <b>Motion Tracking Apply</b> This filter applies tracking data on another image to follow the image element that was the source of the tracking data.
+</ul>
+<p>
+    Motion tracked masked filtering uses <b>Filter Mask: Alpha Shape Motion Tracked</b>, see below.
+</p>
+
+<h3>Filter: Motion Tracking Create</h3>
+<p>
+    Add this filter to clip that contains the image element you wish to track.
+</p>
+<h4>Parameters</h4>
+<p>
+    <b>Rectancle GUI Editor</b> Set the red rectangle on the image element you wish to track. 
+</p>
+<p>
+    Tracking always starts from first frame of clip, so use the first frame to position the rectangle.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut clip at that point to create a new clip that has the first frame at the position you wish the tracking to start.
+</p>
+<p>
+    <b>Keyframe Step</b> This sets the interval in frames between keyframes in the created tracking data. So e.g. value 5 creates a keyframe every 5 frames.
+</p>
+<p>
+    <b>Algorithm</b> Algorithm used to create the tracking data.
+</p>
+
+<ul>
+<li>
+<b>KCF - Kernelized Correlation Filters</b> Accuracy and speed better than MIL. This also reports tracking failure better than MIL. Does not recover from full occlusion.
+</li>
+<li>
+<b>MIL - Multiple Instance Learning</b> Performance is quite good, can work when presented with partial occlusion. Tracking failure not reported reliably. Does not recover from full occlusion.
+</li>
+<li>
+<b>MEDIANFLOW</b> 
+Excellent tracking failure reporting. Works very well when the motion is predictable and there is no occlusion. Fails under large motion.
+</li>
+<li>
+<b>MOSSE - Minimum Output Sum of Squared Error</b> MOSSE tracker is robust to variations in lighting, scale, pose, and non-rigid deformations. It also detects occlusion and can pause and resume where it left off when the object reappears.
+</li>
+<li>
+<b>CSRT</b> Among these algorithms CSRT often shows comparatively better accuracy and resistance to overlapping by other objects. Speed is quite low, and operation is unstable when the object is lost.
+</li>
+</ul>
+<p>
+    <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter or <b>Filter Mask: Alpha Shape Motion Tracked</b>.
+</p>
+
+<h4>Workflow</h4>
+<ol>
+<li>Make sure playhead is on the first frame of the tracked clip.</li>
+<li>Place red rectangle on top of the tracked image element.</li>
+<li>Set parameters and give the data to be created an identifying name.</li>
+<li>Press <b>Create Motion Tracking Data</b> and wait for the data render to complete.</li>
+<li>Check results by moving the playhead around.</li>
+<li>Press <b>Clear Data</b> button if you wish to try again with different parameters or tracking area definition.</li>
+</ol>
+
+<h3>Filter: Motion Tracking Apply</h3>
+<p>
+    Add this filter to the clip that contains the image that you wish to make follow the tracked image elemnet.
+</p>
+<p>
+    Place the clip with tracking image on top of the clip with tracked image and apply cropping if necessary.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
+</p>
+<p>
+    Tracking always starts from first frame of clip.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
+</p>
+<p>
+    <b>Tracking Coords Interpretation</b> 
+</p>
+<ul>
+<li>
+<b>Absolute</b> Places the top left corner of the image to the top left corner of the tracking data box.
+</li>
+<li>
+<b>Top Left Justified</b> Places the top left corner of image to the top left corner of screen in the first frame of tracking, and then moves image relatively as specified by tracking data. This is useful e.g. when making a text created in <b>Titler</b> (that is placed initially correctly) keep position when tracking data is applied.
+</ul>
+<p>
+    <b>X Offset</b> Moves image in the horizontal direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Y Offset</b> Moves image in the vertical direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Size</b> If set to <b>Scale To Box</b> image is scaled to fit the box defined by tracking data.
+</p>
+<p>
+    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as motion of the clip.
+</p>
+
+
+<h4>Workflow</h4>
+<ol>
+<li>Use <b>Select Motion Tracking Data</b> dropdown menu to select which tracking data to apply.</li>
+<li>Set parameters to fine tune tracked motion.</li>
+<li>Press <b>Apply Motion Tracking Data</b> button to make clip image follow tracked motion.</li>
+<li>If needed, change parameters and press <b>Apply Motion Tracking Data</b> button again to get changed motion.</li>
+</ol>
+
+<h3>Filter Mask: Alpha Shape Motion Tracked</h3>
+<p>
+Add this Filter Mask to clip that contains the image element you wish to apply masked filtering on.
+</p>
+
+<p>
+A typical use would be to e.g. blur a person's face to make them unrecognizable.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
+</p>
+<p>
+    Tracking always starts from first frame of clip.
+</p>
+<p>
+    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
+</p>
+<p>
+    <b>X Offset</b> Moves filtered area in the horizontal direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Y Offset</b> Moves filtered area in the vertical direction in relation to the position defined by tracking data.
+</p>
+<p>
+    <b>Scale</b> Makes filtered area smaller or larger.
+</p>
+<p>
+    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as a Filter Mask.
+</p>
+
+<h4>Workflow</h4>
+<ol>
+<li>See above how to <a href="#filtermasking">add a Filter Mask</a>. Select Filter Mask <b>Alpha Shape Motion Tracked</b>.</li>
+<li>Set mask parameters.</li>
+<li>Press <b>Apply Motion Tracking Data</b> to create a motion tracked filter mask.</li>
+</ol>
+
+
+<h2>8. Stabilizing</h2>
+<p>
+    In Flowblade stabilizing a video clip is implemented using filter <b>Stabilize</b> available in filter category <b>Movement</b>. 
+</p>
+<p>
+    This filter requires two passes. The first pass performs analysis and stores the result internally in a file. After completed analysis stabilizing can be applied using the created data.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Analysis Shakiness</b> Used during analysis. How shaky the video is.
+</p>
+<p>
+    <b>Accuracy</b> Used during analysis. The accuracy of shakiness detection.
+</p>
+<p>
+    <b>Smoothing</b> Used during application. Number of frames for lowpass filtering (2N + 1 frames).
+
+</p>
+<p>
+    <b>Zoom</b> Used during application. Additional zoom amount.
+</P>
+<p>
+    <b>Analyze Video</b> Pressing this button analyzis video and saves the created data internally. Upon completion stabilizing is applied and can be controlled using <b>Smoothing</b> and <b>Zoom</b> parameters.
+</p>
+
+
+<h2>9. Jog / Shuttle Support</h2>
 
 
 <h3>Overview</h3>
@@ -253,6 +461,11 @@ a small amount of operating system configuration to grant permissions so that
 Flowblade is allowed to use the device.
 </p>
 <h4>Enable Device Permissions</h4>
+
+<div class="important">
+For Flatpaks and correctly created distro packages the required file has been added as part of the package. If for some reason the application is not able to access the USB device, try adding the file manually.</b>
+</div>
+
 <p>
 In order for Flowblade to be able to read from the USB device, it is
 necessary to tell your operating system to grant permissions on the device
@@ -525,6 +738,8 @@ the keys on your device.
 </tr>
 </table>
 
+
+</div>
 </div>
 </div>
 
