@@ -1,5 +1,14 @@
 # Release Notes
 
+
+## FLOWBLADE 2.16.2
+
+Fixes motion tracking bug.
+
+## FLOWBLADE 2.16.1
+
+Skip this one, metadata was not correct.
+
 ## FLOWBLADE 2.16
 
 This was one of the shortest development cycles we've had. We had some interesting stuff ready, and with summer coming along a meaninfully larger feature set would have pushed the release past August, so we decided to go with what we have now.
