@@ -15,7 +15,7 @@ This was one of the shortest development cycles we've had. We had some interesti
 
 ### MOTION TRACKING
 
-**This one has a bug, update coming shortly**
+**This one has a bug that is fixed now. Update pushed to Flathub, but unfortunately this could take up to day to go through.**
 
 Motion tracking is now available. The feature was implemented using 3 different filters: one filter to produce motion tracking data, one filter to apply that data as motion of other image element and one filter that provides means to create filter masks to e.g. blur a person's face in a shot. More info [here](http://jliljebl.github.io/flowblade/webhelp/advanced.html#6._Motion_Tracking).
 
