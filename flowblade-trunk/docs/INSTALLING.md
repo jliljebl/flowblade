@@ -57,7 +57,7 @@ yaourt -S flowblade-git
 
 ## Installing using Development Repository Version
 
-Flowblade 2.10 has been developed with MLT 7.12 or higher.
+Flowblade versions >= 2.10 have been developed with MLT 7.12 or higher.
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
