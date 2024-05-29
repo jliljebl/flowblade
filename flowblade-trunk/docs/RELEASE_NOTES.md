@@ -3,7 +3,7 @@
 
 ## FLOWBLADE 2.16.2
 
-Fixes motion tracking bug.
+Hotfix release, fixes motion tracking bug.
 
 ## FLOWBLADE 2.16.1
 
