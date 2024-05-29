@@ -59,8 +59,6 @@ def main(root_path, session_id, parent_folder, profile_desc, clip_path, write_fi
     
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
-    ccrutils.prints_to_log_file("/home/janne/trackinglog")
-
     global _render_thread
     _render_thread = TrackingHeadlessRunnerThread(profile_desc, clip_path, write_file, data_file_path, step, algo, rect)
     _render_thread.start()
