@@ -3,6 +3,8 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
+**NEW RELEASE 2.16 AVAILABLE!**
+**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
@@ -12,6 +14,8 @@
 6. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
 7. [Webpage](https://github.com/jliljebl/flowblade#webpage)
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
+
+
 
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
@@ -74,7 +78,7 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.14 was released in March 2024.
+**Latest release:** Flowblade Movie Editor 2.16 was released in May 2024.
 
 # Installing Flowblade
 
