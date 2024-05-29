@@ -1,5 +1,92 @@
 # Release Notes
 
+## FLOWBLADE 2.16
+
+This was one of the shortest development cycles we've had. We had some interesting stuff ready, and with summer coming along a meaninfully larger feature set would have pushed the release past August, so we decided to go with what we have now.
+
+### MOTION TRACKING
+
+Motion tracking is now available. The feature was implemented using 3 different filters: one filter to produce motion tracking data, one filter to apply that data as motion of other image element and one filter that provides means to create filter masks to e.g. blur a person's face in a shot. More info [here](http://jliljebl.github.io/flowblade/webhelp/advanced.html#6._Motion_Tracking).
+
+### STABILIZING
+
+Stabilizing was implemented using a single filter and a user initiated rendering task to create the needed stabilizing data file. More info [here](http://jliljebl.github.io/flowblade/webhelp/advanced.html#8._Stabilizing).
+
+### NEW FILTERS AND FILTER MASKS
+
+- Four new *Filter Masks* are available: **Alpha Shape Motion Tracked**, **Image Alpha**, **Image Luma** or **Color Select**. **Alpha Shape Motion Tracked** is used to implement the motion tracked filter mask feature.
+  
+- New **Rubberband Octave Shift** audio filter.
+  
+- New **Rubberband Pitch Scale** audio filter. These filters provide slightly differing means of adjusting the audio pitch using the Rubberband library.
+  
+
+### MEDIA MANAGEMENT
+
+We added two new features to make managing media more powerful and efficient:
+
+- **Media Item rating feature**. Users can now rate every Media Item as either **Favorite, Unreated** or **Bad** and display only media items with desired ratings.
+- **Move selected Media Items feature** It is now possible to re-arrange Media Items in Bins.
+
+### OTHER NEW FEATURES
+
+- **Slowmo playback at +-0.35 speed with USB shuttle devices**.
+  
+- **Slowmo at +-0.35 speed with JKL playback**.
+  
+- **Keyboard Shortcuts dialog UX update** with improved categorizing of shortcuts.
+  
+- **Move multiple keyframes** feature in *Keyframe Tool* with *SHIFT + Left Mouse*.
+  
+- **Move multiple keyframes** feature with in keyframe editors *SHIFT + Left Mouse*.
+  
+
+### CONTRIBUTIONS
+
+- Stanisław Polak provided update for Polish translation.
+
+### GTK 4 PORT WORK
+
+- Drop *Gdk.Color* usage.
+  
+- Stop using 'clicked' -signal with checkbuttons.
+  
+- Remove *set_keep_above()*, it is not respected in Wayland.
+  
+- Port Edit Tool menu to popovers.
+  
+
+### BUG FIXES AND SMALL ENHANCEMENTS
+
+- Fix setting sync parent
+  
+- Fix filter kf geom editors delete and next/prev buttons bugs
+  
+- Fix clip paste bug
+  
+- Add Paste filters shortcut into Keyboard Shortcuts dialog
+  
+- Update DEPENDENCIES.md, filters list doc, keyboard shortcuts doc and several chapters in docs
+  
+- Fix kb shortcuts dialog info
+  
+- Remove dead GUI colors code
+  
+- Fix tool dock colors
+  
+- Fix tools data users bugs
+  
+- Fix combined monitors size detection for vertical dimension
+  
+- Fix KeyFrameFilterRotatingProperty bug
+  
+- Fix geom kb shortcuts for GeometryNoKeyframes editor
+  
+- Fix filter geom editor shape move keyboard shortcuts
+  
+- Fix filter mask menu warnings
+  
+- Filter Mask UX updates
 
 
 ## FLOWBLADE 2.14.0.2
