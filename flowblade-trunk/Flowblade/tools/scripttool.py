@@ -671,7 +671,7 @@ class ScriptToolWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
         hamburger_launcher_surface = guiutils.get_double_scaled_cairo_image("hamburger.png")
-        if editorpersistance.prefs.double_track_hights == False:
+        if guiutils.double_icon_size():
             psize = 22
         else:
             psize = 44

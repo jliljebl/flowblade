@@ -1704,11 +1704,11 @@ class EditorSeparator:
 def get_monitor_view_select_launcher(callback):
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_hights:
+    if guiutils.double_icon_size():
        size_adj = 2
     surface = guiutils.get_cairo_image("program_view_2")
     menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
-    if prefs.double_track_hights:
+    if guiutils.double_icon_size():
         menu_launch.surface_y = 8*size_adj
     else:
         menu_launch.surface_y = 3
@@ -1720,11 +1720,11 @@ def get_trim_view_select_launcher(callback):
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_hights:
+    if guiutils.double_icon_size():
        size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
     menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
-    if prefs.double_track_hights:
+    if guiutils.double_icon_size():
         menu_launch.surface_y = 8*size_adj
     else:
         menu_launch.surface_y = 3
@@ -1918,7 +1918,7 @@ class BigTCDisplay:
         # Aug-2019 - SvdB -BB
         prefs = editorpersistance.prefs
         size_adj = 1
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
            size_adj = 2
 
         self.widget = cairoarea.CairoDrawableArea2( 170*size_adj,
@@ -2728,8 +2728,7 @@ class ToolSelector(ImageMenuLaunch):
     def _draw(self, event, cr, allocation):
         PressLaunch._draw(self, event, cr, allocation)
 
-        # Aug-2019 - SvdB - BB - If we have larger icons we need to move this a bit and make it a tad larger.
-        if editorpersistance.prefs.double_track_hights:
+        if guiutils.double_icon_size():
             x_pos = [40,45,50]
             y_pos = [10,20,10]
         else:    
@@ -2749,7 +2748,7 @@ class HamburgerPressLaunch:
         prefs = editorpersistance.prefs
         size_adj = 1
         y_adj = 0
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
             size_adj = 2
             y_adj = -2
         
@@ -2851,7 +2850,7 @@ class MonitorSwitch:
         
         # Aug-2019 - SvdB - BB - Set the appropriate values based on button size. Use guiutils functions
         prefs = editorpersistance.prefs
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
             self.WIDTH = self.WIDTH * 2
             self.HEIGHT = self.HEIGHT * 2
             self.press_fix = 8 
@@ -2885,7 +2884,7 @@ class MonitorSwitch:
         y_off_tline = 3
         y_off_clip = 4
         mid_gap = 10
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
            def_off = def_off * 2
            y_off_tline = y_off_tline * 2
            y_off_clip = y_off_clip * 2

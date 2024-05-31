@@ -263,9 +263,9 @@ class FlowbladeApplication(Gtk.Application):
         _set_draw_params()
 
         # Refuse to run on too small screen.
-        if scr_w < 1151 or scr_h < 767:
-            _too_small_screen_exit()
-            return
+        #if scr_w < 1151 or scr_h < 767:
+        #    _too_small_screen_exit()
+        #    return
 
         # Init MLT framework
         repo = mlt.Factory().init()
@@ -966,15 +966,24 @@ def _set_draw_params():
     if editorstate.screen_size_large_height() == True:
         keyframeeditcanvas.GEOMETRY_EDITOR_HEIGHT = 300
 
-    if editorpersistance.prefs.double_track_hights == True:
+    if editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_DEFAULT:
+        return
+    elif editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_DOUBLE:
         appconsts.TRACK_HEIGHT_HIGH = 150
         appconsts.TRACK_HEIGHT_NORMAL = 100 # track height in canvas and column
         appconsts.TRACK_HEIGHT_SMALL = 50 # track height in canvas and column
         appconsts.TLINE_HEIGHT = 520
-        sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
-        sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
-        sequence.TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH
-        tlinewidgets.set_tracks_double_height_consts()
+    else:
+        # TRACKS_SCALE_ONE_AND_HALF
+        appconsts.TRACK_HEIGHT_HIGH = 113
+        appconsts.TRACK_HEIGHT_NORMAL = 75 # track height in canvas and column
+        appconsts.TRACK_HEIGHT_SMALL = 37 # track height in canvas and column
+        appconsts.TLINE_HEIGHT = 390
+                
+    sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
+    sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
+    sequence.TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH
+    tlinewidgets.set_tracks_height_consts()
 
 def _too_small_screen_exit():
     global exit_timeout_id

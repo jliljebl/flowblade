@@ -93,62 +93,45 @@ class FilterFooterRow:
     def __init__(self, filter_object, filter_stack):
         self.filter_object = filter_object
         self.filter_stack = filter_stack
-        
-        surface = guiutils.get_cairo_image("filter_save")
-        if editorpersistance.prefs.double_track_hights  == False:
-            save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=22, h=22)
+
+        if editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DEFAULT:
+            w=22
+            h=22
         else:
-            save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=44, h=44)
+            w=44
+            h=44
+            
+        surface = guiutils.get_cairo_image("filter_save")
+        save_button = guicomponents.PressLaunch(self.save_pressed, surface, w, h)
         save_button.widget.set_tooltip_markup(_("Save effect values"))
         
         surface = guiutils.get_cairo_image("filter_load")
-        if editorpersistance.prefs.double_track_hights  == False:
-            load_button = guicomponents.PressLaunch(self.load_pressed, surface, w=22, h=22)
-        else:
-            load_button = guicomponents.PressLaunch(self.load_pressed, surface, w=44, h=44)
+        load_button = guicomponents.PressLaunch(self.load_pressed, surface, w, h)
         load_button.widget.set_tooltip_markup(_("Load effect values"))
 
         surface = guiutils.get_cairo_image("filter_reset")
-        if editorpersistance.prefs.double_track_hights  == False:
-            reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=22, h=22)
-        else:
-            reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=44, h=44)
+        reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w, h)
         reset_button.widget.set_tooltip_markup(_("Reset effect values"))
         
         surface = guiutils.get_cairo_image("filters_mask_add")
-        if editorpersistance.prefs.double_track_hights  == False:
-            mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=22, h=22)
-        else:
-            mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=44, h=44)
+        mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w, h)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
         self.mask_button = mask_button
         
         surface = guiutils.get_cairo_image("filters_move_up")
-        if editorpersistance.prefs.double_track_hights  == False:
-            move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=22, h=22)
-        else:
-            move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=44, h=44)
+        move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w, h)
         move_up_button.widget.set_tooltip_markup(_("Move Filter Up"))
 
         surface = guiutils.get_cairo_image("filters_move_down")
-        if editorpersistance.prefs.double_track_hights  == False:
-            move_down_button = guicomponents.PressLaunch(self.move_down_pressed, surface, w=22, h=22)
-        else:
-            move_down_button = guicomponents.PressLaunch(self.move_down_pressed, surface, w=44, h=44)
+        move_down_button = guicomponents.PressLaunch(self.move_down_pressed, surface, w, h)
         move_down_button.widget.set_tooltip_markup(_("Move Filter Down"))
 
         surface = guiutils.get_cairo_image("filters_move_top")
-        if editorpersistance.prefs.double_track_hights  == False:
-            move_top_button = guicomponents.PressLaunch(self.move_top_pressed, surface, w=22, h=22)
-        else:
-            move_top_button = guicomponents.PressLaunch(self.move_top_pressed, surface, w=44, h=44)
+        move_top_button = guicomponents.PressLaunch(self.move_top_pressed, surface, w, h)
         move_top_button.widget.set_tooltip_markup(_("Move Filter To Top"))
 
         surface = guiutils.get_cairo_image("filters_move_bottom")
-        if editorpersistance.prefs.double_track_hights  == False:
-            move_bottom_button = guicomponents.PressLaunch(self.move_bottom_pressed, surface, w=22, h=22)
-        else:
-            move_bottom_button = guicomponents.PressLaunch(self.move_bottom_pressed, surface, w=44, h=44)
+        move_bottom_button = guicomponents.PressLaunch(self.move_bottom_pressed, surface, w, h)
         move_bottom_button.widget.set_tooltip_markup(_("Move Filter To Bottom"))
         
         self.widget = Gtk.HBox(False, 0)

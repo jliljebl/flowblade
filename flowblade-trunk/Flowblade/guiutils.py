@@ -160,7 +160,7 @@ def get_image_name(img_name, suffix = ".png", double_height = False):
 def get_image(img_name, suffix = ".png", force = None):
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
-        force = editorpersistance.prefs.double_track_hights
+        force = (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE)
     if force:
         new_name = img_name + "@2"
     else:
@@ -177,7 +177,7 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     # Apr-2020 - SvdB - Make it sturdier in case a @2 image is missing. Just display the original image.
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
-        force = editorpersistance.prefs.double_track_hights
+        force = (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE)
     if force:
         new_name = img_name + "@2"
     else:
@@ -201,7 +201,7 @@ def get_double_scaled_cairo_image(icon_name):
     img_path = respaths.IMAGE_PATH + icon_name
     
     icon = cairo.ImageSurface.create_from_png(img_path)
-    if editorpersistance.prefs.double_track_hights == False:
+    if (editorpersistance.prefs.icons_scale != appconsts.ICONS_SCALE_DOUBLE):
         return icon
     
     surface_pattern = cairo.SurfacePattern(icon)
@@ -220,14 +220,20 @@ def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
     icon = get_image(img_file_name)        
     size_adj = 1
-    if editorpersistance.prefs.double_track_hights:
+    if (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE):
         size_adj = 2
     button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)
     button.add(button_box)
     button.set_size_request(width*size_adj, height*size_adj)
     return button
-    
+
+def double_icon_size():
+    if (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE):
+        return True
+    else:
+        return False
+
 def get_pad_label(w, h):
     label = Gtk.Label()
     label.set_size_request(w, h)
@@ -420,7 +426,7 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
-
+"""
 def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
     img = get_image(image_name)
     text_label = Gtk.Label(label=text)
@@ -438,7 +444,8 @@ def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
     item.show()
 
     return item
-    
+"""
+
 def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
     first_item.set_label(labels[0])

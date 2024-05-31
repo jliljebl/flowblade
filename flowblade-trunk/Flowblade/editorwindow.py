@@ -169,6 +169,8 @@ class EditorWindow:
         else:
             self.window.set_position(Gtk.WindowPosition.CENTER)
 
+        #_apply_test_dimensions(self.window, 3, 1.0)
+                    
         # Show window and all of its components
         self.window.show_all()
 
@@ -190,7 +192,7 @@ class EditorWindow:
                     self.window2.maximize()
                 else:
                     self.window2.resize(w, h)
-
+ 
             self.window2.move(x, y)
             self.window2.show_all()
 
@@ -235,7 +237,7 @@ class EditorWindow:
 
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
         fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
-        if editorpersistance.prefs.double_track_hights == False:
+        if guiutils.double_icon_size():
             self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
         else:
             self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 40, 24)
@@ -249,7 +251,7 @@ class EditorWindow:
         self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
 
         icon_2 = guiutils.get_cairo_image("layout")
-        if editorpersistance.prefs.double_track_hights == False:
+        if guiutils.double_icon_size():
             layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
         else:
             layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 48, 24)
@@ -1381,7 +1383,7 @@ class EditorWindow:
 
         # Aug-2019 - SvdB - BB
         offset = 2
-        if editorpersistance.prefs.double_track_hights:
+        if guiutils.double_icon_size():
            offset = 4
            buttons_row.set_margin_bottom(offset)
 
@@ -1402,6 +1404,15 @@ class EditorWindow:
     def top_paned_resized(self, w, req):
         pass
 
+# testing
+def _apply_test_dimensions(window, test_index, scale):
+    dims = [(1920, 1200), (2048, 1152), (2048, 1536), (2560, 1440), (2560, 1600), (3440, 1440), (3840, 2160)]
+    w, h = dims[test_index]
+    print("unscaled", w, h)
+    w = int(w/scale)
+    h = int(h/scale)
+    print("scaled", w, h)
+    window.set_size_request(w, h)
 
 def _this_is_not_used():
     print("THIS WAS USED!!!!!")

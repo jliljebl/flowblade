@@ -412,24 +412,40 @@ def update_clip_thumbnail(media_file):
 
     clip_thumbnails[media_file.path] = media_file.icon
 
-def set_tracks_double_height_consts():
+def set_tracks_height_consts():
     global ID_PAD_Y_HIGH, ID_PAD_Y, ID_PAD_Y_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, \
     MUTE_ICON_POS_HIGH, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, INSRT_ICON_POS_HIGH, \
-    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT
-    
-    HEIGHT = appconsts.TLINE_HEIGHT
-    ID_PAD_Y_HIGH = 66
-    ID_PAD_Y = 41
-    ID_PAD_Y_SMALL = 16
-    MUTE_ICON_POS = (5, 7)
-    MUTE_ICON_POS_NORMAL = (5, 31)
-    MUTE_ICON_POS_HIGH = (5, 55)
-    LOCK_POS = (25, 2)
-    INSRT_ICON_POS_HIGH = (108, 66) 
-    INSRT_ICON_POS = (108, 43)
-    INSRT_ICON_POS_SMALL =  (108, 18)
-    WAVEFORM_PAD_LARGE = 77
-    WAVEFORM_PAD_SMALL = 33
+    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT, WAVEFORM_PAD_HIGH
+
+    if editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_DOUBLE:
+        HEIGHT = appconsts.TLINE_HEIGHT
+        ID_PAD_Y_HIGH = 66
+        ID_PAD_Y = 41
+        ID_PAD_Y_SMALL = 16
+        MUTE_ICON_POS = (5, 7)
+        MUTE_ICON_POS_NORMAL = (5, 31)
+        MUTE_ICON_POS_HIGH = (5, 55)
+        LOCK_POS = (25, 2)
+        INSRT_ICON_POS_HIGH = (108, 66) 
+        INSRT_ICON_POS = (108, 43)
+        INSRT_ICON_POS_SMALL =  (108, 18)
+        WAVEFORM_PAD_LARGE = 77
+        WAVEFORM_PAD_SMALL = 33
+    elif editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_ONE_AND_HALF:
+        HEIGHT = appconsts.TLINE_HEIGHT
+        ID_PAD_Y_HIGH = 48
+        ID_PAD_Y = 29
+        ID_PAD_Y_SMALL = 9
+        MUTE_ICON_POS = (5, 10)
+        MUTE_ICON_POS_NORMAL = (5, 30)
+        MUTE_ICON_POS_HIGH = (5, 49)
+        LOCK_POS = (25, 2)
+        INSRT_ICON_POS_HIGH = (108, 51) 
+        INSRT_ICON_POS = (108, 32)
+        INSRT_ICON_POS_SMALL =  (108, 12)
+        WAVEFORM_PAD_LARGE = 47
+        WAVEFORM_PAD_SMALL = 20
+        WAVEFORM_PAD_HIGH = 77
 
 def set_dark_bg_color():
     global BG_COLOR

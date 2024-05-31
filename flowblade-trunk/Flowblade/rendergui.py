@@ -66,7 +66,7 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
 
     if frame_rates_match == False:
         # Aug-2019 - SvdB - BB
-        if editorpersistance.prefs.double_track_hights:
+        if guiutils.double_icon_size():
             warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.DND)
         else:
             warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.MENU)

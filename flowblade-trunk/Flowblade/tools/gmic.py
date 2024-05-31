@@ -567,7 +567,7 @@ class GmicWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
         hamburger_launcher_surface = guiutils.get_double_scaled_cairo_image("hamburger.png")
-        if editorpersistance.prefs.double_track_hights == False:
+        if guiutils.double_icon_size() == False:
             psize = 22
         else:
             psize = 44
@@ -638,7 +638,7 @@ class GmicWindow(Gtk.Window):
         pos_bar_frame.set_margin_start(6)
         pos_bar_frame.set_margin_end(2)
     
-        if editorpersistance.prefs.double_track_hights == True:
+        if guiutils.double_icon_size():
             pos_bar_frame_temp = Gtk.VBox(False, 0)
             pos_bar_frame_temp.pack_start(Gtk.Label(), True, True, 0)
             pos_bar_frame_temp.pack_start(pos_bar_frame, False, False, 0)

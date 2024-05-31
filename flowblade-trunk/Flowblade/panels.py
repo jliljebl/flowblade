@@ -49,7 +49,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     # Aug-2019 - SvdB - BB
     size_adj = 1
     prefs = editorpersistance.prefs
-    if prefs.double_track_hights:
+    if guiutils.double_icon_size():
         size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     hamburger_launcher.do_popover_callback = True

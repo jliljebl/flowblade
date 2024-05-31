@@ -186,8 +186,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    force_language_combo, disp_splash, window_mode_combo, full_names, double_track_hights, \
-    top_row_layout, layout_monitor, filter_select_width_spin = view_prefs_widgets
+    force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, icons_combo, gui_combo, \
+    layout_monitor, filter_select_width_spin = view_prefs_widgets
 
     perf_render_threads, perf_drop_frames = performance_widgets
 
@@ -225,9 +225,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.perf_drop_frames = perf_drop_frames.get_active()
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
-    prefs.double_track_hights = (double_track_hights.get_active() == 1)
+    prefs.tracks_scale = tracks_combo.get_active()
+    prefs.icons_scale = icons_combo.get_active()
+    prefs.gui_items_scale = gui_combo.get_active()
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
-    prefs.top_row_layout = top_row_layout.get_active()
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
     prefs.layout_display_index = layout_monitor.get_active()
     if len(render_folder_select.get_filenames()) != 0:
@@ -330,7 +331,7 @@ class EditorPreferences:
         self.ffwd_rev_ctrl = 10 # DEPRECATED, CTRL + arrow now does 10 fps slowmo playback
         self.ffwd_rev_caps = 1
         self.shortcuts = "flowblade.xml"
-        self.double_track_hights = False
+        self.double_track_hights = False # DEPRECATED, tracks_size, icons_size and gui_items_size replace this
         self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
@@ -375,3 +376,8 @@ class EditorPreferences:
         self.usbhid_config = None
         self.zoom_to_playhead = True
         self.filter_select_width = 220
+        self.tracks_scale = appconsts.TRACKS_SCALE_DEFAULT
+        self.icons_scale = appconsts.ICONS_SCALE_DEFAULT
+        self.gui_items_scale = appconsts.GUI_ITEWMS_SCALE_DEFAULT
+
+

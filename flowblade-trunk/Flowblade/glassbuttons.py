@@ -25,7 +25,7 @@ import appconsts
 import cairoarea
 import editorpersistance
 import gui
-import guiutils # Aug-2019 - SvdB - BB
+import guiutils
 import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
@@ -305,8 +305,7 @@ class PlayerButtons(AbstractGlassButtons):
         size_adj = 1
         prefs = editorpersistance.prefs
 
-        # End of Colorized icons
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
@@ -435,7 +434,7 @@ class GmicButtons(AbstractGlassButtons):
         prefs = editorpersistance.prefs
 
         # NOT IMPLEMENTED
-        if prefs.double_track_hights:
+        if guiutils.double_icon_size():
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)

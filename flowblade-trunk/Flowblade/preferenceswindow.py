@@ -18,6 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import multiprocessing
 import os
 
 from gi.repository import Gtk
@@ -28,7 +29,6 @@ import editorpersistance
 import gui
 import guiutils
 import mltprofiles
-import multiprocessing
 import usbhid
 import utils
 import utilsgtk
@@ -362,16 +362,21 @@ def _view_prefs_panel():
         window_mode_combo.set_active(1)
 
     tracks_combo = Gtk.ComboBoxText()
-    tracks_combo.append_text(_("Normal - 50px, 25px"))
-    tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
-    # Aug-2019 - SvdB - BB
-    tracks_combo.set_active(prefs.double_track_hights)
+    tracks_combo.append_text(_("Default - 50px, 25px"))
+    tracks_combo.append_text(_("1.5 x - 75px, 37px"))
+    tracks_combo.append_text(_("2 x - 100px, 50px"))
+    tracks_combo.set_active(prefs.tracks_scale)
 
-    # DEPRECATED, remove.
-    top_row_layout = Gtk.ComboBoxText()
-    top_row_layout.append_text(_("3 panels if width (1450px+) available"))
-    top_row_layout.append_text(_("2 panels always"))
-    top_row_layout.set_active(prefs.top_row_layout)
+    icons_combo = Gtk.ComboBoxText()
+    icons_combo.append_text(_("Default"))
+    icons_combo.append_text(_("Double"))
+    icons_combo.set_active(prefs.icons_scale)
+
+    gui_combo = Gtk.ComboBoxText()
+    gui_combo.append_text(_("1.0"))
+    gui_combo.append_text(_("1.5 x"))
+    gui_combo.append_text(_("2 x"))
+    gui_combo.set_active(prefs.gui_items_scale)
 
     monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
@@ -393,9 +398,10 @@ def _view_prefs_panel():
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
+    row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
-    # Feb-2017 - SvdB - For full file names
-    row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
+    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons Size:")), icons_combo, PREFERENCES_LEFT))
+    row12 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Panel Widths Scale:")), gui_combo, PREFERENCES_LEFT))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Filter Select panel width:")), filter_select_width_spin, PREFERENCES_LEFT))
     
@@ -404,16 +410,17 @@ def _view_prefs_panel():
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row7, False, False, 0)
-    # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, top_row_layout, layout_monitor, filter_select_width_spin)
+                  tracks_combo, icons_combo, gui_combo, layout_monitor, filter_select_width_spin)
 
 
 
