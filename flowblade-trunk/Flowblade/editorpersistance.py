@@ -42,6 +42,10 @@ UNDO_STACK_MIN = 10
 UNDO_STACK_MAX = 100
 FILTER_SELECT_WIDTH_MIN = 220
 FILTER_SELECT_WIDTH_MAX = 350
+PROJECT_PANEL_WIDTH_MIN = 225
+PROJECT_PANEL_WIDTH_MAX = 325
+EDIT_PANEL_WIDTH_MIN = appconsts.PANEL_MULTI_EDIT_MINIMUM_SIZE
+EDIT_PANEL_WIDTH_MAX = 650
 
 GLASS_STYLE = 0
 SIMPLE_STYLE = 1
@@ -186,8 +190,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, icons_combo, gui_combo, \
-    layout_monitor, filter_select_width_spin = view_prefs_widgets
+    force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, icons_combo, project_panel_width_spin, \
+    edit_panel_width_spin, layout_monitor, filter_select_width_spin = view_prefs_widgets
 
     perf_render_threads, perf_drop_frames = performance_widgets
 
@@ -205,9 +209,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.trans_cover_delete = cover_delete.get_active()
 
     prefs.play_pause = play_pause_button.get_active()
-# ------------------------------ timeline_start_end_button
     prefs.timeline_start_end = timeline_start_end_button.get_active()
-# -------------------------------End of timeline_start_end_button
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
@@ -227,7 +229,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.tracks_scale = tracks_combo.get_active()
     prefs.icons_scale = icons_combo.get_active()
-    prefs.gui_items_scale = gui_combo.get_active()
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
     prefs.layout_display_index = layout_monitor.get_active()
@@ -251,6 +252,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # --------------------------------- USB HID END
     prefs.dnd_action = dnd_action.get_active()
     prefs.filter_select_width = int(filter_select_width_spin.get_value())
+    prefs.editor_panel_width = int(edit_panel_width_spin.get_value())
+    prefs.project_panel_width = int(project_panel_width_spin.get_value())
+
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -378,6 +382,6 @@ class EditorPreferences:
         self.filter_select_width = 220
         self.tracks_scale = appconsts.TRACKS_SCALE_DEFAULT
         self.icons_scale = appconsts.ICONS_SCALE_DEFAULT
-        self.gui_items_scale = appconsts.GUI_ITEWMS_SCALE_DEFAULT
-
+        self.project_panel_width = PROJECT_PANEL_WIDTH_MIN
+        self.editor_panel_width = EDIT_PANEL_WIDTH_MIN
 

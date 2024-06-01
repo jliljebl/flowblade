@@ -205,9 +205,11 @@ def init_layout_data():
         if appconsts.PANEL_PROJECT in _panel_positions:
             _panel_positions[appconsts.PANEL_PROJECT_SMALL_SCREEN] = appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT
             del(_panel_positions[appconsts.PANEL_PROJECT])
-    
+
     # Apply Filter Select panel width pref.
     PANEL_MINIMUM_SIZES[appconsts.PANEL_FILTER_SELECT] = (editorpersistance.prefs.filter_select_width, appconsts.TLINE_HEIGHT)
+    PANEL_MINIMUM_SIZES[appconsts.PANEL_PROJECT] = (editorpersistance.prefs.project_panel_width, appconsts.TLINE_HEIGHT)
+    PANEL_MINIMUM_SIZES[appconsts.PANEL_MULTI_EDIT] = (editorpersistance.prefs.editor_panel_width, appconsts.TLINE_HEIGHT)
 
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \

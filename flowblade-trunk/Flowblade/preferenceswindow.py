@@ -372,12 +372,6 @@ def _view_prefs_panel():
     icons_combo.append_text(_("Double"))
     icons_combo.set_active(prefs.icons_scale)
 
-    gui_combo = Gtk.ComboBoxText()
-    gui_combo.append_text(_("1.0"))
-    gui_combo.append_text(_("1.5 x"))
-    gui_combo.append_text(_("2 x"))
-    gui_combo.set_active(prefs.gui_items_scale)
-
     monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
 
@@ -394,6 +388,16 @@ def _view_prefs_panel():
     filter_select_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.FILTER_SELECT_WIDTH_MIN, editorpersistance.FILTER_SELECT_WIDTH_MAX, 1)
     filter_select_width_spin.set_adjustment(spin_adj)
     filter_select_width_spin.set_numeric(True)
+
+    spin_adj = Gtk.Adjustment(value=prefs.project_panel_width, lower=editorpersistance.PROJECT_PANEL_WIDTH_MIN, upper=editorpersistance.PROJECT_PANEL_WIDTH_MAX, step_increment=1)
+    project_panel_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.PROJECT_PANEL_WIDTH_MIN, editorpersistance.PROJECT_PANEL_WIDTH_MAX, 1)
+    project_panel_width_spin.set_adjustment(spin_adj)
+    project_panel_width_spin.set_numeric(True)
+
+    spin_adj = Gtk.Adjustment(value=prefs.editor_panel_width, lower=editorpersistance.EDIT_PANEL_WIDTH_MIN, upper=editorpersistance.EDIT_PANEL_WIDTH_MAX, step_increment=1)
+    edit_panel_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.EDIT_PANEL_WIDTH_MIN, editorpersistance.EDIT_PANEL_WIDTH_MAX, 1)
+    edit_panel_width_spin.set_adjustment(spin_adj)
+    edit_panel_width_spin.set_numeric(True)
     
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
@@ -401,8 +405,10 @@ def _view_prefs_panel():
     row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
     row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons Size:")), icons_combo, PREFERENCES_LEFT))
-    row12 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Panel Widths Scale:")), gui_combo, PREFERENCES_LEFT))
+
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
+    row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Edit panel width:")), edit_panel_width_spin, PREFERENCES_LEFT))
+    row12 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Project panel width:")), project_panel_width_spin, PREFERENCES_LEFT))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Filter Select panel width:")), filter_select_width_spin, PREFERENCES_LEFT))
     
     vbox = Gtk.VBox(False, 2)
@@ -413,6 +419,7 @@ def _view_prefs_panel():
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -420,7 +427,7 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, icons_combo, gui_combo, layout_monitor, filter_select_width_spin)
+                  tracks_combo, icons_combo, project_panel_width_spin, edit_panel_width_spin, layout_monitor, filter_select_width_spin)
 
 
 

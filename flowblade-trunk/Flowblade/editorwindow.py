@@ -169,8 +169,6 @@ class EditorWindow:
         else:
             self.window.set_position(Gtk.WindowPosition.CENTER)
 
-        #_apply_test_dimensions(self.window, 3, 1.0)
-                    
         # Show window and all of its components
         self.window.show_all()
 
@@ -237,7 +235,7 @@ class EditorWindow:
 
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
         fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
-        if guiutils.double_icon_size():
+        if guiutils.double_icon_size() == False:
             self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
         else:
             self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 40, 24)
@@ -251,7 +249,7 @@ class EditorWindow:
         self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
 
         icon_2 = guiutils.get_cairo_image("layout")
-        if guiutils.double_icon_size():
+        if guiutils.double_icon_size() == False:
             layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
         else:
             layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 48, 24)
