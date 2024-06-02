@@ -321,7 +321,7 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
 
         filters_section = Gio.Menu.new()
         add_filter_menu = Gio.Menu.new()
-        _fill_filters_menus(add_filter_menu, callback, "add_filter", "multiclipmenu.addfilter.")
+        _fill_filters_menus(add_filter_menu, callback, "add_filter_multi", "multiclipmenu.addfilter.")
         filters_section.append_submenu(_("Add Filter"), add_filter_menu)
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, True, False)

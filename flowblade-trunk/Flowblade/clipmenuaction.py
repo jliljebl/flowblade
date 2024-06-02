@@ -275,8 +275,9 @@ def _add_filter(data):
 
 def _add_filter_multi(data):
     clip, track, item_id, item_data = data
-    x, filter_info = item_data
-    
+    filter_info = item_data
+    clip, track, x = _popover_clip_data
+
     clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
     
     range_in = movemodes.selected_range_in
