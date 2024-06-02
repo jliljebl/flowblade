@@ -102,7 +102,7 @@ def load_shortcuts():
 def set_keyboard_shortcuts():
     global _keyboard_actions, _editable
     prefs = editorpersistance.prefs
-    print("Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts)
+    print("Keyboard shortcuts file:", editorpersistance.prefs.shortcuts)
     _modifier_dict = {}
 
     # Make sure that whatever is in preferences is a valid and exists file. If it's not in shortcut_files it's not valid
@@ -141,9 +141,9 @@ def set_keyboard_shortcuts():
                     # to easily compare with any entered combo of the modifiers. In fact, CTRL+ALT becomes the
                     # same as ALT+CTRL and Alt+Ctrl- it will all be +acllrtt
                     if event.get('modifiers') == None:
-                        _modifier_dict[''.join(sorted(re.sub('[\s]','','None'.lower())))] = event.get('code')
+                        _modifier_dict[''.join(sorted(re.sub(r'[\s]','','None'.lower())))] = event.get('code')
                     else:
-                        _modifier_dict[''.join(sorted(re.sub('[\s]','',event.get('modifiers').lower())))] = event.get('code')
+                        _modifier_dict[''.join(sorted(re.sub(r'[\s]','',event.get('modifiers').lower())))] = event.get('code')
                     _keyboard_actions[event.text] = _modifier_dict
         _editable = root.get('editable')
     except:

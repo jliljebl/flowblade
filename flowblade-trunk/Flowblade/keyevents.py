@@ -561,10 +561,10 @@ def _get_shortcut_action(event):
         if modifier == "":
             modifier = 'None'
         try:
-            action = _secondary_dict[''.join(sorted(re.sub('[\s]','',modifier.lower())))]
+            action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','',modifier.lower())))]
         except:
             try:
-                action = _secondary_dict[''.join(sorted(re.sub('[\s]','','Any'.lower())))]
+                action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','','Any'.lower())))]
             except:
                 action = 'None'
         return action
