@@ -331,7 +331,7 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
 
         delete_section = Gio.Menu.new()
         add_menu_action(delete_section, _("Delete"), "multiclipmenu.delete",  ("delete", None), callback)
-        add_menu_action(delete_section, _("Lift"), "multiclipmenu.delete",  ("lift", None), callback)
+        add_menu_action(delete_section, _("Lift"), "multiclipmenu.lift",  ("lift", None), callback)
         _multi_clip_menu.append_section(None, delete_section)
 
     else: # Menu items with possible state changes need to recreated.
