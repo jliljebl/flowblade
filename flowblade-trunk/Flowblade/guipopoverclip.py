@@ -405,7 +405,13 @@ def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
     add_menu_action(multi_audio_section, _("Split Audio Synched"), "multiclipmenu.multisplitaudiosynched",  ("multi_split_audio_synched", None), callback, active)
-
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        active = False
+    else:
+        active = True
+    add_menu_action(multi_audio_section, _("Mute Audio"), "multiclipmenu.muteaudio",  ("multi_mute_audio", None), callback, active)
+    add_menu_action(multi_audio_section, _("Unmute Audio"), "multiclipmenu.unmuteaudio",  ("multi_unmute_audio", None), callback, active)
+    
 def _fill_audio_menu(audio_submenu, clip, track, callback):
     if track.type == appconsts.VIDEO:
         active = True

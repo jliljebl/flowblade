@@ -704,6 +704,36 @@ def _multi_split_audio_synched(data):
     
     syncsplitevent.split_audio_synched_from_clips_list(clips, track)
 
+def _multi_mute_audio(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+    
+    mute_actions = []
+    for tclip in clips:
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            continue
+        editdata = {"clip":tclip}
+        action = edit.mute_clip(editdata)
+        mute_actions.append(action)
+
+    mute_consolidated_action = edit.ConsolidatedEditAction(mute_actions)
+    mute_consolidated_action.do_consolidated_edit()
+
+def _multi_unmute_audio(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+
+    unmute_actions = []
+    for tclip in clips:
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            continue
+        editdata = {"clip":tclip}
+        action = edit.unmute_clip(editdata)
+        unmute_actions.append(action)
+
+    unmute_consolidated_action = edit.ConsolidatedEditAction(unmute_actions)
+    unmute_consolidated_action.do_consolidated_edit()
+
 def _get_non_blank_selected_clips(track):
     clips = []
     for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
@@ -893,6 +923,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "create_multi_compound":_create_container_clip_from_selection,
                   "multi_split_audio":_multi_split_audio,
                   "multi_split_audio_synched":_multi_split_audio_synched,
+                  "multi_mute_audio":_multi_mute_audio,
+                  "multi_unmute_audio":_multi_unmute_audio,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":_render_tline_generator,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
