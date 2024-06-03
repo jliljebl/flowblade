@@ -398,6 +398,11 @@ def _view_prefs_panel():
     edit_panel_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.EDIT_PANEL_WIDTH_MIN, editorpersistance.EDIT_PANEL_WIDTH_MAX, 1)
     edit_panel_width_spin.set_adjustment(spin_adj)
     edit_panel_width_spin.set_numeric(True)
+
+    spin_adj = Gtk.Adjustment(value=prefs.media_panel_width, lower=editorpersistance.MEDIA_PANEL_WIDTH_MIN, upper=editorpersistance.MEDIA_PANEL_WIDTH_MAX, step_increment=1)
+    media_panel_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.MEDIA_PANEL_WIDTH_MIN, editorpersistance.MEDIA_PANEL_WIDTH_MAX, 1)
+    media_panel_width_spin.set_adjustment(spin_adj)
+    media_panel_width_spin.set_numeric(True)
     
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
@@ -410,6 +415,7 @@ def _view_prefs_panel():
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Edit panel width:")), edit_panel_width_spin, PREFERENCES_LEFT))
     row12 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Project panel width:")), project_panel_width_spin, PREFERENCES_LEFT))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Filter Select panel width:")), filter_select_width_spin, PREFERENCES_LEFT))
+    row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media panel width:")), media_panel_width_spin, PREFERENCES_LEFT))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -419,6 +425,7 @@ def _view_prefs_panel():
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
@@ -427,7 +434,8 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, icons_combo, project_panel_width_spin, edit_panel_width_spin, layout_monitor, filter_select_width_spin)
+                  tracks_combo, icons_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
+                  layout_monitor, filter_select_width_spin)
 
 
 

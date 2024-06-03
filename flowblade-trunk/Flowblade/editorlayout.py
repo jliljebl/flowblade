@@ -210,7 +210,8 @@ def init_layout_data():
     PANEL_MINIMUM_SIZES[appconsts.PANEL_FILTER_SELECT] = (editorpersistance.prefs.filter_select_width, appconsts.TLINE_HEIGHT)
     PANEL_MINIMUM_SIZES[appconsts.PANEL_PROJECT] = (editorpersistance.prefs.project_panel_width, appconsts.TLINE_HEIGHT)
     PANEL_MINIMUM_SIZES[appconsts.PANEL_MULTI_EDIT] = (editorpersistance.prefs.editor_panel_width, appconsts.TLINE_HEIGHT)
-
+    PANEL_MINIMUM_SIZES[appconsts.PANEL_MEDIA] = (editorpersistance.prefs.media_panel_width, appconsts.TLINE_HEIGHT)
+    
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Default Notebook"),

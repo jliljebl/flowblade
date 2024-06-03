@@ -46,6 +46,8 @@ PROJECT_PANEL_WIDTH_MIN = 225
 PROJECT_PANEL_WIDTH_MAX = 325
 EDIT_PANEL_WIDTH_MIN = appconsts.PANEL_MULTI_EDIT_MINIMUM_SIZE
 EDIT_PANEL_WIDTH_MAX = 650
+MEDIA_PANEL_WIDTH_MIN = appconsts.PANEL_MEDIA_MINIMUM_SIZE
+MEDIA_PANEL_WIDTH_MAX = 510
 
 GLASS_STYLE = 0
 SIMPLE_STYLE = 1
@@ -115,7 +117,7 @@ def load():
             write_file = afw.get_file()
             pickle.dump(prefs, write_file)
         print("prefs updated to new version, new param count:", len(prefs.__dict__))
-
+        
 def save():
     """
     Write out prefs and recent_projects files
@@ -191,7 +193,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, icons_combo, project_panel_width_spin, \
-    edit_panel_width_spin, layout_monitor, filter_select_width_spin = view_prefs_widgets
+    edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin = view_prefs_widgets
 
     perf_render_threads, perf_drop_frames = performance_widgets
 
@@ -254,7 +256,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.filter_select_width = int(filter_select_width_spin.get_value())
     prefs.editor_panel_width = int(edit_panel_width_spin.get_value())
     prefs.project_panel_width = int(project_panel_width_spin.get_value())
-
+    prefs.media_panel_width = int(media_panel_width_spin.get_value())
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -383,5 +385,5 @@ class EditorPreferences:
         self.tracks_scale = appconsts.TRACKS_SCALE_DEFAULT
         self.icons_scale = appconsts.ICONS_SCALE_DEFAULT
         self.project_panel_width = PROJECT_PANEL_WIDTH_MIN
-        self.editor_panel_width = EDIT_PANEL_WIDTH_MIN
-
+        self.editor_panel_width = EDIT_PANEL_WIDTH_MIN 
+        self.media_panel_width = MEDIA_PANEL_WIDTH_MIN
