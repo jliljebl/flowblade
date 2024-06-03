@@ -305,7 +305,7 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
     if hasattr(clip, "rendered_type"):
         transition_popover_menu_show(widget, clip, track, x, y, callback)
         return
-        
+
     global _multi_clip_popover, _multi_clip_menu, _multi_audio_section
 
     if _multi_clip_menu == None:
