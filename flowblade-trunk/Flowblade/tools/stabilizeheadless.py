@@ -111,7 +111,6 @@ class StabilizeHeadlessRunnerThread(threading.Thread):
         tractor = renderconsumer.get_producer_as_tractor(producer, producer.get_length() - 1)
 
         # Get render consumer
-        print(self.write_file,"self.write_file")
         xml_consumer = mlt.Consumer(profile, "xml", str(self.write_file) + ".xml")
         xml_consumer.set("all", "1")
         xml_consumer.set("real_time", "-1")

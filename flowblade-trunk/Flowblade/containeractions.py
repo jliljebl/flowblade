@@ -570,7 +570,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                 steps_count = 3
                 if  self.container_data.render_data.do_video_render == False:
                     steps_count = 2
-                msg = _("Step ") + str(step) + " / " + str(steps_count) + " - "
+                msg = _("G'Mic Render Step ") + str(step) + " / " + str(steps_count) + " - "
                 if step == "1":
                     msg += _("Writing Clip Frames")
                 elif step == "2":
@@ -748,7 +748,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 steps_count = 2
                 if self.container_data.render_data.do_video_render == False:
                     steps_count = 1
-                msg = _("Step ") + str(step) + " / " + str(steps_count) + " - "
+                msg = _("Generator Render ") + str(step) + " / " + str(steps_count) + " - "
                 if step == "1":
                     msg += _("Writing Clip Frames")
                 else:
@@ -942,7 +942,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 fraction, elapsed = status
 
                 if self.container_data.render_data.do_video_render == True:
-                    msg = _("Video for: ") + self.clip.name 
+                    msg = _("Video for Selection Clip: ") + self.clip.name 
                 #elif step == "2":
                 #    msg = _("Image Sequence for: ") + self.clip.name 
 

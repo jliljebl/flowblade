@@ -118,9 +118,9 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
 }
 
-PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
+PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_PROJECT, appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
                             appconsts.PANEL_MULTI_EDIT, appconsts.PANEL_JOBS, appconsts.PANEL_PROJECT_SMALL_SCREEN, 
-                            appconsts.PANEL_PROJECT, appconsts.PANEL_RENDERING,
+                            appconsts.PANEL_RENDERING,
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
 PANEL_MINIMUM_SIZES = { \

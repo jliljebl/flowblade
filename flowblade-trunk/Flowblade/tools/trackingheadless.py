@@ -101,7 +101,6 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         tractor = renderconsumer.get_producer_as_tractor(producer, producer.get_length() - 1)
 
         # Get render consumer
-        print(self.data_file_path,"self.data_file_path")
         xml_consumer = mlt.Consumer(profile, "xml", str(self.write_file))
         xml_consumer.set("all", "1")
         xml_consumer.set("real_time", "-1")

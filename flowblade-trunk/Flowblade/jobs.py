@@ -102,7 +102,8 @@ class JobProxy: # This object represents job in job queue.
 
     def get_elapsed_str(self):
         return utils.get_time_str_for_sec_float(self.elapsed)
-
+    
+    """
     def get_type_str(self):
         if self.type == NOT_SET_YET:
             return "NO TYPE SET" # this just error info, application has done something wrong.
@@ -110,17 +111,18 @@ class JobProxy: # This object represents job in job queue.
             return _("G'Mic Clip")
         elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
             return _("Selection Clip")
-        elif self.type == MOTION_MEDIA_ITEM_RENDER:
+        elif self.type == MOTION_MEDIA_ITEM_RENDER: X
             return _("Motion Clip")
-        elif self.type == PROXY_RENDER:
+        elif self.type == PROXY_RENDER: X
             return _("Proxy Clip")
         elif self.type == CONTAINER_CLIP_RENDER_FLUXITY:
-            return _("Generator Clip")
-        elif self.type == STABILIZE_DATA_RENDER:
+            return _("Generator Clip") X
+        elif self.type == STABILIZE_DATA_RENDER: X
             return _("Stabilizing Data")
-        elif self.type == MOTION_TRACKING_DATA_RENDER:
+        elif self.type == MOTION_TRACKING_DATA_RENDER: X
             return _("Tracking Data")
-
+    """
+    
     def get_progress_str(self):
         if self.progress < 0.0:
             return "-"
@@ -202,10 +204,9 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
 
-    _jobs_list_view.storemodel.set_value(store_iter, 0, _jobs[row].get_type_str())
-    _jobs_list_view.storemodel.set_value(store_iter, 1, _jobs[row].text)
-    _jobs_list_view.storemodel.set_value(store_iter, 2, _jobs[row].get_elapsed_str())
-    _jobs_list_view.storemodel.set_value(store_iter, 3, _jobs[row].get_progress_str())
+    _jobs_list_view.storemodel.set_value(store_iter, 0, _jobs[row].text)
+    _jobs_list_view.storemodel.set_value(store_iter, 1, _jobs[row].get_elapsed_str())
+    _jobs_list_view.storemodel.set_value(store_iter, 2, _jobs[row].get_progress_str())
 
     _jobs_list_view.scroll.queue_draw()
 
@@ -332,7 +333,7 @@ class JobsQueueView(Gtk.VBox):
     def __init__(self):
         GObject.GObject.__init__(self)
         
-        self.storemodel = Gtk.ListStore(str, str, str, str)
+        self.storemodel = Gtk.ListStore(str, str, str)
         
         # Scroll container
         self.scroll = Gtk.ScrolledWindow()
@@ -343,9 +344,6 @@ class JobsQueueView(Gtk.VBox):
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
-
-        self.text_rend_1 = Gtk.CellRendererText()
-        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
 
         self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
@@ -358,33 +356,24 @@ class JobsQueueView(Gtk.VBox):
         self.text_rend_4.set_property("yalign", 0.0)
 
         # Column views
-        self.text_col_1 = Gtk.TreeViewColumn(_("Job Type"))
-        self.text_col_2 = Gtk.TreeViewColumn(_("Info"))
+        self.text_col_2 = Gtk.TreeViewColumn(_("Job Info"))
         self.text_col_3 = Gtk.TreeViewColumn(_("Render Time"))
         self.text_col_4 = Gtk.TreeViewColumn(_("Progress"))
 
-        #self.text_col_1.set_expand(True)
-        self.text_col_1.set_spacing(5)
-        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-        self.text_col_1.set_min_width(200)
-        self.text_col_1.pack_start(self.text_rend_1, True)
-        self.text_col_1.add_attribute(self.text_rend_1, "text", 0) # <- note column index
-
         self.text_col_2.set_expand(True)
         self.text_col_2.pack_start(self.text_rend_2, True)
-        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 0)
         self.text_col_2.set_min_width(90)
 
         self.text_col_3.set_expand(False)
         self.text_col_3.pack_start(self.text_rend_3, True)
-        self.text_col_3.add_attribute(self.text_rend_3, "text", 2)
+        self.text_col_3.add_attribute(self.text_rend_3, "text", 1)
 
         self.text_col_4.set_expand(False)
         self.text_col_4.pack_start(self.text_rend_4, True)
-        self.text_col_4.add_attribute(self.text_rend_4, "text", 3)
+        self.text_col_4.add_attribute(self.text_rend_4, "text", 2)
 
         # Add column views to view
-        self.treeview.append_column(self.text_col_1)
         self.treeview.append_column(self.text_col_2)
         self.treeview.append_column(self.text_col_3)
         self.treeview.append_column(self.text_col_4)
@@ -406,8 +395,7 @@ class JobsQueueView(Gtk.VBox):
         self.storemodel.clear()        
         
         for job in _jobs:
-            row_data = [job.get_type_str(),
-                        job.text,
+            row_data = [job.text,
                         job.get_elapsed_str(),
                         job.get_progress_str()]
             self.storemodel.append(row_data)
@@ -501,8 +489,6 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
     def _update_from_gui_thread(self):
 
         if motionheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
-            #remove_as_status_polling_object(self)
-            
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
             
@@ -512,24 +498,26 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
 
         else:
             status = motionheadless.get_session_status(self.parent_folder, self.get_session_id())
+
             if status != None:
                 fraction, elapsed = status
-                
+
                 self.progress = float(fraction)
                 if self.progress > 1.0:
                     # A fix for how progress is calculated in gmicheadless because producers can render a bit longer then required.
                     self.progress = 1.0
 
                 self.elapsed = float(elapsed)
-                self.text = self.get_job_name()
+                self.text = _("Motion Clip Render") + " " + self.get_job_name()
                 
                 job_msg = self.get_job_queue_message()
-                
+
                 update_job_queue(job_msg)
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
-    
+
+
     def abort_render(self):
         #remove_as_status_polling_object(self)
         motionheadless.abort_render(self.parent_folder, self.get_session_id())
@@ -550,9 +538,6 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
         self.editable_properties = editable_properties
         self.args = args
         self.parent_folder = userfolders.get_temp_render_dir() # This is used for message passing, output file goes to path given by 'write_file'.
-
-    def get_job_name(self):
-        return _("Stabilizing data Render")
         
     def start_render(self):
         
@@ -603,7 +588,7 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
                     self.progress = 1.0
 
                 self.elapsed = float(elapsed)
-                self.text = self.get_job_name()
+                self.text = _("Stabilizing Analysis") + " " + self.editable_properties[0].clip.name
                 
                 job_msg = self.get_job_queue_message()
                 
@@ -635,9 +620,6 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         self.args = args
         self.data_label = data_label
         self.parent_folder = userfolders.get_temp_render_dir() # This is used for message passing, output file goes to path given by 'write_file'.
-
-    def get_job_name(self):
-        return _("Tracking Data Render")
         
     def start_render(self):
         job_msg = self.get_job_queue_message()
@@ -691,8 +673,8 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
                     self.progress = 1.0
 
                 self.elapsed = float(elapsed)
-                self.text = self.get_job_name()
-                
+                self.text = _("Tracking Data Render") + " " + self.data_label #self.editable_properties[0].clip.name
+
                 job_msg = self.get_job_queue_message()
                 
                 update_job_queue(job_msg)
@@ -770,9 +752,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SOURCEFILE, self.render_data.media_file_path)
             # Set proxy file.
             proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_PROXYFILE, self.render_data.proxy_file_path)
-            
-            print(proxy_attr_str)
-            
+
             ffmpeg_command = "ffmpeg -i " + str(proxy_attr_str)
             
             self.ffmpeg_start = time.monotonic()
@@ -806,7 +786,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                         self.progress = 1.0
 
                     self.elapsed = float(elapsed)
-                    self.text = self.get_job_name()
+                    self.text = _("Proxy Render")  + " " + self.get_job_name()
 
                     job_msg = self.get_job_queue_message()
                     update_job_queue(job_msg)
@@ -827,7 +807,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 if self.progress > 1.0:
                     self.progress = 0.99
                     
-                self.text = self.get_job_name()
+                self.text = _("Proxy Render")  + " " + self.get_job_name()
 
                 job_msg = self.get_job_queue_message()
                 update_job_queue(job_msg)
