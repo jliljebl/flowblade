@@ -943,8 +943,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
                 if self.container_data.render_data.do_video_render == True:
                     msg = _("Video for Selection Clip: ") + self.clip.name 
-                #elif step == "2":
-                #    msg = _("Image Sequence for: ") + self.clip.name 
 
                 job_msg = self.get_job_queue_message()
                 job_msg.progress = float(fraction)

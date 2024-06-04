@@ -103,26 +103,6 @@ class JobProxy: # This object represents job in job queue.
     def get_elapsed_str(self):
         return utils.get_time_str_for_sec_float(self.elapsed)
     
-    """
-    def get_type_str(self):
-        if self.type == NOT_SET_YET:
-            return "NO TYPE SET" # this just error info, application has done something wrong.
-        elif self.type == CONTAINER_CLIP_RENDER_GMIC:
-            return _("G'Mic Clip")
-        elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
-            return _("Selection Clip")
-        elif self.type == MOTION_MEDIA_ITEM_RENDER: X
-            return _("Motion Clip")
-        elif self.type == PROXY_RENDER: X
-            return _("Proxy Clip")
-        elif self.type == CONTAINER_CLIP_RENDER_FLUXITY:
-            return _("Generator Clip") X
-        elif self.type == STABILIZE_DATA_RENDER: X
-            return _("Stabilizing Data")
-        elif self.type == MOTION_TRACKING_DATA_RENDER: X
-            return _("Tracking Data")
-    """
-    
     def get_progress_str(self):
         if self.progress < 0.0:
             return "-"
