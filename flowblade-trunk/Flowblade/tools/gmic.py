@@ -309,7 +309,7 @@ def _open_files_dialog_cb(file_select, response_id):
 
     _do_file_load(filenames[0])
 
-def _do_file_load(file_path):
+def _do_file_load(file_path, use_default_profile=False):
     global _last_load_file
     _last_load_file = file_path
     
@@ -325,13 +325,18 @@ def _do_file_load(file_path):
             _effect_renderer.shutdown()
 
     _current_path = file_path
-    
+
     # Finish clip open when dialog has been destroyed
-    GLib.idle_add(_finish_clip_open)
+    GLib.idle_add(_finish_clip_open, use_default_profile)
     
-def _finish_clip_open():
-    new_profile_index = gmicplayer.set_current_profile(_current_path)
-    new_profile = mltprofiles.get_profile_for_index(new_profile_index)
+def _finish_clip_open(use_default_profile):
+    if use_default_profile == False:
+        new_profile_index = gmicplayer.set_current_profile(_current_path)
+        new_profile = mltprofiles.get_profile_for_index(new_profile_index)
+    else:
+        new_profile_index = mltprofiles.get_default_profile_index()
+        new_profile = mltprofiles.get_default_profile()
+        gmicplayer.set_current_profile_as_default_profile()
 
     global _current_dimensions, _current_fps, _current_profile_index
     _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
@@ -343,14 +348,16 @@ def _finish_clip_open():
     _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
 
     _window.set_fps()
-    _window.init_for_new_clip(_current_path, new_profile.description())
     _window.set_monitor_sizes()
-    _window.set_widgets_sensitive(True)
+    if use_default_profile == False:
+        _window.init_for_new_clip(_current_path, new_profile.description())
+        _window.set_widgets_sensitive(True)
+    else:
+        _window.set_widgets_sensitive(False)
     _window.render_button.set_sensitive(False)
     _window.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
     _player.create_sdl_consumer()
     _player.connect_and_start()
-
 
 #-------------------------------------------------- script setting and save/load
 def script_menu_item_selected(widget, action, script):
@@ -871,6 +878,8 @@ class GmicWindow(Gtk.Window):
         self.show_all()
         self.set_resizable(False)
         self.set_active_state(False)
+
+        GLib.idle_add(_do_file_load, respaths.BLACK_IMAGE_PATH, True)
             
     def init_for_new_clip(self, clip_path, profile_name):
         self.clip_path = clip_path
@@ -1020,8 +1029,6 @@ class GmicWindow(Gtk.Window):
         self.preview_monitor.set_sensitive(value)
         self.tc_display.widget.set_sensitive(value)
         self.pos_bar.widget.set_sensitive(value)      
-        #self.control_buttons.set_sensitive(value)
-        #self.control_buttons.widget.set_sensitive(value)
         self.preset_label.set_sensitive(value)
         self.action_select.set_sensitive(value)
         self.action_label.set_sensitive(value)

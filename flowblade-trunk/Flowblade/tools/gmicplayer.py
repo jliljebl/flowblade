@@ -45,6 +45,7 @@ RENDER_TICKER_DELAY = 0.05
 
 _current_profile = None
 
+
 def set_current_profile(clip_path):
     profile = mltprofiles.get_default_profile()
     producer = mlt.Producer(profile, str(clip_path))
@@ -52,6 +53,10 @@ def set_current_profile(clip_path):
     profile_index = mltprofiles.get_closest_matching_profile_index(utils.get_file_producer_info(producer))
     _current_profile = mltprofiles.get_profile_for_index(profile_index)
     return profile_index
+
+def set_current_profile_as_default_profile():
+    global _current_profile
+    _current_profile = mltprofiles.get_default_profile()
 
 def set_current_profile_for_profile_name(profile_name):
     global _current_profile
