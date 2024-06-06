@@ -65,7 +65,7 @@ def set_paths(root_path):
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
     WIPE_RESOURCES_PATH = root_path + "/res/filters/wipes/"
     PROFILE_PATH = root_path + "/res/profiles/"
-    BLACK_IMAGE_PATH = root_path + "/res/img/black.jpg"
+    BLACK_IMAGE_PATH = root_path + "/res/darktheme/black.jpg"
     FILTERS_XML_DOC = root_path + "/res/filters/filters.xml"
     COMPOSITORS_XML_DOC = root_path + "/res/filters/compositors.xml"
     REPLACEMENTS_XML_DOC = root_path + "/res/filters/replace.xml"
