@@ -478,7 +478,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
-            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png") # we just need some valid input
+            test_in_file = str(respaths.IMAGE_PATH + "black.jpg") # we just need some valid input
 
             # Create command list and launch process.
             command_list = [editorstate.gmic_path, test_in_file]
