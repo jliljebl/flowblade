@@ -279,7 +279,7 @@ def screen_size_large_width():
         return True
     else:
         return False
-        
+
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True

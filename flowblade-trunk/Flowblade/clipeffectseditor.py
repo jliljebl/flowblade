@@ -390,6 +390,13 @@ class ClipFilterStack:
             stack_item = self.filter_stack[i]
             stack_item.expander.set_expanded(state_list[i])
 
+    def set_single_expanded(self, expanded_index):
+        for i in range(0, len(self.filter_stack)):
+            stack_item = self.filter_stack[i]
+            stack_item.expander.set_expanded(False)
+        
+        stack_item = self.filter_stack[expanded_index]
+        stack_item.expander.set_expanded(True)
 
 # -------------------------------------------------------------- GUI INIT
 def get_clip_effects_editor_info_row():
@@ -691,8 +698,9 @@ def do_stack_move(clip, insert_row, delete_row):
     action = edit.move_filter_action(data)
     set_stack_update_blocked()
     action.do_edit()
+    _filter_stack.set_single_expanded(insert_row)
     set_stack_update_unblocked()
-    
+
 def reinit_stack_if_needed(force_update):
     clip, track, clip_index = _filter_stack.get_clip_data()
     if _filter_stack.stack_changed(clip) == True or force_update == True:
@@ -896,8 +904,8 @@ def _filter_mask_item_activated(action, variant, data):
     set_stack_update_unblocked()
 
     set_clip(clip, track, clip_index)
-    _filter_stack.set_filter_item_expanded(current_filter_index + 1)
-    _filter_stack.set_filter_item_minified(current_filter_index + 2)
+    _filter_stack.set_single_expanded(index_1)
+
 
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(launcher, widget, event, data):
