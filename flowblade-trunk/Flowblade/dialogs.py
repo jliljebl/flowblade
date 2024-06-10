@@ -926,9 +926,10 @@ def file_properties_dialog(data):
                         ( _("OK"), Gtk.ResponseType.ACCEPT))
 
     panel = panels.get_file_properties_panel(data)
+
     alignment = dialogutils.get_default_alignment(panel)
     guiutils.set_margins(dialog.vbox, 6, 6, 6, 6)
-    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.vbox.pack_start(alignment, False, False, 0)
     _default_behaviour(dialog)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
@@ -1937,8 +1938,6 @@ def watermark_dialog(add_callback, remove_callback):
     vbox.pack_start(row3, False, False, 0)
 
     alignment = dialogutils.get_default_alignment(vbox)
-    #alignment.set_padding(12, 12, 12, 12)
-    #alignment.add(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)

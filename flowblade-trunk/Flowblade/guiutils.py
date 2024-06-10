@@ -98,6 +98,17 @@ def get_two_column_box(widget1, widget2, left_width):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+def get_two_column_box_fixed(widget1, widget2, left_width, right_width, margin):
+    hbox = Gtk.HBox()
+    left_box = get_left_justified_box([widget1])
+    left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
+    right_box = get_left_justified_box([widget2])
+    right_box.set_size_request(right_width, TWO_COLUMN_BOX_HEIGHT)
+    right_box.set_margin_start(margin)
+    hbox.pack_start(left_box, False, False, 0)
+    hbox.pack_start(right_box, False, False, 0)
+    return hbox
+    
 def get_three_column_box(widget1, widget2, widget3, left_width, right_width):
     hbox = Gtk.HBox()
     left_box = get_left_justified_box([widget1])
@@ -425,26 +436,6 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.show()
     item.set_sensitive(sensitive)
     return item
-
-"""
-def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
-    img = get_image(image_name)
-    text_label = Gtk.Label(label=text)
-    
-    hbox = Gtk.HBox()
-    hbox.pack_start(pad_label(4, 4), False, False, 0)
-    hbox.pack_start(img, False, False, 0)
-    hbox.pack_start(pad_label(4, 4), False, False, 0)
-    hbox.pack_start(text_label, False, False, 0)
-    hbox.show_all()
-    item = Gtk.MenuItem()
-    item.add(hbox)
-    if tooltip_markup != None:
-        item.set_tooltip_markup(tooltip_markup)
-    item.show()
-
-    return item
-"""
 
 def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
