@@ -2242,7 +2242,9 @@ def media_file_popover_mouse_right_pressed(widget, media_file, event):
     guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected, media_file_menu_rating_item_selected)
     
 def media_file_menu_item_selected(action, variant, data):
-    item_id, media_file = data
+    item_id, unused = data
+    global _popover_media_file
+    media_file = _popover_media_file
     if item_id == "File Properties":
         _display_file_info(media_file)
     if item_id == "Open in Clip Monitor":
