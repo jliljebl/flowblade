@@ -1,6 +1,9 @@
 # Release Notes
 
 
+## FLOWBLADE 2.16.3
+Fixes G'Mic tool visual glitch and media items popover regression.
+
 ## FLOWBLADE 2.16.2
 
 Hotfix release, fixes motion tracking bug.
