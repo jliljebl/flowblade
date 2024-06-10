@@ -21,6 +21,16 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="2.16.3" date="2024-06-10">
+      <description>
+      <p>New features:</p>
+        <ul>
+          <li>Motion tracking</li>
+          <li>Stabilizing</li>
+          <li>Slow motion playback support for JKL and USB Jog/Shuttle devices</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.16.2" date="2024-05-29">
       <description>
       <p>New features:</p>
