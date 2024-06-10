@@ -574,8 +574,8 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         _media_file_menu = menu_clear_or_create(_media_file_menu)
 
         file_action_section = Gio.Menu.new()
-        add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", media_file), callback)
-        add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", media_file), callback)
+        add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", None), callback)
+        add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", None), callback)
         _media_file_menu.append_section(None, file_action_section)
         
         if hasattr(media_file, "container_data"): 
@@ -588,7 +588,7 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
 
         if monitor_item_active == True:
             monitor_section = Gio.Menu.new()
-            add_menu_action(monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", media_file), callback)
+            add_menu_action(monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", None), callback)
             _media_file_menu.append_section(None, monitor_section)
 
         items_data =[(_("Unrated"), "unrated"), (_("Favorite"), "favorite"), \
@@ -603,27 +603,27 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         
         if media_file.type != appconsts.PATTERN_PRODUCER:
             properties_section = Gio.Menu.new()
-            add_menu_action(properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", media_file), callback)
+            add_menu_action(properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", None), callback)
             _media_file_menu.append_section(None, properties_section)
 
         if hasattr(media_file, "container_data") == True and media_file.container_data == None:
             if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
                 icon_section = Gio.Menu.new()
-                add_menu_action(icon_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", media_file), callback)
-                add_menu_action(icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", media_file), callback)
+                add_menu_action(icon_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", None), callback)
+                add_menu_action(icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", None), callback)
                 _media_file_menu.append_section(None, icon_section)
 
         if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
             render_section = Gio.Menu.new()
             if media_file.type != appconsts.IMAGE_SEQUENCE:
-                add_menu_action(render_section, _("Render Slow/Fast Motion File"), "mediapanel.mediafile.slow", ("Render Slow/Fast Motion File", media_file), callback)
+                add_menu_action(render_section, _("Render Slow/Fast Motion File"), "mediapanel.mediafile.slow", ("Render Slow/Fast Motion File", None), callback)
             if media_file.type != appconsts.IMAGE_SEQUENCE:
-                add_menu_action(render_section, _("Render Reverse Motion File"), "mediapanel.mediafile.reverse", ("Render Reverse Motion File", media_file), callback)
+                add_menu_action(render_section, _("Render Reverse Motion File"), "mediapanel.mediafile.reverse", ("Render Reverse Motion File", None), callback)
             _media_file_menu.append_section(None, render_section)
                 
         if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
             proxy_section = Gio.Menu.new()
-            add_menu_action(proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", media_file), callback)
+            add_menu_action(proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", None), callback)
             _media_file_menu.append_section(None, proxy_section)
     else:
         items_data =[(_("Unrated"), "unrated"), (_("Favorite"), "favorite"), \
