@@ -22,7 +22,7 @@
 Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, Pango
 
 import appconsts
 import editorpersistance # Aug-2019 - SvdB - BB
@@ -37,6 +37,7 @@ import renderconsumer
 import utils
 
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here
+ROW_WIDTH = 320
 EFFECT_PANEL_WIDTH_PAD = 20 # This is subtracted from notebGtk.Calendar ook width to get some component widths
 TC_LABEL_WIDTH = 80 # in, out and length timecodes in monitor area top row 
 
@@ -194,18 +195,23 @@ def get_two_text_panel(primary_txt, secondary_txt):
 
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_current_profile = data
-    
-    row0 = get_two_column_box(get_bold_label(_("Name:")), Gtk.Label(label=media_file.name))
-    row00 = get_two_column_box(get_bold_label(_("Path:")), Gtk.Label(label=media_file.path))
-    row1 = get_two_column_box(get_bold_label(_("Image Size:")), Gtk.Label(label=size))
-    row111 = get_two_column_box(get_bold_label(_("Frames Per Second:")), Gtk.Label(label=fps))
-    row11 = get_two_column_box(get_bold_label(_("Playtime:")), Gtk.Label(label=length))
-    row2 = get_two_column_box(get_bold_label(_("Video Codec:")), Gtk.Label(label=vcodec))
-    row3 = get_two_column_box(get_bold_label(_("Audio Codec:")), Gtk.Label(label=acodec))
-    row4 = get_two_column_box(get_bold_label(_("Audio Channels:")), Gtk.Label(label=channels))
-    row5 = get_two_column_box(get_bold_label(_("Audio Sample Rate:")), Gtk.Label(label=frequency))
-    row6 = get_two_column_box(get_bold_label(_("Best Profile:")), Gtk.Label(label=match_profile_name))
-    row7 = get_two_column_box(get_bold_label(_("Matches Project Profile:")), Gtk.Label(label=matches_current_profile))
+    name_label = Gtk.Label(label=media_file.name)
+    name_label.set_max_width_chars(100)
+    name_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+    row0 = get_two_column_box_fixed(get_bold_label(_("Name:")), name_label)
+    path_label = Gtk.Label(label=media_file.path)
+    path_label.set_max_width_chars(100)
+    path_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+    row00 = get_two_column_box_fixed(get_bold_label(_("Path:")), path_label)
+    row1 = get_two_column_box_fixed(get_bold_label(_("Image Size:")), Gtk.Label(label=size))
+    row111 = get_two_column_box_fixed(get_bold_label(_("Frames Per Second:")), Gtk.Label(label=fps))
+    row11 = get_two_column_box_fixed(get_bold_label(_("Playtime:")), Gtk.Label(label=length))
+    row2 = get_two_column_box_fixed(get_bold_label(_("Video Codec:")), Gtk.Label(label=vcodec))
+    row3 = get_two_column_box_fixed(get_bold_label(_("Audio Codec:")), Gtk.Label(label=acodec))
+    row4 = get_two_column_box_fixed(get_bold_label(_("Audio Channels:")), Gtk.Label(label=channels))
+    row5 = get_two_column_box_fixed(get_bold_label(_("Audio Sample Rate:")), Gtk.Label(label=frequency))
+    row6 = get_two_column_box_fixed(get_bold_label(_("Best Profile:")), Gtk.Label(label=match_profile_name))
+    row7 = get_two_column_box_fixed(get_bold_label(_("Matches Project Profile:")), Gtk.Label(label=matches_current_profile))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(img, False, False, 0)
@@ -222,7 +228,6 @@ def get_file_properties_panel(data):
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
-    
     return vbox
     
 def get_clip_properties_panel(data):
@@ -542,3 +547,7 @@ def get_left_justified_box(widgets):
 
 def get_two_column_box(widget1, widget2, left_width=HALF_ROW_WIDTH):
     return guiutils.get_two_column_box(widget1, widget2, left_width)
+
+def get_two_column_box_fixed(widget1, widget2, left_width=HALF_ROW_WIDTH, right_width=ROW_WIDTH, margin=12):
+    return guiutils.get_two_column_box_fixed(widget1, widget2, left_width, right_width, margin)
+    
