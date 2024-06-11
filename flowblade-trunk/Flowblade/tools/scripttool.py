@@ -193,7 +193,7 @@ class ScriptToolApplication(Gtk.Application):
             MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
         # Themes
-        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.apply_theme()
 
         # Get launch profile and init player and display GUI params for it. 
         global _current_profile_name

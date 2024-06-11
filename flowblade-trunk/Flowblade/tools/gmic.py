@@ -206,7 +206,7 @@ class GMicApplication(Gtk.Application):
             MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
         # Themes
-        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.apply_theme()
         
         # Init mlt.
         repo = mltinit.init_with_translations()

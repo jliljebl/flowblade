@@ -408,7 +408,7 @@ class BatchRenderApp(Gtk.Application):
         self.connect("activate", self.on_activate)
 
     def on_activate(self, data=None):
-        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.apply_theme()
 
         mltinit.init_with_translations()
         
@@ -1279,7 +1279,7 @@ class SingleRenderApp(Gtk.Application):
         self.connect("activate", self.on_activate)
 
     def on_activate(self, data=None):
-        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.apply_theme()
 
         mltinit.init_with_translations()
     

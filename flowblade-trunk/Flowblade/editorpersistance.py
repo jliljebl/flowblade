@@ -29,7 +29,7 @@ import appconsts
 import atomicfile
 import mltprofiles
 import userfolders
-import utils # this needs to also go to not load Gtk for background rendering process
+import utils
 import usbhid
 
 
@@ -73,7 +73,7 @@ def load():
             write_file = afw.get_file()
             pickle.dump(prefs, write_file)
 
-    # Override deprecated preferences to default values.
+    # Override deprecated preferences/values to default values.
     prefs.delta_overlay = True
     prefs.auto_play_in_clip_monitor = False
     prefs.empty_click_exits_trims = True
@@ -82,6 +82,7 @@ def load():
     prefs.buttons_style = NO_DECORATIONS 
     prefs.buttons_style = NO_DECORATIONS 
     prefs.show_tool_tooltips = True
+    prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
 
     try:
         recent_projects = utils.unpickle(recents_file_path)

@@ -28,9 +28,7 @@ import pickle
 
 import appconsts
 import atomicfile
-import editorpersistance
 import respaths
-import userfolders
 import utils
 
 
@@ -174,15 +172,8 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print(path_str)
 
-def apply_theme(theme):
+def apply_theme():
     Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-    
-    # We dropped these themes and need to force change the pref for them.
-    if theme == appconsts.FLOWBLADE_THEME or theme == appconsts.FLOWBLADE_THEME_GRAY:
-        editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-        theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-        editorpersistance.save()
-        
     apply_gtk_css()
             
 def apply_gtk_css():        

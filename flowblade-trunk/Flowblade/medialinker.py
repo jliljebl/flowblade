@@ -749,7 +749,7 @@ class MediaLinkerApp(Gtk.Application):
 
     def on_activate(self, data=None):
         # Themes
-        gui.apply_theme(editorpersistance.prefs.theme)
+        gui.apply_theme()
 
         # Init mlt.
         repo = mltinit.init_with_translations()
