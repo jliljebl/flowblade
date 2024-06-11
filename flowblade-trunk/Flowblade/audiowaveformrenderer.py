@@ -31,7 +31,6 @@ from gi.repository import Gtk # We need to import Gtk first because this module 
 from gi.repository import GLib
 from gi.repository import Gdk
 
-import locale
 try:
     import mlt7 as mlt
 except:
@@ -42,17 +41,13 @@ import subprocess
 import sys
 import threading
 
-import appconsts
 import atomicfile
 import editorpersistance
 import editorstate
 import mltinit
 import mltprofiles
-import processutils
 import projectdatavault
-import renderconsumer
 import respaths
-import translations
 import updater
 import userfolders
 import utils

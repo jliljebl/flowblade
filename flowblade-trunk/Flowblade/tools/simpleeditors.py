@@ -29,11 +29,9 @@ from gi.repository import GObject
 from gi.repository import PangoCairo
 import cairo
 import copy
-import time
 
 import cairoarea
 import editorstate
-import gui
 import guiutils
 import respaths
 import translations

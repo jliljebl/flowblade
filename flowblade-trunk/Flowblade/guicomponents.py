@@ -23,7 +23,6 @@ Module contains classes and build methods to create GUI objects.
 """
 
 import cairo
-import copy
 import math
 import time
 
@@ -51,10 +50,7 @@ from editorstate import PROJECT
 from editorstate import PLAYER
 import gui
 import guiutils
-import mltfilters
 import mltprofiles
-import mlttransitions
-import monitorwidget
 import projectaction # removing causes circular imports
 import respaths
 import renderconsumer

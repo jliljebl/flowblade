@@ -24,7 +24,6 @@ Module contains GUI update routines.
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GLib
 
 import appconsts
 import clipeffectseditor

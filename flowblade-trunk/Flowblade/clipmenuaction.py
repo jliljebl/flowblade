@@ -27,13 +27,8 @@ from PIL import Image
 from gi.repository import GLib
 from gi.repository import Gtk
 
-try:
-    import mlt7 as mlt
-except:
-    import mlt
 from operator import itemgetter
 import os
-import shutil
 import time
 
 import audiosync
@@ -62,7 +57,6 @@ import titler
 import tlinewidgets
 import tlineaction
 import updater
-import userfolders
 import utils
 
 # --------------------------------------------- menu data for each invocation.

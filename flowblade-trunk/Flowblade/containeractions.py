@@ -18,7 +18,6 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 from gi.repository import Gtk
-from gi.repository import Gdk
 from gi.repository import GLib
 
 import cairo
@@ -37,7 +36,6 @@ import threading
 import time
 
 import appconsts
-import atomicfile
 import dialogutils
 import edit
 import editorstate

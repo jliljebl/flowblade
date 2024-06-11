@@ -21,7 +21,7 @@
 """
 Module handles Keyframe tool functionality
 """
-from gi.repository import Pango, PangoCairo, Gtk
+from gi.repository import Pango, PangoCairo
 from gi.repository import Gdk, GLib
 
 import cairo

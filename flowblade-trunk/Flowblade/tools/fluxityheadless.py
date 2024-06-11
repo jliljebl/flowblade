@@ -29,14 +29,12 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 
 import json
-import locale
 try:
     import mlt7 as mlt
 except:
     import mlt
 import os
 import threading
-import sys
 import time
 
 import appconsts
@@ -46,11 +44,9 @@ import editorpersistance
 import fluxity
 import mltinit
 import mltprofiles
-import processutils
 import renderconsumer
 import respaths
 import toolsencoding
-import translations
 import userfolders
 import utils
 

@@ -25,7 +25,6 @@ NOTE: 'vault' in code is presented to user as 'Data Store'.
 """
 from gi.repository import Gtk, GObject, GLib, Gdk
 
-import copy
 import datetime
 import hashlib
 import os

@@ -25,14 +25,9 @@ Module handles button edit events from buttons in the middle bar and other non-t
 
 
 from gi.repository import Gtk
-from gi.repository import Gdk
 
 import copy
-import hashlib
-import os
 from operator import itemgetter
-import threading
-import time
 
 import app
 import appconsts
@@ -45,9 +40,7 @@ import dialogs
 import dialogutils
 import glassbuttons
 import gui
-import guicomponents
 import guipopover
-import guiutils
 import edit
 import editevent
 import editorpersistance
@@ -61,15 +54,10 @@ from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
 import movemodes
 import multimovemode
-import mlttransitions
 import projectaction
-import render
-import renderconsumer
-import respaths
 import sequence
 import syncsplitevent
 import updater
-import userfolders
 import utils
 
 

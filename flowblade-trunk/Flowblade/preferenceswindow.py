@@ -30,7 +30,6 @@ import gui
 import guiutils
 import mltprofiles
 import usbhid
-import utils
 import utilsgtk
 
 

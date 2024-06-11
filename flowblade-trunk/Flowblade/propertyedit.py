@@ -33,7 +33,6 @@ from gi.repository import Gtk
 
 import appconsts
 from editorstate import current_sequence
-import gui
 import mlttransitions
 import mltfilters
 import propertyparse

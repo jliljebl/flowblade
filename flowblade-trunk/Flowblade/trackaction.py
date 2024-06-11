@@ -26,9 +26,7 @@ from gi.repository import GLib
 
 import appconsts
 import audiomonitoring
-import dialogutils
 import gui
-import guicomponents
 import guipopover
 import editorstate
 import editorpersistance

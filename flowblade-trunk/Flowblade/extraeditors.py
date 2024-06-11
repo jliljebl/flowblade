@@ -34,7 +34,6 @@ from gi.repository import Gtk
 import appconsts
 import cairo
 import cairoarea
-import editorpersistance
 from editorstate import PROJECT
 import guiutils
 import guicomponents

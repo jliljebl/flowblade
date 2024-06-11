@@ -21,7 +21,6 @@
 
 from gi.repository import GLib
 import os
-import threading
 
 import appconsts
 import projectdatavault

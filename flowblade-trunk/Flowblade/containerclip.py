@@ -18,11 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk, GLib
 
-import copy
 import hashlib
-import json
 import os
 import shutil
 import threading
@@ -30,13 +28,10 @@ import time
 
 import appconsts
 import containeractions
-import dialogs
 import dialogutils
-import editorstate
 from editorstate import PROJECT
 from editorstate import current_sequence
 import gui
-import guicomponents
 import guiutils
 import projectaction
 import respaths

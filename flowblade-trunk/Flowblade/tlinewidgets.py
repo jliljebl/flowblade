@@ -51,7 +51,6 @@ import respaths
 import sequence
 import snapping
 import trimmodes
-import userfolders
 import utils
 import updater
 

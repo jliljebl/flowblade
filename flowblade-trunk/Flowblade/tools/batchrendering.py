@@ -24,14 +24,13 @@ import gi
 gi.require_version('Gtk', '3.0')
 
 from gi.repository import GObject, GLib, Gio
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf
 
 try:
     import mlt7 as mlt
 except:
     import mlt
 import hashlib
-import locale
 import os
 from os import listdir
 from os.path import isfile, join
@@ -54,12 +53,10 @@ import gui
 import guiutils
 import mltinit
 import mltprofiles
-import processutils
 import persistance
 import respaths
 import renderconsumer
 import toolguicomponents
-import translations
 import userfolders
 import utils
 

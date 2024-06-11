@@ -29,7 +29,6 @@ try:
     import mlt7 as mlt
 except:
     import mlt
-import locale
 import os
 import subprocess
 import sys
@@ -54,12 +53,9 @@ import guipopover
 import mltinit
 import patternproducer
 import persistance
-import processutils
 import projectdata
 import propertyparse
 import respaths
-import renderconsumer
-import translations
 import userfolders
 import utils
 

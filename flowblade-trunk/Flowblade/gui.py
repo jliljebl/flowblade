@@ -24,12 +24,7 @@ Module holds references to GUI widgets and offers some helper functions used in 
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
-import pickle
-
-import appconsts
-import atomicfile
 import respaths
-import utils
 
 
 # Editor window

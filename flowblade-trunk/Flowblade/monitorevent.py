@@ -35,7 +35,6 @@ from editorstate import EDIT_MODE
 from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
-import guicomponents
 import guipopover
 import movemodes
 import trimmodes

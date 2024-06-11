@@ -37,7 +37,6 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
-from editorstate import PLAYER
 import gui
 import guiutils
 import mlttransitions

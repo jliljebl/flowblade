@@ -21,7 +21,6 @@
 from gi.repository import Gtk
 
 from editorstate import PROJECT
-import utils
 
 """
 Module contains functions used to implement motion tracking feature.

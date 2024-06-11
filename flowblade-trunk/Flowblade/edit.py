@@ -35,12 +35,10 @@ import containerclip
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
-from editorstate import auto_follow_active
 import mltfilters
 import movemodes
 import mediaplugin
 import resync
-import tlinewidgets
 import trackaction
 import trimmodes
 import undo

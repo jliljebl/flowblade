@@ -25,8 +25,6 @@ Module handles Compositors edit panel.
 import copy
 from gi.repository import Gtk
 import pickle
-import threading
-import time
 
 import appconsts
 import atomicfile

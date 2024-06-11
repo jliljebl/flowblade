@@ -21,12 +21,10 @@
 import cairo
 import math
 
-import appconsts
 import cairoarea
 import editorpersistance
 import gui
 import guiutils
-import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),

@@ -53,7 +53,6 @@ import editorpersistance
 import gui
 import kftoolmode
 import medialog
-import modesetting
 import monitorevent
 import movemodes
 import projectaction

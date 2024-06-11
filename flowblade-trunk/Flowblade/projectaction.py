@@ -24,7 +24,6 @@ Load, save, add media file, etc...
 """
 
 import datetime
-import glob
 import hashlib
 try:
     import mlt7 as mlt

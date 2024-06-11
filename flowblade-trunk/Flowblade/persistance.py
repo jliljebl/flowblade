@@ -33,7 +33,6 @@ import hashlib
 import os
 import pickle
 import sys
-import time
 
 from gi.repository import GLib
 

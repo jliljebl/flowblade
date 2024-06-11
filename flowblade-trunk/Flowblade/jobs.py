@@ -19,7 +19,7 @@
 """
 
 
-from gi.repository import Gtk, GLib, Gdk, GdkPixbuf
+from gi.repository import Gtk, GLib
 from gi.repository import GObject
 from gi.repository import Pango
 
@@ -37,12 +37,10 @@ import appconsts
 import editorlayout
 import editorpersistance
 from editorstate import PROJECT
-import gui
 import guicomponents
 import guipopover
 import guiutils
 import motionheadless
-import persistance
 import proxyheadless
 import renderconsumer
 import respaths

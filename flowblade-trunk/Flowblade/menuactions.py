@@ -39,7 +39,6 @@ from editorstate import current_sequence
 import editorstate
 import gui
 import guicomponents
-import guipopover
 import projectdata
 import patternproducer
 import profilesmanager

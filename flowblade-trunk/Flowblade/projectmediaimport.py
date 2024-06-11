@@ -23,7 +23,6 @@ try:
     import mlt7 as mlt
 except:
     import mlt
-import locale
 import os
 import subprocess
 import sys
@@ -32,10 +31,9 @@ import threading
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk, Gdk, Gio
+from gi.repository import Gtk, Gio
 from gi.repository import GLib
 
-import appconsts
 import atomicfile
 import editorstate
 import editorpersistance
@@ -45,10 +43,7 @@ import mltinit
 import patternproducer
 import persistance
 import pickle
-import processutils
 import respaths
-import renderconsumer
-import translations
 import userfolders
 import utils
 

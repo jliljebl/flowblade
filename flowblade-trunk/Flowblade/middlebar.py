@@ -39,7 +39,6 @@ import titler
 import tlineaction
 import updater
 import undo
-import workflow
 
 # Default button orders for different layouts.
 DEFAULT_BUTTONS_TIMECODE_LEFT = ['undo_redo', 'zoom_buttons', 'edit_buttons', 'edit_buttons_2', 'edit_buttons_3', 'monitor_insert_buttons']

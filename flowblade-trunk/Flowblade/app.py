@@ -34,7 +34,6 @@ except ImportError:
     
 import gi
 
-from gi.repository import GObject
 from gi.repository import GLib
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -60,7 +59,6 @@ import boxmove
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
-import containerclip
 import containeractions
 import dialogs
 import dialogutils
@@ -94,7 +92,6 @@ import movemodes
 import multitrimmode
 import persistance
 import positionbar
-import preferenceswindow
 import processutils
 import projectaction
 import projectdata
@@ -102,7 +99,6 @@ import projectdatavault
 import projectdatavaultgui
 import projectinfogui
 import propertyeditorbuilder
-import proxyediting
 import render
 import renderconsumer
 import rendergputest

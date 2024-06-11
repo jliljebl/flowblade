@@ -23,7 +23,6 @@ from gi.repository import Gtk, Gdk, GLib
 from os import listdir
 from os.path import isfile, join
 import os
-import threading
 
 import appconsts
 import dialogutils

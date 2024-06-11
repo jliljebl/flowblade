@@ -26,8 +26,6 @@ import copy
 from gi.repository import GLib
 from gi.repository import Gtk
 import pickle
-import threading
-import time
 
 import appconsts
 import atomicfile

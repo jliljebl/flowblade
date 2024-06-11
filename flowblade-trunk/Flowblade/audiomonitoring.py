@@ -36,14 +36,12 @@ except:
 
 from gi.repository import Gtk, GObject
 from gi.repository import GLib
-from gi.repository import Gdk
 from gi.repository import Pango
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import PangoCairo
 
 import appconsts
 import cairoarea
-import editorpersistance
 import editorstate
 import mltrefhold
 import guiutils

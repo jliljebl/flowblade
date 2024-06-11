@@ -26,9 +26,7 @@ from gi.repository import GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
-import copy
 import cairo
-import locale
 try:
     import mlt7 as mlt
 except:
@@ -54,7 +52,6 @@ import glassbuttons
 import mltinit
 import mltprofiles
 import positionbar
-import processutils
 import respaths
 import renderconsumer
 import toolguicomponents

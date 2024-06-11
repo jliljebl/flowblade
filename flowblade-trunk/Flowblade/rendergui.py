@@ -26,7 +26,6 @@ import math
 import os
 
 import dialogutils
-import editorpersistance # Aug-2019- SvdB - BB
 import editorstate
 import gui
 import guicomponents

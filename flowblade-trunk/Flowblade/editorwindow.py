@@ -22,24 +22,19 @@
 Module contains the main editor window object and timeline cursor handling.
 """
 
-import cairo
-
 from gi.repository import Gtk
-from gi.repository import Gdk
 
 import app
 import appconsts
 import audiomonitoring
 import audiosync
 import batchrendering
-import boxmove
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
 import containerclip
 import dialogs
 import dialogutils
-import diskcachemanagement
 import dnd
 import editevent
 import editorlayout
@@ -50,7 +45,6 @@ import glassbuttons
 import gmic
 import gui
 import guicomponents
-import guipopover
 import guiutils
 import jobs
 import keyevents

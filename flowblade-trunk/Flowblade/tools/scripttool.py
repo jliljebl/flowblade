@@ -27,13 +27,11 @@ from gi.repository import Pango
 
 import datetime
 import glob
-import locale
 try:
     import mlt7 as mlt
 except:
     import mlt
 import os
-import pickle
 import shutil
 import subprocess
 import sys
@@ -57,13 +55,10 @@ import gmicplayer
 import mediaplugin
 import mltinit
 import mltprofiles
-import mltfilters
 import positionbar
-import processutils
 import respaths
 import renderconsumer
 import toolsencoding
-import translations
 import threading
 import userfolders
 import utils

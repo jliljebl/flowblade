@@ -33,9 +33,6 @@ import gui
 import tlinewidgets
 import updater
 
-
-import traceback
-
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
 

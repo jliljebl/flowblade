@@ -24,6 +24,8 @@ Module handles keyevents.
 
 from gi.repository import Gdk, Gtk
 
+import re
+
 import appconsts
 import clipeffectseditor
 import compositeeditor
@@ -42,12 +44,9 @@ import menuactions
 import modesetting
 import monitorevent
 import movemodes
-import multitrimmode
 import shortcuts
 import shortcutsquickeffects
-import re
 import render
-import rotomask
 import targetactions
 import tlineaction
 import tlinewidgets

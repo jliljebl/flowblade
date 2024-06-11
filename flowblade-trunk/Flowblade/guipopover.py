@@ -20,8 +20,6 @@
 
 from gi.repository import Gio, Gtk, GLib, Gdk
 
-import copy
-
 import appconsts
 from editorstate import APP
 from editorstate import current_sequence

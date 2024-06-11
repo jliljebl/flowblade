@@ -22,7 +22,7 @@
 Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
-from gi.repository import Gtk, Gdk, Pango
+from gi.repository import Gtk, Pango
 
 import appconsts
 import editorpersistance # Aug-2019 - SvdB - BB
