@@ -55,6 +55,7 @@ import time
 import appconsts
 import audiomonitoring
 import audiowaveformrenderer
+import batchrendering
 import boxmove
 import clipeffectseditor
 import clipmenuaction
@@ -80,6 +81,7 @@ import keyevents
 import keyframeeditor
 import keyframeeditcanvas
 import kftoolmode
+import medialinker
 import medialog
 import mediaplugin
 import mltenv
@@ -107,6 +109,7 @@ import rendergputest
 import respaths
 import resync
 import rotomask
+import scripttool
 import sequence
 import shortcuts
 import shortcutsquickeffects
@@ -425,7 +428,12 @@ class FlowbladeApplication(Gtk.Application):
 
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()
-    
+
+        # Used for imports refactoring.
+        for arg in sys.argv:
+            if arg == "--launchall":
+                GLib.timeout_add(1000, _launch_all)
+                    
         self.add_window(_window)
 
 
@@ -919,6 +927,15 @@ def xdg_data_dir_changed_dialog():
                         _("Existing Projects with project data saved in <b>Default XDG Data Store</b> will continue to work,\n") + \
                         _("but new projects will have data saved in the location specified by the new value <b>XDG Data Home</b> variable .")
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+    return False
+
+# -------------------------------------------------------- launch tests for imports refactoring testing
+def _launch_all():
+    gmic.launch_gmic()
+    scripttool.launch_scripttool()
+    medialinker.display_linker()
+    batchrendering.launch_batch_rendering()
+
     return False
 
 # ------------------------------------------------------- small and multiple screens
