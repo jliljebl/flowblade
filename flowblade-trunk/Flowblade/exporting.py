@@ -510,9 +510,21 @@ def purge_screenshots():
 ####---------------Ardour Session--------------####
 def ardour_export():
     print ("Ardour export...")
-    dialogs.export_ardour_session_folder_select(_ardour_export_dialog_callback)
-    
-    
+
+    sample_rate_combo = Gtk.ComboBoxText()
+    selected_index = 0
+    i = 0
+    for (sample_rate_name, sample_rate) in exportardour.SAMPLE_RATES:
+        sample_rate_combo.append_text(sample_rate_name)
+
+        if sample_rate == exportardour.DEFAULT_SAMPLE_RATE:
+            selected_index = i
+
+        i += 1
+    sample_rate_combo.set_active(selected_index)
+
+    dialogs.export_ardour_session_folder_select(sample_rate_combo, _ardour_export_dialog_callback)
+
 def _ardour_export_dialog_callback(dialog, response_id, session_folder, sample_rate_combo):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()

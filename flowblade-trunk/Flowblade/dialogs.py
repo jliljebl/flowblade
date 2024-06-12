@@ -295,7 +295,7 @@ def save_backup_snapshot(name, callback):
     dialog.connect('response', callback, project_folder, compact_name_entry)
     dialog.show_all()
 
-def export_ardour_session_folder_select(callback):
+def export_ardour_session_folder_select(sample_rate_combo, callback):
     dialog = Gtk.Dialog(_("Save Sequence Audio As Ardour Session"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
@@ -310,12 +310,8 @@ def export_ardour_session_folder_select(callback):
 
     project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
 
-    # sample rate
-    sample_rate_combo = guicomponents.get_ardour_sample_rate_selector()
-
     sample_rate_label = Gtk.Label(label=_("Sample Rate:"))
     sample_rate_row = panels.get_two_column_box(sample_rate_label, sample_rate_combo, 250)
-
 
     type_vbox = Gtk.VBox(False, 2)
     type_vbox.pack_start(project_folder_row, False, False, 0)
@@ -326,6 +322,7 @@ def export_ardour_session_folder_select(callback):
 
     alignment = dialogutils.get_default_alignment(vbox)
 
+    print("kkkk")
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)

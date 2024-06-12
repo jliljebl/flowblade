@@ -38,7 +38,6 @@ from gi.repository import PangoCairo
 from gi.repository import GLib
 
 import appconsts
-import exportardour
 import cairoarea
 import dialogutils
 import dnd
@@ -54,7 +53,6 @@ import mltprofiles
 import projectaction # removing causes circular imports
 import respaths
 import renderconsumer
-import shortcuts
 import translations
 import utils
 
@@ -2497,22 +2495,7 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
-def get_ardour_sample_rate_selector():
-    sample_rate_combo = Gtk.ComboBoxText()
 
-    selected_index = 0
-    i = 0
-    for (sample_rate_name, sample_rate) in exportardour.SAMPLE_RATES:
-        sample_rate_combo.append_text(sample_rate_name)
-
-        if sample_rate == exportardour.DEFAULT_SAMPLE_RATE:
-            selected_index = i
-
-        i += 1
-
-    sample_rate_combo.set_active(selected_index)
-
-    return sample_rate_combo
 
 
 class PressLaunch:
