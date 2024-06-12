@@ -28,7 +28,6 @@ import pickle
 import appconsts
 import atomicfile
 import databridge
-import mltprofiles
 import userfolders
 import utils
 import usbhid
@@ -204,7 +203,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
     prefs.remember_last_render_dir = open_in_last_rendered_check.get_active()
-    prefs.default_profile_name = mltprofiles.get_profile_name_for_index(default_profile_combo.get_active())
+    prefs.default_profile_name = databridge.mltprofiles_get_profile_name_for_index(default_profile_combo.get_active())
     prefs.undos_max = undo_max_spin.get_adjustment().get_value()
     prefs.media_load_order = load_order_combo.get_active()
 
