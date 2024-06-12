@@ -47,9 +47,6 @@ import renderconsumer
 import respaths
 import utils
 import utilsgtk
-import workflow
-
-
 
 
 def new_project_dialog(callback):
