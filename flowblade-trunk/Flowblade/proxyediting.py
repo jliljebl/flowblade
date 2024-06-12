@@ -28,9 +28,9 @@ import time
 
 from gi.repository import Gtk, GLib
 
-import app
 import appconsts
 import atomicfile
+import callbackbridge
 import dialogutils
 import editorstate
 import gui
@@ -594,13 +594,13 @@ def _auto_re_convert_after_proxy_render_in_proxy_mode():
     editorstate.project_is_loading = False
             
     # Open saved temp project
-    app.stop_autosave()
+    callbackbridge.app_stop_autosave()
 
     GLib.idle_add(_open_project, project)
 
 def _open_project(project):
-    app.open_project(project)
-    app.start_autosave()
+    callbackbridge.app_open_project(project)
+    callbackbridge.app_start_autosave()
     editorstate.update_current_proxy_paths()
     persistance.show_messages = True
 
@@ -645,9 +645,9 @@ class ProxyProjectLoadThread(threading.Thread):
         project.c_seq.tractor.mark_in = self.mark_in
         project.c_seq.tractor.mark_out = self.mark_out
     
-        app.stop_autosave()
+        callbackbridge.app_stop_autosave()
 
-        app.open_project(project)
+        callbackbridge.app_open_project(project)
 
         # Loaded project has been converted, set proxy mode to correct mode 
         if project.proxy_data.proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
@@ -655,7 +655,7 @@ class ProxyProjectLoadThread(threading.Thread):
         else:
             project.proxy_data.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
 
-        app.start_autosave()
+        callbackbridge.app_start_autosave()
 
         global load_thread
         load_thread = None
