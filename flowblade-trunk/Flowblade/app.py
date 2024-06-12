@@ -444,6 +444,7 @@ def monkeypatch_callbacks():
     callbackbridge.app_stop_autosave = stop_autosave
     callbackbridge.app_start_autosave = start_autosave
     callbackbridge.app_change_current_sequence = change_current_sequence
+    callbackbridge.app_shutdown = shutdown
 
     databridge.app_get_save_time_msg = get_save_time_msg
 

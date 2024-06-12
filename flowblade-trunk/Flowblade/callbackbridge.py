@@ -23,3 +23,4 @@ app_new_project = None
 app_stop_autosave = None
 app_start_autosave = None
 app_change_current_sequence = None
+app_shutdown = None

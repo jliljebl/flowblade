@@ -24,11 +24,12 @@ Module contains the main editor window object and timeline cursor handling.
 
 from gi.repository import Gtk
 
-import app
+
 import appconsts
 import audiomonitoring
 import audiosync
 import batchrendering
+import callbackbridge
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
@@ -118,10 +119,10 @@ class EditorWindow:
             self.window2 = Gtk.Window(Gtk.WindowType.TOPLEVEL)
             self.window2.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
             self.window2.set_border_width(5)
-            self.window2.connect("delete-event", lambda w, e:app.shutdown())
+            self.window2.connect("delete-event", lambda w, e:callbackbridge.app_shutdown())
 
         # To ask confirmation for shutdown
-        self.window.connect("delete-event", lambda w, e:app.shutdown())
+        self.window.connect("delete-event", lambda w, e:callbackbridge.app_shutdown())
 
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
@@ -801,7 +802,7 @@ class EditorWindow:
             ('ExportScreenshot', None, _('Current Frame'), None, None, lambda a:exporting.screenshot_export()),
             ('ExportToArdour', None, _('Current Sequence Audio As Ardour Session'), None, None, lambda a:exporting.ardour_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
-            ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
+            ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:callbackbridge.app_shutdown()),
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
