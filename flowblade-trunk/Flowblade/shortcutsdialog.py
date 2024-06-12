@@ -18,7 +18,8 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+
+from gi.repository import Gtk, Gdk
 
 import editorpersistance
 import editorstate
@@ -27,6 +28,13 @@ import guicomponents
 import guiutils
 import shortcuts
 import shortcutsquickeffects
+import workflow
+import utils
+
+kb_shortcut_changed_callback = None # Set when dialog launched.
+kb_shortcut_dialog = None # Set when dialog launched.
+scroll_hold_panel = None
+shortcuts_combo = None
 
 
 def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback, _kb_menu_callback):
@@ -41,7 +49,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     kb_shortcut_dialog = dialog
     
     presets_label = guiutils.bold_label(_("Active Shortcuts Group:"))
-    shortcuts_combo = guicomponents.get_shorcuts_selector()
+    shortcuts_combo = get_shorcuts_selector()
 
     button_data = (shortcuts_combo, dialog)
     
@@ -69,7 +77,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
 
     scroll_window = display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
-    guicomponents.KBShortcutEditor.edit_ongoing = False
+    KBShortcutEditor.edit_ongoing = False
         
     changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, dialog))
     shortcuts_combo.changed_id = changed_id
@@ -277,9 +285,9 @@ def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
     editable = shortcuts.get_shortcuts_editable()
     if editable == True:
-        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
+        edit_launch = KBShortcutEditor(code, key_name, kb_shortcut_dialog, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
     else:
-        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, None, False) 
+        edit_launch = KBShortcutEditor(code, key_name, kb_shortcut_dialog, None, False) 
     return _get_kb_row(key_name, action_name, edit_launch)
 
 def _get_kb_row(msg1, msg2, edit_launch=None):
@@ -298,3 +306,119 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
+
+
+def get_shorcuts_selector():
+    shortcuts_combo = Gtk.ComboBoxText()
+    return fill_shortcuts_combo(shortcuts_combo)
+
+def update_shortcuts_combo(shortcuts_combo):
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+    
+    shortcuts_combo.remove_all()
+    fill_shortcuts_combo(shortcuts_combo)
+    
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+
+def fill_shortcuts_combo(shortcuts_combo):
+    current_pref_index = -1
+    
+    for i in range(0, len(shortcuts.shortcut_files)):
+        shortcut_file = shortcuts.shortcut_files[i]
+        shortcuts_combo.append_text(shortcuts.shortcut_files_display_names[i])
+        if editorpersistance.prefs.shortcuts == shortcut_file:
+            current_pref_index = i
+    
+    # Set current selection active
+    if current_pref_index != -1:
+        shortcuts_combo.set_active(current_pref_index)
+    else:
+        # Something is wrong, the pref shortcut file is not preset in the system.
+        print("Shortcut file in editorpersistance.pref.shortcuts not found!")
+        shortcuts_combo.set_active(0)
+
+    return shortcuts_combo
+
+
+class KBShortcutEditor:
+
+    edit_ongoing = False
+    input_listener = None
+ 
+    def __init__(self, code, key_name, dialog_window, set_shortcut_callback, editable=True):
+        
+        self.code = code
+        self.key_name = key_name
+        self.set_shortcut_callback = set_shortcut_callback
+        self.shortcut_label = None # set later
+        self.dialog_window = dialog_window
+    
+        if editable == True:
+            surface_active = guiutils.get_cairo_image("kb_configuration")
+            surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
+            surfaces = [surface_active, surface_not_active]
+            edit_launch = guicomponents.HamburgerPressLaunch(lambda w,e:self.kb_shortcut_edit(), surfaces)
+        else:
+            edit_launch = utils.EmptyClass()
+            edit_launch.widget = Gtk.Label()
+            
+        item_vbox = Gtk.HBox(False, 2)
+        input_label = Gtk.Label(label=_("Input Shortcut"))
+        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+        input_label.override_color(Gtk.StateType.NORMAL, SELECTED_BG)
+        item_vbox.pack_start(input_label, True, True, 0)
+           
+        self.kb_input = Gtk.EventBox()
+        self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.kb_input.connect("key-press-event", lambda w,e: self.kb_input_listener(e))
+        self.kb_input.set_can_focus(True)
+        self.kb_input.add(item_vbox)
+
+        self.widget = Gtk.Stack()
+
+        edit_launch.widget.show()
+        row = guiutils.get_centered_box([edit_launch.widget])
+        row.show()
+        self.kb_input.show()
+        
+        self.widget.add_named(row, "edit_launch")
+        self.widget.add_named(self.kb_input, "kb_input")
+        self.widget.set_visible_child_name("edit_launch")
+
+    def set_shortcut_label(self, shortcut_label):
+        self.shortcut_label = shortcut_label
+  
+    def kb_shortcut_edit(self):
+        if KBShortcutEditor.edit_ongoing == True:
+            KBShortcutEditor.input_listener.kb_input.grab_focus()
+            return
+        KBShortcutEditor.edit_ongoing = True
+        self.widget.set_visible_child_name("kb_input")
+        self.kb_input.grab_focus()
+        KBShortcutEditor.input_listener = self
+
+    def kb_input_listener(self, event):
+
+        
+        # Gdk.KEY_Return ? Are using this as clear and make "exit trim edit" not settable?
+        
+        # Single modifier keys are not accepted as keyboard shortcuts.
+        if  event.keyval == Gdk.KEY_Control_L or  event.keyval == Gdk.KEY_Control_R \
+            or event.keyval == Gdk.KEY_Alt_L or event.keyval == Gdk.KEY_Alt_R \
+            or event.keyval == Gdk.KEY_Shift_L or event.keyval == Gdk.KEY_Shift_R \
+            or event.keyval == Gdk.KEY_Shift_R or event.keyval == Gdk.KEY_ISO_Level3_Shift:
+
+            return
+            
+        self.widget.set_visible_child_name("edit_launch")
+
+        error = self.set_shortcut_callback(self.code, event, self.shortcut_label)
+
+        KBShortcutEditor.edit_ongoing = False
+        KBShortcutEditor.input_listener = None
+        
+        if error != None:
+            primary_txt = _("Reserved Shortcut!")
+            secondary_txt = "'" + error + "'" +  _(" is a reserved keyboard shortcut and\ncannot be set as a custom shortcut.")
+            dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )
+

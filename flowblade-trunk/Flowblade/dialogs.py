@@ -50,10 +50,7 @@ import utilsgtk
 import workflow
 
 
-kb_shortcut_changed_callback = None # Set when dialog launched, using gloal saves modifying 50+ lines.
-kb_shortcut_dialog = None # Set when dialog launched, using gloal saves modifying 50+ lines
-shortcuts_combo = None
-scroll_hold_panel = None
+
 
 def new_project_dialog(callback):
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())

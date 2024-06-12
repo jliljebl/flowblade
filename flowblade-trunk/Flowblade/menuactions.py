@@ -43,6 +43,7 @@ import projectdata
 import patternproducer
 import profilesmanager
 import shortcuts
+import shortcutsdialog
 import respaths
 import workflow
 
@@ -245,8 +246,8 @@ def _create_new_kb_shortcuts_group(dialog, response_id, entry):
         root = shortcuts.get_root()
         shortcuts.shortcut_files_display_names.append(root.get('name'))
         shortcuts.set_keyboard_shortcuts()
-        guicomponents.update_shortcuts_combo(dialogs.shortcuts_combo)
-        dialogs.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), dialogs.scroll_hold_panel)
+        shortcutsdialog.update_shortcuts_combo(shortcutsdialog.shortcuts_combo)
+        shortcutsdialog.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), shortcutsdialog.scroll_hold_panel)
         
     dialog.destroy()
 
@@ -254,8 +255,8 @@ def _delete_new_kb_shortcuts_group(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         shortcuts.delete_active_custom_shortcuts_xml()
         shortcuts.set_keyboard_shortcuts()
-        guicomponents.update_shortcuts_combo(dialogs.shortcuts_combo)
-        dialogs.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), dialogs.scroll_hold_panel)
+        shortcutsdialog.update_shortcuts_combo(shortcutsdialog.shortcuts_combo)
+        shortcutsdialog.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), shortcutsdialog.scroll_hold_panel)
         
     dialog.destroy()
 
