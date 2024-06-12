@@ -29,9 +29,9 @@ from gi.repository import Gtk
 import copy
 from operator import itemgetter
 
-import app
 import appconsts
 import boxmove
+import callbackbridge
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -271,7 +271,7 @@ def split_confirmed(dialog, response_id):
     name = _("sequence_") + str(PROJECT().next_seq_number)
     sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
     PROJECT().add_named_sequence(name)
-    app.change_current_sequence(len(PROJECT().sequences) - 1)
+    callbackbridge.app_change_current_sequence(len(PROJECT().sequences) - 1)
     # New sequence needs to have same compositing mode as current.
     projectaction.do_compositing_mode_change(current_sequence().compositing_mode)
 
