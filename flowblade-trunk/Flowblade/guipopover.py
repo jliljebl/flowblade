@@ -21,6 +21,7 @@
 from gi.repository import Gio, Gtk, GLib, Gdk
 
 import appconsts
+import databridge
 from editorstate import APP
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -29,7 +30,6 @@ import editorstate
 import gui
 import guiutils
 import respaths
-import snapping
 import translations
 import utils
 
@@ -247,7 +247,8 @@ def tline_properties_menu_show(launcher, widget, callback, mouse_zoom_callback):
     _tline_properties_menu.append_section(None, zoom_section)
     
     snapping_section = Gio.Menu.new()
-    add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping.snapping_on, "snapping", callback)
+    snapping_is_on = databridge.snapping_get_snapping_on()
+    add_menu_action_check(snapping_section, _("Snapping On"), "midbar.tlineproperties.snapping", snapping_is_on, "snapping", callback)
     _tline_properties_menu.append_section(None, snapping_section)
 
     scrubbing_section = Gio.Menu.new()

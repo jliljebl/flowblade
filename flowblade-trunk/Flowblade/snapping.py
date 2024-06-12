@@ -42,6 +42,9 @@ _last_snap_x = -1
 _playhead_frame = -1
 
 #---------------------------------------------------- interface
+def get_snapping_on():
+    return snapping_on
+
 def get_snapped_x(x, track, edit_data):
     if snapping_on == False:
         return x

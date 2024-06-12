@@ -50,7 +50,6 @@ from editorstate import PLAYER
 import gui
 import guiutils
 import mltprofiles
-import projectaction # removing causes circular imports
 import respaths
 import renderconsumer
 import translations

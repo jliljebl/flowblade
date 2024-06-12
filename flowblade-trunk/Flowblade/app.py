@@ -448,6 +448,7 @@ def monkeypatch_callbacks():
 
     databridge.app_get_save_time_msg = get_save_time_msg
     databridge.mltprofiles_get_profile_name_for_index = mltprofiles.get_profile_name_for_index
+    databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
     
     # We need to do this on app start-up or
