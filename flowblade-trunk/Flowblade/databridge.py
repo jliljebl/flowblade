@@ -19,3 +19,5 @@
 """
 
 app_get_save_time_msg = None
+
+usbhid_get_usb_hid_device_config_metadata_list = None

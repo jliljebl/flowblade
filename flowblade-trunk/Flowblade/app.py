@@ -447,7 +447,9 @@ def monkeypatch_callbacks():
     callbackbridge.app_shutdown = shutdown
 
     databridge.app_get_save_time_msg = get_save_time_msg
-
+    databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
+    
+    
     # We need to do this on app start-up or
     # we'll get circular imports with projectaction->mltplayer->render->projectaction.
     render.open_media_file_callback = projectaction.open_rendered_file

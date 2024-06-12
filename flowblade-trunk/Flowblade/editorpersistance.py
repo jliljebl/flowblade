@@ -27,6 +27,7 @@ import pickle
 
 import appconsts
 import atomicfile
+import databridge
 import mltprofiles
 import userfolders
 import utils
@@ -245,7 +246,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if usbhid_config_index == 0:
         prefs.usbhid_config = None
     else:
-        usbhid_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list()
+        usbhid_config_metadata_list = databridge.usbhid_get_usb_hid_device_config_metadata_list()
         if len(usbhid_config_metadata_list) >= (usbhid_config_index - 1):
             # index 0 in the combo box is "None", the -1 offsets the zero-based index from the list
             # with the 1-based index from the combo box in the preferences GUI
