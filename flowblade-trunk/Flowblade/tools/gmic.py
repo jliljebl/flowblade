@@ -46,7 +46,6 @@ import dialogutils
 import editorstate
 import editorpersistance
 import gui
-import guicomponents
 import guiutils
 import glassbuttons
 import mltinit
@@ -575,7 +574,7 @@ class GmicWindow(Gtk.Window):
             psize = 22
         else:
             psize = 44
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
+        self.hamburger_launcher = toolguicomponents.PressLaunchSurface(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
         #self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
@@ -628,7 +627,7 @@ class GmicWindow(Gtk.Window):
         monitors_panel.pack_start(right_vbox, False, False, 0)
 
         # Control row
-        self.tc_display = guicomponents.MonitorTCDisplay()
+        self.tc_display = toolguicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
         self.tc_display.use_internal_fps = True
