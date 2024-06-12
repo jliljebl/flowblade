@@ -48,7 +48,6 @@ import editorpersistance
 import fluxity
 import fluxityheadless
 import gui
-import guicomponents
 import guiutils
 import glassbuttons
 import gmicplayer
@@ -59,6 +58,7 @@ import positionbar
 import respaths
 import renderconsumer
 import toolsencoding
+import toolguicomponents
 import threading
 import userfolders
 import utils
@@ -670,7 +670,7 @@ class ScriptToolWindow(Gtk.Window):
             psize = 22
         else:
             psize = 44
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed_popover, hamburger_launcher_surface, psize, psize)
+        self.hamburger_launcher = toolguicomponents.PressLaunchSurface(self.hamburger_launch_pressed_popover, hamburger_launcher_surface, psize, psize)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
         self.reload_button = Gtk.Button(label=_("Reload Script"))
@@ -724,7 +724,7 @@ class ScriptToolWindow(Gtk.Window):
         self.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
 
         # Control row
-        self.tc_display = guicomponents.MonitorTCDisplay(56)
+        self.tc_display = toolguicomponents.MonitorTCDisplay(56)
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
         self.tc_display.use_internal_fps = True
