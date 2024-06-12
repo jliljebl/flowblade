@@ -43,13 +43,14 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
 
-import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import callbackbridge
 import clipeffectseditor
 import compositeeditor
 import containerclip
+import databridge
 import dialogs
 import dialogutils
 import gui
@@ -171,7 +172,7 @@ class LoadThread(threading.Thread):
 
     def _do_project_open(self, project):
         
-        app.open_project(project) # <-- HERE
+        callbackbridge.app_open_project(project) # <-- HERE
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
@@ -241,7 +242,7 @@ class LoadThread(threading.Thread):
                                                 panels)
 
         # We exit to same state as when app is first opened.
-        app.open_project(projectdata.get_default_project())
+        callbackbridge.app_open_project(projectdata.get_default_project())
 
     def _exit_on_profile_file_not_found_error(self, e, ticker, old_project):
         self._error_stop(self.dialog, ticker)
@@ -511,7 +512,7 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_sele
 
         dialog.destroy()
                 
-        app.new_project(profile_index, v_tracks, a_tracks)
+        callbackbridge.app_new_project(profile_index, v_tracks, a_tracks)
 
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
@@ -535,7 +536,7 @@ def close_project():
     if was_edited_since_last_save() == False:
         _close_dialog_callback(None, None, True)
     else:
-        dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+        dialogs.close_confirm_dialog(_close_dialog_callback, databridge.app_get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
 
 def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     if no_dialog_project_close == False:
@@ -563,7 +564,7 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     new_project = projectdata.get_default_project()
     vault_folder = projectdatavault.get_active_vault_folder()
     new_project.create_vault_folder_data(vault_folder)
-    app.open_project(new_project)
+    callbackbridge.app_open_project(new_project)
     projectdatavault.create_project_data_folders()
 
 def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=None):
@@ -653,8 +654,8 @@ def _save_as_dialog_callback(dialog, response_id):
             p_event = projectdata.ProjectEvent(projectdata.EVENT_SAVED_AS, (PROJECT().name, PROJECT().last_save_path))
             PROJECT().events.append(p_event)
             
-        app.stop_autosave()
-        app.start_autosave()
+        callbackbridge.app_stop_autosave()
+        callbackbridge.app_start_autosave()
         
         global save_icon_remove_event_id
         save_icon_remove_event_id = GLib.timeout_add(500, remove_save_icon)
@@ -1791,7 +1792,7 @@ def change_edit_sequence():
     # therefore is not saved.
     movemodes.clear_selected_clips()
     
-    app.change_current_sequence(row)
+    callbackbridge.app_change_current_sequence(row)
 
 def sequences_hamburger_pressed(widget, event):
     sequence_panel_popup_requested(widget, event)
@@ -1848,7 +1849,7 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     if open_right_away == False:
         selection.select_path(str(row)) # Keep previous selection
     else:
-        app.change_current_sequence(len(PROJECT().sequences) - 1)
+        callbackbridge.app_change_current_sequence(len(PROJECT().sequences) - 1)
         gui.editor_window.init_compositing_mode_menu()
     
     dialog.destroy()
@@ -1906,7 +1907,7 @@ def _delete_confirm_callback(dialog, response_id):
     
     # If we deleted current sequence, open first sequence
     if row == current_index:
-        app.change_current_sequence(0)
+        callbackbridge.app_change_current_sequence(0)
     
     _enable_save()
 
@@ -2010,7 +2011,7 @@ def _do_tracks_count_change(v_tracks, a_tracks):
 
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
-    app.change_current_sequence(cur_seq_index)
+    callbackbridge.app_change_current_sequence(cur_seq_index)
 
     if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
         # Put track compositors back

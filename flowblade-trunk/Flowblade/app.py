@@ -56,10 +56,12 @@ import audiomonitoring
 import audiowaveformrenderer
 import batchrendering
 import boxmove
+import callbackbridge
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
 import containeractions
+import databridge
 import dialogs
 import dialogutils
 import dnd
@@ -437,12 +439,20 @@ class FlowbladeApplication(Gtk.Application):
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
 
+    callbackbridge.app_open_project = open_project
+    callbackbridge.app_new_project = new_project
+    callbackbridge.app_stop_autosave = stop_autosave
+    callbackbridge.app_start_autosave = start_autosave
+    callbackbridge.app_change_current_sequence = change_current_sequence
+
+    databridge.app_get_save_time_msg = get_save_time_msg
+
     # We need to do this on app start-up or
     # we'll get circular imports with projectaction->mltplayer->render->projectaction.
     render.open_media_file_callback = projectaction.open_rendered_file
     jobs.open_media_file_callback = projectaction.open_rendered_file
 
-    # Set callback for undo/redo ops, batcherrender app does not need this.
+    # Set callback for undo/redo ops.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
