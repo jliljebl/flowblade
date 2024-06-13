@@ -31,11 +31,11 @@ from gi.repository import Pango
 
 import appconsts
 import dialogutils
+import editorstate
+import editorpersistance
 import gui
 import guicomponents
 import guiutils
-import editorstate
-import editorpersistance
 import mltenv
 import mltprofiles
 import mltfilters

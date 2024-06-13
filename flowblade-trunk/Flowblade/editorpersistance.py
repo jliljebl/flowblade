@@ -30,7 +30,6 @@ import atomicfile
 import databridge
 import userfolders
 import utils
-import usbhid
 
 
 PREFS_DOC = "prefs"
