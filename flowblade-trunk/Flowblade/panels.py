@@ -25,7 +25,7 @@ are used to build gui at callsites.
 from gi.repository import Gtk, Pango
 
 import appconsts
-import editorpersistance # Aug-2019 - SvdB - BB
+import editorpersistance
 from editorstate import current_sequence
 import gui
 import guicomponents

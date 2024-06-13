@@ -39,7 +39,6 @@ from gi.repository import GLib
 
 import appconsts
 import cairoarea
-import dialogutils
 import dnd
 import editorpersistance
 import editorstate

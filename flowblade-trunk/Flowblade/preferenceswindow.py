@@ -24,12 +24,12 @@ import os
 from gi.repository import Gtk
 
 import appconsts
+import databridge
 import dialogutils
 import editorpersistance
 import gui
 import guiutils
 import mltprofiles
-import usbhid
 import utilsgtk
 
 
@@ -498,7 +498,7 @@ def _jog_shuttle_panel():
 
     usbhid_config_combo = Gtk.ComboBoxText()
     usbhid_config_combo.append_text("None")
-    for usbhid_config_metadata in usbhid.get_usb_hid_device_config_metadata_list():
+    for usbhid_config_metadata in databridge.usbhid_get_usb_hid_device_config_metadata_list():
         usbhid_config_combo_index += 1
         usbhid_config_combo.append_text(usbhid_config_metadata.name)
 
