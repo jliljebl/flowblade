@@ -3,8 +3,10 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**NEW RELEASE 2.16 AVAILABLE!**
-**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**Project on summer break until around 25th July, 2024.**
+
+**Please file Issues as usual, action will be taken on those once activity resumes.**
+
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
