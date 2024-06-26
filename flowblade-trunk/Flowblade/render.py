@@ -36,6 +36,7 @@ import time
 
 import appconsts
 import atomicfile
+import callbackbridge
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -53,8 +54,6 @@ import utils
 
 # User defined render agrs file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
-
-open_media_file_callback = None # monkeypatched in by app.py to avoid circular imports
 
 render_start_time = 0
 widgets = utils.EmptyClass()
@@ -251,7 +250,7 @@ def maybe_open_rendered_file_in_bin():
         return
         
     file_path = get_file_path()
-    open_media_file_callback(file_path)
+    callbackbridge.projectaction_open_rendered_file(file_path)
 
 def get_current_profile():
     profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
@@ -397,7 +396,7 @@ def _FB_render_stop(dialog, response_id):
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
     motion_progress_update.running = False
-    open_media_file_callback(motion_renderer.file_name)
+    callbackbridge.projectaction_open_rendered_file(motion_renderer.file_name)
     motion_renderer.running = None
     motion_progress_update.running = None
 
@@ -483,7 +482,7 @@ def _REVERSE_render_stop(dialog, response_id):
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
     motion_progress_update.running = False
-    open_media_file_callback(motion_renderer.file_name)
+    callbackbridge.projectaction_open_rendered_file(motion_renderer.file_name)
     motion_renderer.running = None
     motion_progress_update.running = None
 

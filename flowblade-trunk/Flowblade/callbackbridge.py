@@ -24,3 +24,5 @@ app_stop_autosave = None
 app_start_autosave = None
 app_change_current_sequence = None
 app_shutdown = None
+
+projectaction_open_rendered_file = None

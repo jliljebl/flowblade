@@ -34,6 +34,7 @@ except:
     import mlt
 
 import appconsts
+import callbackbridge
 import editorlayout
 import editorpersistance
 from editorstate import PROJECT
@@ -68,8 +69,6 @@ FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
 FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
 FFMPEG_ATTR_SCREENSIZE_2 = "%SCREEN%SIZE%TWO%"
 FFMPEG_ATTR_PROXYFILE = "%PROXYFILE"
-
-open_media_file_callback = None
 
 _status_polling_thread = None
 
@@ -501,7 +500,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         motionheadless.abort_render(self.parent_folder, self.get_session_id())
         
     def create_media_item(self):
-        open_media_file_callback(self.write_file)
+        callbackbridge.projectaction_open_rendered_file(self.write_file)
  
 
 

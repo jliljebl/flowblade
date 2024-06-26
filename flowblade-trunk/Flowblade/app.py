@@ -451,10 +451,8 @@ def monkeypatch_callbacks():
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
     
-    # We need to do this on app start-up or
-    # we'll get circular imports with projectaction->mltplayer->render->projectaction.
-    render.open_media_file_callback = projectaction.open_rendered_file
-    jobs.open_media_file_callback = projectaction.open_rendered_file
+    callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
+
 
     # Set callback for undo/redo ops.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
@@ -505,11 +503,6 @@ def monkeypatch_callbacks():
 
     # These provide clues for possible further refactoring.
 
-# ---------------------------------- SDL2 consumer
-#def create_sdl_2_consumer():
-#    GObject.source_remove(disk_cache_timeout_id)
-#    print "Creating SDL2 consumer..."
-#    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():
