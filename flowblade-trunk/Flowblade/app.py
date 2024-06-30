@@ -445,15 +445,15 @@ def monkeypatch_callbacks():
     callbackbridge.app_start_autosave = start_autosave
     callbackbridge.app_change_current_sequence = change_current_sequence
     callbackbridge.app_shutdown = shutdown
-
+    callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
+    
     databridge.app_get_save_time_msg = get_save_time_msg
     databridge.mltprofiles_get_profile_name_for_index = mltprofiles.get_profile_name_for_index
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
-    
-    callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
 
 
+    # TODO: Port everthing to callbackbridge and databridge.
     # Set callback for undo/redo ops.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
