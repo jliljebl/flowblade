@@ -29,10 +29,11 @@ import math
 from gi.repository import Gdk
 
 from cairoarea import CairoDrawableArea2
+import callbackbridge
 import editorstate
 import respaths
 
-trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unnecessary dependencies in gmic.py
+#trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unnecessary dependencies in gmic.py
 
 
 # Draw params
@@ -338,7 +339,7 @@ class PositionBar:
 
         if self.handle_trimmodes == True:
             if editorstate.timeline_visible():
-                trimmodes_set_no_edit_trim_mode()
+                callbackbridge.trimmodes_set_no_edit_trim_mode()
 
         if((event.button == 1)
             or(event.button == 3)):

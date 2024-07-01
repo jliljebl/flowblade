@@ -23,14 +23,12 @@ This module handles snapping to clip ends while mouse dragging on timeline.
 """
 
 import compositormodes
+import databridge
 import editorstate
 from editorstate import current_sequence
 from editorstate import EDIT_MODE
 from editorstate import PLAYER
 
-# These are monkeypatched to have access to tlinewidgets.py state  
-_get_frame_for_x_func = None
-_get_x_for_frame_func = None
 
 snapping_on = True
 
@@ -41,6 +39,7 @@ _last_snap_x = -1
 
 _playhead_frame = -1
 
+
 #---------------------------------------------------- interface
 def get_snapping_on():
     return snapping_on
@@ -49,7 +48,7 @@ def get_snapped_x(x, track, edit_data):
     if snapping_on == False:
         return x
     
-    frame = _get_frame_for_x_func(x)
+    frame = databridge.tlinewidgets_get_frame(x)
     
     global _playhead_frame
     _playhead_frame = PLAYER().current_frame() # This is a constant overhead for every mouse move event, 
@@ -116,7 +115,7 @@ def _get_track_snapped_x(track, x, frame, frame_x):
     if closest_cut_frame == -1:
         return -1
     
-    cut_frame_x = _get_x_for_frame_func(closest_cut_frame)
+    cut_frame_x = databridge.tlinewidgets_get_frame_x(closest_cut_frame)
     
     if abs(cut_frame_x - frame_x) < _snap_threshold:
         global _last_snap_x
@@ -148,7 +147,7 @@ def _three_track_snap(track, x, frame, frame_x):
 def _playhead_snap(mouse_x, snapping_feature_x):
     snapped_x = -1
     
-    playhead_frame_x = _get_x_for_frame_func(_playhead_frame)
+    playhead_frame_x = databridge.tlinewidgets_get_frame_x(_playhead_frame)
     if abs(playhead_frame_x - snapping_feature_x) < _snap_threshold:
         global _last_snap_x
         _last_snap_x = playhead_frame_x
@@ -187,9 +186,9 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     press_frame = edit_data["press_frame"]
     first_clip_start = edit_data["first_clip_start"]
     first_clip_frame = first_clip_start + (frame - press_frame)
-    first_clip_x = _get_x_for_frame_func(first_clip_frame)
+    first_clip_x = databridge.tlinewidgets_get_frame_x(first_clip_frame)
     last_clip_frame = first_clip_frame + edit_data["moving_length"]
-    last_clip_x = _get_x_for_frame_func(last_clip_frame)
+    last_clip_x = databridge.tlinewidgets_get_frame_x(last_clip_frame)
     
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
@@ -216,8 +215,8 @@ def _overwrite_box_snap(x, track, frame, edit_data):
     frame_1 = s_data.topleft_frame + frame - edit_data["press_frame"]
     frame_2 = frame_1 + s_data.width_frames
     
-    frame_1_x = _get_x_for_frame_func(frame_1)
-    frame_2_x = _get_x_for_frame_func(frame_2)
+    frame_1_x = databridge.tlinewidgets_get_frame_x(frame_1)
+    frame_2_x = databridge.tlinewidgets_get_frame_x(frame_2)
     
     snapped_x = -1 # if value stays same till end, no snapping has happened.
     snapped_x = _three_track_snap(track, x, frame_1, frame_1_x)
@@ -229,7 +228,7 @@ def _overwrite_box_snap(x, track, frame, edit_data):
         snapped_x = _playhead_snap(x, frame_2_x)
 
     return_x = return_snapped_x_or_x(snapped_x, x)
-    edit_data["snapped_frame"] = _get_frame_for_x_func(return_x) # We need to calculate move delta with snapped value.
+    edit_data["snapped_frame"] = databridge.tlinewidgets_get_frame(return_x) # We need to calculate move delta with snapped value.
     
     return return_x
  
@@ -237,7 +236,7 @@ def _object_end_drag_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
-    frame_x = _get_x_for_frame_func(frame)
+    frame_x = databridge.tlinewidgets_get_frame_x(frame)
 
     snapped_x = -1  # if value stays same till end, no snapping happened.
     snapped_x = _three_track_snap(track, x, frame, frame_x)
@@ -254,14 +253,14 @@ def _compositor_move_snap(x, track, frame, edit_data):
     snapped_x = -1 # if value stays same till end, no snapping happened.
 
     comp_in_frame = edit_data["clip_in"] + (frame - edit_data["press_frame"])
-    comp_in_x = _get_x_for_frame_func(comp_in_frame)
+    comp_in_x = databridge.tlinewidgets_get_frame_x(comp_in_frame)
 
     snapped_x = -1 # if value stys same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, comp_in_frame, comp_in_x)
 
     if snapped_x == -1: # indicates no snap happened
         comp_out_frame = edit_data["clip_in"] + (frame - edit_data["press_frame"]) + edit_data["clip_length"] 
-        comp_out_x = _get_x_for_frame_func(comp_out_frame)
+        comp_out_x = databridge.tlinewidgets_get_frame_x(comp_out_frame)
         snapped_x = _three_track_snap(track, x, comp_out_frame, comp_out_x)
     
     # Return either original x or snapped x
@@ -271,14 +270,14 @@ def _trimming_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
-    selected_frame = _get_frame_for_x_func(x)
-    selected_frame_x = _get_x_for_frame_func(selected_frame)
+    selected_frame = databridge.tlinewidgets_get_frame(x)
+    selected_frame_x = databridge.tlinewidgets_get_frame_x(selected_frame)
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, selected_frame, selected_frame_x)
      
     return_x = return_snapped_x_or_x(snapped_x, x)
-    edit_data["selected_frame"] = _get_frame_for_x_func(return_x) # we need to put snapped frame back into edit data because that is what is used by code elsewhere
+    edit_data["selected_frame"] = databridge.tlinewidgets_get_frame(return_x) # we need to put snapped frame back into edit data because that is what is used by code elsewhere
 
     # Return either original x or snapped x
     return return_x
@@ -292,7 +291,7 @@ def _spacer_move_snap(x, track, frame, edit_data):
     first_moved_frame = edit_data["first_moved_frame"]
     
     move_frame = first_moved_frame + delta
-    move_frame_x = _get_x_for_frame_func(move_frame)
+    move_frame_x = databridge.tlinewidgets_get_frame_x(move_frame)
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _all_tracks_snap(track, x, move_frame, move_frame_x)

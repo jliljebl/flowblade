@@ -23,6 +23,7 @@ Handles Box tool functionality.
 """
 
 import appconsts
+import callbackbridge
 import dialogutils
 import gui
 import edit
@@ -35,8 +36,6 @@ box_selection_data = None
 edit_data = None
 entered_from_overwrite = False
 
-# Set at app.py to be movemodes.select_from_box_selection
-set_move_selection_from_box_selection_func = None
 
 def clear_data():
     # These need to cleared when box tool is activated
@@ -112,7 +111,7 @@ def mouse_release(x, y, frame):
                 # If selection only contains a single track we treat it as a movemode selection range
                 # because that provides the added functionality of moving clips to another track.
                 _exit_to_overwrite()
-                set_move_selection_from_box_selection_func(box_selection_data.track_selections[0])
+                callbackbridge.movemodes_select_from_box_selection(box_selection_data.track_selections[0])
                 return
             else:
                 edit_data = {"action_on":True,

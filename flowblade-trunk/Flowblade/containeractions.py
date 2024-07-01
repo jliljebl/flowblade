@@ -36,6 +36,7 @@ import threading
 import time
 
 import appconsts
+import callbackbridge
 import dialogutils
 import edit
 import editorstate
@@ -80,8 +81,6 @@ FLUXITY_TYPE_ICON = None
 
 NEWLINE = '\n'
 
-set_plugin_to_be_edited_func = None
-get_edited_plugin_clip = None
 
 # ----------------------------------------------------- interface
 def get_action_object(container_data):
@@ -788,8 +787,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
 
     def plugin_tline_render_comlete(self):
         clip = self.create_producer_and_do_update_edit(None)
-        # Reopen in edit panel, doing callback to avoid circular imports
-        set_plugin_to_be_edited_func(clip, self)
+        # Reopen in edit panel.
+        callbackbridge.mediaplugin_set_plugin_to_be_edited(clip, self)
 
     def abort_render(self):
         fluxityheadless.abort_render(self.get_container_program_id())
@@ -808,13 +807,13 @@ class FluxityContainerActions(AbstractContainerActionObject):
         return (surface, length, icon_path)
 
     def edit_program(self, clip):
-        set_plugin_to_be_edited_func(clip, self)
+        callbackbridge.mediaplugin_set_plugin_to_be_edited(clip, self)
         gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
 
     def apply_editors(self, editors):
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
-        get_edited_plugin_clip().container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
+        callbackbridge.mediaplugin_get_clip().container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
 
     def render_fluxity_preview(self, callbacks, editors, preview_frame):
         self.create_data_dirs_if_needed() # This could be first time we are writing

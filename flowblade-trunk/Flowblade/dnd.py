@@ -30,6 +30,7 @@ from gi.repository import GLib
 import os
 
 import editorstate
+import callbackbridge
 import gui
 import utils
 import respaths
@@ -62,12 +63,6 @@ tline_out_drag_context = None
 # Drag icons
 clip_icon = None
 empty_icon = None
-
-# Callback functions. These are set at app.monkeypatch_callbacks().
-display_monitor_media_file = None
-range_log_items_tline_drop = None
-range_log_items_log_drop = None
-open_dropped_files = None
 
 
 def init():
@@ -181,7 +176,7 @@ def _media_files_drag_received(widget, context, x, y, data, info, timestamp):
     if len(files) == 0:
         return
 
-    open_dropped_files(files)
+    callbackbridge.projectaction_open_file_names(files)
     
 def _range_log_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
@@ -202,7 +197,7 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
     try:
         # Drag from media panel
         media_file = drag_data[0].media_file
-        display_monitor_media_file(media_file)
+        callbackbridge.updater_set_and_display_monitor_media_file(media_file)
         gui.pos_bar.widget.grab_focus()
     except:
         range_log_drop_on_monitor(max(drag_data[0].get_indices())) # drag_data is Gtk.TreePath
@@ -262,14 +257,14 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         else:
             print("monitor_drop fail")
     elif drag_source == SOURCE_RANGE_LOG:
-        range_log_items_tline_drop(drag_data, x, y)
+        callbackbridge.editevent_tline_range_item_drop(drag_data, x, y)
     else:
         print("_on_tline_drop failed to do anything")
     
     context.finish(True, False, timestamp)
 
 def _on_range_drop(widget, context, x, y, timestamp):
-    range_log_items_log_drop(drag_data)
+    callbackbridge.medialog_clips_drop(drag_data)
 
     context.finish(True, False, timestamp)
 

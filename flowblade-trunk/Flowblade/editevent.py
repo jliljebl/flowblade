@@ -32,6 +32,7 @@ import shutil
 
 import appconsts
 import audiosync
+import callbackbridge
 import clipeffectseditor
 import clipenddragmode
 import compositeeditor
@@ -65,9 +66,9 @@ import userfolders
 
 
 # functions are monkeypatched in at app.py 
-display_clip_menu_pop_up = None
-compositor_menu_item_activated = None
-set_compositor_data = None
+
+#compositor_menu_item_activated = None
+#set_compositor_data = None
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
@@ -291,7 +292,7 @@ def tline_canvas_mouse_pressed(event, frame):
                 PLAYER().seek_frame(frame)
             # Right mouse on timeline seeks frame
             else:
-                success = display_clip_menu_pop_up(event.y, event, frame)
+                success = callbackbridge.clipmenuaction_display_clip_menu(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
         return
@@ -322,11 +323,11 @@ def tline_canvas_mouse_pressed(event, frame):
                     return
             if event.button == 3:
                 compositormodes.set_compositor_selected(hit_compositor)
-                set_compositor_data(hit_compositor)
+                callbackbridge.clipmenuaction_set_compositor_data(hit_compositor)
                 guipopoverclip.compositor_popover_menu_show(gui.tline_canvas.widget,
                                                             event.x, event.y, 
                                                             hit_compositor, 
-                                                            compositor_menu_item_activated)
+                                                            callbackbridge.clipmenuaction_compositor_menu_item_activated)
                 return
             elif event.button == 2:
                 updater.zoom_project_length()
@@ -350,7 +351,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.KF_TOOL):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                success = display_clip_menu_pop_up(event.y, event, frame)
+                success = callbackbridge.clipmenuaction_display_clip_menu(event.y, event, frame)
                 if not success:
                     PLAYER().seek_frame(frame)
         else:

@@ -22,6 +22,7 @@ from gi.repository import Gio, Gtk
 import copy
 
 import appconsts
+import callbackbridge
 import guipopover
 from editorstate import current_sequence
 import mltfilters
@@ -34,8 +35,6 @@ import utils
 VOLUME_KF_EDIT = 0
 BRIGHTNESS_KF_EDIT = 1
 PARAM_KF_EDIT = 2
-
-select_clip_func = None
 
 _clip_popover = None
 _clip_menu = None
@@ -99,7 +98,7 @@ def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, c
 # -------------------------------------------------- clip menus
 def clip_popover_menu_show(widget, clip, track, x, y, callback):
     if clip.is_blanck_clip:
-        select_clip_func(track.id, track.clips.index(clip))
+        callbackbridge.movemodes_select_clip(track.id, track.clips.index(clip))
         blank_clip_popover_menu_show(widget, clip, track, x, y, callback)
         return
 
@@ -210,7 +209,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
 
 def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
     if clip.is_blanck_clip:
-        select_clip_func(track.id, track.clips.index(clip))
+        callbackbridge.movemodes_select_clip(track.id, track.clips.index(clip))
         blank_clip_popover_menu_show(widget, clip, track, x, y, callback)
         return
         

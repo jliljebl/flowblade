@@ -23,6 +23,7 @@ Module handles Multitrim tool functionality. Individual trimmodes are implemente
 """
 
 import appconsts
+import callbackbridge
 import editorstate
 import gui
 import modesetting
@@ -30,7 +31,6 @@ import tlinewidgets
 import trimmodes
 import updater
 
-set_default_mode_func = None
 
 _mouse_edit_context = appconsts.POINTER_CONTEXT_NONE
 
@@ -39,7 +39,7 @@ _mouse_edit_context = appconsts.POINTER_CONTEXT_NONE
 def mouse_press(event, frame):
     _enter_trim_mode_edit(event.x, event.y, frame)
     if _mouse_edit_context == appconsts.POINTER_CONTEXT_NONE:
-        set_default_mode_func()
+        callbackbridge.modesetting_set_default_edit_mode()
 
 def mouse_move(x, y, frame, state):
     # If _mouse_edit_context == appconsts.POINTER_CONTEXT_NONE we don't need to do anything and mouse events for all other contexts are handled in trimmodes.py

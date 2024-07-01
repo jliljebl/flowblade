@@ -31,13 +31,9 @@ drivers here.
 
 """
 
+import callbackbridge
 import usbhid
 import usbhidconfig
-
-
-targetactions_get_handler_by_name_func = None
-targetactions_move_player_position_func = None
-targetactions_variable_speed_playback_func = None
 
 
 def get_usb_driver(config_name):
@@ -111,7 +107,7 @@ class Jog:
 
                 # move the player position by the requested number of frames,
                 # and in the appropriate direction
-                targetactions_move_player_position_func(delta)
+                callbackbridge.targetactions_move_player_position(delta)
 
         # remember the previous value to detect state transitions next time
         self.prev_value = value
@@ -154,7 +150,7 @@ class Shuttle:
             speed = self.encoder_value_playback_speed_map[value]
 
             # trigger variable speed playback
-            targetactions_variable_speed_playback_func(speed)
+            callbackbridge.targetactions_variable_speed_playback(speed)
 
         # remember the previous value to detect state transitions next time
         self.prev_value = value
@@ -354,7 +350,7 @@ class UsbHidDriver:
         action_string = self.config.get_action(key)
 
         # get a zero-argument function reference based on the name of the action
-        function_reference = targetactions_get_handler_by_name_func(action_string)
+        function_reference = callbackbridge.targetactions_get_handler_by_name(action_string)
 
         # return the function reference
         return function_reference

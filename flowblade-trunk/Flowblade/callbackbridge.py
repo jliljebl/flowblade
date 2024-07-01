@@ -25,4 +25,37 @@ app_start_autosave = None
 app_change_current_sequence = None
 app_shutdown = None
 
+clipeffectseditor_refresh_clip = None
+
+clipmenuaction_display_clip_menu = None
+clipmenuaction_compositor_menu_item_activated = None
+clipmenuaction_get_popover_clip_data = None
+clipmenuaction_set_compositor_data = None
+
+compositeeditor_get_compositor = None
+ 
+editevent_tline_range_item_drop = None
+editevent_do_multiple_clip_insert = None
+
+medialog_clips_drop = None
+
+mediaplugin_get_clip = None
+mediaplugin_set_plugin_to_be_edited = None
+
+modesetting_set_default_edit_mode = None
+
+movemodes_select_clip = None
+movemodes_select_from_box_selection = None
+
 projectaction_open_rendered_file = None
+projectaction_open_file_names = None
+
+rotomask_show_rotomask = None
+
+targetactions_get_handler_by_name = None
+targetactions_move_player_position = None
+targetactions_variable_speed_playback = None
+    
+trimmodes_set_no_edit_trim_mode = None
+
+updater_set_and_display_monitor_media_file = None

@@ -264,9 +264,9 @@ class FlowbladeApplication(Gtk.Application):
         _set_draw_params()
 
         # Refuse to run on too small screen.
-        #if scr_w < 1151 or scr_h < 767:
-        #    _too_small_screen_exit()
-        #    return
+        if scr_w < 1151 or scr_h < 767:
+            _too_small_screen_exit()
+            return
 
         # Init MLT framework
         repo = mlt.Factory().init()
@@ -445,63 +445,40 @@ def monkeypatch_callbacks():
     callbackbridge.app_start_autosave = start_autosave
     callbackbridge.app_change_current_sequence = change_current_sequence
     callbackbridge.app_shutdown = shutdown
+    callbackbridge.clipeffectseditor_refresh_clip = clipeffectseditor.refresh_clip
+    callbackbridge.clipmenuaction_display_clip_menu = clipmenuaction.display_clip_menu
+    callbackbridge.clipmenuaction_compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated
+    callbackbridge.clipmenuaction_get_popover_clip_data = clipmenuaction.get_popover_clip_data
+    callbackbridge.clipmenuaction_set_compositor_data = clipmenuaction.set_compositor_data
+    callbackbridge.editevent_tline_range_item_drop = editevent.tline_range_item_drop
+    callbackbridge.compositeeditor_get_compositor = compositeeditor.get_compositor
+    callbackbridge.editevent_do_multiple_clip_insert = editevent.do_multiple_clip_insert
+    callbackbridge.medialog_clips_drop = medialog.clips_drop
+    callbackbridge.mediaplugin_get_clip = mediaplugin.get_clip
+    callbackbridge.mediaplugin_set_plugin_to_be_edited = mediaplugin.set_plugin_to_be_edited
+    callbackbridge.modesetting_set_default_edit_mode = modesetting.set_default_edit_mode
+    callbackbridge.movemodes_select_clip = movemodes.select_clip
+    callbackbridge.movemodes_select_from_box_selection = movemodes.select_from_box_selection
     callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
-    
+    callbackbridge.projectaction_open_file_names = projectaction.open_file_names
+    callbackbridge.rotomask_show_rotomask = rotomask.show_rotomask
+    callbackbridge.targetactions_get_handler_by_name = targetactions.get_handler_by_name
+    callbackbridge.targetactions_move_player_position = targetactions.move_player_position
+    callbackbridge.targetactions_variable_speed_playback = targetactions.variable_speed_playback
+    callbackbridge.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
+    callbackbridge.updater_set_and_display_monitor_media_file = updater.set_and_display_monitor_media_file
+
     databridge.app_get_save_time_msg = get_save_time_msg
     databridge.mltprofiles_get_profile_name_for_index = mltprofiles.get_profile_name_for_index
+    databridge.tlinewidgets_get_frame = tlinewidgets.get_frame
+    databridge.tlinewidgets_get_frame_x = tlinewidgets._get_frame_x
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
 
-
-    # TODO: Port everthing to callbackbridge and databridge.
-    # Set callback for undo/redo ops.
+    # Set callbacks for undo/redo ops.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
-    # Drag'n'drop callbacks
-    dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
-    dnd.range_log_items_tline_drop = editevent.tline_range_item_drop
-    dnd.range_log_items_log_drop = medialog.clips_drop
-    dnd.open_dropped_files = projectaction.open_file_names
-
-    # Media log 
-    medialog.do_multiple_clip_insert_func = editevent.do_multiple_clip_insert
-
-    editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
-    editevent.compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated
-    editevent.set_compositor_data = clipmenuaction.set_compositor_data
-    
-    # Posionbar in gmic.py does not need trimmodes.py dependency and is avoided.
-    positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
-
-    # Snapping is done in a separate module but needs some tlinewidgets state info
-    snapping._get_frame_for_x_func = tlinewidgets.get_frame
-    snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
-
-    # Callback to reinit to change slider <-> kf editor.
-    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.refresh_clip
-
-    propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
-    
-    multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
-    
-    keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
-
-    guicomponents.select_clip_func = movemodes.select_clip
-    guipopoverclip.select_clip_func = movemodes.select_clip
-    
-    containeractions.set_plugin_to_be_edited_func = mediaplugin.set_plugin_to_be_edited
-    containeractions.get_edited_plugin_clip = mediaplugin.get_clip
-    
-    boxmove.set_move_selection_from_box_selection_func = movemodes.select_from_box_selection
-
-    toolsintegration.get_popover_clip_data_func = clipmenuaction.get_popover_clip_data
-
-    usbhiddrivers.targetactions_get_handler_by_name_func = targetactions.get_handler_by_name
-    usbhiddrivers.targetactions_move_player_position_func = targetactions.move_player_position
-    usbhiddrivers.targetactions_variable_speed_playback_func = targetactions.variable_speed_playback
-
-    # These provide clues for possible further refactoring.
 
 
 # ---------------------------------- program, sequence and project init

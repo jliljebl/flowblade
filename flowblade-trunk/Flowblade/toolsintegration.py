@@ -20,6 +20,7 @@
 import copy
 
 import appconsts
+import callbackbridge
 from editorstate import PROJECT
 import gmic
 import render
@@ -29,7 +30,6 @@ _tools = []
 _render_items = []
 test_timeout_id = None
 
-get_popover_clip_data_func = None
  
 # --------------------------------------------------- interface
 def init():
@@ -64,7 +64,7 @@ class ToolIntegrator:
             return False
 
     def export_callback(self, action, variant, data):
-        clip, track, x = get_popover_clip_data_func() # is clipmenuaction.get_popover_clip_data()
+        clip, track, x = callbackbridge.clipmenuaction_get_popover_clip_data() # is clipmenuaction.get_popover_clip_data()
         new_instance = copy.deepcopy(self)
         new_instance.data = (clip, track)
         new_instance.do_export()

@@ -91,7 +91,6 @@ gmic_icon = None
 selection_icon = None
 title_icon = None
 
-select_clip_func = None
 add_compositors_is_multi_selection = False 
  
 # ------------------------------------------------- item lists

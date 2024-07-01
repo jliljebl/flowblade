@@ -27,6 +27,7 @@ from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
 import appconsts
+import callbackbridge
 import dialogs
 import dnd
 import edit
@@ -46,7 +47,6 @@ import utils
 
 widgets = utils.EmptyClass()
 
-do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
 log_changed_since_last_save = False
 
 # Sort order
@@ -333,7 +333,7 @@ def insert_selected_log_events():
     
     track = editorstate.current_sequence().get_first_active_track()
     tline_pos = editorstate.current_tline_frame()
-    do_multiple_clip_insert_func(track, clips, tline_pos)
+    callbackbridge.editevent_do_multiple_clip_insert(track, clips, tline_pos)
 
 def get_log_event_clip(log_event):
     # Versions before 1.16 do not have this attr in log_event objects

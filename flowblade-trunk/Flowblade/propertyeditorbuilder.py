@@ -28,6 +28,7 @@ import cairo
 
 import appconsts
 import cairoarea
+import callbackbridge
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -92,8 +93,7 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 # are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
 # This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
-re_init_editors_for_slider_type_change_func = None # monkeypatched in at app.py
-show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't launch if we import
+
 
 def _p(name):
     try:
@@ -279,7 +279,7 @@ class SliderEditor:
         if self.editor_type == SLIDER: # slider -> kf editor
             global changing_slider_to_kf_property_name
             changing_slider_to_kf_property_name = self.editable_property.name
-            re_init_editors_for_slider_type_change_func()
+            callbackbridge.clipeffectseditor_refresh_clip()
         else: # kf editor -> slider
             # Save value as single keyframe or PROP_INT or PROP_FLOAT and
             # drop all but first keyframe.
@@ -314,7 +314,7 @@ class SliderEditor:
 
                 self.editable_property.write_value("0=" + str(float(first_kf_val)))
 
-            re_init_editors_for_slider_type_change_func()
+            callbackbridge.clipeffectseditor_refresh_clip()
 
 
 class KeyframesToggler:
@@ -1153,7 +1153,7 @@ def _create_infotips_editor(filt, editable_properties, editor_name, track, clip_
     return hbox
 
 def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels):
-    show_rotomask_func(filt, editable_properties, property_editor_widgets_create_func, value_labels)
+    callbackbridge.rotomask_show_rotomask(filt, editable_properties, property_editor_widgets_create_func, value_labels)
 
 def _create_rotomask_property_editor_widgets(editable_properties):
     # NOTE: EditanbleParam objects for are usually created in  propertyedit.get_filter_editable_properties(), this a deviation from normal pipeline
