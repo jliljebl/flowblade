@@ -473,7 +473,8 @@ def monkeypatch_callbacks():
     callbackbridge.targetactions_variable_speed_playback = targetactions.variable_speed_playback
     callbackbridge.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
     callbackbridge.updater_set_and_display_monitor_media_file = updater.set_and_display_monitor_media_file
-
+    callbackbridge.updater_repaint_tline = updater.repaint_tline
+    
     databridge.app_get_save_time_msg = get_save_time_msg
     databridge.mltprofiles_get_profile_name_for_index = mltprofiles.get_profile_name_for_index
     databridge.tlinewidgets_get_frame = tlinewidgets.get_frame

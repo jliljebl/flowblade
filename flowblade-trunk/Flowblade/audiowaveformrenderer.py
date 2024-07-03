@@ -42,13 +42,13 @@ import sys
 import threading
 
 import atomicfile
+import callbackbridge
 import editorpersistance
 import editorstate
 import mltinit
 import mltprofiles
 import projectdatavault
 import respaths
-import updater
 import userfolders
 import utils
 
@@ -161,7 +161,7 @@ class AudioRenderLaunchThread(threading.Thread):
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _repaint)
 
 def _repaint():
-    updater.repaint_tline()
+    callbackbridge.updater_repaint_tline()
     return False
     
 # --------------------------------------------------------- rendering
