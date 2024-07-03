@@ -60,6 +60,7 @@ import callbackbridge
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
+import compositormodes
 import containeractions
 import databridge
 import dialogs
@@ -452,6 +453,7 @@ def monkeypatch_callbacks():
     callbackbridge.clipmenuaction_set_compositor_data = clipmenuaction.set_compositor_data
     callbackbridge.editevent_tline_range_item_drop = editevent.tline_range_item_drop
     callbackbridge.compositeeditor_get_compositor = compositeeditor.get_compositor
+    callbackbridge.compositormodes_get_snapped_x = compositormodes.get_snapped_x
     callbackbridge.editevent_do_multiple_clip_insert = editevent.do_multiple_clip_insert
     callbackbridge.medialog_clips_drop = medialog.clips_drop
     callbackbridge.mediaplugin_get_clip = mediaplugin.get_clip

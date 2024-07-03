@@ -185,3 +185,14 @@ def _bounds_check_trim(frame, edit_data):
         edit_data["clip_in"] = 0
     if edit_data["clip_out"] < 0:
         edit_data["clip_out"] = 0
+
+def get_snapped_x(x, frame, edit_data, object_end_drag_snap_func, compositor_move_snap_func):
+    track = current_sequence().tracks[compositor.transition.b_track - 1]
+    if sub_mode == TRIM_EDIT:
+        if edit_data["trim_is_clip_in"] == False: # This has different out frame semantics then clips, +1 makes the same function work in this case.
+            frame = frame + 1
+        return object_end_drag_snap_func(x, track, frame, edit_data)
+    elif sub_mode == MOVE_EDIT:
+        return compositor_move_snap_func(x, track, frame, edit_data)
+            
+            
