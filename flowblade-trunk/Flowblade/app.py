@@ -448,6 +448,8 @@ def monkeypatch_callbacks():
     callbackbridge.app_shutdown = shutdown
     callbackbridge.boxmove_get_selection_data = boxmove.get_selection_data
     callbackbridge.clipeffectseditor_refresh_clip = clipeffectseditor.refresh_clip
+    callbackbridge.clipeffectseditor_update_kfeditors_sliders = clipeffectseditor.update_kfeditors_sliders
+    callbackbridge.clipeffectseditor_clip_is_being_edited = clipeffectseditor.clip_is_being_edited
     callbackbridge.clipmenuaction_display_clip_menu = clipmenuaction.display_clip_menu
     callbackbridge.clipmenuaction_compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated
     callbackbridge.clipmenuaction_get_popover_clip_data = clipmenuaction.get_popover_clip_data

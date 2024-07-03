@@ -26,7 +26,9 @@ app_change_current_sequence = None
 app_shutdown = None
 
 clipeffectseditor_refresh_clip = None
-
+clipeffectseditor_update_kfeditors_sliders = None
+clipeffectseditor_clip_is_being_edited = None
+    
 clipmenuaction_display_clip_menu = None
 clipmenuaction_compositor_menu_item_activated = None
 clipmenuaction_get_popover_clip_data = None

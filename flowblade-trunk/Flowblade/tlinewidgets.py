@@ -35,7 +35,6 @@ import appconsts
 import audiowaveformrenderer
 import callbackbridge
 import cairoarea
-import clipeffectseditor
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
@@ -2061,7 +2060,7 @@ class TimeLineCanvas:
                     cr.paint()
                     icon_slot = icon_slot + 1
 
-                if clipeffectseditor.clip_is_being_edited(clip) == True:
+                if callbackbridge.clipeffectseditor_clip_is_being_edited(clip) == True:
                     icon = EDIT_INDICATOR
                     ix =  int(scale_in) + int(scale_length) / 2 - 7
                     iy = y + int(track_height) / 2 - 7
@@ -2575,7 +2574,7 @@ class TimeLineFrameScale:
         if self.drag_on:
             frame = current_sequence().get_seq_range_frame(get_frame(event.x))
             PLAYER().seek_frame(frame) 
-            clipeffectseditor.update_kfeditors_sliders(frame)
+            callbackbridge.clipeffectseditor_update_kfeditors_sliders(frame)
         self.drag_on = False
 
     # --------------------------------------------- DRAW
