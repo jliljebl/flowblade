@@ -201,20 +201,19 @@ def _display_compositor_edit_box():
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     # Track editor
-    if editorstate.get_compositing_mode() != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        target_combo = guicomponents.get_compositor_track_select_combo(
-                        current_sequence().tracks[compositor.transition.b_track], 
-                        current_sequence().tracks[compositor.transition.a_track], 
-                        _target_track_changed)
+    target_combo = guicomponents.get_compositor_track_select_combo(
+                    current_sequence().tracks[compositor.transition.b_track], 
+                    current_sequence().tracks[compositor.transition.a_track], 
+                    _target_track_changed)
 
-        target_row = Gtk.HBox()
-        target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-        target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
-        target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-        target_row.pack_start(target_combo, False, False, 0)
+    target_row = Gtk.HBox()
+    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
+    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+    target_row.pack_start(target_combo, False, False, 0)
 
-        vbox.pack_start(target_row, False, False, 0)
-        vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+    vbox.pack_start(target_row, False, False, 0)
+    vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     blend_added = False # for GUI prettyness.
     

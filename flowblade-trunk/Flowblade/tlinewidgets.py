@@ -580,9 +580,6 @@ def compositor_hit(frame, x, y, sorted_compositors):
 
     if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
         return None
-       
-    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        return _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors)
     
     # Test if compositor hit on track top, so compositor hit on dest track side
     if y >= track_top and y < track_top + (COMPOSITOR_HEIGHT - COMPOSITOR_HEIGHT_OFF):
@@ -608,19 +605,6 @@ def _comp_hit_on_source_track(frame, track, sorted_compositors):
         if comp.transition.b_track == track.id:
             if comp.clip_in <= frame and comp.clip_out >= frame:
                 return comp
-    return None
-
-def _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors):
-    for comp in sorted_compositors:
-        if comp.transition.b_track == track.id:
-            if comp.clip_in <= frame and comp.clip_out >= frame:
-                scale_in = (comp.clip_in - pos) * pix_per_frame
-                scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out incl.
-                comp_top_y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
-                tx, ty, tw, th = _get_standard_mode_compositor_rect(scale_in, scale_length, comp_top_y)
-                if x >= tx and x <= tx + tw:
-                    if y >= ty and y <= ty + th:
-                        return comp
     return None
 
 def _get_standard_mode_compositor_rect(scale_in, scale_length, y):
@@ -2192,10 +2176,7 @@ class TimeLineCanvas:
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
             target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
                 
-            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y, target_y)
-            else:
-                self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
+            self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
                 
     def draw_arrow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
         _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)

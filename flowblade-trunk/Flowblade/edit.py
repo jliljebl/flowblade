@@ -304,8 +304,8 @@ class EditAction:
         # Compositor auto follow is saved with each edit and is computed on first do and later done on redo/undo
         self.compositor_autofollow_data = None
         
-        # Compositor mode COMPOSITING_MODE_STANDARD_AUTO_FOLLOW requires that compositors without parent clips are destroyed
-        # when origin clips are destroyed.
+        # Compositor mode COMPOSITING_MODE_STANDARD_AUTO_FOLLOW required that compositors without parent clips are destroyed
+        # when origin clips are destroyed. This functionality probably no longer meaningful.
         self.orphaned_compositors = None
         
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.

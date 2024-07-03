@@ -743,7 +743,7 @@ class Sequence:
         """
         Compositor order must be from top to bottom or will not work.
         """
-        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW and self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             self.compositors.sort(key=_sort_compositors_comparator, reverse=True)
         else:
             self.compositors.sort(key=_sort_compositors_comparator)
