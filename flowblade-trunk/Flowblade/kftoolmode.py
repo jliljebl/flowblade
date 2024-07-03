@@ -41,7 +41,6 @@ import mltfilters
 import propertyedit
 import propertyparse
 import respaths
-import sequence
 import tlinewidgets
 import updater
 
@@ -1088,7 +1087,7 @@ class TLineKeyFrameEditor:
                 grad.add_color_stop_rgba(*tlinewidgets.BLANK_CLIP_COLOR_GRAD)
                 grad.add_color_stop_rgba(*tlinewidgets.BLANK_CLIP_COLOR_GRAD_L)
                 cr.set_source(grad)
-        elif track.type == sequence.VIDEO:
+        elif track.type == appconsts.VIDEO:
             if clip.container_data != None:
                 if clip.container_data.rendered_media_range_in == -1: 
                     clip_bg_col = (0.7, 0.3, 0.3)
@@ -1098,7 +1097,7 @@ class TLineKeyFrameEditor:
                     clip_bg_col = (0.7, 0.3, 0.3)
                     cr.set_source_rgb(*tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR)
                     clip_bg_col = tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR
-            elif clip.media_type == sequence.VIDEO: 
+            elif clip.media_type == appconsts.VIDEO: 
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
                 pos,r,g,b,ad = tlinewidgets.CLIP_COLOR_GRAD
                 grad.add_color_stop_rgba(pos,r,g,b,a)
