@@ -25,12 +25,12 @@ Module handles cut tool functionality
 from gi.repository import Gdk
 
 import appconsts
+import databridge
 import dialogutils
 import gui
 import edit
 from editorstate import current_sequence
 import editorstate
-import tlinewidgets
 import updater
 
 # ------------------------------------- edit mode setting
@@ -57,7 +57,7 @@ def mouse_release(x, y, frame, state):
 
 # ---------------------------------------------- cut actions
 def cut_single_track(event, frame):
-    track = tlinewidgets.get_track(event.y)
+    track = databridge.tlinewidgets_get_track(event.y)
     if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
         set_default_edit_mode(True)
         return
