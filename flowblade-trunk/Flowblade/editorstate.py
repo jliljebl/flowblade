@@ -197,12 +197,6 @@ def EDIT_MODE():
 def MONITOR_MEDIA_FILE():
     return _monitor_media_file
 
-def auto_follow_active():
-    if get_compositing_mode() == appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
-        return False
-    else:
-        return True
-
 def get_compositing_mode():
     if project.c_seq == None:
         print ("get_compositing_mode(), trying to get compositing mode when no current sequence available!") 

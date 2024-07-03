@@ -1547,13 +1547,7 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, x, y, current_sequence().compositors)
         if hit_compositor != None:
-            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                return appconsts.POINTER_CONTEXT_NONE
-                                
-            if editorstate.auto_follow_active() == False or (editorstate.auto_follow_active() == True and hit_compositor.obey_autofollow == False):
-                return compositormodes.get_pointer_context(hit_compositor, x)
-            else:
-                return appconsts.POINTER_CONTEXT_NONE
+            return compositormodes.get_pointer_context(hit_compositor, x)
 
         track = get_track(y)
         if track == None:
