@@ -33,7 +33,6 @@ from gi.repository import PangoCairo
 
 import appconsts
 import audiowaveformrenderer
-import boxmove
 import callbackbridge
 import cairoarea
 import clipeffectseditor
@@ -1571,9 +1570,9 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_TRIM_RIGHT
         # BOX
         elif (EDIT_MODE() == editorstate.OVERWRITE_MOVE and editorstate.overwrite_mode_box == True and 
-            boxmove.box_selection_data != None):
+            callbackbridge.boxmove_get_selection_data() != None):
 
-            if boxmove.box_selection_data.is_hit(x, y):
+            if callbackbridge.boxmove_get_selection_data().is_hit(x, y):
                 return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
         # MULTI TRIM
         elif EDIT_MODE() == editorstate.MULTI_TRIM:

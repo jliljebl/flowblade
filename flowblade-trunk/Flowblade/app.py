@@ -446,6 +446,7 @@ def monkeypatch_callbacks():
     callbackbridge.app_start_autosave = start_autosave
     callbackbridge.app_change_current_sequence = change_current_sequence
     callbackbridge.app_shutdown = shutdown
+    callbackbridge.boxmove_get_selection_data = boxmove.get_selection_data
     callbackbridge.clipeffectseditor_refresh_clip = clipeffectseditor.refresh_clip
     callbackbridge.clipmenuaction_display_clip_menu = clipmenuaction.display_clip_menu
     callbackbridge.clipmenuaction_compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated

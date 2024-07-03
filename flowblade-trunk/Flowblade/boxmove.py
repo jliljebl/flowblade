@@ -42,7 +42,10 @@ def clear_data():
     global box_selection_data, edit_data
     box_selection_data = None
     edit_data = None
-     
+
+def get_selection_data():
+    return box_selection_data
+
 def mouse_press(event, frame):
     mouse_press_with_coords(event.x, event.y, frame)
 
