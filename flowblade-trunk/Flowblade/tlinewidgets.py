@@ -48,7 +48,6 @@ import editorstate
 import gui
 import guiutils
 import respaths
-import sequence
 import snapping
 import trimmodes
 import utils
@@ -1715,11 +1714,11 @@ class TimeLineCanvas:
         """
         # Get text pos for track height
         track_height = track.height
-        if track_height == sequence.TRACK_HEIGHT_HIGH: 
+        if track_height == appconsts.TRACK_HEIGHT_HIGH: 
             text_y = TEXT_Y_HIGH
-        elif track_height == sequence.TRACK_HEIGHT_NORMAL:
+        elif track_height == appconsts.TRACK_HEIGHT_NORMAL:
             text_y = TEXT_Y
-        elif track_height == sequence.TRACK_HEIGHT_SMALL:
+        elif track_height == appconsts.TRACK_HEIGHT_SMALL:
             text_y = TEXT_Y_SMALL
 
         # Get clip indexes for clips overlapping first and last displayed frame.
@@ -1794,7 +1793,7 @@ class TimeLineCanvas:
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_GRAD)
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_GRAD_L)
                         cr.set_source(grad)
-                elif track.type == sequence.VIDEO:
+                elif track.type == appconsts.VIDEO:
                     if clip.container_data != None:
                         # Container clip
                         if clip.container_data.rendered_media_range_in == -1 \
@@ -1814,7 +1813,7 @@ class TimeLineCanvas:
                             else:
                                 cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_SELECTED_COLOR)
                                 clip_bg_col = CONTAINER_CLIP_RENDERED_SELECTED_COLOR
-                    elif clip.media_type == sequence.VIDEO:
+                    elif clip.media_type == appconsts.VIDEO:
                         # Video clip
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
@@ -1931,9 +1930,9 @@ class TimeLineCanvas:
             # Draw video clip icon.
             text_x_add = 0
             if scale_length > TEXT_MIN and editorstate.display_clip_media_thumbnails:
-                if clip.is_blanck_clip == False and track.type == sequence.VIDEO and \
-                    (clip.media_type == sequence.VIDEO or clip.media_type == sequence.IMAGE 
-                        or clip.media_type == sequence.IMAGE_SEQUENCE):
+                if clip.is_blanck_clip == False and track.type == appconsts.VIDEO and \
+                    (clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.IMAGE 
+                        or clip.media_type == appconsts.IMAGE_SEQUENCE):
                         
                     text_x_add = 115
                     cr.save()
@@ -1990,13 +1989,13 @@ class TimeLineCanvas:
                                              track_height)
                 cr.clip()
                                          
-                if track.height == sequence.TRACK_HEIGHT_HIGH:
+                if track.height == appconsts.TRACK_HEIGHT_HIGH:
                     y_pad = WAVEFORM_PAD_HIGH
                     bar_height = WAVEFORM_HEIGHT_HIGH
-                elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+                elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = WAVEFORM_HEIGHT_LARGE
-                elif track.height == sequence.TRACK_HEIGHT_SMALL:
+                elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                     y_pad = WAVEFORM_PAD_SMALL
                     bar_height = WAVEFORM_HEIGHT_SMALL
                 
@@ -2468,11 +2467,11 @@ class TimeLineColumn:
         layout.set_font_description(desc)
 
         cr.set_source_rgb(*TRACK_NAME_COLOR)
-        if track.height == sequence.TRACK_HEIGHT_HIGH:
+        if track.height == appconsts.TRACK_HEIGHT_HIGH:
             text_y = ID_PAD_Y_HIGH
-        elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+        elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
-        elif track.height == sequence.TRACK_HEIGHT_SMALL:
+        elif track.height == appconsts.TRACK_HEIGHT_SMALL:
             text_y = ID_PAD_Y_SMALL
         cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
         PangoCairo.update_layout(cr, layout)
@@ -2495,34 +2494,34 @@ class TimeLineColumn:
             
         if mute_icon != None:
             ix, iy = MUTE_ICON_POS
-            if track.height == sequence.TRACK_HEIGHT_HIGH:
+            if track.height == appconsts.TRACK_HEIGHT_HIGH:
                 ix, iy = MUTE_ICON_POS_HIGH
-            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
                 ix, iy = MUTE_ICON_POS_NORMAL
-            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+            elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                 ix, iy = MUTE_ICON_POS
             cr.set_source_surface(mute_icon, int(ix), int(y + iy))
             cr.paint()
 
         # Draw locked icon.
-        if track.edit_freedom == sequence.LOCKED:
+        if track.edit_freedom == appconsts.LOCKED:
             ix, iy = LOCK_POS
-            if track.height == sequence.TRACK_HEIGHT_HIGH: 
+            if track.height == appconsts.TRACK_HEIGHT_HIGH: 
                 iy = ID_PAD_Y_HIGH + 4
-            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
                 iy = ID_PAD_Y + 4
-            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+            elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                 iy = ID_PAD_Y_SMALL + 4
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
         # Draw insert arrow.
         if is_insert_track == True:
-            if track.height == sequence.TRACK_HEIGHT_HIGH:
+            if track.height == appconsts.TRACK_HEIGHT_HIGH:
                 ix, iy = INSRT_ICON_POS_HIGH
-            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
                 ix, iy = INSRT_ICON_POS
-            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+            elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                 ix, iy = INSRT_ICON_POS_SMALL
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
@@ -2536,11 +2535,11 @@ class TimeLineColumn:
             layout.set_text(pcs_str, -1)
             layout.set_font_description(desc)
             cr.set_source_rgb(*TRACK_NAME_COLOR)
-            if track.height == sequence.TRACK_HEIGHT_HIGH:
+            if track.height == appconsts.TRACK_HEIGHT_HIGH:
                 text_y = ID_PAD_Y_HIGH + 4
-            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
                 text_y = ID_PAD_Y + 4
-            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+            elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                 text_y = ID_PAD_Y_SMALL + 4
             cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X + 31, y + text_y)
             PangoCairo.update_layout(cr, layout)
