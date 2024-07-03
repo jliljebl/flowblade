@@ -57,7 +57,9 @@ rotomask_show_rotomask = None
 targetactions_get_handler_by_name = None
 targetactions_move_player_position = None
 targetactions_variable_speed_playback = None
-    
+
 trimmodes_set_no_edit_trim_mode = None
 
 updater_set_and_display_monitor_media_file = None
+pdater_display_sequence_in_monitor = None
+updater_repaint_tline = None

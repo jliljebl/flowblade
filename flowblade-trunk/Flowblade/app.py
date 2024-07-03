@@ -472,6 +472,7 @@ def monkeypatch_callbacks():
     callbackbridge.targetactions_move_player_position = targetactions.move_player_position
     callbackbridge.targetactions_variable_speed_playback = targetactions.variable_speed_playback
     callbackbridge.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
+    callbackbridge.updater_display_sequence_in_monitor = updater.display_sequence_in_monitor
     callbackbridge.updater_set_and_display_monitor_media_file = updater.set_and_display_monitor_media_file
     callbackbridge.updater_repaint_tline = updater.repaint_tline
     
@@ -480,6 +481,7 @@ def monkeypatch_callbacks():
     databridge.tlinewidgets_get_frame = tlinewidgets.get_frame
     databridge.tlinewidgets_get_frame_x = tlinewidgets._get_frame_x
     databridge.tlinewidgets_get_track = tlinewidgets.get_track
+    databridge.trimmodes_submode_is_keyb_edit_on = trimmodes.submode_is_keyb_edit_on
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
 

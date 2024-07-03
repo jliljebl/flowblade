@@ -35,6 +35,7 @@ import appconsts
 import audiowaveformrenderer
 import callbackbridge
 import cairoarea
+import databridge
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
@@ -47,9 +48,8 @@ import gui
 import guiutils
 import respaths
 import snapping
-import trimmodes
 import utils
-import updater
+
 
 M_PI = math.pi
 
@@ -1377,7 +1377,7 @@ def _draw_snap(cr, y):
         cr.paint()
 
 def _draw_kb_trim_indicator(cr, x, y):
-    if trimmodes.submode == trimmodes.KEYB_EDIT_ON:
+    if databridge.trimmodes_submode_is_keyb_edit_on() == True: 
         cr.set_source_surface(KEYBOARD_ICON, int(x) - 9, int(y) - 16)
         cr.paint()
 
@@ -2556,9 +2556,9 @@ class TimeLineFrameScale:
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
             if not timeline_visible():
-                updater.display_sequence_in_monitor()
+                callbackbridge.updater_display_sequence_in_monitor()
                 return
-            trimmodes.set_no_edit_trim_mode()
+            callbackbridge.trimmodes_set_no_edit_trim_mode()
             frame = current_sequence().get_seq_range_frame(get_frame(event.x))
             PLAYER().seek_frame(frame)
             self.drag_on = True

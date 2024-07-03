@@ -25,4 +25,6 @@ mltprofiles_get_profile_name_for_index = None
 tlinewidgets_get_frame = None
 tlinewidgets_get_frame_x = None
 
+trimmodes_submode_is_keyb_edit_on = None
+
 usbhid_get_usb_hid_device_config_metadata_list = None

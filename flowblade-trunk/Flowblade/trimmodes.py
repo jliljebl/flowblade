@@ -80,6 +80,9 @@ def clear_edit_data():
     ripple_data = None
     mouse_disabled = False
 
+def submode_is_keyb_edit_on():
+    return (submode == KEYB_EDIT_ON)
+        
 def _get_trim_edit(track, frame):
     """
     Return a trim edit for a frame on a track.
