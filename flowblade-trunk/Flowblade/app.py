@@ -472,6 +472,7 @@ def monkeypatch_callbacks():
     databridge.mltprofiles_get_profile_name_for_index = mltprofiles.get_profile_name_for_index
     databridge.tlinewidgets_get_frame = tlinewidgets.get_frame
     databridge.tlinewidgets_get_frame_x = tlinewidgets._get_frame_x
+    databridge.tlinewidgets_get_track = tlinewidgets.get_track
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
 

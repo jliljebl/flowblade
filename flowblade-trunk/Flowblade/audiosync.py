@@ -41,6 +41,7 @@ from gi.repository import Gtk, Gdk
 
 import appconsts
 import clapperless
+import databridge
 import dialogs
 import dialogutils
 import edit
@@ -52,7 +53,6 @@ import movemodes
 import projectaction
 import renderconsumer
 import respaths
-import tlinewidgets
 import updater
 import userfolders
 import utils
@@ -111,12 +111,12 @@ def _read_offsets(idstr):
 def init_select_tline_sync_clip(popup_data):
 
     clip, track, item_id, x = popup_data
-    frame = tlinewidgets.get_frame(x)
+    frame = databridge.tlinewidgets_get_frame(x)
     clip_index = current_sequence().get_clip_index(track, frame)
 
     if not (track.clips[clip_index] == clip):
-        # This should never happen 
-        print("big fu at init_select_tline_sync_clip(...)")
+        # This should never happen, give info.
+        print("track.clips[clip_index] != clip) in init_select_tline_sync_clip, should not happen.") 
         return
 
     gdk_window = gui.tline_display.get_parent_window()
@@ -142,7 +142,7 @@ def select_sync_clip_mouse_pressed(event, frame):
                                     True)
         return
 
-    sync_track =  tlinewidgets.get_track(event.y)
+    sync_track = databridge.tlinewidgets_get_track(event.y)
     sync_clip_index = sync_track.clips.index(sync_clip)
 
     _tline_sync_data.sync_clip = sync_clip
@@ -171,7 +171,7 @@ def select_sync_clip_mouse_pressed(event, frame):
     updater.repaint_tline()
     
 def _get_sync_tline_clip(event, frame):
-    sync_track = tlinewidgets.get_track(event.y)
+    sync_track = databridge.tlinewidgets_get_track(event.y)
 
     if sync_track == None:
         return None
