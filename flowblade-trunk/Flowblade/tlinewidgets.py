@@ -34,9 +34,9 @@ from gi.repository import PangoCairo
 import appconsts
 import audiowaveformrenderer
 import boxmove
+import callbackbridge
 import cairoarea
 import clipeffectseditor
-import compositormodes
 import editorpersistance
 from editorstate import current_sequence
 from editorstate import timeline_visible
@@ -1531,7 +1531,7 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, x, y, current_sequence().compositors)
         if hit_compositor != None:
-            return compositormodes.get_pointer_context(hit_compositor, x)
+            return callbackbridge.compositormodes_get_pointer_context(hit_compositor, x)
 
         track = get_track(y)
         if track == None:
