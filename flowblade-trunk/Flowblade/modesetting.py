@@ -22,7 +22,7 @@
 Handles edit mode setting.
 """
 
-import boxmove
+#import boxmove
 import clipeffectseditor
 import editorstate
 from editorstate import current_sequence
@@ -106,10 +106,9 @@ def overwrite_move_mode_pressed():
 
     _set_move_mode()
 
+"""
 def box_mode_pressed():
-    """
-    User selects Box tool.
-    """
+
     stop_looping()
     current_sequence().clear_hidden_track()
     
@@ -122,6 +121,7 @@ def box_mode_pressed():
     tlinewidgets.set_edit_mode(None, None) # these get set later for box move
         
     _set_move_mode()
+"""
 
 def multi_mode_pressed():
     """
