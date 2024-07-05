@@ -19,8 +19,8 @@
 """
 
 """
-Module contains GUI components for displayingand  editing clips in timeline.
-Global display position and scale information is in this module.
+Module contains GUI components for displaying and editing clips in timeline.
+Global timeline position and scale information is in this module.
 """
 import cairo
 import math

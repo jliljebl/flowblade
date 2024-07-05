@@ -49,10 +49,13 @@ page_size = 99.0 # Gtk.Adjustment.get_page_size() wasn't there (wft?)
                  # so use this to have page size
 
 # Scale constants
-
 SCALE_MULTIPLIER = 0.66
 PIX_PER_FRAME_MAX = 20.0 * 1.0 / SCALE_MULTIPLIER
 PIX_PER_FRAME_MIN = 0.001
+
+# For adjusting how fast mouse scrolls timeline sideways
+MOUSE_SIDE_SCROLL_SPEED = 1.4
+MOUSE_SIDE_SCROLL_SPEED_LENGTH_CORRECTION_MULTI = 6000.0
 
 # Trim edit loop playback
 TRIM_EDIT_PRE_ROLL = 25
@@ -319,7 +322,8 @@ def mouse_scroll_zoom(event):
 
     if do_scroll == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
-        incr = adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)
+        length_multi = 1.0 / current_sequence().get_length() * MOUSE_SIDE_SCROLL_SPEED_LENGTH_CORRECTION_MULTI
+        incr = (adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)) * MOUSE_SIDE_SCROLL_SPEED * length_multi
         if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
             incr = -incr
         if event.direction == Gdk.ScrollDirection.UP:
