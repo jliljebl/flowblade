@@ -214,7 +214,7 @@ class EditRect:
         # handles
         for id_int, pos in self.edit_points.items():
             x, y = pos
-            cr.rectangle(x - 2, y - 2, 4, 4)
+            cr.rectangle(x - EP_HALF, y - EP_HALF, EP_HALF * 2.0,  EP_HALF * 2.0)
             cr.fill()
         
         if self.projection_point != None:
