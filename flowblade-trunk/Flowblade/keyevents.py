@@ -193,12 +193,6 @@ def key_down(widget, event):
         menuactions.toggle_fullscreen()
         return True
 
-    #debug.test help 
-    #if event.keyval == Gdk.KEY_F12:
-    #    if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-    #        rotomask.show_rotomask()
-    #    return True
-
     # Key event was not handled here.
     return False
     

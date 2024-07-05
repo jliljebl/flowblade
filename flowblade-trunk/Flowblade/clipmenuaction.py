@@ -41,6 +41,7 @@ import dialogutils
 import gui
 import guipopoverclip
 import edit
+import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
@@ -686,6 +687,36 @@ def _clear_filters(data):
     clip, track, item_id, item_data = data
     clear_filters()
 
+def _copy_filters(data):
+    clip, track, item_id, item_data = data
+    editorstate.set_copy_paste_objects((tlineaction.COPY_PASTE_DATA_CLIPS, [clip]))
+            
+def _paste_filters(data):
+    clip, track, item_id, item_data = data
+
+    paste_objs = editorstate.get_copy_paste_objects()
+    if paste_objs == None:
+        return 
+
+    data_type, paste_clips = paste_objs
+    if data_type != tlineaction.COPY_PASTE_DATA_CLIPS:
+        return
+
+    # First clip of selection is used as filters source
+    source_clip = paste_clips[0]
+
+    # Currently selected clips are target clips
+    target_clips = [clip]
+    
+    actions = []    
+    for target_clip in target_clips:
+        data = {"clip":target_clip,"clone_source_clip":source_clip}
+        action = edit.paste_filters_action(data)
+        actions.append(action)
+
+    c_action = edit.ConsolidatedEditAction(actions)
+    c_action.do_consolidated_edit()
+
 def _multi_split_audio(data):
     clip, track, item_id, item_data = data
     clips = _get_non_blank_selected_clips(track)
@@ -894,6 +925,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cover_with_next": _cover_blank_from_next,
                   "clone_filters_from_next": _clone_filters_from_next,
                   "clone_filters_from_prev": _clone_filters_from_prev,
+                  "copy_filters": _copy_filters,
+                  "paste_filters": _paste_filters,
                   "clear_filters": _clear_filters,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
