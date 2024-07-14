@@ -759,15 +759,16 @@ def kftype_select_popover_menu_show(widget, kf_type, x, y, callback):
     else:
         active_index = 2
 
-    guipopover.add_menu_action_all_items_radio(_kf_select_menu, items_data, "kftoolkftypemenu.selecttype", active_index, callback)
-        
-    """
-    else:
-        guipopover.menu_clear_or_create(_params_submenu)
-        
-        guipopover.add_menu_action_all_items_radio(menu, items_data, action_id, active_index, callback)
-    """
-
+    kftype_section = Gio.Menu.new()    
+    guipopover.add_menu_action_all_items_radio(kftype_section, items_data, "kftoolkftypemenu.selecttype", active_index, callback)
+    _kf_select_menu.append_section(None, kftype_section)
+    
+    kfcopy_section = Gio.Menu.new()
+    add_menu_action(kfcopy_section,_("Copy Keyframe Value"), "kftoolkftypemenu.copykf",  ("copykf", None), callback)
+    add_menu_action(kfcopy_section,_("Paste Keyframe Value"), "kftoolkftypemenu.pastekf",  ("pastekf", None), callback)
+    add_menu_action(kfcopy_section,_("Clone Keyframe Value From Next"), "kftoolkftypemenu.clonenextkf",  ("clonekfnext", None), callback)
+    add_menu_action(kfcopy_section,_("Clone Keyframe Value From Previous"), "kftoolkftypemenu.cloneprevkf",  ("clonekfprev", None), callback)
+    _kf_select_menu.append_section(None, kfcopy_section)
 
     rect = guipopover.create_rect(x, y)
     _kf_select_popover = guipopover.new_mouse_popover(widget, _kf_select_menu, rect, Gtk.PositionType.TOP)

@@ -652,7 +652,29 @@ class ClipKeyFrameEditor:
     def set_kf_frame(self, kf_index, new_frame):
         frame, val, kf_type = self.keyframes.pop(kf_index)
         self.keyframes.insert(kf_index,(new_frame, val, kf_type))
+
+    def clone_value_from_next(self):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+
+        try:
+            frame_n, val_n, kf_type_n = self.keyframes[self.active_kf_index]
+        except:
+            # No next keyframe
+            return
+    
+        self.keyframes.insert(self.active_kf_index,(frame, val_n, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+
+    def clone_value_from_prev(self):
+        if self.active_kf_index == 0:
+            return
         
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        frame_p, val_p, kf_type_p = self.keyframes[self.active_kf_index - 1]
+
+        self.keyframes.insert(self.active_kf_index,(frame, val_p, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+
     # 'oor' means out-of-range, these are for handling keyframes that are not in
     # current clip range.
     def _oor_menu_item_activated(self, action, variant, data):
@@ -969,9 +991,20 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         else:
             active_index = 2
 
-        guipopover.add_menu_action_all_items_radio(menu, items_data, action_id, active_index, callback)
 
+        kftype_section = Gio.Menu.new()   
+        guipopover.add_menu_action_all_items_radio(kftype_section, items_data, action_id, active_index, callback)
+        menu.append_section(None, kftype_section)
 
+        """
+        kfcopy_section = Gio.Menu.new()
+        add_menu_action(kfcopy_section,_("Copy Keyframe Value"), "kftoolkftypemenu.copykf",  ("copykf", None), callback)
+        add_menu_action(kfcopy_section,_("Paste Keyframe Value"), "kftoolkftypemenu.pastekf",  ("pastekf", None), callback)
+        add_menu_action(kfcopy_section,_("Clone Keyframe Value From Next"), "kftoolkftypemenu.clonenextkf",  ("clonekfnext", None), callback)
+        add_menu_action(kfcopy_section,_("Clone Keyframe Value From Previous"), "kftoolkftypemenu.cloneprevkf",  ("clonekfprev", None), callback)
+        menu.append_section(None, kfcopy_section)
+        """
+        
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
@@ -1146,12 +1179,15 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-
-        if data == "copy_kf":
+        elif data == "copy_kf":
             keyevents.copy_action()
         elif data == "paste_kf":
             keyevents.paste_action()
-
+        elif data  == "clonekfnext":
+            self.clip_editor.clone_value_from_next()
+        elif data  == "clonekfprev":
+            self.clip_editor.clone_value_from_prev()
+    
         self.queue_draw()
         self.update_property_value()
 
@@ -1188,6 +1224,8 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykf", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekf", "paste_kf", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Next"), "keyframes.clonenextkf",  "clonekfnext", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Previous"), "keyframes.cloneprevkf",  "clonekfprev", self._menu_item_activated)
         _kf_menu.append_section(None, main_section)
 
         before_kfs = len(self.clip_editor.get_out_of_range_before_kfs())
@@ -1653,6 +1691,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykftwo", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekftwo", "paste_kf", self._menu_item_activated)
+        
         _kf_menu.append_section(None, main_section)
 
         before_kfs = len(self.clip_editor.get_out_of_range_before_kfs())
@@ -1987,7 +2026,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
     def _hamburger_pressed(self, launcher, widget, event, data):
         global _kf_popover, _kf_menu, _kf_type_submenu
-
+        print("kkkkkkkkk")
         _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
 
         main_section = Gio.Menu.new()
@@ -1997,6 +2036,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykffive", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekffive", "paste_kf", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Next"), "keyframes.clonenextkftwo",  "clonekfnext", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Previous"), "keyframes.cloneprevkftwo",  "clonekfprev", self._menu_item_activated)
         _kf_menu.append_section(None, main_section)
 
         action_section = Gio.Menu.new()
@@ -2038,8 +2079,19 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         elif data == "hvcenter":
             self._center_horizontal()
             self._center_vertical()
-            
-        if data == "copy_kf":
+        elif data  == "clonekfnext":
+            self.geom_kf_edit.clone_value_from_next(self.clip_editor.active_kf_index)
+            frame = self.clip_editor.get_active_kf_frame()
+            self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            self.update_editor_view_with_frame(frame)
+            self.update_property_value()
+        elif data  == "clonekfprev":
+            self.geom_kf_edit.clone_value_from_prev(self.clip_editor.active_kf_index)
+            frame = self.clip_editor.get_active_kf_frame()
+            self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            self.update_editor_view_with_frame(frame)
+            self.update_property_value()
+        elif data == "copy_kf":
             keyevents.copy_action()
         elif data == "paste_kf":
             keyevents.paste_action()

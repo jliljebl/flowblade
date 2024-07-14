@@ -618,6 +618,28 @@ class BoxEditCanvas(AbstractEditCanvas):
         self.keyframes.pop(active_kf_index)
         self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
 
+    def clone_value_from_next(self, active_kf_index):
+        frame, rect, opacity, kf_type = self.keyframes.pop(active_kf_index)
+
+        try:
+            frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[active_kf_index]
+        except:
+            # No next keyframe
+            return
+    
+        self.keyframes.insert(active_kf_index, (frame, rect_n, opacity_n, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+
+    def clone_value_from_prev(self, active_kf_index):
+        if active_kf_index == 0:
+            return
+            
+        frame, rect, opacity, kf_type = self.keyframes.pop(active_kf_index)
+        frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[active_kf_index - 1]
+    
+        self.keyframes.insert(active_kf_index, (frame, rect_n, opacity_n, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+        
     def _clip_frame_changed(self):
         if self.source_edit_rect != None:
             self._update_source_rect()
