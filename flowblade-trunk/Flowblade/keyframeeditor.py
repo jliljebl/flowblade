@@ -2026,7 +2026,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
     def _hamburger_pressed(self, launcher, widget, event, data):
         global _kf_popover, _kf_menu, _kf_type_submenu
-        print("kkkkkkkkk")
         _kf_menu = guipopover.menu_clear_or_create(_kf_menu)
 
         main_section = Gio.Menu.new()
