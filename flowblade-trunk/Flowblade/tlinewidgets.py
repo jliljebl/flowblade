@@ -673,7 +673,6 @@ def draw_overwrite_box_overlay(cr, data):
     if data["box_selection_data"] == None: # mouse action selection
         x1, y1 = data["press_point"]
         x2, y2 = data["mouse_point"]
-
         cr.set_line_width(2.0)
         cr.set_source_rgb(*OVERLAY_COLOR)
         cr.move_to(x1, y1)
@@ -683,6 +682,7 @@ def draw_overwrite_box_overlay(cr, data):
         cr.close_path()
         cr.stroke()
     else: # mouse action move
+
         # Draw clips in draw range
         cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
         cr.set_source_rgb(*OVERLAY_COLOR)

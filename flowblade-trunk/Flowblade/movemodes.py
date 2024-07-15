@@ -27,6 +27,7 @@ from gi.repository import Gdk
 
 import appconsts
 import boxmove
+import callbackbridge
 import dialogutils
 import editorpersistance
 import editorstate
@@ -191,20 +192,48 @@ def insert_move_press(event, frame):
     """
     _move_mode_pressed(event, frame)
 
+    global edit_data
+    if edit_data == None:
+        # We now enter box mode.
+        # NOTE: this was originally made to work only with OVERWRITE mode (MOVE tool), but we piggyback existing functionality
+        # to create different box selection functionality for INSERT tool.
+        editorstate.overwrite_mode_box = True
+        boxmove.entered_from_overwrite = True
+        boxmove.clear_data()
+        boxmove.mouse_press(event, frame)
+
 def insert_move_move(x, y, frame, state):
     """
     User moves mouse when in insert move mode.
     """
     global edit_data, drag_disabled
 
-    if drag_disabled:
+    if editorstate.overwrite_mode_box == True:
+        boxmove.mouse_move(x, y, frame)
         return
-
+        
     if edit_data == None:
+        if drag_disabled:
+            try:
+                # Try to switch to box selection if blank clip was pressed.
+                px, py, pframe, track_index, range_in, range_out  = blank_press_data
+
+                if abs(x - px) > MOVE_START_LIMIT or abs(y - py) > MOVE_START_LIMIT:
+                    # Ok, blank pressed and mouse dragged a bit, switch to box creation drag.
+                    set_range_selection(track_index, range_in, range_out, False)
+                    
+                    editorstate.overwrite_mode_box = True
+                    boxmove.entered_from_overwrite = True
+                    boxmove.clear_data()
+
+                    boxmove.mouse_press_with_coords(px, py, pframe)
+                    return
+            except:
+                return
         return
 
     _move_mode_move(frame, x, y)
-
+    
     updater.repaint_tline()
 
 def insert_move_release(x, y, frame, state):
@@ -215,10 +244,24 @@ def insert_move_release(x, y, frame, state):
 
     if drag_disabled:
         drag_disabled = False
-        return
 
     # If mouse was not pressed on clip we can't move anything
     if edit_data == None:
+        boxmove.mouse_release(x, y, frame)
+        try:
+            # If we have empty selection boxmove.box_selection_data is None. 
+            callbackbridge.movemodes_select_from_box_selection(boxmove.box_selection_data.track_selections[-1])
+        except:
+            pass
+        # Clear edit mode data and other stuff. These were set at insert_move_press() and boxmove.mouse_press(), but because we only want to get topmost
+        # track as selection, and not enter boxmove mode (unlike when using boxmove from overwrite mode),
+        # we clear editdata, some flags and set tlinewidgets draw mode back to drawing insert tool.
+        edit_data = None
+        tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)
+        boxmove.box_selection_data = None
+        boxmove.entered_from_overwrite = False
+        editorstate.overwrite_mode_box = False
+        updater.repaint_tline()
         return
 
     # Get attempt insert frame
@@ -344,9 +387,8 @@ def overwrite_move_move(x, y, frame, state):
                 boxmove.mouse_press_with_coords(px, py, pframe)
                 return
         except:
-            pass
-            
-        return
+            return
+
     if edit_data == None:
         return
 

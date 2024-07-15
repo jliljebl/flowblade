@@ -59,6 +59,7 @@ def mouse_press_with_coords(ex, ey, frame):
                      "press_point":press_point,
                      "mouse_point":press_point,
                      "box_selection_data":None}
+
     else: # mouse action is to move
         if box_selection_data.is_hit(ex, ey) == False:
             # Back to start state if selection box missed
