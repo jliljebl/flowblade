@@ -904,6 +904,31 @@ class RotatingEditCanvas(AbstractEditCanvas):
         self.keyframes.insert(active_kf_index, (frame, new_trans, opacity, kf_type))
         self._update_shape()
 
+    def clone_value_from_next(self, active_kf_index):
+        frame, trans, opacity, kf_type = self.keyframes.pop(active_kf_index)
+        
+        try:
+            frame_n, trans_n, opacity_n, kf_type_n = self.keyframes[active_kf_index]
+        except:
+            # No next keyframe
+            return
+    
+        self.keyframes.insert(active_kf_index, (frame, trans_n, opacity_n, kf_type))
+        self._update_shape()
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+
+    def clone_value_from_prev(self, active_kf_index):
+        if active_kf_index == 0:
+            return
+            
+        frame, trans, opacity, kf_type = self.keyframes.pop(active_kf_index)
+        frame_n, trans_n, opacity_n, kf_type_n = self.keyframes[active_kf_index - 1]
+    
+        self.keyframes.insert(active_kf_index, (frame, trans_n, opacity_n, kf_type))
+        self._update_shape()
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+        
+
     # -------------------------------------------------------- updating
     def _clip_frame_changed(self):
         self._update_shape()

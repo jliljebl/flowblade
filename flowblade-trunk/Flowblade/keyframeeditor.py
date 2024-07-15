@@ -1562,6 +1562,20 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
+    def _clone_value_from_next(self):
+        self.geom_kf_edit.clone_value_from_next(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
+    def _clone_value_from_prev(self):
+        self.geom_kf_edit.clone_value_from_prev(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+        
     def show_keyframe_menu(self, event, keyframe):
         global _kf_right_mouse_popover, _kf_right_mouse_menu
         
@@ -1592,12 +1606,15 @@ class GeometryEditor(AbstractKeyFrameEditor):
         elif data == "hvcenter":
             self._center_horizontal()
             self._center_vertical()
-            
-        if data == "copy_kf":
+        elif data == "copy_kf":
             keyevents.copy_action()
         elif data == "paste_kf":
             keyevents.paste_action()
-    
+        elif data == "clonekfnext":
+            self._clone_value_from_next()
+        elif data == "clonekfprev":
+            self._clone_value_from_prev()
+
         self.queue_draw()
         self.update_property_value()
 
@@ -1691,6 +1708,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykftwo", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekftwo", "paste_kf", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Next"), "keyframes.clonenextkfthree",  "clonekfnext", self._menu_item_activated)
+        guipopover.add_menu_action(main_section, _("Clone Keyframe Value From Previous"), "keyframes.cloneprevkfthree",  "clonekfprev", self._menu_item_activated)
         
         _kf_menu.append_section(None, main_section)
 
