@@ -3,7 +3,7 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**Project on summer break until around 25th July, 2024.**
+**Project on summer break until beginning of August, 2024.**
 
 **Please file Issues as usual, action will be taken on those once activity resumes.**
 
