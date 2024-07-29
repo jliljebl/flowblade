@@ -142,7 +142,6 @@ def window_resized():
 
     return False
 
-    
 # --------------------------------- timeline
 # --- REPAINT
 def repaint_tline():
