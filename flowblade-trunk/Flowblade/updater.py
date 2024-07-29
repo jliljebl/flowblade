@@ -24,6 +24,7 @@ Module contains GUI update routines.
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 import appconsts
 import clipeffectseditor
@@ -124,15 +125,20 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    #try:
-    # Set page offset.
-    tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
-    
-    # Place clips in the middle of timeline canvas after window resize
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
-
-    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-    repaint_tline()
+    try:
+        # Set page offset.
+        tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
+        
+        # Place clips in the middle of timeline canvas after window resize
+        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+        repaint_tline()
+    except Exception as e:
+        msg = str(e)
+        print("updater.window_resized() failed with " + msg)
+        print("reattempting updater.window_resized()...")
+        GLib.idle_add(window_resized)
+        return False
 
     return False
 
