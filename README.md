@@ -3,11 +3,6 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**Project on summer break until beginning of August, 2024.**
-
-**Please file Issues as usual, action will be taken on those once activity resumes.**
-
-
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Releases](https://github.com/jliljebl/flowblade#releases)
