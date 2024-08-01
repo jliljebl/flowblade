@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-28 14:33+0300\n"
+"POT-Creation-Date: 2024-08-01 10:37+0300\n"
 "PO-Revision-Date: 2021-04-04 15:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
@@ -18,79 +18,79 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: app.py:235
+#: app.py:237
 msgid "No Autosave"
 msgstr "Otomatik Kaydetme Yok"
 
-#: app.py:235
+#: app.py:237
 msgid "1 min"
 msgstr "1 dakika"
 
-#: app.py:235
+#: app.py:237
 msgid "2 min"
 msgstr "2 dakika"
 
-#: app.py:235
+#: app.py:237
 msgid "5 min"
 msgstr "5 dakika"
 
-#: app.py:917
+#: app.py:915
 msgid "XDG Data folder location has changed!"
 msgstr ""
 
-#: app.py:918
+#: app.py:916
 msgid ""
 "Location of <b>Default XDG Data Store</b> has changed because value of "
 "<b>XDG Data Home</b> variable has changed.\n"
 "\n"
 msgstr ""
 
-#: app.py:919
+#: app.py:917
 msgid ""
 "Existing Projects with project data saved in <b>Default XDG Data Store</b> "
 "will continue to work,\n"
 msgstr ""
 
-#: app.py:920
+#: app.py:918
 msgid ""
 "but new projects will have data saved in the location specified by the new "
 "value <b>XDG Data Home</b> variable ."
 msgstr ""
 
-#: app.py:987
+#: app.py:1003
 msgid "Too small screen for this application."
 msgstr "Bu uygulama için çok küçük bir ekran."
 
-#: app.py:989
+#: app.py:1005
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Bu uygulama için Minimum ekran boyutları şunlardır 1152 x 768.\n"
 
-#: app.py:990
+#: app.py:1006
 msgid "Your screen dimensions are "
 msgstr "Ekran boyutlarınız aşağıdaki gibidir "
 
-#: app.py:1001
+#: app.py:1017
 msgid "Cannot launch application because XDG folders init error."
 msgstr "XDG klasörleri başlangıç hatası nedeniyle uygulama başlatılamıyor."
 
-#: app.py:1012
+#: app.py:1028
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr ""
 "Flowblade sürüm 2.6 (veya üstü) çalıştırmak için MLT sürüm 6.18 gerektirir"
 
-#: app.py:1013
+#: app.py:1029
 msgid "Your MLT version is: "
 msgstr "MLT sürümünüz şu şekildedir: "
 
-#: app.py:1013
+#: app.py:1029
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Flowblade çalıştırmak için MLT 6.18 veya daha yükseğini yükleyin."
 
-#: app.py:1087 projectaction.py:553 projectaction.py:755
+#: app.py:1103 projectaction.py:553 projectaction.py:755
 msgid "Project has not been saved previously"
 msgstr "Proje daha önce kaydedilmedi"
 
-#: app.py:1088 projectaction.py:554 projectaction.py:756
+#: app.py:1104 projectaction.py:554 projectaction.py:756
 msgid "Save project with File -> Save As before closing."
 msgstr "Projeyi dosyaya kaydedin -> kapatmadan önce Farklı Kaydet."
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Render launch failed!"
 msgstr "İşleyici başlatma başarısız oldu!"
 
-#: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:360
+#: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
 msgid "Error message: "
 msgstr "Hata iletisi: "
 
@@ -329,18 +329,18 @@ msgid "Original and replace media are not of the same media type."
 msgstr ""
 
 #: projectaction.py:1319 projectaction.py:1321 projectaction.py:1330
-#: projectaction.py:1338 projectaction.py:1345 tools/batchrendering.py:1098
-#: clipmenuaction.py:208 clipmenuaction.py:210
+#: projectaction.py:1338 projectaction.py:1345 tools/batchrendering.py:1095
+#: clipmenuaction.py:203 clipmenuaction.py:205
 msgid "N/A"
 msgstr "YOK"
 
-#: projectaction.py:1334 guicomponents.py:1871 guicomponents.py:1906
-#: projectdatavaultgui.py:314 projectdatavaultgui.py:467
+#: projectaction.py:1334 guicomponents.py:1862 guicomponents.py:1897
+#: projectdatavaultgui.py:313 projectdatavaultgui.py:466
 msgid "Yes"
 msgstr "Evet"
 
-#: projectaction.py:1336 guicomponents.py:1873 guicomponents.py:1908
-#: projectdatavaultgui.py:469
+#: projectaction.py:1336 guicomponents.py:1864 guicomponents.py:1899
+#: projectdatavaultgui.py:468
 msgid "No"
 msgstr "Hayır"
 
@@ -357,7 +357,7 @@ msgid "Save Selection Container Clip"
 msgstr "Karıştırıcı Klip Seç Kaydet"
 
 #: projectaction.py:1504 projectaction.py:1527 projectaction.py:1814
-#: projectaction.py:1830 projectdata.py:323 tlineaction.py:283
+#: projectaction.py:1830 projectdata.py:323 tlineaction.py:271
 msgid "sequence_"
 msgstr "dizge_"
 
@@ -456,664 +456,664 @@ msgstr "Maksimum Ses Parçaları"
 msgid "There are no Audio Tracks to delete."
 msgstr ""
 
-#: editorwindow.py:246
+#: editorwindow.py:242
 #, fuzzy
 msgid "Fullscreen - F11"
 msgstr "Tam Ekran"
 
-#: editorwindow.py:259
+#: editorwindow.py:255
 msgid "Layouts"
 msgstr ""
 
-#: editorwindow.py:412
+#: editorwindow.py:408
 #, fuzzy
 msgid "No Edit Target."
 msgstr "Hedef Kutusu Yok"
 
-#: editorwindow.py:520 editorwindow.py:525
+#: editorwindow.py:516 editorwindow.py:521
 msgid "Start - Home key"
 msgstr "Başlatma - Ev tuşu"
 
-#: editorwindow.py:520 editorwindow.py:525
+#: editorwindow.py:516 editorwindow.py:521
 msgid "End - End key"
 msgstr "Son - Son tuşu"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "Prev Frame - Arrow Left"
 msgstr "Önceki Kare - Sol Ok"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "Next Frame - Arrow Right"
 msgstr "Sonraki Kare - Sağ Ok"
 
-#: editorwindow.py:520
+#: editorwindow.py:516
 msgid "Play/Pause- Space"
 msgstr "Oynat/Duraklat- Boşluk"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "Mark In - I"
 msgstr "İşaretle - I"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "Mark Out - O"
 msgstr "Planlamak - O"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "Clear Marks"
 msgstr "İşareti Temizle"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "To Mark In"
 msgstr "İşaretlemek için"
 
-#: editorwindow.py:520 editorwindow.py:522 editorwindow.py:525
-#: editorwindow.py:527
+#: editorwindow.py:516 editorwindow.py:518 editorwindow.py:521
+#: editorwindow.py:523
 msgid "To Mark Out"
 msgstr "Ayırmak"
 
-#: editorwindow.py:522
+#: editorwindow.py:518
 msgid "Play/Pause - Space"
 msgstr "Oynat/Suraklat - Boşluk"
 
-#: editorwindow.py:525 editorwindow.py:527
+#: editorwindow.py:521 editorwindow.py:523
 msgid "Play - Space"
 msgstr "Oynt - Boşluk"
 
-#: editorwindow.py:525 editorwindow.py:527
+#: editorwindow.py:521 editorwindow.py:523
 msgid "Stop - Space"
 msgstr "Durdur - Boşluk"
 
-#: editorwindow.py:665
+#: editorwindow.py:661
 msgid "Current Sequence Compositing Mode"
 msgstr "Geçerli Sıralı Kompozisyon Modu"
 
-#: editorwindow.py:798
+#: editorwindow.py:794
 msgid "_File"
 msgstr "_Dosya"
 
-#: editorwindow.py:799
+#: editorwindow.py:795
 msgid "_New..."
 msgstr "_Yeni..."
 
-#: editorwindow.py:800
+#: editorwindow.py:796
 msgid "_Open..."
 msgstr "_Aç..."
 
-#: editorwindow.py:801
+#: editorwindow.py:797
 msgid "Open Recent"
 msgstr "Son Açık Dosya"
 
-#: editorwindow.py:802
+#: editorwindow.py:798
 msgid "_Save"
 msgstr "_Kaydet"
 
-#: editorwindow.py:803
+#: editorwindow.py:799
 msgid "_Save As..."
 msgstr "_Farklı Kaydet..."
 
-#: editorwindow.py:804 dialogs.py:307 dialogs.py:551 dialogs.py:1595
+#: editorwindow.py:800 dialogs.py:299 dialogs.py:540 dialogs.py:1585
 msgid "Export"
 msgstr "Dışa Aktar"
 
-#: editorwindow.py:805
+#: editorwindow.py:801
 msgid "MLT XML"
 msgstr "MLT XML"
 
-#: editorwindow.py:806
+#: editorwindow.py:802
 msgid "EDL"
 msgstr "EDL"
 
-#: editorwindow.py:807
+#: editorwindow.py:803
 msgid "Current Frame"
 msgstr "Mevcut Kare"
 
-#: editorwindow.py:808
+#: editorwindow.py:804
 msgid "Current Sequence Audio As Ardour Session"
 msgstr "Mevcut Hareketli Oturum Ses Sırası"
 
-#: editorwindow.py:809
+#: editorwindow.py:805
 msgid "_Close"
 msgstr "_Kapat"
 
-#: editorwindow.py:810
+#: editorwindow.py:806
 msgid "_Quit"
 msgstr "_Çık"
 
-#: editorwindow.py:811
+#: editorwindow.py:807
 msgid "_Edit"
 msgstr "_Düzenle"
 
-#: editorwindow.py:812
+#: editorwindow.py:808
 msgid "_Undo"
 msgstr "_Geri"
 
-#: editorwindow.py:813
+#: editorwindow.py:809
 msgid "_Redo"
 msgstr "_Yinele"
 
-#: editorwindow.py:814 workflow.py:82
+#: editorwindow.py:810 workflow.py:75
 msgid "Cut"
 msgstr "Kes"
 
-#: editorwindow.py:815
+#: editorwindow.py:811
 msgid "Copy"
 msgstr "Kopyala"
 
-#: editorwindow.py:816
+#: editorwindow.py:812
 msgid "Paste"
 msgstr "Yapıştır"
 
-#: editorwindow.py:817
+#: editorwindow.py:813
 msgid "Paste Filters / Properties"
 msgstr "Yapıştır Filtreleri / Özellikleri"
 
-#: editorwindow.py:818
+#: editorwindow.py:814
 msgid "Add Monitor Clip"
 msgstr "Monitör Klibi Ekle"
 
-#: editorwindow.py:819 shortcuts.py:372
+#: editorwindow.py:815 shortcuts.py:372
 msgid "Append"
 msgstr "İliştirmek"
 
-#: editorwindow.py:820 shortcuts.py:371 shortcuts.py:389 workflow.py:74
+#: editorwindow.py:816 shortcuts.py:371 shortcuts.py:389 workflow.py:67
 msgid "Insert"
 msgstr "Eklemek"
 
-#: editorwindow.py:821
+#: editorwindow.py:817
 msgid "Three Point Overwrite"
 msgstr "Üç Nokta Üzerine Yazma"
 
-#: editorwindow.py:822
+#: editorwindow.py:818
 msgid "Range Overwrite"
 msgstr "Üzerine Yazma"
 
-#: editorwindow.py:823
+#: editorwindow.py:819
 #, fuzzy
 msgid "Cut Clip At Playhead"
 msgstr "Oynatma Kafası Konumunda Klip İşaretçisini Sil"
 
-#: editorwindow.py:824
+#: editorwindow.py:820
 msgid "Split to new Sequence at Playhead Position"
 msgstr "Oynatma pozisyonunda yeni sıraya bölün"
 
-#: editorwindow.py:825 dialogs.py:1747 translations.py:568
-#: guipopoverclip.py:334 guipopoverclip.py:496 guipopoverclip.py:607
+#: editorwindow.py:821 translations.py:568 guipopoverclip.py:338
+#: guipopoverclip.py:506 guipopoverclip.py:617
 msgid "Lift"
 msgstr "Kaldırmak"
 
-#: editorwindow.py:826 dialogs.py:1746
+#: editorwindow.py:822
 msgid "Splice Out"
 msgstr "Çıkarmak"
 
-#: editorwindow.py:827 shortcuts.py:379
+#: editorwindow.py:823 shortcuts.py:379
 #, fuzzy
 msgid "Resync Track"
 msgstr "Eşitle"
 
-#: editorwindow.py:828
+#: editorwindow.py:824
 msgid "Set Sync Parent"
 msgstr "Ana Eşitleme Ayarla"
 
-#: editorwindow.py:829
+#: editorwindow.py:825
 msgid "Add Single Track Transition"
 msgstr "Tek Parça Geçiş Ekleyin"
 
-#: editorwindow.py:830 shortcuts.py:409 guipopoverclip.py:171
-#: guipopoverclip.py:265 guipopoverclip.py:329 guipopoverclip.py:389
+#: editorwindow.py:826 shortcuts.py:409 guipopoverclip.py:167
+#: guipopoverclip.py:269 guipopoverclip.py:333 guipopoverclip.py:393
 msgid "Clear Filters"
 msgstr "Filtreleri Temizle"
 
-#: editorwindow.py:831
+#: editorwindow.py:827
 msgid "Timeline"
 msgstr "Zaman akışı"
 
-#: editorwindow.py:832
+#: editorwindow.py:828
 msgid "All Filters Off"
 msgstr "Tüm Filtreleri Kapat"
 
-#: editorwindow.py:833
+#: editorwindow.py:829
 msgid "All Filters On"
 msgstr "Tüm Filtreleri Aç"
 
-#: editorwindow.py:834 shortcuts.py:410
+#: editorwindow.py:830 shortcuts.py:410
 msgid "Sync All Compositors"
 msgstr "Tüm Kompozisyonları Eşitle"
 
-#: editorwindow.py:835 dialogs.py:1146 guipopover.py:269
+#: editorwindow.py:831 dialogs.py:1136 guipopover.py:268
 #, fuzzy
 msgid "Add Video Track"
 msgstr "Maksimum Video Parçaları"
 
-#: editorwindow.py:836 dialogs.py:1149 guipopover.py:270
+#: editorwindow.py:832 dialogs.py:1139 guipopover.py:269
 #, fuzzy
 msgid "Add Audio Track"
 msgstr "Maksimum Ses Parçaları"
 
-#: editorwindow.py:837 dialogs.py:1153 guipopover.py:271
+#: editorwindow.py:833 dialogs.py:1143 guipopover.py:270
 #, fuzzy
 msgid "Delete Video Track"
 msgstr "Maksimum Video Parçaları"
 
-#: editorwindow.py:838 dialogs.py:1156 guipopover.py:272
+#: editorwindow.py:834 dialogs.py:1146 guipopover.py:271
 #, fuzzy
 msgid "Delete Audio Track"
 msgstr "Editörü Sil"
 
-#: editorwindow.py:839
+#: editorwindow.py:835
 msgid "Change Sequence Tracks Count..."
 msgstr "Parça Sayısını Değiştirme Sırası..."
 
-#: editorwindow.py:840
+#: editorwindow.py:836
 msgid "Watermark..."
 msgstr "Filigran..."
 
-#: editorwindow.py:841 profilesmanager.py:46
+#: editorwindow.py:837 profilesmanager.py:46
 msgid "Profiles Manager"
 msgstr "Profil Yöneticisi"
 
-#: editorwindow.py:842
+#: editorwindow.py:838
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: editorwindow.py:843 preferenceswindow.py:60
+#: editorwindow.py:839 preferenceswindow.py:59
 msgid "View"
 msgstr "Göster"
 
-#: editorwindow.py:844
+#: editorwindow.py:840
 msgid "Fullscreen"
 msgstr "Tam Ekran"
 
-#: editorwindow.py:845 editorlayout.py:229 editorlayout.py:230
+#: editorwindow.py:841 editorlayout.py:232 editorlayout.py:233
 msgid "Project"
 msgstr "Proje"
 
-#: editorwindow.py:846 guipopover.py:332
+#: editorwindow.py:842 guipopover.py:331
 msgid "Add Video, Audio or Image..."
 msgstr "Video, Ses ve Resim Ekleyin..."
 
-#: editorwindow.py:847
+#: editorwindow.py:843
 #, fuzzy
 msgid "Add Media From Folder..."
 msgstr "Klasörden Ortam Ekle"
 
-#: editorwindow.py:848 guipopover.py:333
+#: editorwindow.py:844 guipopover.py:332
 msgid "Add Image Sequence..."
 msgstr "Sıralı Resim Ekleyin..."
 
-#: editorwindow.py:849 guipopover.py:338
+#: editorwindow.py:845 guipopover.py:337
 #, fuzzy
 msgid "Add Color Clip..."
 msgstr "Renkli Klip Oluştur..."
 
-#: editorwindow.py:850
+#: editorwindow.py:846
 msgid "Bin"
 msgstr "Bölüm"
 
-#: editorwindow.py:851 guipopover.py:457
+#: editorwindow.py:847 guipopover.py:456
 msgid "Add Bin"
 msgstr "Bölme Ekle"
 
-#: editorwindow.py:852 guipopover.py:458
+#: editorwindow.py:848 guipopover.py:457
 msgid "Delete Selected Bin"
 msgstr "Seçilen Bölmeyi Silin"
 
-#: editorwindow.py:853
+#: editorwindow.py:849
 msgid "Sequence"
 msgstr "Sıra"
 
-#: editorwindow.py:854 guipopover.py:354
+#: editorwindow.py:850 guipopover.py:353
 msgid "Add New Sequence"
 msgstr "Yeni Sıra Ekle"
 
-#: editorwindow.py:855 guipopover.py:355
+#: editorwindow.py:851 guipopover.py:354
 msgid "Edit Selected Sequence"
 msgstr "Seçilen Sırayı Düzenle"
 
-#: editorwindow.py:856 guipopover.py:356
+#: editorwindow.py:852 guipopover.py:355
 msgid "Delete Selected Sequence"
 msgstr "Seçilen Sırayı Sil"
 
-#: editorwindow.py:857
+#: editorwindow.py:853
 msgid "Compositing Mode"
 msgstr "Kompozisyon Modu"
 
-#: editorwindow.py:858
+#: editorwindow.py:854
 msgid "Timeline Rendering"
 msgstr "Zaman Çizelgesi Oluşturma"
 
-#: editorwindow.py:859 guipopover.py:337
+#: editorwindow.py:855 guipopover.py:336
 #, fuzzy
 msgid "Add Generator..."
 msgstr "Ortam Dosyası Ekle..."
 
-#: editorwindow.py:860
+#: editorwindow.py:856
 #, fuzzy
 msgid "Load Generator Script..."
 msgstr "Gmic Komut Dosyasını Yükle"
 
-#: editorwindow.py:861
+#: editorwindow.py:857
 msgid "From Selected Clips"
 msgstr "Seçilen Kliplerden"
 
-#: editorwindow.py:862
+#: editorwindow.py:858
 msgid "From Current Sequence"
 msgstr "Geçerli Sıradan"
 
-#: editorwindow.py:863
+#: editorwindow.py:859
 msgid "From Current Sequence With Freeze Frame at Playhead Position"
 msgstr "Oynatma başlangıç konumunda dondurma karesi ile mevcut sıradan"
 
-#: editorwindow.py:864
+#: editorwindow.py:860
 msgid "Audio Sync Merge Clip From 2 Media Items "
 msgstr "Ses Eşleştirmede 2 Medya Öğesinden Klibi Birleştir "
 
-#: editorwindow.py:865
+#: editorwindow.py:861
 msgid "Import Media From Project..."
 msgstr "Ortamı Projeden İçe Aktarın..."
 
-#: editorwindow.py:866
+#: editorwindow.py:862
 msgid "Create Container Clip"
 msgstr "Kapsayıcı Klip Oluştur"
 
-#: editorwindow.py:867
+#: editorwindow.py:863
 msgid "From G'Mic Script"
 msgstr "G'Mic Komut Dosyasından"
 
-#: editorwindow.py:868
+#: editorwindow.py:864
 msgid "Import Another Sequence Into This Sequence..."
 msgstr "Bu Sıraya Başka Bir Sıra Alın..."
 
-#: editorwindow.py:869 shortcuts.py:377
+#: editorwindow.py:865 shortcuts.py:377
 msgid "Log Marked Clip Range"
 msgstr "Günlük İşaretli Klip Aralığı"
 
-#: editorwindow.py:870
+#: editorwindow.py:866
 msgid "View Project Events..."
 msgstr "Proje Olaylarını Görüntüleyin..."
 
-#: editorwindow.py:871
+#: editorwindow.py:867
 msgid "Recreate Media Icons..."
 msgstr "Medya Simgelerini Yeniden Oluşturun..."
 
-#: editorwindow.py:872
+#: editorwindow.py:868
 msgid "Remove Unused Media..."
 msgstr "Kullanılmayan Medyayı Kaldırın..."
 
-#: editorwindow.py:873
+#: editorwindow.py:869
 msgid "Change Project Profile..."
 msgstr "Proje Profilini Değiştirin..."
 
-#: editorwindow.py:874 proxyediting.py:158
+#: editorwindow.py:870 proxyediting.py:158
 msgid "Proxy Manager"
 msgstr "Vekil Yöneticisi"
 
-#: editorwindow.py:875 projectdatavaultgui.py:286
+#: editorwindow.py:871 projectdatavaultgui.py:285
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "Yöneticiyi Kapat"
 
-#: editorwindow.py:876 projectdatavaultgui.py:739
+#: editorwindow.py:872 projectdatavaultgui.py:738
 #, fuzzy
 msgid "Project Data"
 msgstr "Proje"
 
-#: editorwindow.py:877
+#: editorwindow.py:873
 msgid "Project Info"
 msgstr "Proje Bilgisi"
 
-#: editorwindow.py:878 rendergui.py:181 rendergui.py:327
-#: tools/batchrendering.py:959 tools/gmic.py:802 containeractions.py:385
-#: editorlayout.py:227 tools/scripttool.py:902
+#: editorwindow.py:874 rendergui.py:180 rendergui.py:326
+#: tools/batchrendering.py:956 tools/gmic.py:805 containeractions.py:382
+#: editorlayout.py:230 tools/scripttool.py:897
 msgid "Render"
 msgstr "İşleme"
 
-#: editorwindow.py:879
+#: editorwindow.py:875
 msgid "Add To Batch Render Queue..."
 msgstr "Toplu İş Oluşturma Kuyruğuna Ekleyin..."
 
-#: editorwindow.py:880 middlebar.py:284
+#: editorwindow.py:876 middlebar.py:283
 msgid "Batch Render Queue"
 msgstr "Toplu İş Oluşturma Sırası"
 
-#: editorwindow.py:881
+#: editorwindow.py:877
 #, fuzzy
 msgid "Rerender All Rendered Transitions"
 msgstr "Tüm Oluşturulan Geçişleri / Solmaları Yeniden Oluştur"
 
-#: editorwindow.py:882
+#: editorwindow.py:878
 msgid "Render Timeline"
 msgstr "İşlem Zaman Akışı"
 
-#: editorwindow.py:883
+#: editorwindow.py:879
 msgid "Tools"
 msgstr "Araçlar"
 
-#: editorwindow.py:884 middlebar.py:284 tools/titler.py:263
+#: editorwindow.py:880 middlebar.py:283 tools/titler.py:263
 msgid "Titler"
 msgstr "Yazıcılar"
 
-#: editorwindow.py:885 middlebar.py:284
+#: editorwindow.py:881 middlebar.py:283
 msgid "Audio Mixer"
 msgstr "Ses Karıştırıcısı"
 
-#: editorwindow.py:886 tools/gmic.py:862 toolsintegration.py:108
+#: editorwindow.py:882 tools/gmic.py:865 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "G'MIC Efekleri"
 
-#: editorwindow.py:887 tools/scripttool.py:997
+#: editorwindow.py:883 tools/scripttool.py:992
 #, fuzzy
 msgid "Generator Script Editor"
 msgstr "Geometri Editörü"
 
-#: editorwindow.py:888 medialinker.py:191
+#: editorwindow.py:884 medialinker.py:187
 msgid "Media Relinker"
 msgstr "Ortam Bağlayıcı"
 
-#: editorwindow.py:889
+#: editorwindow.py:885
 msgid "_Help"
 msgstr "_Yardım"
 
-#: editorwindow.py:890
+#: editorwindow.py:886
 msgid "Contents"
 msgstr "İçindekiler"
 
-#: editorwindow.py:891
+#: editorwindow.py:887
 #, fuzzy
 msgid "Contents Web"
 msgstr "İçindekiler"
 
-#: editorwindow.py:892 dialogs.py:803
+#: editorwindow.py:888 dialogs.py:792
 msgid "Runtime Environment"
 msgstr "Program Ortamı"
 
-#: editorwindow.py:893 dialogs.py:1638
+#: editorwindow.py:889
 msgid "Keyboard Shortcuts"
 msgstr "Klavye Kısayolu"
 
-#: editorwindow.py:894 dialogs.py:677
+#: editorwindow.py:890 dialogs.py:666
 msgid "About"
 msgstr "Hakkında"
 
-#: editorwindow.py:1081
+#: editorwindow.py:1077
 msgid "Window Mode"
 msgstr "Pencere Modu"
 
-#: editorwindow.py:1084 preferenceswindow.py:357
+#: editorwindow.py:1080 preferenceswindow.py:356
 msgid "Single Window"
 msgstr "Tek Pencere"
 
-#: editorwindow.py:1088 preferenceswindow.py:358
+#: editorwindow.py:1084 preferenceswindow.py:357
 msgid "Two Windows"
 msgstr "Pencere Döşeme"
 
-#: editorwindow.py:1112
+#: editorwindow.py:1108
 #, fuzzy
 msgid "Middlebar Configuration..."
 msgstr "Ücretsiz Çubuk Yapılandırması"
 
-#: editorwindow.py:1117
+#: editorwindow.py:1113
 msgid "Edit Tool Selection Widget"
 msgstr "Araç Seçim Bileşenini Düzenle"
 
-#: editorwindow.py:1120
+#: editorwindow.py:1116
 msgid "Middlebar Menu"
 msgstr "Orta çubuk Menüsü"
 
-#: editorwindow.py:1124
+#: editorwindow.py:1120
 msgid "Dock"
 msgstr "Yuva"
 
-#: editorwindow.py:1142
+#: editorwindow.py:1138
 msgid "Monitor Playback Interpolation"
 msgstr "Monitör Oynatma Eklendi"
 
-#: editorwindow.py:1146
+#: editorwindow.py:1142
 msgid "Nearest Neighbour (fast)"
 msgstr "En Yakın Komşu (hızlı)"
 
-#: editorwindow.py:1150
+#: editorwindow.py:1146
 msgid "Bilinear (good)"
 msgstr "Doğrusal (uygun)"
 
-#: editorwindow.py:1154
+#: editorwindow.py:1150
 msgid "Bicubic (better)"
 msgstr "Kübik (iyi)"
 
-#: editorwindow.py:1159
+#: editorwindow.py:1155
 msgid "Hyper/Lanczos (best)"
 msgstr "Aşırı/Lanczos (en iyi)"
 
-#: editorwindow.py:1170 shortcuts.py:397
+#: editorwindow.py:1166 shortcuts.py:397
 msgid "Zoom In"
 msgstr "Yakınlaştır"
 
-#: editorwindow.py:1173 shortcuts.py:396
+#: editorwindow.py:1169 shortcuts.py:396
 msgid "Zoom Out"
 msgstr "Uzaklaştırmak"
 
-#: editorwindow.py:1176
+#: editorwindow.py:1172
 msgid "Zoom Fit"
 msgstr "Yakınlaştırma Uygunluğu"
 
-#: editorwindow.py:1186 guipopover.py:307
+#: editorwindow.py:1182 guipopover.py:306
 #, fuzzy
 msgid "Compositors Free Move"
 msgstr "Dizgiler"
 
-#: editorwindow.py:1190 guipopover.py:309
+#: editorwindow.py:1186 guipopover.py:308
 msgid "Standard Full Track"
 msgstr "Standart Tam Parça"
 
-#: editorwindow.py:1228
+#: editorwindow.py:1224
 msgid "Empty"
 msgstr "Boş"
 
-#: editorwindow.py:1249
+#: editorwindow.py:1245
 msgid "Global Window Mode changed"
 msgstr "Genel Pencere Modu değiştirildi"
 
-#: editorwindow.py:1250
+#: editorwindow.py:1246
 msgid "Application restart required for the new layout choice to take effect."
 msgstr ""
 "Yeni düzen seçiminin etkili olması için uygulamayı yeniden başlatmanız "
 "gerekir."
 
-#: editorwindow.py:1395
+#: editorwindow.py:1391
 msgid "Timeline current frame timecode"
 msgstr "Zaman çizelgesi geçerli kare zaman kodu"
 
-#: editorwindow.py:1397
+#: editorwindow.py:1393
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "Görünüm modunu seçin: Video / Vectorscope/ RGBParade"
 
-#: editorwindow.py:1398
+#: editorwindow.py:1394
 msgid "Set trim view and match frames"
 msgstr "Kırpma görünümünü ayarla ve kareleri eşleştir"
 
-#: editorwindow.py:1400
+#: editorwindow.py:1396
 msgid "Sequence / Media current position"
 msgstr "Sıra / Ortam mevcut konumu"
 
-#: clipeffectseditor.py:102
+#: clipeffectseditor.py:104
 msgid "Save effect values"
 msgstr "Efekt değerlerini kaydet"
 
-#: clipeffectseditor.py:109
+#: clipeffectseditor.py:108
 msgid "Load effect values"
 msgstr "Yük etkisi değerleri"
 
-#: clipeffectseditor.py:116
+#: clipeffectseditor.py:112
 msgid "Reset effect values"
 msgstr "Efekt değerlerini Sıfırla"
 
-#: clipeffectseditor.py:123
+#: clipeffectseditor.py:116
 msgid "Add Filter Mask"
 msgstr "Filtre Maskesi Ekle"
 
-#: clipeffectseditor.py:131
+#: clipeffectseditor.py:121
 msgid "Move Filter Up"
 msgstr "Filtreyi Yukarı Taşı"
 
-#: clipeffectseditor.py:138
+#: clipeffectseditor.py:125
 msgid "Move Filter Down"
 msgstr "Filtreyi Aşağı Taşı"
 
-#: clipeffectseditor.py:145
+#: clipeffectseditor.py:129
 msgid "Move Filter To Top"
 msgstr "Filtreyi En Üste Taşı"
 
-#: clipeffectseditor.py:152
+#: clipeffectseditor.py:133
 msgid "Move Filter To Bottom"
 msgstr "Filtreyi Alta Taşı"
 
-#: clipeffectseditor.py:172
+#: clipeffectseditor.py:153
 msgid "_effect_values"
 msgstr "_efekt_değerler"
 
-#: clipeffectseditor.py:469 clipeffectseditor.py:832
+#: clipeffectseditor.py:457 clipeffectseditor.py:821
 msgid "Clip Has No Filters"
 msgstr "Klipte Filtre Yok"
 
-#: clipeffectseditor.py:570
+#: clipeffectseditor.py:558
 msgid "No Clip"
 msgstr "Klip Yok"
 
-#: clipeffectseditor.py:683
+#: clipeffectseditor.py:671
 msgid "unnamed_stack_values"
 msgstr ""
 
-#: clipeffectseditor.py:797
+#: clipeffectseditor.py:786
 msgid "No editable parameters"
 msgstr "Düzenlenebilir parametre yok"
 
-#: clipeffectseditor.py:989
+#: clipeffectseditor.py:978
 #, fuzzy
 msgid "Saved Filter data not applicable for this Filter!"
 msgstr "Kaydedilen filtre verileri bu filtre için geçerli değildir!"
 
-#: clipeffectseditor.py:990 compositeeditor.py:367
+#: clipeffectseditor.py:979 compositeeditor.py:364
 msgid "Saved data is for "
 msgstr "Kaydedilen veriler için "
 
-#: clipeffectseditor.py:990
+#: clipeffectseditor.py:979
 msgid "current edited Filter is "
 msgstr "geçerli düzenlenmiş filtre "
 
-#: compositeeditor.py:72 compositeeditor.py:97 compositeeditor.py:174
+#: compositeeditor.py:70 compositeeditor.py:95 compositeeditor.py:172
 msgid "No Compositor"
 msgstr "Dizgi Yok"
 
-#: compositeeditor.py:99
+#: compositeeditor.py:97
 msgid "Compositor panel not used in/n Standard Full track Compositing Mode"
 msgstr "Kompozit panel kullanılmaz / Standart tam parça kompozisyon modu"
 
-#: compositeeditor.py:177
+#: compositeeditor.py:175
 msgid ""
 "This panel not used in\n"
 " Compositing Mode Standard Full Track."
@@ -1121,94 +1121,94 @@ msgstr ""
 "Bu panel kullanılmaz\n"
 "Kompozisyon Modu Standart Tam Parça."
 
-#: compositeeditor.py:214
+#: compositeeditor.py:211
 msgid "Destination Track:"
 msgstr "Hedef Parça:"
 
-#: compositeeditor.py:334
+#: compositeeditor.py:331
 msgid "_compositor_values"
 msgstr "_dizgi_değerleri"
 
-#: compositeeditor.py:366
+#: compositeeditor.py:363
 #, fuzzy
 msgid "Saved Compositor data not applicable for this compositor!"
 msgstr "Kaydedilen Dizgi verileri bu dizgiler için geçerli değildir!"
 
-#: compositeeditor.py:367
+#: compositeeditor.py:364
 msgid ", current compositor is "
 msgstr ", mevcut dizgi olduğunu "
 
-#: dialogs.py:69 dialogs.py:173
+#: dialogs.py:61 dialogs.py:165
 msgid "Project profile:"
 msgstr "Proje Profili:"
 
-#: dialogs.py:76 projectinfogui.py:50
+#: dialogs.py:68 projectinfogui.py:50
 msgid "Profile"
 msgstr "Profil"
 
-#: dialogs.py:81
+#: dialogs.py:73
 msgid "Tracks"
 msgstr "Parçalar"
 
-#: dialogs.py:85
+#: dialogs.py:77
 #, fuzzy
 msgid "Create New Data Store"
 msgstr "Yeni Proje Oluşturun"
 
-#: dialogs.py:93
+#: dialogs.py:85
 msgid "Data Store"
 msgstr ""
 
-#: dialogs.py:95 dialogs.py:1296 dialogs.py:1513 dialogs.py:1555
-#: menuactions.py:226 containerclip.py:173 tools/scripttool.py:607
+#: dialogs.py:87 dialogs.py:1286 dialogs.py:1503 dialogs.py:1545
+#: menuactions.py:226 containerclip.py:168 tools/scripttool.py:602
 msgid "Ok"
 msgstr "Tamam"
 
-#: dialogs.py:97 dialogs.py:161 dialogs.py:217 dialogs.py:269 dialogs.py:306
-#: dialogs.py:349 dialogs.py:366 dialogs.py:394 dialogs.py:424 dialogs.py:443
-#: dialogs.py:462 dialogs.py:478 dialogs.py:497 dialogs.py:511 dialogs.py:550
-#: dialogs.py:565 dialogs.py:596 dialogs.py:608 dialogs.py:624 dialogs.py:645
-#: dialogs.py:667 dialogs.py:1047 dialogs.py:1160 dialogs.py:1187
-#: dialogs.py:1244 dialogs.py:1270 dialogs.py:1295 dialogs.py:1316
-#: dialogs.py:1357 dialogs.py:1385 dialogs.py:1413 dialogs.py:1554
-#: dialogs.py:1594 dialogs.py:1608 dialogs.py:1622 dialogs.py:1952
-#: dialogs.py:2069 dialogs.py:2116 dialogs.py:2154 dialogs.py:2172
-#: dialogs.py:2223 propertyeditorbuilder.py:654 propertyeditorbuilder.py:793
-#: propertyeditorbuilder.py:833 middlebar.py:474 rendergui.py:48
-#: rendergui.py:107 rendergui.py:121 rendergui.py:139 rendergui.py:989
-#: rendergui.py:1254 preferenceswindow.py:45 tools/batchrendering.py:1059
-#: tools/batchrendering.py:1132 proxyediting.py:322 patternproducer.py:337
-#: patternproducer.py:370 patternproducer.py:401 tools/gmic.py:363
-#: tools/gmic.py:387 tools/gmic.py:529 dialogutils.py:54 dialogutils.py:126
-#: dialogutils.py:186 exporting.py:444 containeractions.py:393
-#: containerclip.py:172 tools/scripttool.py:302 tools/scripttool.py:338
-#: tools/scripttool.py:586 tools/scripttool.py:606 singletracktransition.py:555
-#: singletracktransition.py:734
+#: dialogs.py:89 dialogs.py:153 dialogs.py:209 dialogs.py:261 dialogs.py:298
+#: dialogs.py:338 dialogs.py:355 dialogs.py:383 dialogs.py:413 dialogs.py:432
+#: dialogs.py:451 dialogs.py:467 dialogs.py:486 dialogs.py:500 dialogs.py:539
+#: dialogs.py:554 dialogs.py:585 dialogs.py:597 dialogs.py:613 dialogs.py:634
+#: dialogs.py:656 dialogs.py:1037 dialogs.py:1150 dialogs.py:1177
+#: dialogs.py:1234 dialogs.py:1260 dialogs.py:1285 dialogs.py:1306
+#: dialogs.py:1347 dialogs.py:1375 dialogs.py:1403 dialogs.py:1544
+#: dialogs.py:1584 dialogs.py:1598 dialogs.py:1612 dialogs.py:1672
+#: dialogs.py:1789 dialogs.py:1836 dialogs.py:1874 dialogs.py:1892
+#: dialogs.py:1943 propertyeditorbuilder.py:654 propertyeditorbuilder.py:793
+#: propertyeditorbuilder.py:833 middlebar.py:473 rendergui.py:47
+#: rendergui.py:106 rendergui.py:120 rendergui.py:138 rendergui.py:988
+#: rendergui.py:1253 preferenceswindow.py:44 tools/batchrendering.py:1056
+#: tools/batchrendering.py:1129 proxyediting.py:322 patternproducer.py:337
+#: patternproducer.py:370 patternproducer.py:401 tools/gmic.py:366
+#: tools/gmic.py:390 tools/gmic.py:532 dialogutils.py:54 dialogutils.py:126
+#: dialogutils.py:186 exporting.py:444 containeractions.py:390
+#: containerclip.py:167 tools/scripttool.py:297 tools/scripttool.py:333
+#: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
+#: singletracktransition.py:733
 msgid "Cancel"
 msgstr "İptal"
 
-#: dialogs.py:106
+#: dialogs.py:98
 msgid "New Project"
 msgstr "Yeni Proje"
 
-#: dialogs.py:140 projectdatavaultgui.py:523
+#: dialogs.py:132 projectdatavaultgui.py:522
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "Seçilen klasör dosyaları içerir"
 
-#: dialogs.py:141 projectdatavaultgui.py:524
+#: dialogs.py:133 projectdatavaultgui.py:523
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
-#: dialogs.py:159 dialogs.py:215
+#: dialogs.py:151 dialogs.py:207
 msgid "Change Project Profile"
 msgstr "Proje Profilini Değiştir"
 
-#: dialogs.py:162 dialogs.py:218
+#: dialogs.py:154 dialogs.py:210
 msgid "Save With Changed Profile"
 msgstr "Değiştirilmiş Profil ile Kaydet"
 
-#: dialogs.py:164 dialogs.py:220
+#: dialogs.py:156 dialogs.py:212
 msgid ""
 "Project Profile can only changed by saving a version\n"
 "with different profile."
@@ -1216,400 +1216,400 @@ msgstr ""
 "Proje profili yalnızca bir sürümü kaydedilerek değiştirilebilir\n"
 "farklı profil ile."
 
-#: dialogs.py:181
+#: dialogs.py:173
 msgid "New Profile"
 msgstr "Yeni Profil"
 
-#: dialogs.py:183 dialogs.py:235 rendergui.py:686 tools/gmic.py:746
-#: tools/toolsencoding.py:293 tools/scripttool.py:846
-#: projectdatavaultgui.py:111 projectdatavaultgui.py:580
+#: dialogs.py:175 dialogs.py:227 rendergui.py:685 tools/gmic.py:749
+#: tools/toolsencoding.py:293 tools/scripttool.py:841
+#: projectdatavaultgui.py:110 projectdatavaultgui.py:579
 msgid "Select Folder"
 msgstr "Dosya Seç"
 
-#: dialogs.py:187 dialogs.py:239 rendergui.py:690 tools/batchrendering.py:1148
+#: dialogs.py:179 dialogs.py:231 rendergui.py:689 tools/batchrendering.py:1145
 #: tools/toolsencoding.py:297
 msgid "Folder:"
 msgstr "Klasör:"
 
-#: dialogs.py:195 dialogs.py:247
+#: dialogs.py:187 dialogs.py:239
 msgid "Project Name:"
 msgstr "Proje Adı:"
 
-#: dialogs.py:199 dialogs.py:251
+#: dialogs.py:191 dialogs.py:243
 msgid "New Project File"
 msgstr "Yeni Proje Dosyası"
 
-#: dialogs.py:226 dialogs.py:2035 tools/batchrendering.py:707
-#: tools/batchrendering.py:1435
+#: dialogs.py:218 dialogs.py:1755 tools/batchrendering.py:704
+#: tools/batchrendering.py:1432
 msgid "File:"
 msgstr "Dosya:"
 
-#: dialogs.py:227
+#: dialogs.py:219
 msgid "File Best Match Profile:"
 msgstr "En İyi Dosya Eşleşme Profili:"
 
-#: dialogs.py:228
+#: dialogs.py:220
 msgid "Project Current Profile:"
 msgstr "Mevcut Proje Profili:"
 
-#: dialogs.py:253
+#: dialogs.py:245
 msgid "Project will be saved with profile: "
 msgstr "Proje profili ile kaydedilecektir "
 
-#: dialogs.py:267
+#: dialogs.py:259
 msgid "Save Project Backup Snapshot"
 msgstr "Proje Yedekleme Anlık Görüntüsünü Kaydet"
 
-#: dialogs.py:270 dialogs.py:350 dialogs.py:425 dialogs.py:463 dialogs.py:498
-#: dialogs.py:625 dialogs.py:679 dialogs.py:805 dialogs.py:926 dialogs.py:939
-#: dialogs.py:1271 dialogs.py:1953 propertyeditorbuilder.py:655
-#: propertyeditorbuilder.py:794 propertyeditorbuilder.py:834 middlebar.py:475
-#: rendergui.py:108 preferenceswindow.py:46 tools/batchrendering.py:449
-#: tools/gmic.py:388 dialogutils.py:41 dialogutils.py:93 dialogutils.py:106
-#: dialogutils.py:121 tools/scripttool.py:339
+#: dialogs.py:262 dialogs.py:339 dialogs.py:414 dialogs.py:452 dialogs.py:487
+#: dialogs.py:614 dialogs.py:668 dialogs.py:794 dialogs.py:915 dialogs.py:929
+#: dialogs.py:1261 dialogs.py:1673 propertyeditorbuilder.py:655
+#: propertyeditorbuilder.py:794 propertyeditorbuilder.py:834 middlebar.py:474
+#: rendergui.py:107 preferenceswindow.py:45 tools/batchrendering.py:446
+#: tools/gmic.py:391 dialogutils.py:41 dialogutils.py:93 dialogutils.py:106
+#: dialogutils.py:121 tools/scripttool.py:334
 msgid "OK"
 msgstr "Tamam"
 
-#: dialogs.py:272
+#: dialogs.py:264
 msgid "Select Snapshot Project Folder"
 msgstr "Anlık Görüntü Proje Klasörünü Seçin"
 
-#: dialogs.py:276
+#: dialogs.py:268
 msgid "Snapshot Folder:"
 msgstr "Anlık Görüntü Klasörü:"
 
-#: dialogs.py:284
+#: dialogs.py:276
 msgid "Project File Name:"
 msgstr "Proje Dosya Adı:"
 
-#: dialogs.py:304
+#: dialogs.py:296
 msgid "Save Sequence Audio As Ardour Session"
 msgstr "Ses Dizisini Hareket Oturumu Olarak Kaydedin"
 
-#: dialogs.py:310
+#: dialogs.py:302
 msgid "Select Ardour Session Folder"
 msgstr "Hareket Oturum Klasörünü Seçin"
 
-#: dialogs.py:314
+#: dialogs.py:306
 msgid "Select Ardour Session Folder:"
 msgstr "Hareket Oturum Klasörünü Seçin:"
 
-#: dialogs.py:321
+#: dialogs.py:310
 #, fuzzy
 msgid "Sample Rate:"
 msgstr "Ses Örnek Hızı:"
 
-#: dialogs.py:345
+#: dialogs.py:334
 msgid "Select Project File"
 msgstr "Proje Dosyasını Seç"
 
-#: dialogs.py:354
+#: dialogs.py:343
 msgid "Flowblade Projects"
 msgstr "Flowblade Projeler"
 
-#: dialogs.py:364
+#: dialogs.py:353
 msgid "Save Project As"
 msgstr "Projeyi Farklı Kaydet"
 
-#: dialogs.py:367 dialogs.py:395 dialogs.py:444 dialogs.py:479 dialogs.py:597
-#: dialogs.py:609 dialogs.py:646 dialogs.py:668 rendergui.py:122
-#: tools/batchrendering.py:1060 tools/gmic.py:364 tools/scripttool.py:303
-#: tools/scripttool.py:1068
+#: dialogs.py:356 dialogs.py:384 dialogs.py:433 dialogs.py:468 dialogs.py:586
+#: dialogs.py:598 dialogs.py:635 dialogs.py:657 rendergui.py:121
+#: tools/batchrendering.py:1057 tools/gmic.py:367 tools/scripttool.py:298
+#: tools/scripttool.py:1063
 msgid "Save"
 msgstr "Kaydet"
 
-#: dialogs.py:385
+#: dialogs.py:374
 msgid "Save Effect Values Data"
 msgstr "Efekt Değerleri Verilerini Kaydet"
 
-#: dialogs.py:387
+#: dialogs.py:376
 msgid "Save Compositor Values Data"
 msgstr "Dizgi Değerleri Verilerini Kaydet"
 
-#: dialogs.py:390
+#: dialogs.py:379
 #, fuzzy
 msgid "Save Effects Stack Values Data"
 msgstr "Efekt Değerleri Verilerini Kaydet"
 
-#: dialogs.py:402
+#: dialogs.py:391
 #, fuzzy
 msgid "Stack/Effect/Compositor Values Data"
 msgstr "Efekt/Dizgi Veri Değerleri"
 
-#: dialogs.py:415
+#: dialogs.py:404
 msgid "Load Effect Values Data"
 msgstr "Yük Etkisi Veri Değerleri"
 
-#: dialogs.py:417
+#: dialogs.py:406
 msgid "Load Compositor Values Data"
 msgstr "Yük Dizgi Veri Değerleri"
 
-#: dialogs.py:420
+#: dialogs.py:409
 #, fuzzy
 msgid "Load Effects Stack Values Data"
 msgstr "Yük Etkisi Veri Değerleri"
 
-#: dialogs.py:429
+#: dialogs.py:418
 msgid "Effect/Compositor Values Data"
 msgstr "Efekt/Dizgi Veri Değerleri"
 
-#: dialogs.py:441
+#: dialogs.py:430
 #, fuzzy
 msgid "Save Layout"
 msgstr "Katmanları Kaydet"
 
-#: dialogs.py:446
+#: dialogs.py:435
 msgid "flowblade_custom_layout.layout_data"
 msgstr ""
 
-#: dialogs.py:451 dialogs.py:467
+#: dialogs.py:440 dialogs.py:456
 #, fuzzy
 msgid "Flowblade Layout Data"
 msgstr "Flowblade Projeler"
 
-#: dialogs.py:460
+#: dialogs.py:449
 #, fuzzy
 msgid "Load Layout"
 msgstr "Katmanları Yükle"
 
-#: dialogs.py:476
+#: dialogs.py:465
 #, fuzzy
 msgid "Save Generator Properties"
 msgstr "Oluşturma Özellikleri"
 
-#: dialogs.py:486 dialogs.py:502
+#: dialogs.py:475 dialogs.py:491
 #, fuzzy
 msgid "Flowblade Generator Properties"
 msgstr "Flowblade Projeler"
 
-#: dialogs.py:495
+#: dialogs.py:484
 #, fuzzy
 msgid "Load Generator Properties"
 msgstr "Oluşturma Özellikleri"
 
-#: dialogs.py:509
+#: dialogs.py:498
 msgid "Create Cloned Media Item"
 msgstr ""
 
-#: dialogs.py:512 dialogs.py:566 dialogs.py:1414 patternproducer.py:338
+#: dialogs.py:501 dialogs.py:555 dialogs.py:1404 patternproducer.py:338
 #: patternproducer.py:371 patternproducer.py:402
 msgid "Create"
 msgstr "Olıştur"
 
-#: dialogs.py:517 panels.py:198 rendergui.py:700 tools/toolsencoding.py:304
+#: dialogs.py:506 panels.py:201 rendergui.py:699 tools/toolsencoding.py:304
 msgid "Name:"
 msgstr "Ad:"
 
-#: dialogs.py:521
+#: dialogs.py:510
 #, fuzzy
 msgid "Length in Frames:"
 msgstr "Klip Kareleri Yazma"
 
-#: dialogs.py:545
+#: dialogs.py:534
 msgid "Export Project as XML to"
 msgstr "Projeyi XML olarak Dışa Aktar"
 
-#: dialogs.py:573 patternproducer.py:349 tools/toolsencoding.py:306
+#: dialogs.py:562 patternproducer.py:349 tools/toolsencoding.py:306
 msgid "Clip Name:"
 msgstr "Klip Adı:"
 
-#: dialogs.py:594
+#: dialogs.py:583
 msgid "Save Runtime Environment Data"
 msgstr "Çalışma Program Ortam Verilerini Kaydet"
 
-#: dialogs.py:606
+#: dialogs.py:595
 msgid "Save Container Clip Edit Data"
 msgstr "Kapsayıcı Verileri Düzenle Klibi Kaydet"
 
-#: dialogs.py:620
+#: dialogs.py:609
 msgid "Load Container Clip Program Edit Data"
 msgstr "Yük Kapsayıcı Klip Programı Verileri Düzenle"
 
-#: dialogs.py:632
+#: dialogs.py:621
 msgid "Can't make home folder render clips folder"
 msgstr "Ana klasör oluşturma klipleri klasörü oluşturulamıyor"
 
-#: dialogs.py:633
+#: dialogs.py:622
 msgid "Please create and select some other folder then '"
 msgstr "Lütfen başka bir klasör oluşturun ve seçin '"
 
-#: dialogs.py:634
+#: dialogs.py:623
 msgid "' as render clips folder"
 msgstr "' işleyen kliplerin klasörü olarak"
 
-#: dialogs.py:638 dialogs.py:659
+#: dialogs.py:627 dialogs.py:648
 msgid "Save project '"
 msgstr "Proje kaydet '"
 
-#: dialogs.py:638
+#: dialogs.py:627
 msgid "' before exiting?"
 msgstr "' çıkmadan önce mi?"
 
-#: dialogs.py:644 dialogs.py:666
+#: dialogs.py:633 dialogs.py:655
 msgid "Don't Save"
 msgstr "Kaydetme"
 
-#: dialogs.py:659
+#: dialogs.py:648
 msgid "' before closing project?"
 msgstr "' önceki projeden çık?"
 
-#: dialogs.py:686
+#: dialogs.py:675
 msgid "Project page:"
 msgstr "Proje sayfası:"
 
-#: dialogs.py:707
+#: dialogs.py:696
 msgid "Upstream:"
 msgstr "Kaynak yönü:"
 
-#: dialogs.py:710
+#: dialogs.py:699
 msgid "Tools:"
 msgstr "Araçlar:"
 
-#: dialogs.py:736
+#: dialogs.py:725
 msgid "Lead Developer:"
 msgstr "Geliştirici Öncüsü:"
 
-#: dialogs.py:739
+#: dialogs.py:728
 msgid "Developers:"
 msgstr "Geliştiriciler:"
 
-#: dialogs.py:746
+#: dialogs.py:735
 msgid "Contributors:"
 msgstr "Katkıda bulunanlar:"
 
-#: dialogs.py:776
+#: dialogs.py:765
 msgid "Translations by:"
 msgstr "Çeviriler:"
 
-#: dialogs.py:790
+#: dialogs.py:779
 msgid "Application"
 msgstr "Uygulama"
 
-#: dialogs.py:791
+#: dialogs.py:780
 msgid "Thanks"
 msgstr "Teşekkürler"
 
-#: dialogs.py:792
+#: dialogs.py:781
 msgid "License"
 msgstr "Lisaans"
 
-#: dialogs.py:793
+#: dialogs.py:782
 msgid "Developers"
 msgstr "Geliştiriciler"
 
-#: dialogs.py:794
+#: dialogs.py:783
 msgid "Translations"
 msgstr "Çeviri"
 
-#: dialogs.py:809
+#: dialogs.py:798
 msgid "MLT version: "
 msgstr "MLT sürümü: "
 
-#: dialogs.py:815
+#: dialogs.py:804
 msgid "GTK version: "
 msgstr "GTK sürümü: "
 
-#: dialogs.py:817
+#: dialogs.py:806
 msgid "Locale: "
 msgstr "Yerel: "
 
-#: dialogs.py:820
+#: dialogs.py:809
 msgid "INSTALLATION"
 msgstr "KURULUM"
 
-#: dialogs.py:824
+#: dialogs.py:813
 msgid "DEVELOPER VERSION"
 msgstr "GELİŞTİRİCİ SÜRÜMÜ"
 
-#: dialogs.py:826
+#: dialogs.py:815
 msgid "Running from: "
 msgstr "Aşağıdakilerden kaçmak: "
 
-#: dialogs.py:854
+#: dialogs.py:843
 msgid " AVAILABLE"
 msgstr " MEVCUT"
 
-#: dialogs.py:856
+#: dialogs.py:845
 msgid " NOT AVAILABLE, "
 msgstr " UYGUN DEĞİL, "
 
-#: dialogs.py:856
+#: dialogs.py:845
 msgid " MISSING"
 msgstr " EKSİK"
 
-#: dialogs.py:862
+#: dialogs.py:851
 msgid " FOR FILTER "
 msgstr " FİLTRE İÇİN "
 
-#: dialogs.py:862 dialogs.py:865
+#: dialogs.py:851 dialogs.py:854
 msgid " NOT FOUND"
 msgstr " BULUNAMADI"
 
-#: dialogs.py:865
+#: dialogs.py:854
 msgid " FOR TRANSITION "
 msgstr " GEÇİŞ İÇİN "
 
-#: dialogs.py:869 dialogs.py:1739 preferenceswindow.py:57
+#: dialogs.py:858 preferenceswindow.py:56
 msgid "General"
 msgstr "Genel"
 
-#: dialogs.py:870
+#: dialogs.py:859
 msgid "MLT Filters"
 msgstr "MLT Filtreler"
 
-#: dialogs.py:871
+#: dialogs.py:860
 msgid "MLT Transitions"
 msgstr "MLT Geçişleri"
 
-#: dialogs.py:872
+#: dialogs.py:861
 msgid "Missing MLT Services"
 msgstr "Eksik MLT Servisleri"
 
-#: dialogs.py:875
+#: dialogs.py:864
 msgid "Video Codecs"
 msgstr "Video Kodlayıcıları"
 
-#: dialogs.py:876
+#: dialogs.py:865
 msgid "Audio Codecs"
 msgstr "Ses Kodlayıcıları"
 
-#: dialogs.py:877
+#: dialogs.py:866
 msgid "Formats"
 msgstr "Biçimler"
 
-#: dialogs.py:878
+#: dialogs.py:867
 msgid "Render Options"
 msgstr "İşleme Seçenekleri"
 
-#: dialogs.py:924 guipopover.py:606
+#: dialogs.py:913 guipopover.py:605
 msgid "File Properties"
 msgstr "Dosya Özellikleri"
 
-#: dialogs.py:937
+#: dialogs.py:927
 msgid "Clip Properties"
 msgstr "Klip Özellikleri"
 
-#: dialogs.py:958
+#: dialogs.py:948
 msgid "Loading project"
 msgstr "Yükleme işlemi"
 
-#: dialogs.py:993
+#: dialogs.py:983
 msgid "Recreating icons"
 msgstr "Simgeleri yeniden oluştur"
 
-#: dialogs.py:996
+#: dialogs.py:986
 msgid "Update media lengths data"
 msgstr "Ortam uzunluklarını güncelleyin"
 
-#: dialogs.py:999
+#: dialogs.py:989
 msgid "Comparing Audio Data..."
 msgstr "Ses verilerini karşılaştırma..."
 
-#: dialogs.py:1036
+#: dialogs.py:1026
 msgid "Are you sure you want to delete these media files?"
 msgstr "Bu ortam dosyalarını silmek istediğinize emin misiniz?"
 
-#: dialogs.py:1037
+#: dialogs.py:1027
 msgid ""
 "One or more of the Media Files you are deleting from the project\n"
 "either <b>have proxy files or are proxy files.</b>\n"
@@ -1619,7 +1619,7 @@ msgstr ""
 "<b>vekil dosyaları var veya vekil dosyaları.</b>\n"
 "\n"
 
-#: dialogs.py:1038
+#: dialogs.py:1028
 msgid ""
 "Deleting these files could <b>prevent converting</b> between\n"
 "using proxy files and using original media.\n"
@@ -1629,15 +1629,15 @@ msgstr ""
 "vekil dosyalarını kullanma ve özgün ortam kullanma.\n"
 "\n"
 
-#: dialogs.py:1048
+#: dialogs.py:1038
 msgid "Force Delete"
 msgstr "Zorla Silme"
 
-#: dialogs.py:1059
+#: dialogs.py:1049
 msgid "Open last autosave?"
 msgstr "Son otomatik kaydetmeyi aç?"
 
-#: dialogs.py:1060
+#: dialogs.py:1050
 msgid ""
 "It seems that Flowblade exited abnormally last time.\n"
 "\n"
@@ -1645,7 +1645,7 @@ msgstr ""
 "Görünüşe göre Flowblade geçen sefer anormal bir şekilde çıktı.\n"
 "\n"
 
-#: dialogs.py:1061
+#: dialogs.py:1051
 msgid ""
 "If there is another instance of Flowblade running,\n"
 "this dialog has probably detected its autosave file.\n"
@@ -1655,23 +1655,23 @@ msgstr ""
 "bu iletişim kutusu muhtemelen otomatik kaydetme dosyasını algıladı.\n"
 "\n"
 
-#: dialogs.py:1062
+#: dialogs.py:1052
 msgid "It is NOT possible to open this autosaved version later."
 msgstr "Bu otomatik kaydedilmiş sürümü daha sonra açmak mümkün DEĞİLDİR."
 
-#: dialogs.py:1070 dialogs.py:1114
+#: dialogs.py:1060 dialogs.py:1104
 msgid "Continue with default 'untitled' project"
 msgstr "Varsayılan 'başlıksız' projeyle devam edin"
 
-#: dialogs.py:1071
+#: dialogs.py:1061
 msgid "Open Autosaved Project"
 msgstr "Otomatik Kaydedilen Projeyi Aç"
 
-#: dialogs.py:1081
+#: dialogs.py:1071
 msgid "Open a autosave file?"
 msgstr "Otomatik kaydetme dosyası açılsın mı?"
 
-#: dialogs.py:1082
+#: dialogs.py:1072
 msgid ""
 "There are <b>multiple autosave files</b> from application crashes.\n"
 "\n"
@@ -1680,7 +1680,7 @@ msgstr ""
 "var.\n"
 "\n"
 
-#: dialogs.py:1083
+#: dialogs.py:1073
 msgid ""
 "If you just <b>experienced a crash, select the last created autosave</b> "
 "file\n"
@@ -1692,7 +1692,7 @@ msgstr ""
 "çalışmaya devam etmek için.\n"
 "\n"
 
-#: dialogs.py:1084
+#: dialogs.py:1074
 msgid ""
 "If you see this at application start without a recent crash,\n"
 "you should probably delete all autosave files to stop seeing this dialog."
@@ -1701,66 +1701,66 @@ msgstr ""
 "Bu iletişim kutusunu görmeyi durdurmak için muhtemelen tüm otomatik kaydetme "
 "dosyalarını silmelisiniz."
 
-#: dialogs.py:1092
+#: dialogs.py:1082
 msgid "Delete all autosaves"
 msgstr "Tüm otomatik kayıtları sil"
 
-#: dialogs.py:1094
+#: dialogs.py:1084
 msgid "Delete all but selected autosave"
 msgstr "Seçili olanlar hariç tümünü sil"
 
-#: dialogs.py:1115
+#: dialogs.py:1105
 msgid "Open Selected Autosave"
 msgstr "Seçili Otomatik Kaydetmeyi Aç"
 
-#: dialogs.py:1145
+#: dialogs.py:1135
 #, fuzzy
 msgid "Confirm Adding Video Track"
 msgstr "Maksimum Video Parçaları"
 
-#: dialogs.py:1148
+#: dialogs.py:1138
 #, fuzzy
 msgid "Confirm Adding Audio Track"
 msgstr "Maksimum Ses Parçaları"
 
-#: dialogs.py:1152
+#: dialogs.py:1142
 #, fuzzy
 msgid "Confirm Deleting Video Track"
 msgstr "Maksimum Video Parçaları"
 
-#: dialogs.py:1155
+#: dialogs.py:1145
 #, fuzzy
 msgid "Confirm Deleting Audio Track"
 msgstr "Maksimum Ses Parçaları"
 
-#: dialogs.py:1163 dialogs.py:2072
+#: dialogs.py:1153 dialogs.py:1792
 msgid "<b>Please note:</b>\n"
 msgstr "<b>Lütfen aklınızda bulundurun:</b>\n"
 
-#: dialogs.py:1164 dialogs.py:1194 dialogs.py:2074
+#: dialogs.py:1154 dialogs.py:1184 dialogs.py:1794
 msgid " There is no Undo for this operation\n"
 msgstr " Bu işlem için Geri Alma yok\n"
 
-#: dialogs.py:1165 dialogs.py:1195 dialogs.py:2075
+#: dialogs.py:1155 dialogs.py:1185 dialogs.py:1795
 msgid " Current Undo Stack will be destroyed\n"
 msgstr " Geçerli Geri Alma yığını yok edilecek\n"
 
-#: dialogs.py:1185
+#: dialogs.py:1175
 msgid "Change Sequence Tracks Count"
 msgstr "Parça Sayısını Değiştirme Sırası"
 
-#: dialogs.py:1188
+#: dialogs.py:1178
 msgid "Change Tracks"
 msgstr "Parçaları Değiştir"
 
-#: dialogs.py:1192
+#: dialogs.py:1182
 #, fuzzy
 msgid "Please note:\n"
 msgstr ""
 "Lütfen dikkate alın:\n"
 "\n"
 
-#: dialogs.py:1193
+#: dialogs.py:1183
 msgid ""
 " When reducing the number of tracks the top Video track and/or bottom Audio "
 "track will be removed\n"
@@ -1768,18 +1768,18 @@ msgstr ""
 " Parça sayısını azaltırken, üst Video parçası ve / veya alt ses parçası "
 "silinecektir\n"
 
-#: dialogs.py:1196
+#: dialogs.py:1186
 msgid ""
 " All Clips and Compositors on deleted Tracks will be permanently destroyed"
 msgstr ""
 " Silinen Parçalardaki tüm klipler ve Besteciler kalıcı olarak yok edilecektir"
 
-#: dialogs.py:1218
+#: dialogs.py:1208
 #, fuzzy
 msgid "Replace Media Item in Project"
 msgstr "Oluştuma Öğesi Projesini Farklı Kaydet"
 
-#: dialogs.py:1221
+#: dialogs.py:1211
 msgid ""
 "Please note:\n"
 "\n"
@@ -1787,119 +1787,119 @@ msgstr ""
 "Lütfen dikkate alın:\n"
 "\n"
 
-#: dialogs.py:1222
+#: dialogs.py:1212
 #, fuzzy
 msgid ""
 " It is recommended that you save Project before completing this operation.\n"
 msgstr " Bu işlemi tamamlamadan önce projeyi kaydetmeniz önerilir\n"
 
-#: dialogs.py:1223
+#: dialogs.py:1213
 #, fuzzy
 msgid " There is no Undo for this operation.\n"
 msgstr " Bu işlem için Geri Alma yok\n"
 
-#: dialogs.py:1224
+#: dialogs.py:1214
 #, fuzzy
 msgid " Current Undo Stack will be destroyed.\n"
 msgstr " Geçerli Geri Alma yığını yok edilecek\n"
 
-#: dialogs.py:1225
+#: dialogs.py:1215
 msgid ""
 " Replacing current media with shorter or othervise unsuitable media may "
 "result in\n"
 "   crashes or corrupted project data."
 msgstr ""
 
-#: dialogs.py:1231
+#: dialogs.py:1221
 #, fuzzy
 msgid "Media File To Replace"
 msgstr "Medya dosyası yeniden bağlantı yolu"
 
-#: dialogs.py:1235
+#: dialogs.py:1225
 #, fuzzy
 msgid "Select Replacement File"
 msgstr "Proje Dosyasını Seç"
 
-#: dialogs.py:1240
+#: dialogs.py:1230
 msgid "Replacement Media"
 msgstr ""
 
-#: dialogs.py:1246
+#: dialogs.py:1236
 #, fuzzy
 msgid "Replace Media"
 msgstr "Video Ortamını Seçin"
 
-#: dialogs.py:1268
+#: dialogs.py:1258
 #, fuzzy
 msgid "Select Replament Media"
 msgstr "Video Ortamını Seçin"
 
-#: dialogs.py:1276
+#: dialogs.py:1266
 #, fuzzy
 msgid "Media Files"
 msgstr "Tüm Ortam Dosyaları"
 
-#: dialogs.py:1293
+#: dialogs.py:1283
 msgid "Change Clip Length"
 msgstr "Klibin Uzunluğunu Değiştirme"
 
-#: dialogs.py:1314
+#: dialogs.py:1304
 msgid "Create New Sequence"
 msgstr "Yeni Sıra Oluştur"
 
-#: dialogs.py:1317
+#: dialogs.py:1307
 msgid "Create Sequence"
 msgstr "Sıra Oluştur"
 
-#: dialogs.py:1324
+#: dialogs.py:1314
 msgid "Sequence Name:"
 msgstr "Sıra Adı:"
 
-#: dialogs.py:1332
+#: dialogs.py:1322
 msgid "Open For Editing:"
 msgstr "Düzenleme İçin Aç:"
 
-#: dialogs.py:1355
+#: dialogs.py:1345
 msgid "Rename New Media Object"
 msgstr "Yeni Medya Nesnesini Yeniden Adlandır"
 
-#: dialogs.py:1358 dialogs.py:1386 dialogs.py:1440 guipopover.py:577
+#: dialogs.py:1348 dialogs.py:1376 dialogs.py:1430 guipopover.py:576
 msgid "Rename"
 msgstr "Yeniden adlandır"
 
-#: dialogs.py:1365 dialogs.py:1393
+#: dialogs.py:1355 dialogs.py:1383
 msgid "New Name:"
 msgstr "Yeni Ad:"
 
-#: dialogs.py:1383 guipopoverclip.py:446
+#: dialogs.py:1373 guipopoverclip.py:456
 msgid "Rename Clip"
 msgstr "Klibi Yeniden Adlandır"
 
-#: dialogs.py:1411
+#: dialogs.py:1401
 msgid "New Range Item Group"
 msgstr "Yeni Aralık Öğe Grubu"
 
-#: dialogs.py:1418
+#: dialogs.py:1408
 msgid "User Group "
 msgstr "Kullanıcı Grubu "
 
-#: dialogs.py:1421 dialogs.py:1441
+#: dialogs.py:1411 dialogs.py:1431
 msgid "New Group Name:"
 msgstr "Yeni Grup Adı:"
 
-#: dialogs.py:1439
+#: dialogs.py:1429
 msgid "Rename Range Log Item Group"
 msgstr "Aralık Günlüğü Öğesi Grubunu Yeniden Adlandırma"
 
-#: dialogs.py:1447
+#: dialogs.py:1437
 msgid "Can't open non-valid media"
 msgstr "Geçerli olmayan ortamı açamıyor"
 
-#: dialogs.py:1448
+#: dialogs.py:1438
 msgid "File: "
 msgstr "Dosya: "
 
-#: dialogs.py:1448
+#: dialogs.py:1438
 msgid ""
 "\n"
 "is not a valid media file."
@@ -1907,45 +1907,45 @@ msgstr ""
 "\n"
 "geçerli bir ortan dosyası değil."
 
-#: dialogs.py:1453 dialogs.py:1481
+#: dialogs.py:1443 dialogs.py:1471
 msgid "New Marker"
 msgstr "Yeni İşaretçi"
 
-#: dialogs.py:1454 dialogs.py:1483 guipopover.py:222
+#: dialogs.py:1444 dialogs.py:1473 guipopover.py:220
 msgid "Add Marker"
 msgstr "İşaretçi Ekle"
 
-#: dialogs.py:1456 guipopover.py:225
+#: dialogs.py:1446 guipopover.py:223
 #, fuzzy
 msgid "Rename Marker"
 msgstr "Yeni İşaretçi"
 
-#: dialogs.py:1457
+#: dialogs.py:1447
 #, fuzzy
 msgid "Do Rename"
 msgstr "Yeniden adlandır"
 
-#: dialogs.py:1468
+#: dialogs.py:1458
 msgid "Name for marker at "
 msgstr "İşaretleyicinin adı "
 
-#: dialogs.py:1485
+#: dialogs.py:1475
 msgid "Timeline position: "
 msgstr "Zaman çizelgesi konumu: "
 
-#: dialogs.py:1492
+#: dialogs.py:1482
 msgid "Name for clip marker at "
 msgstr "Klip işaretleyicisinin adı "
 
-#: dialogs.py:1511
+#: dialogs.py:1501
 msgid "Alpha Filters Info"
 msgstr "Alfa Filtreleri Hakkında Bilgi"
 
-#: dialogs.py:1515
+#: dialogs.py:1505
 msgid "You are adding <b>Alpha Filter '"
 msgstr "Alfa<b> filtresini Ekliyorsunuz '"
 
-#: dialogs.py:1515
+#: dialogs.py:1505
 msgid ""
 "'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on "
 "Flowblade:"
@@ -1953,7 +1953,7 @@ msgstr ""
 "'</b>bir klibe. Flowblade'de <b>Alfa Filtre</b>lerinin nasıl çalıştığına "
 "dair bazı bilgiler:"
 
-#: dialogs.py:1520
+#: dialogs.py:1510
 msgid ""
 "This applies to all <b>Compositing Modes</b> other then <b>Standard Full "
 "Track</b>."
@@ -1961,12 +1961,12 @@ msgstr ""
 "Bu, <b>Standart Tam Yol</b> dışındaki tüm <b>Birleştirme Modları</b>için "
 "geçerlidir."
 
-#: dialogs.py:1526
+#: dialogs.py:1516
 msgid " <b>Alpha Filters</b> work by modifying image's alpha channel.\n"
 msgstr ""
 " <b>Alfa filtreleri</b> görüntünün alfa kanalını değiştirerek çalışır.\n"
 
-#: dialogs.py:1527
+#: dialogs.py:1517
 msgid ""
 " To see the effect of <b>Alpha Filter</b> you need composite this clip on "
 "track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n"
@@ -1975,493 +1975,120 @@ msgstr ""
 "'Karıştırma' gibi <b> ekleyerek bu klibi aşağıdaki parçada birleştirmeniz "
 "gerekir.\n"
 
-#: dialogs.py:1528
+#: dialogs.py:1518
 msgid " <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect."
 msgstr ""
 " <b>Alfa Filtre</b>lerinin <b>Parça V1</b> üzerindeki kliplerde hiçbir "
 "etkisi yoktur."
 
-#: dialogs.py:1533
+#: dialogs.py:1523
 msgid "Don't show this message again."
 msgstr "Bu iletiyi bir daha gösterme."
 
-#: dialogs.py:1556
+#: dialogs.py:1546
 msgid "Add Image Sequence Clip"
 msgstr "Görüntü Sırası Klibi Ekle"
 
-#: dialogs.py:1562
+#: dialogs.py:1552
 msgid "Select First Frame"
 msgstr "İlk Kareyi Seçin"
 
-#: dialogs.py:1572
+#: dialogs.py:1562
 msgid "First frame:"
 msgstr "İlk Kare:"
 
-#: dialogs.py:1576
+#: dialogs.py:1566
 msgid "Frames per Source Image:"
 msgstr "Kaynak Görüntü Başına Kare:"
 
-#: dialogs.py:1592
+#: dialogs.py:1582
 msgid "Export EDL"
 msgstr "Dışa Aktar EDL"
 
-#: dialogs.py:1606
+#: dialogs.py:1596
 msgid "Rerender Transition"
 msgstr "Reverans Geçişi"
 
-#: dialogs.py:1609 guipopoverclip.py:372
+#: dialogs.py:1599 guipopoverclip.py:376
 msgid "Rerender"
 msgstr "Reverans"
 
-#: dialogs.py:1620
+#: dialogs.py:1610
 msgid "Rerender All Transitions and Fades"
 msgstr "Reverans Bütün geçişler ve kaybolur"
 
-#: dialogs.py:1623
+#: dialogs.py:1613
 msgid "Rerender All"
 msgstr "Tüm Reveranslar"
 
-#: dialogs.py:1641 dialogs.py:1905 tools/titler.py:648 proxyediting.py:313
-#: medialinker.py:166 tools/gmic.py:833 tools/gmic.py:929
-#: diskcachemanagement.py:158 tools/scripttool.py:923 tools/scripttool.py:1087
-#: projectdatavaultgui.py:266 projectdatavaultgui.py:725
-msgid "Close"
-msgstr "Kapat"
-
-#: dialogs.py:1644
-#, fuzzy
-msgid "Active Shortcuts Group:"
-msgstr "Kısayol Grubu:"
-
-#: dialogs.py:1649
-msgid "Add Custom Shortcuts Group"
-msgstr "Özel Kısayolları Grubunu Ekle"
-
-#: dialogs.py:1652
-msgid "Delete Active Custom Shortcuts Group"
-msgstr "Etkin Özel Kısayollar Grubunu Sil"
-
-#: dialogs.py:1725
-msgid "Control + N"
-msgstr "Control + N"
-
-#: dialogs.py:1725
-msgid "Create New Project"
-msgstr "Yeni Proje Oluşturun"
-
-#: dialogs.py:1726
-msgid "Control + S"
-msgstr "Control + S"
-
-#: dialogs.py:1726
-msgid "Save Project"
-msgstr "Ptojeyi Kaydet"
-
-#: dialogs.py:1727 dialogs.py:1746
-msgid "DELETE"
-msgstr "SİL"
-
-#: dialogs.py:1727 shortcuts.py:380
-msgid "Delete Selected Item"
-msgstr "Seçili Öğeyi Sil"
-
-#: dialogs.py:1729
-msgid "ESCAPE"
-msgstr "VAZGEÇ"
-
-#: dialogs.py:1729
-msgid "Stop Rendering Audio Levels"
-msgstr "Ses Düzeylerini Oluşturmayı Durdur"
-
-#: dialogs.py:1730
-msgid "Control + Q"
-msgstr "Control + Q"
-
-#: dialogs.py:1730
-msgid "Quit"
-msgstr "Çık"
-
-#: dialogs.py:1731
-msgid "Control + Z"
-msgstr "Control + Z"
-
-#: dialogs.py:1731
-msgid "Undo"
-msgstr "Geri Al"
-
-#: dialogs.py:1732
-msgid "Control + Y"
-msgstr "Control + Y"
-
-#: dialogs.py:1732
-msgid "Redo"
-msgstr "Yenile"
-
-#: dialogs.py:1733
-msgid "Control + O"
-msgstr "Control + O"
-
-#: dialogs.py:1733
-msgid "Open Project"
-msgstr "Proje Aç"
-
-#: dialogs.py:1734 shortcuts.py:484
-msgid "TAB"
-msgstr "TAB"
-
-#: dialogs.py:1734 shortcuts.py:398
-msgid "Switch Monitor Source"
-msgstr "Monitör Kaynağını Değiştir"
-
-#: dialogs.py:1747
-msgid "Control + DELETE"
-msgstr "Kontrol + SİL"
-
-#: dialogs.py:1757 dialogs.py:1822
-msgid "Control + C"
-msgstr "Control + C"
-
-#: dialogs.py:1757
-msgid "Copy Clips"
-msgstr "Klipleri Kopyala"
-
-#: dialogs.py:1758 dialogs.py:1823
-msgid "Control + V"
-msgstr "Control + V"
-
-#: dialogs.py:1758
-msgid "Paste Clips"
-msgstr "Klipleri Yapıştır"
-
-#: dialogs.py:1759
-#, fuzzy
-msgid "Shift + Control + V"
-msgstr "Shift + Kontrol + Sol Ok "
-
-#: dialogs.py:1759
-#, fuzzy
-msgid "Paste Filters/Properties"
-msgstr "Yapıştır Filtreleri / Özellikleri"
-
-#: dialogs.py:1764
-#, fuzzy
-msgid "Timeline Edits"
-msgstr "Zaman akışı"
-
-#: dialogs.py:1772
-#, fuzzy
-msgid "Timeline Actions"
-msgstr "Zaman çizelgesi konumu: "
-
-#: dialogs.py:1775 dialogs.py:1801 dialogs.py:1828 dialogs.py:1843
-msgid "Left Arrow "
-msgstr "Sol Ok "
-
-#: dialogs.py:1775
-msgid "Prev Frame Trim Edit"
-msgstr "Önceki Kare Kırpma Düzenleme"
-
-#: dialogs.py:1776 dialogs.py:1829 dialogs.py:1844 shortcuts.py:457
-msgid "Right Arrow"
-msgstr "Sağ Ok"
-
-#: dialogs.py:1776
-msgid "Next Frame Trim Edit"
-msgstr "Sonraki Kare Kırpma Düzenlemesi"
-
-#: dialogs.py:1777 dialogs.py:1805 dialogs.py:1834
-msgid "Shift + Left Arrow "
-msgstr "Shift + Sol Ok "
-
-#: dialogs.py:1777
-msgid "Back 10 Frames Trim Edit"
-msgstr "Geri 10 Kare Kırpma Düzenle"
-
-#: dialogs.py:1778 dialogs.py:1806 dialogs.py:1835
-msgid "Shift + Right Arrow"
-msgstr "Shift + Sağ Ok"
-
-#: dialogs.py:1778
-msgid "Forward 10 Frames Trim Edit"
-msgstr "10 Kare İleri Kırp Düzenle"
-
-#: dialogs.py:1779 shortcuts.py:485
-msgid "ENTER"
-msgstr "ENTER"
-
-#: dialogs.py:1779 shortcuts.py:402
-msgid "Complete Keyboard Trim Edit"
-msgstr "Klavye Kırpma Düzenlemesini Tamamla"
-
-#: dialogs.py:1780
-#, fuzzy
-msgid "Trimming"
-msgstr "Kırpma"
-
-#: dialogs.py:1789
-#, fuzzy
-msgid "Marks"
-msgstr "İşaretçiler"
-
-#: dialogs.py:1792
-msgid "Mouse Double Click"
-msgstr "Fareyi Çift Tıklatın"
-
-#: dialogs.py:1792
-msgid "Toggle Track Height"
-msgstr "Parça Yüksekliğini Değiştir"
-
-#: dialogs.py:1793
-msgid "Track Head Column"
-msgstr "Parça Başı Sütun"
-
-#: dialogs.py:1801 dialogs.py:1844 keyframeeditor.py:760 shortcuts.py:370
-msgid "Next Frame"
-msgstr "Sonraki Kare"
-
-#: dialogs.py:1802
-msgid "Right Arrow "
-msgstr "Sağ Ok "
-
-#: dialogs.py:1802
-msgid "Previous Frames"
-msgstr "Önceki Kare"
-
-#: dialogs.py:1803
-#, fuzzy
-msgid "Control + Left Arrow"
-msgstr "Kontrol + Sol Ok "
-
-#: dialogs.py:1803
-#, fuzzy
-msgid "Move Back at 10 fps slowmo"
-msgstr "10 Kare Geri Git"
-
-#: dialogs.py:1804
-msgid "Control + Right Arrow"
-msgstr "Kontrol + Sağ Ok"
-
-#: dialogs.py:1804
-#, fuzzy
-msgid "Move Forward  at 10 fps slowmo"
-msgstr "10 Kare İleri Taşı"
-
-#: dialogs.py:1805
-msgid "Move Back 10 Frames"
-msgstr "10 Kare Geri Git"
-
-#: dialogs.py:1806
-msgid "Move Forward 10 Frames"
-msgstr "10 Kare İleri Taşı"
-
-#: dialogs.py:1809
-msgid "Home"
-msgstr "Anasayfa"
-
-#: dialogs.py:1809 shortcuts.py:382
-msgid "Go To Start"
-msgstr "Başlamak"
-
-#: dialogs.py:1810
-msgid "End"
-msgstr "Son"
-
-#: dialogs.py:1810 shortcuts.py:383
-msgid "Go To End"
-msgstr "Sona Git"
-
-#: dialogs.py:1813 preferenceswindow.py:59
-msgid "Playback"
-msgstr "Geri çalma"
-
-#: dialogs.py:1818
-#, fuzzy
-msgid "Keypad 1-6"
-msgstr "Tuş takımı 1-9"
-
-#: dialogs.py:1818
-#, fuzzy
-msgid "Same as 1-6"
-msgstr "1-9 ile aynı"
-
-#: dialogs.py:1819
-msgid "Edit Tools"
-msgstr "Araçları Düzenle"
-
-#: dialogs.py:1822
-msgid "Copy Keyframe Value"
-msgstr "Anahtar Kare Değerini Kopyala"
-
-#: dialogs.py:1823
-msgid "Paste Keyframe Value"
-msgstr "Anahtar Kare Değerini Yapıştı"
-
-#: dialogs.py:1824 dialogs.py:1833
-msgid "Control + Mouse Drag"
-msgstr "Kontrol + Fareyle Sürükle"
-
-#: dialogs.py:1824
-#, fuzzy
-msgid "Move all keyframes after selected"
-msgstr "Klip aralığından sonra tüm ana kareleri Sil"
-
-#: dialogs.py:1825
-msgid "Keyframe and Geometry Editor"
-msgstr "Anahtar Kare ve Geometri Düzenleyici"
-
-#: dialogs.py:1828
-msgid "Move Source Video Left 1px"
-msgstr "Kaynak Videoyu 1px Sola Taşı"
-
-#: dialogs.py:1829
-msgid "Move Source Video Right 1px"
-msgstr "Kaynak Videoyu 1px Sağa Taşı"
-
-#: dialogs.py:1830 shortcuts.py:455
-msgid "Up Arrow"
-msgstr "Yukarı Ok"
-
-#: dialogs.py:1830
-msgid "Move Source Video Up 1px"
-msgstr "Kaynak Videoyu 1px Yukarı Taşı"
-
-#: dialogs.py:1831 shortcuts.py:454
-msgid "Down Arrow"
-msgstr "Aşağı Ok"
-
-#: dialogs.py:1831
-msgid "Move Source Video Down 1px"
-msgstr "Kaynak Videoyu 1px Aşağı Taşı"
-
-#: dialogs.py:1832
-msgid "Control + Arrow"
-msgstr "Kontrol + Ok"
-
-#: dialogs.py:1832
-msgid "Move Source Video 10px"
-msgstr "Kaynak Videoyu 10px Taşı"
-
-#: dialogs.py:1833
-msgid "Keep Aspect Ratio in Affine Blend scaling"
-msgstr "Afin karışım ölçeklemesinde en boy oranını koruyun"
-
-#: dialogs.py:1834
-msgid "Scale Down"
-msgstr "Azaltmak"
-
-#: dialogs.py:1835
-msgid "Scale Up"
-msgstr "Çoğalt"
-
-#: dialogs.py:1836
-msgid "Shift + Control + Left Arrow "
-msgstr "Shift + Kontrol + Sol Ok "
-
-#: dialogs.py:1836
-msgid "Scale Down More"
-msgstr "Daha Fazla Ölçeklendirin"
-
-#: dialogs.py:1837
-msgid "Shift + Control + Right Arrow"
-msgstr "Shift + Kontrol + Sağ Ok"
-
-#: dialogs.py:1837
-msgid "Scale Up More"
-msgstr "Daha Fazla Ölçeklendirin"
-
-#: dialogs.py:1838 shortcuts.py:493
-msgid "Shift"
-msgstr "Shift"
-
-#: dialogs.py:1838
-msgid "Snap to X or Y of drag start point"
-msgstr "Başlangıç noktasını X veya Y kısmına sürükle tuttur"
-
-#: dialogs.py:1839
-#, fuzzy
-msgid "Geometry Editor GUI Panel"
-msgstr "Geometri Editörü"
-
-#: dialogs.py:1842 tools/titler.py:284 tools/batchrendering.py:1197
-#: shortcuts.py:458 guipopover.py:578 guipopover.py:903 guipopoverclip.py:298
-#: guipopoverclip.py:333 guipopoverclip.py:359 guipopoverclip.py:495
-#: guipopoverclip.py:606
-msgid "Delete"
-msgstr "Sil"
-
-#: dialogs.py:1842
-msgid "Deletes Selected Handle"
-msgstr "Seçili Tanıtıcıyı Siler"
-
-#: dialogs.py:1843 keyframeeditor.py:759
-msgid "Previous Frame"
-msgstr "Önceki Çerçeve"
-
-#: dialogs.py:1845
-msgid "RotoMask Editor"
-msgstr "İçMaske Editörü"
-
-#: dialogs.py:1903
+#: dialogs.py:1625
 msgid "Sequence Watermark"
 msgstr "Sıra Filigranı"
 
-#: dialogs.py:1907
+#: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
+#: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
+#: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
+#: projectdatavaultgui.py:724
+msgid "Close"
+msgstr "Kapat"
+
+#: dialogs.py:1629
 msgid "Sequence:"
 msgstr "Sıra:"
 
-#: dialogs.py:1911
+#: dialogs.py:1633
 msgid "Watermark:"
 msgstr "Fligran:"
 
-#: dialogs.py:1913
+#: dialogs.py:1635
 msgid "Set Watermark File"
 msgstr "Filigran Dosyasını Ayarla"
 
-#: dialogs.py:1914
+#: dialogs.py:1636
 msgid "Remove Watermark"
 msgstr "Filigranı Kaldır"
 
-#: dialogs.py:1916 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178
 msgid "Not Set"
 msgstr "Ayarlanmadı"
 
-#: dialogs.py:1950
+#: dialogs.py:1670
 msgid "Select Watermark File"
 msgstr "Filigran Dosyası Seçin"
 
-#: dialogs.py:1979
+#: dialogs.py:1699
 msgid "All files"
 msgstr "Tüm dosyalar"
 
-#: dialogs.py:2001
+#: dialogs.py:1721
 msgid "Saving project snapshot"
 msgstr "Proje anlık görüntüsünü kaydetme"
 
-#: dialogs.py:2023
+#: dialogs.py:1743
 msgid "Loaded Media Profile Mismatch"
 msgstr "Yüklenen Medya Profili Uyuşmazlığı"
 
-#: dialogs.py:2025
+#: dialogs.py:1745
 msgid "Keep Current Profile"
 msgstr "Mevcut Profili Koru"
 
-#: dialogs.py:2026
+#: dialogs.py:1746
 msgid "Change To File Profile"
 msgstr "Dosya Profiline Değiştir"
 
-#: dialogs.py:2028
+#: dialogs.py:1748
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr "Proje profiliyle eşleşmeyen bir video dosyası yüklendi!"
 
-#: dialogs.py:2036
+#: dialogs.py:1756
 msgid "File Profile:"
 msgstr "Dosya Profili:"
 
-#: dialogs.py:2037
+#: dialogs.py:1757
 msgid "Project Profile:"
 msgstr "Proje Profili:"
 
-#: dialogs.py:2038
+#: dialogs.py:1758
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2472,149 +2099,149 @@ msgstr ""
 ".\n"
 "Bu ileti yalnızca proje için ilk medya yükünde görüntülenir."
 
-#: dialogs.py:2062
+#: dialogs.py:1782
 msgid "Cannot import sequence!"
 msgstr "Sıra içe aktarılamıyor!"
 
-#: dialogs.py:2063
+#: dialogs.py:1783
 msgid "There are no other sequences in the Project."
 msgstr "Projede başka öğe dizisi yok."
 
-#: dialogs.py:2067
+#: dialogs.py:1787
 msgid "Import Sequence"
 msgstr "İçe Aktarma Sırası"
 
-#: dialogs.py:2070
+#: dialogs.py:1790
 msgid "Import"
 msgstr "Aktarma"
 
-#: dialogs.py:2073
+#: dialogs.py:1793
 msgid ""
 " It is recommended that you save Project before completing this operation\n"
 msgstr " Bu işlemi tamamlamadan önce projeyi kaydetmeniz önerilir\n"
 
-#: dialogs.py:2081
+#: dialogs.py:1801
 msgid "Append Sequence"
 msgstr "Sırayı Ekle"
 
-#: dialogs.py:2082
+#: dialogs.py:1802
 msgid "Insert Sequence at Playhead position"
 msgstr "Oynatma başlatma konumuna bir dizi ekleme"
 
-#: dialogs.py:2095
+#: dialogs.py:1815
 msgid "Action:"
 msgstr "Aksiyon:"
 
-#: dialogs.py:2098
+#: dialogs.py:1818
 msgid "Import:"
 msgstr "Aktar:"
 
-#: dialogs.py:2114
+#: dialogs.py:1834
 msgid "Timeline Audio Sync"
 msgstr "Zaman Çizelgesi Ses Eşitleme"
 
-#: dialogs.py:2117
+#: dialogs.py:1837
 msgid "Do Audio Sync Move Edit"
 msgstr "Ses Eşitlemesini Düzenle Taşı"
 
-#: dialogs.py:2119
+#: dialogs.py:1839
 msgid "<b>Audio Sync Offset</b> between clips media is "
 msgstr "Klipler arasında <b>Ses Eşitleme Dengesi</b> "
 
-#: dialogs.py:2119 dialogs.py:2122 dialogs.py:2126
+#: dialogs.py:1839 dialogs.py:1842 dialogs.py:1846
 msgid " frames."
 msgstr " kareler."
 
-#: dialogs.py:2122
+#: dialogs.py:1842
 msgid "<b>Timeline Media Offset</b> between clips is "
 msgstr "Klipler arasında <b>Zaman Çizelgesi Ortam Dengesi</b> "
 
-#: dialogs.py:2126
+#: dialogs.py:1846
 msgid "To audio sync clips you need move action origin clip by "
 msgstr ""
 "Ses kliplerini eşitlemek için aksiyon köken klip'i hareket ettirmeniz "
 "gerekir "
 
-#: dialogs.py:2146
+#: dialogs.py:1866
 msgid "Can't put an audio clip on a video track."
 msgstr "Bir video parçasına ses klibi ekleyemezsiniz."
 
-#: dialogs.py:2147 movemodes.py:728 dialogutils.py:263
+#: dialogs.py:1867 movemodes.py:770 dialogutils.py:263
 msgid "Track "
 msgstr "Parça "
 
-#: dialogs.py:2147
+#: dialogs.py:1867
 msgid " is a video track and can't display audio only material."
 msgstr " bir video parçası ve yalnızca sesli materyali gösteremez."
 
-#: dialogs.py:2152
+#: dialogs.py:1872
 msgid "Confirm Compositing Mode Change"
 msgstr "Birleştirme Modu Değişikliğini Onaylayın"
 
-#: dialogs.py:2155
+#: dialogs.py:1875
 msgid "Change Compositing Mode"
 msgstr "Birleştirme Modunu Değiştirin"
 
-#: dialogs.py:2157
+#: dialogs.py:1877
 msgid "Changing Compositing Mode destroys current Compositors and undo stack"
 msgstr ""
 "Birleştirme Modunu değiştirmek, mevcut Oluşturucuları yok eder ve yığını "
 "geri alır"
 
-#: dialogs.py:2158
+#: dialogs.py:1878
 msgid "This operation cannot be undone. Are you sure you wish to proceed?"
 msgstr "Bu işlem geri alınamaz. İlerlemek istediğinize emin misiniz?"
 
-#: dialogs.py:2170
+#: dialogs.py:1890
 msgid "Fades Default Lengths"
 msgstr "Varsayılan Uzunlukları Soldurur"
 
-#: dialogs.py:2173 dialogs.py:2245
+#: dialogs.py:1893 dialogs.py:1965
 msgid "Set"
 msgstr "Ayarla"
 
-#: dialogs.py:2179
+#: dialogs.py:1899
 msgid "Fade Buttons Fades Default Length:"
 msgstr "Solmaya Düğmeleri Varsayılan Uzunluğu Kaybolur:"
 
-#: dialogs.py:2195
+#: dialogs.py:1915
 msgid "No Monitor display available for Generators"
 msgstr ""
 
-#: dialogs.py:2196
+#: dialogs.py:1916
 msgid "Generators with user mutable media are best handled on Timeline."
 msgstr ""
 
-#: dialogs.py:2200
+#: dialogs.py:1920
 msgid "Cannot do the panel move!"
 msgstr ""
 
-#: dialogs.py:2201
+#: dialogs.py:1921
 msgid ""
 "It is not possible to move the panel and make the top left notebook empty."
 msgstr ""
 
-#: dialogs.py:2205
+#: dialogs.py:1925
 #, fuzzy
 msgid "There are currenly "
 msgstr "Var "
 
-#: dialogs.py:2205
+#: dialogs.py:1925
 #, fuzzy
 msgid " active job/s!"
 msgstr "aktif"
 
-#: dialogs.py:2206
+#: dialogs.py:1926
 #, fuzzy
 msgid "Let active jobs complete or cancel them before closing the application."
 msgstr "Uygulamayı kapatmadan önce oluşturmayı durdurun."
 
-#: dialogs.py:2210
+#: dialogs.py:1930
 #, fuzzy
 msgid "Unable to load some Compositors!"
 msgstr "Sil Dizgici/ler"
 
-#: dialogs.py:2211
+#: dialogs.py:1931
 msgid ""
 "MLT version 7 removed several services that were used to implement "
 "Compositors in Flowblade.\n"
@@ -2622,16 +2249,16 @@ msgid ""
 "Your Project had "
 msgstr ""
 
-#: dialogs.py:2212
+#: dialogs.py:1932
 msgid " Compositor/s in it that cannot be loaded."
 msgstr ""
 
-#: dialogs.py:2216
+#: dialogs.py:1936
 #, fuzzy
 msgid "Cannot log Ranges from Timelime!"
 msgstr "Seçilen aralıkları zaman çizelgesine ekleme"
 
-#: dialogs.py:2217
+#: dialogs.py:1937
 msgid ""
 "'Range Log' functionality is intented to log areas of interest\n"
 "in Media Items.\n"
@@ -2640,232 +2267,216 @@ msgid ""
 "the 'Timeline Markers' functionality."
 msgstr ""
 
-#: dialogs.py:2221
+#: dialogs.py:1941
 #, fuzzy
 msgid "Add Compositor To Clip"
 msgstr "Dizin Ekle"
 
-#: dialogs.py:2224
+#: dialogs.py:1944
 msgid "Add Compositor"
 msgstr "Dizin Ekle"
 
-#: dialogs.py:2244
+#: dialogs.py:1964
 #, fuzzy
 msgid "Set Bin Graphics Default Length"
 msgstr "Grafik varsayılan uzunluğu:"
 
-#: dialogs.py:2247
+#: dialogs.py:1967
 #, fuzzy
 msgid "Set graphics default length for {}:"
 msgstr "Grafik varsayılan uzunluğu:"
 
-#: guicomponents.py:770
+#: guicomponents.py:761
 msgid "default"
 msgstr "varsayılan"
 
-#: guicomponents.py:785
+#: guicomponents.py:776
 msgid "Autosave created "
 msgstr "Otomatik kaydetme oluşturuldu "
 
-#: guicomponents.py:785
+#: guicomponents.py:776
 msgid " ago."
 msgstr " önce."
 
-#: guicomponents.py:804
+#: guicomponents.py:795
 msgid "Clip:"
 msgstr "Klip:"
 
-#: guicomponents.py:815
+#: guicomponents.py:806
 msgid "Track:"
 msgstr "Parça:"
 
-#: guicomponents.py:836
+#: guicomponents.py:827
 msgid "<b>Clip: </b>"
 msgstr "<b>Klip: </b>"
 
-#: guicomponents.py:838
+#: guicomponents.py:829
 msgid "<b>Track: </b>"
 msgstr "<b>Parça: </b>"
 
-#: guicomponents.py:918
+#: guicomponents.py:909
 msgid "<b>Source:</b>"
 msgstr "<b>Kaynak:</b>"
 
-#: guicomponents.py:919
+#: guicomponents.py:910
 msgid "<b>Destination:</b>"
 msgstr "<b>Hedef:</b>"
 
-#: guicomponents.py:920 guicomponents.py:1001
+#: guicomponents.py:911 guicomponents.py:992
 msgid "<b>Length:</b>"
 msgstr "<b>Uzunluk:</b>"
 
-#: guicomponents.py:1000
+#: guicomponents.py:991
 #, fuzzy
 msgid "<b>Generator Clip on Track:</b>"
 msgstr "<b>Hedef:</b>"
 
-#: guicomponents.py:1064 guipopover.py:553 guipopover.py:563
+#: guicomponents.py:1055 guipopover.py:552 guipopover.py:562
 #, fuzzy
 msgid "Show All Ratings"
 msgstr "Tam Yolları Göster"
 
-#: guicomponents.py:1066 guipopover.py:553 guipopover.py:563
+#: guicomponents.py:1057 guipopover.py:552 guipopover.py:562
 #, fuzzy
 msgid "Show Favorites"
 msgstr "Tam Yolları Göster"
 
-#: guicomponents.py:1068 guipopover.py:554 guipopover.py:564
+#: guicomponents.py:1059 guipopover.py:553 guipopover.py:563
 msgid "Hide Bad"
 msgstr ""
 
-#: guicomponents.py:1087
+#: guicomponents.py:1078
 msgid "<b>Items:</b>"
 msgstr "<b>Öğeler:</b>"
 
-#: guicomponents.py:1381
+#: guicomponents.py:1372
 msgid "Right Click to Add Media."
 msgstr "Ortam Eklemek için Sağ Tıklayın."
 
-#: guicomponents.py:1804 propertyeditorbuilder.py:862
+#: guicomponents.py:1795 propertyeditorbuilder.py:862
 #: propertyeditorbuilder.py:965 tools/toolsencoding.py:194
 msgid "Progressive"
 msgstr "Aşamalı"
 
-#: guicomponents.py:1806 tools/toolsencoding.py:196
+#: guicomponents.py:1797 tools/toolsencoding.py:196
 msgid "Interlaced"
 msgstr "Aralıklı"
 
-#: guicomponents.py:1811 guicomponents.py:1821 tools/toolsencoding.py:199
+#: guicomponents.py:1802 guicomponents.py:1812 tools/toolsencoding.py:199
 msgid "Fps: "
 msgstr "Fps: "
 
-#: guicomponents.py:1814 tools/toolsencoding.py:202
+#: guicomponents.py:1805 tools/toolsencoding.py:202
 msgid "Pixel Aspect: "
 msgstr "Piksel Yönü: "
 
-#: guicomponents.py:1835
+#: guicomponents.py:1826
 msgid "Description:"
 msgstr "Tanım:"
 
-#: guicomponents.py:1837
+#: guicomponents.py:1828
 msgid "Dimensions:"
 msgstr "Boyutlar:"
 
-#: guicomponents.py:1839
+#: guicomponents.py:1830
 msgid "Frames per second:"
 msgstr "Saniyede kare sayısı:"
 
-#: guicomponents.py:1841 tools/titler.py:408 tools/simpleeditors.py:589
+#: guicomponents.py:1832 tools/titler.py:408 tools/simpleeditors.py:587
 msgid "Size:"
 msgstr "Boyut:"
 
-#: guicomponents.py:1843 guicomponents.py:1868
+#: guicomponents.py:1834 guicomponents.py:1859
 msgid "Pixel aspect ratio: "
 msgstr "Piksel en boy oranı: "
 
-#: guicomponents.py:1845 profilesmanager.py:139
+#: guicomponents.py:1836 profilesmanager.py:139
 msgid "Progressive:"
 msgstr "İleri:"
 
-#: guicomponents.py:1853
+#: guicomponents.py:1844
 #, fuzzy
 msgid "Description: "
 msgstr "Tanım:"
 
-#: guicomponents.py:1855
+#: guicomponents.py:1846
 #, fuzzy
 msgid "Dimensions: "
 msgstr "Boyutlar:"
 
-#: guicomponents.py:1862
+#: guicomponents.py:1853
 #, fuzzy
 msgid "Frames per second: "
 msgstr "Saniyede kare sayısı:"
 
-#: guicomponents.py:1864
+#: guicomponents.py:1855
 #, fuzzy
 msgid "Size: "
 msgstr "Boyut:"
 
-#: guicomponents.py:1874
+#: guicomponents.py:1865
 #, fuzzy
 msgid "Progressive: "
 msgstr "İleri:"
 
-#: guicomponents.py:1876
+#: guicomponents.py:1867
 #, fuzzy
 msgid "Color space: "
 msgstr "Renk Aralığı"
 
-#: guicomponents.py:2354
+#: guicomponents.py:2345
 msgid "Sequence uses proxy media if available."
 msgstr ""
 
-#: guicomponents.py:2375
+#: guicomponents.py:2366
 msgid "Video:"
 msgstr "Video:"
 
-#: guicomponents.py:2380
+#: guicomponents.py:2371
 msgid "Audio:"
 msgstr "Ses:"
 
-#: guicomponents.py:2385
+#: guicomponents.py:2376
 msgid "Number of Tracks:"
 msgstr "Parça Sayısı:"
 
-#: guicomponents.py:2428 tools/scripttool.py:614
+#: guicomponents.py:2419 tools/scripttool.py:609
 msgid "Frames:"
 msgstr "Kareler:"
 
-#: guicomponents.py:2862
+#: guicomponents.py:2806
 msgid "Display Timeline / Clip on Monitor"
 msgstr "Ekranda Zaman Çizelgesi / Klip görüntüleme"
 
-#: guicomponents.py:2952
-msgid "Input Shortcut"
-msgstr "Giriş Kısayolu"
-
-#: guicomponents.py:3007
-msgid "Reserved Shortcut!"
-msgstr "Ayrılmış Kısayol!"
-
-#: guicomponents.py:3008
-msgid ""
-" is a reserved keyboard shortcut and\n"
-"cannot be set as a custom shortcut."
-msgstr ""
-" ayrılmış bir klavye kısayolu ve\n"
-"özel bir kısayol olarak ayarlanamaz."
-
-#: movemodes.py:727
+#: movemodes.py:769
 msgid "Can't do edit on a locked track"
 msgstr "Kilitli bir yolda düzenleme yapamazsınız"
 
-#: movemodes.py:728
+#: movemodes.py:770
 msgid " is locked. Unlock track to edit it.\n"
 msgstr " kilitli. Düzenlemek için parçanın kilidini açın.\n"
 
-#: panels.py:61
+#: panels.py:62
 msgid "Number of Media File columns."
 msgstr "Ortam dosyası sütun sayısı."
 
-#: panels.py:74
+#: panels.py:75
 msgid "Visible Media File types."
 msgstr "Görünür medya dosya türleri."
 
-#: panels.py:106
+#: panels.py:107
 msgid "Bins"
 msgstr "Ambar"
 
-#: panels.py:106
+#: panels.py:107
 msgid "A <b>Bin</b> is a named collection of media."
 msgstr ""
 
-#: panels.py:114
+#: panels.py:115
 msgid "Sequences"
 msgstr "Dizilişler"
 
-#: panels.py:114
+#: panels.py:115
 msgid ""
 "A <b>Sequence</b> is the full contents of the timeline creating a program, a "
 "movie."
@@ -2873,123 +2484,123 @@ msgstr ""
 "Bir <b>dizisi</b>, bir program, bir film oluşturan zaman çizelgesinin tam "
 "içeriğidir."
 
-#: panels.py:199
+#: panels.py:205
 msgid "Path:"
 msgstr "Yol:"
 
-#: panels.py:200 panels.py:234
+#: panels.py:206 panels.py:239
 msgid "Image Size:"
 msgstr "Görüntü Boyutu:"
 
-#: panels.py:201 tools/batchrendering.py:1109
+#: panels.py:207 tools/batchrendering.py:1106
 msgid "Frames Per Second:"
 msgstr "Saniyede Kare:"
 
-#: panels.py:202
+#: panels.py:208
 msgid "Playtime:"
 msgstr "Fazla:"
 
-#: panels.py:203 panels.py:236
+#: panels.py:209 panels.py:241
 msgid "Video Codec:"
 msgstr "Video Çözücü:"
 
-#: panels.py:204 panels.py:237
+#: panels.py:210 panels.py:242
 msgid "Audio Codec:"
 msgstr "Ses Çözücü:"
 
-#: panels.py:205
+#: panels.py:211
 msgid "Audio Channels:"
 msgstr "Ses Kanalları:"
 
-#: panels.py:206
+#: panels.py:212
 msgid "Audio Sample Rate:"
 msgstr "Ses Örnek Hızı:"
 
-#: panels.py:207
+#: panels.py:213
 msgid "Best Profile:"
 msgstr "En İyi Profil:"
 
-#: panels.py:208
+#: panels.py:214
 msgid "Matches Project Profile:"
 msgstr "Proje Profili ile Eşleşir:"
 
-#: panels.py:231 tools/gmic.py:729 tools/scripttool.py:828
+#: panels.py:236 tools/gmic.py:732 tools/scripttool.py:823
 msgid "Mark In:"
 msgstr "İşaretle:"
 
-#: panels.py:232 tools/gmic.py:730 tools/scripttool.py:829
+#: panels.py:237 tools/gmic.py:733 tools/scripttool.py:824
 msgid "Mark Out:"
 msgstr "Ayırmaak:"
 
-#: panels.py:233
+#: panels.py:238
 msgid "Clip Length:"
 msgstr "Klip Uzunluğu:"
 
-#: panels.py:235
+#: panels.py:240
 msgid "Media Path:"
 msgstr "Medya Yolu:"
 
-#: panels.py:265
+#: panels.py:270
 msgid "Composite clip on:"
 msgstr "Birleşik klip:"
 
-#: panels.py:276 tools/toolsencoding.py:384
+#: panels.py:281 tools/toolsencoding.py:384
 msgid "Type:"
 msgstr "Tür:"
 
-#: panels.py:285
+#: panels.py:290
 msgid "Wipe Pattern:"
 msgstr "Desen Sil:"
 
-#: panels.py:302 panels.py:378 tools/gmic.py:731
+#: panels.py:307 panels.py:383 tools/gmic.py:734
 msgid "Length:"
 msgstr "Uzunluk:"
 
-#: panels.py:308
+#: panels.py:313
 msgid "First Clip Out Handle Available/Required:"
 msgstr "İlk Klip Kolu Mevcut/Gerekli:"
 
-#: panels.py:309 panels.py:312 panels.py:315
+#: panels.py:314 panels.py:317 panels.py:320
 msgid " frame(s)"
 msgstr " kare(s)"
 
-#: panels.py:311
+#: panels.py:316
 msgid "Second Clip In Handle Available/Required:"
 msgstr "İkinci Klip Kolu Mevcut/Gerekli:"
 
-#: panels.py:314
+#: panels.py:319
 msgid "Second Clip In Handle:"
 msgstr "İkinci Klip Kolu:"
 
-#: panels.py:320
+#: panels.py:325
 msgid "Steal frames from clips if needed"
 msgstr "Gerekirse kliplerden kareleri çalın"
 
-#: panels.py:356
+#: panels.py:361
 msgid "Transition Options"
 msgstr "Geçiş Seçenekleri"
 
-#: panels.py:357 panels.py:403 panels.py:443
+#: panels.py:362 panels.py:408 panels.py:448
 msgid "Encoding"
 msgstr "Kodlama"
 
-#: panels.py:358
+#: panels.py:363
 msgid "Media Overlap info"
 msgstr "Ortam Örtüşme bilgisi"
 
-#: panels.py:402
+#: panels.py:407
 msgid "Transition"
 msgstr "Geçiş"
 
-#: panels.py:411
+#: panels.py:416
 msgid "Transitions / Fades to be rerendered:"
 msgstr "Yeniden oluşturulacak Geçişler / Soldurmalar:"
 
-#: panels.py:416
+#: panels.py:421
 msgid "There are "
 msgstr "Var "
 
-#: panels.py:416
+#: panels.py:421
 msgid ""
 " Transitions / Fades that cannot be rerendered, either because they are\n"
 "created with Flowblade version <=1.14 or the source clips are no longer on "
@@ -2999,23 +2610,23 @@ msgstr ""
 "Flowblade sürümü ile Oluşturuldu <=1.14 veya kaynak klipler artık zaman "
 "çizelgesinde değil."
 
-#: panels.py:442 jobs.py:362
+#: panels.py:447
 msgid "Info"
 msgstr "Bilgi"
 
-#: persistance.py:469
+#: persistance.py:468
 msgid "Building sequence "
 msgstr "Oluşturma sırası "
 
-#: persistance.py:492
+#: persistance.py:491
 msgid "Loading icons"
 msgstr "Simgeler yükleniyor"
 
-#: persistance.py:603
+#: persistance.py:602
 msgid "Building track "
 msgstr "Oluşturma parça "
 
-#: persistance.py:792 persistance.py:809
+#: persistance.py:791 persistance.py:808
 msgid "Relative file search for "
 msgstr "Göreceli dosya araması "
 
@@ -3073,27 +2684,27 @@ msgstr "Ortam yükü"
 msgid "Saved with changed profile"
 msgstr "Değiştirilen profille kaydedildi"
 
-#: render.py:206
+#: render.py:205
 msgid "To Queue"
 msgstr "Kuyruk Oluşturma"
 
-#: render.py:207
+#: render.py:206
 msgid "Save Project in Render Queue"
 msgstr "Projeyi İşleme kuyruğuna Kaydet"
 
-#: render.py:211
+#: render.py:210
 msgid "Select render range"
 msgstr "Oluşturma aralığını seçin"
 
-#: render.py:212
+#: render.py:211
 msgid "Begin Rendering"
 msgstr "Oluşturmaya Başla"
 
-#: render.py:341 render.py:421
+#: render.py:340 render.py:420
 msgid "A File with given path exists!"
 msgstr "Belirli bir yolu olan bir dosya var!"
 
-#: render.py:342 render.py:422
+#: render.py:341 render.py:421
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -3102,7 +2713,7 @@ msgstr ""
 "verilmez.\n"
 "Dosya için başka bir ad seçin."
 
-#: render.py:519
+#: render.py:518
 msgid "Rendering Transition Clip"
 msgstr "Geçiş Klibi Oluşturuluyor"
 
@@ -3221,7 +2832,7 @@ msgstr "Kırp"
 msgid "Alpha Shape"
 msgstr "Alfa Şekli"
 
-#: translations.py:185 kftoolmode.py:490
+#: translations.py:185 kftoolmode.py:489
 msgid "Volume"
 msgstr "Ses Ayarı"
 
@@ -3391,7 +3002,7 @@ msgstr "Ters"
 msgid "Hue"
 msgstr "Ton"
 
-#: translations.py:232 kftoolmode.py:491
+#: translations.py:232 kftoolmode.py:490
 msgid "Brightness"
 msgstr "Parlaklık"
 
@@ -3806,11 +3417,11 @@ msgstr "Sol"
 msgid "Right"
 msgstr "Sağ"
 
-#: translations.py:347 translations.py:513 editorlayout.py:513
+#: translations.py:347 translations.py:513 editorlayout.py:516
 msgid "Top"
 msgstr "Yukarı"
 
-#: translations.py:348 translations.py:514 editorlayout.py:516
+#: translations.py:348 translations.py:514 editorlayout.py:519
 msgid "Bottom"
 msgstr "Aşağı"
 
@@ -4420,12 +4031,12 @@ msgid "Suppress"
 msgstr "Bastır"
 
 #: translations.py:530 translations.py:768 tools/titler.py:505
-#: tools/simpleeditors.py:671
+#: tools/simpleeditors.py:669
 msgid "Horizontal"
 msgstr "Yatay"
 
 #: translations.py:531 translations.py:769 tools/titler.py:504
-#: tools/simpleeditors.py:670
+#: tools/simpleeditors.py:668
 msgid "Vertical"
 msgstr "Dikey"
 
@@ -4505,17 +4116,17 @@ msgstr "Kara çıktı"
 msgid "White output"
 msgstr "Ak çıktı"
 
-#: translations.py:554 translations.py:754 guipopoverclip.py:450
+#: translations.py:554 translations.py:754 guipopoverclip.py:460
 msgid "Red"
 msgstr "Kırmızı"
 
 #: translations.py:555 translations.py:749 translations.py:755
-#: guipopoverclip.py:451
+#: guipopoverclip.py:461
 msgid "Green"
 msgstr "Yeşil"
 
 #: translations.py:556 translations.py:750 translations.py:756
-#: guipopoverclip.py:452
+#: guipopoverclip.py:462
 msgid "Blue"
 msgstr "Mavi"
 
@@ -4696,7 +4307,7 @@ msgstr "Min Kazanç"
 msgid "Select file"
 msgstr "Dosya Seç"
 
-#: translations.py:613 keyframeeditor.py:966 guipopoverclip.py:744
+#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:754
 msgid "Smooth"
 msgstr "Düz"
 
@@ -4868,7 +4479,7 @@ msgstr "Doygunluk"
 msgid "Hue Change"
 msgstr "Değişikleri Kaydet"
 
-#: translations.py:657 tools/titler.py:626 tools/simpleeditors.py:705
+#: translations.py:657 tools/titler.py:626 tools/simpleeditors.py:703
 msgid "Font"
 msgstr "Yazıtipi"
 
@@ -5057,7 +4668,7 @@ msgstr ""
 msgid "Fade In Type"
 msgstr "Azaltma"
 
-#: translations.py:697 guipopover.py:411
+#: translations.py:697 guipopover.py:410
 msgid "Image"
 msgstr "Görüntü"
 
@@ -5186,7 +4797,7 @@ msgstr "Oval"
 msgid "Triangle"
 msgstr "Üçgen"
 
-#: translations.py:728 shortcuts.py:395 workflow.py:80
+#: translations.py:728 shortcuts.py:395 workflow.py:73
 msgid "Box"
 msgstr "Kutu"
 
@@ -5387,7 +4998,7 @@ msgstr "HLSParlaklık"
 msgid "Cos"
 msgstr "Komşu Kenar"
 
-#: translations.py:793 keyframeeditor.py:966 guipopoverclip.py:744
+#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:754
 msgid "Linear"
 msgstr "Doğrusal"
 
@@ -5604,15 +5215,15 @@ msgstr "Postakutusu"
 msgid "Words"
 msgstr ""
 
-#: translations.py:849 preferenceswindow.py:135
+#: translations.py:849 preferenceswindow.py:134
 msgid "Off"
 msgstr "Kapat"
 
-#: translations.py:851 keyframeeditor.py:1687 keyframeeditor.py:2005
+#: translations.py:851 keyframeeditor.py:1743 keyframeeditor.py:2062
 msgid "Center Horizontal"
 msgstr "Yatay Ortala"
 
-#: translations.py:852 keyframeeditor.py:1688 keyframeeditor.py:2006
+#: translations.py:852 keyframeeditor.py:1744 keyframeeditor.py:2063
 msgid "Center Vertical"
 msgstr "Dikey Ortala"
 
@@ -6042,151 +5653,171 @@ msgstr "AnaMaske Bilgisi"
 msgid "Info & tips available under heading '{}'"
 msgstr ""
 
-#: keyframeeditor.py:755
+#: keyframeeditor.py:775
 msgid "Add Keyframe"
 msgstr "Kare Ekle"
 
-#: keyframeeditor.py:756
+#: keyframeeditor.py:776
 msgid "Delete Keyframe"
 msgstr "Kare Sil"
 
-#: keyframeeditor.py:757
+#: keyframeeditor.py:777
 msgid "Previous Keyframe"
 msgstr "Önceki Kare"
 
-#: keyframeeditor.py:758
+#: keyframeeditor.py:778
 msgid "Next Keyframe"
 msgstr "Sonraki Kare"
 
-#: keyframeeditor.py:761
+#: keyframeeditor.py:779
+msgid "Previous Frame"
+msgstr "Önceki Çerçeve"
+
+#: keyframeeditor.py:780 shortcuts.py:370
+msgid "Next Frame"
+msgstr "Sonraki Kare"
+
+#: keyframeeditor.py:781
 msgid "Move Keyframe 1 Frame Back"
 msgstr "Ana Kareyi 1 Kare Geri Taşı"
 
-#: keyframeeditor.py:762
+#: keyframeeditor.py:782
 msgid "Move Keyframe 1 Frame Forward"
 msgstr "Ana Kareyi 1 Kare İleriye Taşı"
 
-#: keyframeeditor.py:763
+#: keyframeeditor.py:783
 msgid "Add Fade In"
 msgstr "Açılma Ekle"
 
-#: keyframeeditor.py:764
+#: keyframeeditor.py:784
 msgid "Add Fade Out"
 msgstr "Kararma Ekle"
 
-#: keyframeeditor.py:966 guipopoverclip.py:744
+#: keyframeeditor.py:986 guipopoverclip.py:754
 msgid "Discrete"
 msgstr ""
 
-#: keyframeeditor.py:1189 keyframeeditor.py:1654 keyframeeditor.py:1999
+#: keyframeeditor.py:1223 keyframeeditor.py:1707 keyframeeditor.py:2054
 #, fuzzy
 msgid "Active Keyframe Type"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: keyframeeditor.py:1191 keyframeeditor.py:1656 keyframeeditor.py:2000
+#: keyframeeditor.py:1225 keyframeeditor.py:1709 keyframeeditor.py:2055
 #, fuzzy
 msgid "Copy Keyframe Value (Control + C)"
 msgstr "Anahtar Kare Değerini Kopyala"
 
-#: keyframeeditor.py:1192 keyframeeditor.py:1657 keyframeeditor.py:2001
+#: keyframeeditor.py:1226 keyframeeditor.py:1710 keyframeeditor.py:2056
 #, fuzzy
 msgid "Paste Keyframe Value (Control + V)"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: keyframeeditor.py:1199 keyframeeditor.py:1664 guipopoverclip.py:695
+#: keyframeeditor.py:1227 keyframeeditor.py:1711 keyframeeditor.py:2057
+#: guipopoverclip.py:769
+#, fuzzy
+msgid "Clone Keyframe Value From Next"
+msgstr "Anahtar Kare Değerini Kopyala"
+
+#: keyframeeditor.py:1228 keyframeeditor.py:1712 keyframeeditor.py:2058
+#: guipopoverclip.py:770
+#, fuzzy
+msgid "Clone Keyframe Value From Previous"
+msgstr "Anahtar Kare Değerini Kopyala"
+
+#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:705
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr ""
 "Anahtar kareyi 0 karesinde bir sonraki anahtar karenin değerine ayarlayın"
 
-#: keyframeeditor.py:1205 keyframeeditor.py:1670 guipopoverclip.py:690
+#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:700
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Klip aralığından önce ilk ana kareler hariç tümünü sil"
 
-#: keyframeeditor.py:1212 keyframeeditor.py:1677
+#: keyframeeditor.py:1248 keyframeeditor.py:1733
 msgid "Delete all Keyframes after Clip Range"
 msgstr "Klip aralığından sonra tüm ana kareleri Sil"
 
-#: keyframeeditor.py:1689 keyframeeditor.py:2007
+#: keyframeeditor.py:1745 keyframeeditor.py:2064
 #, fuzzy
 msgid "Reset"
 msgstr "Araçları Düzenle"
 
-#: keyframeeditor.py:1690 keyframeeditor.py:2008
+#: keyframeeditor.py:1746 keyframeeditor.py:2065
 msgid "Reset Geometry"
 msgstr "Uzambilgisini Sıfırla"
 
-#: keyframeeditor.py:2409 keyframeeditor.py:2454
+#: keyframeeditor.py:2491 keyframeeditor.py:2536
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:2410 keyframeeditor.py:2455
+#: keyframeeditor.py:2492 keyframeeditor.py:2537
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:2411
+#: keyframeeditor.py:2493
 msgid "W:"
 msgstr ""
 
-#: keyframeeditor.py:2412
+#: keyframeeditor.py:2494
 msgid "H:"
 msgstr ""
 
-#: keyframeeditor.py:2456
+#: keyframeeditor.py:2538
 msgid "\\u21D4:"
 msgstr ""
 
-#: keyframeeditor.py:2457
+#: keyframeeditor.py:2539
 msgid "\\u21D5:"
 msgstr ""
 
-#: keyframeeditor.py:2458
+#: keyframeeditor.py:2540
 msgid "\\u2941:"
 msgstr ""
 
-#: middlebar.py:177
+#: middlebar.py:176
 msgid "Undo Group"
 msgstr "Grubu Geri Al"
 
-#: middlebar.py:178
+#: middlebar.py:177
 msgid "Zoom Group"
 msgstr "Grubu Yakınlaştır"
 
-#: middlebar.py:179
+#: middlebar.py:178
 msgid "Edit Group"
 msgstr "Grubu Düzenle"
 
-#: middlebar.py:180
+#: middlebar.py:179
 msgid "Sync Split Group"
 msgstr "Bölünmüş Grubu Birleştir"
 
-#: middlebar.py:181
+#: middlebar.py:180
 msgid "Delete Group"
 msgstr "Grubu Sil"
 
-#: middlebar.py:182
+#: middlebar.py:181
 msgid "Monitor Add Group"
 msgstr "Ekrana Grubu Ekle"
 
-#: middlebar.py:225
+#: middlebar.py:224
 msgid "Zoom In - Mouse Middle Scroll"
 msgstr "Yakınlaştırma - Fare Orta Kaydırma"
 
-#: middlebar.py:225
+#: middlebar.py:224
 msgid "Zoom Out - Mouse Middle Scroll"
 msgstr "Uzaklaştır - Fare Orta Kaydırma"
 
-#: middlebar.py:225
+#: middlebar.py:224
 msgid "Zoom Length - Mouse Middle Click"
 msgstr "Yakınlaştırma Uzunluğu - Fare Orta Tıklama"
 
-#: middlebar.py:234
+#: middlebar.py:233
 #, fuzzy
 msgid "Add Rendered Transition - 2 clips selected"
 msgstr ""
 "İşlenmiş geçiş Ekle-2 klip seçildi\n"
 "İşlenmiş Kararma Ekle - 1 klip seçildi"
 
-#: middlebar.py:234
+#: middlebar.py:233
 msgid ""
 "Cut Active Tracks - X\n"
 "Cut All Tracks - Shift + X"
@@ -6194,69 +5825,69 @@ msgstr ""
 "Aktif Parçaları Kes - X\n"
 "Tüm Parçaları Kes - Shift + X"
 
-#: middlebar.py:245
+#: middlebar.py:244
 msgid "Splice Out - Delete"
 msgstr "Bağlama Çıkışı - Sil"
 
-#: middlebar.py:245
+#: middlebar.py:244
 msgid "Lift - Control + Delete"
 msgstr "Kaldırma - Kontrol + Sil"
 
-#: middlebar.py:245
+#: middlebar.py:244
 msgid "Ripple Delete"
 msgstr "Dalgalanma Silme"
 
-#: middlebar.py:245
+#: middlebar.py:244
 msgid "Range Delete"
 msgstr "Aralık Silme"
 
-#: middlebar.py:255 shortcuts.py:378 guipopoverclip.py:407
-#: guipopoverclip.py:419
+#: middlebar.py:254 shortcuts.py:378 guipopoverclip.py:411
+#: guipopoverclip.py:429
 msgid "Split Audio Synched"
 msgstr "Bölünmüş Ses Eşitlendi"
 
-#: middlebar.py:255
+#: middlebar.py:254
 msgid "Resync Track Containing Selected Clip/s"
 msgstr ""
 
-#: middlebar.py:255
+#: middlebar.py:254
 #, fuzzy
 msgid "Resync Selected Clip"
 msgstr "Yeniden Eşleştirme Seçili"
 
-#: middlebar.py:265 shortcuts.py:385
+#: middlebar.py:264 shortcuts.py:385
 msgid "Overwrite Range"
 msgstr "Üzerine Yazma Aralığı"
 
-#: middlebar.py:265
+#: middlebar.py:264
 msgid "Overwrite Clip - T"
 msgstr "Klibin Üzerine Yaz - T"
 
-#: middlebar.py:265
+#: middlebar.py:264
 msgid "Insert Clip - Y"
 msgstr "Klip Ekle - Y"
 
-#: middlebar.py:265
+#: middlebar.py:264
 msgid "Append Clip - U"
 msgstr "Klip İliştirme - U"
 
-#: middlebar.py:273
+#: middlebar.py:272
 msgid "Undo - Ctrl + Z"
 msgstr "Geri - Ctrl + Z"
 
-#: middlebar.py:273
+#: middlebar.py:272
 msgid "Redo - Ctrl + Y"
 msgstr "Yeniden - Ctrl + Y"
 
-#: middlebar.py:284
+#: middlebar.py:283
 msgid "G'Mic Effects"
 msgstr "G'Mic Efekti"
 
-#: middlebar.py:284
+#: middlebar.py:283
 msgid "Generator Plugin Script Editor"
 msgstr ""
 
-#: middlebar.py:291
+#: middlebar.py:290
 msgid ""
 "Audio Mixer(not available)\n"
 "Titler"
@@ -6264,49 +5895,49 @@ msgstr ""
 "Ses Mikseri(mevcut değil)\n"
 "Başlık"
 
-#: middlebar.py:472
+#: middlebar.py:471
 #, fuzzy
 msgid "Middlebar Configuration"
 msgstr "Ücretsiz Çubuk Yapılandırması"
 
-#: middlebar.py:513 rendergui.py:472 tools/toolsencoding.py:487
+#: middlebar.py:512 rendergui.py:471 tools/toolsencoding.py:487
 msgid "Select Render quality"
 msgstr "Oluşturma kalitesini seçin"
 
-#: middlebar.py:514
+#: middlebar.py:513
 msgid "Timecode Left"
 msgstr "Sol Zaman kodu"
 
-#: middlebar.py:515
+#: middlebar.py:514
 msgid "Timecode Center"
 msgstr "Orta Zaman kodu"
 
-#: middlebar.py:516
+#: middlebar.py:515
 msgid "Components Centered"
 msgstr "Merkezi Bileşenler"
 
-#: middlebar.py:522
+#: middlebar.py:521
 msgid "Layout"
 msgstr ""
 
-#: middlebar.py:525
+#: middlebar.py:524
 msgid "Set button group active state and position."
 msgstr "Düğme grubu etkin durumunu ve konumunu ayarlayın."
 
-#: middlebar.py:531 guipopover.py:463
+#: middlebar.py:530 guipopover.py:462
 msgid "Up"
 msgstr "Yukarı"
 
-#: middlebar.py:534 guipopover.py:464
+#: middlebar.py:533 guipopover.py:463
 msgid "Down"
 msgstr "Aşağı"
 
-#: middlebar.py:537
+#: middlebar.py:536
 #, fuzzy
 msgid "Reset Positions"
 msgstr "Pozisyonu Ayarla"
 
-#: middlebar.py:548
+#: middlebar.py:547
 #, fuzzy
 msgid "Buttons Groups"
 msgstr "Grup Yok"
@@ -6319,11 +5950,11 @@ msgstr "Grup "
 msgid "Event"
 msgstr "Takvim"
 
-#: medialog.py:554 guipopover.py:773 guipopover.py:797
+#: medialog.py:554 guipopover.py:772 guipopover.py:796
 msgid "Comment"
 msgstr "Yorum"
 
-#: medialog.py:556 guipopover.py:773 guipopover.py:797
+#: medialog.py:556 guipopover.py:772 guipopover.py:796
 msgid "File Name"
 msgstr "Dosya Adı"
 
@@ -6405,23 +6036,30 @@ msgstr "Başlık zaten açık"
 msgid "Only single instance of Titler can be opened."
 msgstr "Yalnızca tek bir başlık örneği açılabilir."
 
-#: tools/titler.py:434 tools/simpleeditors.py:611
+#: tools/titler.py:284 tools/batchrendering.py:1194 shortcuts.py:458
+#: guipopover.py:577 guipopover.py:902 guipopoverclip.py:302
+#: guipopoverclip.py:337 guipopoverclip.py:363 guipopoverclip.py:505
+#: guipopoverclip.py:616
+msgid "Delete"
+msgstr "Sil"
+
+#: tools/titler.py:434 tools/simpleeditors.py:609
 msgid "Opacity:"
 msgstr "Opaklık:"
 
-#: tools/titler.py:435 tools/simpleeditors.py:612
+#: tools/titler.py:435 tools/simpleeditors.py:610
 msgid "X Off:"
 msgstr "X Kapalı:"
 
-#: tools/titler.py:436 tools/simpleeditors.py:613
+#: tools/titler.py:436 tools/simpleeditors.py:611
 msgid "Y Off:"
 msgstr "Y Kapalı:"
 
-#: tools/titler.py:437 tools/simpleeditors.py:614
+#: tools/titler.py:437 tools/simpleeditors.py:612
 msgid "Blur:"
 msgstr "Bulanık:"
 
-#: tools/titler.py:502 tools/simpleeditors.py:668
+#: tools/titler.py:502 tools/simpleeditors.py:666
 msgid "Gradient Direction:"
 msgstr "Eğim Yönü:"
 
@@ -6437,15 +6075,15 @@ msgstr "Katmanları Kaydet"
 msgid "Clear All"
 msgstr "Tümünü Temizle"
 
-#: tools/titler.py:627 tools/simpleeditors.py:706
+#: tools/titler.py:627 tools/simpleeditors.py:704
 msgid "Outline"
 msgstr "Anahat"
 
-#: tools/titler.py:628 tools/simpleeditors.py:707
+#: tools/titler.py:628 tools/simpleeditors.py:705
 msgid "Shadow"
 msgstr "Gölge"
 
-#: tools/titler.py:629 tools/simpleeditors.py:708
+#: tools/titler.py:629 tools/simpleeditors.py:706
 msgid "Gradient"
 msgstr "Eğim"
 
@@ -6496,11 +6134,11 @@ msgstr "Dosya Adı"
 msgid "Title"
 msgstr "Yazıcılar"
 
-#: rendergui.py:45
+#: rendergui.py:44
 msgid "Render Progress"
 msgstr "Oluştuma İlerlemesi"
 
-#: rendergui.py:73
+#: rendergui.py:72
 msgid ""
 "Project and Render Profile FPS values are not same. Rendered file may have A/"
 "V sync issues."
@@ -6508,11 +6146,11 @@ msgstr ""
 "Proje ve İşlenen profili FPS değerleri aynı değildir. İşlenen dosya A/V "
 "eşitleme sorunları olabilir."
 
-#: rendergui.py:100
+#: rendergui.py:99
 msgid "Render range not defined!"
 msgstr "Oluşturma aralığı tanımlanmadı!"
 
-#: rendergui.py:101
+#: rendergui.py:100
 msgid ""
 "Define render range using Mark In and Mark Out points\n"
 "or select range option 'Sequence length' to start rendering."
@@ -6520,203 +6158,203 @@ msgstr ""
 "İşaretleme ve Ayırma noktalarını kullanarak oluşturma aralığını tanımlayın\n"
 "veya oluştumayı başlatmak için Aralık seçeneği 'sıra uzunluğu' seçin."
 
-#: rendergui.py:105
+#: rendergui.py:104
 msgid "Load Render Args File"
 msgstr "Oluşturma Args Dosyasını Yükle"
 
-#: rendergui.py:119
+#: rendergui.py:118
 msgid "Save Render Args As"
 msgstr "Oluşturma Dizilerini Farklı Kaydet"
 
-#: rendergui.py:178
+#: rendergui.py:177
 msgid "Render Slow/Fast Motion Video File"
 msgstr "Yavaş/Hızlı Hareket Video Dosyası Oluşturma"
 
-#: rendergui.py:183 rendergui.py:329
+#: rendergui.py:182 rendergui.py:328
 msgid "Source Media File: "
 msgstr "Kaynak Ortam Dosyası: "
 
-#: rendergui.py:190 rendergui.py:191 rendergui.py:336 rendergui.py:337
+#: rendergui.py:189 rendergui.py:190 rendergui.py:335 rendergui.py:336
 msgid "<b>not set</b>"
 msgstr "<b>ayarlanmadı</b>"
 
-#: rendergui.py:211 rendergui.py:357
+#: rendergui.py:210 rendergui.py:356
 msgid "Select Target Folder"
 msgstr "Hedef Klasörü Seçin"
 
-#: rendergui.py:215 rendergui.py:361
+#: rendergui.py:214 rendergui.py:360
 msgid "Speed %:"
 msgstr "Hız %:"
 
-#: rendergui.py:226 rendergui.py:398
+#: rendergui.py:225 rendergui.py:397
 msgid "Full Source Length"
 msgstr "Tam Kaynak Uzunluğu"
 
-#: rendergui.py:231 rendergui.py:403
+#: rendergui.py:230 rendergui.py:402
 msgid "Source Mark In to Mark Out"
 msgstr "İşaretlemek ve Ayırmak için Kaynak"
 
-#: rendergui.py:250
+#: rendergui.py:249
 msgid "Rendered Length:"
 msgstr "Oluştuma Uzunluğu:"
 
-#: rendergui.py:279 rendergui.py:426
+#: rendergui.py:278 rendergui.py:425
 msgid "Source Mark In: "
 msgstr "Kaynak İşareti: "
 
-#: rendergui.py:280 rendergui.py:427
+#: rendergui.py:279 rendergui.py:426
 msgid "Source Mark Out: "
 msgstr "Ayırma Kaynağı: "
 
-#: rendergui.py:285 rendergui.py:432
+#: rendergui.py:284 rendergui.py:431
 msgid "Target File:"
 msgstr "Hedef Dosya:"
 
-#: rendergui.py:286 rendergui.py:433
+#: rendergui.py:285 rendergui.py:432
 msgid "Target Folder:"
 msgstr "Hedef Klasör:"
 
-#: rendergui.py:287 rendergui.py:434
+#: rendergui.py:286 rendergui.py:433
 msgid "Target Profile:"
 msgstr "Hedef Profil:"
 
-#: rendergui.py:288 rendergui.py:435
+#: rendergui.py:287 rendergui.py:434
 msgid "Target Encoding:"
 msgstr "Hedef Kodlama:"
 
-#: rendergui.py:289 rendergui.py:436
+#: rendergui.py:288 rendergui.py:435
 msgid "Target Quality:"
 msgstr "Hedef Kalite:"
 
-#: rendergui.py:291 rendergui.py:438
+#: rendergui.py:290 rendergui.py:437
 msgid "Render Range:"
 msgstr "İşleme Aralığı:"
 
-#: rendergui.py:324
+#: rendergui.py:323
 msgid "Render Reverse Motion Video File"
 msgstr "Ters Hareket Video Dosyasını Oluştur"
 
-#: rendergui.py:439
+#: rendergui.py:438
 msgid "Rendered Clip Length:"
 msgstr "İşlenen Klip Uzunluğu:"
 
-#: rendergui.py:490
+#: rendergui.py:489
 msgid "Select audio sample frequency"
 msgstr "Ses örnek frekansını seçin"
 
-#: rendergui.py:512 tools/toolsencoding.py:544
+#: rendergui.py:511 tools/toolsencoding.py:544
 msgid "Select Render encoding"
 msgstr "Oluşturma kodlamasını seç"
 
-#: rendergui.py:556 tools/toolsencoding.py:473
+#: rendergui.py:555 tools/toolsencoding.py:473
 msgid "Select render profile"
 msgstr "İşleme profilini seç"
 
-#: rendergui.py:578
+#: rendergui.py:577
 msgid "Full Length"
 msgstr "Tam Uzunluk"
 
-#: rendergui.py:579
+#: rendergui.py:578
 msgid "Marked Range"
 msgstr "İşaret Mesafesi"
 
-#: rendergui.py:585 tools/toolsencoding.py:129
+#: rendergui.py:584 tools/toolsencoding.py:129
 msgid "File"
 msgstr "Dosya"
 
-#: rendergui.py:586 tools/toolsencoding.py:135
+#: rendergui.py:585 tools/toolsencoding.py:135
 msgid "Render Profile"
 msgstr "Profili İşle"
 
-#: rendergui.py:587 tools/toolsencoding.py:136
+#: rendergui.py:586 tools/toolsencoding.py:136
 msgid "Encoding Format"
 msgstr "Kodlama Formatı"
 
-#: rendergui.py:593 rendergui.py:658
+#: rendergui.py:592 rendergui.py:657
 #, fuzzy
 msgid "Range"
 msgstr "Turuncu"
 
-#: rendergui.py:631 rendergui.py:1275
+#: rendergui.py:630 rendergui.py:1274
 msgid "Render Args"
 msgstr "Oluşturma Dizinleri"
 
-#: rendergui.py:637
+#: rendergui.py:636
 msgid "Open File in Bin"
 msgstr "Kutudaki Dosyayı Aç"
 
-#: rendergui.py:706 tools/toolsencoding.py:328
+#: rendergui.py:705 tools/toolsencoding.py:328
 msgid "Select folder to place rendered file in"
 msgstr "Oluşturulan dosyanın yerleştirileceği klasörü seçin"
 
-#: rendergui.py:707 tools/toolsencoding.py:329
+#: rendergui.py:706 tools/toolsencoding.py:329
 msgid "Give name for rendered file"
 msgstr "İşlenen dosya için ad ver"
 
-#: rendergui.py:720 rendergui.py:802
+#: rendergui.py:719 rendergui.py:801
 msgid "Use Project Profile"
 msgstr "Proje Profilini Kullan"
 
-#: rendergui.py:736
+#: rendergui.py:735
 msgid "Select used project profile for rendering"
 msgstr "İşlemek için kullanılan proje profilini seçin"
 
-#: rendergui.py:737
+#: rendergui.py:736
 msgid "Render profile info"
 msgstr "Profil bilgilerini oluşturma"
 
-#: rendergui.py:803 rendergui.py:919 rendergui.py:1109
+#: rendergui.py:802 rendergui.py:918 rendergui.py:1108
 msgid "Render using args"
 msgstr "Dizinler kullanarak İşleme"
 
-#: rendergui.py:809 rendergui.py:974 rendergui.py:1237
+#: rendergui.py:808 rendergui.py:973 rendergui.py:1236
 msgid "Ext.:"
 msgstr "İç.:"
 
-#: rendergui.py:846 rendergui.py:924 rendergui.py:1148
+#: rendergui.py:845 rendergui.py:923 rendergui.py:1147
 msgid "Render using key=value rendering options"
 msgstr "Anahtar=değer işleme seçeneklerini kullanarak oluşturma"
 
-#: rendergui.py:847 rendergui.py:958 rendergui.py:1245
+#: rendergui.py:846 rendergui.py:957 rendergui.py:1244
 msgid "Edit render options"
 msgstr "Oluşturma Seçeneklerini Düzenle"
 
-#: rendergui.py:949
+#: rendergui.py:948
 #, fuzzy
 msgid "Load Args From Current Encoding"
 msgstr "Mevcut Kodlamadan Oluşturma Dizilerini Yükle"
 
-#: rendergui.py:968
+#: rendergui.py:967
 #, fuzzy
 msgid "Load Args"
 msgstr "Katmanları Yükle"
 
-#: rendergui.py:971
+#: rendergui.py:970
 #, fuzzy
 msgid "Save Args"
 msgstr "Dizinler Takımı"
 
-#: rendergui.py:992 rendergui.py:1256
+#: rendergui.py:991 rendergui.py:1255
 msgid "Set Args"
 msgstr "Dizinler Takımı"
 
-#: rendergui.py:1127
+#: rendergui.py:1126
 msgid "Edit Args:"
 msgstr "Dizinleri Düzenle:"
 
-#: rendergui.py:1150 guipopover.py:985
+#: rendergui.py:1149 guipopover.py:984
 msgid "Save Render Args into a text file"
 msgstr "Oluşturma dizinini bir metin dosyasına kaydedin"
 
-#: rendergui.py:1151 guipopover.py:984
+#: rendergui.py:1150 guipopover.py:983
 msgid "Load Render Args from a text file"
 msgstr "Bir metin dosyasından dizin işleme yükle"
 
-#: rendergui.py:1234
+#: rendergui.py:1233
 msgid "Load Selection"
 msgstr "Seçimi Yükle"
 
-#: rendergui.py:1244
+#: rendergui.py:1243
 msgid "Load render options from currently selected encoding"
 msgstr "Mevcut seçili kodlamadan oluşturma seçeneklerini yükle"
 
@@ -6724,7 +6362,7 @@ msgstr "Mevcut seçili kodlamadan oluşturma seçeneklerini yükle"
 msgid "Close Manager"
 msgstr "Yöneticiyi Kapat"
 
-#: profilesmanager.py:73 tools/batchrendering.py:732
+#: profilesmanager.py:73 tools/batchrendering.py:729
 msgid "Delete Selected"
 msgstr "Seçilenleri Sil"
 
@@ -6828,185 +6466,189 @@ msgstr "Artık yeni profili kullanarak yeni bir proje oluşturabilirsiniz."
 msgid "Confirm user profile delete"
 msgstr "Kullanıcı profilinin silinmesini onayla"
 
-#: profilesmanager.py:281 tools/batchrendering.py:815 menuactions.py:232
+#: profilesmanager.py:281 tools/batchrendering.py:812 menuactions.py:232
 msgid "This operation cannot be undone."
 msgstr "Bu işlem geri alınamaz."
 
-#: preferenceswindow.py:43
+#: preferenceswindow.py:42
 msgid "Editor Preferences"
 msgstr "Editör Seçenekleri"
 
-#: preferenceswindow.py:58
+#: preferenceswindow.py:57
 msgid "Editing"
 msgstr "Düzenle"
 
-#: preferenceswindow.py:61
+#: preferenceswindow.py:58
+msgid "Playback"
+msgstr "Geri çalma"
+
+#: preferenceswindow.py:60
 msgid "Performance"
 msgstr "Performans"
 
-#: preferenceswindow.py:62
+#: preferenceswindow.py:61
 msgid "Jog/Shuttle"
 msgstr ""
 
-#: preferenceswindow.py:83
+#: preferenceswindow.py:82
 msgid "Restart required for some setting changes to take effect."
 msgstr ""
 "Bazı ayar değişikliklerinin etkili olması için yeniden başlatmanız gerekir."
 
-#: preferenceswindow.py:84
+#: preferenceswindow.py:83
 msgid "If requested change is not in effect, restart application."
 msgstr "İstenen değişiklik geçerli değilse, uygulamayı yeniden başlatın."
 
-#: preferenceswindow.py:121
+#: preferenceswindow.py:120
 msgid "Absolute paths first, relative second"
 msgstr "Mutlak yollar ilk, göreceli ikinci"
 
-#: preferenceswindow.py:122
+#: preferenceswindow.py:121
 msgid "Relative paths first, absolute second"
 msgstr "Göreceli yollar ilk, mutlak ikinci"
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:122
 msgid "Absolute paths only"
 msgstr "Sadece mutlak yollar"
 
-#: preferenceswindow.py:126
+#: preferenceswindow.py:125
 msgid "Select Default Render Folder"
 msgstr "Varsayılan Oluşturma Klasörünü Seçin"
 
-#: preferenceswindow.py:136
+#: preferenceswindow.py:135
 msgid "500 MB"
 msgstr "500 MB"
 
-#: preferenceswindow.py:137
+#: preferenceswindow.py:136
 msgid "1 GB"
 msgstr "1 GB"
 
-#: preferenceswindow.py:138
+#: preferenceswindow.py:137
 msgid "2 GB"
 msgstr "2 GB"
 
-#: preferenceswindow.py:142
+#: preferenceswindow.py:141
 msgid "Default Profile:"
 msgstr "Varsayılan Profil:"
 
-#: preferenceswindow.py:143
+#: preferenceswindow.py:142
 msgid "Remember last media directory"
 msgstr "Son ortam dizinini hatırla"
 
-#: preferenceswindow.py:144
+#: preferenceswindow.py:143
 msgid "Undo stack size:"
 msgstr "Yığın boyutunu Geri Al:"
 
-#: preferenceswindow.py:145
+#: preferenceswindow.py:144
 msgid "Remember last render directory"
 msgstr "Son oluşturma dizinini hatırla"
 
-#: preferenceswindow.py:146
+#: preferenceswindow.py:145
 msgid "Autosave for crash recovery every:"
 msgstr "Her kilitlenme veya kurtarma için otomatik kaydetme:"
 
-#: preferenceswindow.py:147
+#: preferenceswindow.py:146
 msgid "Media look-up order on load:"
 msgstr "Yükleme de ortam arama sırası:"
 
-#: preferenceswindow.py:148
+#: preferenceswindow.py:147
 msgid "Default render directory:"
 msgstr "Varsayılan işleme dizini:"
 
-#: preferenceswindow.py:149
+#: preferenceswindow.py:148
 msgid "Warning on Disk Cache Size:"
 msgstr "Disk önbellek boyutu hakkında uyarı:"
 
-#: preferenceswindow.py:184
+#: preferenceswindow.py:183
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr "Yakınlaştırma, Yatay Kaydırma Kontrolü"
 
-#: preferenceswindow.py:185
+#: preferenceswindow.py:184
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr "Yatay kaydırma, yakınlaştırmak için kontrol"
 
-#: preferenceswindow.py:192
+#: preferenceswindow.py:191
 msgid "Scroll Up Forward"
 msgstr "İleri Doğru Kaydır"
 
-#: preferenceswindow.py:193
+#: preferenceswindow.py:192
 msgid "Scroll Down Forward"
 msgstr "Aşağıya İleriye Doğru Kaydırın"
 
-#: preferenceswindow.py:200
+#: preferenceswindow.py:199
 msgid "On Double Click"
 msgstr "Çift Tıklama İle"
 
-#: preferenceswindow.py:201
+#: preferenceswindow.py:200
 msgid "On Single Click"
 msgstr "Tek Tıklama"
 
-#: preferenceswindow.py:212
+#: preferenceswindow.py:211
 msgid "Always Overwrite Blanks"
 msgstr "Her Zaman Boşlukların Üzerine Yaz"
 
-#: preferenceswindow.py:213
+#: preferenceswindow.py:212
 msgid "Overwrite Blanks on non-V1 Tracks"
 msgstr "Olmayan boşlukların üzerine yaz-V1 Parçalar"
 
-#: preferenceswindow.py:214
+#: preferenceswindow.py:213
 msgid "Always Insert"
 msgstr "Her zaman Ekle"
 
-#: preferenceswindow.py:217
+#: preferenceswindow.py:216
 #, fuzzy
 msgid "Drag-and-Drop Action:"
 msgstr "Sürükle-Bırak Eylemi"
 
-#: preferenceswindow.py:218
+#: preferenceswindow.py:217
 msgid "Graphics default length:"
 msgstr "Grafik varsayılan uzunluğu:"
 
-#: preferenceswindow.py:219
+#: preferenceswindow.py:218
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "Kapak Geçişi/Mümkünse silinirken klipleri soldur"
 
-#: preferenceswindow.py:221
+#: preferenceswindow.py:220
 msgid "Mouse Middle Button Scroll Action:"
 msgstr "Fare Orta Düğme Kaydırma Eylemi:"
 
-#: preferenceswindow.py:222
+#: preferenceswindow.py:221
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr "Fare Yatay Kaydırma Yönü:"
 
-#: preferenceswindow.py:223
+#: preferenceswindow.py:222
 msgid "Hide file extensions when importing Clips"
 msgstr "Klipleri içe aktarırken dosya uzantılarını gizle"
 
-#: preferenceswindow.py:224
+#: preferenceswindow.py:223
 msgid "Open Clip in Effects Editor"
 msgstr "Efekt düzenleyicide klibi aç"
 
-#: preferenceswindow.py:225
+#: preferenceswindow.py:224
 msgid "Autorender Generators"
 msgstr ""
 
-#: preferenceswindow.py:289
+#: preferenceswindow.py:288
 msgid "Center Current Frame on Playback Stop"
 msgstr "Yürütme Durduğunda Geçerli Kareyi Ortala"
 
-#: preferenceswindow.py:290
+#: preferenceswindow.py:289
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr "Yukarı/Aşağı Okdan sonra mevcut kareyi merkezleyin"
 
-#: preferenceswindow.py:291
+#: preferenceswindow.py:290
 msgid "Enable single Play/Pause button"
 msgstr "Tek Oynat/Duraklat tuşunu etkinleştir"
 
-#: preferenceswindow.py:292
+#: preferenceswindow.py:291
 msgid "Enable To Start and To End buttons"
 msgstr "Başlat ve Bitir tuşlarını Etkinleştir"
 
-#: preferenceswindow.py:293
+#: preferenceswindow.py:292
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr "Shift Tuşu için İleri Hızı / Geri Hızı:"
 
-#: preferenceswindow.py:294
+#: preferenceswindow.py:293
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -7019,11 +6661,11 @@ msgstr ""
 "çarpacaktır.\n"
 "Mesela, Shift olarak ayarlanmışsa "
 
-#: preferenceswindow.py:299
+#: preferenceswindow.py:298
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr "Caps Lock Tuşu için Hızlı İleri / Geri Hızı:"
 
-#: preferenceswindow.py:300
+#: preferenceswindow.py:299
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
@@ -7031,121 +6673,147 @@ msgstr ""
 "Caps Lock  ayarlanmışsa, İleri / Geri hızı bu değerle çarpılır (yalnızca "
 "Tuşlar kullanarak)."
 
-#: preferenceswindow.py:301
+#: preferenceswindow.py:300
 msgid "Move Timeline to follow Playback"
 msgstr "Oynatmayı takip etmek için zaman çizelgesini taşı"
 
-#: preferenceswindow.py:302
+#: preferenceswindow.py:301
 msgid "Loop Media Clips on Monitor"
 msgstr "Ekranda Ortam Döngü Klipleri"
 
-#: preferenceswindow.py:330
+#: preferenceswindow.py:329
 msgid "None"
 msgstr "Hiçbiri"
 
-#: preferenceswindow.py:331
+#: preferenceswindow.py:330
 msgid "English"
 msgstr "İngilizce"
 
-#: preferenceswindow.py:332
+#: preferenceswindow.py:331
 msgid "Chinese, Simplified"
 msgstr "Çince,Basit"
 
-#: preferenceswindow.py:333
+#: preferenceswindow.py:332
 msgid "Chinese, Traditional"
 msgstr "Çince,Geleneksel"
 
-#: preferenceswindow.py:334
+#: preferenceswindow.py:333
 msgid "Czech"
 msgstr "Çekce"
 
-#: preferenceswindow.py:335
+#: preferenceswindow.py:334
 msgid "French"
 msgstr "Fransızca"
 
-#: preferenceswindow.py:336
+#: preferenceswindow.py:335
 msgid "German"
 msgstr "Almanca"
 
-#: preferenceswindow.py:337
+#: preferenceswindow.py:336
 msgid "Hungarian"
 msgstr "Macarca"
 
-#: preferenceswindow.py:338
+#: preferenceswindow.py:337
 msgid "Italian"
 msgstr "İtalyanca"
 
-#: preferenceswindow.py:339
+#: preferenceswindow.py:338
 msgid "Polish"
 msgstr "Polonyaca"
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:339
 msgid "Russian"
 msgstr "Rusça"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:340
 msgid "Spanish"
 msgstr "İspanyolca"
 
-#: preferenceswindow.py:342
+#: preferenceswindow.py:341
 #, fuzzy
 msgid "Ukrainian"
 msgstr "Ukraynaca"
 
-#: preferenceswindow.py:365
-msgid "Normal - 50px, 25px"
+#: preferenceswindow.py:364
+#, fuzzy
+msgid "Default - 50px, 25px"
 msgstr "Normal - 50px, 25px"
 
+#: preferenceswindow.py:365
+msgid "1.5 x - 75px, 37px"
+msgstr ""
+
 #: preferenceswindow.py:366
-msgid "Double for HiDPI - 100px, 50px"
+#, fuzzy
+msgid "2 x - 100px, 50px"
 msgstr "Dublörlüğünü yap - HiDPI - 100px, 50px"
 
-#: preferenceswindow.py:372
-msgid "3 panels if width (1450px+) available"
-msgstr "Mevcut ise 3 panel Genişlik (1450px+)"
+#: preferenceswindow.py:370 guipopoverclip.py:459
+msgid "Default"
+msgstr "Varsayılan"
 
-#: preferenceswindow.py:373
-msgid "2 panels always"
-msgstr "Her zaman 2 panel"
+#: preferenceswindow.py:371
+msgid "Double"
+msgstr ""
 
-#: preferenceswindow.py:381
+#: preferenceswindow.py:379
 msgid "Full Display area: "
 msgstr "Tam Ekran alanı: "
 
-#: preferenceswindow.py:385
+#: preferenceswindow.py:383
 msgid "Monitor "
 msgstr "Ekran "
 
-#: preferenceswindow.py:393
+#: preferenceswindow.py:406
 msgid "Application window mode:"
 msgstr "Uygulama penceresi modu:"
 
-#: preferenceswindow.py:394
+#: preferenceswindow.py:407
 msgid "Force Language:"
 msgstr "Lisanı Zorla:"
 
-#: preferenceswindow.py:395
+#: preferenceswindow.py:408
 msgid "Display splash screen"
 msgstr "Açılış ekranını görüntüle"
 
-#: preferenceswindow.py:396
-msgid "Tracks Heights:"
-msgstr "Parça Yüksekliği:"
-
-#: preferenceswindow.py:398
+#: preferenceswindow.py:409
 msgid "Show Full File names"
 msgstr "Tam dosya adlarını göster"
 
-#: preferenceswindow.py:399
+#: preferenceswindow.py:410
+msgid "Tracks Heights:"
+msgstr "Parça Yüksekliği:"
+
+#: preferenceswindow.py:411
+#, fuzzy
+msgid "Icons Size:"
+msgstr "Görüntü Boyutu:"
+
+#: preferenceswindow.py:413
 msgid "Do GUI layout based on:"
 msgstr "GUI düzenini temel alarak yapın:"
 
-#: preferenceswindow.py:400
+#: preferenceswindow.py:414
+#, fuzzy
+msgid "Edit panel width:"
+msgstr "Filtre Seçme Panonu"
+
+#: preferenceswindow.py:415
+#, fuzzy
+msgid "Project panel width:"
+msgstr "Filtre Seçme Panonu"
+
+#: preferenceswindow.py:416
 #, fuzzy
 msgid "Filter Select panel width:"
 msgstr "Filtre Seçme Panonu"
 
-#: preferenceswindow.py:431
+#: preferenceswindow.py:417
+#, fuzzy
+msgid "Media panel width:"
+msgstr "Ortam Panosu"
+
+#: preferenceswindow.py:452
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
@@ -7156,146 +6824,146 @@ msgstr ""
 "Güvenli değerler İşleme iş parçacıklarıdır: 1, çerçevenin düşmesine izin "
 "ver: Hayır."
 
-#: preferenceswindow.py:442
+#: preferenceswindow.py:463
 msgid "Between 1 and the number of CPU Cores"
 msgstr "1 ile CPU Çekirdeği sayısı arasında"
 
-#: preferenceswindow.py:443
+#: preferenceswindow.py:464
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr "Gerektiğinde gerçek zamanlı oluşturmak için karenin düşmesine izin ver"
 
-#: preferenceswindow.py:447
+#: preferenceswindow.py:468
 msgid "Render Threads:"
 msgstr "İş Parçacığı Oluşturma:"
 
-#: preferenceswindow.py:448
+#: preferenceswindow.py:469
 msgid "Allow Frame Dropping"
 msgstr "Kare Kaldırmaya İzin Ver"
 
-#: preferenceswindow.py:493
+#: preferenceswindow.py:514
 msgid "USB Jog/Shuttle Enabled"
 msgstr ""
 
-#: preferenceswindow.py:494
+#: preferenceswindow.py:515
 msgid "Device"
 msgstr ""
 
-#: tools/batchrendering.py:359
+#: tools/batchrendering.py:356
 msgid "Render Item Project File Copy failed!"
 msgstr "Öğeyi Oluştur Proje Dosyası Kopyalanamadı!"
 
-#: tools/batchrendering.py:423 tools/batchrendering.py:841
+#: tools/batchrendering.py:420 tools/batchrendering.py:838
 msgid "Error loading render queue items!"
 msgstr "İşleme sırası öğeleri yüklenirken hata oluştu!"
 
-#: tools/batchrendering.py:424 tools/batchrendering.py:842
+#: tools/batchrendering.py:421 tools/batchrendering.py:839
 msgid "Message:\n"
 msgstr "İleti:\n"
 
-#: tools/batchrendering.py:439
+#: tools/batchrendering.py:436
 msgid "Batch Render Queue already running!"
 msgstr "Toplu İşleme Sırası zaten çalışıyor!"
 
-#: tools/batchrendering.py:441
+#: tools/batchrendering.py:438
 #, fuzzy
 msgid "Batch Render Queue application was detected running."
 msgstr "Toplu İşleme Kuyruğu uygulaması, oturum veri yolunda algılandı."
 
-#: tools/batchrendering.py:462
+#: tools/batchrendering.py:459
 msgid "Application is rendering and cannot be closed!"
 msgstr "Uygulama oluşturuluyor ve kapatılamaz!"
 
-#: tools/batchrendering.py:463
+#: tools/batchrendering.py:460
 msgid "Stop rendering before closing the application."
 msgstr "Uygulamayı kapatmadan önce oluşturmayı durdurun."
 
-#: tools/batchrendering.py:497
+#: tools/batchrendering.py:494
 msgid " datafile load failed with "
 msgstr " veri dosyası yüklenemedi "
 
-#: tools/batchrendering.py:505
+#: tools/batchrendering.py:502
 msgid " project file load failed with "
 msgstr " proje dosyası yüklenemedi "
 
-#: tools/batchrendering.py:638
+#: tools/batchrendering.py:635
 msgid "Queued"
 msgstr "Sıradaki"
 
-#: tools/batchrendering.py:640
+#: tools/batchrendering.py:637
 msgid "Rendering"
 msgstr "Oluşturma"
 
-#: tools/batchrendering.py:642
+#: tools/batchrendering.py:639
 msgid "Finished"
 msgstr "Tamamlandı"
 
-#: tools/batchrendering.py:644
+#: tools/batchrendering.py:641
 msgid "Unqueued"
 msgstr "Sıralanmamış"
 
-#: tools/batchrendering.py:646
+#: tools/batchrendering.py:643
 msgid "Aborted"
 msgstr "Durduruldu"
 
-#: tools/batchrendering.py:704 tools/batchrendering.py:1434
+#: tools/batchrendering.py:701 tools/batchrendering.py:1431
 msgid "Estimated Left:"
 msgstr "Tahmini Sol:"
 
-#: tools/batchrendering.py:705
+#: tools/batchrendering.py:702
 msgid "Current Render:"
 msgstr "Geçerli Oluşturma:"
 
-#: tools/batchrendering.py:706 tools/batchrendering.py:1436
+#: tools/batchrendering.py:703 tools/batchrendering.py:1433
 msgid "Elapsed:"
 msgstr "Biten:"
 
-#: tools/batchrendering.py:720
+#: tools/batchrendering.py:717
 msgid "Items Rendered:"
 msgstr "İşlenen Öğeler:"
 
-#: tools/batchrendering.py:722
+#: tools/batchrendering.py:719
 msgid "Render Started:"
 msgstr "Oluşturma Başladı:"
 
-#: tools/batchrendering.py:728
+#: tools/batchrendering.py:725
 msgid "Not Rendering"
 msgstr "Oluşturulamıyor"
 
-#: tools/batchrendering.py:736
+#: tools/batchrendering.py:733
 msgid "Delete Finished"
 msgstr "Silme Tamamlandı"
 
-#: tools/batchrendering.py:741
+#: tools/batchrendering.py:738
 msgid "Reload Queue"
 msgstr "Kuyruğu Yeniden Yükle"
 
-#: tools/batchrendering.py:752 tools/batchrendering.py:1446
+#: tools/batchrendering.py:749 tools/batchrendering.py:1443
 msgid "Stop Render"
 msgstr "İşlemeyi Durdur"
 
-#: tools/batchrendering.py:788
+#: tools/batchrendering.py:785
 msgid "Flowblade Batch Render"
 msgstr "Flowblade Toplu İş Oluşturma"
 
-#: tools/batchrendering.py:814
+#: tools/batchrendering.py:811
 msgid "Delete "
 msgstr "Sil "
 
-#: tools/batchrendering.py:814
+#: tools/batchrendering.py:811
 msgid " item(s) from render queue?"
 msgstr " oluşturma kuyruğundan öğe(ler)?"
 
-#: tools/batchrendering.py:854
+#: tools/batchrendering.py:851
 msgid "Multiple items with same render target file!"
 msgstr "Aynı oluşturma hedef dosyası ile birden fazla öğe!"
 
-#: tools/batchrendering.py:856
+#: tools/batchrendering.py:853
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr ""
 "Bu kuyruk işlenirse, sonraki öğeler önceki öğelerin üzerinde işlenecektir.\n"
 
-#: tools/batchrendering.py:857
+#: tools/batchrendering.py:854
 msgid ""
 "Possible fixes:\n"
 "\n"
@@ -7303,12 +6971,12 @@ msgstr ""
 "Olası düzeltmeler:\n"
 "\n"
 
-#: tools/batchrendering.py:858
+#: tools/batchrendering.py:855
 msgid "Change item render file path from right click popup menu.\n"
 msgstr ""
 "Sağ tıklama açılır menüsünden öğe oluşturma dosyası yolunu değiştirin\n"
 
-#: tools/batchrendering.py:859
+#: tools/batchrendering.py:856
 msgid ""
 "Delete or unqueue some items with same paths.\n"
 "\n"
@@ -7316,103 +6984,103 @@ msgstr ""
 "Aynı yollara sahip bazı öğeleri silin veya sırasını kaldırın.\n"
 "\n"
 
-#: tools/batchrendering.py:861
+#: tools/batchrendering.py:858
 msgid " items with path: "
 msgstr " yolu olan öğeler: "
 
-#: tools/batchrendering.py:960
+#: tools/batchrendering.py:957
 msgid "Project/Sequence"
 msgstr "Proje/Sıra"
 
-#: tools/batchrendering.py:961
+#: tools/batchrendering.py:958
 msgid "Status"
 msgstr "Durum"
 
-#: tools/batchrendering.py:962
+#: tools/batchrendering.py:959
 msgid "Render File"
 msgstr "Oluşturma Dosyası"
 
-#: tools/batchrendering.py:963 jobs.py:363
+#: tools/batchrendering.py:960 jobs.py:337
 msgid "Render Time"
 msgstr "Oluşturma Süresi"
 
-#: tools/batchrendering.py:1057
+#: tools/batchrendering.py:1054
 msgid "Save Render Item Project As"
 msgstr "Oluştuma Öğesi Projesini Farklı Kaydet"
 
-#: tools/batchrendering.py:1094 proxyediting.py:281
+#: tools/batchrendering.py:1091 proxyediting.py:281
 msgid "Using Original Media"
 msgstr "Orijinal Ortamı Kullanma"
 
-#: tools/batchrendering.py:1096 proxyediting.py:279
+#: tools/batchrendering.py:1093 proxyediting.py:279
 msgid "Using Proxy Media"
 msgstr "Vekil Ortamını Kullanma"
 
-#: tools/batchrendering.py:1103
+#: tools/batchrendering.py:1100
 msgid "Encoding:"
 msgstr "Kodlama:"
 
-#: tools/batchrendering.py:1104
+#: tools/batchrendering.py:1101
 msgid "Quality:"
 msgstr "Kalite:"
 
-#: tools/batchrendering.py:1105
+#: tools/batchrendering.py:1102
 msgid "Audio Encoding:"
 msgstr "Ses Kodlama:"
 
-#: tools/batchrendering.py:1106
+#: tools/batchrendering.py:1103
 msgid "Use User Args:"
 msgstr "Kullanıcı Args Kullanın:"
 
-#: tools/batchrendering.py:1107
+#: tools/batchrendering.py:1104
 msgid "Start:"
 msgstr "Başlat:"
 
-#: tools/batchrendering.py:1108
+#: tools/batchrendering.py:1105
 msgid "End:"
 msgstr "Son:"
 
-#: tools/batchrendering.py:1110
+#: tools/batchrendering.py:1107
 msgid "Render Profile Name:"
 msgstr "Profil Adını İşle:"
 
-#: tools/batchrendering.py:1111
+#: tools/batchrendering.py:1108
 msgid "Render Profile:"
 msgstr "Profili İşle:"
 
-#: tools/batchrendering.py:1112
+#: tools/batchrendering.py:1109
 msgid "Proxy Mode:"
 msgstr "Vekil Modu:"
 
-#: tools/batchrendering.py:1128 tools/batchrendering.py:1193
+#: tools/batchrendering.py:1125 tools/batchrendering.py:1190
 msgid "Render Properties"
 msgstr "Oluşturma Özellikleri"
 
-#: tools/batchrendering.py:1133
+#: tools/batchrendering.py:1130
 msgid "Change Path"
 msgstr "Yolu Değiştir"
 
-#: tools/batchrendering.py:1134
+#: tools/batchrendering.py:1131
 msgid "Change Render Item Path"
 msgstr "Öğe Oluşturma Yolunu Değiştir"
 
-#: tools/batchrendering.py:1144 exporting.py:472
+#: tools/batchrendering.py:1141 exporting.py:472
 msgid "Select target folder"
 msgstr "Hedef klasörü seçin"
 
-#: tools/batchrendering.py:1156
+#: tools/batchrendering.py:1153
 msgid "Render file name:"
 msgstr "Dosya adını Oluştur:"
 
-#: tools/batchrendering.py:1191
+#: tools/batchrendering.py:1188
 msgid "Change Item Render File Path..."
 msgstr "Öğe Oluşturma Dosya Yolunu Değiştirin..."
 
-#: tools/batchrendering.py:1192
+#: tools/batchrendering.py:1189
 msgid "Save Item Project As..."
 msgstr "Öğe Projesini Farklı Kaydedin..."
 
-#: tools/batchrendering.py:1471
+#: tools/batchrendering.py:1468
 msgid "Flowblade Timeline Render"
 msgstr "Flowblade Zaman Çizelgesi Oluşturma"
 
@@ -7549,11 +7217,11 @@ msgstr "Projeyi Vekil ortamını kullanmak için dönüştürme"
 msgid "Converting to Use Original Media"
 msgstr "Orijinal ortamı kullanmak için dönüştürme"
 
-#: tlineaction.py:203
+#: tlineaction.py:191
 msgid "Confirm split to new Sequence at Playhead position"
 msgstr "Oynatma kafası konumunda yeni diziye bölünmeyi onaylayın"
 
-#: tlineaction.py:204
+#: tlineaction.py:192
 #, fuzzy
 msgid ""
 "This will create a new sequence from the part after playhead. That part will "
@@ -7570,11 +7238,11 @@ msgstr ""
 "\n"
 "Yeni oluşturulan sıra geçerli sıra olarak açılacaktır."
 
-#: tlineaction.py:431
+#: tlineaction.py:419
 msgid "Fade/Transition cover delete failed!"
 msgstr "Soldurma / Geçiş kapağı silme başarısız oldu!"
 
-#: tlineaction.py:432
+#: tlineaction.py:420
 msgid ""
 "There wasn't enough material available in adjacent clips.\n"
 "A normal Splice Out was done instead."
@@ -7582,11 +7250,11 @@ msgstr ""
 "Bitişik kliplerde yeterli malzeme yoktu.\n"
 "Bunun yerine normal bir ekleme yapıldı."
 
-#: tlineaction.py:559
+#: tlineaction.py:547
 msgid "Can't do Ripple Delete!"
 msgstr "Dalgalanma silmesi yapılamıyor!"
 
-#: tlineaction.py:560
+#: tlineaction.py:548
 #, fuzzy
 msgid ""
 "Selected Ripple Delete would cause an overwrite and that is not permitted "
@@ -7599,21 +7267,21 @@ msgstr ""
 "\n"
 "Üzerine yazma, yolda gerçekleşir<b>"
 
-#: tlineaction.py:615
+#: tlineaction.py:603
 msgid "No Clips are selected!"
 msgstr "Hiçbir klip seçilmez!"
 
-#: tlineaction.py:616
+#: tlineaction.py:604
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
 "Bu düzenlemeyi gerçekleştirmek için üzerine yazılacak klipleri seçmeniz "
 "gerekir."
 
-#: tlineaction.py:737 tlineaction.py:939
+#: tlineaction.py:725 tlineaction.py:927
 msgid "3 point edit not defined!"
 msgstr "3 nokta düzenleme tanımlanmadı!"
 
-#: tlineaction.py:738 tlineaction.py:762
+#: tlineaction.py:726 tlineaction.py:750
 msgid ""
 "You need to set Timeline Range using Mark In and Mark Out buttons\n"
 "to perform this edit."
@@ -7622,15 +7290,15 @@ msgstr ""
 "ayarlamanız gerekir\n"
 "bu düzenlemeyi gerçekleştirmek için."
 
-#: tlineaction.py:761
+#: tlineaction.py:749
 msgid "Timeline Range not set!"
 msgstr "Zaman Çizelgesi Aralığı ayarlanmadı!"
 
-#: tlineaction.py:855
+#: tlineaction.py:843
 msgid "Origin clip not found!"
 msgstr "Başlangıç klibi bulunamadı!"
 
-#: tlineaction.py:856
+#: tlineaction.py:844
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
@@ -7638,19 +7306,19 @@ msgstr ""
 "Bu Oluşturucuyu oluşturmak için kullanılan klip kaldırıldı\n"
 "veya farklı bir parçaya taşındı."
 
-#: tlineaction.py:929
+#: tlineaction.py:917
 msgid "No Clip loaded into Monitor"
 msgstr "Ekranda Yüklü Klip Yok"
 
-#: tlineaction.py:930
+#: tlineaction.py:918
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr "Ekranda klip olmadığı için istenen düzenleme yapılamaz."
 
-#: tlineaction.py:934
+#: tlineaction.py:922
 msgid "Defined range in Monitor Clip is too short"
 msgstr "Ekran Klibindeki belirli aralık çok kısa"
 
-#: tlineaction.py:935
+#: tlineaction.py:923
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -7658,7 +7326,7 @@ msgstr ""
 "İstenen düzenleme yapılamıyor çünkü İşaretle -> İşaretleme Aralığı veya Klip "
 "çok kısa."
 
-#: tlineaction.py:940
+#: tlineaction.py:928
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -7668,160 +7336,160 @@ msgstr ""
 "bu düzenlemeyi gerçekleştirmek için zaman çizelgesinde veya klipte ek bir "
 "işaret gerekir."
 
-#: tlineaction.py:1145
+#: tlineaction.py:1133
 #, fuzzy
 msgid "Playback Marker"
 msgstr "Geri çalma"
 
-#: extraeditors.py:1189
+#: extraeditors.py:1188
 msgid "Analyze video"
 msgstr ""
 
-#: extraeditors.py:1191
+#: extraeditors.py:1190
 msgid "No stabilizing data"
 msgstr ""
 
-#: extraeditors.py:1192
+#: extraeditors.py:1191
 msgid "Stabilizing data loaded"
 msgstr ""
 
-#: extraeditors.py:1245
+#: extraeditors.py:1244
 msgid "Tracking Data Label:"
 msgstr ""
 
-#: extraeditors.py:1259
+#: extraeditors.py:1258
 msgid "Create Motion Tracking Data"
 msgstr ""
 
-#: extraeditors.py:1262
+#: extraeditors.py:1261
 #, fuzzy
 msgid "Clear Data"
 msgstr "İşareti Temizle"
 
-#: extraeditors.py:1302
+#: extraeditors.py:1301
 msgid "tracking"
 msgstr ""
 
-#: extraeditors.py:1337
+#: extraeditors.py:1336
 msgid "Motion Tracking Data created: "
 msgstr ""
 
-#: extraeditors.py:1375 extraeditors.py:1449
+#: extraeditors.py:1374 extraeditors.py:1448
 msgid "Select Motion Tracking Data:"
 msgstr ""
 
-#: extraeditors.py:1379 extraeditors.py:1453
+#: extraeditors.py:1378 extraeditors.py:1452
 msgid "No Tracking Data Available"
 msgstr ""
 
-#: extraeditors.py:1393 extraeditors.py:1467
+#: extraeditors.py:1392 extraeditors.py:1466
 msgid "Apply Motion Tracking Data"
 msgstr ""
 
-#: extraeditors.py:1437 extraeditors.py:1501
+#: extraeditors.py:1436 extraeditors.py:1500
 #, fuzzy
 msgid "Last applied "
 msgstr "Luma Dosya:"
 
-#: medialinker.py:112
+#: medialinker.py:108
 msgid "Load Project For Relinking"
 msgstr "Yeniden Bağlantı İçin Proje Yükle"
 
-#: medialinker.py:120
+#: medialinker.py:116
 msgid "Original Media Missing:"
 msgstr "Orijinal Ortam Eksik:"
 
-#: medialinker.py:121
+#: medialinker.py:117
 msgid "Original Media Found:"
 msgstr "Orijinal Ortam Bulundu:"
 
-#: medialinker.py:124
+#: medialinker.py:120
 msgid "Project:"
 msgstr "Proje:"
 
-#: medialinker.py:125
+#: medialinker.py:121
 msgid "<not loaded>"
 msgstr "<yüklü değil>"
 
-#: medialinker.py:142 guipopover.py:880
+#: medialinker.py:138 guipopover.py:879
 msgid "Set File Relink Path"
 msgstr "Dosya Bağlantı Yolunu Ayarla"
 
-#: medialinker.py:144 guipopover.py:882
+#: medialinker.py:140 guipopover.py:881
 #, fuzzy
 msgid "Create Placeholder File"
 msgstr "Kullanıcı Profili Oluşturun"
 
-#: medialinker.py:146 guipopover.py:881
+#: medialinker.py:142 guipopover.py:880
 msgid "Delete File Relink Path"
 msgstr "Dosya Yeniden Bağlantı Yolunu Sil"
 
-#: medialinker.py:150
+#: medialinker.py:146
 msgid "Display Missing Media Files"
 msgstr "Eksik Ortam Dosyalarını Görüntüleme"
 
-#: medialinker.py:151
+#: medialinker.py:147
 msgid "Display Found Media Files"
 msgstr "Bulunan Ortam Dosyalarını Görüntüleme"
 
-#: medialinker.py:164
+#: medialinker.py:160
 msgid "Save Relinked Project As..."
 msgstr "Bağlantı Yolunu Proje Olarak Kaydedin..."
 
-#: medialinker.py:211
+#: medialinker.py:207
 #, fuzzy
 msgid "Loading..."
 msgstr "Kaydet..."
 
-#: medialinker.py:283
+#: medialinker.py:279
 msgid "Missing Media File Path"
 msgstr "Eksik Ortam Dosyası Yolu"
 
-#: medialinker.py:284
+#: medialinker.py:280
 msgid "Found Media File Path"
 msgstr "Ortam Dosyası Yolu Bulundu"
 
-#: medialinker.py:288
+#: medialinker.py:284
 msgid "Media File Re-link Path"
 msgstr "Medya dosyası yeniden bağlantı yolu"
 
-#: medialinker.py:453
+#: medialinker.py:449
 msgid "Select Media File To Relink To"
 msgstr "Yeniden Bağlanacak Ortam Dosyasını Seçin"
 
-#: medialinker.py:461
+#: medialinker.py:457
 msgid "Creating placeholder image..."
 msgstr ""
 
-#: medialinker.py:463
+#: medialinker.py:459
 msgid "Creating placeholder audio..."
 msgstr ""
 
-#: medialinker.py:465
+#: medialinker.py:461
 msgid "Creating placeholder video..."
 msgstr ""
 
-#: medialinker.py:485
+#: medialinker.py:481
 msgid "Place holder media ready."
 msgstr ""
 
-#: medialinker.py:563
+#: medialinker.py:559
 msgid "<b>Original path:</b> "
 msgstr "<b>Orijinal yol:</b> "
 
-#: medialinker.py:566
+#: medialinker.py:562
 msgid "<b>Relink path:</b> "
 msgstr "<b>Yeniden bağlantı yolu:</b> "
 
-#: medialinker.py:575
+#: medialinker.py:571
 msgid "Media Asset Paths"
 msgstr "Ortam Varlık Yolları"
 
-#: medialinker.py:612
+#: medialinker.py:608
 msgid "Relinked version of the Project saved!"
 msgstr "Projenin Yeniden bağlanmış sürümü kaydedildi!"
 
-#: medialinker.py:613
+#: medialinker.py:609
 msgid ""
 "To test the project, close this tool and open the relinked version in "
 "Flowblade."
@@ -7897,11 +7565,11 @@ msgstr "Hareket 1:"
 msgid "Move 2:"
 msgstr "Hareket 2:"
 
-#: tools/gmic.py:127
+#: tools/gmic.py:123
 msgid "G'Mic not found!"
 msgstr "G'Mic bulunamadı!"
 
-#: tools/gmic.py:128
+#: tools/gmic.py:124
 msgid ""
 "G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
 "Install G'MIC to use this tool."
@@ -7909,146 +7577,146 @@ msgstr ""
 "G'Mic ikili <b>/usr/bin/gmic</b>dosyasında mevcut değildi.\n"
 "Bu aracı kullanmak için G'Mic yükleyin."
 
-#: tools/gmic.py:272
+#: tools/gmic.py:268
 msgid "Select Video Media"
 msgstr "Video Ortamını Seçin"
 
-#: tools/gmic.py:346 tools/gmic.py:769 tools/scripttool.py:869
+#: tools/gmic.py:350 tools/gmic.py:772 tools/scripttool.py:864
 msgid "not set"
 msgstr "yok"
 
-#: tools/gmic.py:361
+#: tools/gmic.py:364
 msgid "Save Gmic Script As"
 msgstr "Gmic Komut Dosyasını Farklı Kaydet"
 
-#: tools/gmic.py:385
+#: tools/gmic.py:388
 msgid "Load Gmic Script"
 msgstr "Gmic Komut Dosyasını Yükle"
 
-#: tools/gmic.py:506
+#: tools/gmic.py:509
 msgid "Rendering preview..."
 msgstr "Önizleme oluşturma..."
 
-#: tools/gmic.py:526 tools/scripttool.py:583
+#: tools/gmic.py:529 tools/scripttool.py:578
 msgid "Video Encoding Settings"
 msgstr "Video Kodlama Ayarları"
 
-#: tools/gmic.py:530 containeractions.py:388 tools/scripttool.py:587
+#: tools/gmic.py:533 containeractions.py:385 tools/scripttool.py:582
 msgid "Set Encoding"
 msgstr "Kodlamayı Ayarla"
 
-#: tools/gmic.py:578 tools/gmic.py:924
+#: tools/gmic.py:581 tools/gmic.py:929
 msgid "Load Clip"
 msgstr "Klip Yükle"
 
-#: tools/gmic.py:582
+#: tools/gmic.py:585
 msgid "no clip loaded"
 msgstr "hiçbir klip yüklenmedi"
 
-#: tools/gmic.py:605 tools/simpleeditors.py:903
+#: tools/gmic.py:608 tools/simpleeditors.py:901
 msgid "no preview"
 msgstr "önizleme yok"
 
-#: tools/gmic.py:660 tools/simpleeditors.py:924 tools/scripttool.py:799
+#: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
 msgid "Preview"
 msgstr "Önizleme"
 
-#: tools/gmic.py:689
+#: tools/gmic.py:692
 msgid "Add to Script"
 msgstr "Komut dosyasını Ekle"
 
-#: tools/gmic.py:749 tools/scripttool.py:849
+#: tools/gmic.py:752 tools/scripttool.py:844
 msgid "Frames Folder:"
 msgstr "Kare Kodlama:"
 
-#: tools/gmic.py:760 tools/scripttool.py:860
+#: tools/gmic.py:763 tools/scripttool.py:855
 msgid "Encode Video"
 msgstr "Video Kodlama"
 
-#: tools/gmic.py:766 tools/scripttool.py:866
+#: tools/gmic.py:769 tools/scripttool.py:861
 msgid "Encoding settings"
 msgstr "Kodlama ayarları"
 
-#: tools/gmic.py:785
+#: tools/gmic.py:788
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr "Geçerli işleme için İşaretleyici, Planı ve Kareler klasörünü ayarlayın"
 
-#: tools/gmic.py:800 shortcuts.py:375 tools/scripttool.py:900
+#: tools/gmic.py:803 shortcuts.py:375 tools/scripttool.py:895
 msgid "Stop"
 msgstr "Durdur"
 
-#: tools/gmic.py:828 tools/scripttool.py:336
+#: tools/gmic.py:831 tools/scripttool.py:331
 msgid "Load Script"
 msgstr "Komut Dosyasını Yükle"
 
-#: tools/gmic.py:830
+#: tools/gmic.py:833
 msgid "Save Script"
 msgstr "Komut Dosyasını Kaydet"
 
-#: tools/gmic.py:889 tools/scripttool.py:1026
+#: tools/gmic.py:894 tools/scripttool.py:1021
 msgid "frames"
 msgstr "kareler"
 
-#: tools/gmic.py:907 tools/scripttool.py:1049
+#: tools/gmic.py:912 tools/scripttool.py:1044
 msgid " no video file"
 msgstr " video dosyası yok"
 
-#: tools/gmic.py:909 tools/scripttool.py:1051
+#: tools/gmic.py:914 tools/scripttool.py:1046
 msgid " render video file"
 msgstr " video dosyası oluşturma"
 
-#: tools/gmic.py:910 tools/scripttool.py:1052
+#: tools/gmic.py:915 tools/scripttool.py:1047
 msgid " frame(s),"
 msgstr " kare(ler),"
 
-#: tools/gmic.py:925
+#: tools/gmic.py:930
 msgid "G'Mic Webpage"
 msgstr "G'Mic İnternetsayfası"
 
-#: tools/gmic.py:1167 tools/scripttool.py:541
+#: tools/gmic.py:1170 tools/scripttool.py:536
 msgid "Preview for frame: "
 msgstr "Kare için önizleme: "
 
-#: tools/gmic.py:1168
+#: tools/gmic.py:1171
 msgid ", render time: "
 msgstr ", işleme zamanı: "
 
-#: tools/gmic.py:1173
+#: tools/gmic.py:1176
 #, fuzzy
 msgid "Extracting PNG frames from this file failed!"
 msgstr "<b>Kliplerden geçiş için kareleri çalmak başarısız oldu!</b>"
 
-#: tools/gmic.py:1213
+#: tools/gmic.py:1216
 msgid "Waiting for frames write to complete..."
 msgstr "Karelerin tamamlanmasını bekliyorum..."
 
-#: tools/gmic.py:1250 tools/gmic.py:1323 tools/scripttool.py:1500
-#: tools/scripttool.py:1527
+#: tools/gmic.py:1253 tools/gmic.py:1326 tools/scripttool.py:1495
+#: tools/scripttool.py:1522
 msgid "Render stopped!"
 msgstr "İşleneni durdu!"
 
-#: tools/gmic.py:1254 tools/scripttool.py:1504
+#: tools/gmic.py:1257 tools/scripttool.py:1499
 msgid "Rendering video, "
 msgstr "İşlenen video, "
 
-#: tools/gmic.py:1254 tools/scripttool.py:1504
+#: tools/gmic.py:1257 tools/scripttool.py:1499
 #, python-format
 msgid "% done"
 msgstr "% done"
 
-#: tools/gmic.py:1260 tools/scripttool.py:1510 tools/scripttool.py:1585
+#: tools/gmic.py:1263 tools/scripttool.py:1505 tools/scripttool.py:1580
 msgid "Render complete!"
 msgstr "İşleme tamamlandı!"
 
-#: tools/gmic.py:1272 tools/scripttool.py:1591
+#: tools/gmic.py:1275 tools/scripttool.py:1586
 msgid "Writing clip frame: "
 msgstr "Klip karesi yazma: "
 
-#: tools/gmic.py:1281
+#: tools/gmic.py:1284
 msgid "Rendering frame: "
 msgstr "İşleme karesi: "
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1294
 msgid "Render error!"
 msgstr "İşleme hatası!"
 
@@ -8096,11 +7764,11 @@ msgstr "Önceden ayarlanmış Dosya türü"
 msgid "Use Default Profile:"
 msgstr "Varsayılan Profili Kullan:"
 
-#: monitorevent.py:387
+#: monitorevent.py:386
 msgid "On some systems Trim View may update slowly"
 msgstr "Bazı sistemlerde Kırpma Görünümü yavaş güncellenebilir"
 
-#: monitorevent.py:388
+#: monitorevent.py:387
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -8109,7 +7777,7 @@ msgstr ""
 "şekilde çalışır.\n"
 "\n"
 
-#: monitorevent.py:389
+#: monitorevent.py:388
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -8210,11 +7878,11 @@ msgstr "EŞİTLENEN_KLİP_"
 msgid "Save Sync Compound Clip XML"
 msgstr "Birleşik klip XML bileşinini Kaydet"
 
-#: diskcachemanagement.py:55
+#: diskcachemanagement.py:54
 msgid "Destroy data"
 msgstr "Verileri yok et"
 
-#: diskcachemanagement.py:75
+#: diskcachemanagement.py:74
 msgid ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
@@ -8222,19 +7890,19 @@ msgstr ""
 "Varolan içeriği bu veri yok değişebilir\n"
 "projeler ve bazı projeleri açılmaz hale getirin."
 
-#: diskcachemanagement.py:119
+#: diskcachemanagement.py:118
 msgid " MB"
 msgstr " MB"
 
-#: diskcachemanagement.py:121
+#: diskcachemanagement.py:120
 msgid " kB"
 msgstr " kB"
 
-#: diskcachemanagement.py:156
+#: diskcachemanagement.py:155
 msgid "Disk Cache Manager"
 msgstr "Disket Önbellek Yöneticisi"
 
-#: diskcachemanagement.py:163
+#: diskcachemanagement.py:162
 msgid ""
 "This dialog handles legacy Projects data created using versions before "
 "2.12.\n"
@@ -8243,7 +7911,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: diskcachemanagement.py:164
+#: diskcachemanagement.py:163
 #, fuzzy
 msgid ""
 "Destroying data using this dialog may <b>change contents</b> of existing\n"
@@ -8252,19 +7920,19 @@ msgstr ""
 "Bu verilerin yok edilmesi, mevcut verilerin <b>içeriğini</b> değiştirebilir\n"
 "projeler veya <b>bazı projeleri açılamaz hale getirin!</b>"
 
-#: diskcachemanagement.py:221
+#: diskcachemanagement.py:220
 msgid "Disk Cache Size Exceeds Current Warning Level!"
 msgstr "Disk Önbellek Boyutu Geçerli Uyarı Seviyesini Aşıyor!"
 
-#: diskcachemanagement.py:222
+#: diskcachemanagement.py:221
 msgid "Flowblade currently uses "
 msgstr "Flowblade şu anda kullanıyor "
 
-#: diskcachemanagement.py:222 projectdatavaultgui.py:1000
+#: diskcachemanagement.py:221 projectdatavaultgui.py:999
 msgid " of disk space."
 msgstr " disk alanı."
 
-#: diskcachemanagement.py:223
+#: diskcachemanagement.py:222
 msgid ""
 "You can either delete saved data using dialog opened with <b>Edit->Disk "
 "Cache</b> or"
@@ -8272,30 +7940,30 @@ msgstr ""
 "Kaydedilen verileri <b>Edit->Disk Önbelleği</b> ile açılan iletişim kutusunu "
 "kullanarak silebilirsiniz veya"
 
-#: diskcachemanagement.py:224
+#: diskcachemanagement.py:223
 msgid ""
 "change warning level in <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 "<b>Düzenle->Tercihler 'Genel Ayarlar'</b> panelinde uyarı seviyesini "
 "değiştirin."
 
-#: diskcachemanagement.py:229 projectdatavaultgui.py:184
+#: diskcachemanagement.py:228 projectdatavaultgui.py:183
 msgid "Audio Levels Data"
 msgstr "Ses Düzeyleri Verisi"
 
-#: diskcachemanagement.py:232 projectdatavaultgui.py:186
+#: diskcachemanagement.py:231 projectdatavaultgui.py:185
 msgid "Rendered Files"
 msgstr "İşlenen Dosya"
 
-#: diskcachemanagement.py:233 projectdatavaultgui.py:190
+#: diskcachemanagement.py:232 projectdatavaultgui.py:189
 msgid "Proxy Files"
 msgstr "Vekil Dosyalar"
 
-#: diskcachemanagement.py:234 projectdatavaultgui.py:188
+#: diskcachemanagement.py:233 projectdatavaultgui.py:187
 msgid "Container Clips"
 msgstr "Kapsayıcı Klipler"
 
-#: diskcachemanagement.py:235 projectdatavaultgui.py:182
+#: diskcachemanagement.py:234 projectdatavaultgui.py:181
 msgid "Thumbnails"
 msgstr "Küçük resimler"
 
@@ -8307,7 +7975,7 @@ msgstr "Yavaş/Hızlı Hareket"
 msgid "Reverse"
 msgstr "Ters"
 
-#: projectmediaimport.py:165
+#: projectmediaimport.py:160
 msgid "Loading Media Import Project"
 msgstr "Ortamı İçe Aktarma Projesi Yükleniyor"
 
@@ -8374,9 +8042,21 @@ msgstr "Geriye Doğru Daha Hızlı"
 msgid "Forward Faster"
 msgstr "Daha Hızlı İleri"
 
+#: shortcuts.py:380
+msgid "Delete Selected Item"
+msgstr "Seçili Öğeyi Sil"
+
 #: shortcuts.py:381
 msgid "Lift Selected Item"
 msgstr "Seçili Öğeyi Kaldır"
+
+#: shortcuts.py:382
+msgid "Go To Start"
+msgstr "Başlamak"
+
+#: shortcuts.py:383
+msgid "Go To End"
+msgstr "Sona Git"
 
 #: shortcuts.py:384
 msgid "3 Point Overwrite"
@@ -8394,21 +8074,25 @@ msgstr "Aktif İzleri Kes"
 msgid "Cut All Tracks"
 msgstr "Tüm Parçaları Kes"
 
-#: shortcuts.py:391 workflow.py:76
+#: shortcuts.py:391 workflow.py:69
 msgid "Trim"
 msgstr "Kırpma"
 
-#: shortcuts.py:392 workflow.py:77
+#: shortcuts.py:392 workflow.py:70
 msgid "Roll"
 msgstr "Rulo"
 
-#: shortcuts.py:393 workflow.py:78
+#: shortcuts.py:393 workflow.py:71
 msgid "Slip"
 msgstr "Kaydır"
 
-#: shortcuts.py:394 workflow.py:79
+#: shortcuts.py:394 workflow.py:72
 msgid "Spacer"
 msgstr "Aralayıcı"
+
+#: shortcuts.py:398
+msgid "Switch Monitor Source"
+msgstr "Monitör Kaynağını Değiştir"
 
 #: shortcuts.py:399
 #, fuzzy
@@ -8423,6 +8107,10 @@ msgstr "Klibi Ekranda Görüntüle"
 #: shortcuts.py:401
 msgid "Add Mark"
 msgstr "Maske Ekle"
+
+#: shortcuts.py:402
+msgid "Complete Keyboard Trim Edit"
+msgstr "Klavye Kırpma Düzenlemesini Tamamla"
 
 #: shortcuts.py:403
 msgid "Nudge Move Selection Back 1 Frame"
@@ -8496,9 +8184,21 @@ msgstr "Seçili Ortamı Depoya Taşıma"
 msgid "SPACE"
 msgstr "BOŞLUK"
 
+#: shortcuts.py:454
+msgid "Down Arrow"
+msgstr "Aşağı Ok"
+
+#: shortcuts.py:455
+msgid "Up Arrow"
+msgstr "Yukarı Ok"
+
 #: shortcuts.py:456
 msgid "Left Arrow"
 msgstr "Sol Ok"
+
+#: shortcuts.py:457
+msgid "Right Arrow"
+msgstr "Sağ Ok"
 
 #: shortcuts.py:459
 msgid "HOME"
@@ -8556,6 +8256,14 @@ msgstr "Tuş Takımı 7"
 msgid "Key Pad HOME"
 msgstr "Tuş Takımı ANASAYFA"
 
+#: shortcuts.py:484
+msgid "TAB"
+msgstr "TAB"
+
+#: shortcuts.py:485
+msgid "ENTER"
+msgstr "ENTER"
+
 #: shortcuts.py:486
 msgid "="
 msgstr "="
@@ -8581,6 +8289,10 @@ msgstr "Azaltmak"
 #: shortcuts.py:492
 msgid "Alt"
 msgstr "Alt"
+
+#: shortcuts.py:493
+msgid "Shift"
+msgstr "Shift"
 
 #: shortcuts.py:494
 msgid "Alt + Shift"
@@ -8630,15 +8342,15 @@ msgstr "<control><alt><shift>"
 msgid "<control>"
 msgstr "<control>"
 
-#: clipmenuaction.py:556
+#: clipmenuaction.py:552
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "Önceki klibin boş alanı kaplamak için yeterli malzemesi yok"
 
-#: clipmenuaction.py:557 clipmenuaction.py:586
+#: clipmenuaction.py:553 clipmenuaction.py:582
 msgid "Requested edit can't be done."
 msgstr "İstenen düzenleme yapılamaz."
 
-#: clipmenuaction.py:585
+#: clipmenuaction.py:581
 msgid "Next clip does not have enough material to cover blank area"
 msgstr ""
 "Bir sonraki klip, boş alanı kaplamak için yeterli malzemeye sahip değil"
@@ -8730,11 +8442,11 @@ msgstr "Dışa aktarma klasörü:"
 msgid "Image type:"
 msgstr "Resim Türü:"
 
-#: exporting.py:529
+#: exporting.py:541
 msgid "Selected folder contains files"
 msgstr "Seçilen klasör dosyaları içerir"
 
-#: exporting.py:530
+#: exporting.py:542
 msgid ""
 "When exporting audio to Ardour, the selected folder\n"
 "has to be empty."
@@ -8742,23 +8454,23 @@ msgstr ""
 "Ateşli ses dışa aktarırken, seçilen klasörün\n"
 "boş olması gerek."
 
-#: workflow.py:75
+#: workflow.py:68
 msgid "Move"
 msgstr "Hareket"
 
-#: workflow.py:81
+#: workflow.py:74
 msgid "Ripple Trim"
 msgstr "Dalgalanma Kırpma"
 
-#: workflow.py:83
+#: workflow.py:76
 msgid "Keyframe"
 msgstr "Klavye kısayolları"
 
-#: workflow.py:84
+#: workflow.py:77
 msgid "Multitrim"
 msgstr "Çoklu"
 
-#: workflow.py:87
+#: workflow.py:80
 msgid ""
 "<b>Left Mouse</b> to move and insert single clip between clips.\n"
 "<b>CTRL + Left Mouse</b> to select and move clip range.\n"
@@ -8770,7 +8482,7 @@ msgstr ""
 "\n"
 "<b> sol fare</b > klip klip uzunluğu kırpmak için biter."
 
-#: workflow.py:88
+#: workflow.py:81
 #, fuzzy
 msgid ""
 "<b>Left Mouse</b> to select a clip, or to move clip or clip range into new "
@@ -8787,7 +8499,7 @@ msgstr ""
 "\n"
 "<b> sol fare</b> klip klip uzunluğu kırpmak için biter."
 
-#: workflow.py:89
+#: workflow.py:82
 msgid ""
 "<b>Left Mouse</b> to trim closest clip end.\n"
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
@@ -8797,7 +8509,7 @@ msgstr ""
 "<b>Sol veya sağ ok tuşu </b> + <b>ENTER tuşu</b> klavyeyi kullanarak "
 "düzenleme yapmak için."
 
-#: workflow.py:90
+#: workflow.py:83
 msgid ""
 "<b>Left Mouse</b> to move closest edit point between 2 clips.\n"
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
@@ -8807,7 +8519,7 @@ msgstr ""
 "<b>Sol veya sağ ok tuşu </b> + <b>ENTER tuşu </b> klavyeyi kullanarak "
 "düzenleme yapmak için."
 
-#: workflow.py:91
+#: workflow.py:84
 msgid ""
 "<b>Left Mouse</b> to move clip contents within clip.\n"
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
@@ -8817,7 +8529,7 @@ msgstr ""
 "<b>Sol veya sağ ok tuşu </b> + <b>ENTER tuşu </b> klavyeyi kullanarak "
 "düzenleme yapmak için."
 
-#: workflow.py:92
+#: workflow.py:85
 msgid ""
 "<b>Left Mouse</b> to move clip under cursor and all clips after it forward "
 "or backward, overwrites not allowed.\n"
@@ -8830,7 +8542,7 @@ msgstr ""
 "aynı parçaya taşımak için<b> ileri veya geri</b>, üzerine yazmasına izin "
 "verilmez."
 
-#: workflow.py:93
+#: workflow.py:86
 msgid ""
 "<b>1. Left Mouse</b> to draw a box to select a group of clips.\n"
 "<b>2. Left Mouse</b> inside the box to move selected clips forward or "
@@ -8840,7 +8552,7 @@ msgstr ""
 "2. Seçilen klipleri ileri veya geri hareket ettirmek için kutunun içinde "
 "<b>sol fare</b>."
 
-#: workflow.py:94
+#: workflow.py:87
 msgid ""
 "<b>Left Mouse</b> to trim closest clip end and move all clips after it to "
 "maintain sync, overwrites not allowed.\n"
@@ -8852,7 +8564,7 @@ msgstr ""
 "<b>Sol veya Sağ ok tuşu </b> + <b>ENTER tuşu</b> klavyeyi kullanarak "
 "düzenleme yapmak için."
 
-#: workflow.py:95
+#: workflow.py:88
 msgid ""
 "<b>Left Mouse</b> to cut clip under cursor.\n"
 "<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."
@@ -8861,7 +8573,7 @@ msgstr ""
 "<b>CTRL + Sol Fare</b> imleç konumundaki tüm parçalardaki klipleri kesmek "
 "için."
 
-#: workflow.py:96
+#: workflow.py:89
 #, fuzzy
 msgid ""
 "Click <b>Left Mouse</b> on Clip to init Volume Keyframe editing, Brightness "
@@ -8878,7 +8590,7 @@ msgstr ""
 "ana kareleri oluşturmak veya sürüklemek için<b> Sol Fare</b>.\n"
 "etkin ana kareyi silmek için<b>Sil Tuşu</b>."
 
-#: workflow.py:97
+#: workflow.py:90
 msgid ""
 "Position cursor near or on clip edges for <b>Trim</b> and <b>Roll</b> "
 "edits.\n"
@@ -8898,11 +8610,11 @@ msgstr ""
 "taşımak için<b> sol veya sağ ok tuşu</b>.\n"
 "klavye düzenlemesini tamamlamak için <b> Enter Tuşu</b>na basın."
 
-#: workflow.py:209
+#: workflow.py:202
 msgid "Keyboard shortcut: "
 msgstr "Klavye kısayolu: "
 
-#: kftoolmode.py:386
+#: kftoolmode.py:385
 msgid ""
 "This Clip has a deprecated Volume filter and cannot be edited with Keyframe "
 "Tool!"
@@ -8910,7 +8622,7 @@ msgstr ""
 "Bu klibin kullanımdan kaldırılmış bir ses filtresi vardır ve klavye aracıyla "
 "düzenlenemez!"
 
-#: kftoolmode.py:387
+#: kftoolmode.py:386
 msgid ""
 "Flowblade 2.8 changed to use Volume filtes with dB values.\n"
 "\n"
@@ -8925,7 +8637,7 @@ msgstr ""
 "gerekiyor\n"
 "bu klibi klavye aracıyla düzenlemek için."
 
-#: kftoolmode.py:489
+#: kftoolmode.py:488
 msgid "Media Frame: "
 msgstr "Ortam Karesi: "
 
@@ -8953,131 +8665,118 @@ msgstr "Kapalı maskelerde nokta ekleme / silme işlemine izin ver"
 msgid "Close Tool"
 msgstr "Aracı Kapat"
 
-#: tools/simpleeditors.py:136 tools/simpleeditors.py:202
+#: tools/simpleeditors.py:134 tools/simpleeditors.py:200
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:915
+#: tools/simpleeditors.py:913
 msgid "Clip Frame"
 msgstr "Klip Kare"
 
-#: jobs.py:110
-msgid "G'Mic Clip"
-msgstr "G'Mic Klip"
-
-#: jobs.py:112
-msgid "Selection Clip"
-msgstr "Klip Seç"
-
-#: jobs.py:114
-msgid "Motion Clip"
-msgstr "Hareketli Klip"
-
-#: jobs.py:116
-msgid "Proxy Clip"
-msgstr "Vekil Klip"
-
-#: jobs.py:118
-#, fuzzy
-msgid "Generator Clip"
-msgstr "Karıştıcı Klip"
-
-#: jobs.py:120
-msgid "Stabilizing Data"
-msgstr ""
-
-#: jobs.py:122
-#, fuzzy
-msgid "Tracking Data"
-msgstr "Parça "
-
-#: jobs.py:192
+#: jobs.py:171
 msgid "Completed"
 msgstr "Tamamlandı"
 
-#: jobs.py:219 jobs.py:287
+#: jobs.py:197 jobs.py:265
 msgid "Cancelled"
 msgstr "İptal"
 
-#: jobs.py:361
-msgid "Job Type"
-msgstr "İş Türü"
+#: jobs.py:336
+#, fuzzy
+msgid "Job Info"
+msgstr "Bilgi"
 
-#: jobs.py:364
+#: jobs.py:338
 msgid "Progress"
 msgstr "İlerleme"
 
-#: jobs.py:454 containeractions.py:255
+#: jobs.py:419 containeractions.py:252
 msgid "In Queue - "
 msgstr "Sırada - "
 
-#: jobs.py:484 jobs.py:560 jobs.py:644 jobs.py:727 containeractions.py:532
-#: containeractions.py:698 containeractions.py:905
+#: jobs.py:449 jobs.py:522 jobs.py:603 jobs.py:686 containeractions.py:529
+#: containeractions.py:695 containeractions.py:902
 msgid "Render Starting..."
 msgstr "İşleme Başlıyor..."
 
-#: jobs.py:555
-msgid "Stabilizing data Render"
+#: jobs.py:488
+#, fuzzy
+msgid "Motion Clip Render"
+msgstr "Hareketli Klip"
+
+#: jobs.py:568
+msgid "Stabilizing Analysis"
 msgstr ""
 
-#: jobs.py:640
+#: jobs.py:653
 msgid "Tracking Data Render"
 msgstr ""
 
-#: containeractions.py:372
+#: jobs.py:766 jobs.py:787
+#, fuzzy
+msgid "Proxy Render"
+msgstr "Vekil Oluşturma Bilgisi"
+
+#: containeractions.py:369
 #, fuzzy
 msgid "Render Full Media"
 msgstr "Tam Ortamı Oluştur..."
 
-#: containeractions.py:373
+#: containeractions.py:370
 #, fuzzy
 msgid "Render Clip Length"
 msgstr "Klip Uzunluğunu İşle..."
 
-#: containeractions.py:384
+#: containeractions.py:381
 #, fuzzy
 msgid "Container/Generator Clip Render"
 msgstr "Kapsayıcı Klip Oluşturma Ayarları"
 
-#: containeractions.py:387
+#: containeractions.py:384
 #, fuzzy
 msgid "Set Render Encoding Settings"
 msgstr "Video Kodlama Ayarları"
 
-#: containeractions.py:573 containeractions.py:751
-msgid "Step "
-msgstr "Adım "
+#: containeractions.py:570
+#, fuzzy
+msgid "G'Mic Render Step "
+msgstr "Oluşturma Başladı:"
 
-#: containeractions.py:575 containeractions.py:753
+#: containeractions.py:572 containeractions.py:750
 msgid "Writing Clip Frames"
 msgstr "Klip Kareleri Yazma"
 
-#: containeractions.py:577
+#: containeractions.py:574
 msgid "Rendering G'Mic Script"
 msgstr "G'Mic Görüntü Kodlama"
 
-#: containeractions.py:579 containeractions.py:755
+#: containeractions.py:576 containeractions.py:752
 msgid "Encoding Video"
 msgstr "Video Kodlama"
 
-#: containeractions.py:945
+#: containeractions.py:748
 #, fuzzy
-msgid "Video for: "
-msgstr "Video:"
+msgid "Generator Render "
+msgstr "İşlemi Oluşturun"
 
-#: containeractions.py:1010
+#: containeractions.py:942
+#, fuzzy
+msgid "Video for Selection Clip: "
+msgstr "Klip Seç"
+
+#: containeractions.py:1005
 msgid "<b>Rendering Placeholder Media For:</b> "
 msgstr "<b>Görüntü İçin Yer Tutucu Ortam Oluşturma:</b> "
 
-#: containerclip.py:159
+#: containerclip.py:154
 msgid "Select A File"
 msgstr "Bir Dosya Seçin"
 
-#: containerclip.py:200
+#: containerclip.py:195
 msgid "Not all required files were defined"
 msgstr "Gerekli tüm dosyalar tanımlanmadı"
 
-#: containerclip.py:200
+#: containerclip.py:195
 #, fuzzy
 msgid ""
 "Select all files asked for in dialog for successful Container Clip creation."
@@ -9085,281 +8784,281 @@ msgstr ""
 "Kapsayıcı klibi başarılı bir şekilde oluşturmak için iletişim kutusunda "
 "istenen tüm dosyaları seçin."
 
-#: containerclip.py:207
+#: containerclip.py:202
 msgid "G'Mic Tool Script:"
 msgstr "G'Mic Komut Aracı:"
 
-#: containerclip.py:207
+#: containerclip.py:202
 msgid "Select G'Mic Tool Script"
 msgstr "G'Mic Araç Komut Dosyasını Seçin"
 
-#: containerclip.py:208
+#: containerclip.py:203
 msgid "Video Clip:"
 msgstr "Video Klip:"
 
-#: containerclip.py:209
+#: containerclip.py:204
 msgid "Create G'Mic Script Container Clip"
 msgstr "G'Mic kapsayıcı senaryo klibi oluşturun"
 
-#: containerclip.py:258
+#: containerclip.py:253
 msgid "G'Mic Container Clip Validation Error"
 msgstr "G'Mic Kapsayıcı Klip Doğrulama Hatası"
 
-#: containerclip.py:266
+#: containerclip.py:261
 msgid "Generator Plugin Script:"
 msgstr ""
 
-#: containerclip.py:266
+#: containerclip.py:261
 msgid "Generator Plugin Script"
 msgstr ""
 
-#: containerclip.py:267
+#: containerclip.py:262
 msgid "Create Generator Plugin Script Media Item"
 msgstr ""
 
-#: containerclip.py:338
+#: containerclip.py:333
 #, fuzzy
 msgid "Creating Container for Generator..."
 msgstr "Karıştıcı Projesi için kapsayıcı oluşturma"
 
-#: containerclip.py:342
+#: containerclip.py:337
 #, fuzzy
 msgid "Generator Container Clip Validation Error"
 msgstr "Karıştıcı Kapsayıcı Klip Doğrulama Hatası"
 
-#: editorlayout.py:214
+#: editorlayout.py:217
 msgid "Top Row Default Notebook"
 msgstr "Varsayılan Üst Satır Not Defteri"
 
-#: editorlayout.py:215
+#: editorlayout.py:218
 msgid "Top Row Right"
 msgstr "Üst Sağ Satır"
 
-#: editorlayout.py:216
+#: editorlayout.py:219
 msgid "Left Column"
 msgstr "Sol Sütun"
 
-#: editorlayout.py:217
+#: editorlayout.py:220
 msgid "Bottom Row Left"
 msgstr "Sol Alt Satır"
 
-#: editorlayout.py:218
+#: editorlayout.py:221
 msgid "Bottom Row Right"
 msgstr "Alt Sağ Satır"
 
-#: editorlayout.py:219
+#: editorlayout.py:222
 msgid "Not Visible"
 msgstr "Görünmez"
 
-#: editorlayout.py:220
+#: editorlayout.py:223
 msgid "Top Row Project Panel Default"
 msgstr "Varsayılan Üst Satır Proje Panosu"
 
-#: editorlayout.py:224
+#: editorlayout.py:227
 msgid "Media"
 msgstr "Ortam"
 
-#: editorlayout.py:225 guipopoverclip.py:158 guipopoverclip.py:255
+#: editorlayout.py:228 guipopoverclip.py:157 guipopoverclip.py:259
 msgid "Edit"
 msgstr "Düzenle"
 
-#: editorlayout.py:226
+#: editorlayout.py:229
 msgid "Range Log"
 msgstr "Seri Günlük"
 
-#: editorlayout.py:228
+#: editorlayout.py:231
 msgid "Jobs"
 msgstr "İşler"
 
-#: editorlayout.py:232
+#: editorlayout.py:235
 msgid "Filter Select"
 msgstr "Filtre Seç"
 
-#: editorlayout.py:401
+#: editorlayout.py:404
 msgid "Panel Placement"
 msgstr "Yerleşim Panosu"
 
-#: editorlayout.py:407
+#: editorlayout.py:410
 #, fuzzy
 msgid "Preset Layouts"
 msgstr "Önayarlı Luma"
 
-#: editorlayout.py:416
+#: editorlayout.py:419
 msgid "Project Panel"
 msgstr "Proje Panosu"
 
-#: editorlayout.py:424
+#: editorlayout.py:427
 msgid "Media Panel"
 msgstr "Ortam Panosu"
 
-#: editorlayout.py:431
+#: editorlayout.py:434
 msgid "Range Log Panel"
 msgstr "Seri sistem günlüğü Panosu"
 
-#: editorlayout.py:438
+#: editorlayout.py:441
 #, fuzzy
 msgid "Edit Panel"
 msgstr "Ortam Panosu"
 
-#: editorlayout.py:445
+#: editorlayout.py:448
 msgid "Jobs Panel"
 msgstr "İşler Panosu"
 
-#: editorlayout.py:452
+#: editorlayout.py:455
 msgid "Render Panel"
 msgstr "Görüntü Panosu"
 
-#: editorlayout.py:459
+#: editorlayout.py:462
 msgid "Filter Select Panel"
 msgstr "Filtre Seçme Panonu"
 
-#: editorlayout.py:497
+#: editorlayout.py:500
 msgid "Tabs Positions"
 msgstr "Sekme Konumları"
 
-#: editorlayout.py:536 guipopover.py:376
+#: editorlayout.py:539 guipopover.py:375
 #, fuzzy
 msgid "Layout Monitor Left"
 msgstr "Soldaki Kaynak"
 
-#: editorlayout.py:539 guipopover.py:377
+#: editorlayout.py:542 guipopover.py:376
 msgid "Layout Monitor Center"
 msgstr ""
 
-#: editorlayout.py:542 guipopover.py:379
+#: editorlayout.py:545 guipopover.py:378
 msgid "Layout Top Row 4 Panels"
 msgstr ""
 
-#: editorlayout.py:547 guipopover.py:380
+#: editorlayout.py:550 guipopover.py:379
 msgid "Layout Media Panel Left Column"
 msgstr ""
 
-#: editorlayout.py:552 guipopover.py:384
+#: editorlayout.py:555 guipopover.py:383
 #, fuzzy
 msgid "Save Current Layout..."
 msgstr "Geçerli Grubu Yeniden Adlandır..."
 
-#: editorlayout.py:555 guipopover.py:385
+#: editorlayout.py:558 guipopover.py:384
 #, fuzzy
 msgid "Load Layout..."
 msgstr "Katmanları Yükle"
 
-#: editorlayout.py:601
+#: editorlayout.py:604
 msgid "Loading Layout Filed!"
 msgstr ""
 
-#: editorlayout.py:643
+#: editorlayout.py:646
 msgid "Custom layout does not fit on screen!"
 msgstr ""
 
-#: editorlayout.py:645
+#: editorlayout.py:648
 #, fuzzy
 msgid "Available screen dimensions: "
 msgstr "Ekran boyutlarınız aşağıdaki gibidir "
 
-#: editorlayout.py:647
+#: editorlayout.py:650
 msgid "Top row width:        "
 msgstr ""
 
-#: editorlayout.py:649
+#: editorlayout.py:652
 #, fuzzy
 msgid "Bottom row width:     "
 msgstr "Alt Sağ Satır"
 
-#: editorlayout.py:651
+#: editorlayout.py:654
 msgid ""
 "Change panels positions or remove buttons from midbar\n"
 "to make layout fit on screen."
 msgstr ""
 
-#: tools/scripttool.py:300 tools/scripttool.py:1067
+#: tools/scripttool.py:295 tools/scripttool.py:1062
 #, fuzzy
 msgid "Save Script As"
 msgstr "Komut Dosyasını Kaydet"
 
-#: tools/scripttool.py:320
+#: tools/scripttool.py:315
 #, fuzzy
 msgid "Saving"
 msgstr "Kaydet..."
 
-#: tools/scripttool.py:554 tools/scripttool.py:688 tools/scripttool.py:1316
-#: tools/scripttool.py:1376 tools/scripttool.py:1562
+#: tools/scripttool.py:549 tools/scripttool.py:683 tools/scripttool.py:1311
+#: tools/scripttool.py:1371 tools/scripttool.py:1557
 #, fuzzy
 msgid "No Preview"
 msgstr "Önizleme"
 
-#: tools/scripttool.py:604
+#: tools/scripttool.py:599
 #, fuzzy
 msgid "Change Generator Length"
 msgstr "Klibin Uzunluğunu Değiştirme"
 
-#: tools/scripttool.py:681
+#: tools/scripttool.py:676
 #, fuzzy
 msgid "Reload Script"
 msgstr "Komut Dosyasını Yükle"
 
-#: tools/scripttool.py:801
+#: tools/scripttool.py:796
 #, fuzzy
 msgid "Preview Range"
 msgstr "Önizleme"
 
-#: tools/scripttool.py:830
+#: tools/scripttool.py:825
 #, fuzzy
 msgid "Generator Media Length:"
 msgstr "Oluştuma Uzunluğu:"
 
-#: tools/scripttool.py:885
+#: tools/scripttool.py:880
 #, fuzzy
 msgid "Set Frames Folder for valid render"
 msgstr "Geçerli işleme için İşaretleyici, Planı ve Kareler klasörünü ayarlayın"
 
-#: tools/scripttool.py:1066
+#: tools/scripttool.py:1061
 #, fuzzy
 msgid "Open Script"
 msgstr "Komut Dosyasını Kaydet"
 
-#: tools/scripttool.py:1074
+#: tools/scripttool.py:1069
 #, fuzzy
 msgid "Load Generator Code"
 msgstr "Oluşturma Args Dosyasını Yükle"
 
-#: tools/scripttool.py:1078
+#: tools/scripttool.py:1073
 #, fuzzy
 msgid "Change Generator Media Length"
 msgstr "Klibin Uzunluğunu Değiştirme"
 
-#: tools/scripttool.py:1082
+#: tools/scripttool.py:1077
 msgid "API Docs"
 msgstr ""
 
-#: tools/scripttool.py:1083
+#: tools/scripttool.py:1078
 msgid "API Docs Web"
 msgstr ""
 
-#: tools/scripttool.py:1274
+#: tools/scripttool.py:1269
 #, fuzzy
 msgid "Rendering..."
 msgstr "Oluşturma"
 
-#: tools/scripttool.py:1337
+#: tools/scripttool.py:1332
 #, fuzzy
 msgid "Rendered frame "
 msgstr "İşleme karesi: "
 
-#: tools/scripttool.py:1373
+#: tools/scripttool.py:1368
 #, fuzzy
 msgid "Range preview for frame range "
 msgstr "Kare için önizleme: "
 
-#: singletracktransition.py:258
+#: singletracktransition.py:257
 msgid "Rendering "
 msgstr "İşle "
 
-#: singletracktransition.py:350
+#: singletracktransition.py:349
 msgid "Rerendering "
 msgstr "İşleniyor "
 
-#: singletracktransition.py:377
+#: singletracktransition.py:376
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
@@ -9369,116 +9068,116 @@ msgstr ""
 "çakışmasına ihtiyacınız var!\n"
 "\n"
 
-#: singletracktransition.py:382
+#: singletracktransition.py:381
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr "<b>İLK KLİP ORTAMI ÇAKIŞIYOR:</b>  "
 
-#: singletracktransition.py:383 singletracktransition.py:391
+#: singletracktransition.py:382 singletracktransition.py:390
 msgid "Available <b>"
 msgstr "Mevcut <b>"
 
-#: singletracktransition.py:383 singletracktransition.py:391
-#: singletracktransition.py:440 singletracktransition.py:448
+#: singletracktransition.py:382 singletracktransition.py:390
+#: singletracktransition.py:439 singletracktransition.py:447
 msgid "</b> frame(s), "
 msgstr "</b> kare(ler), "
 
-#: singletracktransition.py:384 singletracktransition.py:392
+#: singletracktransition.py:383 singletracktransition.py:391
 msgid "Required <b>"
 msgstr "Gerekli <b>"
 
-#: singletracktransition.py:384 singletracktransition.py:385
-#: singletracktransition.py:393 singletracktransition.py:441
+#: singletracktransition.py:383 singletracktransition.py:384
+#: singletracktransition.py:392 singletracktransition.py:440
 msgid "</b> frame(s)"
 msgstr "</b> kare(ler)"
 
-#: singletracktransition.py:385
+#: singletracktransition.py:384
 msgid "Trim first clip end back <b>"
 msgstr "İlk klibin sonunu geriye doğru kırp <b>"
 
-#: singletracktransition.py:390
+#: singletracktransition.py:389
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr "<b>İKİNCİ KLİP ORTAMI ÇAKIŞMASI:</b> "
 
-#: singletracktransition.py:392 singletracktransition.py:449
+#: singletracktransition.py:391 singletracktransition.py:448
 msgid "</b> frame(s) "
 msgstr "</b> kare(ler) "
 
-#: singletracktransition.py:393
+#: singletracktransition.py:392
 msgid "Trim second clip start forward <b>"
 msgstr "İkinci klibi kırp ileriye doğru başlat <b>"
 
-#: singletracktransition.py:399
+#: singletracktransition.py:398
 #, fuzzy
 msgid "Current situation, not enough media overlap:"
 msgstr "Mevcut durum, yeterli medya çakışması yok:"
 
-#: singletracktransition.py:401
+#: singletracktransition.py:400
 msgid "You need more media overlap:"
 msgstr "Daha fazla ortam örtüşmesine ihtiyacınız var:"
 
-#: singletracktransition.py:425
+#: singletracktransition.py:424
 msgid "Activating 'Steal frames from clips if needed' checkbox can help too."
 msgstr ""
 "'Gerekirse kliplerden kare çalma' onay kutusunu etkinleştirmek de yardımcı "
 "olabilir."
 
-#: singletracktransition.py:430
+#: singletracktransition.py:429
 msgid "More media overlap needed to create transition!"
 msgstr "Geçiş oluşturmak için daha fazla ortamın çakışması gerekiyor!"
 
-#: singletracktransition.py:439
+#: singletracktransition.py:438
 msgid "<b>FIRST CLIP:</b>  "
 msgstr "<b>İLK KLİP:</b>  "
 
-#: singletracktransition.py:440 singletracktransition.py:448
+#: singletracktransition.py:439 singletracktransition.py:447
 msgid "Length <b>"
 msgstr "Uzunluk <b>"
 
-#: singletracktransition.py:441 singletracktransition.py:449
+#: singletracktransition.py:440 singletracktransition.py:448
 msgid "Required shortning <b>"
 msgstr "Gerekli kısaltma <b>"
 
-#: singletracktransition.py:447
+#: singletracktransition.py:446
 msgid "<b>SECOND CLIP:</b> "
 msgstr "<b>İKİNCİ KLİP:</b> "
 
-#: singletracktransition.py:457
+#: singletracktransition.py:456
 msgid "Lengthen first Clip from beginning:"
 msgstr "İlk klibi baştan uzatın:"
 
-#: singletracktransition.py:465 singletracktransition.py:482
+#: singletracktransition.py:464 singletracktransition.py:481
 msgid "or make Transition shorter."
 msgstr "veya geçişi daha kısa hale getirin."
 
-#: singletracktransition.py:474
+#: singletracktransition.py:473
 msgid "Lengthen second Clip from end:"
 msgstr "İkinci Klibi uçtan uzatın:"
 
-#: singletracktransition.py:486
+#: singletracktransition.py:485
 msgid "<b>Stealing frames from clips to transition failed!</b>"
 msgstr "<b>Kliplerden geçiş için kareleri çalmak başarısız oldu!</b>"
 
-#: singletracktransition.py:552
+#: singletracktransition.py:551
 msgid "Rerender all Rendered Transitions / Fades"
 msgstr "Tüm Oluşturulan Geçişleri / Solmaları Yeniden Oluştur"
 
-#: singletracktransition.py:595
+#: singletracktransition.py:594
 msgid "Rendering item "
 msgstr "Öğe oluştur "
 
-#: singletracktransition.py:732
+#: singletracktransition.py:731
 msgid "Add Transition"
 msgstr "Geçiş Ekle"
 
-#: singletracktransition.py:735
+#: singletracktransition.py:734
 msgid "Apply"
 msgstr "Uygula"
 
-#: singletracktransition.py:746 singletracktransition.py:751
+#: singletracktransition.py:745 singletracktransition.py:750
 msgid "Can't rerender this fade / transition."
 msgstr "Bu solma / geçişi tekrarlanamıyor."
 
-#: singletracktransition.py:747
+#: singletracktransition.py:746
 msgid ""
 "This fade / transition was created with Flowblade <= 1.14 and does not have "
 "the necessary data embedded.\n"
@@ -9489,7 +9188,7 @@ msgstr ""
 "Yeniden oluşturma, Flowblade >= 1.16 ile oluşturulan karartma / geçişlerle "
 "çalışır."
 
-#: singletracktransition.py:752
+#: singletracktransition.py:751
 msgid ""
 "The clip/s used to create this fade / transition are no longer available on "
 "the timeline."
@@ -9497,952 +9196,1244 @@ msgstr ""
 "Bu solma/geçişi oluşturmak için kullanılan klipler artık zaman çizelgesinde "
 "mevcut değildir."
 
-#: singletracktransition.py:756
+#: singletracktransition.py:755
 msgid "Rendered transitions cannot be used on audio tracks."
 msgstr ""
 
-#: singletracktransition.py:757
+#: singletracktransition.py:756
 msgid "This feature only works on video tracks."
 msgstr ""
 
-#: guipopover.py:223
+#: guipopover.py:221
 msgid "Delete Marker"
 msgstr "İşaretçi Sil"
 
-#: guipopover.py:224
+#: guipopover.py:222
 msgid "Delete All Markers"
 msgstr "Tüm İşaretçileri Sil"
 
-#: guipopover.py:238
+#: guipopover.py:236
 msgid "Display Clip Media Thumbnails"
 msgstr "Küçük Ortam Küçük Resimlerini Görüntüle"
 
-#: guipopover.py:239
+#: guipopover.py:237
 #, fuzzy
 msgid "Display Audio Levels"
 msgstr "Ses Seviyesini Göster"
 
-#: guipopover.py:243
+#: guipopover.py:241
 msgid "Mouse Zoom To Playhead"
 msgstr ""
 
-#: guipopover.py:243
+#: guipopover.py:241
 msgid "Mouse Zoom To Cursor"
 msgstr ""
 
-#: guipopover.py:252
+#: guipopover.py:251
 msgid "Snapping On"
 msgstr "Üzerinde Yakalama"
 
-#: guipopover.py:256
+#: guipopover.py:255
 msgid "Audio scrubbing"
 msgstr "Ses temizleme"
 
-#: guipopover.py:276
+#: guipopover.py:275
 msgid "Maximize Tracks"
 msgstr "Maksimum Parçalar"
 
-#: guipopover.py:277
+#: guipopover.py:276
 msgid "Maximize Video Tracks"
 msgstr "Maksimum Video Parçaları"
 
-#: guipopover.py:278
+#: guipopover.py:277
 msgid "Maximize Audio Tracks"
 msgstr "Maksimum Ses Parçaları"
 
-#: guipopover.py:279
+#: guipopover.py:278
 msgid "Minimize Tracks"
 msgstr "Minumum Parçalar"
 
-#: guipopover.py:280
+#: guipopover.py:279
 #, fuzzy
 msgid "Reset Track Heights"
 msgstr "Parça Yüksekliği:"
 
-#: guipopover.py:284
+#: guipopover.py:283
 msgid "Activate All Tracks"
 msgstr "Tüm Parçaları Aktifleştir"
 
-#: guipopover.py:285
+#: guipopover.py:284
 msgid "Activate Only Current Top Active Track"
 msgstr "Yalnızca Mevcut En Aktif İzi Etkinleştir"
 
-#: guipopover.py:289
+#: guipopover.py:288
 msgid "Expand Track on First Item Drop"
 msgstr ""
 
-#: guipopover.py:290
+#: guipopover.py:289
 msgid "Vertical Shrink Timeline"
 msgstr "Dikey Küçültme Zaman Çizelgesi"
 
-#: guipopover.py:360
+#: guipopover.py:359
 msgid "Create Container Clip from Selected Sequence"
 msgstr "Seçilen sıradan kapsayıcı klip oluşturma"
 
-#: guipopover.py:395
+#: guipopover.py:394
 msgid "Trim View On"
 msgstr "Kırpma Görünümü Açık"
 
-#: guipopover.py:395
+#: guipopover.py:394
 msgid "Trim View Single Side Edits Only"
 msgstr "Görünümü Yalnızca Tek Taraflı Düzenlemelerle Kırpın"
 
-#: guipopover.py:396
+#: guipopover.py:395
 msgid "Trim View Off"
 msgstr "Görünümü Kırpın"
 
-#: guipopover.py:411
+#: guipopover.py:410
 msgid "Vectorscope"
 msgstr "Vektörkapsamı"
 
-#: guipopover.py:412
+#: guipopover.py:411
 msgid "RGB Parade"
 msgstr "RGB Geçiş"
 
-#: guipopover.py:421 guipopover.py:428
+#: guipopover.py:420 guipopover.py:427
 msgid "100%"
 msgstr "100%"
 
-#: guipopover.py:421 guipopover.py:428
+#: guipopover.py:420 guipopover.py:427
 msgid "80%"
 msgstr "80%"
 
-#: guipopover.py:421 guipopover.py:428
+#: guipopover.py:420 guipopover.py:427
 msgid "50%"
 msgstr "50%"
 
-#: guipopover.py:421 guipopover.py:428
+#: guipopover.py:420 guipopover.py:427
 msgid "20%"
 msgstr "20%"
 
-#: guipopover.py:424
+#: guipopover.py:423
 msgid "Overlay Opacity"
 msgstr "Kaplama Opaklığı"
 
-#: guipopover.py:465
+#: guipopover.py:464
 msgid "First"
 msgstr "İlk"
 
-#: guipopover.py:466
+#: guipopover.py:465
 msgid "Last"
 msgstr "Son"
 
-#: guipopover.py:468
+#: guipopover.py:467
 msgid "Move Bin"
 msgstr "Hareket Bölmesi"
 
-#: guipopover.py:480
+#: guipopover.py:479
 msgid "Render Proxy Files For Selected Media"
 msgstr "Seçilen Ortam İçin Vekil Dosyaları Oluşturma"
 
-#: guipopover.py:481
+#: guipopover.py:480
 msgid "Render Proxy Files For All Media"
 msgstr "Tüm Ortam İçin Vekil Dosyaları Oluşturma"
 
-#: guipopover.py:485
+#: guipopover.py:484
 #, fuzzy
 msgid "Move Selected Items To Clicked Position..."
 msgstr "Seçili Öğeleri Gruba Taşıma"
 
-#: guipopover.py:486
+#: guipopover.py:485
 #, fuzzy
 msgid "Reverse Items Order"
 msgstr "Yankı süresi"
 
-#: guipopover.py:490
+#: guipopover.py:489
 #, fuzzy
 msgid "Set Current Bin Graphics Default Length"
 msgstr "Grafik varsayılan uzunluğu:"
 
-#: guipopover.py:494
+#: guipopover.py:493
 msgid "Select All"
 msgstr "Tümünü Seç"
 
-#: guipopover.py:495
+#: guipopover.py:494
 msgid "Select None"
 msgstr "Hiçbirini Seçme"
 
-#: guipopover.py:511
+#: guipopover.py:510
 msgid "Move Selected Media To Bin"
 msgstr "Seçili Ortamı Depoya Taşıma"
 
-#: guipopover.py:515
+#: guipopover.py:514
 msgid "Append All Media to Timeline"
 msgstr "Tüm ortamı zaman çizelgesine Ekle"
 
-#: guipopover.py:516
+#: guipopover.py:515
 msgid "Append Selected Media to Timeline"
 msgstr "Seçilen ortamı zaman çizelgesine ekleme"
 
-#: guipopover.py:526
+#: guipopover.py:525
 msgid "2 Columns"
 msgstr "2 Sütunlar"
 
-#: guipopover.py:526
+#: guipopover.py:525
 msgid "3 Columns"
 msgstr "3 Sütunlar"
 
-#: guipopover.py:527
+#: guipopover.py:526
 msgid "4 Columns"
 msgstr "4 Sütunlar"
 
-#: guipopover.py:527
+#: guipopover.py:526
 msgid "5 Columns"
 msgstr "5 Sütunlar"
 
-#: guipopover.py:527
+#: guipopover.py:526
 msgid "6 Columns"
 msgstr "6 Sütunlar"
 
-#: guipopover.py:528
+#: guipopover.py:527
 msgid "7 Columns"
 msgstr "7 Sütunlar"
 
-#: guipopover.py:544
+#: guipopover.py:543
 msgid "All Files"
 msgstr "Tüm Dosyalar"
 
-#: guipopover.py:544
+#: guipopover.py:543
 msgid "Video Files"
 msgstr "Video Dosyaları"
 
-#: guipopover.py:545
+#: guipopover.py:544
 msgid "Audio Files"
 msgstr "Ses Dosyaları"
 
-#: guipopover.py:545
+#: guipopover.py:544
 msgid "Graphics Files"
 msgstr "Grafik Dosyaları"
 
-#: guipopover.py:545
+#: guipopover.py:544
 msgid "Image Sequences"
 msgstr "Görüntü Dizileri"
 
-#: guipopover.py:546
+#: guipopover.py:545
 msgid "Pattern Producers"
 msgstr "Desen Üreticileri"
 
-#: guipopover.py:546
+#: guipopover.py:545
 msgid "Unused Files"
 msgstr "Kullanılmayan Dosyalar"
 
-#: guipopover.py:559
+#: guipopover.py:558
 msgid "Ratings Filtering"
 msgstr ""
 
-#: guipopover.py:591 guipopoverclip.py:118 guipopoverclip.py:224
+#: guipopover.py:590 guipopoverclip.py:117 guipopoverclip.py:228
 msgid "Open in Clip Monitor"
 msgstr "Klip İzleyici Monitöründe Aç"
 
-#: guipopover.py:594 guipopover.py:629
+#: guipopover.py:593 guipopover.py:628
 msgid "Unrated"
 msgstr ""
 
-#: guipopover.py:594 guipopover.py:629
+#: guipopover.py:593 guipopover.py:628
 msgid "Favorite"
 msgstr ""
 
-#: guipopover.py:595 guipopover.py:630
+#: guipopover.py:594 guipopover.py:629
 msgid "Bad"
 msgstr ""
 
-#: guipopover.py:601
+#: guipopover.py:600
 #, fuzzy
 msgid "Rating"
 msgstr "Dönüş"
 
-#: guipopover.py:612
+#: guipopover.py:611
 #, fuzzy
 msgid "Replace Media In Project"
 msgstr "Ortamı İçe Aktarma Projesi Yükleniyor"
 
-#: guipopover.py:613
+#: guipopover.py:612
 #, fuzzy
 msgid "Recreate Icon"
 msgstr "Simgeleri yeniden oluştur"
 
-#: guipopover.py:619 guipopover.py:901
+#: guipopover.py:618 guipopover.py:900
 msgid "Render Slow/Fast Motion File"
 msgstr "Yavaş/Hızlı Çekim Dosyası Oluştur"
 
-#: guipopover.py:621
+#: guipopover.py:620
 msgid "Render Reverse Motion File"
 msgstr "Ters Hareket Dosyası Oluştur"
 
-#: guipopover.py:626
+#: guipopover.py:625
 msgid "Render Proxy File"
 msgstr "Vekil Dosyası Oluşturma"
 
-#: guipopover.py:644
+#: guipopover.py:643
 msgid "Cancel Selected Render"
 msgstr "Seçili İşlemi İptal Et"
 
-#: guipopover.py:645
+#: guipopover.py:644
 msgid "Cancel All Renders"
 msgstr "Tüm İşleyenleri İptal Et"
 
-#: guipopover.py:649
+#: guipopover.py:648
 msgid "Show Jobs Panel on Adding New Job"
 msgstr "Yeni İşler Eklerken İş Panosunu Göster"
 
-#: guipopover.py:660
+#: guipopover.py:659
 msgid "Toggle All Effects On/Off"
 msgstr "Tüm Efektleri Aç/Kapat"
 
-#: guipopover.py:664
+#: guipopover.py:663
 msgid "Expand All"
 msgstr ""
 
-#: guipopover.py:665
+#: guipopover.py:664
 msgid "Unexpand All"
 msgstr ""
 
-#: guipopover.py:669
+#: guipopover.py:668
 #, fuzzy
 msgid "Save Effect Stack"
 msgstr "Efekt Değerleri Verilerini Kaydet"
 
-#: guipopover.py:670
+#: guipopover.py:669
 #, fuzzy
 msgid "Load Effect Stack"
 msgstr "Yük Etkisi Veri Değerleri"
 
-#: guipopover.py:674 guipopover.py:716
+#: guipopover.py:673 guipopover.py:715
 msgid "Set Fade Buttons Default Fade Length..."
 msgstr "Solma Düğmelerinin Varsayılan Solma Uzunluğunu Ayarlayın..."
 
-#: guipopover.py:678 guipopover.py:694 guipopover.py:720
+#: guipopover.py:677 guipopover.py:693 guipopover.py:719
 msgid "Close Editor"
 msgstr "Düzenleyiciyi Kapat"
 
-#: guipopover.py:689
+#: guipopover.py:688
 msgid "Save and Apply Plugin Properties"
 msgstr ""
 
-#: guipopover.py:690
+#: guipopover.py:689
 msgid "Load and Apply Plugin Properties"
 msgstr ""
 
-#: guipopover.py:705
+#: guipopover.py:704
 msgid "Save Compositor Values"
 msgstr "Kapsayıcı Değerlerini Kaydet"
 
-#: guipopover.py:706
+#: guipopover.py:705
 msgid "Load Compositor Values"
 msgstr "Kapsayıcı Değerlerini Kaydet"
 
-#: guipopover.py:707
+#: guipopover.py:706
 msgid "Reset Compositor Values"
 msgstr "Kapsayıcı Değerlerini Sıfırla"
 
-#: guipopover.py:712 guipopoverclip.py:570
+#: guipopover.py:711 guipopoverclip.py:580
 msgid "Delete Compositor"
 msgstr "Dizgiciyi Sil"
 
-#: guipopover.py:737
+#: guipopover.py:736
 msgid "New Group..."
 msgstr "Yeni Grup..."
 
-#: guipopover.py:738
+#: guipopover.py:737
 msgid "New Group From Selected..."
 msgstr "Seçilen Yeni Grup..."
 
-#: guipopover.py:742
+#: guipopover.py:741
 msgid "Rename Current Group..."
 msgstr "Geçerli Grubu Yeniden Adlandır..."
 
-#: guipopover.py:757 guipopover.py:794
+#: guipopover.py:756 guipopover.py:793
 msgid "No Groups"
 msgstr "Grup Yok"
 
-#: guipopover.py:759
+#: guipopover.py:758
 msgid "Move Selected Items To Group"
 msgstr "Seçili Öğeleri Gruba Taşıma"
 
-#: guipopover.py:763
+#: guipopover.py:762
 msgid "Delete Current Group"
 msgstr "Geçerli Grubu Sil"
 
-#: guipopover.py:767
+#: guipopover.py:766
 msgid "Use Comments as Clip Names"
 msgstr "Yorumları Klip Adları olarak kullan"
 
-#: guipopover.py:773 guipopover.py:797
+#: guipopover.py:772 guipopover.py:796
 msgid "Time"
 msgstr "Zaman"
 
-#: guipopover.py:781
+#: guipopover.py:780
 msgid "Sort by"
 msgstr "Sırala"
 
-#: guipopover.py:817 guipopover.py:820
+#: guipopover.py:816 guipopover.py:819
 msgid "Lock Track"
 msgstr "Parça Kilitli"
 
-#: guipopover.py:818 guipopover.py:821
+#: guipopover.py:817 guipopover.py:820
 msgid "Unlock Track"
 msgstr "Parçanın Kilidini Aç"
 
-#: guipopover.py:825
+#: guipopover.py:824
 msgid "High Height"
 msgstr "Yüksek Yükseklik"
 
-#: guipopover.py:825
+#: guipopover.py:824
 msgid "Large Height"
 msgstr "Büyük Yükseklik"
 
-#: guipopover.py:825
+#: guipopover.py:824
 msgid "Normal Height"
 msgstr "Normal Yükseklik"
 
-#: guipopover.py:840 guipopover.py:843 guipopoverclip.py:433
-#: guipopoverclip.py:595
+#: guipopover.py:839 guipopover.py:842 guipopoverclip.py:443
+#: guipopoverclip.py:605
 msgid "Unmute"
 msgstr "Sesi Aç"
 
-#: guipopover.py:847
+#: guipopover.py:846
 msgid "Mute Video"
 msgstr "Video Sessiz"
 
-#: guipopover.py:851 guipopover.py:854 guipopoverclip.py:436
-#: guipopoverclip.py:598
+#: guipopover.py:850 guipopover.py:853 guipopoverclip.py:416
+#: guipopoverclip.py:446 guipopoverclip.py:608
 msgid "Mute Audio"
 msgstr "Ses Sessiz"
 
-#: guipopover.py:858
+#: guipopover.py:857
 msgid "Mute All"
 msgstr "Tümü Sessiz"
 
-#: guipopover.py:886
+#: guipopover.py:885
 msgid "Show Full Paths"
 msgstr "Tam Yolları Göster"
 
-#: guipopover.py:900
+#: guipopover.py:899
 msgid "Display In Clip Monitor"
 msgstr "Klibi Ekranda Görüntüle"
 
-#: guipopover.py:902
+#: guipopover.py:901
 msgid "Toggle Star"
 msgstr "Yıldız Değiştir"
 
-#: guipopover.py:930
+#: guipopover.py:929
 msgid "Add Filter Mask on Selected Filter"
 msgstr "Seçilen filtreye filtre maskesi ekleme"
 
-#: guipopover.py:934
+#: guipopover.py:933
 msgid "Add Filter Mask on All Filters"
 msgstr "Tüm filtrelere filtre maskesi ekleme"
 
-#: guipopover.py:986
+#: guipopover.py:985
 msgid "Load Render Args from Current Encoding"
 msgstr "Mevcut Kodlamadan Oluşturma Dizilerini Yükle"
 
-#: guipopover.py:990
+#: guipopover.py:989
 msgid "Reset all Render Options to Defaults"
 msgstr "Tüm İşleme seçeneklerini Varsayılanlara Sıfırla"
 
-#: projectdatavaultgui.py:71
+#: projectdatavaultgui.py:70
 msgid "Project created with version 2.10 or lower!"
 msgstr ""
 
-#: projectdatavaultgui.py:72
+#: projectdatavaultgui.py:71
 msgid ""
 "This feature available only for projects created with version 2.12 or higher."
 msgstr ""
 
-#: projectdatavaultgui.py:97 projectdatavaultgui.py:145
-#: projectdatavaultgui.py:969
+#: projectdatavaultgui.py:96 projectdatavaultgui.py:144
+#: projectdatavaultgui.py:968
 msgid "Default XDG Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:109
+#: projectdatavaultgui.py:108
 msgid "Select Empty Folder to be added as Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:115 projectdatavaultgui.py:584
+#: projectdatavaultgui.py:114 projectdatavaultgui.py:583
 #, fuzzy
 msgid "Data Folder:"
 msgstr "Hedef Klasör:"
 
-#: projectdatavaultgui.py:120 projectdatavaultgui.py:589
+#: projectdatavaultgui.py:119 projectdatavaultgui.py:588
 msgid "Data Store Name"
 msgstr ""
 
-#: projectdatavaultgui.py:136 projectdatavaultgui.py:332
+#: projectdatavaultgui.py:135 projectdatavaultgui.py:331
 #, fuzzy
 msgid "Create Data Store"
 msgstr "Desen Üretici Oluştur"
 
-#: projectdatavaultgui.py:155
+#: projectdatavaultgui.py:154
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "Luma Dosya:"
 
-#: projectdatavaultgui.py:160 projectdatavaultgui.py:169
+#: projectdatavaultgui.py:159 projectdatavaultgui.py:168
 #, fuzzy
 msgid "Not Saved"
 msgstr "Ayarlanmadı"
 
-#: projectdatavaultgui.py:164
+#: projectdatavaultgui.py:163
 #, fuzzy
 msgid "Last Saved Time:"
 msgstr "Zaman çizelgesindeki son Kare"
 
-#: projectdatavaultgui.py:175
+#: projectdatavaultgui.py:174
 #, fuzzy
 msgid "Data ID:"
 msgstr "Veri"
 
-#: projectdatavaultgui.py:195
+#: projectdatavaultgui.py:194
 msgid "Total"
 msgstr ""
 
-#: projectdatavaultgui.py:224
+#: projectdatavaultgui.py:223
 #, fuzzy
 msgid "Actions"
 msgstr "Aksiyon"
 
-#: projectdatavaultgui.py:229
+#: projectdatavaultgui.py:228
 #, fuzzy
 msgid "Last Saved Project File"
 msgstr "Yeni Proje Dosyası"
 
-#: projectdatavaultgui.py:229
+#: projectdatavaultgui.py:228
 msgid "Times Saved"
 msgstr ""
 
-#: projectdatavaultgui.py:238 projectdatavaultgui.py:455
-#: projectdatavaultgui.py:483
+#: projectdatavaultgui.py:237 projectdatavaultgui.py:454
+#: projectdatavaultgui.py:482
 #, fuzzy
 msgid "No data folders"
 msgstr "Dışa aktarma klasörü:"
 
-#: projectdatavaultgui.py:254
+#: projectdatavaultgui.py:253
 #, fuzzy
 msgid "Project Data Folders"
 msgstr "Hedef Klasörü Seçin"
 
-#: projectdatavaultgui.py:264
+#: projectdatavaultgui.py:263
 msgid "Data Stores"
 msgstr ""
 
-#: projectdatavaultgui.py:299 projectdatavaultgui.py:547
+#: projectdatavaultgui.py:298 projectdatavaultgui.py:546
 msgid "Drop Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:307
+#: projectdatavaultgui.py:306
 #, fuzzy
 msgid "Data Store Folder: "
 msgstr "Hedef Klasör:"
 
-#: projectdatavaultgui.py:313
+#: projectdatavaultgui.py:312
 #, fuzzy
 msgid "Active: "
 msgstr "aktif"
 
-#: projectdatavaultgui.py:315
+#: projectdatavaultgui.py:314
 msgid "Make This Data Store Active"
 msgstr ""
 
-#: projectdatavaultgui.py:334 projectdatavaultgui.py:601
+#: projectdatavaultgui.py:333 projectdatavaultgui.py:600
 msgid "Connect Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:338
+#: projectdatavaultgui.py:337
 #, fuzzy
 msgid "Legacy Disk Cache Manager"
 msgstr "Disket Önbellek Yöneticisi"
 
-#: projectdatavaultgui.py:373
+#: projectdatavaultgui.py:372
 #, fuzzy
 msgid "Show only Saved Projects"
 msgstr "Flowblade Projeler"
 
-#: projectdatavaultgui.py:375
+#: projectdatavaultgui.py:374
 #, fuzzy
 msgid "Destroy Non-Saved Projects"
 msgstr "Projeyi Farklı Kaydet"
 
-#: projectdatavaultgui.py:391
+#: projectdatavaultgui.py:390
 #, fuzzy
 msgid "Destroy Project Data"
 msgstr "Verileri yok et"
 
-#: projectdatavaultgui.py:404
+#: projectdatavaultgui.py:403
 #, fuzzy
 msgid "Currently open Project data cannot be destroyed."
 msgstr " Geçerli Geri Alma yığını yok edilecek\n"
 
-#: projectdatavaultgui.py:435
+#: projectdatavaultgui.py:434
 #, fuzzy
 msgid "not saved"
 msgstr "yok"
 
-#: projectdatavaultgui.py:529
+#: projectdatavaultgui.py:528
 #, fuzzy
 msgid "Confirm Dropping Data Store:"
 msgstr "Önbelleğe Alınmış Verileri İmha Etmeyi Onaylayın!"
 
-#: projectdatavaultgui.py:537
+#: projectdatavaultgui.py:536
 msgid "Data inside folder will NOT be destroyd."
 msgstr ""
 
-#: projectdatavaultgui.py:578
+#: projectdatavaultgui.py:577
 msgid "Select Folder With existing Data Store data"
 msgstr ""
 
-#: projectdatavaultgui.py:640
+#: projectdatavaultgui.py:639
 msgid "Data Store Validity Error: "
 msgstr ""
 
-#: projectdatavaultgui.py:642
+#: projectdatavaultgui.py:641
 msgid "Data Store folder has non-folder files."
 msgstr ""
 
-#: projectdatavaultgui.py:644
+#: projectdatavaultgui.py:643
 msgid "Data Store folder has bad folders."
 msgstr ""
 
-#: projectdatavaultgui.py:648
+#: projectdatavaultgui.py:647
 msgid " is empty."
 msgstr ""
 
-#: projectdatavaultgui.py:650
+#: projectdatavaultgui.py:649
 #, fuzzy
 msgid " has extra files or folders"
 msgstr "' işleyen kliplerin klasörü olarak"
 
-#: projectdatavaultgui.py:652
+#: projectdatavaultgui.py:651
 msgid " has missing data folders"
 msgstr ""
 
-#: projectdatavaultgui.py:654
+#: projectdatavaultgui.py:653
 msgid " has no savefile data."
 msgstr ""
 
-#: projectdatavaultgui.py:655
+#: projectdatavaultgui.py:654
 msgid "Cannot connect Folder as Data Store!"
 msgstr ""
 
-#: projectdatavaultgui.py:672
+#: projectdatavaultgui.py:671
 #, fuzzy
 msgid "Confirm Destroying Project Data"
 msgstr "Önbelleğe Alınmış Verileri İmha Etmeyi Onaylayın!"
 
-#: projectdatavaultgui.py:673
+#: projectdatavaultgui.py:672
 #, fuzzy
 msgid ""
 "Data will be permanently destroyed and there is no undo for this operation."
 msgstr " Bu işlem için Geri Alma yok\n"
 
-#: projectdatavaultgui.py:705
+#: projectdatavaultgui.py:704
 msgid "Project Data Store is not active"
 msgstr ""
 
-#: projectdatavaultgui.py:706
+#: projectdatavaultgui.py:705
 #, fuzzy
 msgid "Project Data Store:"
 msgstr "Proje Adı:"
 
-#: projectdatavaultgui.py:711
+#: projectdatavaultgui.py:710
 msgid "Data Store Path:"
 msgstr ""
 
-#: projectdatavaultgui.py:717
+#: projectdatavaultgui.py:716
 msgid "Create Clone Project with Project Data in another Data Store"
 msgstr ""
 
-#: projectdatavaultgui.py:786
+#: projectdatavaultgui.py:785
 msgid "New Data Store:"
 msgstr ""
 
-#: projectdatavaultgui.py:788
+#: projectdatavaultgui.py:787
 #, fuzzy
 msgid "Set Clone Project Path"
 msgstr "Karıştıcı Proje Dosyasını Seçin:"
 
-#: projectdatavaultgui.py:791
+#: projectdatavaultgui.py:790
 #, fuzzy
 msgid "<not set>"
 msgstr "yok"
 
-#: projectdatavaultgui.py:794
+#: projectdatavaultgui.py:793
 msgid "<small>Set clone Project path and select new Data Store.</small>"
 msgstr ""
 
-#: projectdatavaultgui.py:799 projectdatavaultgui.py:827
+#: projectdatavaultgui.py:798 projectdatavaultgui.py:826
 #, fuzzy
 msgid "Create Clone Project"
 msgstr "Yeni Proje Oluşturun"
 
-#: projectdatavaultgui.py:812
+#: projectdatavaultgui.py:811
 #, fuzzy
 msgid "Exit"
 msgstr "Düzenlemeden Çık"
 
-#: projectdatavaultgui.py:989
+#: projectdatavaultgui.py:988
 #, fuzzy
 msgid "Data Store Size Exceeds Current Warning Level!"
 msgstr "Disk Önbellek Boyutu Geçerli Uyarı Seviyesini Aşıyor!"
 
-#: projectdatavaultgui.py:990
+#: projectdatavaultgui.py:989
 msgid ""
 "\n"
 "You can either delete data in Disk Store or change warning level in"
 msgstr ""
 
-#: projectdatavaultgui.py:991
+#: projectdatavaultgui.py:990
 #, fuzzy
 msgid " <b>Edit->Preferences 'General Options'</b> panel."
 msgstr ""
 "<b>Düzenle->Tercihler 'Genel Ayarlar'</b> panelinde uyarı seviyesini "
 "değiştirin."
 
-#: projectdatavaultgui.py:1000
+#: projectdatavaultgui.py:999
 msgid "Disk Store <b>"
 msgstr ""
 
-#: projectdatavaultgui.py:1000
+#: projectdatavaultgui.py:999
 #, fuzzy
 msgid "</b> currently uses "
 msgstr "Flowblade şu anda kullanıyor "
 
-#: guipopoverclip.py:124
+#: guipopoverclip.py:123
 #, fuzzy
 msgid "Audio Edit"
 msgstr "Ses Filtresi"
 
-#: guipopoverclip.py:133 guipopoverclip.py:239
+#: guipopoverclip.py:132 guipopoverclip.py:243
 msgid "Properties"
 msgstr "Özellikleri"
 
-#: guipopoverclip.py:140 guipopoverclip.py:246
+#: guipopoverclip.py:139 guipopoverclip.py:250
 msgid "Markers"
 msgstr "İşaretçiler"
 
-#: guipopoverclip.py:141
+#: guipopoverclip.py:140
 msgid "Clip Info"
 msgstr "Klip Bilgisi"
 
-#: guipopoverclip.py:155 guipopoverclip.py:252
+#: guipopoverclip.py:154 guipopoverclip.py:256
 msgid "Select"
 msgstr "Seç"
 
-#: guipopoverclip.py:161
+#: guipopoverclip.py:160
 msgid "Export To Tool"
 msgstr "Araca Aktar"
 
-#: guipopoverclip.py:167 guipopoverclip.py:261 guipopoverclip.py:325
-#: guipopoverclip.py:385
+#: guipopoverclip.py:166 guipopoverclip.py:265 guipopoverclip.py:329
+#: guipopoverclip.py:389
 msgid "Add Filter"
 msgstr "Filtre Ekle"
 
-#: guipopoverclip.py:170 guipopoverclip.py:264 guipopoverclip.py:328
-#: guipopoverclip.py:388
+#: guipopoverclip.py:173 guipopoverclip.py:268 guipopoverclip.py:332
+#: guipopoverclip.py:392
 #, fuzzy
 msgid "Clone Filter"
 msgstr "Filtreleri Kopyala"
 
-#: guipopoverclip.py:179 guipopoverclip.py:269 guipopoverclip.py:373
+#: guipopoverclip.py:174
+#, fuzzy
+msgid "Copy Filters"
+msgstr "Filtreleri Kopyala"
+
+#: guipopoverclip.py:175
+#, fuzzy
+msgid "Paste Filters"
+msgstr "Ses Filtresi"
+
+#: guipopoverclip.py:183 guipopoverclip.py:273 guipopoverclip.py:377
 #, fuzzy
 msgid "Edit Filters"
 msgstr "Ses Filtresi"
 
-#: guipopoverclip.py:234 guipopoverclip.py:379
+#: guipopoverclip.py:238 guipopoverclip.py:383
 msgid "Mute"
 msgstr "Sessiz"
 
-#: guipopoverclip.py:293
+#: guipopoverclip.py:297
 #, fuzzy
 msgid "Stretch Prev Clip to Cover"
 msgstr "Kapak için önceki uzatma klip"
 
-#: guipopoverclip.py:294
+#: guipopoverclip.py:298
 #, fuzzy
 msgid "Stretch Next Clip to Cover"
 msgstr "Kapak için sonraki uzatma klip"
 
-#: guipopoverclip.py:319
+#: guipopoverclip.py:323
 #, fuzzy
 msgid "Create Container Clip From Selected Clips"
 msgstr "Seçilen sıradan kapsayıcı klip oluşturma"
 
-#: guipopoverclip.py:351
+#: guipopoverclip.py:355
 msgid "Open In Compositor Editor"
 msgstr "Dizini Editörde Aç"
 
-#: guipopoverclip.py:355
+#: guipopoverclip.py:359
 msgid "Sync with Origin Clip"
 msgstr "Kök Klip ile Eşitle"
 
-#: guipopoverclip.py:403 guipopoverclip.py:414
+#: guipopoverclip.py:407 guipopoverclip.py:424
 msgid "Split Audio"
 msgstr "Sesi Böl"
 
-#: guipopoverclip.py:430
+#: guipopoverclip.py:417
+#, fuzzy
+msgid "Unmute Audio"
+msgstr "Ses Sessiz"
+
+#: guipopoverclip.py:440
 msgid "Select Clip to Audio Sync With..."
 msgstr "Sesi eşitlemek için Klip'i seçin..."
 
-#: guipopoverclip.py:449
-msgid "Default"
-msgstr "Varsayılan"
-
-#: guipopoverclip.py:453
+#: guipopoverclip.py:463
 msgid "Orange"
 msgstr "Turuncu"
 
-#: guipopoverclip.py:454
+#: guipopoverclip.py:464
 msgid "Brown"
 msgstr "Kahverengi"
 
-#: guipopoverclip.py:455
+#: guipopoverclip.py:465
 msgid "Olive"
 msgstr "Zeytin Rengi"
 
-#: guipopoverclip.py:456
+#: guipopoverclip.py:466
 msgid "Clip Color"
 msgstr "Klip Renk"
 
-#: guipopoverclip.py:474
+#: guipopoverclip.py:484
 msgid "No Clip Markers"
 msgstr "Klip İşaretçileri Yok"
 
-#: guipopoverclip.py:476
+#: guipopoverclip.py:486
 msgid "Add Clip Marker At Playhead Position"
 msgstr "Oynatma Kafası Konumunda Klip İşaretçisi Ekle"
 
-#: guipopoverclip.py:477
+#: guipopoverclip.py:487
 msgid "Delete Clip Marker At Playhead Position"
 msgstr "Oynatma Kafası Konumunda Klip İşaretçisini Sil"
 
-#: guipopoverclip.py:478
+#: guipopoverclip.py:488
 msgid "Delete All Clip Markers"
 msgstr "Tüm Klip İşaretlerini Sil"
 
-#: guipopoverclip.py:482 guipopoverclip.py:484
+#: guipopoverclip.py:492 guipopoverclip.py:494
 msgid "Reload Media From Disk"
 msgstr "Ortamı Diskten Yeniden Yükle"
 
-#: guipopoverclip.py:489 guipopoverclip.py:602
+#: guipopoverclip.py:499 guipopoverclip.py:612
 msgid "Volume Keyframes"
 msgstr "Ses Anahtar Kareleri"
 
-#: guipopoverclip.py:491
+#: guipopoverclip.py:501
 msgid "Brightness Keyframes"
 msgstr "Parlaklık Anahtar Kareleri"
 
-#: guipopoverclip.py:502 guipopoverclip.py:589
+#: guipopoverclip.py:512 guipopoverclip.py:599
 msgid "Resync"
 msgstr "Eşitle"
 
-#: guipopoverclip.py:503 guipopoverclip.py:590
+#: guipopoverclip.py:513 guipopoverclip.py:600
 msgid "Clear Sync Relation"
 msgstr "Eşitleme İlişkisini Temizle"
 
-#: guipopoverclip.py:505 guipopoverclip.py:591
+#: guipopoverclip.py:515 guipopoverclip.py:601
 msgid "Select Sync Parent Clip..."
 msgstr "Ana Klibi Eşitlemeyi seçin..."
 
-#: guipopoverclip.py:509 guipopoverclip.py:611
+#: guipopoverclip.py:519 guipopoverclip.py:621
 msgid "Set Clip Length..."
 msgstr "Klip Uzunluğunu Ayarla..."
 
-#: guipopoverclip.py:510 guipopoverclip.py:612
+#: guipopoverclip.py:520 guipopoverclip.py:622
 msgid "Stretch Over Next Blank"
 msgstr "Sonraki Boşluğa Yay"
 
-#: guipopoverclip.py:511 guipopoverclip.py:613
+#: guipopoverclip.py:521 guipopoverclip.py:623
 msgid "Stretch Over Prev Blank"
 msgstr "Önceki Boşluğa Yay"
 
-#: guipopoverclip.py:530
+#: guipopoverclip.py:540
 msgid "All Clips After"
 msgstr "Sonraki Tüm Klipler"
 
-#: guipopoverclip.py:531
+#: guipopoverclip.py:541
 msgid "All Clips Before"
 msgstr "Önceki Tüm Klipler"
 
-#: guipopoverclip.py:556
+#: guipopoverclip.py:566
 msgid "From Next Clip"
 msgstr "Bir Sonraki Klipten"
 
-#: guipopoverclip.py:557
+#: guipopoverclip.py:567
 msgid "From Previous Clip"
 msgstr "Bir Önceki Klipten"
 
-#: guipopoverclip.py:564
+#: guipopoverclip.py:574
 #, fuzzy
 msgid "Add Compositor..."
 msgstr "Dizin Ekle"
 
-#: guipopoverclip.py:575
+#: guipopoverclip.py:585
 #, fuzzy
 msgid "Edit Title"
 msgstr "Ses Filtresi"
 
-#: guipopoverclip.py:582
+#: guipopoverclip.py:592
 #, fuzzy
 msgid "Edit Generator Properties..."
 msgstr "Yeni Editör Özellikleri"
 
-#: guipopoverclip.py:583
+#: guipopoverclip.py:593
 #, fuzzy
 msgid "Create Cloned Generator..."
 msgstr "Renkli Klip Oluştur..."
 
-#: guipopoverclip.py:584
+#: guipopoverclip.py:594
 #, fuzzy
 msgid "Generator/Container Render Actions"
 msgstr "İşlemi Oluşturun"
 
-#: guipopoverclip.py:585
+#: guipopoverclip.py:595
 msgid "Switch to Unrendered Media"
 msgstr "İşlenmemiş Ortama Geç"
 
-#: guipopoverclip.py:643
+#: guipopoverclip.py:653
 #, fuzzy
 msgid "Select Edit Filter"
 msgstr "Bir Dosya Seçin"
 
-#: guipopoverclip.py:649
+#: guipopoverclip.py:659
 msgid "Leading Keyframes"
 msgstr "Önde Gelen Ana Kareler"
 
-#: guipopoverclip.py:652
+#: guipopoverclip.py:662
 msgid "Trailing Keyframes"
 msgstr "Sondaki Ana Kareler"
 
-#: guipopoverclip.py:658
+#: guipopoverclip.py:668
 msgid "Value Snapping"
 msgstr "Değer Kapma"
 
-#: guipopoverclip.py:662
+#: guipopoverclip.py:672
 msgid "Playhead Follows Dragged Keyframe"
 msgstr "Baş Oynatma Sürüklenen Animasyon Kareyi Takip Eder"
 
-#: guipopoverclip.py:666
+#: guipopoverclip.py:676
 msgid "Exit Edit"
 msgstr "Düzenlemeden Çık"
 
-#: guipopoverclip.py:702
+#: guipopoverclip.py:712
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr "Klip aralığından sonra son ana kareler hariç tümünü sil"
 
-#: guipopoverclip.py:707
+#: guipopoverclip.py:717
 #, fuzzy
 msgid "Delete all Keyframe after Clip Range"
 msgstr "Klip aralığından sonra tüm ana kareleri Sil"
 
-#: guipopoverclip.py:720
+#: guipopoverclip.py:730
 msgid "No additional Keyframe Tool editable Params"
 msgstr ""
 
-#: tlinewidgets.py:2846
+#: guipopoverclip.py:767
+msgid "Copy Keyframe Value"
+msgstr "Anahtar Kare Değerini Kopyala"
+
+#: guipopoverclip.py:768
+msgid "Paste Keyframe Value"
+msgstr "Anahtar Kare Değerini Yapıştı"
+
+#: tlinewidgets.py:2833
 msgid ""
 "Up - Page Up\n"
 "Down - Page Down"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Active Shortcuts Group:"
+#~ msgstr "Kısayol Grubu:"
+
+#~ msgid "Add Custom Shortcuts Group"
+#~ msgstr "Özel Kısayolları Grubunu Ekle"
+
+#~ msgid "Delete Active Custom Shortcuts Group"
+#~ msgstr "Etkin Özel Kısayollar Grubunu Sil"
+
+#~ msgid "Control + N"
+#~ msgstr "Control + N"
+
+#~ msgid "Create New Project"
+#~ msgstr "Yeni Proje Oluşturun"
+
+#~ msgid "Control + S"
+#~ msgstr "Control + S"
+
+#~ msgid "Save Project"
+#~ msgstr "Ptojeyi Kaydet"
+
+#~ msgid "DELETE"
+#~ msgstr "SİL"
+
+#~ msgid "ESCAPE"
+#~ msgstr "VAZGEÇ"
+
+#~ msgid "Stop Rendering Audio Levels"
+#~ msgstr "Ses Düzeylerini Oluşturmayı Durdur"
+
+#~ msgid "Control + Q"
+#~ msgstr "Control + Q"
+
+#~ msgid "Quit"
+#~ msgstr "Çık"
+
+#~ msgid "Control + Z"
+#~ msgstr "Control + Z"
+
+#~ msgid "Undo"
+#~ msgstr "Geri Al"
+
+#~ msgid "Control + Y"
+#~ msgstr "Control + Y"
+
+#~ msgid "Redo"
+#~ msgstr "Yenile"
+
+#~ msgid "Control + O"
+#~ msgstr "Control + O"
+
+#~ msgid "Open Project"
+#~ msgstr "Proje Aç"
+
+#~ msgid "Control + DELETE"
+#~ msgstr "Kontrol + SİL"
+
+#~ msgid "Control + C"
+#~ msgstr "Control + C"
+
+#~ msgid "Copy Clips"
+#~ msgstr "Klipleri Kopyala"
+
+#~ msgid "Control + V"
+#~ msgstr "Control + V"
+
+#~ msgid "Paste Clips"
+#~ msgstr "Klipleri Yapıştır"
+
+#, fuzzy
+#~ msgid "Shift + Control + V"
+#~ msgstr "Shift + Kontrol + Sol Ok "
+
+#, fuzzy
+#~ msgid "Paste Filters/Properties"
+#~ msgstr "Yapıştır Filtreleri / Özellikleri"
+
+#, fuzzy
+#~ msgid "Timeline Edits"
+#~ msgstr "Zaman akışı"
+
+#, fuzzy
+#~ msgid "Timeline Actions"
+#~ msgstr "Zaman çizelgesi konumu: "
+
+#~ msgid "Left Arrow "
+#~ msgstr "Sol Ok "
+
+#~ msgid "Prev Frame Trim Edit"
+#~ msgstr "Önceki Kare Kırpma Düzenleme"
+
+#~ msgid "Next Frame Trim Edit"
+#~ msgstr "Sonraki Kare Kırpma Düzenlemesi"
+
+#~ msgid "Shift + Left Arrow "
+#~ msgstr "Shift + Sol Ok "
+
+#~ msgid "Back 10 Frames Trim Edit"
+#~ msgstr "Geri 10 Kare Kırpma Düzenle"
+
+#~ msgid "Shift + Right Arrow"
+#~ msgstr "Shift + Sağ Ok"
+
+#~ msgid "Forward 10 Frames Trim Edit"
+#~ msgstr "10 Kare İleri Kırp Düzenle"
+
+#, fuzzy
+#~ msgid "Trimming"
+#~ msgstr "Kırpma"
+
+#, fuzzy
+#~ msgid "Marks"
+#~ msgstr "İşaretçiler"
+
+#~ msgid "Mouse Double Click"
+#~ msgstr "Fareyi Çift Tıklatın"
+
+#~ msgid "Toggle Track Height"
+#~ msgstr "Parça Yüksekliğini Değiştir"
+
+#~ msgid "Track Head Column"
+#~ msgstr "Parça Başı Sütun"
+
+#~ msgid "Right Arrow "
+#~ msgstr "Sağ Ok "
+
+#~ msgid "Previous Frames"
+#~ msgstr "Önceki Kare"
+
+#, fuzzy
+#~ msgid "Control + Left Arrow"
+#~ msgstr "Kontrol + Sol Ok "
+
+#, fuzzy
+#~ msgid "Move Back at 10 fps slowmo"
+#~ msgstr "10 Kare Geri Git"
+
+#~ msgid "Control + Right Arrow"
+#~ msgstr "Kontrol + Sağ Ok"
+
+#, fuzzy
+#~ msgid "Move Forward  at 10 fps slowmo"
+#~ msgstr "10 Kare İleri Taşı"
+
+#~ msgid "Move Back 10 Frames"
+#~ msgstr "10 Kare Geri Git"
+
+#~ msgid "Move Forward 10 Frames"
+#~ msgstr "10 Kare İleri Taşı"
+
+#~ msgid "Home"
+#~ msgstr "Anasayfa"
+
+#~ msgid "End"
+#~ msgstr "Son"
+
+#, fuzzy
+#~ msgid "Keypad 1-6"
+#~ msgstr "Tuş takımı 1-9"
+
+#, fuzzy
+#~ msgid "Same as 1-6"
+#~ msgstr "1-9 ile aynı"
+
+#~ msgid "Edit Tools"
+#~ msgstr "Araçları Düzenle"
+
+#~ msgid "Control + Mouse Drag"
+#~ msgstr "Kontrol + Fareyle Sürükle"
+
+#, fuzzy
+#~ msgid "Move all keyframes after selected"
+#~ msgstr "Klip aralığından sonra tüm ana kareleri Sil"
+
+#~ msgid "Keyframe and Geometry Editor"
+#~ msgstr "Anahtar Kare ve Geometri Düzenleyici"
+
+#~ msgid "Move Source Video Left 1px"
+#~ msgstr "Kaynak Videoyu 1px Sola Taşı"
+
+#~ msgid "Move Source Video Right 1px"
+#~ msgstr "Kaynak Videoyu 1px Sağa Taşı"
+
+#~ msgid "Move Source Video Up 1px"
+#~ msgstr "Kaynak Videoyu 1px Yukarı Taşı"
+
+#~ msgid "Move Source Video Down 1px"
+#~ msgstr "Kaynak Videoyu 1px Aşağı Taşı"
+
+#~ msgid "Control + Arrow"
+#~ msgstr "Kontrol + Ok"
+
+#~ msgid "Move Source Video 10px"
+#~ msgstr "Kaynak Videoyu 10px Taşı"
+
+#~ msgid "Keep Aspect Ratio in Affine Blend scaling"
+#~ msgstr "Afin karışım ölçeklemesinde en boy oranını koruyun"
+
+#~ msgid "Scale Down"
+#~ msgstr "Azaltmak"
+
+#~ msgid "Scale Up"
+#~ msgstr "Çoğalt"
+
+#~ msgid "Shift + Control + Left Arrow "
+#~ msgstr "Shift + Kontrol + Sol Ok "
+
+#~ msgid "Scale Down More"
+#~ msgstr "Daha Fazla Ölçeklendirin"
+
+#~ msgid "Shift + Control + Right Arrow"
+#~ msgstr "Shift + Kontrol + Sağ Ok"
+
+#~ msgid "Scale Up More"
+#~ msgstr "Daha Fazla Ölçeklendirin"
+
+#~ msgid "Snap to X or Y of drag start point"
+#~ msgstr "Başlangıç noktasını X veya Y kısmına sürükle tuttur"
+
+#, fuzzy
+#~ msgid "Geometry Editor GUI Panel"
+#~ msgstr "Geometri Editörü"
+
+#~ msgid "Deletes Selected Handle"
+#~ msgstr "Seçili Tanıtıcıyı Siler"
+
+#~ msgid "RotoMask Editor"
+#~ msgstr "İçMaske Editörü"
+
+#~ msgid "Input Shortcut"
+#~ msgstr "Giriş Kısayolu"
+
+#~ msgid "Reserved Shortcut!"
+#~ msgstr "Ayrılmış Kısayol!"
+
+#~ msgid ""
+#~ " is a reserved keyboard shortcut and\n"
+#~ "cannot be set as a custom shortcut."
+#~ msgstr ""
+#~ " ayrılmış bir klavye kısayolu ve\n"
+#~ "özel bir kısayol olarak ayarlanamaz."
+
+#~ msgid "3 panels if width (1450px+) available"
+#~ msgstr "Mevcut ise 3 panel Genişlik (1450px+)"
+
+#~ msgid "2 panels always"
+#~ msgstr "Her zaman 2 panel"
+
+#~ msgid "G'Mic Clip"
+#~ msgstr "G'Mic Klip"
+
+#~ msgid "Proxy Clip"
+#~ msgstr "Vekil Klip"
+
+#, fuzzy
+#~ msgid "Generator Clip"
+#~ msgstr "Karıştıcı Klip"
+
+#, fuzzy
+#~ msgid "Tracking Data"
+#~ msgstr "Parça "
+
+#~ msgid "Job Type"
+#~ msgstr "İş Türü"
+
+#~ msgid "Step "
+#~ msgstr "Adım "
+
+#, fuzzy
+#~ msgid "Video for: "
+#~ msgstr "Video:"
 
 #~ msgid "Delete Compositor/s"
 #~ msgstr "Sil Dizgici/ler"
