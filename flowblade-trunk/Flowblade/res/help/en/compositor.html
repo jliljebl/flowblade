@@ -45,21 +45,57 @@ Compositing in Standard Full Track mode is similar to using layers in applicatio
 
 
 <h3>Workflow</h3>
-<ol>
-<li>Add Clips on Timeline
+<h4>Creating layered compositions</h4>
+
 <ul>
-<li>Images with alpha channel are composited in bottom to top order.</li>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Images are composited in bottom to top order.</li>
+<li> Images with alpha channel are composited with transparency as defined by alpha channel.</li>
+<li> Use Filters to create Dissolves, Wipes, Blends and affine transforms.</li>
 </ul>
-<li>Controlling image opacity</li>
+
+<h4>Dissolves</h4>
 <ul>
-<li> Add <b>Fade In</b> or <b>Fade Out</b> Filters to create opacity transitions in the beginning or end of Clip.</li>
-<li> Add <b>Wipe</b> Filters on top clip to create wipe transitions.</li>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Add <b>Fade In</b> or <b>Fade Out</b> Filters to Clip on the upper track to create Dissolves with Clip on the lower track.</li>
+<li> <b>Fade In</b> and <b>Fade Out</b> Filters are in <b>Fade</b> Filter category.</li>
 </ul>
-<li>Transforming image</li>
+
+<h4>Dissolves - Rendered Transition</h4>
+
 <ul>
-<li>Add <b>Position Scale</b>, <b>Rotation</b> or <b>Shear</b> filter.</li>
+<li> Select two Clips on the same track.</li>
+<li> Press <b>Add Rendered Transition</b> button in middlebar.</li>
+<li> Give length of rendered transition and press <b>Render</b> button.</li>
 </ul>
-</ol>
+
+<h4>Blends</h4>
+<ul>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Add <b>Blend</b> Filter to Clip on the upper track to control blend mode used when compositing image on top of the Clip on the lower track.</li>
+<li> <b>Blend</b> Filters can be combined with other Filters to create compositions as wished.</li>
+<li> <b>Blend</b> Filters are in <b>Blend</b> Filter category.</li>
+</ul>
+
+<h4>Wipes</h4>
+<ul>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Add <b>Wipe</b> Filters to the top Clip to create wipe transitions.</li>
+<li> <b>Wipe</b> Filters are in <b>Blend</b> Filter category.</li>
+</ul>
+
+<h4>Alpha channel manipulation: Keys, Rotomasks etc.</h4>
+<ul>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Use appropriate Filters in <b>Alpha</b> Filter category to create more complex compositing opearations such as color keys, shaped masks or animated masks.</li>
+</ul>
+
+<h4>Transforms</h4>
+<ul>
+<li> Add Clips on Timeline on different tracks.</li>
+<li> Add <b>Position Scale</b> or <b>Position Scale Rotation</b> Filters to the top Clip to move, rotate and scale image before it is composited on lower track.</li>
+<li> These Filters are in <b>Transform</b> Filter category.</li>
+</ul>
 
 <h2>Compositor Free Move Compositing mode</h2>
 <p>
@@ -114,6 +150,9 @@ unless the user is aware of rendering order of Compositors.
 <li>This is done for each track.</li>
 <li>Output image on is from the topmost track that has media on the frame and does not have a compostor on the frame.</li>
 </ol>
+
+<h3>Using Filters</h3>
+<p> Exept for <b>Blend</b> Filter, all filters can used in the same way to achieve compositions as in <b>Standard Free Move</b> compositing mode.</p>
 
 <h3>EXAMPLE: Creating a 3-layer composite</h3>
 <p style="margin-bottom:45px" >
