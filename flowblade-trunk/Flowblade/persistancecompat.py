@@ -74,6 +74,10 @@ def FIX_MISSING_CLIP_ATTRS(clip):
     if not hasattr(clip, "titler_data"):
         clip.titler_data = None
 
+    # Add container data if not found.
+    if not hasattr(clip, "slowmo_data"):
+        clip.slowmo_data = None
+        
 def FIX_MISSING_FILTER_ATTRS(filter):
     if not hasattr(filter.info, "filter_mask_filter"):
         filter.info.filter_mask_filter = None

@@ -157,7 +157,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         edit_section.append_submenu(_("Edit"), _edit_actions_menu)
         _tools_submenu = Gio.Menu.new()
         _fill_tool_integration_menu(_tools_submenu, clip, callback)
-        edit_section.append_submenu(_("Export To Tool"), _tools_submenu)
+        edit_section.append_submenu(_("SlowMo"), _tools_submenu)
         _clip_menu.append_section(None, edit_section)
 
         filters_section = Gio.Menu.new()
@@ -522,16 +522,23 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     edit_actions_menu.append_section(None, length_section)
 
 def _fill_tool_integration_menu(tools_sub_menu, clip, callback):
-    export_tools = toolsintegration.get_export_integrators()
-    i = 0
-    for integrator in export_tools:
-        if integrator.supports_clip_media(clip) == False:
-            active = False
-        else:
-            active = True
-        add_menu_action(tools_sub_menu, copy.copy(integrator.tool_name), "clipmenu." + str(i), (None, None),  integrator.export_callback, active)
-        i += 1
 
+    action_section = Gio.Menu.new()
+    if clip.slowmo_data != None:
+        slowmo_type, orig_file_path, slowmo_clip_media_area, speed, orig_media_in, orig_media_out = clip.slowmo_data
+    else:
+        slowmo_type = None
+    active = ((slowmo_type == None) or (slowmo_type == appconsts.SLOWMO_SLOW_FAST))
+    add_menu_action(action_section,_("Slow/Fast"), "clipslowmo.slowfast",  ("slowfast", clip), callback, active)
+    active = ((slowmo_type == None) or (slowmo_type == appconsts.SLOWMO_REVERSE))
+    add_menu_action(action_section,_("Reverse"), "clipslowmo.reverse",  ("reverse", clip), callback, active)
+    tools_sub_menu.append_section(None, action_section)
+    
+    revert_section = Gio.Menu.new()
+    active = (clip.slowmo_data != None)
+    add_menu_action(revert_section,_("Revert To Original Media"), "clipslowmo.revert",  ("revert", clip), callback, active)
+    tools_sub_menu.append_section(None, revert_section)
+    
 def _fill_select_menu(select_menu, callback, is_audio_select=False):
     if is_audio_select == True:
         pre_id = "audio"

@@ -52,6 +52,7 @@ import mlttransitions
 import modesetting
 import movemodes
 import projectaction
+import render
 import singletracktransition
 import syncsplitevent
 import titler
@@ -900,8 +901,36 @@ def _render_tline_generator_callback(combo):
         containerclip.render_clip_length(render_data)
 
     """
-    TODO: see if "cc_render_full_media", "cc_render_settings" ca be deleted below.
+    TODO: see if "cc_render_full_media", "cc_render_settings" can be deleted below.
     """
+
+def _tline_clip_slowfast(data):
+    clip, track, item_id, item_data = data
+    render.render_slow_fast_timeline_clip(clip, track, _tline_clip_slow_fast_render_complete)
+
+def _tline_clip_slow_fast_render_complete(render_data, new_clip_path):
+    # Unpack render_data created in render._render_tline_clip_slowfast_clip()
+    clip, track, orig_file_path, slowmo_type, slowmo_clip_media_area, \
+    speed, orig_media_in, orig_media_out, new_clip_in, new_clip_out = render_data
+    
+    new_clip = current_sequence().create_file_producer_clip(new_clip_path, None, False, clip.ttl) # file producer
+    new_clip.name = clip.name
+    current_sequence().clone_clip_and_filters(clip, new_clip)
+    
+    clip_index = track.clips.index(clip)
+    
+    # Create slowmo datra needed to do further slowmos.
+    new_clip.slowmo_data = (appconsts.SLOWMO_SLOW_FAST, orig_file_path, slowmo_clip_media_area, speed, orig_media_in, orig_media_out)
+
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index, 
+            "clip_in":new_clip_in, 
+            "clip_out":new_clip_out}
+    action = edit.clip_replace(data)
+    action.do_edit()
+
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guipopoverclip.py
@@ -958,4 +987,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_settings":containerclip.set_render_settings,
                   "cc_edit_program":containerclip.edit_program,
                   "cc_clone_generator":mediaplugin.add_media_plugin_clone,
-                  "edit_title":_edit_title}
+                  "edit_title":_edit_title,
+                  "slowfast":_tline_clip_slowfast}

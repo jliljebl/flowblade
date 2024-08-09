@@ -513,6 +513,11 @@ def _parse_line(line_start, line_end, buf):
 
     return ((k,v), None)
 
+def get_encoding_option(enc_opt_index):
+    return encoding_options[enc_opt_index]
+
+
+
 # Convenience function needed because FileRenderPlayer no longer stops on last
 # frame with 'wait_for_producer_end_stop' set True and naked producer as producer.
 # With tractor we get full length rendered and player stops correctly.

@@ -184,6 +184,8 @@ def _create_clip_clone(clip):
     else:
         new_clip = current_sequence().create_pattern_producer(clip.create_data)
     new_clip.name = clip.name
+    new_clip.titler_data = copy.deepcopy(clip.titler_data)
+    new_clip.slowmo_data = copy.deepcopy(clip.slowmo_data)
     return new_clip
 
 def _create_mute_volume_filter(seq): 
@@ -2925,7 +2927,20 @@ def _reload_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
 
+# -------------------------------------------------------- MEDIA RELOAD CLIP REPLACE
+# "old_clip", "new_clip", "clip_in", "clip_out", "track", "index"
+def clip_replace(data):
+    action = EditAction(_clip_replace_undo, _clip_replace_redo, data)
+    return action
 
+def _clip_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+def _clip_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.new_clip, self.index, self.clip_in, self.clip_out)
+    
 # -------------------------------------------------------- CONTAINER CLIP FULL RENDER MEDIA REPLACE
 # "old_clip", "new_clip","rendered_media_path","track", "index", "do_filters_clone"
 def container_clip_full_render_replace(data):

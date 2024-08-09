@@ -431,13 +431,14 @@ class AbstractJobQueueObject(JobProxy):
 
 class MotionRenderJobQueueObject(AbstractJobQueueObject):
 
-    def __init__(self, session_id, write_file, args):
+    def __init__(self, session_id, write_file, args, tline_clip_data=None):
         
         AbstractJobQueueObject.__init__(self, session_id, MOTION_MEDIA_ITEM_RENDER)
         
         self.write_file = write_file
         self.args = args
         self.parent_folder = userfolders.get_temp_render_dir() # THis is just used for message passing, output file goes where user decided.
+        self.tline_clip_data = tline_clip_data
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.write_file)
@@ -500,8 +501,12 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         motionheadless.abort_render(self.parent_folder, self.get_session_id())
         
     def create_media_item(self):
-        callbackbridge.projectaction_open_rendered_file(self.write_file)
- 
+        if self.tline_clip_data == None:
+            callbackbridge.projectaction_open_rendered_file(self.write_file)
+        else:
+            render_data, completed_callback = self.tline_clip_data
+            completed_callback(render_data, self.write_file)
+
 
 
 class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):

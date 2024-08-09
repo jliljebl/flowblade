@@ -297,6 +297,104 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     dialog.connect('response', _response_callback, fb_widgets, media_file)
     dialog.show_all()
 
+def show_tline_clip_slowmo_dialog(clip, track, completed_callback, _response_callback):
+    folder, file_name = os.path.split(clip.path)
+
+    name, ext = os.path.splitext(file_name)
+        
+    dialog = Gtk.Dialog(_("Clip Slow/Fast Motion"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
+                        _("Render"), Gtk.ResponseType.ACCEPT))
+
+    media_file_label = Gtk.Label(label=_("Clip: "))
+    media_name = Gtk.Label(label="<b>" + clip.name + "</b>")
+    media_name.set_use_markup(True)
+    SOURCE_PAD = 8
+    SOURCE_HEIGHT = 20
+    mf_row = guiutils.get_left_justified_box([media_file_label,  guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), media_name])
+    
+    fb_widgets = utils.EmptyClass()
+
+    label = Gtk.Label(label=_("Speed %:"))
+
+    if clip.slowmo_data == None:
+        current_speed = 1.0
+    else:
+        slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
+
+    adjustment = Gtk.Adjustment(value=float(100 * current_speed), lower=float(1), upper=float(2900), step_increment=float(1))
+    fb_widgets.adjustment = adjustment
+
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+    spin.set_digits(0)
+
+    fb_widgets.extension_label = Gtk.Label()
+    fb_widgets.extension_label.set_size_request(45, 20)
+    
+    objects_list = Gtk.TreeStore(str, bool)
+    objects_list.append(None, [_("Current Clip Content"), True])
+    objects_list.append(None, [_("Full Media"), True])
+
+    fb_widgets.render_range = Gtk.ComboBox.new_with_model(objects_list)
+    renderer_text = Gtk.CellRendererText()
+    fb_widgets.render_range.pack_start(renderer_text, True)
+    fb_widgets.render_range.add_attribute(renderer_text, "text", 0)
+    fb_widgets.render_range.add_attribute(renderer_text, 'sensitive', 1)
+    fb_widgets.render_range.show()
+    fb_widgets.render_range.set_active(0)
+
+    slider_hbox = Gtk.HBox(False, 4)
+    slider_hbox.pack_start(Gtk.Label(), True, True, 0)
+    slider_hbox.pack_start(spin, False, False, 4)
+    #slider_hbox.pack_start(Gtk.Label(label=_("Rendered Length:")), False, False, 4)
+    #slider_hbox.pack_start(clip_length_label, False, False, 4)
+    slider_hbox.pack_start(Gtk.Label(), True, True, 0)
+    slider_hbox.set_size_request(450,35)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(guiutils.pad_label(8, 8), False, False, 0)
+    hbox.pack_start(slider_hbox, False, False, 0)
+
+    profile_selector = ProfileSelector()
+    profile_selector.set_initial_selection()
+    profile_selector.widget.set_sensitive(True)
+    fb_widgets.categories_combo = profile_selector.categories_combo
+
+    quality_selector = RenderQualitySelector()
+    fb_widgets.quality_cb = quality_selector.widget
+    
+    # Encoding
+    encoding_selector = RenderEncodingSelector(quality_selector, fb_widgets.extension_label, None)
+    encoding_selector.encoding_selection_changed()
+    fb_widgets.encodings_cb = encoding_selector.widget
+
+    # To update rendered length display
+    #adjustment.connect("value-changed", _slomo_speed_changed, media_file, fb_widgets.render_range, clip_length_label)
+    #fb_widgets.render_range.connect("changed", _slomo_range_changed,  media_file, adjustment,  clip_length_label)
+
+    # Build gui
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(mf_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(label, False, False, 0)
+    vbox.pack_start(hbox, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Render Range:")), fb_widgets.render_range, 180), False, False, 0)
+    
+    alignment = guiutils.set_margins(vbox, 6, 24, 24, 24)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', _response_callback, fb_widgets, clip, track, completed_callback)
+    dialog.show_all()
+    
 def _slomo_speed_changed(adjustment, media_file, range_combo, length_label):
     clip_length = _get_rendered_slomo_clip_length(media_file, range_combo, adjustment.get_value())
     length_label.set_text(utils.get_tc_string(clip_length))
