@@ -157,7 +157,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         edit_section.append_submenu(_("Edit"), _edit_actions_menu)
         _tools_submenu = Gio.Menu.new()
         _fill_tool_integration_menu(_tools_submenu, clip, callback)
-        edit_section.append_submenu(_("SlowMo"), _tools_submenu)
+        edit_section.append_submenu(_("Slow Motion"), _tools_submenu)
         _clip_menu.append_section(None, edit_section)
 
         filters_section = Gio.Menu.new()

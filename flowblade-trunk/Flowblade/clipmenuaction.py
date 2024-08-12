@@ -931,6 +931,23 @@ def _tline_clip_slow_fast_render_complete(render_data, new_clip_path):
     action = edit.clip_replace(data)
     action.do_edit()
 
+def _revert_to_original_clip_from_slowmo_clip(data):
+    clip, track, item_id, item_data = data
+    clip_index = track.clips.index(clip)
+    slowmo_type, orig_file_path, slowmo_clip_media_area, speed, orig_media_in, orig_media_out = clip.slowmo_data
+
+    new_clip = current_sequence().create_file_producer_clip(orig_file_path, None, False, clip.ttl) # file producer
+    new_clip.name = clip.name
+    current_sequence().clone_clip_and_filters(clip, new_clip)
+
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index, 
+            "clip_in":orig_media_in, 
+            "clip_out":orig_media_out}
+    action = edit.clip_replace(data)
+    action.do_edit()
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guipopoverclip.py
@@ -988,4 +1005,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_edit_program":containerclip.edit_program,
                   "cc_clone_generator":mediaplugin.add_media_plugin_clone,
                   "edit_title":_edit_title,
-                  "slowfast":_tline_clip_slowfast}
+                  "slowfast":_tline_clip_slowfast,
+                  "revert":_revert_to_original_clip_from_slowmo_clip}
