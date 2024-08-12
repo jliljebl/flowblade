@@ -2134,19 +2134,21 @@ class TimeLineCanvas:
                         cr.paint()
 
             # Container clip render status.
-            if clip.container_data != None:
-                if hasattr(clip.container_data, "progress") and clip.container_data.progress != None:
-                    cr.set_source_rgba(0, 0, 0, 0.6)
-                    cr.rectangle(int(scale_in + scale_length / 2.0 - 14),  int(y + track_height / 2.0 - 8), 39, 16)
-                    cr.fill()
-            
-                    cr.set_source_rgb(1, 1, 1)
-                    cr.select_font_face ("sans-serif",
-                                         cairo.FONT_SLANT_NORMAL,
-                                         cairo.FONT_WEIGHT_BOLD)
-                    cr.set_font_size(14)
-                    cr.move_to(int(scale_in + scale_length / 2.0 - 12), int(y + track_height / 2.0 + 5))
-                    cr.show_text(str(int(clip.container_data.progress * 100)) + "%")
+            if clip.container_data != None and hasattr(clip.container_data, "progress") and clip.container_data.progress != None:
+                display_progress = clip.container_data.progress
+            elif hasattr(clip, "render_progress") and clip.render_progress != None:
+                display_progress = clip.render_progress
+            else:
+                display_progress = None
+
+            if display_progress != None:
+                cr.set_source_rgb(1, 1, 1)
+                cr.select_font_face ("sans-serif",
+                                     cairo.FONT_SLANT_NORMAL,
+                                     cairo.FONT_WEIGHT_BOLD)
+                cr.set_font_size(14)
+                cr.move_to(int(scale_in + scale_length / 2.0 - 12), int(y + track_height / 2.0 + 5))
+                cr.show_text(str(int(display_progress * 100)) + "%")
                         
             # Get next draw position.
             clip_start_frame += clip_length

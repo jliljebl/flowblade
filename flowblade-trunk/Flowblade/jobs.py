@@ -80,7 +80,7 @@ _remove_list = [] # objects are removed from GUI with delay to give user time to
 _jobs_render_progress_window = None
 
 
-class JobProxy: # This object represents job in job queue. 
+class JobProxy: # This object represents a job in the job queue. 
 
 
     def __init__(self, uid, callback_object):
@@ -440,6 +440,16 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         self.parent_folder = userfolders.get_temp_render_dir() # THis is just used for message passing, output file goes where user decided.
         self.tline_clip_data = tline_clip_data
 
+        # We are using same job object class to render slowmotion media items and 
+        # slowmotion timeline clips, and need to do different things
+        # when self.tline_clip_data != None and we are 
+        # thus working on a timeline clip.
+        if self.tline_clip_data != None:
+            render_data, completed_callback = self.tline_clip_data
+            clip, track, orig_file_path, slowmo_type, slowmo_clip_media_area, \
+            speed, orig_media_in, orig_media_out, new_clip_in, new_clip_out = render_data
+            self.target_clip = clip
+                
     def get_job_name(self):
         folder, file_name = os.path.split(self.write_file)
         return file_name
@@ -470,6 +480,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
             
+            if self.tline_clip_data != None:
+                self.target_clip.render_progress = None
+                callbackbridge.updater_repaint_tline()
+
             motionheadless.delete_session_folders(self.parent_folder, self.get_session_id())
             
             GLib.idle_add(self.create_media_item)
@@ -485,6 +499,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
                     # A fix for how progress is calculated in gmicheadless because producers can render a bit longer then required.
                     self.progress = 1.0
 
+                if self.tline_clip_data != None:
+                    self.target_clip.render_progress = self.progress
+                    callbackbridge.updater_repaint_tline()
+
                 self.elapsed = float(elapsed)
                 self.text = _("Motion Clip Render") + " " + self.get_job_name()
                 
@@ -493,11 +511,15 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
                 update_job_queue(job_msg)
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
-                pass
-
+                
+                # This may not necessery to do here.
+                if self.tline_clip_data != None:
+                    self.target_clip.render_progress = None
 
     def abort_render(self):
         #remove_as_status_polling_object(self)
+        if self.tline_clip_data != None:
+            self.target_clip.render_progress = None
         motionheadless.abort_render(self.parent_folder, self.get_session_id())
         
     def create_media_item(self):

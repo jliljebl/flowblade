@@ -18,6 +18,11 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module provides a way for modules to call functions in other modules that are 
+closer to the root of the module import graph in order to avoid circular imports.
+"""
+
 app_open_project = None
 app_new_project = None
 app_stop_autosave = None
