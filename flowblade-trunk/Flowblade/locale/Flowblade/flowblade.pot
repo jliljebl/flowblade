@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 10:37+0300\n"
+"POT-Creation-Date: 2024-08-13 09:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -302,7 +302,7 @@ msgstr ""
 
 #: projectaction.py:1319 projectaction.py:1321 projectaction.py:1330
 #: projectaction.py:1338 projectaction.py:1345 tools/batchrendering.py:1095
-#: clipmenuaction.py:203 clipmenuaction.py:205
+#: clipmenuaction.py:204 clipmenuaction.py:206
 msgid "N/A"
 msgstr ""
 
@@ -605,7 +605,7 @@ msgid "Split to new Sequence at Playhead Position"
 msgstr ""
 
 #: editorwindow.py:821 translations.py:568 guipopoverclip.py:338
-#: guipopoverclip.py:506 guipopoverclip.py:617
+#: guipopoverclip.py:506 guipopoverclip.py:624
 msgid "Lift"
 msgstr ""
 
@@ -818,7 +818,7 @@ msgstr ""
 msgid "Project Info"
 msgstr ""
 
-#: editorwindow.py:874 rendergui.py:180 rendergui.py:326
+#: editorwindow.py:874 rendergui.py:180 rendergui.py:308 rendergui.py:424
 #: tools/batchrendering.py:956 tools/gmic.py:805 containeractions.py:382
 #: editorlayout.py:230 tools/scripttool.py:897
 msgid "Render"
@@ -1114,8 +1114,8 @@ msgstr ""
 #: dialogs.py:1789 dialogs.py:1836 dialogs.py:1874 dialogs.py:1892
 #: dialogs.py:1943 propertyeditorbuilder.py:654 propertyeditorbuilder.py:793
 #: propertyeditorbuilder.py:833 middlebar.py:473 rendergui.py:47
-#: rendergui.py:106 rendergui.py:120 rendergui.py:138 rendergui.py:988
-#: rendergui.py:1253 preferenceswindow.py:44 tools/batchrendering.py:1056
+#: rendergui.py:106 rendergui.py:120 rendergui.py:138 rendergui.py:1086
+#: rendergui.py:1351 preferenceswindow.py:44 tools/batchrendering.py:1056
 #: tools/batchrendering.py:1129 proxyediting.py:322 patternproducer.py:337
 #: patternproducer.py:370 patternproducer.py:401 tools/gmic.py:366
 #: tools/gmic.py:390 tools/gmic.py:532 dialogutils.py:54 dialogutils.py:126
@@ -1156,13 +1156,13 @@ msgstr ""
 msgid "New Profile"
 msgstr ""
 
-#: dialogs.py:175 dialogs.py:227 rendergui.py:685 tools/gmic.py:749
+#: dialogs.py:175 dialogs.py:227 rendergui.py:783 tools/gmic.py:749
 #: tools/toolsencoding.py:293 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
 msgid "Select Folder"
 msgstr ""
 
-#: dialogs.py:179 dialogs.py:231 rendergui.py:689 tools/batchrendering.py:1145
+#: dialogs.py:179 dialogs.py:231 rendergui.py:787 tools/batchrendering.py:1145
 #: tools/toolsencoding.py:297
 msgid "Folder:"
 msgstr ""
@@ -1322,7 +1322,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: dialogs.py:506 panels.py:201 rendergui.py:699 tools/toolsencoding.py:304
+#: dialogs.py:506 panels.py:201 rendergui.py:797 tools/toolsencoding.py:304
 msgid "Name:"
 msgstr ""
 
@@ -2539,17 +2539,17 @@ msgstr ""
 msgid "Begin Rendering"
 msgstr ""
 
-#: render.py:340 render.py:420
+#: render.py:341 render.py:532
 msgid "A File with given path exists!"
 msgstr ""
 
-#: render.py:341 render.py:421
+#: render.py:342 render.py:533
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 msgstr ""
 
-#: render.py:518
+#: render.py:630
 msgid "Rendering Transition Clip"
 msgstr ""
 
@@ -4127,7 +4127,7 @@ msgstr ""
 msgid "Select file"
 msgstr ""
 
-#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:754
+#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Smooth"
 msgstr ""
 
@@ -4764,7 +4764,7 @@ msgstr ""
 msgid "Cos"
 msgstr ""
 
-#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:754
+#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Linear"
 msgstr ""
 
@@ -5420,7 +5420,7 @@ msgstr ""
 msgid "Add Fade Out"
 msgstr ""
 
-#: keyframeeditor.py:986 guipopoverclip.py:754
+#: keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Discrete"
 msgstr ""
 
@@ -5437,20 +5437,20 @@ msgid "Paste Keyframe Value (Control + V)"
 msgstr ""
 
 #: keyframeeditor.py:1227 keyframeeditor.py:1711 keyframeeditor.py:2057
-#: guipopoverclip.py:769
+#: guipopoverclip.py:776
 msgid "Clone Keyframe Value From Next"
 msgstr ""
 
 #: keyframeeditor.py:1228 keyframeeditor.py:1712 keyframeeditor.py:2058
-#: guipopoverclip.py:770
+#: guipopoverclip.py:777
 msgid "Clone Keyframe Value From Previous"
 msgstr ""
 
-#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:705
+#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:712
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:700
+#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:707
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr ""
 
@@ -5611,7 +5611,7 @@ msgstr ""
 msgid "Middlebar Configuration"
 msgstr ""
 
-#: middlebar.py:512 rendergui.py:471 tools/toolsencoding.py:487
+#: middlebar.py:512 rendergui.py:569 tools/toolsencoding.py:487
 msgid "Select Render quality"
 msgstr ""
 
@@ -5746,7 +5746,7 @@ msgstr ""
 #: tools/titler.py:284 tools/batchrendering.py:1194 shortcuts.py:458
 #: guipopover.py:577 guipopover.py:902 guipopoverclip.py:302
 #: guipopoverclip.py:337 guipopoverclip.py:363 guipopoverclip.py:505
-#: guipopoverclip.py:616
+#: guipopoverclip.py:623
 msgid "Delete"
 msgstr ""
 
@@ -5866,27 +5866,27 @@ msgstr ""
 msgid "Render Slow/Fast Motion Video File"
 msgstr ""
 
-#: rendergui.py:182 rendergui.py:328
+#: rendergui.py:182 rendergui.py:426
 msgid "Source Media File: "
 msgstr ""
 
-#: rendergui.py:189 rendergui.py:190 rendergui.py:335 rendergui.py:336
+#: rendergui.py:189 rendergui.py:190 rendergui.py:433 rendergui.py:434
 msgid "<b>not set</b>"
 msgstr ""
 
-#: rendergui.py:210 rendergui.py:356
+#: rendergui.py:210 rendergui.py:454
 msgid "Select Target Folder"
 msgstr ""
 
-#: rendergui.py:214 rendergui.py:360
+#: rendergui.py:214 rendergui.py:319 rendergui.py:458
 msgid "Speed %:"
 msgstr ""
 
-#: rendergui.py:225 rendergui.py:397
+#: rendergui.py:225 rendergui.py:495
 msgid "Full Source Length"
 msgstr ""
 
-#: rendergui.py:230 rendergui.py:402
+#: rendergui.py:230 rendergui.py:500
 msgid "Source Mark In to Mark Out"
 msgstr ""
 
@@ -5894,159 +5894,183 @@ msgstr ""
 msgid "Rendered Length:"
 msgstr ""
 
-#: rendergui.py:278 rendergui.py:425
+#: rendergui.py:278 rendergui.py:523
 msgid "Source Mark In: "
 msgstr ""
 
-#: rendergui.py:279 rendergui.py:426
+#: rendergui.py:279 rendergui.py:524
 msgid "Source Mark Out: "
 msgstr ""
 
-#: rendergui.py:284 rendergui.py:431
+#: rendergui.py:284 rendergui.py:529
 msgid "Target File:"
 msgstr ""
 
-#: rendergui.py:285 rendergui.py:432
+#: rendergui.py:285 rendergui.py:530
 msgid "Target Folder:"
 msgstr ""
 
-#: rendergui.py:286 rendergui.py:433
+#: rendergui.py:286 rendergui.py:531
 msgid "Target Profile:"
 msgstr ""
 
-#: rendergui.py:287 rendergui.py:434
+#: rendergui.py:287 rendergui.py:532
 msgid "Target Encoding:"
 msgstr ""
 
-#: rendergui.py:288 rendergui.py:435
+#: rendergui.py:288 rendergui.py:533
 msgid "Target Quality:"
 msgstr ""
 
-#: rendergui.py:290 rendergui.py:437
+#: rendergui.py:290 rendergui.py:388 rendergui.py:535
 msgid "Render Range:"
 msgstr ""
 
-#: rendergui.py:323
+#: rendergui.py:305
+msgid "Clip Slow/Fast Motion"
+msgstr ""
+
+#: rendergui.py:310
+msgid "Clip: "
+msgstr ""
+
+#: rendergui.py:338
+msgid "Current Clip Content"
+msgstr ""
+
+#: rendergui.py:339
+msgid "Full Media"
+msgstr ""
+
+#: rendergui.py:385 tools/batchrendering.py:1100
+msgid "Encoding:"
+msgstr ""
+
+#: rendergui.py:386 tools/batchrendering.py:1101
+msgid "Quality:"
+msgstr ""
+
+#: rendergui.py:421
 msgid "Render Reverse Motion Video File"
 msgstr ""
 
-#: rendergui.py:438
+#: rendergui.py:536
 msgid "Rendered Clip Length:"
 msgstr ""
 
-#: rendergui.py:489
+#: rendergui.py:587
 msgid "Select audio sample frequency"
 msgstr ""
 
-#: rendergui.py:511 tools/toolsencoding.py:544
+#: rendergui.py:609 tools/toolsencoding.py:544
 msgid "Select Render encoding"
 msgstr ""
 
-#: rendergui.py:555 tools/toolsencoding.py:473
+#: rendergui.py:653 tools/toolsencoding.py:473
 msgid "Select render profile"
 msgstr ""
 
-#: rendergui.py:577
+#: rendergui.py:675
 msgid "Full Length"
 msgstr ""
 
-#: rendergui.py:578
+#: rendergui.py:676
 msgid "Marked Range"
 msgstr ""
 
-#: rendergui.py:584 tools/toolsencoding.py:129
+#: rendergui.py:682 tools/toolsencoding.py:129
 msgid "File"
 msgstr ""
 
-#: rendergui.py:585 tools/toolsencoding.py:135
+#: rendergui.py:683 tools/toolsencoding.py:135
 msgid "Render Profile"
 msgstr ""
 
-#: rendergui.py:586 tools/toolsencoding.py:136
+#: rendergui.py:684 tools/toolsencoding.py:136
 msgid "Encoding Format"
 msgstr ""
 
-#: rendergui.py:592 rendergui.py:657
+#: rendergui.py:690 rendergui.py:755
 msgid "Range"
 msgstr ""
 
-#: rendergui.py:630 rendergui.py:1274
+#: rendergui.py:728 rendergui.py:1372
 msgid "Render Args"
 msgstr ""
 
-#: rendergui.py:636
+#: rendergui.py:734
 msgid "Open File in Bin"
 msgstr ""
 
-#: rendergui.py:705 tools/toolsencoding.py:328
+#: rendergui.py:803 tools/toolsencoding.py:328
 msgid "Select folder to place rendered file in"
 msgstr ""
 
-#: rendergui.py:706 tools/toolsencoding.py:329
+#: rendergui.py:804 tools/toolsencoding.py:329
 msgid "Give name for rendered file"
 msgstr ""
 
-#: rendergui.py:719 rendergui.py:801
+#: rendergui.py:817 rendergui.py:899
 msgid "Use Project Profile"
 msgstr ""
 
-#: rendergui.py:735
+#: rendergui.py:833
 msgid "Select used project profile for rendering"
 msgstr ""
 
-#: rendergui.py:736
+#: rendergui.py:834
 msgid "Render profile info"
 msgstr ""
 
-#: rendergui.py:802 rendergui.py:918 rendergui.py:1108
+#: rendergui.py:900 rendergui.py:1016 rendergui.py:1206
 msgid "Render using args"
 msgstr ""
 
-#: rendergui.py:808 rendergui.py:973 rendergui.py:1236
+#: rendergui.py:906 rendergui.py:1071 rendergui.py:1334
 msgid "Ext.:"
 msgstr ""
 
-#: rendergui.py:845 rendergui.py:923 rendergui.py:1147
+#: rendergui.py:943 rendergui.py:1021 rendergui.py:1245
 msgid "Render using key=value rendering options"
 msgstr ""
 
-#: rendergui.py:846 rendergui.py:957 rendergui.py:1244
+#: rendergui.py:944 rendergui.py:1055 rendergui.py:1342
 msgid "Edit render options"
 msgstr ""
 
-#: rendergui.py:948
+#: rendergui.py:1046
 msgid "Load Args From Current Encoding"
 msgstr ""
 
-#: rendergui.py:967
+#: rendergui.py:1065
 msgid "Load Args"
 msgstr ""
 
-#: rendergui.py:970
+#: rendergui.py:1068
 msgid "Save Args"
 msgstr ""
 
-#: rendergui.py:991 rendergui.py:1255
+#: rendergui.py:1089 rendergui.py:1353
 msgid "Set Args"
 msgstr ""
 
-#: rendergui.py:1126
+#: rendergui.py:1224
 msgid "Edit Args:"
 msgstr ""
 
-#: rendergui.py:1149 guipopover.py:984
+#: rendergui.py:1247 guipopover.py:984
 msgid "Save Render Args into a text file"
 msgstr ""
 
-#: rendergui.py:1150 guipopover.py:983
+#: rendergui.py:1248 guipopover.py:983
 msgid "Load Render Args from a text file"
 msgstr ""
 
-#: rendergui.py:1233
+#: rendergui.py:1331
 msgid "Load Selection"
 msgstr ""
 
-#: rendergui.py:1243
+#: rendergui.py:1341
 msgid "Load render options from currently selected encoding"
 msgstr ""
 
@@ -6677,14 +6701,6 @@ msgstr ""
 
 #: tools/batchrendering.py:1093 proxyediting.py:279
 msgid "Using Proxy Media"
-msgstr ""
-
-#: tools/batchrendering.py:1100
-msgid "Encoding:"
-msgstr ""
-
-#: tools/batchrendering.py:1101
-msgid "Quality:"
 msgstr ""
 
 #: tools/batchrendering.py:1102
@@ -7567,7 +7583,7 @@ msgstr ""
 msgid "Slow/Fast Motion"
 msgstr ""
 
-#: toolsintegration.py:128
+#: toolsintegration.py:128 guipopoverclip.py:534
 msgid "Reverse"
 msgstr ""
 
@@ -7927,15 +7943,15 @@ msgstr ""
 msgid "<control>"
 msgstr ""
 
-#: clipmenuaction.py:552
+#: clipmenuaction.py:553
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr ""
 
-#: clipmenuaction.py:553 clipmenuaction.py:582
+#: clipmenuaction.py:554 clipmenuaction.py:583
 msgid "Requested edit can't be done."
 msgstr ""
 
-#: clipmenuaction.py:581
+#: clipmenuaction.py:582
 msgid "Next clip does not have enough material to cover blank area"
 msgstr ""
 
@@ -8214,24 +8230,24 @@ msgstr ""
 msgid "In Queue - "
 msgstr ""
 
-#: jobs.py:449 jobs.py:522 jobs.py:603 jobs.py:686 containeractions.py:529
+#: jobs.py:460 jobs.py:549 jobs.py:630 jobs.py:713 containeractions.py:529
 #: containeractions.py:695 containeractions.py:902
 msgid "Render Starting..."
 msgstr ""
 
-#: jobs.py:488
+#: jobs.py:507
 msgid "Motion Clip Render"
 msgstr ""
 
-#: jobs.py:568
+#: jobs.py:595
 msgid "Stabilizing Analysis"
 msgstr ""
 
-#: jobs.py:653
+#: jobs.py:680
 msgid "Tracking Data Render"
 msgstr ""
 
-#: jobs.py:766 jobs.py:787
+#: jobs.py:793 jobs.py:814
 msgid "Proxy Render"
 msgstr ""
 
@@ -8997,7 +9013,7 @@ msgstr ""
 msgid "Reset Compositor Values"
 msgstr ""
 
-#: guipopover.py:711 guipopoverclip.py:580
+#: guipopover.py:711 guipopoverclip.py:587
 msgid "Delete Compositor"
 msgstr ""
 
@@ -9058,7 +9074,7 @@ msgid "Normal Height"
 msgstr ""
 
 #: guipopover.py:839 guipopover.py:842 guipopoverclip.py:443
-#: guipopoverclip.py:605
+#: guipopoverclip.py:612
 msgid "Unmute"
 msgstr ""
 
@@ -9067,7 +9083,7 @@ msgid "Mute Video"
 msgstr ""
 
 #: guipopover.py:850 guipopover.py:853 guipopoverclip.py:416
-#: guipopoverclip.py:446 guipopoverclip.py:608
+#: guipopoverclip.py:446 guipopoverclip.py:615
 msgid "Mute Audio"
 msgstr ""
 
@@ -9358,7 +9374,7 @@ msgid "Select"
 msgstr ""
 
 #: guipopoverclip.py:160
-msgid "Export To Tool"
+msgid "Slow Motion"
 msgstr ""
 
 #: guipopoverclip.py:166 guipopoverclip.py:265 guipopoverclip.py:329
@@ -9455,7 +9471,7 @@ msgstr ""
 msgid "Reload Media From Disk"
 msgstr ""
 
-#: guipopoverclip.py:499 guipopoverclip.py:612
+#: guipopoverclip.py:499 guipopoverclip.py:619
 msgid "Volume Keyframes"
 msgstr ""
 
@@ -9463,115 +9479,123 @@ msgstr ""
 msgid "Brightness Keyframes"
 msgstr ""
 
-#: guipopoverclip.py:512 guipopoverclip.py:599
+#: guipopoverclip.py:512 guipopoverclip.py:606
 msgid "Resync"
 msgstr ""
 
-#: guipopoverclip.py:513 guipopoverclip.py:600
+#: guipopoverclip.py:513 guipopoverclip.py:607
 msgid "Clear Sync Relation"
 msgstr ""
 
-#: guipopoverclip.py:515 guipopoverclip.py:601
+#: guipopoverclip.py:515 guipopoverclip.py:608
 msgid "Select Sync Parent Clip..."
 msgstr ""
 
-#: guipopoverclip.py:519 guipopoverclip.py:621
+#: guipopoverclip.py:519 guipopoverclip.py:628
 msgid "Set Clip Length..."
 msgstr ""
 
-#: guipopoverclip.py:520 guipopoverclip.py:622
+#: guipopoverclip.py:520 guipopoverclip.py:629
 msgid "Stretch Over Next Blank"
 msgstr ""
 
-#: guipopoverclip.py:521 guipopoverclip.py:623
+#: guipopoverclip.py:521 guipopoverclip.py:630
 msgid "Stretch Over Prev Blank"
 msgstr ""
 
-#: guipopoverclip.py:540
+#: guipopoverclip.py:532
+msgid "Slow/Fast"
+msgstr ""
+
+#: guipopoverclip.py:539
+msgid "Revert To Original Media"
+msgstr ""
+
+#: guipopoverclip.py:547
 msgid "All Clips After"
 msgstr ""
 
-#: guipopoverclip.py:541
+#: guipopoverclip.py:548
 msgid "All Clips Before"
 msgstr ""
 
-#: guipopoverclip.py:566
+#: guipopoverclip.py:573
 msgid "From Next Clip"
 msgstr ""
 
-#: guipopoverclip.py:567
+#: guipopoverclip.py:574
 msgid "From Previous Clip"
 msgstr ""
 
-#: guipopoverclip.py:574
+#: guipopoverclip.py:581
 msgid "Add Compositor..."
 msgstr ""
 
-#: guipopoverclip.py:585
+#: guipopoverclip.py:592
 msgid "Edit Title"
 msgstr ""
 
-#: guipopoverclip.py:592
+#: guipopoverclip.py:599
 msgid "Edit Generator Properties..."
 msgstr ""
 
-#: guipopoverclip.py:593
+#: guipopoverclip.py:600
 msgid "Create Cloned Generator..."
 msgstr ""
 
-#: guipopoverclip.py:594
+#: guipopoverclip.py:601
 msgid "Generator/Container Render Actions"
 msgstr ""
 
-#: guipopoverclip.py:595
+#: guipopoverclip.py:602
 msgid "Switch to Unrendered Media"
 msgstr ""
 
-#: guipopoverclip.py:653
+#: guipopoverclip.py:660
 msgid "Select Edit Filter"
 msgstr ""
 
-#: guipopoverclip.py:659
+#: guipopoverclip.py:666
 msgid "Leading Keyframes"
 msgstr ""
 
-#: guipopoverclip.py:662
+#: guipopoverclip.py:669
 msgid "Trailing Keyframes"
 msgstr ""
 
-#: guipopoverclip.py:668
+#: guipopoverclip.py:675
 msgid "Value Snapping"
 msgstr ""
 
-#: guipopoverclip.py:672
+#: guipopoverclip.py:679
 msgid "Playhead Follows Dragged Keyframe"
 msgstr ""
 
-#: guipopoverclip.py:676
+#: guipopoverclip.py:683
 msgid "Exit Edit"
 msgstr ""
 
-#: guipopoverclip.py:712
+#: guipopoverclip.py:719
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr ""
 
-#: guipopoverclip.py:717
+#: guipopoverclip.py:724
 msgid "Delete all Keyframe after Clip Range"
 msgstr ""
 
-#: guipopoverclip.py:730
+#: guipopoverclip.py:737
 msgid "No additional Keyframe Tool editable Params"
 msgstr ""
 
-#: guipopoverclip.py:767
+#: guipopoverclip.py:774
 msgid "Copy Keyframe Value"
 msgstr ""
 
-#: guipopoverclip.py:768
+#: guipopoverclip.py:775
 msgid "Paste Keyframe Value"
 msgstr ""
 
-#: tlinewidgets.py:2833
+#: tlinewidgets.py:2835
 msgid ""
 "Up - Page Up\n"
 "Down - Page Down"

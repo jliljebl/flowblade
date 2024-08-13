@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 10:37+0300\n"
+"POT-Creation-Date: 2024-08-13 09:23+0300\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -314,7 +314,7 @@ msgstr ""
 
 #: projectaction.py:1319 projectaction.py:1321 projectaction.py:1330
 #: projectaction.py:1338 projectaction.py:1345 tools/batchrendering.py:1095
-#: clipmenuaction.py:203 clipmenuaction.py:205
+#: clipmenuaction.py:204 clipmenuaction.py:206
 msgid "N/A"
 msgstr "N/A"
 
@@ -632,7 +632,7 @@ msgid "Split to new Sequence at Playhead Position"
 msgstr "在起始播放位置拆分为新序列"
 
 #: editorwindow.py:821 translations.py:568 guipopoverclip.py:338
-#: guipopoverclip.py:506 guipopoverclip.py:617
+#: guipopoverclip.py:506 guipopoverclip.py:624
 msgid "Lift"
 msgstr "提升"
 
@@ -859,7 +859,7 @@ msgstr "项目"
 msgid "Project Info"
 msgstr "项目信息"
 
-#: editorwindow.py:874 rendergui.py:180 rendergui.py:326
+#: editorwindow.py:874 rendergui.py:180 rendergui.py:308 rendergui.py:424
 #: tools/batchrendering.py:956 tools/gmic.py:805 containeractions.py:382
 #: editorlayout.py:230 tools/scripttool.py:897
 msgid "Render"
@@ -1174,8 +1174,8 @@ msgstr "确定"
 #: dialogs.py:1789 dialogs.py:1836 dialogs.py:1874 dialogs.py:1892
 #: dialogs.py:1943 propertyeditorbuilder.py:654 propertyeditorbuilder.py:793
 #: propertyeditorbuilder.py:833 middlebar.py:473 rendergui.py:47
-#: rendergui.py:106 rendergui.py:120 rendergui.py:138 rendergui.py:988
-#: rendergui.py:1253 preferenceswindow.py:44 tools/batchrendering.py:1056
+#: rendergui.py:106 rendergui.py:120 rendergui.py:138 rendergui.py:1086
+#: rendergui.py:1351 preferenceswindow.py:44 tools/batchrendering.py:1056
 #: tools/batchrendering.py:1129 proxyediting.py:322 patternproducer.py:337
 #: patternproducer.py:370 patternproducer.py:401 tools/gmic.py:366
 #: tools/gmic.py:390 tools/gmic.py:532 dialogutils.py:54 dialogutils.py:126
@@ -1219,13 +1219,13 @@ msgstr ""
 msgid "New Profile"
 msgstr "新配置文件"
 
-#: dialogs.py:175 dialogs.py:227 rendergui.py:685 tools/gmic.py:749
+#: dialogs.py:175 dialogs.py:227 rendergui.py:783 tools/gmic.py:749
 #: tools/toolsencoding.py:293 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
 msgid "Select Folder"
 msgstr "选择目录"
 
-#: dialogs.py:179 dialogs.py:231 rendergui.py:689 tools/batchrendering.py:1145
+#: dialogs.py:179 dialogs.py:231 rendergui.py:787 tools/batchrendering.py:1145
 #: tools/toolsencoding.py:297
 msgid "Folder:"
 msgstr "目录"
@@ -1395,7 +1395,7 @@ msgstr ""
 msgid "Create"
 msgstr "创建"
 
-#: dialogs.py:506 panels.py:201 rendergui.py:699 tools/toolsencoding.py:304
+#: dialogs.py:506 panels.py:201 rendergui.py:797 tools/toolsencoding.py:304
 msgid "Name:"
 msgstr "名称:"
 
@@ -2685,11 +2685,11 @@ msgstr "选择渲染范围"
 msgid "Begin Rendering"
 msgstr "开始渲染"
 
-#: render.py:340 render.py:420
+#: render.py:341 render.py:532
 msgid "A File with given path exists!"
 msgstr "一个已经存在给定路径的文件！"
 
-#: render.py:341 render.py:421
+#: render.py:342 render.py:533
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -2697,7 +2697,7 @@ msgstr ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 
-#: render.py:518
+#: render.py:630
 msgid "Rendering Transition Clip"
 msgstr "渲染转场剪辑"
 
@@ -4297,7 +4297,7 @@ msgstr "Min Gain"
 msgid "Select file"
 msgstr "选择文件"
 
-#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:754
+#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Smooth"
 msgstr "Smooth"
 
@@ -4994,7 +4994,7 @@ msgstr "HSLLuminosity"
 msgid "Cos"
 msgstr "Cos"
 
-#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:754
+#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Linear"
 msgstr "Linear"
 
@@ -5690,7 +5690,7 @@ msgstr "添加淡入"
 msgid "Add Fade Out"
 msgstr "添加淡出"
 
-#: keyframeeditor.py:986 guipopoverclip.py:754
+#: keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Discrete"
 msgstr ""
 
@@ -5708,21 +5708,21 @@ msgid "Paste Keyframe Value (Control + V)"
 msgstr ""
 
 #: keyframeeditor.py:1227 keyframeeditor.py:1711 keyframeeditor.py:2057
-#: guipopoverclip.py:769
+#: guipopoverclip.py:776
 #, fuzzy
 msgid "Clone Keyframe Value From Next"
 msgstr "关键帧向后移动一帧"
 
 #: keyframeeditor.py:1228 keyframeeditor.py:1712 keyframeeditor.py:2058
-#: guipopoverclip.py:770
+#: guipopoverclip.py:777
 msgid "Clone Keyframe Value From Previous"
 msgstr ""
 
-#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:705
+#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:712
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "Set Keyframe at Frame 0 to value of next Keyframe"
 
-#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:700
+#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:707
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Delete all but first Keyframe before Clip Range"
 
@@ -5898,7 +5898,7 @@ msgstr ""
 msgid "Middlebar Configuration"
 msgstr "中间工具栏布局"
 
-#: middlebar.py:512 rendergui.py:471 tools/toolsencoding.py:487
+#: middlebar.py:512 rendergui.py:569 tools/toolsencoding.py:487
 msgid "Select Render quality"
 msgstr "选择渲染质量"
 
@@ -6037,7 +6037,7 @@ msgstr "只许单例字幕被打开"
 #: tools/titler.py:284 tools/batchrendering.py:1194 shortcuts.py:458
 #: guipopover.py:577 guipopover.py:902 guipopoverclip.py:302
 #: guipopoverclip.py:337 guipopoverclip.py:363 guipopoverclip.py:505
-#: guipopoverclip.py:616
+#: guipopoverclip.py:623
 msgid "Delete"
 msgstr "删除"
 
@@ -6169,27 +6169,27 @@ msgstr "保存渲染Args为"
 msgid "Render Slow/Fast Motion Video File"
 msgstr "渲染慢/快动作视频文件"
 
-#: rendergui.py:182 rendergui.py:328
+#: rendergui.py:182 rendergui.py:426
 msgid "Source Media File: "
 msgstr "源媒体文件: "
 
-#: rendergui.py:189 rendergui.py:190 rendergui.py:335 rendergui.py:336
+#: rendergui.py:189 rendergui.py:190 rendergui.py:433 rendergui.py:434
 msgid "<b>not set</b>"
 msgstr "<b>不设置</b>"
 
-#: rendergui.py:210 rendergui.py:356
+#: rendergui.py:210 rendergui.py:454
 msgid "Select Target Folder"
 msgstr "选择目标目录"
 
-#: rendergui.py:214 rendergui.py:360
+#: rendergui.py:214 rendergui.py:319 rendergui.py:458
 msgid "Speed %:"
 msgstr "速度%:"
 
-#: rendergui.py:225 rendergui.py:397
+#: rendergui.py:225 rendergui.py:495
 msgid "Full Source Length"
 msgstr "全源长度"
 
-#: rendergui.py:230 rendergui.py:402
+#: rendergui.py:230 rendergui.py:500
 msgid "Source Mark In to Mark Out"
 msgstr "从始点到终点"
 
@@ -6197,166 +6197,193 @@ msgstr "从始点到终点"
 msgid "Rendered Length:"
 msgstr "渲染长度："
 
-#: rendergui.py:278 rendergui.py:425
+#: rendergui.py:278 rendergui.py:523
 msgid "Source Mark In: "
 msgstr "源自始点: "
 
-#: rendergui.py:279 rendergui.py:426
+#: rendergui.py:279 rendergui.py:524
 msgid "Source Mark Out: "
 msgstr "源自始点: "
 
-#: rendergui.py:284 rendergui.py:431
+#: rendergui.py:284 rendergui.py:529
 msgid "Target File:"
 msgstr "目标文件:"
 
-#: rendergui.py:285 rendergui.py:432
+#: rendergui.py:285 rendergui.py:530
 msgid "Target Folder:"
 msgstr "目标目录:"
 
-#: rendergui.py:286 rendergui.py:433
+#: rendergui.py:286 rendergui.py:531
 msgid "Target Profile:"
 msgstr "目标配置文件:"
 
-#: rendergui.py:287 rendergui.py:434
+#: rendergui.py:287 rendergui.py:532
 msgid "Target Encoding:"
 msgstr "目标编码:"
 
-#: rendergui.py:288 rendergui.py:435
+#: rendergui.py:288 rendergui.py:533
 msgid "Target Quality:"
 msgstr "目标质量"
 
-#: rendergui.py:290 rendergui.py:437
+#: rendergui.py:290 rendergui.py:388 rendergui.py:535
 msgid "Render Range:"
 msgstr "渲染范围:"
 
-#: rendergui.py:323
+#: rendergui.py:305
+#, fuzzy
+msgid "Clip Slow/Fast Motion"
+msgstr "慢/快动作"
+
+#: rendergui.py:310
+#, fuzzy
+msgid "Clip: "
+msgstr "剪辑"
+
+#: rendergui.py:338
+msgid "Current Clip Content"
+msgstr ""
+
+#: rendergui.py:339
+#, fuzzy
+msgid "Full Media"
+msgstr "移除无用媒体..."
+
+#: rendergui.py:385 tools/batchrendering.py:1100
+msgid "Encoding:"
+msgstr "编码:"
+
+#: rendergui.py:386 tools/batchrendering.py:1101
+msgid "Quality:"
+msgstr "质量:"
+
+#: rendergui.py:421
 msgid "Render Reverse Motion Video File"
 msgstr "渲染逆向动作视频文件"
 
-#: rendergui.py:438
+#: rendergui.py:536
 msgid "Rendered Clip Length:"
 msgstr "渲染的剪辑长度:"
 
-#: rendergui.py:489
+#: rendergui.py:587
 msgid "Select audio sample frequency"
 msgstr "选择音频样本频率"
 
-#: rendergui.py:511 tools/toolsencoding.py:544
+#: rendergui.py:609 tools/toolsencoding.py:544
 msgid "Select Render encoding"
 msgstr "选择渲染编码"
 
-#: rendergui.py:555 tools/toolsencoding.py:473
+#: rendergui.py:653 tools/toolsencoding.py:473
 msgid "Select render profile"
 msgstr "选择渲染配置文件"
 
-#: rendergui.py:577
+#: rendergui.py:675
 msgid "Full Length"
 msgstr "全长"
 
-#: rendergui.py:578
+#: rendergui.py:676
 msgid "Marked Range"
 msgstr "标记的范围"
 
-#: rendergui.py:584 tools/toolsencoding.py:129
+#: rendergui.py:682 tools/toolsencoding.py:129
 msgid "File"
 msgstr "文件"
 
-#: rendergui.py:585 tools/toolsencoding.py:135
+#: rendergui.py:683 tools/toolsencoding.py:135
 msgid "Render Profile"
 msgstr "渲染配置文件"
 
-#: rendergui.py:586 tools/toolsencoding.py:136
+#: rendergui.py:684 tools/toolsencoding.py:136
 msgid "Encoding Format"
 msgstr "编码格式"
 
-#: rendergui.py:592 rendergui.py:657
+#: rendergui.py:690 rendergui.py:755
 #, fuzzy
 msgid "Range"
 msgstr "橙色"
 
-#: rendergui.py:630 rendergui.py:1274
+#: rendergui.py:728 rendergui.py:1372
 msgid "Render Args"
 msgstr "渲染Args"
 
-#: rendergui.py:636
+#: rendergui.py:734
 #, fuzzy
 msgid "Open File in Bin"
 msgstr "从库中打开文件"
 
-#: rendergui.py:705 tools/toolsencoding.py:328
+#: rendergui.py:803 tools/toolsencoding.py:328
 msgid "Select folder to place rendered file in"
 msgstr "选择目录来放置被渲染的文件"
 
-#: rendergui.py:706 tools/toolsencoding.py:329
+#: rendergui.py:804 tools/toolsencoding.py:329
 msgid "Give name for rendered file"
 msgstr "为被渲染的文件命名"
 
-#: rendergui.py:719 rendergui.py:801
+#: rendergui.py:817 rendergui.py:899
 #, fuzzy
 msgid "Use Project Profile"
 msgstr "用项目配置文件:"
 
-#: rendergui.py:735
+#: rendergui.py:833
 msgid "Select used project profile for rendering"
 msgstr "为渲染选择使用的项目配置文件"
 
-#: rendergui.py:736
+#: rendergui.py:834
 msgid "Render profile info"
 msgstr "渲染配置文件信息"
 
-#: rendergui.py:802 rendergui.py:918 rendergui.py:1108
+#: rendergui.py:900 rendergui.py:1016 rendergui.py:1206
 #, fuzzy
 msgid "Render using args"
 msgstr "渲染使用中的args:"
 
-#: rendergui.py:808 rendergui.py:973 rendergui.py:1236
+#: rendergui.py:906 rendergui.py:1071 rendergui.py:1334
 msgid "Ext.:"
 msgstr "Ext.:"
 
-#: rendergui.py:845 rendergui.py:923 rendergui.py:1147
+#: rendergui.py:943 rendergui.py:1021 rendergui.py:1245
 msgid "Render using key=value rendering options"
 msgstr "用来渲染的关键=渲染选项的值"
 
-#: rendergui.py:846 rendergui.py:957 rendergui.py:1244
+#: rendergui.py:944 rendergui.py:1055 rendergui.py:1342
 msgid "Edit render options"
 msgstr "编辑渲染选项"
 
-#: rendergui.py:948
+#: rendergui.py:1046
 #, fuzzy
 msgid "Load Args From Current Encoding"
 msgstr "从一个文本文件加载渲染Args"
 
-#: rendergui.py:967
+#: rendergui.py:1065
 #, fuzzy
 msgid "Load Args"
 msgstr "加载层"
 
-#: rendergui.py:970
+#: rendergui.py:1068
 #, fuzzy
 msgid "Save Args"
 msgstr "设置Args"
 
-#: rendergui.py:991 rendergui.py:1255
+#: rendergui.py:1089 rendergui.py:1353
 msgid "Set Args"
 msgstr "设置Args"
 
-#: rendergui.py:1126
+#: rendergui.py:1224
 msgid "Edit Args:"
 msgstr "编辑Args:"
 
-#: rendergui.py:1149 guipopover.py:984
+#: rendergui.py:1247 guipopover.py:984
 msgid "Save Render Args into a text file"
 msgstr "保存渲染Args到一个文本文件"
 
-#: rendergui.py:1150 guipopover.py:983
+#: rendergui.py:1248 guipopover.py:983
 msgid "Load Render Args from a text file"
 msgstr "从一个文本文件加载渲染Args"
 
-#: rendergui.py:1233
+#: rendergui.py:1331
 msgid "Load Selection"
 msgstr "加载选择"
 
-#: rendergui.py:1243
+#: rendergui.py:1341
 msgid "Load render options from currently selected encoding"
 msgstr "从当前选中编码中加载渲染选项"
 
@@ -7009,14 +7036,6 @@ msgstr "正在使用原始媒体"
 #: tools/batchrendering.py:1093 proxyediting.py:279
 msgid "Using Proxy Media"
 msgstr "正在使用代理媒体"
-
-#: tools/batchrendering.py:1100
-msgid "Encoding:"
-msgstr "编码:"
-
-#: tools/batchrendering.py:1101
-msgid "Quality:"
-msgstr "质量:"
 
 #: tools/batchrendering.py:1102
 msgid "Audio Encoding:"
@@ -7951,7 +7970,7 @@ msgstr "缩略图"
 msgid "Slow/Fast Motion"
 msgstr "慢/快动作"
 
-#: toolsintegration.py:128
+#: toolsintegration.py:128 guipopoverclip.py:534
 msgid "Reverse"
 msgstr "反向"
 
@@ -8331,15 +8350,15 @@ msgstr ""
 msgid "<control>"
 msgstr "Control"
 
-#: clipmenuaction.py:552
+#: clipmenuaction.py:553
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "前一个剪辑没有足够的信息覆盖空白区域"
 
-#: clipmenuaction.py:553 clipmenuaction.py:582
+#: clipmenuaction.py:554 clipmenuaction.py:583
 msgid "Requested edit can't be done."
 msgstr "Requested edit can't be done."
 
-#: clipmenuaction.py:581
+#: clipmenuaction.py:582
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "下一个剪辑没有足够的信息覆盖空白区域"
 
@@ -8674,26 +8693,26 @@ msgstr "进行中的"
 msgid "In Queue - "
 msgstr "排序"
 
-#: jobs.py:449 jobs.py:522 jobs.py:603 jobs.py:686 containeractions.py:529
+#: jobs.py:460 jobs.py:549 jobs.py:630 jobs.py:713 containeractions.py:529
 #: containeractions.py:695 containeractions.py:902
 #, fuzzy
 msgid "Render Starting..."
 msgstr "渲染开始:"
 
-#: jobs.py:488
+#: jobs.py:507
 #, fuzzy
 msgid "Motion Clip Render"
 msgstr "渲染动画剪辑"
 
-#: jobs.py:568
+#: jobs.py:595
 msgid "Stabilizing Analysis"
 msgstr ""
 
-#: jobs.py:653
+#: jobs.py:680
 msgid "Tracking Data Render"
 msgstr ""
 
-#: jobs.py:766 jobs.py:787
+#: jobs.py:793 jobs.py:814
 #, fuzzy
 msgid "Proxy Render"
 msgstr "代理渲染信息"
@@ -9525,7 +9544,7 @@ msgstr "Load Compositor Values"
 msgid "Reset Compositor Values"
 msgstr "Reset Compositor Values"
 
-#: guipopover.py:711 guipopoverclip.py:580
+#: guipopover.py:711 guipopoverclip.py:587
 msgid "Delete Compositor"
 msgstr "删除合成器"
 
@@ -9587,7 +9606,7 @@ msgid "Normal Height"
 msgstr "正常高度"
 
 #: guipopover.py:839 guipopover.py:842 guipopoverclip.py:443
-#: guipopoverclip.py:605
+#: guipopoverclip.py:612
 msgid "Unmute"
 msgstr "取消静音"
 
@@ -9596,7 +9615,7 @@ msgid "Mute Video"
 msgstr "视频静音"
 
 #: guipopover.py:850 guipopover.py:853 guipopoverclip.py:416
-#: guipopoverclip.py:446 guipopoverclip.py:608
+#: guipopoverclip.py:446 guipopoverclip.py:615
 msgid "Mute Audio"
 msgstr "音频静音"
 
@@ -9922,8 +9941,9 @@ msgid "Select"
 msgstr "选择"
 
 #: guipopoverclip.py:160
-msgid "Export To Tool"
-msgstr "导出到工具"
+#, fuzzy
+msgid "Slow Motion"
+msgstr "慢/快动作"
 
 #: guipopoverclip.py:166 guipopoverclip.py:265 guipopoverclip.py:329
 #: guipopoverclip.py:389
@@ -10028,7 +10048,7 @@ msgstr "Delete All Clip Markers"
 msgid "Reload Media From Disk"
 msgstr "从库中删除媒体文件"
 
-#: guipopoverclip.py:499 guipopoverclip.py:612
+#: guipopoverclip.py:499 guipopoverclip.py:619
 msgid "Volume Keyframes"
 msgstr "音量关键帧"
 
@@ -10036,126 +10056,139 @@ msgstr "音量关键帧"
 msgid "Brightness Keyframes"
 msgstr "亮度关键帧"
 
-#: guipopoverclip.py:512 guipopoverclip.py:599
+#: guipopoverclip.py:512 guipopoverclip.py:606
 msgid "Resync"
 msgstr "重新同步"
 
-#: guipopoverclip.py:513 guipopoverclip.py:600
+#: guipopoverclip.py:513 guipopoverclip.py:607
 msgid "Clear Sync Relation"
 msgstr "清除同步关联"
 
-#: guipopoverclip.py:515 guipopoverclip.py:601
+#: guipopoverclip.py:515 guipopoverclip.py:608
 msgid "Select Sync Parent Clip..."
 msgstr "选择同步母剪辑..."
 
-#: guipopoverclip.py:519 guipopoverclip.py:621
+#: guipopoverclip.py:519 guipopoverclip.py:628
 msgid "Set Clip Length..."
 msgstr "设置剪辑长度..."
 
-#: guipopoverclip.py:520 guipopoverclip.py:622
+#: guipopoverclip.py:520 guipopoverclip.py:629
 msgid "Stretch Over Next Blank"
 msgstr "拉伸过下一个空白的"
 
-#: guipopoverclip.py:521 guipopoverclip.py:623
+#: guipopoverclip.py:521 guipopoverclip.py:630
 msgid "Stretch Over Prev Blank"
 msgstr "拉伸过前一个空白的"
 
-#: guipopoverclip.py:540
+#: guipopoverclip.py:532
+#, fuzzy
+msgid "Slow/Fast"
+msgstr "慢/快动作"
+
+#: guipopoverclip.py:539
+#, fuzzy
+msgid "Revert To Original Media"
+msgstr "使用原始媒体"
+
+#: guipopoverclip.py:547
 msgid "All Clips After"
 msgstr "所有之后的剪辑"
 
-#: guipopoverclip.py:541
+#: guipopoverclip.py:548
 msgid "All Clips Before"
 msgstr "之前所有剪辑"
 
-#: guipopoverclip.py:566
+#: guipopoverclip.py:573
 msgid "From Next Clip"
 msgstr "从下一个剪辑"
 
-#: guipopoverclip.py:567
+#: guipopoverclip.py:574
 msgid "From Previous Clip"
 msgstr "从前一个剪辑"
 
-#: guipopoverclip.py:574
+#: guipopoverclip.py:581
 #, fuzzy
 msgid "Add Compositor..."
 msgstr "添加合成"
 
-#: guipopoverclip.py:585
+#: guipopoverclip.py:592
 #, fuzzy
 msgid "Edit Title"
 msgstr "音频滤镜"
 
-#: guipopoverclip.py:592
+#: guipopoverclip.py:599
 #, fuzzy
 msgid "Edit Generator Properties..."
 msgstr "渲染属性"
 
-#: guipopoverclip.py:593
+#: guipopoverclip.py:600
 #, fuzzy
 msgid "Create Cloned Generator..."
 msgstr "创建色彩剪辑..."
 
-#: guipopoverclip.py:594
+#: guipopoverclip.py:601
 #, fuzzy
 msgid "Generator/Container Render Actions"
 msgstr "执行渲染动作"
 
-#: guipopoverclip.py:595
+#: guipopoverclip.py:602
 msgid "Switch to Unrendered Media"
 msgstr ""
 
-#: guipopoverclip.py:653
+#: guipopoverclip.py:660
 #, fuzzy
 msgid "Select Edit Filter"
 msgstr "选择文件"
 
-#: guipopoverclip.py:659
+#: guipopoverclip.py:666
 msgid "Leading Keyframes"
 msgstr "Leading Keyframes"
 
-#: guipopoverclip.py:662
+#: guipopoverclip.py:669
 msgid "Trailing Keyframes"
 msgstr "Trailing Keyframes"
 
-#: guipopoverclip.py:668
+#: guipopoverclip.py:675
 msgid "Value Snapping"
 msgstr "Value Snapping"
 
-#: guipopoverclip.py:672
+#: guipopoverclip.py:679
 msgid "Playhead Follows Dragged Keyframe"
 msgstr "Playhead Follows Dragged Keyframe"
 
-#: guipopoverclip.py:676
+#: guipopoverclip.py:683
 msgid "Exit Edit"
 msgstr "退出编辑"
 
-#: guipopoverclip.py:712
+#: guipopoverclip.py:719
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr "Delete all but last Keyframe after Clip Range"
 
-#: guipopoverclip.py:717
+#: guipopoverclip.py:724
 #, fuzzy
 msgid "Delete all Keyframe after Clip Range"
 msgstr "Delete all Keyframes after Clip Range"
 
-#: guipopoverclip.py:730
+#: guipopoverclip.py:737
 msgid "No additional Keyframe Tool editable Params"
 msgstr ""
 
-#: guipopoverclip.py:767
+#: guipopoverclip.py:774
 msgid "Copy Keyframe Value"
 msgstr ""
 
-#: guipopoverclip.py:768
+#: guipopoverclip.py:775
 msgid "Paste Keyframe Value"
 msgstr ""
 
-#: tlinewidgets.py:2833
+#: tlinewidgets.py:2835
 msgid ""
 "Up - Page Up\n"
 "Down - Page Down"
 msgstr ""
+
+#~ msgid "Export To Tool"
+#~ msgstr "导出到工具"
 
 #, fuzzy
 #~ msgid "Active Shortcuts Group:"
