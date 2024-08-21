@@ -931,6 +931,33 @@ def _tline_clip_slow_fast_render_complete(render_data, new_clip_path):
     action = edit.clip_replace(data)
     action.do_edit()
 
+def _tline_clip_reverse(data):
+    clip, track, item_id, item_data = data
+    render.render_reverse_timeline_clip(clip, track, _tline_clip_reverse_render_complete)
+
+def _tline_clip_reverse_render_complete(render_data, new_clip_path):
+    # Unpack render_data created in render._render_tline_clip_slowfast_clip()
+    clip, track, orig_file_path, slowmo_type, slowmo_clip_media_area, \
+    speed, orig_media_in, orig_media_out, new_clip_in, new_clip_out = render_data
+    
+    new_clip = current_sequence().create_file_producer_clip(new_clip_path, None, False, clip.ttl) # file producer
+    new_clip.name = clip.name
+    current_sequence().clone_clip_and_filters(clip, new_clip)
+    
+    clip_index = track.clips.index(clip)
+    
+    # Create slowmo datra needed to do further slowmos.
+    new_clip.slowmo_data = (appconsts.SLOWMO_REVERSE, orig_file_path, slowmo_clip_media_area, abs(speed), orig_media_in, orig_media_out)
+
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index, 
+            "clip_in":new_clip_in, 
+            "clip_out":new_clip_out}
+    action = edit.clip_replace(data)
+    action.do_edit()
+
 def _revert_to_original_clip_from_slowmo_clip(data):
     clip, track, item_id, item_data = data
     clip_index = track.clips.index(clip)
@@ -1006,4 +1033,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_clone_generator":mediaplugin.add_media_plugin_clone,
                   "edit_title":_edit_title,
                   "slowfast":_tline_clip_slowfast,
-                  "revert":_revert_to_original_clip_from_slowmo_clip}
+                  "revert":_revert_to_original_clip_from_slowmo_clip,
+                  "reverse":_tline_clip_reverse}

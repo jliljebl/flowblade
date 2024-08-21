@@ -73,11 +73,6 @@ def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
     encoding_option_index = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
-    """
-    if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings                                                                             -1)
-        encoding_option = renderconsumer.non_user_encodings[widgets.render_type_panel.presets_selector.widget.get_active()]
-        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
-    """
 
     if widgets.args_panel.use_args_check.get_active() == False: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
@@ -396,7 +391,7 @@ def render_slow_fast_timeline_clip(clip, track, completed_callback):
 
 def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, track, completed_callback):
 
-    # These consts only applicable here, but used for improved readbility.
+    # These consts only applicable here, used for improved readbility.
     RENDER_RANGE_CLIP_AREA = 0
     RENDER_RANGE_FULL_MEDIA = 1
 
@@ -421,7 +416,6 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
     # Get render range for new media and information needed for clip.slowmo_data 
     # used to eanble further slowmo renders to produce timeline clips with the 
     # same content area.
-    print("slowmoddata", clip.slowmo_data) 
     if clip.slowmo_data == None:
         orig_file_path = clip.path
         orig_media_in = clip.clip_in
@@ -446,7 +440,7 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
         # clip.slowmo_data is set after succesful slowmo render when new rendered clip
         # is placed on timeline.
         slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
-        print("slowmodata orig media", orig_media_in, orig_media_out) 
+
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
         producer_length = motion_producer.get_length() - 1
         
@@ -494,7 +488,7 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
     write_file = folder + uuid_str + "." + extension
     
     render_full_range = True # TODO: Look to remove, not used anymore.
-    print("orig_file_path", orig_file_path, "speed", speed, "orig media", orig_media_in, orig_media_out)
+
     args = ("session_id:" + str(session_id),
             "speed:" + str(speed), 
             "write_file:" + str(write_file),
@@ -512,6 +506,151 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
                                                         orig_media_in, orig_media_out,
                                                         new_clip_in, new_clip_out), 
                                                         completed_callback))
+    job_queue_object.add_to_queue()
+
+def render_reverse_timeline_clip(clip, track, completed_callback):
+    rendergui.show_tline_clip_reverse_dialog(clip, track, completed_callback, _render_tline_clip_reverse_clip)
+
+def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track, completed_callback):
+
+    # These consts only applicable here, used for improved readbility.
+    RENDER_RANGE_CLIP_AREA = 0
+    RENDER_RANGE_FULL_MEDIA = 1
+
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    # Get data needed for render.
+    speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
+        
+    profile_desc = PROJECT().profile.description()
+    profile = mltprofiles.get_profile(profile_desc)
+    profile_desc = profile_desc.replace(" ", "_")
+
+    encoding_option_index = fb_widgets.encodings_cb.get_active()
+    quality_option_index = fb_widgets.quality_cb.get_active()
+
+    range_selection = fb_widgets.render_range.get_active()
+
+    dialog.destroy()
+
+
+
+    # Get render range for new media and information needed for clip.slowmo_data 
+    # used to eanble further slowmo renders to produce timeline clips with the 
+    # same content area.
+    if clip.slowmo_data == None:
+        media_file_producer = mlt.Producer(profile, str(clip.path))
+        media_file_length = media_file_producer.get_length()
+    
+        orig_file_path = clip.path
+        orig_media_in = clip.clip_in
+        orig_media_out = clip.clip_out
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
+        producer_length = motion_producer.get_length() - 1
+        if range_selection == RENDER_RANGE_CLIP_AREA:
+            # Render only clip area media into slowmo clip.
+            render_range_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+            render_range_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
+            new_clip_in = 0
+            new_clip_out = render_range_out - render_range_in
+            print("RENDER_RANGE_CLIP_AREA", orig_media_in, orig_media_out, render_range_in, render_range_out)
+        else:
+            # Render full media into slowmo clip.
+            render_range_in = 0
+            render_range_out = producer_length
+            new_clip_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+            new_clip_out = int(float(media_file_length - orig_media_in + 1) * (1.0 / speed)) + int(1.0 / speed)
+            print("RENDER_RANGE_FULL", orig_media_in, orig_media_out, new_clip_in, new_clip_out)
+        if render_range_out > producer_length:
+            render_range_out = producer_length
+    else:
+        # clip.slowmo_data is set after succesful slowmo render when new rendered clip
+        # is placed on timeline.
+        slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
+        print("slowmodata orig media", orig_media_in, orig_media_out)
+
+        media_file_producer = mlt.Producer(profile, str(orig_file_path))
+        media_file_length = media_file_producer.get_length()
+     
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
+        producer_length = motion_producer.get_length() - 1
+        
+        # Get current clip range as original media frames.
+        if slowmo_clip_media_area == appconsts.SLOWMO_MEDIA_RANGE_FULL_MEDIA:
+            # Existing slowmo clip contained full media.
+            orig_media_in = int(media_file_length - clip.clip_out * current_speed)
+            orig_media_out = int(media_file_length - clip.clip_in * current_speed)
+        else:
+            # Existing slowmo clip contained area of clip at time of slowmo render request.
+            print("PREEE SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
+            print(producer_length,  (-orig_media_in * (current_speed / 1.0)), clip.get_length(), (-clip.clip_out))
+            orig_media_in = int(orig_media_in + (clip.get_length() - clip.clip_out) * (current_speed / 1.0)) 
+            orig_media_out = int(orig_media_in + (clip.get_length() - clip.clip_in) * (current_speed / 1.0))
+            print("PREEE SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
+
+        print("POOOST SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
+            
+        if range_selection == RENDER_RANGE_CLIP_AREA:
+            # Render only clip area media into slowmo clip.
+            render_range_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+            render_range_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
+            new_clip_in = 0
+            new_clip_out = render_range_out - render_range_in
+            print("RENDER_RANGE_CLIP_AREA", orig_media_in, orig_media_out, render_range_in, render_range_out)
+        else:
+            # Render full media into slowmo clip.
+            render_range_in = 0
+            render_range_out = producer_length
+            new_clip_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+            new_clip_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
+            print("RENDER_RANGE_FULL", orig_media_in, orig_media_out, new_clip_in, new_clip_out)
+        if render_range_out > producer_length:
+            render_range_out = producer_length
+
+    slowmo_type = appconsts.SLOWMO_REVERSE
+    if range_selection == RENDER_RANGE_CLIP_AREA:
+        slowmo_clip_media_area = appconsts.SLOWMO_MEDIA_RANGE_CLIP_AREA
+    else:
+        slowmo_clip_media_area = appconsts.SLOWMO_MEDIA_RANGE_FULL_MEDIA
+
+    source_path = orig_file_path
+
+    session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    extension = renderconsumer.get_encoding_option(encoding_option_index).extension
+    write_file = folder + uuid_str + "." + extension
+    
+    render_full_range = True # TODO: Look to remove, not used anymore.
+    print("orig_file_path", orig_file_path, "speed", speed, "orig media", orig_media_in, orig_media_out)
+    args = ("session_id:" + str(session_id),
+            "speed:" + str(-speed),   # We are handling speed as positive value everyhere else except when than doing the actual rendering for reverse clips.
+            "write_file:" + str(write_file),
+            "profile_desc:" + str(profile_desc),
+            "encoding_option_index:" + str(encoding_option_index),
+            "quality_option_index:" + str(quality_option_index),
+            "source_path:" + str(source_path),
+            "render_full_range:" + str(render_full_range),
+            "start_frame:" + str(render_range_in),
+            "end_frame:" + str(render_range_out))
+
+    job_queue_object = jobs.MotionRenderJobQueueObject( session_id, write_file, args, 
+                                                        ((clip, track, orig_file_path, slowmo_type,
+                                                        slowmo_clip_media_area, speed,
+                                                        orig_media_in, orig_media_out,
+                                                        new_clip_in, new_clip_out), 
+                                                        completed_callback))
+
+    print("(clip, track, orig_file_path, slowmo_type,\
+        slowmo_clip_media_area, speed,\
+        orig_media_in, orig_media_out,\
+        new_clip_in, new_clip_out)" \
+        , orig_media_in, orig_media_out,
+        new_clip_in, new_clip_out)
+
     job_queue_object.add_to_queue()
 
 def render_reverse_clip(media_file, default_range_render=False):
