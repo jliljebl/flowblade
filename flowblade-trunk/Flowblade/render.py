@@ -555,7 +555,7 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
 
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
         producer_length = motion_producer.get_length() - 1
-        
+
         media_file_producer = mlt.Producer(profile, str(orig_file_path))
         media_file_length = media_file_producer.get_length()
 
