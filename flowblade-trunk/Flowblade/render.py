@@ -55,6 +55,10 @@ import utils
 # User defined render agrs file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
 
+# These consts only applicable here, used in timeline clip slowmotion and reverse code.
+RENDER_RANGE_CLIP_AREA = 0
+RENDER_RANGE_FULL_MEDIA = 1
+    
 render_start_time = 0
 widgets = utils.EmptyClass()
 # progress_window = None
@@ -391,9 +395,7 @@ def render_slow_fast_timeline_clip(clip, track, completed_callback):
 
 def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, track, completed_callback):
 
-    # These consts only applicable here, used for improved readbility.
-    RENDER_RANGE_CLIP_AREA = 0
-    RENDER_RANGE_FULL_MEDIA = 1
+
 
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -512,11 +514,6 @@ def render_reverse_timeline_clip(clip, track, completed_callback):
     rendergui.show_tline_clip_reverse_dialog(clip, track, completed_callback, _render_tline_clip_reverse_clip)
 
 def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track, completed_callback):
-
-    # These consts only applicable here, used for improved readbility.
-    RENDER_RANGE_CLIP_AREA = 0
-    RENDER_RANGE_FULL_MEDIA = 1
-
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
@@ -535,10 +532,8 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
 
     dialog.destroy()
 
-
-
     # Get render range for new media and information needed for clip.slowmo_data 
-    # used to eanble further slowmo renders to produce timeline clips with the 
+    # used to enable further slowmo renders to produce timeline clips with the 
     # same content area.
     if clip.slowmo_data == None:
         media_file_producer = mlt.Producer(profile, str(clip.path))
@@ -547,36 +542,24 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
         orig_file_path = clip.path
         orig_media_in = clip.clip_in
         orig_media_out = clip.clip_out
+
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
         producer_length = motion_producer.get_length() - 1
-        if range_selection == RENDER_RANGE_CLIP_AREA:
-            # Render only clip area media into slowmo clip.
-            render_range_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
-            render_range_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
-            new_clip_in = 0
-            new_clip_out = render_range_out - render_range_in
-            print("RENDER_RANGE_CLIP_AREA", orig_media_in, orig_media_out, render_range_in, render_range_out)
-        else:
-            # Render full media into slowmo clip.
-            render_range_in = 0
-            render_range_out = producer_length
-            new_clip_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
-            new_clip_out = int(float(media_file_length - orig_media_in + 1) * (1.0 / speed)) + int(1.0 / speed)
-            print("RENDER_RANGE_FULL", orig_media_in, orig_media_out, new_clip_in, new_clip_out)
-        if render_range_out > producer_length:
-            render_range_out = producer_length
+    
+        render_range_in, render_range_out, new_clip_in, new_clip_out = \
+            _compute_reverse_render_range(media_file_length, producer_length, orig_media_in, \
+                                          orig_media_out, speed, range_selection)
     else:
         # clip.slowmo_data is set after succesful slowmo render when new rendered clip
         # is placed on timeline.
         slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
-        print("slowmodata orig media", orig_media_in, orig_media_out)
 
-        media_file_producer = mlt.Producer(profile, str(orig_file_path))
-        media_file_length = media_file_producer.get_length()
-     
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(orig_file_path)))
         producer_length = motion_producer.get_length() - 1
         
+        media_file_producer = mlt.Producer(profile, str(orig_file_path))
+        media_file_length = media_file_producer.get_length()
+
         # Get current clip range as original media frames.
         if slowmo_clip_media_area == appconsts.SLOWMO_MEDIA_RANGE_FULL_MEDIA:
             # Existing slowmo clip contained full media.
@@ -584,30 +567,12 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
             orig_media_out = int(media_file_length - clip.clip_in * current_speed)
         else:
             # Existing slowmo clip contained area of clip at time of slowmo render request.
-            print("PREEE SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
-            print(producer_length,  (-orig_media_in * (current_speed / 1.0)), clip.get_length(), (-clip.clip_out))
             orig_media_in = int(orig_media_in + (clip.get_length() - clip.clip_out) * (current_speed / 1.0)) 
             orig_media_out = int(orig_media_in + (clip.get_length() - clip.clip_in) * (current_speed / 1.0))
-            print("PREEE SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
 
-        print("POOOST SLOWMO_MEDIA_RANGE_CLIP_AREA", orig_media_in, orig_media_out)
-            
-        if range_selection == RENDER_RANGE_CLIP_AREA:
-            # Render only clip area media into slowmo clip.
-            render_range_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
-            render_range_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
-            new_clip_in = 0
-            new_clip_out = render_range_out - render_range_in
-            print("RENDER_RANGE_CLIP_AREA", orig_media_in, orig_media_out, render_range_in, render_range_out)
-        else:
-            # Render full media into slowmo clip.
-            render_range_in = 0
-            render_range_out = producer_length
-            new_clip_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
-            new_clip_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
-            print("RENDER_RANGE_FULL", orig_media_in, orig_media_out, new_clip_in, new_clip_out)
-        if render_range_out > producer_length:
-            render_range_out = producer_length
+        render_range_in, render_range_out, new_clip_in, new_clip_out = \
+            _compute_reverse_render_range(media_file_length, producer_length, orig_media_in, \
+                                          orig_media_out, speed, range_selection)
 
     slowmo_type = appconsts.SLOWMO_REVERSE
     if range_selection == RENDER_RANGE_CLIP_AREA:
@@ -644,14 +609,28 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
                                                         new_clip_in, new_clip_out), 
                                                         completed_callback))
 
-    print("(clip, track, orig_file_path, slowmo_type,\
-        slowmo_clip_media_area, speed,\
-        orig_media_in, orig_media_out,\
-        new_clip_in, new_clip_out)" \
-        , orig_media_in, orig_media_out,
-        new_clip_in, new_clip_out)
-
     job_queue_object.add_to_queue()
+
+def _compute_reverse_render_range(media_file_length, producer_length, orig_media_in, orig_media_out, speed, range_selection):
+    if range_selection == RENDER_RANGE_CLIP_AREA:
+        # Render only clip area media into slowmo clip.
+        render_range_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+        render_range_out = int(float(media_file_length - orig_media_in + 1) * (1.0 / speed)) + int(1.0 / speed)
+        new_clip_in = 0
+        new_clip_out = render_range_out - render_range_in
+    else:
+        # Render full media into slowmo clip.
+        render_range_in = 0
+        render_range_out = producer_length
+        new_clip_in = int(float(media_file_length - orig_media_out - 1) * (1.0 / speed))
+        new_clip_out = int(float(media_file_length - orig_media_out + (orig_media_out - orig_media_in) + 1) * (1.0 / speed)) + int(1.0 / speed)
+
+    if render_range_in < 0:
+        render_range_in = 0
+    if render_range_out > producer_length:
+        render_range_out = producer_length
+
+    return (render_range_in, render_range_out, new_clip_in, new_clip_out)
 
 def render_reverse_clip(media_file, default_range_render=False):
     rendergui.show_reverse_dialog(media_file, default_range_render, _render_reverse_clip_dialog_callback)
