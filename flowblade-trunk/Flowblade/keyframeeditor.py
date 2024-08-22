@@ -1903,7 +1903,13 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def next_frame_pressed(self):
         self.clip_editor.move_clip_frame(1)
         self.update_editor_view()
-
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+    
+    def move_clip_frame(self, delta):
+        self.clip_editor.move_clip_frame(delta)
+        self.update_editor_view()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+    
     def move_kf_next_frame_pressed(self):
         current_frame = self.clip_editor.get_active_kf_frame()
         self.clip_editor.active_kf_pos_entered(current_frame + 1)
@@ -1933,16 +1939,22 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         else:
             delta = 1
         
-        if SHIFT_DOWN == False: # Move 
-            self.geom_kf_edit.handle_arrow_edit(keyval, delta)
-        else: # Scale
-            self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
-            
-        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
-        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
-        self.update_property_value()
-        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-        
+        if self.geom_kf_edit.widget.has_focus() == True:    
+            if SHIFT_DOWN == False: # Move 
+                self.geom_kf_edit.handle_arrow_edit(keyval, delta)
+            else: # Scale
+                self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
+                
+            self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
+            self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+            self.update_property_value()
+            self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        else:
+            if keyval == Gdk.KEY_Left:
+                self.move_clip_frame(-delta)
+            elif keyval == Gdk.KEY_Right:
+                self.move_clip_frame(delta)
+
     def view_size_changed(self, selected_index):
         y_fract = GEOM_EDITOR_SIZES[selected_index]
         self.geom_kf_edit.set_view_size(y_fract)
