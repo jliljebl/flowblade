@@ -81,9 +81,9 @@ def set_track_counts(project):
     VIDEO_TRACKS_COUNT = AUDIO_TRACKS_COUNT + 1
 
 # Output modes. These correspond to option indexes in guicomponents.get_monitor_view_select_combo()
-PROGRAM_OUT_MODE = 0
-VECTORSCOPE_MODE = 1
-RGB_PARADE_MODE = 2
+PROGRAM_OUT_MODE = appconsts.PROGRAM_OUT_MODE
+VECTORSCOPE_MODE = appconsts.VECTORSCOPE_MODE
+RGB_PARADE_MODE = appconsts.RGB_PARADE_MODE
 
 # Black clip
 black_track_clip = None

@@ -104,5 +104,8 @@
     <event code='tline_page_up' name='Timeline Vertical Page Up'>page_up</event>
     <event code='tline_page_down' name='Timeline Vertical Page Down'>page_down</event>
     <event code='move_media' name='Move Selected Media items' modifiers='ALT'>m</event>
+    <event code='monitor_show_video' name='Monitor Show Video' modifiers='ALT'>1</event>
+    <event code='monitor_show_scope' name='Monitor Show Vectorscope' modifiers='ALT'>2</event>
+    <event code='monitor_show_rgb' name='Monitor Show RGB Parade' modifiers='ALT'>3</event>
   </shortcuts>
 </flowblade>

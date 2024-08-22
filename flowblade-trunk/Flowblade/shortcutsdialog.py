@@ -252,6 +252,12 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     roto_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
     roto = guiutils.get_named_frame(_("RotoMask Editor"), roto_vbox)
 
+    monitor_vbox = Gtk.VBox()
+    monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_video"), False, False, 0)
+    monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_scope"), False, False, 0)
+    monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_rgb"), False, False, 0)
+    monitor = guiutils.get_named_frame(_("Monitor View"), monitor_vbox)
+
     quick_effects_panel = shortcutsquickeffects.get_shortcuts_panel()
  
     panel = Gtk.VBox()
@@ -276,6 +282,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     panel.pack_start(geom, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(roto, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(monitor, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(quick_effects_panel, False, False, 0)
     

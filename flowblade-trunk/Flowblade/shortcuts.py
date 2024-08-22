@@ -418,7 +418,10 @@ def _set_keyboard_action_names():
     _keyboard_action_names['tline_page_up'] = _('Timeline Vertical Page Up')
     _keyboard_action_names['tline_page_down'] = _('Timeline Vertical Page Down')
     _keyboard_action_names['move_media'] = _('Move Selected Media Items')
-    
+    _keyboard_action_names['monitor_show_video'] = _('Show Video')
+    _keyboard_action_names['monitor_show_scope'] = _('Show Vectorscope')
+    _keyboard_action_names['monitor_show_rgb'] = _('Show RGB Parade')
+
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate

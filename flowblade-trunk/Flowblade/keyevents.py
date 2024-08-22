@@ -135,7 +135,7 @@ def key_down(widget, event):
             # by stopping signal.
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
-
+    
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events.
     was_handled = _handle_extended_monitor_focus_events(event)
@@ -305,6 +305,15 @@ def _handle_tline_key_event(event):
         return True
     if action == 'trim_end':
         tlineaction.trim_end_pressed()
+        return True
+    if action == 'monitor_show_video':
+        tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
+        return True
+    if action == 'monitor_show_scope':
+        tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE)
+        return True
+    if action == 'monitor_show_rgb':
+        tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
         return True
 
     # Key bindings for keyboard trimming
@@ -584,6 +593,15 @@ def _handle_configurable_global_events(event):
             return True
     if action == "move_media":
         gui.media_list_view.init_move()
+    if action == 'monitor_show_video':
+        tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
+        return True
+    if action == 'monitor_show_scope':
+        tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE)
+        return True
+    if action == 'monitor_show_rgb':
+        tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
+        return True
 
     return False
     
