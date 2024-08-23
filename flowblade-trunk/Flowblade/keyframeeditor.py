@@ -1510,15 +1510,26 @@ class GeometryEditor(AbstractKeyFrameEditor):
             delta = 10
         else:
             delta = 1
-        
-        if SHIFT_DOWN == False: # Move 
-            self.geom_kf_edit.handle_arrow_edit(keyval, delta)
-        else: # Scale
-            self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
-            
-        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
+
+        if self.geom_kf_edit.widget.has_focus() == True:    
+            if SHIFT_DOWN == False: # Move 
+                self.geom_kf_edit.handle_arrow_edit(keyval, delta)
+            else: # Scale
+                self.geom_kf_edit.handle_arrow_scale_edit(keyval, delta)
+                
+            self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
+            self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+            self.update_property_value()
+        else:
+            if keyval == Gdk.KEY_Left:
+                self.move_clip_frame(-delta)
+            elif keyval == Gdk.KEY_Right:
+                self.move_clip_frame(delta)
+
+    def move_clip_frame(self, delta):
+        self.clip_editor.move_clip_frame(delta)
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
-        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         
     def update_request_from_geom_editor(self): # callback from geom_kf_edit
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
