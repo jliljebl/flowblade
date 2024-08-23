@@ -307,6 +307,7 @@ def load_filters_translations():
     filter_names["RotoMask"] = _("RotoMask")
     filter_names["Lens Defisher"] = _("Lens Defisher")
     filter_names["Position Scale"] = _("Position Scale")
+    filter_names["Position Scale Rotate"] = _("Position Scale Rotate")
     filter_names["Wipe"] = _("Wipe")
     filter_names["Mask - Begin"] = "\u21c9" + " " + _("Mask - Begin")
     filter_names["Mask - End"] = "\u21c7" + " "  + _("Mask - End")
