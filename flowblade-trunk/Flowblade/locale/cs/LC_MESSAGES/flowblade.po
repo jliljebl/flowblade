@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-23 10:03+0300\n"
+"POT-Creation-Date: 2024-08-23 15:04+0300\n"
 "PO-Revision-Date: 2021-02-28 16:18+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -646,7 +646,7 @@ msgstr "Smazat značku záběru v poloze ukazatele přehrávání"
 msgid "Split to new Sequence at Playhead Position"
 msgstr "Rozdělit do nového úryvku v poloze ukazatele přehrávání"
 
-#: editorwindow.py:821 translations.py:568 guipopoverclip.py:338
+#: editorwindow.py:821 translations.py:569 guipopoverclip.py:338
 #: guipopoverclip.py:506 guipopoverclip.py:624
 msgid "Lift"
 msgstr "Vyzvednout"
@@ -2727,7 +2727,7 @@ msgstr ""
 ".\n"
 "Seřízení můžete provést jen se záběry, které jsou na stopě V1."
 
-#: translations.py:152 translations.py:475
+#: translations.py:152 translations.py:476
 msgid "Color"
 msgstr "Barva"
 
@@ -2743,17 +2743,17 @@ msgstr "Zvuk"
 msgid "Audio Filter"
 msgstr "Zvukový filtr"
 
-#: translations.py:156 translations.py:223 translations.py:447
-#: translations.py:516
+#: translations.py:156 translations.py:223 translations.py:448
+#: translations.py:517
 msgid "Blur"
 msgstr "Rozostření"
 
-#: translations.py:157 translations.py:596 propertyeditorbuilder.py:877
+#: translations.py:157 translations.py:597 propertyeditorbuilder.py:877
 #: propertyeditorbuilder.py:980
 msgid "Distort"
 msgstr "Zkreslení"
 
-#: translations.py:158 translations.py:177 translations.py:798
+#: translations.py:158 translations.py:177 translations.py:799
 msgid "Alpha"
 msgstr "Průhlednost"
 
@@ -2765,7 +2765,7 @@ msgstr "Pohyb"
 msgid "Transform"
 msgstr "Proměna"
 
-#: translations.py:161 translations.py:533
+#: translations.py:161 translations.py:534
 msgid "Edge"
 msgstr "Okraj"
 
@@ -2777,7 +2777,7 @@ msgstr "Oprava"
 msgid "Artistic"
 msgstr "Umění"
 
-#: translations.py:164 translations.py:615
+#: translations.py:164 translations.py:616
 msgid "Fade"
 msgstr "Prolínání"
 
@@ -2979,20 +2979,20 @@ msgstr "Odstíny šedi"
 msgid "Grayscale Luminance"
 msgstr "Odstíny šedi"
 
-#: translations.py:228 translations.py:462
+#: translations.py:228 translations.py:463
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: translations.py:229 translations.py:463 mlttransitions.py:162
+#: translations.py:229 translations.py:464 mlttransitions.py:162
 msgid "Saturation"
 msgstr "Sytost"
 
-#: translations.py:230 translations.py:446 translations.py:491
-#: translations.py:515 translations.py:598 translations.py:602
+#: translations.py:230 translations.py:447 translations.py:492
+#: translations.py:516 translations.py:599 translations.py:603
 msgid "Invert"
 msgstr "Obrácení"
 
-#: translations.py:231 translations.py:464 mlttransitions.py:158
+#: translations.py:231 translations.py:465 mlttransitions.py:158
 msgid "Hue"
 msgstr "Odstín"
 
@@ -3000,7 +3000,7 @@ msgstr "Odstín"
 msgid "Brightness"
 msgstr "Jas"
 
-#: translations.py:233 translations.py:762
+#: translations.py:233 translations.py:763
 msgid "Sepia"
 msgstr "Sépie"
 
@@ -3012,7 +3012,7 @@ msgstr "Tónování"
 msgid "White Balance"
 msgstr "Vyvážení bílé"
 
-#: translations.py:236 translations.py:538
+#: translations.py:236 translations.py:539
 msgid "Levels"
 msgstr "Úrovně"
 
@@ -3044,7 +3044,7 @@ msgstr "Základní barvy"
 msgid "Color Distance"
 msgstr "Barevná odchylka"
 
-#: translations.py:245 translations.py:477 translations.py:482
+#: translations.py:245 translations.py:478 translations.py:483
 msgid "Threshold"
 msgstr "Prahová hodnota"
 
@@ -3056,7 +3056,7 @@ msgstr "Vlnění"
 msgid "Lens Correction"
 msgstr "Oprava čoček"
 
-#: translations.py:249 translations.py:489
+#: translations.py:249 translations.py:490
 msgid "Flip"
 msgstr "Převrácení"
 
@@ -3080,7 +3080,7 @@ msgstr "Sobel"
 msgid "Denoise"
 msgstr "Odstranění šumu"
 
-#: translations.py:257 translations.py:561
+#: translations.py:257 translations.py:562
 msgid "Sharpness"
 msgstr "Ostrost"
 
@@ -3104,7 +3104,7 @@ msgstr "Nervozita"
 msgid "Freeze"
 msgstr "Zmrazení"
 
-#: translations.py:265 translations.py:485
+#: translations.py:265 translations.py:486
 msgid "Rotate"
 msgstr "Otočení"
 
@@ -3269,2068 +3269,2073 @@ msgstr "Odstranění rybího oka z objektivu"
 msgid "Position Scale"
 msgstr "Měřítko polohy"
 
-#: translations.py:310 mlttransitions.py:186
+#: translations.py:310
+#, fuzzy
+msgid "Position Scale Rotate"
+msgstr "Měřítko polohy"
+
+#: translations.py:311 mlttransitions.py:186
 msgid "Wipe"
 msgstr "Stírání"
 
-#: translations.py:311
+#: translations.py:312
 msgid "Mask - Begin"
 msgstr "Maska - Začátek"
 
-#: translations.py:312
+#: translations.py:313
 msgid "Mask - End"
 msgstr "Maska - Konec"
 
-#: translations.py:313 translations.py:517 translations.py:593
+#: translations.py:314 translations.py:518 translations.py:594
 msgid "Opacity"
 msgstr "Neprůhlednost"
 
-#: translations.py:314
+#: translations.py:315
 msgid "Fade In"
 msgstr "Postupný náběh"
 
-#: translations.py:315
+#: translations.py:316
 msgid "Fade Out"
 msgstr "Do ztracena"
 
-#: translations.py:316
+#: translations.py:317
 msgid "Fade In / Fade Out"
 msgstr "Postupné zesílení/zeslabení (do ztracena)"
 
-#: translations.py:317 translations.py:844 translations.py:848
+#: translations.py:318 translations.py:845 translations.py:849
 msgid "Lines"
 msgstr "Čáry"
 
-#: translations.py:318
+#: translations.py:319
 msgid "Dust"
 msgstr "Prach"
 
-#: translations.py:319
+#: translations.py:320
 msgid "Pan Left Channel"
 msgstr "Posunout levý kanál"
 
-#: translations.py:320
+#: translations.py:321
 msgid "Pan Right Channel"
 msgstr "Posunout pravý kanál"
 
-#: translations.py:321
+#: translations.py:322
 #, fuzzy
 msgid "RGB Shift"
 msgstr "Shift"
 
-#: translations.py:322
+#: translations.py:323
 msgid "Choppy"
 msgstr ""
 
-#: translations.py:323
+#: translations.py:324
 msgid "Glitch"
 msgstr ""
 
-#: translations.py:324
+#: translations.py:325
 #, fuzzy
 msgid "Trails"
 msgstr "Náhledy"
 
-#: translations.py:325 translations.py:607
+#: translations.py:326 translations.py:608
 msgid "Blend Mode"
 msgstr "Režim míchání"
 
-#: translations.py:326
+#: translations.py:327
 #, fuzzy
 msgid "Unpremultiply"
 msgstr "Násobit"
 
-#: translations.py:327
+#: translations.py:328
 #, fuzzy
 msgid "Fade To Black In / Out"
 msgstr "Postupné zesílení/zeslabení"
 
-#: translations.py:328
+#: translations.py:329
 msgid "Elastic"
 msgstr ""
 
-#: translations.py:329
+#: translations.py:330
 msgid "Rubberband Octave Shift"
 msgstr ""
 
-#: translations.py:330
+#: translations.py:331
 msgid "Rubberband Pitch Scale"
 msgstr ""
 
-#: translations.py:331
+#: translations.py:332
 #, fuzzy
 msgid "Image Luma"
 msgstr "Obrázek"
 
-#: translations.py:332
+#: translations.py:333
 #, fuzzy
 msgid "Image Alpha"
 msgstr "Typ obrázku:"
 
-#: translations.py:333
+#: translations.py:334
 msgid "Stabilize"
 msgstr ""
 
-#: translations.py:334
+#: translations.py:335
 msgid "Motion Tracking Apply"
 msgstr ""
 
-#: translations.py:335
+#: translations.py:336
 msgid "Motion Tracking Create"
 msgstr ""
 
-#: translations.py:336
+#: translations.py:337
 msgid "Alpha Shape Motion Tracked"
 msgstr ""
 
-#: translations.py:340 translations.py:492
+#: translations.py:341 translations.py:493
 msgid "Position"
 msgstr "Poloha"
 
-#: translations.py:341
+#: translations.py:342
 msgid "Grad width"
 msgstr "Šířka přechodu"
 
-#: translations.py:342 translations.py:354 translations.py:486
+#: translations.py:343 translations.py:355 translations.py:487
 msgid "Tilt"
 msgstr "Naklonění"
 
-#: translations.py:343 translations.py:746
+#: translations.py:344 translations.py:747
 msgid "Min"
 msgstr "Nejméně"
 
-#: translations.py:344 translations.py:745
+#: translations.py:345 translations.py:746
 msgid "Max"
 msgstr "Nejvíce"
 
-#: translations.py:345 translations.py:511 translations.py:862
+#: translations.py:346 translations.py:512 translations.py:863
 msgid "Left"
 msgstr "Vlevo"
 
-#: translations.py:346 translations.py:512 translations.py:863
+#: translations.py:347 translations.py:513 translations.py:864
 msgid "Right"
 msgstr "Vpravo"
 
-#: translations.py:347 translations.py:513 editorlayout.py:516
+#: translations.py:348 translations.py:514 editorlayout.py:516
 msgid "Top"
 msgstr "Nahoře"
 
-#: translations.py:348 translations.py:514 editorlayout.py:519
+#: translations.py:349 translations.py:515 editorlayout.py:519
 msgid "Bottom"
 msgstr "Dole"
 
-#: translations.py:349
+#: translations.py:350
 msgid "Shape"
 msgstr "Tvar"
 
-#: translations.py:350
+#: translations.py:351
 msgid "Pos X"
 msgstr "Poloha X"
 
-#: translations.py:351
+#: translations.py:352
 msgid "Pos Y"
 msgstr "Poloha Y"
 
-#: translations.py:352
+#: translations.py:353
 msgid "Size X"
 msgstr "Velikost X"
 
-#: translations.py:353
+#: translations.py:354
 msgid "Size Y"
 msgstr "Velikost Y"
 
-#: translations.py:355
+#: translations.py:356
 msgid "Trans. Width"
 msgstr "Šířka přechodu"
 
-#: translations.py:356
+#: translations.py:357
 msgid "Volume dB"
 msgstr "Hlasitost dB"
 
-#: translations.py:357 translations.py:358
+#: translations.py:358 translations.py:359
 msgid "Left/Right"
 msgstr "Zleva/Zprava"
 
-#: translations.py:359
+#: translations.py:360
 msgid "Dry/Wet"
 msgstr "Poměr směšování mezi původním (nefiltrovaným)/filtrovaným signálem"
 
-#: translations.py:360
+#: translations.py:361
 msgid "Pitch Shift"
 msgstr "Posun výšky tónu"
 
-#: translations.py:361
+#: translations.py:362
 msgid "Buffer Size"
 msgstr "Velikost vyrovnávací paměti"
 
-#: translations.py:362
+#: translations.py:363
 msgid "Decay Time(samples)"
 msgstr "Čas doběhu impulsu (vzorky)"
 
-#: translations.py:363
+#: translations.py:364
 msgid "Knee Point(dB)"
 msgstr "Bod kolene (dB)"
 
-#: translations.py:364
+#: translations.py:365
 msgid "Frequency shift"
 msgstr "Posun kmitočtu"
 
-#: translations.py:365
+#: translations.py:366
 msgid "Low Gain(dB)"
 msgstr "Nízké zesílení (dB)"
 
-#: translations.py:366
+#: translations.py:367
 msgid "Mid Gain(dB)"
 msgstr "Střední zesílení (dB)"
 
-#: translations.py:367
+#: translations.py:368
 msgid "High Gain(dB)"
 msgstr "Vysoké zesílení (dB)"
 
-#: translations.py:368
+#: translations.py:369
 msgid "Oscillation period(s)"
 msgstr "Doba kolísání (s)"
 
-#: translations.py:369
+#: translations.py:370
 msgid "Oscillation depth(ms)"
 msgstr "Hloubka kolísání (ms)"
 
-#: translations.py:370
+#: translations.py:371
 msgid "Feedback%"
 msgstr "Zpětná vazba %"
 
-#: translations.py:371
+#: translations.py:372
 msgid "Random seed"
 msgstr "Náhodné zrnko"
 
-#: translations.py:372
+#: translations.py:373
 msgid "Input Gain(dB)"
 msgstr "Vstupní zesílení (dB)"
 
-#: translations.py:373
+#: translations.py:374
 msgid "Feedback(%)"
 msgstr "Zpětná vazba (%)"
 
-#: translations.py:374
+#: translations.py:375
 msgid "Number of taps"
 msgstr "Počet odboček"
 
-#: translations.py:375
+#: translations.py:376
 msgid "First Delay(s)"
 msgstr "První zpoždění (s)"
 
-#: translations.py:376
+#: translations.py:377
 msgid "Delay Range(s)"
 msgstr "Rozsah zpoždění (s)"
 
-#: translations.py:377
+#: translations.py:378
 msgid "Delay Change"
 msgstr "Změna zpoždění"
 
-#: translations.py:378
+#: translations.py:379
 msgid "Delay Random(%)"
 msgstr "Náhodné zpoždění (%)"
 
-#: translations.py:379
+#: translations.py:380
 msgid "Amplitude Change"
 msgstr "Změna rozkmitu"
 
-#: translations.py:380
+#: translations.py:381
 msgid "Amplitude Random(%)"
 msgstr "Náhodný rozkmit (%)"
 
-#: translations.py:381 translations.py:430 translations.py:469
-#: translations.py:498
+#: translations.py:382 translations.py:431 translations.py:470
+#: translations.py:499
 msgid "Amount"
 msgstr "Množství"
 
-#: translations.py:382
+#: translations.py:383
 msgid "Drive"
 msgstr "Odpálení"
 
-#: translations.py:383
+#: translations.py:384
 msgid "Skew"
 msgstr "Vychýlení z přímého směru"
 
-#: translations.py:384 translations.py:386
+#: translations.py:385 translations.py:387
 msgid "Cutoff Frequency(Hz)"
 msgstr "Kmitočet ukončení (Hz)"
 
-#: translations.py:385 translations.py:387
+#: translations.py:386 translations.py:388
 msgid "Resonance"
 msgstr "Rezonance"
 
-#: translations.py:388
+#: translations.py:389
 msgid "Passes"
 msgstr "Průchody"
 
-#: translations.py:389
+#: translations.py:390
 msgid "Error Rate"
 msgstr "Chybovost"
 
-#: translations.py:390
+#: translations.py:391
 msgid "Roomsize"
 msgstr "Velikost prostoru"
 
-#: translations.py:391
+#: translations.py:392
 msgid "Reverb time(s)"
 msgstr "Délka dozvuku (s)"
 
-#: translations.py:392 translations.py:424
+#: translations.py:393 translations.py:425
 msgid "Damping"
 msgstr "Tlumení"
 
-#: translations.py:393
+#: translations.py:394
 #, fuzzy
 msgid "Input bandwidth"
 msgstr "Vstupní šířka pásma"
 
-#: translations.py:394
+#: translations.py:395
 msgid "Dry signal level(dB)"
 msgstr "Úroveň původního (nefiltrovaného) signálu (dB)"
 
-#: translations.py:395
+#: translations.py:396
 msgid "Early reflection level(dB)"
 msgstr "Úroveň odrazu na začátku (dB)"
 
-#: translations.py:396
+#: translations.py:397
 msgid "Tail level(dB)"
 msgstr "Úroveň konce (dB)"
 
-#: translations.py:397
+#: translations.py:398
 msgid "LF keyfilter(Hz)"
 msgstr "Nízkokmitočtový klíčový filtr (Hz)"
 
-#: translations.py:398
+#: translations.py:399
 msgid "HF keyfilter(Hz)"
 msgstr "Vysokokmitočtový klíčový filtr (Hz)"
 
-#: translations.py:399
+#: translations.py:400
 msgid "Threshold(dB)"
 msgstr "Práh dB)"
 
-#: translations.py:400
+#: translations.py:401
 msgid "Attack(ms)"
 msgstr "Náběh (ms)"
 
-#: translations.py:401
+#: translations.py:402
 msgid "Hold(ms)"
 msgstr "Držení (ms)"
 
-#: translations.py:402
+#: translations.py:403
 msgid "Decay(ms)"
 msgstr "Doběh impulsu (ms)"
 
-#: translations.py:403
+#: translations.py:404
 msgid "Range(dB)"
 msgstr "Rozsah (dB)"
 
-#: translations.py:404
+#: translations.py:405
 msgid "Center Frequency(Hz)"
 msgstr "Středový kmitočet (Hz)"
 
-#: translations.py:405
+#: translations.py:406
 msgid "Bandwidth(Hz)"
 msgstr "Šířka pásma (Hz)"
 
-#: translations.py:406
+#: translations.py:407
 msgid "Stages"
 msgstr "Stupně"
 
-#: translations.py:407
+#: translations.py:408
 msgid "Pitch-coefficient"
 msgstr "Koeficient výšky tónu"
 
-#: translations.py:408
+#: translations.py:409
 msgid "50Hz gain"
 msgstr "Zesílení 50 Hz"
 
-#: translations.py:409
+#: translations.py:410
 msgid "100Hz gain"
 msgstr "Zesílení 100 Hz"
 
-#: translations.py:410
+#: translations.py:411
 msgid "156Hz gain"
 msgstr "Zesílení 156 Hz"
 
-#: translations.py:411
+#: translations.py:412
 msgid "220Hz gain"
 msgstr "Zesílení 220 Hz"
 
-#: translations.py:412
+#: translations.py:413
 msgid "311Hz gain"
 msgstr "Zesílení 311 Hz"
 
-#: translations.py:413
+#: translations.py:414
 msgid "440Hz gain"
 msgstr "Zesílení 440 Hz"
 
-#: translations.py:414
+#: translations.py:415
 msgid "622Hz gain"
 msgstr "Zesílení 622 Hz"
 
-#: translations.py:415
+#: translations.py:416
 msgid "880Hz gain"
 msgstr "Zesílení 880 Hz"
 
-#: translations.py:416
+#: translations.py:417
 msgid "1250Hz gain"
 msgstr "Zesílení 1250 Hz"
 
-#: translations.py:417
+#: translations.py:418
 msgid "1750Hz gain"
 msgstr "Zesílení 1750 Hz"
 
-#: translations.py:418
+#: translations.py:419
 msgid "2500Hz gain"
 msgstr "Zesílení 2500 Hz"
 
-#: translations.py:419
+#: translations.py:420
 msgid "3500Hz gain"
 msgstr "Zesílení 3500 Hz"
 
-#: translations.py:420
+#: translations.py:421
 msgid "5000Hz gain"
 msgstr "Zesílení 5000 Hz"
 
-#: translations.py:421
+#: translations.py:422
 msgid "100000Hz gain"
 msgstr "Zesílení 100000 Hz"
 
-#: translations.py:422
+#: translations.py:423
 msgid "200000Hz gain"
 msgstr "Zesílení 200000 Hz"
 
-#: translations.py:423
+#: translations.py:424
 msgid "Reverb time"
 msgstr "Délka dozvuku"
 
-#: translations.py:425 translations.py:427
+#: translations.py:426 translations.py:428
 msgid "Dry/Wet mix"
 msgstr "Poměr směšování mezi původním (nefiltrovaným)/filtrovaným signálem"
 
-#: translations.py:426
+#: translations.py:427
 msgid "Effect cutoff(Hz)"
 msgstr "Ukončení efektu (Hz)"
 
-#: translations.py:428
+#: translations.py:429
 msgid "Rate"
 msgstr "Míra"
 
-#: translations.py:429
+#: translations.py:430
 msgid "Sift"
 msgstr "Prosévání"
 
-#: translations.py:431
+#: translations.py:432
 msgid "Year"
 msgstr "Rok"
 
-#: translations.py:432
+#: translations.py:433
 msgid "RPM"
 msgstr "RPM"
 
-#: translations.py:433
+#: translations.py:434
 msgid "Surface warping"
 msgstr "Ohýbání povrchu"
 
-#: translations.py:434
+#: translations.py:435
 msgid "Cracle"
 msgstr "Praskání"
 
-#: translations.py:435
+#: translations.py:436
 msgid "Wear"
 msgstr "Opotřebení"
 
-#: translations.py:436
+#: translations.py:437
 msgid "Number of voices"
 msgstr "Počet hlasů"
 
-#: translations.py:437
+#: translations.py:438
 msgid "Delay base(ms)"
 msgstr "Výchozí bod zpoždění (ms)"
 
-#: translations.py:438
+#: translations.py:439
 msgid "Voice separation(ms)"
 msgstr "Oddělení hlasů (ms)"
 
-#: translations.py:439
+#: translations.py:440
 msgid "Detune(%)"
 msgstr "Rozladění (%)"
 
-#: translations.py:440
+#: translations.py:441
 msgid "Oscillation frequency(Hz)"
 msgstr "Kmitočet kmitání (Hz)"
 
-#: translations.py:441
+#: translations.py:442
 msgid "Output attenuation(dB)"
 msgstr "Výstupní zeslabování (dB)"
 
-#: translations.py:442
+#: translations.py:443
 msgid "X Scatter"
 msgstr "Vodorovný rozptyl"
 
-#: translations.py:443
+#: translations.py:444
 msgid "Y Scatter"
 msgstr "Svislý rozptyl"
 
-#: translations.py:444
+#: translations.py:445
 msgid "Scale"
 msgstr "Měřítko"
 
-#: translations.py:445
+#: translations.py:446
 msgid "Mix"
 msgstr "Směs"
 
-#: translations.py:448
+#: translations.py:449
 msgid "Delta"
 msgstr "Delta"
 
-#: translations.py:449
+#: translations.py:450
 msgid "Duration"
 msgstr "Doba trvání"
 
-#: translations.py:450
+#: translations.py:451
 msgid "Bright. up"
 msgstr "Jas nahoru"
 
-#: translations.py:451
+#: translations.py:452
 msgid "Bright. down"
 msgstr "Jas dolů"
 
-#: translations.py:452
+#: translations.py:453
 msgid "Bright. dur."
 msgstr "Doba trvání jasu"
 
-#: translations.py:453
+#: translations.py:454
 msgid "Develop up"
 msgstr "Vyvolání nahoru"
 
-#: translations.py:454
+#: translations.py:455
 msgid "Develop down"
 msgstr "Vyvolání dolů"
 
-#: translations.py:455
+#: translations.py:456
 msgid "Develop dur."
 msgstr "Doba trvání vyvolání"
 
-#: translations.py:456
+#: translations.py:457
 msgid "Triplevel"
 msgstr "Úroveň nakopnutí"
 
-#: translations.py:457
+#: translations.py:458
 msgid "Difference Space"
 msgstr "Rozdílový prostor"
 
-#: translations.py:458
+#: translations.py:459
 #, fuzzy
 msgid "Block Width"
 msgstr "Šířka bloku"
 
-#: translations.py:459
+#: translations.py:460
 #, fuzzy
 msgid "Block Height"
 msgstr "Výška bloku"
 
-#: translations.py:460
+#: translations.py:461
 msgid "Size"
 msgstr "Velikost"
 
-#: translations.py:461 patternproducer.py:71
+#: translations.py:462 patternproducer.py:71
 msgid "Noise"
 msgstr "Šum"
 
-#: translations.py:465
+#: translations.py:466
 msgid "U"
 msgstr "U"
 
-#: translations.py:466
+#: translations.py:467
 msgid "V"
 msgstr "V"
 
-#: translations.py:467
+#: translations.py:468
 msgid "Black"
 msgstr "Černá"
 
-#: translations.py:468
+#: translations.py:469
 msgid "White"
 msgstr "Bílá"
 
-#: translations.py:470
+#: translations.py:471
 msgid "Neutral Color"
 msgstr "Neutrální barva"
 
-#: translations.py:471
+#: translations.py:472
 msgid "Input"
 msgstr "Vstup"
 
-#: translations.py:472
+#: translations.py:473
 msgid "Gamma"
 msgstr "Gama"
 
-#: translations.py:473
+#: translations.py:474
 msgid "Num"
 msgstr "Číslo"
 
-#: translations.py:474
+#: translations.py:475
 msgid "Dist. weight"
 msgstr "Hodnota vzdálenosti"
 
-#: translations.py:476
+#: translations.py:477
 msgid "Variance"
 msgstr "Rozptyl"
 
-#: translations.py:478
+#: translations.py:479
 msgid "Red Saturation"
 msgstr "Nasycení červenou"
 
-#: translations.py:479
+#: translations.py:480
 msgid "Yellow Saturation"
 msgstr "Nasycení žlutou"
 
-#: translations.py:480
+#: translations.py:481
 msgid "Factor"
 msgstr "Faktor"
 
-#: translations.py:481
+#: translations.py:482
 msgid "Source color"
 msgstr "Výchozí barva"
 
-#: translations.py:483
+#: translations.py:484
 msgid "Amplitude"
 msgstr "Rozkmit"
 
-#: translations.py:484
+#: translations.py:485
 msgid "Frequency"
 msgstr "Kmitočet"
 
-#: translations.py:487
+#: translations.py:488
 msgid "Center Correct"
 msgstr "Oprava středu"
 
-#: translations.py:488
+#: translations.py:489
 msgid "Edges Correct"
 msgstr "Oprava okrajů"
 
-#: translations.py:490
+#: translations.py:491
 msgid "Axis"
 msgstr "Osa"
 
-#: translations.py:493
+#: translations.py:494
 msgid "Edge Lightning"
 msgstr "Blýskání okraje"
 
-#: translations.py:494
+#: translations.py:495
 msgid "Edge Brightness"
 msgstr "Jas okraje"
 
-#: translations.py:495
+#: translations.py:496
 msgid "Non-Edge Brightness"
 msgstr "Jas ne-okraje"
 
-#: translations.py:496
+#: translations.py:497
 msgid "Spatial"
 msgstr "Prostorový"
 
-#: translations.py:497
+#: translations.py:498
 msgid "Temporal"
 msgstr "Časový"
 
-#: translations.py:499
+#: translations.py:500
 msgid "Border width"
 msgstr "Šířka čáry"
 
-#: translations.py:500
+#: translations.py:501
 msgid "Phase Incr."
 msgstr "Přírůstek fáze"
 
-#: translations.py:501
+#: translations.py:502
 msgid "Zoom"
 msgstr "Zvětšení"
 
-#: translations.py:502
+#: translations.py:503
 msgid "Freeze Frame"
 msgstr "Zmrazit snímek"
 
-#: translations.py:503
+#: translations.py:504
 msgid "Freeze After"
 msgstr "Zmrazit po"
 
-#: translations.py:504
+#: translations.py:505
 msgid "Freeze Before"
 msgstr "Zmrazit před"
 
-#: translations.py:505
+#: translations.py:506
 msgid "Angle"
 msgstr "Úhel"
 
-#: translations.py:506 translations.py:509 translations.py:510
+#: translations.py:507 translations.py:510 translations.py:511
 msgid "transition.geometry"
 msgstr "Rozložení přechodu"
 
-#: translations.py:507 translations.py:594
+#: translations.py:508 translations.py:595
 msgid "Shear X"
 msgstr "Zkosení X"
 
-#: translations.py:508 translations.py:595
+#: translations.py:509 translations.py:596
 msgid "Shear Y"
 msgstr "Zkosení Y"
 
-#: translations.py:518
+#: translations.py:519
 msgid "Rotate X"
 msgstr "Otočení X"
 
-#: translations.py:519
+#: translations.py:520
 msgid "Rotate Y"
 msgstr "Otočení Y"
 
-#: translations.py:520
+#: translations.py:521
 msgid "Rotate Z"
 msgstr "Rotovat přes Z"
 
-#: translations.py:521
+#: translations.py:522
 msgid "Edge Mode"
 msgstr "Režim okraje"
 
-#: translations.py:522
+#: translations.py:523
 msgid "Sel. Space"
 msgstr "Prostor výběru"
 
-#: translations.py:523
+#: translations.py:524
 msgid "Operation"
 msgstr "Operace"
 
-#: translations.py:524 translations.py:738
+#: translations.py:525 translations.py:739
 msgid "Hard"
 msgstr "Tvrdý"
 
-#: translations.py:525
+#: translations.py:526
 msgid "Selection subspace"
 msgstr "Podprostor výběru"
 
-#: translations.py:526
+#: translations.py:527
 msgid "R/A/Hue"
 msgstr "R/A/barevný tón"
 
-#: translations.py:527
+#: translations.py:528
 msgid "G/B/Chroma"
 msgstr "G/B/svítivost"
 
-#: translations.py:528
+#: translations.py:529
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:529
+#: translations.py:530
 #, fuzzy
 msgid "Suppress"
 msgstr "Potlačení"
 
-#: translations.py:530 translations.py:768 tools/titler.py:505
+#: translations.py:531 translations.py:769 tools/titler.py:505
 #: tools/simpleeditors.py:669
 msgid "Horizontal"
 msgstr "Vodorovné"
 
-#: translations.py:531 translations.py:769 tools/titler.py:504
+#: translations.py:532 translations.py:770 tools/titler.py:504
 #: tools/simpleeditors.py:668
 msgid "Vertical"
 msgstr "Svislé"
 
-#: translations.py:532
+#: translations.py:533
 msgid "Type"
 msgstr "Typ"
 
-#: translations.py:534
+#: translations.py:535
 msgid "Dot Radius"
 msgstr "Poloměr tečky"
 
-#: translations.py:535
+#: translations.py:536
 msgid "Cyan Angle"
 msgstr "Úhel modrozelené"
 
-#: translations.py:536
+#: translations.py:537
 msgid "Magenta Angle"
 msgstr "Úhel purpurové"
 
-#: translations.py:537
+#: translations.py:538
 msgid "Yellow Angle"
 msgstr "Úhel žluté"
 
-#: translations.py:539
+#: translations.py:540
 msgid "Matrix Type"
 msgstr "Typ prostředí"
 
-#: translations.py:540
+#: translations.py:541
 msgid "Aspect"
 msgstr "Poměr"
 
-#: translations.py:541
+#: translations.py:542
 msgid "Center Size"
 msgstr "Velikost středu"
 
-#: translations.py:542
+#: translations.py:543
 msgid "Azimuth"
 msgstr "Azimut"
 
-#: translations.py:543 translations.py:548
+#: translations.py:544 translations.py:549
 msgid "Lightness"
 msgstr "Světlost"
 
-#: translations.py:544
+#: translations.py:545
 msgid "Bump Height"
 msgstr "Výška hrbolu"
 
-#: translations.py:545
+#: translations.py:546
 msgid "Gray"
 msgstr "Šedá"
 
-#: translations.py:546
+#: translations.py:547
 msgid "Split Preview"
 msgstr "Rozdělit náhled"
 
-#: translations.py:547
+#: translations.py:548
 msgid "Source on Left"
 msgstr "Zdroj nalevo"
 
-#: translations.py:549
+#: translations.py:550
 msgid "Channel"
 msgstr "Kanál"
 
-#: translations.py:550
+#: translations.py:551
 msgid "Input black level"
 msgstr "Vstupní úroveň černé"
 
-#: translations.py:551
+#: translations.py:552
 msgid "Input white level"
 msgstr "Vstupní úroveň bílé"
 
-#: translations.py:552
+#: translations.py:553
 msgid "Black output"
 msgstr "Černá na výstupu"
 
-#: translations.py:553
+#: translations.py:554
 msgid "White output"
 msgstr "Bílá na výstupu"
 
-#: translations.py:554 translations.py:754 guipopoverclip.py:460
+#: translations.py:555 translations.py:755 guipopoverclip.py:460
 msgid "Red"
 msgstr "Červená"
 
-#: translations.py:555 translations.py:749 translations.py:755
+#: translations.py:556 translations.py:750 translations.py:756
 #: guipopoverclip.py:461
 msgid "Green"
 msgstr "Zelená"
 
-#: translations.py:556 translations.py:750 translations.py:756
+#: translations.py:557 translations.py:751 translations.py:757
 #: guipopoverclip.py:462
 msgid "Blue"
 msgstr "Modrá"
 
-#: translations.py:557
+#: translations.py:558
 msgid "Action"
 msgstr "Činnost"
 
-#: translations.py:558
+#: translations.py:559
 msgid "Keep Luma"
 msgstr "Zachovat svítivost"
 
-#: translations.py:559
+#: translations.py:560
 msgid "Luma Formula"
 msgstr "Složení svítivosti"
 
-#: translations.py:560
+#: translations.py:561
 msgid "Effect"
 msgstr "Efekt"
 
-#: translations.py:562
+#: translations.py:563
 msgid "Blend Type"
 msgstr "Typ smíchání"
 
-#: translations.py:563
+#: translations.py:564
 msgid "Key Color"
 msgstr "Barva klíče"
 
-#: translations.py:564
+#: translations.py:565
 msgid "Pre-Level"
 msgstr "Před-úroveň"
 
-#: translations.py:565
+#: translations.py:566
 msgid "Post-Level"
 msgstr "Po-úroveň"
 
-#: translations.py:566
+#: translations.py:567
 msgid "Slope"
 msgstr "Sklon"
 
-#: translations.py:567
+#: translations.py:568
 msgid "Luma Band"
 msgstr "Pásmo svítivosti"
 
-#: translations.py:569
+#: translations.py:570
 msgid "Gain"
 msgstr "Nárůst"
 
-#: translations.py:570
+#: translations.py:571
 msgid "Input White Level"
 msgstr "Vstupní úroveň bílé"
 
-#: translations.py:571
+#: translations.py:572
 msgid "Input Black Level"
 msgstr "Vstupní úroveň černé"
 
-#: translations.py:572
+#: translations.py:573
 msgid "Black Output"
 msgstr "Černá na výstupu"
 
-#: translations.py:573
+#: translations.py:574
 msgid "White Output"
 msgstr "Bílá na výstupu"
 
-#: translations.py:574
+#: translations.py:575
 msgid "Rows"
 msgstr "Řádky"
 
-#: translations.py:575
+#: translations.py:576
 msgid "Columns"
 msgstr "Sloupce"
 
-#: translations.py:576
+#: translations.py:577
 msgid "Color Temperature"
 msgstr "Teplota barvy"
 
-#: translations.py:577 translations.py:592
+#: translations.py:578 translations.py:593
 msgid "Select .cube file"
 msgstr "Vybrat soubor .cube (luma)"
 
-#: translations.py:578
+#: translations.py:579
 msgid "Red Ch. Red Gain"
 msgstr "Červený kanál červené zesílení"
 
-#: translations.py:579
+#: translations.py:580
 msgid "Red Ch. Green Gain"
 msgstr "Červený kanál zelené zesílení"
 
-#: translations.py:580
+#: translations.py:581
 msgid "Red Ch. Blue Gain"
 msgstr "Červený kanál modré zesílení"
 
-#: translations.py:581
+#: translations.py:582
 msgid "Green Ch. Red Gain"
 msgstr "Zelený kanál červené zesílení"
 
-#: translations.py:582
+#: translations.py:583
 msgid "Green Ch. Green Gain"
 msgstr "Zelený kanál zelené zesílení"
 
-#: translations.py:583
+#: translations.py:584
 msgid "Green Ch. Blue Gain"
 msgstr "Zelený kanál modré zesílení"
 
-#: translations.py:584
+#: translations.py:585
 msgid "Blue Ch. Red Gain"
 msgstr "Modrý kanál červené zesílení"
 
-#: translations.py:585
+#: translations.py:586
 msgid "Blue Ch. Green Gain"
 msgstr "Modrý kanál zelené zesílení"
 
-#: translations.py:586
+#: translations.py:587
 msgid "Blue Ch. Blue Gain"
 msgstr "Modrý kanál modré zesílení"
 
-#: translations.py:587
+#: translations.py:588
 msgid "Center X"
 msgstr "Vystředit X"
 
-#: translations.py:588
+#: translations.py:589
 msgid "Center Y"
 msgstr "Vystředit Y"
 
-#: translations.py:589
+#: translations.py:590
 msgid "Quad Distortion"
 msgstr "Čtvercové zkreslení"
 
-#: translations.py:590
+#: translations.py:591
 msgid "Double Quad Distortion"
 msgstr "Dvojité čtvercové zkreslení"
 
-#: translations.py:591
+#: translations.py:592
 msgid "Level"
 msgstr "Úroveň"
 
-#: translations.py:597 translations.py:601
+#: translations.py:598 translations.py:602
 msgid "Wipe Type"
 msgstr "Typ stírání"
 
-#: translations.py:599 translations.py:603
+#: translations.py:600 translations.py:604
 msgid "Softness"
 msgstr "Jemnost"
 
-#: translations.py:600
+#: translations.py:601
 msgid "Wipe Amount"
 msgstr "Množství stírání"
 
-#: translations.py:604
+#: translations.py:605
 msgid "Fade Out Length"
 msgstr "Délka postupného zeslabení (do ztracena)"
 
-#: translations.py:605
+#: translations.py:606
 msgid "Fade In Length"
 msgstr "Délka postupného zesílení (postupný náběh)"
 
-#: translations.py:606
+#: translations.py:607
 msgid "Wipe Direction"
 msgstr "Směr stírání"
 
-#: translations.py:608
+#: translations.py:609
 #, fuzzy
 msgid "Target Loudness"
 msgstr "Cílová složka:"
 
-#: translations.py:609
+#: translations.py:610
 msgid "Analysis Length"
 msgstr "Délka rozboru"
 
-#: translations.py:610
+#: translations.py:611
 msgid "Max Gain"
 msgstr "Největší zesílení"
 
-#: translations.py:611
+#: translations.py:612
 msgid "Min Gain"
 msgstr "Nejmenší zesílení"
 
-#: translations.py:612
+#: translations.py:613
 msgid "Select file"
 msgstr "Vybrat soubor"
 
-#: translations.py:613 keyframeeditor.py:986 guipopoverclip.py:761
+#: translations.py:614 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Smooth"
 msgstr "Vyhladit"
 
-#: translations.py:614
+#: translations.py:615
 msgid "Radius"
 msgstr "Poloměr"
 
-#: translations.py:616
+#: translations.py:617
 msgid "Start Opacity"
 msgstr "Neprůhlednost začátku"
 
-#: translations.py:617
+#: translations.py:618
 msgid "End Opacity"
 msgstr "Neprůhlednost konce"
 
-#: translations.py:618
+#: translations.py:619
 msgid "End Color"
 msgstr "Barva konce"
 
-#: translations.py:619
+#: translations.py:620
 msgid "Start Color"
 msgstr "Barva začátku"
 
-#: translations.py:620
+#: translations.py:621
 msgid "Start X"
 msgstr "Začátek X"
 
-#: translations.py:621
+#: translations.py:622
 msgid "Start Y"
 msgstr "Začátek Y"
 
-#: translations.py:622
+#: translations.py:623
 msgid "End Y"
 msgstr "Konec X"
 
-#: translations.py:623
+#: translations.py:624
 msgid "End X"
 msgstr "Konec Y"
 
-#: translations.py:624
+#: translations.py:625
 msgid "Gradient Type"
 msgstr "Druh přechodu"
 
-#: translations.py:625
+#: translations.py:626
 msgid "Radial Offset"
 msgstr "Paprskový posun"
 
-#: translations.py:626
+#: translations.py:627
 msgid "Feather Passes"
 msgstr "Průchody péra"
 
-#: translations.py:627
+#: translations.py:628
 msgid "Alpha Mode"
 msgstr "Režim alfy"
 
-#: translations.py:628
+#: translations.py:629
 msgid "Feather"
 msgstr "Péro"
 
-#: translations.py:629
+#: translations.py:630
 msgid "Mode"
 msgstr "Režim"
 
-#: translations.py:630
+#: translations.py:631
 msgid "Input Pixel Aspect Ratio"
 msgstr "Poměr stran vstupního obrazového bodu (pixelu): "
 
-#: translations.py:631
+#: translations.py:632
 msgid "Direction"
 msgstr "Směr"
 
-#: translations.py:632
+#: translations.py:633
 msgid "Lens Projection"
 msgstr "Promítání čočky"
 
-#: translations.py:633
+#: translations.py:634
 msgid "Interpolator"
 msgstr "Prokládání"
 
-#: translations.py:634
+#: translations.py:635
 msgid "Strength"
 msgstr "Síla"
 
-#: translations.py:635
+#: translations.py:636
 msgid "X Scale"
 msgstr "Měřítko X"
 
-#: translations.py:636
+#: translations.py:637
 msgid "Y Scale"
 msgstr "Měřítko Y"
 
-#: translations.py:637
+#: translations.py:638
 msgid "Rotation"
 msgstr "Otočení"
 
-#: translations.py:638
+#: translations.py:639
 msgid "X Position"
 msgstr "Poloha X"
 
-#: translations.py:639
+#: translations.py:640
 msgid "Y Position"
 msgstr "Poloha Y"
 
-#: translations.py:640
+#: translations.py:641
 msgid "Max Diameter"
 msgstr "Největší průměr"
 
-#: translations.py:641 translations.py:642
+#: translations.py:642 translations.py:643
 msgid "Max Count"
 msgstr "Největší počet"
 
-#: translations.py:643
+#: translations.py:644
 msgid "Line Width"
 msgstr "Šířka čáry"
 
-#: translations.py:644
+#: translations.py:645
 msgid "Number"
 msgstr "Počet"
 
-#: translations.py:645
+#: translations.py:646
 msgid "Darker"
 msgstr "Ztmavení"
 
-#: translations.py:646
+#: translations.py:647
 msgid "Lighter"
 msgstr "Zesvětlení"
 
-#: translations.py:647
+#: translations.py:648
 #, fuzzy
 msgid "Frames"
 msgstr "Snímky:"
 
-#: translations.py:648
+#: translations.py:649
 #, fuzzy
 msgid "Glitch Frequency"
 msgstr "Kmitočet"
 
-#: translations.py:649
+#: translations.py:650
 msgid "Shift Intensity"
 msgstr ""
 
-#: translations.py:650
+#: translations.py:651
 #, fuzzy
 msgid "Color Intensity"
 msgstr "Přizpůsobení barev"
 
-#: translations.py:652
+#: translations.py:653
 #, fuzzy
 msgid "Speed"
 msgstr "Rychlost %:"
 
-#: translations.py:653
+#: translations.py:654
 #, fuzzy
 msgid "Speed Variation %"
 msgstr "Nasycení červenou"
 
-#: translations.py:654
+#: translations.py:655
 #, fuzzy
 msgid "Number of Items"
 msgstr "Počet odboček"
 
-#: translations.py:655
+#: translations.py:656
 #, fuzzy
 msgid "Size Variation %"
 msgstr "Sytost"
 
-#: translations.py:656
+#: translations.py:657
 #, fuzzy
 msgid "Hue Change"
 msgstr "Uložit změny"
 
-#: translations.py:657 tools/titler.py:626 tools/simpleeditors.py:703
+#: translations.py:658 tools/titler.py:626 tools/simpleeditors.py:703
 msgid "Font"
 msgstr "Písmo"
 
-#: translations.py:658 translations.py:884
+#: translations.py:659 translations.py:885
 msgid "Text"
 msgstr ""
 
-#: translations.py:659
+#: translations.py:660
 msgid "Animation Type In"
 msgstr ""
 
-#: translations.py:660
+#: translations.py:661
 msgid "Animation Type Out"
 msgstr ""
 
-#: translations.py:661
+#: translations.py:662
 #, fuzzy
 msgid "Animation Type"
 msgstr "Animace textu"
 
-#: translations.py:662
+#: translations.py:663
 #, fuzzy
 msgid "Steps Per Frame"
 msgstr "Předchozí snímek"
 
-#: translations.py:663
+#: translations.py:664
 #, fuzzy
 msgid "Line Gap"
 msgstr "Lineární"
 
-#: translations.py:664
+#: translations.py:665
 #, fuzzy
 msgid "Colors"
 msgstr "Barva"
 
-#: translations.py:665 translations.py:818
+#: translations.py:666 translations.py:819
 #, fuzzy
 msgid "User Hue"
 msgstr "Uživatel "
 
-#: translations.py:666
+#: translations.py:667
 #, fuzzy
 msgid "Length"
 msgstr "Délka:"
 
-#: translations.py:667
+#: translations.py:668
 #, fuzzy
 msgid "Random Seed"
 msgstr "Náhodné zrnko"
 
-#: translations.py:668
+#: translations.py:669
 #, fuzzy
 msgid "Lines Delay Frames"
 msgstr "Jas klíčového snímku"
 
-#: translations.py:669
+#: translations.py:670
 #, fuzzy
 msgid "Movement In"
 msgstr "Pohyb"
 
-#: translations.py:670
+#: translations.py:671
 #, fuzzy
 msgid "Movement Out"
 msgstr "Pohyb"
 
-#: translations.py:671
+#: translations.py:672
 #, fuzzy
 msgid "Frames In"
 msgstr "Snímky:"
 
-#: translations.py:672
+#: translations.py:673
 #, fuzzy
 msgid "Frames Out"
 msgstr "Do ztracena"
 
-#: translations.py:673
+#: translations.py:674
 #, fuzzy
 msgid "Steps In"
 msgstr "Krok"
 
-#: translations.py:674
+#: translations.py:675
 #, fuzzy
 msgid "Steps Out"
 msgstr "Krok"
 
-#: translations.py:675
+#: translations.py:676
 #, fuzzy
 msgid "Fade In Frames"
 msgstr "Postupné zesílení/zeslabení (do ztracena)"
 
-#: translations.py:676
+#: translations.py:677
 #, fuzzy
 msgid "Fade Out Frames"
 msgstr "Do ztracena"
 
-#: translations.py:677 translations.py:886
+#: translations.py:678 translations.py:887
 msgid "Background"
-msgstr "Pozadí"
-
-#: translations.py:678
-#, fuzzy
-msgid "Background Pad"
 msgstr "Pozadí"
 
 #: translations.py:679
 #, fuzzy
-msgid "Background Color"
+msgid "Background Pad"
 msgstr "Pozadí"
 
 #: translations.py:680
 #, fuzzy
-msgid "Background Opacity"
+msgid "Background Color"
 msgstr "Pozadí"
 
 #: translations.py:681
 #, fuzzy
+msgid "Background Opacity"
+msgstr "Pozadí"
+
+#: translations.py:682
+#, fuzzy
 msgid "Line Y Offset"
 msgstr "Paprskový posun"
 
-#: translations.py:682
+#: translations.py:683
 #, fuzzy
 msgid "Color Variation"
 msgstr "Odstupňování barev"
 
-#: translations.py:683
+#: translations.py:684
 #, fuzzy
 msgid "Shadow Opacity"
 msgstr "Neprůhlednost začátku"
 
-#: translations.py:684
+#: translations.py:685
 #, fuzzy
 msgid "Shadow Offset"
 msgstr "Stíny"
 
-#: translations.py:685
+#: translations.py:686
 #, fuzzy
 msgid "Background Frames Out"
 msgstr "Pozadí"
 
-#: translations.py:686
+#: translations.py:687
 #, fuzzy
 msgid "Background Anim Out"
 msgstr "Pozadí"
 
-#: translations.py:687
+#: translations.py:688
 #, fuzzy
 msgid "Background Frames In"
 msgstr "Pozadí"
 
-#: translations.py:688
+#: translations.py:689
 #, fuzzy
 msgid "Background Anim In"
 msgstr "Pozadí"
 
-#: translations.py:689
+#: translations.py:690
 #, fuzzy
 msgid "Background Line Width"
 msgstr "Šířka čáry"
 
-#: translations.py:690
+#: translations.py:691
 #, fuzzy
 msgid "Fade Out Type"
 msgstr "Do ztracena"
 
-#: translations.py:691
+#: translations.py:692
 #, fuzzy
 msgid "Centering"
 msgstr "Vykreslování"
 
-#: translations.py:692
+#: translations.py:693
 #, fuzzy
 msgid "Reveal Horizontal"
 msgstr "Vystředit vodorovně"
 
-#: translations.py:693
+#: translations.py:694
 #, fuzzy
 msgid "Reveal Vertical"
 msgstr "Vystředit svisle"
 
-#: translations.py:694
+#: translations.py:695
 msgid "Reveal Left"
 msgstr ""
 
-#: translations.py:695
+#: translations.py:696
 msgid "Reveal Right"
 msgstr ""
 
-#: translations.py:696
+#: translations.py:697
 #, fuzzy
 msgid "Fade In Type"
 msgstr "Postupný náběh"
 
-#: translations.py:697 guipopover.py:410
+#: translations.py:698 guipopover.py:410
 msgid "Image"
 msgstr "Obrázek"
 
-#: translations.py:698
+#: translations.py:699
 msgid "RMP-peak"
 msgstr ""
 
-#: translations.py:699
+#: translations.py:700
 #, fuzzy
 msgid "Relese(ms)"
 msgstr "Výchozí bod zpoždění (ms)"
 
-#: translations.py:700
+#: translations.py:701
 #, fuzzy
 msgid "Ratio"
 msgstr "Otočení"
 
-#: translations.py:701
+#: translations.py:702
 #, fuzzy
 msgid "Knee Radius(dB)"
 msgstr "Bod kolene (dB)"
 
-#: translations.py:702
+#: translations.py:703
 #, fuzzy
 msgid "Makeup gain(dB)"
 msgstr "Střední zesílení (dB)"
 
-#: translations.py:703
+#: translations.py:704
 msgid "Velocity"
 msgstr ""
 
-#: translations.py:704 translations.py:850
+#: translations.py:705 translations.py:851
 #, fuzzy
 msgid "Center"
 msgstr "Vystředit X"
 
-#: translations.py:705
+#: translations.py:706
 #, fuzzy
 msgid "Width"
 msgstr "Šířka:"
 
-#: translations.py:706
+#: translations.py:707
 #, fuzzy
 msgid "Linear Scale"
 msgstr "Lineární"
 
-#: translations.py:707
+#: translations.py:708
 #, fuzzy
 msgid "Non-Linear Scale"
 msgstr "Měřítko polohy"
 
-#: translations.py:708
+#: translations.py:709
 msgid "Latency ms"
 msgstr ""
 
-#: translations.py:709
+#: translations.py:710
 #, fuzzy
 msgid "Stretch"
 msgstr "Síla"
 
-#: translations.py:710
+#: translations.py:711
 #, fuzzy
 msgid "Pitch Scale"
 msgstr "Měřítko polohy"
 
-#: translations.py:711
+#: translations.py:712
 #, fuzzy
 msgid "Octave Shift"
 msgstr "Změna rychlosti"
 
-#: translations.py:712
+#: translations.py:713
 #, fuzzy
 msgid "Keyframe Step"
 msgstr "Klíčový snímek"
 
-#: translations.py:713
+#: translations.py:714
 msgid "Algorithm"
 msgstr ""
 
-#: translations.py:714
+#: translations.py:715
 #, fuzzy
 msgid "X Offset"
 msgstr "X vypnuto:"
 
-#: translations.py:715
+#: translations.py:716
 #, fuzzy
 msgid "Y Offset"
 msgstr "Paprskový posun"
 
-#: translations.py:716
+#: translations.py:717
 #, fuzzy
 msgid "Scale %"
 msgstr "Měřítko"
 
-#: translations.py:717
+#: translations.py:718
 #, fuzzy
 msgid "Smoothing"
 msgstr "Vyhladit"
 
-#: translations.py:718
+#: translations.py:719
 msgid "Analysis Accuracy"
 msgstr ""
 
-#: translations.py:719
+#: translations.py:720
 #, fuzzy
 msgid "Analysis Shakiness"
 msgstr "Délka rozboru"
 
-#: translations.py:720
+#: translations.py:721
 msgid "Tracking Coords Interpretation"
 msgstr ""
 
-#: translations.py:724 translations.py:730
+#: translations.py:725 translations.py:731
 msgid "Shave"
 msgstr "Oholení"
 
-#: translations.py:725
+#: translations.py:726
 msgid "Rectangle"
 msgstr "Obdélník"
 
-#: translations.py:726
+#: translations.py:727
 msgid "Ellipse"
 msgstr "Elipsa"
 
-#: translations.py:727
+#: translations.py:728
 msgid "Triangle"
 msgstr "Trojúhelník"
 
-#: translations.py:728 shortcuts.py:395 workflow.py:73
+#: translations.py:729 shortcuts.py:395 workflow.py:73
 msgid "Box"
 msgstr "Box"
 
-#: translations.py:729 translations.py:743
+#: translations.py:730 translations.py:744
 msgid "Diamond"
 msgstr "Kosočtverec"
 
-#: translations.py:731
+#: translations.py:732
 msgid "Shrink Hard"
 msgstr "Zmenšit silně"
 
-#: translations.py:732
+#: translations.py:733
 msgid "Shrink Soft"
 msgstr "Zmenšit mírně"
 
-#: translations.py:733
+#: translations.py:734
 msgid "Grow Hard"
 msgstr "Růst silně"
 
-#: translations.py:734
+#: translations.py:735
 msgid "Grow Soft"
 msgstr "Růst mírně"
 
-#: translations.py:735
+#: translations.py:736
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:736
+#: translations.py:737
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:737
+#: translations.py:738
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:739
+#: translations.py:740
 msgid "Fat"
 msgstr "Tloušťka"
 
-#: translations.py:740
+#: translations.py:741
 msgid "Normal"
 msgstr "Obvyklá"
 
-#: translations.py:741
+#: translations.py:742
 msgid "Skinny"
 msgstr "Kožnatý"
 
-#: translations.py:742
+#: translations.py:743
 msgid "Ellipsoid"
 msgstr "Elipsoid"
 
-#: translations.py:744 shortcuts.py:390
+#: translations.py:745 shortcuts.py:390
 msgid "Overwrite"
 msgstr "Přepsání"
 
-#: translations.py:747 translations.py:775 translations.py:796
+#: translations.py:748 translations.py:776 translations.py:797
 #: mlttransitions.py:148 tools/titler.py:283
 msgid "Add"
 msgstr "Přidat"
 
-#: translations.py:748 translations.py:797 mlttransitions.py:165
+#: translations.py:749 translations.py:798 mlttransitions.py:165
 msgid "Subtract"
 msgstr "Odečíst"
 
-#: translations.py:751
+#: translations.py:752
 msgid "Sharper"
 msgstr "Ostré"
 
-#: translations.py:752
+#: translations.py:753
 msgid "Fuzzier"
 msgstr "Neostré"
 
-#: translations.py:753
+#: translations.py:754
 msgid "Luma"
 msgstr "Svítivost"
 
-#: translations.py:757
+#: translations.py:758
 msgid "Add Constant"
 msgstr "Přidat konstantu"
 
-#: translations.py:758
+#: translations.py:759
 msgid "Change Gamma"
 msgstr "Změnit gamu"
 
-#: translations.py:759 translations.py:777 mlttransitions.py:160
+#: translations.py:760 translations.py:778 mlttransitions.py:160
 msgid "Multiply"
 msgstr "Násobit"
 
-#: translations.py:760
+#: translations.py:761
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:761
+#: translations.py:762
 msgid "OldPhoto"
 msgstr "Stará fotografie"
 
-#: translations.py:763
+#: translations.py:764
 msgid "Heat"
 msgstr "Záhlaví"
 
-#: translations.py:764
+#: translations.py:765
 msgid "XRay"
 msgstr "Paprsek X"
 
-#: translations.py:765
+#: translations.py:766
 msgid "RedGreen"
 msgstr "Červená a zelená"
 
-#: translations.py:766
+#: translations.py:767
 msgid "YellowBlue"
 msgstr "Žlutá a modrá"
 
-#: translations.py:767
+#: translations.py:768
 msgid "Esses"
 msgstr "Esíčka"
 
-#: translations.py:770
+#: translations.py:771
 msgid "Shadows"
 msgstr "Stíny"
 
-#: translations.py:771
+#: translations.py:772
 msgid "Midtones"
 msgstr "Střední tóny"
 
-#: translations.py:772
+#: translations.py:773
 msgid "Highlights"
 msgstr "Prosvícení"
 
-#: translations.py:773
+#: translations.py:774
 msgid "Forward"
 msgstr "Vpřed"
 
-#: translations.py:774
+#: translations.py:775
 msgid "Backward"
 msgstr "Zpět"
 
-#: translations.py:776
+#: translations.py:777
 msgid "Saturate"
 msgstr "Nasytit"
 
-#: translations.py:778 mlttransitions.py:163
+#: translations.py:779 mlttransitions.py:163
 msgid "Screen"
 msgstr "Obrazovka"
 
-#: translations.py:779 mlttransitions.py:161
+#: translations.py:780 mlttransitions.py:161
 msgid "Overlay"
 msgstr "Překrytí"
 
-#: translations.py:780 mlttransitions.py:151
+#: translations.py:781 mlttransitions.py:151
 msgid "Darken"
 msgstr "Ztmavení"
 
-#: translations.py:781 mlttransitions.py:159
+#: translations.py:782 mlttransitions.py:159
 msgid "Lighten"
 msgstr "Zesvětlení"
 
-#: translations.py:782
+#: translations.py:783
 msgid "ColorDodge"
 msgstr "Pozměnění světlosti barvy"
 
-#: translations.py:783
+#: translations.py:784
 msgid "Colorburn"
 msgstr "Svícení barvy"
 
-#: translations.py:784 mlttransitions.py:157
+#: translations.py:785 mlttransitions.py:157
 msgid "Hardlight"
 msgstr "Ostré světlo"
 
-#: translations.py:785 mlttransitions.py:164
+#: translations.py:786 mlttransitions.py:164
 msgid "Softlight"
 msgstr "Jemné světlo"
 
-#: translations.py:786 mlttransitions.py:152
+#: translations.py:787 mlttransitions.py:152
 msgid "Difference"
 msgstr "Rozdíl"
 
-#: translations.py:787
+#: translations.py:788
 msgid "Exclusion"
 msgstr "Vyloučení"
 
-#: translations.py:788
+#: translations.py:789
 msgid "HSLHue"
 msgstr "Odstín HSL"
 
-#: translations.py:789
+#: translations.py:790
 msgid "HSLSaturation"
 msgstr "Sytost HSL"
 
-#: translations.py:790
+#: translations.py:791
 msgid "HSLColor"
 msgstr "Barva HSL"
 
-#: translations.py:791
+#: translations.py:792
 msgid "HSLLuminosity"
 msgstr "Zářivost HSL"
 
-#: translations.py:792
+#: translations.py:793
 msgid "Cos"
 msgstr "Cos"
 
-#: translations.py:793 keyframeeditor.py:986 guipopoverclip.py:761
+#: translations.py:794 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Linear"
 msgstr "Lineární"
 
-#: translations.py:794
+#: translations.py:795
 msgid "Radial"
 msgstr "Paprskový"
 
-#: translations.py:795
+#: translations.py:796
 msgid "Clear"
 msgstr "Vyprázdnit"
 
-#: translations.py:799
+#: translations.py:800
 msgid "Square"
 msgstr "Čtverec"
 
-#: translations.py:800
+#: translations.py:801
 msgid "HDV"
 msgstr "HDV"
 
-#: translations.py:801
+#: translations.py:802
 msgid "DV/DVD Widescreen PAL"
 msgstr "DV/DVD Širokoúhlé zobrazení PAL"
 
-#: translations.py:802
+#: translations.py:803
 msgid "DV/DVD Widescreen NTSC"
 msgstr "DV/DVD Širokoúhlé zobrazení NTSC"
 
-#: translations.py:803
+#: translations.py:804
 msgid "DV/DVD PAL"
 msgstr "DV/DVD PAL"
 
-#: translations.py:804
+#: translations.py:805
 msgid "DV/DVD NTSC"
 msgstr "DV/DVD NTSC"
 
-#: translations.py:805
+#: translations.py:806
 msgid "Remove Lens Distortion"
 msgstr "Odstranit zkreslení objektivu"
 
-#: translations.py:806
+#: translations.py:807
 msgid "Apply Lens Distortion"
 msgstr "Použít zkreslení objektivu"
 
-#: translations.py:807
+#: translations.py:808
 msgid "Equidistant"
 msgstr "Stejně vzdálený"
 
-#: translations.py:808
+#: translations.py:809
 msgid "Orthographic"
 msgstr "Ortografické"
 
-#: translations.py:809
+#: translations.py:810
 msgid "Equiarea"
 msgstr "Stejná oblast"
 
-#: translations.py:810
+#: translations.py:811
 msgid "Stereographic"
 msgstr "Stereografické promítání"
 
-#: translations.py:811
+#: translations.py:812
 msgid "Bilinear"
 msgstr "Bilineární"
 
-#: translations.py:812
+#: translations.py:813
 msgid "Bicubic Smooth"
 msgstr "Bikubické hladké"
 
-#: translations.py:813
+#: translations.py:814
 msgid "Bicubic Sharp"
 msgstr "Bikubické ostré"
 
-#: translations.py:814
+#: translations.py:815
 msgid "Spline"
 msgstr "Kubická interpolace"
 
-#: translations.py:816
+#: translations.py:817
 msgid "Mondrian"
 msgstr ""
 
-#: translations.py:817
+#: translations.py:818
 #, fuzzy
 msgid "Pastels"
 msgstr "Vložit"
 
-#: translations.py:819
+#: translations.py:820
 #, fuzzy
 msgid "Light"
 msgstr "Zesvětlení"
 
-#: translations.py:820
+#: translations.py:821
 msgid "Earthy"
 msgstr ""
 
-#: translations.py:821
+#: translations.py:822
 msgid "Neon"
 msgstr ""
 
-#: translations.py:822
+#: translations.py:823
 #, fuzzy
 msgid "Left To Right"
 msgstr "Hodiny zleva doprava"
 
-#: translations.py:823
+#: translations.py:824
 #, fuzzy
 msgid "Right To Left"
 msgstr "Hodiny zprava doleva"
 
-#: translations.py:824
+#: translations.py:825
 #, fuzzy
 msgid "Ease In"
 msgstr "Postupný náběh"
 
-#: translations.py:825
+#: translations.py:826
 #, fuzzy
 msgid "Ease Out"
 msgstr "Do ztracena"
 
-#: translations.py:826
+#: translations.py:827
 #, fuzzy
 msgid "Stepped"
 msgstr "Krok"
 
-#: translations.py:827
+#: translations.py:828
 #, fuzzy
 msgid "From Left Clipped"
 msgstr "Z dalšího záběru"
 
-#: translations.py:828
+#: translations.py:829
 #, fuzzy
 msgid "From Right Clipped"
 msgstr "Z dalšího záběru"
 
-#: translations.py:829
+#: translations.py:830
 #, fuzzy
 msgid "From Down Clipped"
 msgstr "Z dalšího záběru"
 
-#: translations.py:830
+#: translations.py:831
 #, fuzzy
 msgid "From Left"
 msgstr "Vlevo"
 
-#: translations.py:831
+#: translations.py:832
 #, fuzzy
 msgid "From Right"
 msgstr "Vpravo"
 
-#: translations.py:832
+#: translations.py:833
 msgid "From Up"
 msgstr ""
 
-#: translations.py:833
+#: translations.py:834
 #, fuzzy
 msgid "From Down"
 msgstr "Dole"
 
-#: translations.py:834
+#: translations.py:835
 #, fuzzy
 msgid "To Left Clipped"
 msgstr "Z dalšího záběru"
 
-#: translations.py:835
+#: translations.py:836
 msgid "To Right Clipped"
 msgstr ""
 
-#: translations.py:836
+#: translations.py:837
 #, fuzzy
 msgid "To Up Clipped"
 msgstr "Kopírovat záběry"
 
-#: translations.py:837
+#: translations.py:838
 #, fuzzy
 msgid "To Down Clipped"
 msgstr "Pohybový záběr"
 
-#: translations.py:838
+#: translations.py:839
 #, fuzzy
 msgid "To Left"
 msgstr "Vlevo"
 
-#: translations.py:839
+#: translations.py:840
 #, fuzzy
 msgid "To Right"
 msgstr "Vpravo"
 
-#: translations.py:840
+#: translations.py:841
 msgid "To Up"
 msgstr ""
 
-#: translations.py:841
+#: translations.py:842
 #, fuzzy
 msgid "To Down"
 msgstr "Dole"
 
-#: translations.py:842
+#: translations.py:843
 #, fuzzy
 msgid "No Background"
 msgstr "Pozadí"
 
-#: translations.py:843
+#: translations.py:844
 msgid "Solid"
 msgstr ""
 
-#: translations.py:845
+#: translations.py:846
 #, fuzzy
 msgid "Lines Word Length"
 msgstr "Zpracovaná délka:"
 
-#: translations.py:846
+#: translations.py:847
 #, fuzzy
 msgid "Letters"
 msgstr "Širokoúhlý formát"
 
-#: translations.py:847
+#: translations.py:848
 msgid "Words"
 msgstr ""
 
-#: translations.py:849 preferenceswindow.py:134
+#: translations.py:850 preferenceswindow.py:134
 msgid "Off"
 msgstr "Vypnuto"
 
-#: translations.py:851 keyframeeditor.py:1754 keyframeeditor.py:2085
+#: translations.py:852 keyframeeditor.py:1754 keyframeeditor.py:2085
 msgid "Center Horizontal"
 msgstr "Vystředit vodorovně"
 
-#: translations.py:852 keyframeeditor.py:1755 keyframeeditor.py:2086
+#: translations.py:853 keyframeeditor.py:1755 keyframeeditor.py:2086
 msgid "Center Vertical"
 msgstr "Vystředit svisle"
 
-#: translations.py:853
+#: translations.py:854
 #, fuzzy
 msgid "Compact Linear"
 msgstr "Vytvořit nový projekt"
 
-#: translations.py:854
+#: translations.py:855
 msgid "Lines Word Length Solid"
 msgstr ""
 
-#: translations.py:855
+#: translations.py:856
 msgid "Lines Solid Screen Width"
 msgstr ""
 
-#: translations.py:856
+#: translations.py:857
 #, fuzzy
 msgid "Horizontal Lines"
 msgstr "Vodorovné"
 
-#: translations.py:857
+#: translations.py:858
 #, fuzzy
 msgid "Underline"
 msgstr "Zpracovat časovou osu"
 
-#: translations.py:858
+#: translations.py:859
 msgid "Strikethrought"
 msgstr ""
 
-#: translations.py:859
+#: translations.py:860
 #, fuzzy
 msgid "Lines Solid"
 msgstr "Šířka čáry"
 
-#: translations.py:860
+#: translations.py:861
 #, fuzzy
 msgid "Diagonal"
 msgstr "Úhlopříčný 1"
 
-#: translations.py:861
+#: translations.py:862
 #, fuzzy
 msgid "XDiagonal"
 msgstr "Úhlopříčný 1"
 
-#: translations.py:864
+#: translations.py:865
 msgid "Absolute"
 msgstr ""
 
-#: translations.py:865
+#: translations.py:866
 #, fuzzy
 msgid "Top Left Justified"
 msgstr "Z dalšího záběru"
 
-#: translations.py:866
+#: translations.py:867
 #, fuzzy
 msgid "Not Scaled"
 msgstr "Nenastaveno"
 
-#: translations.py:867
+#: translations.py:868
 #, fuzzy
 msgid "Scaled To Box"
 msgstr "Zmenšit více"
 
-#: translations.py:871
+#: translations.py:872
 #, fuzzy
 msgid "Backgrounds"
 msgstr "Pozadí"
 
-#: translations.py:872
+#: translations.py:873
 #, fuzzy
 msgid "Cover Transitions"
 msgstr "MLT přechody"
 
-#: translations.py:873
+#: translations.py:874
 #, fuzzy
 msgid "Animated Texts"
 msgstr "Zbývá odhadem:"
 
-#: translations.py:876
+#: translations.py:877
 #, fuzzy
 msgid "Lines Sweep"
 msgstr "Čáry"
 
-#: translations.py:877
+#: translations.py:878
 #, fuzzy
 msgid "Hex Colors"
 msgstr "Barva klíče"
 
-#: translations.py:878
+#: translations.py:879
 msgid "Floating Boxes"
 msgstr ""
 
-#: translations.py:879
+#: translations.py:880
 #, fuzzy
 msgid "Typewriter"
 msgstr "Přepsání"
 
-#: translations.py:880
+#: translations.py:881
 msgid "Multiline Text"
 msgstr ""
 
-#: translations.py:881
+#: translations.py:882
 #, fuzzy
 msgid "Hex Overlay"
 msgstr "Překrytí"
 
-#: translations.py:885
+#: translations.py:886
 #, fuzzy
 msgid "Animation"
 msgstr "Animace textu"
