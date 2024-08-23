@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-23 15:19+0300\n"
-"PO-Revision-Date: 2024-08-22 09:03+0200\n"
+"POT-Creation-Date: 2024-08-23 17:40+0300\n"
+"PO-Revision-Date: 2024-08-23 15:16+0200\n"
 "Last-Translator: Stanislaw Polak <polak@agh.edu.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
@@ -3073,11 +3073,11 @@ msgstr "Zamrożenie"
 
 #: translations.py:265 translations.py:486
 msgid "Rotate"
-msgstr "Obracanie"
+msgstr "Obrót"
 
 #: translations.py:266
 msgid "Shear"
-msgstr "Ścinanie"
+msgstr "Nożyce"
 
 #: translations.py:267 translations.py:302
 msgid "Translate"
@@ -3233,7 +3233,7 @@ msgstr "Likwidacja efektu rybiego oka"
 
 #: translations.py:309
 msgid "Position Scale"
-msgstr "Skala pozycji"
+msgstr "Pozycja Skala"
 
 #: translations.py:310
 msgid "Position Scale Rotate"
@@ -3930,11 +3930,11 @@ msgstr "przejście.geometria"
 
 #: translations.py:508 translations.py:595
 msgid "Shear X"
-msgstr "Ścinanie X"
+msgstr "Kąt cięcia X"
 
 #: translations.py:509 translations.py:596
 msgid "Shear Y"
-msgstr "Ścinanie Y"
+msgstr "Kąt cięcia Y"
 
 #: translations.py:519
 msgid "Rotate X"
