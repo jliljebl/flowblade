@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-22 08:51+0200\n"
+"POT-Creation-Date: 2024-08-23 10:03+0300\n"
 "PO-Revision-Date: 2024-08-22 09:03+0200\n"
 "Last-Translator: Stanislaw Polak <polak@agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -5093,11 +5093,11 @@ msgstr "Wyrazy"
 msgid "Off"
 msgstr "Poza"
 
-#: translations.py:851 keyframeeditor.py:1743 keyframeeditor.py:2062
+#: translations.py:851 keyframeeditor.py:1754 keyframeeditor.py:2085
 msgid "Center Horizontal"
 msgstr "Centruj w poziomie"
 
-#: translations.py:852 keyframeeditor.py:1744 keyframeeditor.py:2063
+#: translations.py:852 keyframeeditor.py:1755 keyframeeditor.py:2086
 msgid "Center Vertical"
 msgstr "Centruj w pionie"
 
@@ -5553,73 +5553,73 @@ msgstr "Dodaj płynne zanikanie"
 msgid "Discrete"
 msgstr "Dyskretny"
 
-#: keyframeeditor.py:1223 keyframeeditor.py:1707 keyframeeditor.py:2054
+#: keyframeeditor.py:1223 keyframeeditor.py:1718 keyframeeditor.py:2077
 msgid "Active Keyframe Type"
 msgstr "Typ aktywnej klatki kluczowej"
 
-#: keyframeeditor.py:1225 keyframeeditor.py:1709 keyframeeditor.py:2055
+#: keyframeeditor.py:1225 keyframeeditor.py:1720 keyframeeditor.py:2078
 msgid "Copy Keyframe Value (Control + C)"
 msgstr "Skopiuj wartość klatki kluczowej  (Control + C)"
 
-#: keyframeeditor.py:1226 keyframeeditor.py:1710 keyframeeditor.py:2056
+#: keyframeeditor.py:1226 keyframeeditor.py:1721 keyframeeditor.py:2079
 msgid "Paste Keyframe Value (Control + V)"
 msgstr "Wklej wartość klatki kluczowej (Control + V)"
 
-#: keyframeeditor.py:1227 keyframeeditor.py:1711 keyframeeditor.py:2057
+#: keyframeeditor.py:1227 keyframeeditor.py:1722 keyframeeditor.py:2080
 #: guipopoverclip.py:776
 msgid "Clone Keyframe Value From Next"
 msgstr "Klonuj wartość klatki kluczowej z następnej"
 
-#: keyframeeditor.py:1228 keyframeeditor.py:1712 keyframeeditor.py:2058
+#: keyframeeditor.py:1228 keyframeeditor.py:1723 keyframeeditor.py:2081
 #: guipopoverclip.py:777
 msgid "Clone Keyframe Value From Previous"
 msgstr "Klonuj wartość klatki kluczowej z poprzedniej"
 
-#: keyframeeditor.py:1235 keyframeeditor.py:1720 guipopoverclip.py:712
+#: keyframeeditor.py:1235 keyframeeditor.py:1731 guipopoverclip.py:712
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "Ustaw klatkę kluczową w klatce 0 na wartość następnej klatki kluczowej"
 
-#: keyframeeditor.py:1241 keyframeeditor.py:1726 guipopoverclip.py:707
+#: keyframeeditor.py:1241 keyframeeditor.py:1737 guipopoverclip.py:707
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Usuń wszystkie ale pierwsza klatka kluczowa przed zakresem klipu"
 
-#: keyframeeditor.py:1248 keyframeeditor.py:1733
+#: keyframeeditor.py:1248 keyframeeditor.py:1744
 msgid "Delete all Keyframes after Clip Range"
 msgstr "Usuń wszystkie klatki kluczowe po zakresie klipu"
 
-#: keyframeeditor.py:1745 keyframeeditor.py:2064
+#: keyframeeditor.py:1756 keyframeeditor.py:2087
 msgid "Reset"
 msgstr "Resetuj"
 
-#: keyframeeditor.py:1746 keyframeeditor.py:2065
+#: keyframeeditor.py:1757 keyframeeditor.py:2088
 msgid "Reset Geometry"
 msgstr "Zresetuj geometrię"
 
-#: keyframeeditor.py:2491 keyframeeditor.py:2536
+#: keyframeeditor.py:2514 keyframeeditor.py:2559
 msgid "X:"
 msgstr ""
 
-#: keyframeeditor.py:2492 keyframeeditor.py:2537
+#: keyframeeditor.py:2515 keyframeeditor.py:2560
 msgid "Y:"
 msgstr ""
 
-#: keyframeeditor.py:2493
+#: keyframeeditor.py:2516
 msgid "W:"
 msgstr ""
 
-#: keyframeeditor.py:2494
+#: keyframeeditor.py:2517
 msgid "H:"
 msgstr ""
 
-#: keyframeeditor.py:2538
+#: keyframeeditor.py:2561
 msgid "\\u21D4:"
 msgstr ""
 
-#: keyframeeditor.py:2539
+#: keyframeeditor.py:2562
 msgid "\\u21D5:"
 msgstr ""
 
-#: keyframeeditor.py:2540
+#: keyframeeditor.py:2563
 msgid "\\u2941:"
 msgstr ""
 
@@ -5876,7 +5876,7 @@ msgstr "Edytor tytułów jest już otwarty"
 msgid "Only single instance of Titler can be opened."
 msgstr "Można otworzyć tylko jedną instancję edytora tytułów."
 
-#: tools/titler.py:284 tools/batchrendering.py:1194 shortcuts.py:458
+#: tools/titler.py:284 tools/batchrendering.py:1194 shortcuts.py:461
 #: guipopover.py:577 guipopover.py:902 guipopoverclip.py:302
 #: guipopoverclip.py:337 guipopoverclip.py:363 guipopoverclip.py:505
 #: guipopoverclip.py:623
@@ -7121,7 +7121,7 @@ msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
 "Musisz wybrać klipy, które mają zostać zastąpione, aby wykonać tę edycję."
 
-#: tlineaction.py:725 tlineaction.py:927
+#: tlineaction.py:725 tlineaction.py:937
 msgid "3 point edit not defined!"
 msgstr "3-punktowa edycja nie została zdefiniowana!"
 
@@ -7150,20 +7150,20 @@ msgstr ""
 "Klip użyty do utworzenia tego kompozytora został usunięty\n"
 "lub został przeniesiony do innej ścieżki."
 
-#: tlineaction.py:917
+#: tlineaction.py:927
 msgid "No Clip loaded into Monitor"
 msgstr "Nie załadowano żadnego klipu do monitora"
 
-#: tlineaction.py:918
+#: tlineaction.py:928
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr ""
 "Nie można wykonać żądanej edycji, ponieważ monitor nie zawiera żadnego klipu."
 
-#: tlineaction.py:922
+#: tlineaction.py:932
 msgid "Defined range in Monitor Clip is too short"
 msgstr "Określony, w monitorze klipu, zakres jest zbyt krótki"
 
-#: tlineaction.py:923
+#: tlineaction.py:933
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -7171,7 +7171,7 @@ msgstr ""
 "Nie można wykonać żądanej edycji, ponieważ zakres pomiędzy znacznikiem "
 "początkowym a końcowym jest zbyt krótki."
 
-#: tlineaction.py:928
+#: tlineaction.py:938
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -7179,7 +7179,7 @@ msgstr ""
 "Musisz umieścić znacznik początkowy oraz końcowy na osi czasu lub klipie i\n"
 "dodatkowo znacznik początkowy na osi czasu lub klipie, aby wykonać tę edycję."
 
-#: tlineaction.py:1133
+#: tlineaction.py:1143
 msgid "Playback Marker"
 msgstr "Znacznik odtwarzania"
 
@@ -8021,163 +8021,178 @@ msgstr "Oś czasu pionowo, strona w dół"
 msgid "Move Selected Media Items"
 msgstr "Przenieś wybrane elementy multimedialne"
 
-#: shortcuts.py:453
+#: shortcuts.py:421
+#, fuzzy
+msgid "Show Video"
+msgstr "Koduj wideo"
+
+#: shortcuts.py:422
+#, fuzzy
+msgid "Show Vectorscope"
+msgstr "Wektoroskop"
+
+#: shortcuts.py:423
+#, fuzzy
+msgid "Show RGB Parade"
+msgstr "Parada RGB"
+
+#: shortcuts.py:456
 msgid "SPACE"
 msgstr "SPACJA"
 
-#: shortcuts.py:454
+#: shortcuts.py:457
 msgid "Down Arrow"
 msgstr "Strzałka w dół"
 
-#: shortcuts.py:455
+#: shortcuts.py:458
 msgid "Up Arrow"
 msgstr "Strzałka w górę"
 
-#: shortcuts.py:456
+#: shortcuts.py:459
 msgid "Left Arrow"
 msgstr "Strzałka w lewo"
 
-#: shortcuts.py:457
+#: shortcuts.py:460
 msgid "Right Arrow"
 msgstr "Strzałka w prawo"
 
-#: shortcuts.py:459
+#: shortcuts.py:462
 msgid "HOME"
 msgstr ""
 
-#: shortcuts.py:460
+#: shortcuts.py:463
 msgid "END"
 msgstr ""
 
-#: shortcuts.py:462
+#: shortcuts.py:465
 msgid "Key Pad END"
 msgstr "Blok klawiszy - END"
 
-#: shortcuts.py:463
+#: shortcuts.py:466
 msgid "Key Pad 1"
 msgstr "Blok klawiszy - 1"
 
-#: shortcuts.py:465 shortcuts.py:468 shortcuts.py:469
+#: shortcuts.py:468 shortcuts.py:471 shortcuts.py:472
 msgid "Key Pad 2"
 msgstr "Blok klawiszy - 2"
 
-#: shortcuts.py:466
+#: shortcuts.py:469
 msgid "Key Pad Down Arrow"
 msgstr "Blok klawiszy - strzałka w dół"
 
-#: shortcuts.py:471
+#: shortcuts.py:474
 msgid "Key Pad 4"
 msgstr "Blok klawiszy - 4"
 
-#: shortcuts.py:472
+#: shortcuts.py:475
 msgid "Key Pad Left Arrow"
 msgstr "Blok klawiszy - strzałka w lewo"
 
-#: shortcuts.py:474
+#: shortcuts.py:477
 msgid "Key Pad 5"
 msgstr "Blok klawiszy - 5"
 
-#: shortcuts.py:475
+#: shortcuts.py:478
 msgid "Key Pad Begin"
 msgstr "Blok klawiszy - Begin"
 
-#: shortcuts.py:477
+#: shortcuts.py:480
 msgid "Key Pad 6"
 msgstr "Blok klawiszy - 6"
 
-#: shortcuts.py:478
+#: shortcuts.py:481
 msgid "Key Pad Right Arrow"
 msgstr "Blok klawiszy - strzałka w prawo"
 
-#: shortcuts.py:480
+#: shortcuts.py:483
 msgid "Key Pad 7"
 msgstr "Blok klawiszy - 7"
 
-#: shortcuts.py:481
+#: shortcuts.py:484
 msgid "Key Pad HOME"
 msgstr "Blok klawiszy - HOME"
 
-#: shortcuts.py:484
+#: shortcuts.py:487
 msgid "TAB"
 msgstr ""
 
-#: shortcuts.py:485
+#: shortcuts.py:488
 msgid "ENTER"
 msgstr ""
 
-#: shortcuts.py:486
+#: shortcuts.py:489
 msgid "="
 msgstr ""
 
-#: shortcuts.py:487
+#: shortcuts.py:490
 msgid ","
 msgstr ""
 
-#: shortcuts.py:488
+#: shortcuts.py:491
 msgid "."
 msgstr ""
 
-#: shortcuts.py:489
+#: shortcuts.py:492
 msgid "Page Up"
 msgstr ""
 
-#: shortcuts.py:490
+#: shortcuts.py:493
 msgid "Page Down"
 msgstr ""
 
-#: shortcuts.py:492
+#: shortcuts.py:495
 msgid "Alt"
 msgstr ""
 
-#: shortcuts.py:493
+#: shortcuts.py:496
 msgid "Shift"
 msgstr ""
 
-#: shortcuts.py:494
+#: shortcuts.py:497
 msgid "Alt + Shift"
 msgstr ""
 
-#: shortcuts.py:495
+#: shortcuts.py:498
 msgid "Control + Alt"
 msgstr ""
 
-#: shortcuts.py:496
+#: shortcuts.py:499
 msgid "Control + Shift"
 msgstr ""
 
-#: shortcuts.py:497
+#: shortcuts.py:500
 msgid "Control + Alt + Shift"
 msgstr ""
 
-#: shortcuts.py:498
+#: shortcuts.py:501
 msgid "Control"
 msgstr ""
 
-#: shortcuts.py:500
+#: shortcuts.py:503
 msgid "<alt>"
 msgstr ""
 
-#: shortcuts.py:501
+#: shortcuts.py:504
 msgid "<shift>"
 msgstr ""
 
-#: shortcuts.py:502
+#: shortcuts.py:505
 msgid "<alt><shift>"
 msgstr ""
 
-#: shortcuts.py:503
+#: shortcuts.py:506
 msgid "<control><alt>"
 msgstr ""
 
-#: shortcuts.py:504
+#: shortcuts.py:507
 msgid "<control><shift>"
 msgstr ""
 
-#: shortcuts.py:505
+#: shortcuts.py:508
 msgid "<control><alt><shift>"
 msgstr ""
 
-#: shortcuts.py:506
+#: shortcuts.py:509
 msgid "<control>"
 msgstr ""
 
