@@ -1347,7 +1347,7 @@ def _display_file_info(media_file):
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_project_profile))
 
 def remove_unused_media():
-    unused = PEOJECT().get_unused_media()
+    unused = PROJECT().get_unused_media()
     # It is most convenient to do remove via gui object
     gui.media_list_view.select_media_file_list(unused)
     delete_media_files()
