@@ -411,3 +411,9 @@ SLOWMO_MEDIA_RANGE_FULL_MEDIA = 1
 PROGRAM_OUT_MODE = 0
 VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
+
+# values set in /res/mediaplugins/plugins.json
+# and use in containerclip.py whencreating new 
+# ContainerClipMediaItem objects for Generators.
+DEFAULT_RENDER_CLIP = "clip"
+DEFAULT_RENDER_ALPHA_CLIP = "alphaclip"

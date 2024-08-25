@@ -137,8 +137,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         
     def run(self):
         self.start_time = time.monotonic()
-        
-       
+
         if self.render_data.save_internally == True:
             frame_name = "frame"            
         else:

@@ -17,6 +17,16 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+
+"""
+Thís module handels creation and editing of
+Generators.
+
+Generators are container clips that use Fluxity Scripts to render 
+clips on timeline, see fluxity.py, containerclip.py, containeractions.py.
+"""  
+
+
 from gi.repository import Gtk, GObject, Pango, Gio
 
 import cairo
@@ -75,11 +85,12 @@ _preview_canvas = None
 # --------------------------------------------------------- plugin
 class MediaPlugin:
     
-    def __init__(self, folder, script_file, name, category):
+    def __init__(self, folder, script_file, name, category, default_render):
         self.folder = folder
-        self.script_file = script_file
+        self.script_file = script_file # This is a fluxity script.
         self.name = name
         self.category = category
+        self.default_render = default_render
     
     def get_screenshot_file(self):
         return respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
@@ -101,7 +112,7 @@ def init():
     global _plugins
     plugins_list = plugins_obj["plugins"]
     for plugin_data in plugins_list:
-        plugin = MediaPlugin(plugin_data["folder"], plugin_data["scriptfile"], plugin_data["name"], plugin_data["category"])
+        plugin = MediaPlugin(plugin_data["folder"], plugin_data["scriptfile"], plugin_data["name"], plugin_data["category"], plugin_data["defaultrender"])
         _plugins.append(plugin)
     
     load_groups = {}
@@ -184,7 +195,7 @@ def _add_media_plugin():
     if _add_plugin_window.import_select.get_active() == 0:
         _close_window()
         # Add as Container Clip
-        containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
+        containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object, None, _selected_plugin.default_render)
     else:
         # Add as Rendered Clip.
         _close_window()

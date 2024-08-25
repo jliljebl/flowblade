@@ -651,6 +651,7 @@ def maybe_autorender_plugin(clip):
     if clip.container_data == None:
         return
 
+    print("---------------renderdata:", clip.container_data.render_data)
     if editorpersistance.prefs.auto_render_media_plugins == True:
         if clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
             action_object = containeractions.get_action_object(clip.container_data)

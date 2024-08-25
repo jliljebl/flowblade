@@ -35,6 +35,7 @@ import gui
 import guiutils
 import projectaction
 import respaths
+import toolsencoding
 import updater
 import userfolders
 import utils
@@ -284,11 +285,22 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
 
 # ------------------------------------------------------- ADDING GENERATOR FROM DIALOG AS MEDIA ITEM
 # Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
-def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data, import_callback=None):
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data, import_callback=None, default_render=None):
     container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
     container_data.data_slots["icon_file"] = screenshot_file
     container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
-    
+
+    # Create and set default render options data.
+    if default_render == appconsts.DEFAULT_RENDER_CLIP:
+        container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(PROJECT().profile)
+        container_data.render_data.do_video_render = True
+    elif default_render == appconsts.DEFAULT_RENDER_ALPHA_CLIP:
+        print("haloo  alpha")
+        render_data = toolsencoding.create_container_clip_default_alpha_render_data_object(PROJECT().profile)
+        if render_data != None:
+            container_data.render_data = render_data
+            container_data.render_data.do_video_render = True
+
     # Set callback
     global _media_import_callback
     _media_import_callback = import_callback

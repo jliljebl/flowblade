@@ -102,6 +102,9 @@ quality_option_groups_default_index = {}
 non_user_encodings = []
 proxy_encodings = None
 
+# We pick this up on init to get alpha encoding later on request.
+_default_alpha_enc_opt = None
+        
 # This is used to turn performance settings off for proxy rendering.
 performance_settings_enabled = True
 
@@ -119,6 +122,13 @@ def get_encoding_index(encoding):
             return i
             
     return -1
+
+def get_default_alpha_enc_quality_ext():
+    if _default_alpha_enc_opt == None:
+        return (-1, None, None)
+    return (get_encoding_index(_default_alpha_enc_opt), _default_alpha_enc_opt.quality_default_index, _default_alpha_enc_opt.extension)
+
+
 
 class QualityOption:
     """
@@ -309,8 +319,14 @@ def load_render_profiles():
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_LOSSLESS), LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_IMAGE_SEQUENCE), IMG_SEQ_encs))
+
     if len(ALPHA_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_ALPHA), ALPHA_encs))
+        # Save default alpha encoding option for later use
+        global _default_alpha_enc_opt
+        enc_name, enc = ALPHA_encs[0]
+        _default_alpha_enc_opt = enc
+
     if len(AUDIO_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_AUDIO), AUDIO_encs))
 

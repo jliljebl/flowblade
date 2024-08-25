@@ -52,9 +52,10 @@ class ToolsRenderData():
     """
     def __init__(self):
         self.profile_index = None
-        self.use_default_profile = None # NOT USED, 'profile_index' is the meaningful data here, this one should not have been included in this data struct.
-        self.use_preset_encodings = None
-        self.presets_index = None
+        # DEPRECATED values are part of save data and cannot be removed without braking save files.
+        self.use_default_profile = None # DEPRECATED, 'profile_index' is used.
+        self.use_preset_encodings = None  # DEPRECATED 'encoding_option_index', 'quality_option_index' are used.
+        self.presets_index = None  # DEPRECATED, 'encoding_option_index', 'quality_option_index' are used.
         self.encoding_option_index = None
         self.quality_option_index = None
         self.render_dir = None
@@ -67,9 +68,8 @@ class ToolsRenderData():
         self.frame_name = "frame"
         self.is_preview_render = False
         self.is_flatpak_render = False
-    
-    
-    
+
+
 def get_args_vals_list_for_render_data(render_data):
     profile = mltprofiles.get_profile_for_index(render_data.profile_index)
 
@@ -81,9 +81,8 @@ def get_args_vals_list_for_render_data(render_data):
 
     return args_vals_list
 
-
 def create_container_clip_default_render_data_object(profile):
-    # When ToolsRenderData is used by G'Mic tool we need to have default values be 'None', for container clis we need different
+    # When ToolsRenderData is used by G'Mic tool we need to have default values be 'None', for container clips we need different
     # default values.
     # 
     # When first render is attempted this created to have data available for render process
@@ -100,7 +99,20 @@ def create_container_clip_default_render_data_object(profile):
     render_data.file_extension = ".mp4"
 
     return render_data
-    
+
+def create_container_clip_default_alpha_render_data_object(profile):
+    render_data = create_container_clip_default_render_data_object(profile)
+    encoding_option_index, quality_option_index, extension = renderconsumer.get_default_alpha_enc_quality_ext()
+    if encoding_option_index == -1:
+        return None
+
+    render_data.encoding_option_index = encoding_option_index
+    render_data.quality_option_index = quality_option_index
+    render_data.file_extension = "." + extension
+
+    return render_data
+
+
 # ------------------------------------------------------------ GUI interface
 def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
     """
