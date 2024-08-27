@@ -469,6 +469,19 @@ class AddMediaPluginWindow(Gtk.Window):
         _current_screenshot_surface = new_selected_plugin.get_screenshot_surface()
         self.length_spin.set_value(_current_plugin_data_object["length"])
 
+        # Create and set default render options data.
+        global _current_render_data
+        default_render = _selected_plugin.default_render
+        if default_render == appconsts.DEFAULT_RENDER_CLIP:
+            _current_render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            _current_render_data.do_video_render = True
+        elif default_render == appconsts.DEFAULT_RENDER_ALPHA_CLIP:
+            _current_render_data = toolsencoding.create_container_clip_default_alpha_render_data_object(current_sequence().profile)
+            _current_render_data.do_video_render = True
+        else:
+            _current_render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+        self._display_current_render_data()
+        
         self.producer.set_frame(0)
         self.tc_display.set_frame(0)
         self.producer.set_length(_current_plugin_data_object["length"])
