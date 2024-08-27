@@ -295,7 +295,6 @@ def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_d
         container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(PROJECT().profile)
         container_data.render_data.do_video_render = True
     elif default_render == appconsts.DEFAULT_RENDER_ALPHA_CLIP:
-        print("haloo  alpha")
         render_data = toolsencoding.create_container_clip_default_alpha_render_data_object(PROJECT().profile)
         if render_data != None:
             container_data.render_data = render_data

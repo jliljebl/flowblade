@@ -417,3 +417,4 @@ RGB_PARADE_MODE = 2
 # ContainerClipMediaItem objects for Generators.
 DEFAULT_RENDER_CLIP = "clip"
 DEFAULT_RENDER_ALPHA_CLIP = "alphaclip"
+DEFAULT_RENDER_FRAME_SEQUENCE = "framesequecne"

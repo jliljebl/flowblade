@@ -19,11 +19,14 @@
 """
 
 """
-Thís module handels creation and editing of
+Thís module handels creating, editing and cloning of
 Generators.
 
 Generators are container clips that use Fluxity Scripts to render 
-clips on timeline, see fluxity.py, containerclip.py, containeractions.py.
+clips on timeline, see e.g. fluxity.py, containerclip.py, containeractions.py and simpleeditors.py.
+
+Naming was changed to 'Generator' from 'Media Plugin' at the last moment before release,
+so all code here refers to 'media plugins' instead of 'generators'.
 """  
 
 
@@ -239,7 +242,9 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
     new_plugin_edit_data["name"] = name
     new_plugin_edit_data["length"] = int(new_length)
 
-    containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data)
+    default_render = toolsencoding.get_render_type_from_render_data(old_cd.render_data)
+ 
+    containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data, None, default_render)
 
 def create_plugin_assests_for_media_import(old_cd):
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()

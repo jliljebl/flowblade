@@ -113,6 +113,23 @@ def create_container_clip_default_alpha_render_data_object(profile):
     return render_data
 
 
+def get_render_type_from_render_data(render_data):
+    if render_data == None:
+        return appconsts.DEFAULT_RENDER_FRAME_SEQUENCE
+    elif render_data.do_video_render == True:
+        alpha_encoding_option_index, quality_option_index, extension = renderconsumer.get_default_alpha_enc_quality_ext()
+        # NOTE: this breaks is we add more then 1 alpha render option,
+        # and user switches to use another one,
+        # a more rubust way would be to get list of all alpha encodings indexes.
+        if render_data.encoding_option_index == alpha_encoding_option_index:
+            return appconsts.DEFAULT_RENDER_ALPHA_CLIP
+        else:
+            return appconsts.DEFAULT_RENDER_CLIP
+    else:
+        return appconsts.DEFAULT_RENDER_FRAME_SEQUENCE
+    
+    
+
 # ------------------------------------------------------------ GUI interface
 def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
     """
