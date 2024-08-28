@@ -90,7 +90,7 @@ def get_combined_monitors_size():
 def get_media_source_file_filter(include_audio=True):
     # No idea if these actually play or not, except images mime types
     f = Gtk.FileFilter()
-    f.set_name("Media MIME types")
+    f.set_name(_("Media MIME types"))
     f.add_mime_type("image*")
     f.add_mime_type("video*")
     f.add_mime_type("audio*")

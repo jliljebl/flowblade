@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-23 17:40+0300\n"
+"POT-Creation-Date: 2024-08-28 09:13+0300\n"
 "PO-Revision-Date: 2021-04-04 15:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
@@ -642,7 +642,7 @@ msgstr "Oynatma Kafası Konumunda Klip İşaretçisini Sil"
 msgid "Split to new Sequence at Playhead Position"
 msgstr "Oynatma pozisyonunda yeni sıraya bölün"
 
-#: editorwindow.py:821 translations.py:569 guipopoverclip.py:338
+#: editorwindow.py:821 translations.py:560 guipopoverclip.py:338
 #: guipopoverclip.py:506 guipopoverclip.py:624
 msgid "Lift"
 msgstr "Kaldırmak"
@@ -1160,7 +1160,7 @@ msgid "Data Store"
 msgstr ""
 
 #: dialogs.py:87 dialogs.py:1286 dialogs.py:1503 dialogs.py:1545
-#: menuactions.py:226 containerclip.py:168 tools/scripttool.py:602
+#: menuactions.py:226 containerclip.py:169 tools/scripttool.py:602
 msgid "Ok"
 msgstr "Tamam"
 
@@ -1181,7 +1181,7 @@ msgstr "Tamam"
 #: patternproducer.py:370 patternproducer.py:401 tools/gmic.py:366
 #: tools/gmic.py:390 tools/gmic.py:532 dialogutils.py:54 dialogutils.py:126
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
-#: containerclip.py:167 tools/scripttool.py:297 tools/scripttool.py:333
+#: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
 #: singletracktransition.py:733
 msgid "Cancel"
@@ -1221,13 +1221,13 @@ msgid "New Profile"
 msgstr "Yeni Profil"
 
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
-#: tools/toolsencoding.py:293 tools/scripttool.py:841
+#: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
 msgid "Select Folder"
 msgstr "Dosya Seç"
 
 #: dialogs.py:179 dialogs.py:231 rendergui.py:875 tools/batchrendering.py:1145
-#: tools/toolsencoding.py:297
+#: tools/toolsencoding.py:326
 msgid "Folder:"
 msgstr "Klasör:"
 
@@ -1396,7 +1396,7 @@ msgstr ""
 msgid "Create"
 msgstr "Olıştur"
 
-#: dialogs.py:506 panels.py:201 rendergui.py:885 tools/toolsencoding.py:304
+#: dialogs.py:506 panels.py:201 rendergui.py:885 tools/toolsencoding.py:333
 msgid "Name:"
 msgstr "Ad:"
 
@@ -1409,7 +1409,7 @@ msgstr "Klip Kareleri Yazma"
 msgid "Export Project as XML to"
 msgstr "Projeyi XML olarak Dışa Aktar"
 
-#: dialogs.py:562 patternproducer.py:349 tools/toolsencoding.py:306
+#: dialogs.py:562 patternproducer.py:349 tools/toolsencoding.py:335
 msgid "Clip Name:"
 msgstr "Klip Adı:"
 
@@ -2354,19 +2354,19 @@ msgid "Right Click to Add Media."
 msgstr "Ortam Eklemek için Sağ Tıklayın."
 
 #: guicomponents.py:1795 propertyeditorbuilder.py:862
-#: propertyeditorbuilder.py:965 tools/toolsencoding.py:194
+#: propertyeditorbuilder.py:965 tools/toolsencoding.py:223
 msgid "Progressive"
 msgstr "Aşamalı"
 
-#: guicomponents.py:1797 tools/toolsencoding.py:196
+#: guicomponents.py:1797 tools/toolsencoding.py:225
 msgid "Interlaced"
 msgstr "Aralıklı"
 
-#: guicomponents.py:1802 guicomponents.py:1812 tools/toolsencoding.py:199
+#: guicomponents.py:1802 guicomponents.py:1812 tools/toolsencoding.py:228
 msgid "Fps: "
 msgstr "Fps: "
 
-#: guicomponents.py:1805 tools/toolsencoding.py:202
+#: guicomponents.py:1805 tools/toolsencoding.py:231
 msgid "Pixel Aspect: "
 msgstr "Piksel Yönü: "
 
@@ -2544,7 +2544,7 @@ msgstr "Medya Yolu:"
 msgid "Composite clip on:"
 msgstr "Birleşik klip:"
 
-#: panels.py:281 tools/toolsencoding.py:384
+#: panels.py:281 tools/toolsencoding.py:413
 msgid "Type:"
 msgstr "Tür:"
 
@@ -2733,7 +2733,7 @@ msgstr ""
 ".\n"
 "Yalnızca yolda olan V1 kliplerle eşitleyebilirsiniz."
 
-#: translations.py:152 translations.py:476
+#: translations.py:152 translations.py:467
 msgid "Color"
 msgstr "Renkler"
 
@@ -2749,17 +2749,17 @@ msgstr "Ses"
 msgid "Audio Filter"
 msgstr "Ses Filtresi"
 
-#: translations.py:156 translations.py:223 translations.py:448
-#: translations.py:517
+#: translations.py:156 translations.py:219 translations.py:439
+#: translations.py:508
 msgid "Blur"
 msgstr "Bulanık"
 
-#: translations.py:157 translations.py:597 propertyeditorbuilder.py:877
+#: translations.py:157 translations.py:588 propertyeditorbuilder.py:877
 #: propertyeditorbuilder.py:980
 msgid "Distort"
 msgstr "Çarpıtma"
 
-#: translations.py:158 translations.py:177 translations.py:799
+#: translations.py:158 translations.py:177 translations.py:792
 msgid "Alpha"
 msgstr "Alfa"
 
@@ -2771,7 +2771,7 @@ msgstr "Hareket"
 msgid "Transform"
 msgstr "Dönüştürmek"
 
-#: translations.py:161 translations.py:534
+#: translations.py:161 translations.py:525
 msgid "Edge"
 msgstr "Kenar"
 
@@ -2783,7 +2783,7 @@ msgstr "Düzeltmek"
 msgid "Artistic"
 msgstr "Artistik"
 
-#: translations.py:164 translations.py:616
+#: translations.py:164 translations.py:607
 msgid "Fade"
 msgstr "Kararma"
 
@@ -2832,2511 +2832,2531 @@ msgstr "Kırp"
 msgid "Alpha Shape"
 msgstr "Alfa Şekli"
 
-#: translations.py:185 kftoolmode.py:489
+#: translations.py:184 kftoolmode.py:489
 msgid "Volume"
 msgstr "Ses Ayarı"
 
-#: translations.py:186
+#: translations.py:185
 msgid "Pan"
 msgstr "Çevir"
 
-#: translations.py:187
+#: translations.py:186
 msgid "Pan Keyframed"
 msgstr "Çevir Ana Kareleri"
 
-#: translations.py:188
+#: translations.py:187
 msgid "Mono to Stereo"
 msgstr "Mono Stereo"
 
-#: translations.py:189
+#: translations.py:188
 msgid "Swap Channels"
 msgstr "Kanalları Değiştir"
 
-#: translations.py:191
+#: translations.py:189
 msgid "Pitchshifter - AM"
 msgstr "Pitchshifter - AM"
 
-#: translations.py:192
+#: translations.py:190
 msgid "Distort - Barry's Satan"
 msgstr "Çarpıtma - Barry's Satan"
 
-#: translations.py:193
+#: translations.py:191
 msgid "Frequency Shift - Bode/Moog"
 msgstr "Frekans Kayması - Bode/Moog"
 
-#: translations.py:194
+#: translations.py:192
 msgid "Equalize - DJ 3-band"
 msgstr "Eşitleme - DJ 3-band"
 
-#: translations.py:195
+#: translations.py:193
 msgid "Flanger - DJ"
 msgstr "Flanger - DJ"
 
-#: translations.py:196
+#: translations.py:194
 msgid "Declipper"
 msgstr "Declipper"
 
-#: translations.py:197
+#: translations.py:195
 msgid "Delayorama"
 msgstr "Delayorama"
 
-#: translations.py:198
+#: translations.py:196
 msgid "Distort - Diode Processor"
 msgstr "Çarpıtma - Diode Processor"
 
-#: translations.py:199
+#: translations.py:197
 msgid "Distort - Foldover"
 msgstr "Çarpıtma - Evrak"
 
-#: translations.py:200
+#: translations.py:198
 msgid "Highpass - Butterworth"
 msgstr "Yüksek - Bant"
 
-#: translations.py:201
+#: translations.py:199
 msgid "Lowpass - Butterworth"
 msgstr "Alçak Geçiş - Bant"
 
-#: translations.py:202
+#: translations.py:200
 msgid "GSM Simulator"
 msgstr "GSM Simülatörü"
 
-#: translations.py:203
+#: translations.py:201
 msgid "Reverb - GVerb"
 msgstr "Yankı - GVerb"
 
-#: translations.py:204
+#: translations.py:202
 msgid "Noise Gate"
 msgstr "Gürültü Geçişi"
 
-#: translations.py:205
+#: translations.py:203
 msgid "Bandpass"
 msgstr "Bant Geçişi"
 
-#: translations.py:206
+#: translations.py:204
 msgid "Pitchscaler - High Quality"
 msgstr "Pitchscaler - Yüksek Kalite"
 
-#: translations.py:207
+#: translations.py:205
 msgid "Equalize - Multiband"
 msgstr "Eşitleme - Çoklubant"
 
-#: translations.py:208
+#: translations.py:206
 msgid "Reverb - Plate"
 msgstr "Yankı - Plaka"
 
-#: translations.py:209
+#: translations.py:207
 msgid "Distort - Pointer cast"
 msgstr "Çarpıtma - İşretçi rolü"
 
-#: translations.py:210
+#: translations.py:208
 msgid "Rate Shifter"
 msgstr "Hız Değiştirici"
 
-#: translations.py:211
+#: translations.py:209
 msgid "Signal Shifter"
 msgstr "Sinyal Değiştirici"
 
-#: translations.py:212
+#: translations.py:210
 msgid "Distort - Sinus Wavewrap"
 msgstr "Çarpıtma - Sinüs Dalga Sargısı"
 
-#: translations.py:213
+#: translations.py:211
 msgid "Vinyl Effect"
 msgstr "Vinil Efekti"
 
-#: translations.py:214
+#: translations.py:212
 msgid "Chorus - Multivoice"
 msgstr "Koro - Çokluses"
 
-#: translations.py:216
+#: translations.py:213
 msgid "Charcoal"
 msgstr "Odunkömürü"
 
-#: translations.py:217
+#: translations.py:214
 msgid "Glow"
 msgstr "Parıltılı"
 
-#: translations.py:218
+#: translations.py:215
 msgid "Old Film"
 msgstr "Eski Film"
 
-#: translations.py:219
+#: translations.py:216
 msgid "Scanlines"
 msgstr "Tarama çizgileri"
 
-#: translations.py:220
+#: translations.py:217
 msgid "Cartoon"
 msgstr "Karikatür"
 
-#: translations.py:222
+#: translations.py:218
 msgid "Pixelize"
 msgstr "Pikselleştir"
 
-#: translations.py:224
+#: translations.py:220
 msgid "Grain"
 msgstr "Tane"
 
-#: translations.py:226
+#: translations.py:221
 msgid "Grayscale"
 msgstr "Griton"
 
-#: translations.py:227
+#: translations.py:222
 #, fuzzy
 msgid "Grayscale Luminance"
 msgstr "Griton"
 
-#: translations.py:228 translations.py:463
+#: translations.py:223 translations.py:454
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: translations.py:229 translations.py:464 mlttransitions.py:162
+#: translations.py:224 translations.py:455 mlttransitions.py:162
 msgid "Saturation"
 msgstr "Doygunluk"
 
-#: translations.py:230 translations.py:447 translations.py:492
-#: translations.py:516 translations.py:599 translations.py:603
+#: translations.py:225 translations.py:438 translations.py:483
+#: translations.py:507 translations.py:590 translations.py:594
 msgid "Invert"
 msgstr "Ters"
 
-#: translations.py:231 translations.py:465 mlttransitions.py:158
+#: translations.py:226 translations.py:456 mlttransitions.py:158
 msgid "Hue"
 msgstr "Ton"
 
-#: translations.py:232 kftoolmode.py:490
+#: translations.py:227 kftoolmode.py:490
 msgid "Brightness"
 msgstr "Parlaklık"
 
-#: translations.py:233 translations.py:763
+#: translations.py:228 translations.py:756
 msgid "Sepia"
 msgstr "Sepya"
 
-#: translations.py:234
+#: translations.py:229
 msgid "Tint"
 msgstr "Renk Tonu"
 
-#: translations.py:235
+#: translations.py:230
 msgid "White Balance"
 msgstr "Beyaz Denge"
 
-#: translations.py:236 translations.py:539
+#: translations.py:231 translations.py:530
 msgid "Levels"
 msgstr "Düzeyler"
 
-#: translations.py:238
+#: translations.py:232
 msgid "Color Clustering"
 msgstr "Renk Kümeleme"
 
-#: translations.py:239
+#: translations.py:233
 msgid "Chroma Hold"
 msgstr "Renk Düzenleme"
 
-#: translations.py:240
+#: translations.py:234
 msgid "Three Layer"
 msgstr "Üç Katlı"
 
-#: translations.py:241
+#: translations.py:235
 msgid "Threshold0r"
 msgstr "Eşikler"
 
-#: translations.py:242
+#: translations.py:236
 msgid "Technicolor"
 msgstr "Teknikrenk"
 
-#: translations.py:243
+#: translations.py:237
 msgid "Primaries"
 msgstr "Önseçimler"
 
-#: translations.py:244
+#: translations.py:238
 msgid "Color Distance"
 msgstr "Renk Aralığı"
 
-#: translations.py:245 translations.py:478 translations.py:483
+#: translations.py:239 translations.py:469 translations.py:474
 msgid "Threshold"
 msgstr "Eşik"
 
-#: translations.py:247
+#: translations.py:240
 msgid "Waves"
 msgstr "Dalgalar"
 
-#: translations.py:248
+#: translations.py:241
 msgid "Lens Correction"
 msgstr "Mercek Düzeltme"
 
-#: translations.py:249 translations.py:490
+#: translations.py:242 translations.py:481
 msgid "Flip"
 msgstr "Çevir"
 
-#: translations.py:250
+#: translations.py:243
 msgid "Mirror"
 msgstr "Ayna"
 
-#: translations.py:251
+#: translations.py:244
 msgid "V Sync"
 msgstr "V Eşitle"
 
-#: translations.py:253
+#: translations.py:245
 msgid "Edge Glow"
 msgstr "Kenar Parıltı"
 
-#: translations.py:254
+#: translations.py:246
 msgid "Sobel"
 msgstr "Kenar bul"
 
-#: translations.py:256
+#: translations.py:247
 msgid "Denoise"
 msgstr "Gürültü giderme"
 
-#: translations.py:257 translations.py:562
+#: translations.py:248 translations.py:553
 msgid "Sharpness"
 msgstr "Netlik"
 
-#: translations.py:258
+#: translations.py:249
 msgid "Letterbox"
 msgstr "Postakutusu"
 
-#: translations.py:260
+#: translations.py:250
 msgid "Baltan"
 msgstr "Yakıt"
 
-#: translations.py:261
+#: translations.py:251
 msgid "Vertigo"
 msgstr "Başa"
 
-#: translations.py:262
+#: translations.py:252
 msgid "Nervous"
 msgstr "Gergin"
 
-#: translations.py:263
+#: translations.py:253
 msgid "Freeze"
 msgstr "Donmak"
 
-#: translations.py:265 translations.py:486
+#: translations.py:254 translations.py:477
 msgid "Rotate"
 msgstr "Döndür"
 
-#: translations.py:266
+#: translations.py:255
 msgid "Shear"
 msgstr "Kesme"
 
-#: translations.py:267 translations.py:302
+#: translations.py:256 translations.py:288
 msgid "Translate"
 msgstr "Çevir"
 
-#: translations.py:269
+#: translations.py:257
 msgid "Color Select"
 msgstr "Renk Seç"
 
-#: translations.py:270
+#: translations.py:258
 msgid "Alpha Modify"
 msgstr "Alfa Değiştir"
 
-#: translations.py:271
+#: translations.py:259
 #, fuzzy
 msgid "Spill Suppress"
 msgstr "Aktar Bastır"
 
-#: translations.py:272
+#: translations.py:260
 msgid "RGB Noise"
 msgstr "RGB Gürültü,ses"
 
-#: translations.py:273
+#: translations.py:261
 msgid "Box Blur"
 msgstr "Kutu Bulanıklığı"
 
-#: translations.py:274
+#: translations.py:262
 msgid "IRR Blur"
 msgstr "IRR Bulanıklığı"
 
-#: translations.py:275
+#: translations.py:263
 msgid "Color Halftone"
 msgstr "Renk Yarım Ton"
 
-#: translations.py:276
+#: translations.py:264
 msgid "Dither"
 msgstr "Titreşim"
 
-#: translations.py:277
+#: translations.py:265
 msgid "Vignette"
 msgstr "Süsleme"
 
-#: translations.py:278
+#: translations.py:266
 msgid "Vignette Advanced"
 msgstr "Gelişmiş Süsleme"
 
-#: translations.py:279
+#: translations.py:267
 msgid "Emboss"
 msgstr "Kabartmak"
 
-#: translations.py:280
+#: translations.py:268
 msgid "3 Point Balance"
 msgstr "3 Denge Noktası"
 
-#: translations.py:281
+#: translations.py:269
 msgid "Colorize"
 msgstr "Renklendir"
 
-#: translations.py:282
+#: translations.py:270
 msgid "Brightness Keyframed"
 msgstr "Parlaklık Ana Kareleri"
 
-#: translations.py:283
+#: translations.py:271
 msgid "RGB Adjustment"
 msgstr "RGB Ayarlama"
 
-#: translations.py:284
+#: translations.py:272
 msgid "Color Tap"
 msgstr "Renk Dokusu"
 
-#: translations.py:285
+#: translations.py:273
 msgid "Posterize"
 msgstr "Posterleştir"
 
-#: translations.py:286
+#: translations.py:274
 msgid "Soft Glow"
 msgstr "Esnek Parıltı"
 
-#: translations.py:287
+#: translations.py:275
 msgid "Newspaper"
 msgstr "Gazete"
 
-#: translations.py:289
+#: translations.py:276
 msgid "Luma Key"
 msgstr "Luma Anahtar"
 
-#: translations.py:290
+#: translations.py:277
 msgid "Chroma Key"
 msgstr "Renk Parlaklı Anahtarı"
 
-#: translations.py:291
+#: translations.py:278
 msgid "Affine"
 msgstr "Afin"
 
-#: translations.py:292
+#: translations.py:279
 msgid "Color Adjustment"
 msgstr "Renk Ayarı"
 
-#: translations.py:293
+#: translations.py:280
 msgid "Color Grading"
 msgstr "Renk Sınıflandırması"
 
-#: translations.py:294
+#: translations.py:281
 msgid "Curves"
 msgstr "Eğriler"
 
-#: translations.py:295
+#: translations.py:282
 msgid "Lift Gain Gamma"
 msgstr "Artış Kazanç Gaması"
 
-#: translations.py:296
+#: translations.py:283
 msgid "Image Grid"
 msgstr "Görüntü Klavuzu"
 
-#: translations.py:298
+#: translations.py:284
 msgid "Color Lift Gain Gamma"
 msgstr "Renk Kaldırma Gama Kazancı"
 
-#: translations.py:299
+#: translations.py:285
 msgid "Color Channel Mixer"
 msgstr "Renk Kanalı Karıştırıcı"
 
-#: translations.py:300
+#: translations.py:286
 msgid "Lens Correction AV"
 msgstr "AV Mercek Düzeltme"
 
-#: translations.py:301
+#: translations.py:287
 msgid "Perspective"
 msgstr "Perpektif"
 
-#: translations.py:303
+#: translations.py:289
 msgid "Lut3D"
 msgstr "Lut3D"
 
-#: translations.py:304
+#: translations.py:290
 msgid "Normalize"
 msgstr "Normal"
 
-#: translations.py:305
+#: translations.py:291
 msgid "File Luma to Alpha"
 msgstr "Alfa için Luma Dosyası"
 
-#: translations.py:306
+#: translations.py:292
 msgid "Gradient Tint"
 msgstr "Gradyan Renk Tonu"
 
-#: translations.py:307
+#: translations.py:293
 msgid "RotoMask"
 msgstr "Maskesiz"
 
-#: translations.py:308
+#: translations.py:294
 msgid "Lens Defisher"
 msgstr "Mercek Tutucu"
 
-#: translations.py:309
+#: translations.py:295
 msgid "Position Scale"
 msgstr "Pozisyon Ölçeği"
 
-#: translations.py:310
+#: translations.py:296
 #, fuzzy
 msgid "Position Scale Rotate"
 msgstr "Pozisyon Ölçeği"
 
-#: translations.py:311 mlttransitions.py:186
+#: translations.py:297 mlttransitions.py:186
 msgid "Wipe"
 msgstr "Süpür"
 
-#: translations.py:312
+#: translations.py:298
 msgid "Mask - Begin"
 msgstr "Maske - Başla"
 
-#: translations.py:313
+#: translations.py:299
 msgid "Mask - End"
 msgstr "Maske - Son"
 
-#: translations.py:314 translations.py:518 translations.py:594
+#: translations.py:300 translations.py:509 translations.py:585
 msgid "Opacity"
 msgstr "Opaklık"
 
-#: translations.py:315
+#: translations.py:301
 msgid "Fade In"
 msgstr "Azaltma"
 
-#: translations.py:316
+#: translations.py:302
 msgid "Fade Out"
 msgstr "Kararma"
 
-#: translations.py:317
+#: translations.py:303
 msgid "Fade In / Fade Out"
 msgstr "Arttırıp / Azaltmak"
 
-#: translations.py:318 translations.py:845 translations.py:849
+#: translations.py:304 translations.py:838 translations.py:842
 msgid "Lines"
 msgstr "Çizgiler"
 
-#: translations.py:319
+#: translations.py:305
 msgid "Dust"
 msgstr "Toz"
 
-#: translations.py:320
+#: translations.py:306
 msgid "Pan Left Channel"
 msgstr "Sol Kanalı Çevir"
 
-#: translations.py:321
+#: translations.py:307
 msgid "Pan Right Channel"
 msgstr "Sağ Kanalı Çevir"
 
-#: translations.py:322
+#: translations.py:308
 #, fuzzy
 msgid "RGB Shift"
 msgstr "Shift"
 
-#: translations.py:323
+#: translations.py:309
 msgid "Choppy"
 msgstr ""
 
-#: translations.py:324
+#: translations.py:310
 msgid "Glitch"
 msgstr ""
 
-#: translations.py:325
+#: translations.py:311
 #, fuzzy
 msgid "Trails"
 msgstr "Küçük resimler"
 
-#: translations.py:326 translations.py:608
+#: translations.py:312 translations.py:599
 msgid "Blend Mode"
 msgstr "Karıştırma Modu"
 
-#: translations.py:327
+#: translations.py:313
 #, fuzzy
 msgid "Unpremultiply"
 msgstr "Çoğalma"
 
-#: translations.py:328
+#: translations.py:314
 #, fuzzy
 msgid "Fade To Black In / Out"
 msgstr "Sol Giriş / Çıkış"
 
-#: translations.py:329
+#: translations.py:315
 msgid "Elastic"
 msgstr ""
 
-#: translations.py:330
+#: translations.py:316
 msgid "Rubberband Octave Shift"
 msgstr ""
 
-#: translations.py:331
+#: translations.py:317
 msgid "Rubberband Pitch Scale"
 msgstr ""
 
-#: translations.py:332
+#: translations.py:318
 #, fuzzy
 msgid "Image Luma"
 msgstr "Görüntü"
 
-#: translations.py:333
+#: translations.py:319
 #, fuzzy
 msgid "Image Alpha"
 msgstr "Resim Türü:"
 
-#: translations.py:334
+#: translations.py:320
 msgid "Stabilize"
 msgstr ""
 
-#: translations.py:335
+#: translations.py:321
 msgid "Motion Tracking Apply"
 msgstr ""
 
-#: translations.py:336
+#: translations.py:322
 msgid "Motion Tracking Create"
 msgstr ""
 
-#: translations.py:337
+#: translations.py:323
 msgid "Alpha Shape Motion Tracked"
 msgstr ""
 
-#: translations.py:341 translations.py:493
+#: translations.py:324
+#, fuzzy
+msgid "Compressor"
+msgstr "Dizgi Yok"
+
+#: translations.py:325
+#, fuzzy
+msgid "Channel Copy"
+msgstr "Kanal"
+
+#: translations.py:332 translations.py:484
 msgid "Position"
 msgstr "Pozisyon"
 
-#: translations.py:342
+#: translations.py:333
 msgid "Grad width"
 msgstr "Kalite Genişliği"
 
-#: translations.py:343 translations.py:355 translations.py:487
+#: translations.py:334 translations.py:346 translations.py:478
 msgid "Tilt"
 msgstr "Eğim"
 
-#: translations.py:344 translations.py:747
+#: translations.py:335 translations.py:740
 msgid "Min"
 msgstr "Dakika"
 
-#: translations.py:345 translations.py:746
+#: translations.py:336 translations.py:739
 msgid "Max"
 msgstr "Maksimum"
 
-#: translations.py:346 translations.py:512 translations.py:863
+#: translations.py:337 translations.py:503 translations.py:856
 msgid "Left"
 msgstr "Sol"
 
-#: translations.py:347 translations.py:513 translations.py:864
+#: translations.py:338 translations.py:504 translations.py:857
 msgid "Right"
 msgstr "Sağ"
 
-#: translations.py:348 translations.py:514 editorlayout.py:516
+#: translations.py:339 translations.py:505 editorlayout.py:516
 msgid "Top"
 msgstr "Yukarı"
 
-#: translations.py:349 translations.py:515 editorlayout.py:519
+#: translations.py:340 translations.py:506 editorlayout.py:519
 msgid "Bottom"
 msgstr "Aşağı"
 
-#: translations.py:350
+#: translations.py:341
 msgid "Shape"
 msgstr "Şekil"
 
-#: translations.py:351
+#: translations.py:342
 msgid "Pos X"
 msgstr "Poz X"
 
-#: translations.py:352
+#: translations.py:343
 msgid "Pos Y"
 msgstr "Poz Y"
 
-#: translations.py:353
+#: translations.py:344
 msgid "Size X"
 msgstr "Boyut X"
 
-#: translations.py:354
+#: translations.py:345
 msgid "Size Y"
 msgstr "Boyut Y"
 
-#: translations.py:356
+#: translations.py:347
 msgid "Trans. Width"
 msgstr "Çevir. Genişliği"
 
-#: translations.py:357
+#: translations.py:348
 msgid "Volume dB"
 msgstr "Ses dB"
 
-#: translations.py:358 translations.py:359
+#: translations.py:349 translations.py:350
 msgid "Left/Right"
 msgstr "Sol/Sağ"
 
-#: translations.py:360
+#: translations.py:351
 msgid "Dry/Wet"
 msgstr "Katı/Yaş"
 
-#: translations.py:361
+#: translations.py:352
 msgid "Pitch Shift"
 msgstr "Saha Vardiya"
 
-#: translations.py:362
+#: translations.py:353
 msgid "Buffer Size"
 msgstr "Arabellek Boyutu"
 
-#: translations.py:363
+#: translations.py:354
 msgid "Decay Time(samples)"
 msgstr "Bozulma Süresi (örnekler)"
 
-#: translations.py:364
+#: translations.py:355
 msgid "Knee Point(dB)"
 msgstr "Diz Noktası(dB)"
 
-#: translations.py:365
+#: translations.py:356
 msgid "Frequency shift"
 msgstr "Frekans kayması"
 
-#: translations.py:366
+#: translations.py:357
 msgid "Low Gain(dB)"
 msgstr "Düşük Kazanç(dB)"
 
-#: translations.py:367
+#: translations.py:358
 msgid "Mid Gain(dB)"
 msgstr "Orta Kazanç(dB)"
 
-#: translations.py:368
+#: translations.py:359
 msgid "High Gain(dB)"
 msgstr "Yüksek Kazanç(dB)"
 
-#: translations.py:369
+#: translations.py:360
 msgid "Oscillation period(s)"
 msgstr "Salınım periyodu(s)"
 
-#: translations.py:370
+#: translations.py:361
 msgid "Oscillation depth(ms)"
 msgstr "Salınım derinliği(ms)"
 
-#: translations.py:371
+#: translations.py:362
 msgid "Feedback%"
 msgstr "Geri bildirim%"
 
-#: translations.py:372
+#: translations.py:363
 msgid "Random seed"
 msgstr "Rasgele çekirdek"
 
-#: translations.py:373
+#: translations.py:364
 msgid "Input Gain(dB)"
 msgstr "Giriş Artışı(dB)"
 
-#: translations.py:374
+#: translations.py:365
 msgid "Feedback(%)"
 msgstr "Geribildirim(%)"
 
-#: translations.py:375
+#: translations.py:366
 msgid "Number of taps"
 msgstr "Klavuzlar Sayısı"
 
-#: translations.py:376
+#: translations.py:367
 msgid "First Delay(s)"
 msgstr "İlk Gecikme(s)"
 
-#: translations.py:377
+#: translations.py:368
 msgid "Delay Range(s)"
 msgstr "Gecikme Aralığı(s)"
 
-#: translations.py:378
+#: translations.py:369
 msgid "Delay Change"
 msgstr "Gecikme Değişikliği"
 
-#: translations.py:379
+#: translations.py:370
 msgid "Delay Random(%)"
 msgstr "Rastgele Gecikme(%)"
 
-#: translations.py:380
+#: translations.py:371
 msgid "Amplitude Change"
 msgstr "Genlik Değişim"
 
-#: translations.py:381
+#: translations.py:372
 msgid "Amplitude Random(%)"
 msgstr "Rastgele Genlik(%)"
 
-#: translations.py:382 translations.py:431 translations.py:470
-#: translations.py:499
+#: translations.py:373 translations.py:422 translations.py:461
+#: translations.py:490
 msgid "Amount"
 msgstr "Miktar"
 
-#: translations.py:383
+#: translations.py:374
 msgid "Drive"
 msgstr "Sürücü"
 
-#: translations.py:384
+#: translations.py:375
 msgid "Skew"
 msgstr "Eğim"
 
-#: translations.py:385 translations.py:387
+#: translations.py:376 translations.py:378
 msgid "Cutoff Frequency(Hz)"
 msgstr "Kesme Frekansı(Hz)"
 
-#: translations.py:386 translations.py:388
+#: translations.py:377 translations.py:379
 msgid "Resonance"
 msgstr "Yankılama"
 
-#: translations.py:389
+#: translations.py:380
 msgid "Passes"
 msgstr "Geçişler"
 
-#: translations.py:390
+#: translations.py:381
 msgid "Error Rate"
 msgstr "Hata Oranı"
 
-#: translations.py:391
+#: translations.py:382
 msgid "Roomsize"
 msgstr "Odabüyüklüğü"
 
-#: translations.py:392
+#: translations.py:383
 msgid "Reverb time(s)"
 msgstr "Yankı süre(leri)"
 
-#: translations.py:393 translations.py:425
+#: translations.py:384 translations.py:416
 msgid "Damping"
 msgstr "İndirme"
 
-#: translations.py:394
+#: translations.py:385
 #, fuzzy
 msgid "Input bandwidth"
 msgstr "Giriş bant genişliği"
 
-#: translations.py:395
+#: translations.py:386
 msgid "Dry signal level(dB)"
 msgstr "Katı sinyal seviyesi(dB)"
 
-#: translations.py:396
+#: translations.py:387
 msgid "Early reflection level(dB)"
 msgstr "Başlangıç yansıma seviyesi(dB)"
 
-#: translations.py:397
+#: translations.py:388
 msgid "Tail level(dB)"
 msgstr "Kuyruk seviyesi(dB)"
 
-#: translations.py:398
+#: translations.py:389
 msgid "LF keyfilter(Hz)"
 msgstr "LF ansfiltre(Hz)"
 
-#: translations.py:399
+#: translations.py:390
 msgid "HF keyfilter(Hz)"
 msgstr "HF anafiltre(Hz)"
 
-#: translations.py:400
+#: translations.py:391
 msgid "Threshold(dB)"
 msgstr "Eşik(dB)"
 
-#: translations.py:401
+#: translations.py:392
 msgid "Attack(ms)"
 msgstr "Atak(ms)"
 
-#: translations.py:402
+#: translations.py:393
 msgid "Hold(ms)"
 msgstr "Tut(ms)"
 
-#: translations.py:403
+#: translations.py:394
 msgid "Decay(ms)"
 msgstr "Bozulma(ms)"
 
-#: translations.py:404
+#: translations.py:395
 msgid "Range(dB)"
 msgstr "Aralık(dB)"
 
-#: translations.py:405
+#: translations.py:396
 msgid "Center Frequency(Hz)"
 msgstr "Merkez Frekansı(Hz)"
 
-#: translations.py:406
+#: translations.py:397
 msgid "Bandwidth(Hz)"
 msgstr "Bant Genişliği(Hz)"
 
-#: translations.py:407
+#: translations.py:398
 msgid "Stages"
 msgstr "Aşamalar"
 
-#: translations.py:408
+#: translations.py:399
 msgid "Pitch-coefficient"
 msgstr "İz aralığı-katsayısı"
 
-#: translations.py:409
+#: translations.py:400
 msgid "50Hz gain"
 msgstr "50Hz kazanç"
 
-#: translations.py:410
+#: translations.py:401
 msgid "100Hz gain"
 msgstr "100Hz kazanç"
 
-#: translations.py:411
+#: translations.py:402
 msgid "156Hz gain"
 msgstr "156Hz kazanç"
 
-#: translations.py:412
+#: translations.py:403
 msgid "220Hz gain"
 msgstr "220Hz kazanç"
 
-#: translations.py:413
+#: translations.py:404
 msgid "311Hz gain"
 msgstr "311Hz kazanç"
 
-#: translations.py:414
+#: translations.py:405
 msgid "440Hz gain"
 msgstr "440Hz kazanç"
 
-#: translations.py:415
+#: translations.py:406
 msgid "622Hz gain"
 msgstr "622Hz kazanç"
 
-#: translations.py:416
+#: translations.py:407
 msgid "880Hz gain"
 msgstr "880Hz kazanç"
 
-#: translations.py:417
+#: translations.py:408
 msgid "1250Hz gain"
 msgstr "1250Hz kazanç"
 
-#: translations.py:418
+#: translations.py:409
 msgid "1750Hz gain"
 msgstr "1750Hz kazanç"
 
-#: translations.py:419
+#: translations.py:410
 msgid "2500Hz gain"
 msgstr "2500Hz kazanç"
 
-#: translations.py:420
+#: translations.py:411
 msgid "3500Hz gain"
 msgstr "3500Hz kazanç"
 
-#: translations.py:421
+#: translations.py:412
 msgid "5000Hz gain"
 msgstr "5000Hz kazanç"
 
-#: translations.py:422
+#: translations.py:413
 msgid "100000Hz gain"
 msgstr "100000Hz kazanç"
 
-#: translations.py:423
+#: translations.py:414
 msgid "200000Hz gain"
 msgstr "200000Hz kazanç"
 
-#: translations.py:424
+#: translations.py:415
 msgid "Reverb time"
 msgstr "Yankı süresi"
 
-#: translations.py:426 translations.py:428
+#: translations.py:417 translations.py:419
 msgid "Dry/Wet mix"
 msgstr "Katı/Sulu karışım"
 
-#: translations.py:427
+#: translations.py:418
 msgid "Effect cutoff(Hz)"
 msgstr "Efekt kesme(Hz)"
 
-#: translations.py:429
+#: translations.py:420
 msgid "Rate"
 msgstr "Derece"
 
-#: translations.py:430
+#: translations.py:421
 msgid "Sift"
 msgstr "Elemek"
 
-#: translations.py:432
+#: translations.py:423
 msgid "Year"
 msgstr "Yıllık"
 
-#: translations.py:433
+#: translations.py:424
 msgid "RPM"
 msgstr "RPM"
 
-#: translations.py:434
+#: translations.py:425
 msgid "Surface warping"
 msgstr "Yüzey çarpıtma"
 
-#: translations.py:435
+#: translations.py:426
 msgid "Cracle"
 msgstr "Çatlak"
 
-#: translations.py:436
+#: translations.py:427
 msgid "Wear"
 msgstr "Tak"
 
-#: translations.py:437
+#: translations.py:428
 msgid "Number of voices"
 msgstr "Seslerin sayısı"
 
-#: translations.py:438
+#: translations.py:429
 msgid "Delay base(ms)"
 msgstr "Gecikme temeli(ms)"
 
-#: translations.py:439
+#: translations.py:430
 msgid "Voice separation(ms)"
 msgstr "Ses ayrımı(ms)"
 
-#: translations.py:440
+#: translations.py:431
 msgid "Detune(%)"
 msgstr "Ayar bozma(%)"
 
-#: translations.py:441
+#: translations.py:432
 msgid "Oscillation frequency(Hz)"
 msgstr "Titreşim frekansı(Hz)"
 
-#: translations.py:442
+#: translations.py:433
 msgid "Output attenuation(dB)"
 msgstr "Çıkış azalma(dB)"
 
-#: translations.py:443
+#: translations.py:434
 msgid "X Scatter"
 msgstr "X Dağıtma"
 
-#: translations.py:444
+#: translations.py:435
 msgid "Y Scatter"
 msgstr "Y Dağıtma"
 
-#: translations.py:445
+#: translations.py:436
 msgid "Scale"
 msgstr "Ölçek"
 
-#: translations.py:446
+#: translations.py:437
 msgid "Mix"
 msgstr "Karıştırıcı"
 
-#: translations.py:449
+#: translations.py:440
 msgid "Delta"
 msgstr "Bellek"
 
-#: translations.py:450
+#: translations.py:441
 msgid "Duration"
 msgstr "Süre"
 
-#: translations.py:451
+#: translations.py:442
 msgid "Bright. up"
 msgstr "Parlaklık. yukarı"
 
-#: translations.py:452
+#: translations.py:443
 msgid "Bright. down"
 msgstr "Parlaklık. aşağı"
 
-#: translations.py:453
+#: translations.py:444
 msgid "Bright. dur."
 msgstr "Parlaklık. sır."
 
-#: translations.py:454
+#: translations.py:445
 msgid "Develop up"
 msgstr "Geliştirme"
 
-#: translations.py:455
+#: translations.py:446
 msgid "Develop down"
 msgstr "Aşağı Geliştirme"
 
-#: translations.py:456
+#: translations.py:447
 msgid "Develop dur."
 msgstr "Geliştirme sır."
 
-#: translations.py:457
+#: translations.py:448
 msgid "Triplevel"
 msgstr "Yolseviye"
 
-#: translations.py:458
+#: translations.py:449
 msgid "Difference Space"
 msgstr "Fark Alanı"
 
-#: translations.py:459
+#: translations.py:450
 #, fuzzy
 msgid "Block Width"
 msgstr "Blok genişliği"
 
-#: translations.py:460
+#: translations.py:451
 #, fuzzy
 msgid "Block Height"
 msgstr "Blok yükseklği"
 
-#: translations.py:461
+#: translations.py:452
 msgid "Size"
 msgstr "Boyut"
 
-#: translations.py:462 patternproducer.py:71
+#: translations.py:453 patternproducer.py:71
 msgid "Noise"
 msgstr "Gürültü,Ses"
 
-#: translations.py:466
+#: translations.py:457
 msgid "U"
 msgstr "U"
 
-#: translations.py:467
+#: translations.py:458
 msgid "V"
 msgstr "V"
 
-#: translations.py:468
+#: translations.py:459
 msgid "Black"
 msgstr "Kara"
 
-#: translations.py:469
+#: translations.py:460
 msgid "White"
 msgstr "Ak"
 
-#: translations.py:471
+#: translations.py:462
 msgid "Neutral Color"
 msgstr "Önalan Rengi"
 
-#: translations.py:472
+#: translations.py:463
 msgid "Input"
 msgstr "Girdi"
 
-#: translations.py:473
+#: translations.py:464
 msgid "Gamma"
 msgstr "Gama"
 
-#: translations.py:474
+#: translations.py:465
 msgid "Num"
 msgstr "Num"
 
-#: translations.py:475
+#: translations.py:466
 msgid "Dist. weight"
 msgstr "Dist. ağırlık"
 
-#: translations.py:477
+#: translations.py:468
 msgid "Variance"
 msgstr "Değişiklik"
 
-#: translations.py:479
+#: translations.py:470
 msgid "Red Saturation"
 msgstr "Kırmızı Doygunluk"
 
-#: translations.py:480
+#: translations.py:471
 msgid "Yellow Saturation"
 msgstr "Sarı Doygunluk"
 
-#: translations.py:481
+#: translations.py:472
 msgid "Factor"
 msgstr "Etken"
 
-#: translations.py:482
+#: translations.py:473
 msgid "Source color"
 msgstr "Kaynak rengi"
 
-#: translations.py:484
+#: translations.py:475
 msgid "Amplitude"
 msgstr "Çokluk"
 
-#: translations.py:485
+#: translations.py:476
 msgid "Frequency"
 msgstr "Frekans sıklığı"
 
-#: translations.py:488
+#: translations.py:479
 msgid "Center Correct"
 msgstr "Merkeze Doğru"
 
-#: translations.py:489
+#: translations.py:480
 msgid "Edges Correct"
 msgstr "Kenarlara Doğru"
 
-#: translations.py:491
+#: translations.py:482
 msgid "Axis"
 msgstr "Eksen"
 
-#: translations.py:494
+#: translations.py:485
 msgid "Edge Lightning"
 msgstr "Kenar Aydınlatma"
 
-#: translations.py:495
+#: translations.py:486
 msgid "Edge Brightness"
 msgstr "Kenar Parlaklığı"
 
-#: translations.py:496
+#: translations.py:487
 msgid "Non-Edge Brightness"
 msgstr "Kenar-Dışı Parlaklık"
 
-#: translations.py:497
+#: translations.py:488
 msgid "Spatial"
 msgstr "Mekansal"
 
-#: translations.py:498
+#: translations.py:489
 msgid "Temporal"
 msgstr "Geçici"
 
-#: translations.py:500
+#: translations.py:491
 msgid "Border width"
 msgstr "Kenarlık genişliği"
 
-#: translations.py:501
+#: translations.py:492
 msgid "Phase Incr."
 msgstr "Faz Artışı."
 
-#: translations.py:502
+#: translations.py:493
 msgid "Zoom"
 msgstr "Yakınlaştır"
 
-#: translations.py:503
+#: translations.py:494
 msgid "Freeze Frame"
 msgstr "Sabitlenmiş Kare"
 
-#: translations.py:504
+#: translations.py:495
 msgid "Freeze After"
 msgstr "Sabitlemeden sonra Dondur"
 
-#: translations.py:505
+#: translations.py:496
 msgid "Freeze Before"
 msgstr "Sabitlemeden Önce Dondur"
 
-#: translations.py:506
+#: translations.py:497
 msgid "Angle"
 msgstr "Açı"
 
-#: translations.py:507 translations.py:510 translations.py:511
+#: translations.py:498 translations.py:501 translations.py:502
 msgid "transition.geometry"
 msgstr "geçiş.geometrisi"
 
-#: translations.py:508 translations.py:595
+#: translations.py:499 translations.py:586
 msgid "Shear X"
 msgstr "Kesme X"
 
-#: translations.py:509 translations.py:596
+#: translations.py:500 translations.py:587
 msgid "Shear Y"
 msgstr "Kesme Y"
 
-#: translations.py:519
+#: translations.py:510
 msgid "Rotate X"
 msgstr "Döndürme X"
 
-#: translations.py:520
+#: translations.py:511
 msgid "Rotate Y"
 msgstr "Döndürme Y"
 
-#: translations.py:521
+#: translations.py:512
 msgid "Rotate Z"
 msgstr "Döndürme Z"
 
-#: translations.py:522
+#: translations.py:513
 msgid "Edge Mode"
 msgstr "Kenar Modu"
 
-#: translations.py:523
+#: translations.py:514
 msgid "Sel. Space"
 msgstr "Sel. Alanı"
 
-#: translations.py:524
+#: translations.py:515
 msgid "Operation"
 msgstr "Operasyon"
 
-#: translations.py:525 translations.py:739
+#: translations.py:516 translations.py:732
 msgid "Hard"
 msgstr "Zor"
 
-#: translations.py:526
+#: translations.py:517
 msgid "Selection subspace"
 msgstr "Seçim alt alanı"
 
-#: translations.py:527
+#: translations.py:518
 msgid "R/A/Hue"
 msgstr "R/A/Ton"
 
-#: translations.py:528
+#: translations.py:519
 msgid "G/B/Chroma"
 msgstr "G/B/Renk parlaklığı"
 
-#: translations.py:529
+#: translations.py:520
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:530
+#: translations.py:521
 #, fuzzy
 msgid "Suppress"
 msgstr "Bastır"
 
-#: translations.py:531 translations.py:769 tools/titler.py:505
+#: translations.py:522 translations.py:762 tools/titler.py:505
 #: tools/simpleeditors.py:669
 msgid "Horizontal"
 msgstr "Yatay"
 
-#: translations.py:532 translations.py:770 tools/titler.py:504
+#: translations.py:523 translations.py:763 tools/titler.py:504
 #: tools/simpleeditors.py:668
 msgid "Vertical"
 msgstr "Dikey"
 
-#: translations.py:533
+#: translations.py:524
 msgid "Type"
 msgstr "Tür"
 
-#: translations.py:535
+#: translations.py:526
 msgid "Dot Radius"
 msgstr "Nokta Yarıçapı"
 
-#: translations.py:536
+#: translations.py:527
 msgid "Cyan Angle"
 msgstr "Camböceği Açısı"
 
-#: translations.py:537
+#: translations.py:528
 msgid "Magenta Angle"
 msgstr "Eflatun Açısı"
 
-#: translations.py:538
+#: translations.py:529
 msgid "Yellow Angle"
 msgstr "Sarı Açısı"
 
-#: translations.py:540
+#: translations.py:531
 msgid "Matrix Type"
 msgstr "Düzey Türü"
 
-#: translations.py:541
+#: translations.py:532
 msgid "Aspect"
 msgstr "Görünüş"
 
-#: translations.py:542
+#: translations.py:533
 msgid "Center Size"
 msgstr "Merkez Boyut"
 
-#: translations.py:543
+#: translations.py:534
 msgid "Azimuth"
 msgstr "Yıldız Açısı"
 
-#: translations.py:544 translations.py:549
+#: translations.py:535 translations.py:540
 msgid "Lightness"
 msgstr "Hafif"
 
-#: translations.py:545
+#: translations.py:536
 msgid "Bump Height"
 msgstr "Yumru Yüksekliği"
 
-#: translations.py:546
+#: translations.py:537
 msgid "Gray"
 msgstr "Gri"
 
-#: translations.py:547
+#: translations.py:538
 msgid "Split Preview"
 msgstr "Bölünmüş Önizleme"
 
-#: translations.py:548
+#: translations.py:539
 msgid "Source on Left"
 msgstr "Soldaki Kaynak"
 
-#: translations.py:550
+#: translations.py:541
 msgid "Channel"
 msgstr "Kanal"
 
-#: translations.py:551
+#: translations.py:542
 msgid "Input black level"
 msgstr "Giriş kara seviyesi"
 
-#: translations.py:552
+#: translations.py:543
 msgid "Input white level"
 msgstr "Giriş beyaz seviyesi"
 
-#: translations.py:553
+#: translations.py:544
 msgid "Black output"
 msgstr "Kara çıktı"
 
-#: translations.py:554
+#: translations.py:545
 msgid "White output"
 msgstr "Ak çıktı"
 
-#: translations.py:555 translations.py:755 guipopoverclip.py:460
+#: translations.py:546 translations.py:748 guipopoverclip.py:460
 msgid "Red"
 msgstr "Kırmızı"
 
-#: translations.py:556 translations.py:750 translations.py:756
+#: translations.py:547 translations.py:743 translations.py:749
 #: guipopoverclip.py:461
 msgid "Green"
 msgstr "Yeşil"
 
-#: translations.py:557 translations.py:751 translations.py:757
+#: translations.py:548 translations.py:744 translations.py:750
 #: guipopoverclip.py:462
 msgid "Blue"
 msgstr "Mavi"
 
-#: translations.py:558
+#: translations.py:549
 msgid "Action"
 msgstr "Aksiyon"
 
-#: translations.py:559
+#: translations.py:550
 msgid "Keep Luma"
 msgstr "Tut Luma"
 
-#: translations.py:560
+#: translations.py:551
 msgid "Luma Formula"
 msgstr "Luma Formül"
 
-#: translations.py:561
+#: translations.py:552
 msgid "Effect"
 msgstr "Efekt"
 
-#: translations.py:563
+#: translations.py:554
 msgid "Blend Type"
 msgstr "Karıştırma Türü"
 
-#: translations.py:564
+#: translations.py:555
 msgid "Key Color"
 msgstr "Anahtar Renk"
 
-#: translations.py:565
+#: translations.py:556
 msgid "Pre-Level"
 msgstr "Ön-Seviye"
 
-#: translations.py:566
+#: translations.py:557
 msgid "Post-Level"
 msgstr "İleti-Seviyesi"
 
-#: translations.py:567
+#: translations.py:558
 msgid "Slope"
 msgstr "Eğim"
 
-#: translations.py:568
+#: translations.py:559
 msgid "Luma Band"
 msgstr "Luma Grup"
 
-#: translations.py:570
+#: translations.py:561
 msgid "Gain"
 msgstr "Kazanç"
 
-#: translations.py:571
+#: translations.py:562
 msgid "Input White Level"
 msgstr "Giriş Ak Seviyesi"
 
-#: translations.py:572
+#: translations.py:563
 msgid "Input Black Level"
 msgstr "Giriş Kara Seviyesi"
 
-#: translations.py:573
+#: translations.py:564
 msgid "Black Output"
 msgstr "Kara Çıkış"
 
-#: translations.py:574
+#: translations.py:565
 msgid "White Output"
 msgstr "Ak Çıkış"
 
-#: translations.py:575
+#: translations.py:566
 msgid "Rows"
 msgstr "Satırlar"
 
-#: translations.py:576
+#: translations.py:567
 msgid "Columns"
 msgstr "Sütunlar"
 
-#: translations.py:577
+#: translations.py:568
 msgid "Color Temperature"
 msgstr "Renk Sıcaklığı"
 
-#: translations.py:578 translations.py:593
+#: translations.py:569 translations.py:584
 msgid "Select .cube file"
 msgstr ".Küp Dosyasını Seçin"
 
-#: translations.py:579
+#: translations.py:570
 msgid "Red Ch. Red Gain"
 msgstr "Kırmızı Ch. Kırmızı Kazanç"
 
-#: translations.py:580
+#: translations.py:571
 msgid "Red Ch. Green Gain"
 msgstr "Yeşil Ch. Yeşil Kazanç"
 
-#: translations.py:581
+#: translations.py:572
 msgid "Red Ch. Blue Gain"
 msgstr "Kırmızı Ch. Mavi Kazanç"
 
-#: translations.py:582
+#: translations.py:573
 msgid "Green Ch. Red Gain"
 msgstr "Yeşil Ch. Kırmızı Kazanç"
 
-#: translations.py:583
+#: translations.py:574
 msgid "Green Ch. Green Gain"
 msgstr "Yeşil Ch. Yeşil Kazanç"
 
-#: translations.py:584
+#: translations.py:575
 msgid "Green Ch. Blue Gain"
 msgstr "Yeşil Ch. Mavi Kazanç"
 
-#: translations.py:585
+#: translations.py:576
 msgid "Blue Ch. Red Gain"
 msgstr "Mavi Ch. Kırmızı Kazanç"
 
-#: translations.py:586
+#: translations.py:577
 msgid "Blue Ch. Green Gain"
 msgstr "Mavi Ch. Yeşil Kazanç"
 
-#: translations.py:587
+#: translations.py:578
 msgid "Blue Ch. Blue Gain"
 msgstr "Mavi Ch. Mavi Kazanç"
 
-#: translations.py:588
+#: translations.py:579
 msgid "Center X"
 msgstr "Merkez X"
 
-#: translations.py:589
+#: translations.py:580
 msgid "Center Y"
 msgstr "Merkez Y"
 
-#: translations.py:590
+#: translations.py:581
 msgid "Quad Distortion"
 msgstr "Dörtlü Bozulma"
 
-#: translations.py:591
+#: translations.py:582
 msgid "Double Quad Distortion"
 msgstr "Çift Dörtlü Bozulma"
 
-#: translations.py:592
+#: translations.py:583
 msgid "Level"
 msgstr "Düzey"
 
-#: translations.py:598 translations.py:602
+#: translations.py:589 translations.py:593
 msgid "Wipe Type"
 msgstr "Silme Türü"
 
-#: translations.py:600 translations.py:604
+#: translations.py:591 translations.py:595
 msgid "Softness"
 msgstr "Yumuşaklık"
 
-#: translations.py:601
+#: translations.py:592
 msgid "Wipe Amount"
 msgstr "Silme Miktarı"
 
-#: translations.py:605
+#: translations.py:596
 msgid "Fade Out Length"
 msgstr "Kararma Uzunluğu"
 
-#: translations.py:606
+#: translations.py:597
 msgid "Fade In Length"
 msgstr "Solma Uzunluğu"
 
-#: translations.py:607
+#: translations.py:598
 msgid "Wipe Direction"
 msgstr "Silme Yönü"
 
-#: translations.py:609
+#: translations.py:600
 #, fuzzy
 msgid "Target Loudness"
 msgstr "Hedef Klasör:"
 
-#: translations.py:610
+#: translations.py:601
 msgid "Analysis Length"
 msgstr "Analiz Uzunluğu"
 
-#: translations.py:611
+#: translations.py:602
 msgid "Max Gain"
 msgstr "Maks Kazanç"
 
-#: translations.py:612
+#: translations.py:603
 msgid "Min Gain"
 msgstr "Min Kazanç"
 
-#: translations.py:613
+#: translations.py:604
 msgid "Select file"
 msgstr "Dosya Seç"
 
-#: translations.py:614 keyframeeditor.py:986 guipopoverclip.py:761
+#: translations.py:605 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Smooth"
 msgstr "Düz"
 
-#: translations.py:615
+#: translations.py:606
 msgid "Radius"
 msgstr "Yarıçap"
 
-#: translations.py:617
+#: translations.py:608
 msgid "Start Opacity"
 msgstr "Opaklığı Başlat"
 
-#: translations.py:618
+#: translations.py:609
 msgid "End Opacity"
 msgstr "Opaklığı Sonlandır"
 
-#: translations.py:619
+#: translations.py:610
 msgid "End Color"
 msgstr "Rengi Sonlandır"
 
-#: translations.py:620
+#: translations.py:611
 msgid "Start Color"
 msgstr "Rengi Başlat"
 
-#: translations.py:621
+#: translations.py:612
 msgid "Start X"
 msgstr "Başlat X"
 
-#: translations.py:622
+#: translations.py:613
 msgid "Start Y"
 msgstr "Başlat Y"
 
-#: translations.py:623
+#: translations.py:614
 msgid "End Y"
 msgstr "Son Y"
 
-#: translations.py:624
+#: translations.py:615
 msgid "End X"
 msgstr "Son X"
 
-#: translations.py:625
+#: translations.py:616
 msgid "Gradient Type"
 msgstr "Gradyan Türü"
 
-#: translations.py:626
+#: translations.py:617
 msgid "Radial Offset"
 msgstr "Dairesel Ofset"
 
-#: translations.py:627
+#: translations.py:618
 msgid "Feather Passes"
 msgstr "Tüy Geçişleri"
 
-#: translations.py:628
+#: translations.py:619
 msgid "Alpha Mode"
 msgstr "Alfa Modu"
 
-#: translations.py:629
+#: translations.py:620
 msgid "Feather"
 msgstr "Tüy"
 
-#: translations.py:630
+#: translations.py:621
 msgid "Mode"
 msgstr "Mod"
 
-#: translations.py:631
+#: translations.py:622
 msgid "Input Pixel Aspect Ratio"
 msgstr "Giriş Piksel En Boy Oranı"
 
-#: translations.py:632
+#: translations.py:623
 msgid "Direction"
 msgstr "Yön"
 
-#: translations.py:633
+#: translations.py:624
 msgid "Lens Projection"
 msgstr "Mercek Projeksiyonu"
 
-#: translations.py:634
+#: translations.py:625
 msgid "Interpolator"
 msgstr "İnterpolator"
 
-#: translations.py:635
+#: translations.py:626
 msgid "Strength"
 msgstr "Güç"
 
-#: translations.py:636
+#: translations.py:627
 msgid "X Scale"
 msgstr "X Ölçek"
 
-#: translations.py:637
+#: translations.py:628
 msgid "Y Scale"
 msgstr "Y Ölçek"
 
-#: translations.py:638
+#: translations.py:629
 msgid "Rotation"
 msgstr "Dönüş"
 
-#: translations.py:639
+#: translations.py:630
 msgid "X Position"
 msgstr "X Pozisyonu"
 
-#: translations.py:640
+#: translations.py:631
 msgid "Y Position"
 msgstr "Y Posizyonu"
 
-#: translations.py:641
+#: translations.py:632
 msgid "Max Diameter"
 msgstr "Maks Çap"
 
-#: translations.py:642 translations.py:643
+#: translations.py:633 translations.py:634
 msgid "Max Count"
 msgstr "Maks Sayı"
 
-#: translations.py:644
+#: translations.py:635
 msgid "Line Width"
 msgstr "Hat Genişliği"
 
-#: translations.py:645
+#: translations.py:636
 msgid "Number"
 msgstr "Numara"
 
-#: translations.py:646
+#: translations.py:637
 msgid "Darker"
 msgstr "Daha Koyu"
 
-#: translations.py:647
+#: translations.py:638
 msgid "Lighter"
 msgstr "Daha Hafif"
 
-#: translations.py:648
+#: translations.py:639
 #, fuzzy
 msgid "Frames"
 msgstr "Kareler:"
 
-#: translations.py:649
+#: translations.py:640
 #, fuzzy
 msgid "Glitch Frequency"
 msgstr "Frekans sıklığı"
 
-#: translations.py:650
+#: translations.py:641
 msgid "Shift Intensity"
 msgstr ""
 
-#: translations.py:651
+#: translations.py:642
 #, fuzzy
 msgid "Color Intensity"
 msgstr "Renk Ayarı"
 
-#: translations.py:653
+#: translations.py:644
 #, fuzzy
 msgid "Speed"
 msgstr "Hız %:"
 
-#: translations.py:654
+#: translations.py:645
 #, fuzzy
 msgid "Speed Variation %"
 msgstr "Kırmızı Doygunluk"
 
-#: translations.py:655
+#: translations.py:646
 #, fuzzy
 msgid "Number of Items"
 msgstr "Klavuzlar Sayısı"
 
-#: translations.py:656
+#: translations.py:647
 #, fuzzy
 msgid "Size Variation %"
 msgstr "Doygunluk"
 
-#: translations.py:657
+#: translations.py:648
 #, fuzzy
 msgid "Hue Change"
 msgstr "Değişikleri Kaydet"
 
-#: translations.py:658 tools/titler.py:626 tools/simpleeditors.py:703
+#: translations.py:649 tools/titler.py:626 tools/simpleeditors.py:703
 msgid "Font"
 msgstr "Yazıtipi"
 
-#: translations.py:659 translations.py:885
+#: translations.py:650 translations.py:878
 msgid "Text"
 msgstr ""
 
-#: translations.py:660
+#: translations.py:651
 msgid "Animation Type In"
 msgstr ""
 
-#: translations.py:661
+#: translations.py:652
 msgid "Animation Type Out"
 msgstr ""
 
-#: translations.py:662
+#: translations.py:653
 #, fuzzy
 msgid "Animation Type"
 msgstr "Düzey Türü"
 
-#: translations.py:663
+#: translations.py:654
 #, fuzzy
 msgid "Steps Per Frame"
 msgstr "Önceki Kare"
 
-#: translations.py:664
+#: translations.py:655
 #, fuzzy
 msgid "Line Gap"
 msgstr "Doğrusal"
 
-#: translations.py:665
+#: translations.py:656
 #, fuzzy
 msgid "Colors"
 msgstr "Renkler"
 
-#: translations.py:666 translations.py:819
+#: translations.py:657 translations.py:812
 #, fuzzy
 msgid "User Hue"
 msgstr "Kullanıcı "
 
-#: translations.py:667
+#: translations.py:658
 #, fuzzy
 msgid "Length"
 msgstr "Uzunluk:"
 
-#: translations.py:668
+#: translations.py:659
 #, fuzzy
 msgid "Random Seed"
 msgstr "Rasgele çekirdek"
 
-#: translations.py:669
+#: translations.py:660
 #, fuzzy
 msgid "Lines Delay Frames"
 msgstr "Parlaklık Anahtar Kareleri"
 
-#: translations.py:670
+#: translations.py:661
 #, fuzzy
 msgid "Movement In"
 msgstr "Hareket"
 
-#: translations.py:671
+#: translations.py:662
 #, fuzzy
 msgid "Movement Out"
 msgstr "Hareket"
 
-#: translations.py:672
+#: translations.py:663
 #, fuzzy
 msgid "Frames In"
 msgstr "Kareler:"
 
-#: translations.py:673
+#: translations.py:664
 #, fuzzy
 msgid "Frames Out"
 msgstr "Kararma"
 
-#: translations.py:674
+#: translations.py:665
 #, fuzzy
 msgid "Steps In"
 msgstr "Adım "
 
-#: translations.py:675
+#: translations.py:666
 #, fuzzy
 msgid "Steps Out"
 msgstr "Adım "
 
-#: translations.py:676
+#: translations.py:667
 #, fuzzy
 msgid "Fade In Frames"
 msgstr "Arttırıp / Azaltmak"
 
-#: translations.py:677
+#: translations.py:668
 #, fuzzy
 msgid "Fade Out Frames"
 msgstr "Kararma"
 
-#: translations.py:678 translations.py:887
+#: translations.py:669 translations.py:880
 #, fuzzy
 msgid "Background"
 msgstr "Geriye"
 
-#: translations.py:679
+#: translations.py:670
 msgid "Background Pad"
 msgstr ""
 
-#: translations.py:680
+#: translations.py:671
 #, fuzzy
 msgid "Background Color"
 msgstr "Rengi Sonlandır"
 
-#: translations.py:681
+#: translations.py:672
 #, fuzzy
 msgid "Background Opacity"
 msgstr "Opaklığı Sonlandır"
 
-#: translations.py:682
+#: translations.py:673
 #, fuzzy
 msgid "Line Y Offset"
 msgstr "Dairesel Ofset"
 
-#: translations.py:683
+#: translations.py:674
 #, fuzzy
 msgid "Color Variation"
 msgstr "Renk Sınıflandırması"
 
-#: translations.py:684
+#: translations.py:675
 #, fuzzy
 msgid "Shadow Opacity"
 msgstr "Opaklığı Başlat"
 
-#: translations.py:685
+#: translations.py:676
 #, fuzzy
 msgid "Shadow Offset"
 msgstr "Gölgeler"
 
-#: translations.py:686
+#: translations.py:677
 msgid "Background Frames Out"
 msgstr ""
 
-#: translations.py:687
+#: translations.py:678
 msgid "Background Anim Out"
 msgstr ""
 
-#: translations.py:688
+#: translations.py:679
 msgid "Background Frames In"
 msgstr ""
 
-#: translations.py:689
+#: translations.py:680
 msgid "Background Anim In"
 msgstr ""
 
-#: translations.py:690
+#: translations.py:681
 #, fuzzy
 msgid "Background Line Width"
 msgstr "Hat Genişliği"
 
-#: translations.py:691
+#: translations.py:682
 #, fuzzy
 msgid "Fade Out Type"
 msgstr "Kararma"
 
-#: translations.py:692
+#: translations.py:683
 #, fuzzy
 msgid "Centering"
 msgstr "Oluşturma"
 
-#: translations.py:693
+#: translations.py:684
 #, fuzzy
 msgid "Reveal Horizontal"
 msgstr "Yatay Ortala"
 
-#: translations.py:694
+#: translations.py:685
 #, fuzzy
 msgid "Reveal Vertical"
 msgstr "Dikey Ortala"
 
-#: translations.py:695
+#: translations.py:686
 msgid "Reveal Left"
 msgstr ""
 
-#: translations.py:696
+#: translations.py:687
 msgid "Reveal Right"
 msgstr ""
 
-#: translations.py:697
+#: translations.py:688
 #, fuzzy
 msgid "Fade In Type"
 msgstr "Azaltma"
 
-#: translations.py:698 guipopover.py:410
+#: translations.py:689 guipopover.py:410
 msgid "Image"
 msgstr "Görüntü"
 
-#: translations.py:699
+#: translations.py:690
 msgid "RMP-peak"
 msgstr ""
 
-#: translations.py:700
+#: translations.py:691
 #, fuzzy
 msgid "Relese(ms)"
 msgstr "Gecikme temeli(ms)"
 
-#: translations.py:701
+#: translations.py:692
 #, fuzzy
 msgid "Ratio"
 msgstr "Dönüş"
 
-#: translations.py:702
+#: translations.py:693
 #, fuzzy
 msgid "Knee Radius(dB)"
 msgstr "Diz Noktası(dB)"
 
-#: translations.py:703
+#: translations.py:694
 #, fuzzy
 msgid "Makeup gain(dB)"
 msgstr "Orta Kazanç(dB)"
 
-#: translations.py:704
+#: translations.py:695
 msgid "Velocity"
 msgstr ""
 
-#: translations.py:705 translations.py:851
+#: translations.py:696 translations.py:844
 #, fuzzy
 msgid "Center"
 msgstr "Merkez X"
 
-#: translations.py:706
+#: translations.py:697
 #, fuzzy
 msgid "Width"
 msgstr "Genişlik:"
 
-#: translations.py:707
+#: translations.py:698
 #, fuzzy
 msgid "Linear Scale"
 msgstr "Doğrusal"
 
-#: translations.py:708
+#: translations.py:699
 #, fuzzy
 msgid "Non-Linear Scale"
 msgstr "Pozisyon Ölçeği"
 
-#: translations.py:709
+#: translations.py:700
 msgid "Latency ms"
 msgstr ""
 
-#: translations.py:710
+#: translations.py:701
 #, fuzzy
 msgid "Stretch"
 msgstr "Güç"
 
-#: translations.py:711
+#: translations.py:702
 #, fuzzy
 msgid "Pitch Scale"
 msgstr "Pozisyon Ölçeği"
 
-#: translations.py:712
+#: translations.py:703
 #, fuzzy
 msgid "Octave Shift"
 msgstr "Hız Değiştirici"
 
-#: translations.py:713
+#: translations.py:704
 #, fuzzy
 msgid "Keyframe Step"
 msgstr "Klavye kısayolları"
 
-#: translations.py:714
+#: translations.py:705
 msgid "Algorithm"
 msgstr ""
 
-#: translations.py:715
+#: translations.py:706
 #, fuzzy
 msgid "X Offset"
 msgstr "X Kapalı:"
 
-#: translations.py:716
+#: translations.py:707
 #, fuzzy
 msgid "Y Offset"
 msgstr "Dairesel Ofset"
 
-#: translations.py:717
+#: translations.py:708
 #, fuzzy
 msgid "Scale %"
 msgstr "Ölçek"
 
-#: translations.py:718
+#: translations.py:709
 #, fuzzy
 msgid "Smoothing"
 msgstr "Düz"
 
-#: translations.py:719
+#: translations.py:710
 msgid "Analysis Accuracy"
 msgstr ""
 
-#: translations.py:720
+#: translations.py:711
 #, fuzzy
 msgid "Analysis Shakiness"
 msgstr "Analiz Uzunluğu"
 
-#: translations.py:721
+#: translations.py:712
 msgid "Tracking Coords Interpretation"
 msgstr ""
 
-#: translations.py:725 translations.py:731
+#: translations.py:713
+#, fuzzy
+msgid "Copy Channel From:"
+msgstr "Renk Kanalı Karıştırıcı"
+
+#: translations.py:714
+#, fuzzy
+msgid "Copy Channel To:"
+msgstr "Ses Kanalları:"
+
+#: translations.py:718 translations.py:724
 msgid "Shave"
 msgstr "Tıraşlama"
 
-#: translations.py:726
+#: translations.py:719
 msgid "Rectangle"
 msgstr "Dikdörtgen"
 
-#: translations.py:727
+#: translations.py:720
 msgid "Ellipse"
 msgstr "Oval"
 
-#: translations.py:728
+#: translations.py:721
 msgid "Triangle"
 msgstr "Üçgen"
 
-#: translations.py:729 shortcuts.py:395 workflow.py:73
+#: translations.py:722 shortcuts.py:395 workflow.py:73
 msgid "Box"
 msgstr "Kutu"
 
-#: translations.py:730 translations.py:744
+#: translations.py:723 translations.py:737
 msgid "Diamond"
 msgstr "Kare"
 
-#: translations.py:732
+#: translations.py:725
 msgid "Shrink Hard"
 msgstr "Sert Küçültme"
 
-#: translations.py:733
+#: translations.py:726
 msgid "Shrink Soft"
 msgstr "Yumuşak Küçültme"
 
-#: translations.py:734
+#: translations.py:727
 msgid "Grow Hard"
 msgstr "Sert Büyüme"
 
-#: translations.py:735
+#: translations.py:728
 msgid "Grow Soft"
 msgstr "Yumuşak Büyüme"
 
-#: translations.py:736
+#: translations.py:729
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:737
+#: translations.py:730
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:738
+#: translations.py:731
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:740
+#: translations.py:733
 msgid "Fat"
 msgstr "Dosya Dizini"
 
-#: translations.py:741
+#: translations.py:734
 msgid "Normal"
 msgstr "Normal"
 
-#: translations.py:742
+#: translations.py:735
 msgid "Skinny"
 msgstr "Çok Zayıf"
 
-#: translations.py:743
+#: translations.py:736
 msgid "Ellipsoid"
 msgstr "Elipsoid"
 
-#: translations.py:745 shortcuts.py:390
+#: translations.py:738 shortcuts.py:390
 msgid "Overwrite"
 msgstr "Üstüneyaz"
 
-#: translations.py:748 translations.py:776 translations.py:797
+#: translations.py:741 translations.py:769 translations.py:790
 #: mlttransitions.py:148 tools/titler.py:283
 msgid "Add"
 msgstr "Ekle"
 
-#: translations.py:749 translations.py:798 mlttransitions.py:165
+#: translations.py:742 translations.py:791 mlttransitions.py:165
 msgid "Subtract"
 msgstr "Çıkar"
 
-#: translations.py:752
+#: translations.py:745
 msgid "Sharper"
 msgstr "Keskin"
 
-#: translations.py:753
+#: translations.py:746
 msgid "Fuzzier"
 msgstr "Bulanık"
 
-#: translations.py:754
+#: translations.py:747
 msgid "Luma"
 msgstr "Luma"
 
-#: translations.py:758
+#: translations.py:751
 msgid "Add Constant"
 msgstr "Durağanı Ekle"
 
-#: translations.py:759
+#: translations.py:752
 msgid "Change Gamma"
 msgstr "Gamayı Değiştir"
 
-#: translations.py:760 translations.py:778 mlttransitions.py:160
+#: translations.py:753 translations.py:771 mlttransitions.py:160
 msgid "Multiply"
 msgstr "Çoğalma"
 
-#: translations.py:761
+#: translations.py:754
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:762
+#: translations.py:755
 msgid "OldPhoto"
 msgstr "EskiFotoğraf"
 
-#: translations.py:764
+#: translations.py:757
 msgid "Heat"
 msgstr "Sıcaklık"
 
-#: translations.py:765
+#: translations.py:758
 msgid "XRay"
 msgstr "XIsını"
 
-#: translations.py:766
+#: translations.py:759
 msgid "RedGreen"
 msgstr "AlYeşil"
 
-#: translations.py:767
+#: translations.py:760
 msgid "YellowBlue"
 msgstr "SarıMavi"
 
-#: translations.py:768
+#: translations.py:761
 msgid "Esses"
 msgstr "Varlık"
 
-#: translations.py:771
+#: translations.py:764
 msgid "Shadows"
 msgstr "Gölgeler"
 
-#: translations.py:772
+#: translations.py:765
 msgid "Midtones"
 msgstr "Ortaton"
 
-#: translations.py:773
+#: translations.py:766
 msgid "Highlights"
 msgstr "Vurgulanmış"
 
-#: translations.py:774
+#: translations.py:767
 msgid "Forward"
 msgstr "İleriye"
 
-#: translations.py:775
+#: translations.py:768
 msgid "Backward"
 msgstr "Geriye"
 
-#: translations.py:777
+#: translations.py:770
 msgid "Saturate"
 msgstr "Doygunluk"
 
-#: translations.py:779 mlttransitions.py:163
+#: translations.py:772 mlttransitions.py:163
 msgid "Screen"
 msgstr "Ekran"
 
-#: translations.py:780 mlttransitions.py:161
+#: translations.py:773 mlttransitions.py:161
 msgid "Overlay"
 msgstr "Kaplama"
 
-#: translations.py:781 mlttransitions.py:151
+#: translations.py:774 mlttransitions.py:151
 msgid "Darken"
 msgstr "Kararma"
 
-#: translations.py:782 mlttransitions.py:159
+#: translations.py:775 mlttransitions.py:159
 msgid "Lighten"
 msgstr "Açıklaştır"
 
-#: translations.py:783
+#: translations.py:776
 msgid "ColorDodge"
 msgstr "RenkSoldurma"
 
-#: translations.py:784
+#: translations.py:777
 msgid "Colorburn"
 msgstr "Renkyanması"
 
-#: translations.py:785 mlttransitions.py:157
+#: translations.py:778 mlttransitions.py:157
 msgid "Hardlight"
 msgstr "Sertışık"
 
-#: translations.py:786 mlttransitions.py:164
+#: translations.py:779 mlttransitions.py:164
 msgid "Softlight"
 msgstr "Yumuşakışık"
 
-#: translations.py:787 mlttransitions.py:152
+#: translations.py:780 mlttransitions.py:152
 msgid "Difference"
 msgstr "Fark"
 
-#: translations.py:788
+#: translations.py:781
 msgid "Exclusion"
 msgstr "Dışlama"
 
-#: translations.py:789
+#: translations.py:782
 msgid "HSLHue"
 msgstr "HLSNüansı"
 
-#: translations.py:790
+#: translations.py:783
 msgid "HSLSaturation"
 msgstr "HLSDoygunluk"
 
-#: translations.py:791
+#: translations.py:784
 msgid "HSLColor"
 msgstr "HSLRenk"
 
-#: translations.py:792
+#: translations.py:785
 msgid "HSLLuminosity"
 msgstr "HLSParlaklık"
 
-#: translations.py:793
+#: translations.py:786
 msgid "Cos"
 msgstr "Komşu Kenar"
 
-#: translations.py:794 keyframeeditor.py:986 guipopoverclip.py:761
+#: translations.py:787 keyframeeditor.py:986 guipopoverclip.py:761
 msgid "Linear"
 msgstr "Doğrusal"
 
-#: translations.py:795
+#: translations.py:788
 msgid "Radial"
 msgstr "Dairesel"
 
-#: translations.py:796
+#: translations.py:789
 msgid "Clear"
 msgstr "Temizle"
 
-#: translations.py:800
+#: translations.py:793
 msgid "Square"
 msgstr "Kare"
 
-#: translations.py:801
+#: translations.py:794
 msgid "HDV"
 msgstr "HDV"
 
-#: translations.py:802
+#: translations.py:795
 msgid "DV/DVD Widescreen PAL"
 msgstr "DV/DVD Geniş Ekran PAL"
 
-#: translations.py:803
+#: translations.py:796
 msgid "DV/DVD Widescreen NTSC"
 msgstr "DV/DVD Geniş Ekran NTSC"
 
-#: translations.py:804
+#: translations.py:797
 msgid "DV/DVD PAL"
 msgstr "DV/DVD PAL"
 
-#: translations.py:805
+#: translations.py:798
 msgid "DV/DVD NTSC"
 msgstr "DV/DVD NTSC"
 
-#: translations.py:806
+#: translations.py:799
 msgid "Remove Lens Distortion"
 msgstr "Mercek Bozulmasını Giderin"
 
-#: translations.py:807
+#: translations.py:800
 msgid "Apply Lens Distortion"
 msgstr "Mercek Bozulması Uygulayın"
 
-#: translations.py:808
+#: translations.py:801
 msgid "Equidistant"
 msgstr "Eşit uzaklıkta"
 
-#: translations.py:809
+#: translations.py:802
 msgid "Orthographic"
 msgstr "Yazım"
 
-#: translations.py:810
+#: translations.py:803
 msgid "Equiarea"
 msgstr "Eşitalan"
 
-#: translations.py:811
+#: translations.py:804
 msgid "Stereographic"
 msgstr "Stereografik"
 
-#: translations.py:812
+#: translations.py:805
 msgid "Bilinear"
 msgstr "Çift doğrusal"
 
-#: translations.py:813
+#: translations.py:806
 msgid "Bicubic Smooth"
 msgstr "Pürüzsüz Çift Kübik"
 
-#: translations.py:814
+#: translations.py:807
 msgid "Bicubic Sharp"
 msgstr "Pürüzsüz Çift Keskinleştirme"
 
-#: translations.py:815
+#: translations.py:808
 msgid "Spline"
 msgstr "Oluk"
 
-#: translations.py:817
+#: translations.py:810
 msgid "Mondrian"
 msgstr ""
 
-#: translations.py:818
+#: translations.py:811
 #, fuzzy
 msgid "Pastels"
 msgstr "Yapıştır"
 
-#: translations.py:820
+#: translations.py:813
 #, fuzzy
 msgid "Light"
 msgstr "Daha Hafif"
 
-#: translations.py:821
+#: translations.py:814
 msgid "Earthy"
 msgstr ""
 
-#: translations.py:822
+#: translations.py:815
 msgid "Neon"
 msgstr ""
 
-#: translations.py:823
+#: translations.py:816
 #, fuzzy
 msgid "Left To Right"
 msgstr "Saat Soldan Sağa"
 
-#: translations.py:824
+#: translations.py:817
 #, fuzzy
 msgid "Right To Left"
 msgstr "Saat Sağdan Sola"
 
-#: translations.py:825
+#: translations.py:818
 #, fuzzy
 msgid "Ease In"
 msgstr "Azaltma"
 
-#: translations.py:826
+#: translations.py:819
 #, fuzzy
 msgid "Ease Out"
 msgstr "Kararma"
 
-#: translations.py:827
+#: translations.py:820
 #, fuzzy
 msgid "Stepped"
 msgstr "Adım "
 
-#: translations.py:828
+#: translations.py:821
 #, fuzzy
 msgid "From Left Clipped"
 msgstr "Bir Sonraki Klipten"
 
-#: translations.py:829
+#: translations.py:822
 #, fuzzy
 msgid "From Right Clipped"
 msgstr "Bir Sonraki Klipten"
 
-#: translations.py:830
+#: translations.py:823
 #, fuzzy
 msgid "From Down Clipped"
 msgstr "Bir Sonraki Klipten"
 
-#: translations.py:831
+#: translations.py:824
 #, fuzzy
 msgid "From Left"
 msgstr "Sol"
 
-#: translations.py:832
+#: translations.py:825
 #, fuzzy
 msgid "From Right"
 msgstr "Sağ"
 
-#: translations.py:833
+#: translations.py:826
 msgid "From Up"
 msgstr ""
 
-#: translations.py:834
+#: translations.py:827
 #, fuzzy
 msgid "From Down"
 msgstr "Aşağı"
 
-#: translations.py:835
+#: translations.py:828
 #, fuzzy
 msgid "To Left Clipped"
 msgstr "Bir Sonraki Klipten"
 
-#: translations.py:836
+#: translations.py:829
 msgid "To Right Clipped"
 msgstr ""
 
-#: translations.py:837
+#: translations.py:830
 #, fuzzy
 msgid "To Up Clipped"
 msgstr "Klipleri Kopyala"
 
-#: translations.py:838
+#: translations.py:831
 #, fuzzy
 msgid "To Down Clipped"
 msgstr "Hareketli Klip"
 
-#: translations.py:839
+#: translations.py:832
 #, fuzzy
 msgid "To Left"
 msgstr "Sol"
 
-#: translations.py:840
+#: translations.py:833
 #, fuzzy
 msgid "To Right"
 msgstr "Sağ"
 
-#: translations.py:841
+#: translations.py:834
 msgid "To Up"
 msgstr ""
 
-#: translations.py:842
+#: translations.py:835
 #, fuzzy
 msgid "To Down"
 msgstr "Aşağı"
 
-#: translations.py:843
+#: translations.py:836
 msgid "No Background"
 msgstr ""
 
-#: translations.py:844
+#: translations.py:837
 msgid "Solid"
 msgstr ""
 
-#: translations.py:846
+#: translations.py:839
 #, fuzzy
 msgid "Lines Word Length"
 msgstr "Oluştuma Uzunluğu:"
 
-#: translations.py:847
+#: translations.py:840
 #, fuzzy
 msgid "Letters"
 msgstr "Postakutusu"
 
-#: translations.py:848
+#: translations.py:841
 msgid "Words"
 msgstr ""
 
-#: translations.py:850 preferenceswindow.py:134
+#: translations.py:843 preferenceswindow.py:134
 msgid "Off"
 msgstr "Kapat"
 
-#: translations.py:852 keyframeeditor.py:1754 keyframeeditor.py:2085
+#: translations.py:845 keyframeeditor.py:1754 keyframeeditor.py:2085
 msgid "Center Horizontal"
 msgstr "Yatay Ortala"
 
-#: translations.py:853 keyframeeditor.py:1755 keyframeeditor.py:2086
+#: translations.py:846 keyframeeditor.py:1755 keyframeeditor.py:2086
 msgid "Center Vertical"
 msgstr "Dikey Ortala"
 
-#: translations.py:854
+#: translations.py:847
 #, fuzzy
 msgid "Compact Linear"
 msgstr "Doğrusal"
 
-#: translations.py:855
+#: translations.py:848
 msgid "Lines Word Length Solid"
 msgstr ""
 
-#: translations.py:856
+#: translations.py:849
 msgid "Lines Solid Screen Width"
 msgstr ""
 
-#: translations.py:857
+#: translations.py:850
 #, fuzzy
 msgid "Horizontal Lines"
 msgstr "Yatay"
 
-#: translations.py:858
+#: translations.py:851
 #, fuzzy
 msgid "Underline"
 msgstr "İşlem Zaman Akışı"
 
-#: translations.py:859
+#: translations.py:852
 msgid "Strikethrought"
 msgstr ""
 
-#: translations.py:860
+#: translations.py:853
 #, fuzzy
 msgid "Lines Solid"
 msgstr "Hat Genişliği"
 
-#: translations.py:861
+#: translations.py:854
 #, fuzzy
 msgid "Diagonal"
 msgstr "Köşegen 1"
 
-#: translations.py:862
+#: translations.py:855
 #, fuzzy
 msgid "XDiagonal"
 msgstr "Köşegen 1"
 
-#: translations.py:865
+#: translations.py:858
 msgid "Absolute"
 msgstr ""
 
-#: translations.py:866
+#: translations.py:859
 #, fuzzy
 msgid "Top Left Justified"
 msgstr "Bir Sonraki Klipten"
 
-#: translations.py:867
+#: translations.py:860
 #, fuzzy
 msgid "Not Scaled"
 msgstr "Ayarlanmadı"
 
-#: translations.py:868
+#: translations.py:861
 #, fuzzy
 msgid "Scaled To Box"
 msgstr "Daha Fazla Ölçeklendirin"
 
-#: translations.py:872
+#: translations.py:865
 #, fuzzy
 msgid "Backgrounds"
 msgstr "Geriye"
 
-#: translations.py:873
+#: translations.py:866
 #, fuzzy
 msgid "Cover Transitions"
 msgstr "MLT Geçişleri"
 
-#: translations.py:874
+#: translations.py:867
 #, fuzzy
 msgid "Animated Texts"
 msgstr "Tahmini Sol:"
 
-#: translations.py:877
+#: translations.py:870
 #, fuzzy
 msgid "Lines Sweep"
 msgstr "Çizgiler"
 
-#: translations.py:878
+#: translations.py:871
 #, fuzzy
 msgid "Hex Colors"
 msgstr "Anahtar Renk"
 
-#: translations.py:879
+#: translations.py:872
 msgid "Floating Boxes"
 msgstr ""
 
-#: translations.py:880
+#: translations.py:873
 #, fuzzy
 msgid "Typewriter"
 msgstr "Üstüneyaz"
 
-#: translations.py:881
+#: translations.py:874
 msgid "Multiline Text"
 msgstr ""
 
-#: translations.py:882
+#: translations.py:875
 #, fuzzy
 msgid "Hex Overlay"
 msgstr "Kaplama"
 
-#: translations.py:886
+#: translations.py:879
 #, fuzzy
 msgid "Animation"
 msgstr "Düzey Türü"
@@ -5905,7 +5925,7 @@ msgstr ""
 msgid "Middlebar Configuration"
 msgstr "Ücretsiz Çubuk Yapılandırması"
 
-#: middlebar.py:512 rendergui.py:657 tools/toolsencoding.py:487
+#: middlebar.py:512 rendergui.py:657 tools/toolsencoding.py:516
 msgid "Select Render quality"
 msgstr "Oluşturma kalitesini seçin"
 
@@ -6284,11 +6304,11 @@ msgstr "İşlenen Klip Uzunluğu:"
 msgid "Select audio sample frequency"
 msgstr "Ses örnek frekansını seçin"
 
-#: rendergui.py:697 tools/toolsencoding.py:544
+#: rendergui.py:697 tools/toolsencoding.py:573
 msgid "Select Render encoding"
 msgstr "Oluşturma kodlamasını seç"
 
-#: rendergui.py:741 tools/toolsencoding.py:473
+#: rendergui.py:741 tools/toolsencoding.py:502
 msgid "Select render profile"
 msgstr "İşleme profilini seç"
 
@@ -6300,15 +6320,15 @@ msgstr "Tam Uzunluk"
 msgid "Marked Range"
 msgstr "İşaret Mesafesi"
 
-#: rendergui.py:770 tools/toolsencoding.py:129
+#: rendergui.py:770 tools/toolsencoding.py:158
 msgid "File"
 msgstr "Dosya"
 
-#: rendergui.py:771 tools/toolsencoding.py:135
+#: rendergui.py:771 tools/toolsencoding.py:164
 msgid "Render Profile"
 msgstr "Profili İşle"
 
-#: rendergui.py:772 tools/toolsencoding.py:136
+#: rendergui.py:772 tools/toolsencoding.py:165
 msgid "Encoding Format"
 msgstr "Kodlama Formatı"
 
@@ -6325,11 +6345,11 @@ msgstr "Oluşturma Dizinleri"
 msgid "Open File in Bin"
 msgstr "Kutudaki Dosyayı Aç"
 
-#: rendergui.py:891 tools/toolsencoding.py:328
+#: rendergui.py:891 tools/toolsencoding.py:357
 msgid "Select folder to place rendered file in"
 msgstr "Oluşturulan dosyanın yerleştirileceği klasörü seçin"
 
-#: rendergui.py:892 tools/toolsencoding.py:329
+#: rendergui.py:892 tools/toolsencoding.py:358
 msgid "Give name for rendered file"
 msgstr "İşlenen dosya için ad ver"
 
@@ -7754,47 +7774,47 @@ msgstr "İşleme karesi: "
 msgid "Render error!"
 msgstr "İşleme hatası!"
 
-#: tools/toolsencoding.py:131
+#: tools/toolsencoding.py:160
 msgid "Save Location"
 msgstr "Konumu Kaydet"
 
-#: tools/toolsencoding.py:140
+#: tools/toolsencoding.py:169
 msgid "Video Clip"
 msgstr "Video Klip"
 
-#: tools/toolsencoding.py:286
+#: tools/toolsencoding.py:315
 msgid "Save Rendered Container Media Internally"
 msgstr "Oluşturulan Kapsayıcı Medyayı Dahili Olarak Kaydedin"
 
-#: tools/toolsencoding.py:287
+#: tools/toolsencoding.py:316
 msgid "Save Rendered Container Media Externally"
 msgstr "İşlenen Kapsayıcı Ortamı Harici Olarak Kaydedin"
 
-#: tools/toolsencoding.py:314
+#: tools/toolsencoding.py:343
 msgid "Frame Name:"
 msgstr "Kare Adı:"
 
-#: tools/toolsencoding.py:353
+#: tools/toolsencoding.py:382
 msgid "Render Video Clip"
 msgstr "İşlenen Video Klip"
 
-#: tools/toolsencoding.py:354
+#: tools/toolsencoding.py:383
 msgid "Frame Sequence Only"
 msgstr "Sadece Kare Sırası"
 
-#: tools/toolsencoding.py:385
+#: tools/toolsencoding.py:414
 msgid "Presets:"
 msgstr "Önayarlar:"
 
-#: tools/toolsencoding.py:388
+#: tools/toolsencoding.py:417
 msgid "User Defined"
 msgstr "Kullanıcı Tanımlı"
 
-#: tools/toolsencoding.py:389
+#: tools/toolsencoding.py:418
 msgid "Preset File type"
 msgstr "Önceden ayarlanmış Dosya türü"
 
-#: tools/toolsencoding.py:407
+#: tools/toolsencoding.py:436
 msgid "Use Default Profile:"
 msgstr "Varsayılan Profili Kullan:"
 
@@ -8817,15 +8837,15 @@ msgstr "Klip Seç"
 msgid "<b>Rendering Placeholder Media For:</b> "
 msgstr "<b>Görüntü İçin Yer Tutucu Ortam Oluşturma:</b> "
 
-#: containerclip.py:154
+#: containerclip.py:155
 msgid "Select A File"
 msgstr "Bir Dosya Seçin"
 
-#: containerclip.py:195
+#: containerclip.py:196
 msgid "Not all required files were defined"
 msgstr "Gerekli tüm dosyalar tanımlanmadı"
 
-#: containerclip.py:195
+#: containerclip.py:196
 #, fuzzy
 msgid ""
 "Select all files asked for in dialog for successful Container Clip creation."
@@ -8833,44 +8853,44 @@ msgstr ""
 "Kapsayıcı klibi başarılı bir şekilde oluşturmak için iletişim kutusunda "
 "istenen tüm dosyaları seçin."
 
-#: containerclip.py:202
+#: containerclip.py:203
 msgid "G'Mic Tool Script:"
 msgstr "G'Mic Komut Aracı:"
 
-#: containerclip.py:202
+#: containerclip.py:203
 msgid "Select G'Mic Tool Script"
 msgstr "G'Mic Araç Komut Dosyasını Seçin"
 
-#: containerclip.py:203
+#: containerclip.py:204
 msgid "Video Clip:"
 msgstr "Video Klip:"
 
-#: containerclip.py:204
+#: containerclip.py:205
 msgid "Create G'Mic Script Container Clip"
 msgstr "G'Mic kapsayıcı senaryo klibi oluşturun"
 
-#: containerclip.py:253
+#: containerclip.py:254
 msgid "G'Mic Container Clip Validation Error"
 msgstr "G'Mic Kapsayıcı Klip Doğrulama Hatası"
 
-#: containerclip.py:261
+#: containerclip.py:262
 msgid "Generator Plugin Script:"
 msgstr ""
 
-#: containerclip.py:261
+#: containerclip.py:262
 msgid "Generator Plugin Script"
 msgstr ""
 
-#: containerclip.py:262
+#: containerclip.py:263
 msgid "Create Generator Plugin Script Media Item"
 msgstr ""
 
-#: containerclip.py:333
+#: containerclip.py:344
 #, fuzzy
 msgid "Creating Container for Generator..."
 msgstr "Karıştıcı Projesi için kapsayıcı oluşturma"
 
-#: containerclip.py:337
+#: containerclip.py:348
 #, fuzzy
 msgid "Generator Container Clip Validation Error"
 msgstr "Karıştıcı Kapsayıcı Klip Doğrulama Hatası"
@@ -10220,6 +10240,10 @@ msgstr "Anahtar Kare Değerini Yapıştı"
 msgid ""
 "Up - Page Up\n"
 "Down - Page Down"
+msgstr ""
+
+#: utilsgtk.py:93
+msgid "Media MIME types"
 msgstr ""
 
 #~ msgid "Export To Tool"

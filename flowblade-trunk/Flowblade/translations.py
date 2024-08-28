@@ -181,13 +181,11 @@ def load_filters_translations():
     filter_names["Alpha Gradient"] = _("Alpha Gradient")
     filter_names["Crop"] = _("Crop")
     filter_names["Alpha Shape"]= _("Alpha Shape")
-
     filter_names["Volume"]= _("Volume")
     filter_names["Pan"]= _("Pan")
     filter_names["Pan Keyframed"]= _("Pan Keyframed")
     filter_names["Mono to Stereo"]= _("Mono to Stereo")
     filter_names["Swap Channels"]= _("Swap Channels")
-
     filter_names["Pitchshifter - AM"]= _("Pitchshifter - AM")
     filter_names["Distort - Barry's Satan"]= _("Distort - Barry's Satan")
     filter_names["Frequency Shift - Bode/Moog"]= _("Frequency Shift - Bode/Moog")
@@ -212,17 +210,14 @@ def load_filters_translations():
     filter_names["Distort - Sinus Wavewrap"]= _("Distort - Sinus Wavewrap")
     filter_names["Vinyl Effect"]= _("Vinyl Effect")
     filter_names["Chorus - Multivoice"]= _("Chorus - Multivoice")
-
     filter_names["Charcoal"]= _("Charcoal")
     filter_names["Glow"]= _("Glow")
     filter_names["Old Film"]= _("Old Film")
     filter_names["Scanlines"]= _("Scanlines")
     filter_names["Cartoon"]= _("Cartoon")
-
     filter_names["Pixelize"]= _("Pixelize")
     filter_names["Blur"]= _("Blur")
     filter_names["Grain"]= _("Grain")
-
     filter_names["Grayscale"]= _("Grayscale")
     filter_names["Grayscale Luminance"]= _("Grayscale Luminance")
     filter_names["Contrast"]= _("Contrast")
@@ -234,7 +229,6 @@ def load_filters_translations():
     filter_names["Tint"]= _("Tint")
     filter_names["White Balance"]= _("White Balance")
     filter_names["Levels"]= _("Levels")
-
     filter_names["Color Clustering"]= _("Color Clustering")
     filter_names["Chroma Hold"]= _("Chroma Hold")
     filter_names["Three Layer"]= _("Three Layer")
@@ -243,29 +237,23 @@ def load_filters_translations():
     filter_names["Primaries"]= _("Primaries")
     filter_names["Color Distance"]= _("Color Distance")
     filter_names["Threshold"]= _("Threshold")
-
     filter_names["Waves"]= _("Waves")
     filter_names["Lens Correction"]= _("Lens Correction")
     filter_names["Flip"]= _("Flip")
     filter_names["Mirror"]= _("Mirror")
     filter_names["V Sync"]= _("V Sync")
-
     filter_names["Edge Glow"]= _("Edge Glow")
     filter_names["Sobel"]= _("Sobel")
-
     filter_names["Denoise"]= _("Denoise")
     filter_names["Sharpness"]= _("Sharpness")
     filter_names["Letterbox"]= _("Letterbox")
-
     filter_names["Baltan"]= _("Baltan")
     filter_names["Vertigo"]= _("Vertigo")
     filter_names["Nervous"]= _("Nervous")
     filter_names["Freeze"]= _("Freeze")
-
     filter_names["Rotate"]= _("Rotate")
     filter_names["Shear"]= _("Shear")
     filter_names["Translate"]= _("Translate")
-
     filter_names["Color Select"]= _("Color Select")
     filter_names["Alpha Modify"]= _("Alpha Modify")
     filter_names["Spill Suppress"]= _("Spill Suppress")
@@ -285,7 +273,6 @@ def load_filters_translations():
     filter_names["Posterize"]= _("Posterize")
     filter_names["Soft Glow"]= _("Soft Glow")
     filter_names["Newspaper"]= _("Newspaper")
-
     filter_names["Luma Key"] = _("Luma Key")
     filter_names["Chroma Key"] = _("Chroma Key")
     filter_names["Affine"] = _("Affine")
@@ -294,7 +281,6 @@ def load_filters_translations():
     filter_names["Curves"] = _("Curves")
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
-
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
@@ -335,6 +321,11 @@ def load_filters_translations():
     filter_names["Motion Tracking Apply"] = _("Motion Tracking Apply")
     filter_names["Motion Tracking Create"] = _("Motion Tracking Create")
     filter_names["Alpha Shape Motion Tracked"]= _("Alpha Shape Motion Tracked")
+    filter_names["Compressor"] = _("Compressor")
+    filter_names["Channel Copy"] = _("Channel Copy")
+
+
+
     # param names
     global param_names
 
@@ -719,6 +710,8 @@ def load_filters_translations():
     param_names["Analysis Accuracy"] = _("Analysis Accuracy")
     param_names["Analysis Shakiness"] = _("Analysis Shakiness")
     param_names["Tracking Coords Interpretation"] = _("Tracking Coords Interpretation")
+    param_names["Copy Channel From:") = _("Copy Channel From:")
+    param_names["Copy Channel To:") = _("Copy Channel To:") 
 
     # Combo options
     global combo_options
