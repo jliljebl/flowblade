@@ -710,8 +710,8 @@ def load_filters_translations():
     param_names["Analysis Accuracy"] = _("Analysis Accuracy")
     param_names["Analysis Shakiness"] = _("Analysis Shakiness")
     param_names["Tracking Coords Interpretation"] = _("Tracking Coords Interpretation")
-    param_names["Copy Channel From:") = _("Copy Channel From:")
-    param_names["Copy Channel To:") = _("Copy Channel To:") 
+    param_names["Copy Channel From:"] = _("Copy Channel From:")
+    param_names["Copy Channel To:"] = _("Copy Channel To:") 
 
     # Combo options
     global combo_options
