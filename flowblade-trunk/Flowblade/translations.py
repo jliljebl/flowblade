@@ -99,7 +99,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["ru"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["pl"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a built-in available in all modules without imports
 
@@ -871,7 +871,7 @@ def load_filters_translations():
     plugin_names["Hex Colors"] = _("Hex Colors")
     plugin_names["Floating Boxes"] = _("Floating Boxes")
     plugin_names["Typewriter"] = _("Typewriter")
-    plugin_names["Multiline Text"] = _("Multiline Text")
+    plugin_names["Multiline Animation"] = _("Multiline Animation")
     plugin_names["Hex Overlay"] = _("Hex Overlay")
 
     global plugin_editor_groups

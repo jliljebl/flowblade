@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2024-08-27 10:29+0200\n"
 "Last-Translator: Stanislaw Polak <polak@agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -291,6 +291,7 @@ msgid "Render launch failed!"
 msgstr "Renderowanie nie powiodło się!"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "Komunikat o błędzie: "
 
@@ -794,7 +795,7 @@ msgstr "Renderowanie osi czasu"
 
 #: editorwindow.py:855 guipopover.py:336
 msgid "Add Generator..."
-msgstr "Dodaj generatoe.."
+msgstr "Dodaj generator.."
 
 #: editorwindow.py:856
 msgid "Load Generator Script..."
@@ -1179,7 +1180,7 @@ msgstr ""
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -1219,6 +1220,7 @@ msgstr "Nowy profil"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "Wybierz folder"
 
@@ -1996,7 +1998,7 @@ msgstr "Sekwencja znaków wodnych"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "Zamknij"
 
@@ -2016,7 +2018,7 @@ msgstr "Określ plik znaku wodnego"
 msgid "Remove Watermark"
 msgstr "Usuń znak wodny"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "Nie ustawiony"
 
@@ -2774,7 +2776,7 @@ msgstr ""
 msgid "Lossless"
 msgstr "Bezstratny"
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 msgid "Image Sequence"
 msgstr "Sekwencja obrazów"
 
@@ -5202,8 +5204,8 @@ msgid "Typewriter"
 msgstr "Maszyna do pisania"
 
 #: translations.py:874
-msgid "Multiline Text"
-msgstr "Tekst wielowierszowy"
+msgid "Multiline Animation"
+msgstr "Animacja wieloliniowa"
 
 #: translations.py:875
 msgid "Hex Overlay"
@@ -7476,6 +7478,7 @@ msgid "no preview"
 msgstr "brak podglądu"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "Podgląd"
 
@@ -8552,7 +8555,7 @@ msgstr "Zamknij narzędzie"
 msgid "No Editors for this script"
 msgstr "Brak edytorów dla tego skryptu"
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 msgid "Clip Frame"
 msgstr "Ramka klipu"
 
@@ -9020,7 +9023,7 @@ msgstr "Renderowany element "
 msgid "Add Transition"
 msgstr "Dodaj przejście"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "Zastosuj"
 
@@ -9247,11 +9250,11 @@ msgstr "7 kolumn"
 msgid "All Files"
 msgstr "Wszystkie pliki"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "Pliki wideo"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "Pliki dźwiękowe"
 
@@ -9975,6 +9978,134 @@ msgstr ""
 msgid "Media MIME types"
 msgstr "Typy MIME mediów"
 
+#: mediaplugin.py:284 mediaplugin.py:380
+msgid "Add Generator"
+msgstr "Dodaj generator"
+
+#: mediaplugin.py:292
+msgid "Generator:"
+msgstr "Klip generatora"
+
+#: mediaplugin.py:346
+msgid "Add as Container Clip"
+msgstr "Dodaj jako klip kontenerowy"
+
+#: mediaplugin.py:347
+msgid "Add as Rendered Clip"
+msgstr "Dodaj jako klip wyrenderowany"
+
+#: mediaplugin.py:350
+msgid "Import Action:"
+msgstr "Akcja importu:"
+
+#: mediaplugin.py:356
+msgid "Generator Length:"
+msgstr "Długość generatora:"
+
+#: mediaplugin.py:358
+msgid "Encode settings"
+msgstr "Ustawienia kodowania"
+
+#: mediaplugin.py:406
+msgid "<b>Author: </b> "
+msgstr "<b>Ścieżka: </b>"
+
+#: mediaplugin.py:408
+msgid "<b>Version: </b> "
+msgstr "<b>Pozycja:</b>"
+
+#: mediaplugin.py:637
+msgid "No Generator"
+msgstr "Dodaj generatoe.."
+
+#: mediaplugin.py:769
+msgid "Error in Preview for frame: "
+msgstr "Podgląd dla klatki: "
+
+#: mediaplugin.py:787
+msgid "_media_plugin_properties"
+msgstr "Właściwości klipu"
+
+#: mediaplugin.py:813
+msgid "Generator properties load failed!"
+msgstr "Załaduj właściwości generatora"
+
+#: projectaddmediafolder.py:34
+msgid "Add Media From Folder"
+msgstr "Dodaj multimedia z folderu..."
+
+#: projectaddmediafolder.py:46
+msgid "Add Media from Folder:"
+msgstr "Dodaj multimedia z folderu:"
+
+#: projectaddmediafolder.py:50
+msgid "Search subfolders"
+msgstr "Przeszukaj podfoldery"
+
+#: projectaddmediafolder.py:55
+msgid "All Media Files"
+msgstr "Wszystkie pliki multimedialne"
+
+#: projectaddmediafolder.py:58
+msgid "Image Files"
+msgstr "Pliki obrazów"
+
+#: projectaddmediafolder.py:61
+msgid "File types to add:"
+msgstr "Typy plików do dodania:"
+
+#: projectaddmediafolder.py:67
+msgid "Filter by file extension"
+msgstr "Filtruj według rozszerzenia pliku"
+
+#: projectaddmediafolder.py:76
+msgid "File extension:"
+msgstr "Rozszerzenie pliku:"
+
+#: projectaddmediafolder.py:89
+msgid "No files loaded."
+msgstr "Nie załadowano żadnych plików."
+
+#: projectaddmediafolder.py:101
+msgid "Load Add Files Set"
+msgstr "Załaduj zestaw plików do dodani"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+msgid "Files to load: "
+msgstr "Pliki do załadowania:"
+
+#: projectaddmediafolder.py:112
+msgid "Add Media"
+msgstr "Dodaj multimedia"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr ""
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr ""
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr ""
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr ""
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr "Maksymalna liczba plików do zaimportowania:"
+
+#: projectaddmediafolder.py:157
+msgid "Searching..."
+msgstr "Zapisuję..."
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr ""
+
 #~ msgid "Export To Tool"
 #~ msgstr "Eksportuj do narzędzia"
 
@@ -10215,9 +10346,6 @@ msgstr "Typy MIME mediów"
 #~ msgid "Proxy Clip"
 #~ msgstr "Klip proxy"
 
-#~ msgid "Generator Clip"
-#~ msgstr "Klip generatora"
-
 #, fuzzy
 #~ msgid "Tracking Data"
 #~ msgstr "Ścieżka "
@@ -10375,9 +10503,6 @@ msgstr "Typy MIME mediów"
 
 #~ msgid "Set Position"
 #~ msgstr "Ustaw pozycję"
-
-#~ msgid "Saving..."
-#~ msgstr "Zapisuję..."
 
 #~ msgid "Jobs Remaining Item:"
 #~ msgstr "Pozostałe elementy zadania::"
@@ -10631,35 +10756,11 @@ msgstr "Typy MIME mediów"
 #~ msgid "This can take up to a few minutes, please wait..."
 #~ msgstr "Może to zająć kilka minut, proszę czekać ..."
 
-#~ msgid "Add Media from Folder:"
-#~ msgstr "Dodaj multimedia z folderu:"
-
 #~ msgid "Create new Bin"
 #~ msgstr "Utwórz nowy pojemnik"
 
-#~ msgid "Search subfolders"
-#~ msgstr "Przeszukaj podfoldery"
-
-#~ msgid "Image Files"
-#~ msgstr "Pliki graficzne"
-
-#~ msgid "File types to add:"
-#~ msgstr "Typy plików do dodania:"
-
-#~ msgid "Filter by file extension"
-#~ msgstr "Filtruj według rozszerzenia pliku"
-
-#~ msgid "File extension:"
-#~ msgstr "Rozszerzenie pliku:"
-
-#~ msgid "Max. number of files to import:"
-#~ msgstr "Maks. liczba plików do zaimportowania:"
-
 #~ msgid "Media Folder Add Info"
 #~ msgstr "Folder multimediów dodaj informacje"
-
-#~ msgid "Add Files"
-#~ msgstr "Dodaj pliki"
 
 #~ msgid "Number of files to add exceeds currently set limit!"
 #~ msgstr "Liczba plików do dodania przekracza aktualnie ustawiony limit!"
@@ -11310,9 +11411,6 @@ msgstr "Typy MIME mediów"
 
 #~ msgid "Pos:"
 #~ msgstr "Poz:"
-
-#~ msgid "<b>Position:</b>"
-#~ msgstr "<b>Pozycja:</b>"
 
 #~ msgid "<b>Clip:</b>"
 #~ msgstr "<b>Klip:</b>"

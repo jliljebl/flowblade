@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,6 +252,7 @@ msgid "Render launch failed!"
 msgstr ""
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr ""
 
@@ -1122,7 +1123,7 @@ msgstr ""
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr ""
 
@@ -1159,6 +1160,7 @@ msgstr ""
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr ""
 
@@ -1897,7 +1899,7 @@ msgstr ""
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr ""
 
@@ -1917,7 +1919,7 @@ msgstr ""
 msgid "Remove Watermark"
 msgstr ""
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr ""
 
@@ -2645,7 +2647,7 @@ msgstr ""
 msgid "Lossless"
 msgstr ""
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 msgid "Image Sequence"
 msgstr ""
 
@@ -5073,7 +5075,7 @@ msgid "Typewriter"
 msgstr ""
 
 #: translations.py:874
-msgid "Multiline Text"
+msgid "Multiline Animation"
 msgstr ""
 
 #: translations.py:875
@@ -7285,6 +7287,7 @@ msgid "no preview"
 msgstr ""
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr ""
 
@@ -8246,7 +8249,7 @@ msgstr ""
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 msgid "Clip Frame"
 msgstr ""
 
@@ -8704,7 +8707,7 @@ msgstr ""
 msgid "Add Transition"
 msgstr ""
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr ""
 
@@ -8925,11 +8928,11 @@ msgstr ""
 msgid "All Files"
 msgstr ""
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr ""
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr ""
 
@@ -9643,4 +9646,132 @@ msgstr ""
 
 #: utilsgtk.py:93
 msgid "Media MIME types"
+msgstr ""
+
+#: mediaplugin.py:284 mediaplugin.py:380
+msgid "Add Generator"
+msgstr ""
+
+#: mediaplugin.py:292
+msgid "Generator:"
+msgstr ""
+
+#: mediaplugin.py:346
+msgid "Add as Container Clip"
+msgstr ""
+
+#: mediaplugin.py:347
+msgid "Add as Rendered Clip"
+msgstr ""
+
+#: mediaplugin.py:350
+msgid "Import Action:"
+msgstr ""
+
+#: mediaplugin.py:356
+msgid "Generator Length:"
+msgstr ""
+
+#: mediaplugin.py:358
+msgid "Encode settings"
+msgstr ""
+
+#: mediaplugin.py:406
+msgid "<b>Author: </b> "
+msgstr ""
+
+#: mediaplugin.py:408
+msgid "<b>Version: </b> "
+msgstr ""
+
+#: mediaplugin.py:637
+msgid "No Generator"
+msgstr ""
+
+#: mediaplugin.py:769
+msgid "Error in Preview for frame: "
+msgstr ""
+
+#: mediaplugin.py:787
+msgid "_media_plugin_properties"
+msgstr ""
+
+#: mediaplugin.py:813
+msgid "Generator properties load failed!"
+msgstr ""
+
+#: projectaddmediafolder.py:34
+msgid "Add Media From Folder"
+msgstr ""
+
+#: projectaddmediafolder.py:46
+msgid "Add Media from Folder:"
+msgstr ""
+
+#: projectaddmediafolder.py:50
+msgid "Search subfolders"
+msgstr ""
+
+#: projectaddmediafolder.py:55
+msgid "All Media Files"
+msgstr ""
+
+#: projectaddmediafolder.py:58
+msgid "Image Files"
+msgstr ""
+
+#: projectaddmediafolder.py:61
+msgid "File types to add:"
+msgstr ""
+
+#: projectaddmediafolder.py:67
+msgid "Filter by file extension"
+msgstr ""
+
+#: projectaddmediafolder.py:76
+msgid "File extension:"
+msgstr ""
+
+#: projectaddmediafolder.py:89
+msgid "No files loaded."
+msgstr ""
+
+#: projectaddmediafolder.py:101
+msgid "Load Add Files Set"
+msgstr ""
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+msgid "Files to load: "
+msgstr ""
+
+#: projectaddmediafolder.py:112
+msgid "Add Media"
+msgstr ""
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr ""
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr ""
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr ""
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr ""
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr ""
+
+#: projectaddmediafolder.py:157
+msgid "Searching..."
+msgstr ""
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
 msgstr ""

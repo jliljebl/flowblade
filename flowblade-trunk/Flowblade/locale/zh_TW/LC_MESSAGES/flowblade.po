@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -262,6 +262,7 @@ msgid "Render launch failed!"
 msgstr "渲染啟動失敗！"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "錯誤訊息："
 
@@ -1187,7 +1188,7 @@ msgstr "確定"
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "取消"
 
@@ -1227,6 +1228,7 @@ msgstr "新專案"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "選擇資料夾"
 
@@ -2020,7 +2022,7 @@ msgstr "序列浮水印"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "關閉"
 
@@ -2040,7 +2042,7 @@ msgstr "設定浮水印檔案"
 msgid "Remove Watermark"
 msgstr "移除浮水印"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "未設定"
 
@@ -2803,7 +2805,7 @@ msgstr ""
 msgid "Lossless"
 msgstr ""
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 #, fuzzy
 msgid "Image Sequence"
 msgstr "影像序列"
@@ -5390,8 +5392,9 @@ msgid "Typewriter"
 msgstr "覆寫"
 
 #: translations.py:874
-msgid "Multiline Text"
-msgstr ""
+#, fuzzy
+msgid "Multiline Animation"
+msgstr "Natron 動畫"
 
 #: translations.py:875
 #, fuzzy
@@ -7717,6 +7720,7 @@ msgid "no preview"
 msgstr "沒有預覽"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "預覽"
 
@@ -8783,7 +8787,7 @@ msgstr "關閉"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 #, fuzzy
 msgid "Clip Frame"
 msgstr "剪輯名稱："
@@ -9300,7 +9304,7 @@ msgstr "渲染項目 "
 msgid "Add Transition"
 msgstr "新增轉場"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "套用"
 
@@ -9533,11 +9537,11 @@ msgstr "7 列"
 msgid "All Files"
 msgstr "全部檔案"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "視訊檔案"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "音訊檔案"
 
@@ -10318,6 +10322,159 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
+#: mediaplugin.py:284 mediaplugin.py:380
+#, fuzzy
+msgid "Add Generator"
+msgstr "載入渲染參數檔案"
+
+#: mediaplugin.py:292
+#, fuzzy
+msgid "Generator:"
+msgstr "混合器"
+
+#: mediaplugin.py:346
+#, fuzzy
+msgid "Add as Container Clip"
+msgstr "複製剪輯片段"
+
+#: mediaplugin.py:347
+#, fuzzy
+msgid "Add as Rendered Clip"
+msgstr "新增連續影像剪輯片段"
+
+#: mediaplugin.py:350
+#, fuzzy
+msgid "Import Action:"
+msgstr "動作："
+
+#: mediaplugin.py:356
+#, fuzzy
+msgid "Generator Length:"
+msgstr "渲染剪輯片段長度："
+
+#: mediaplugin.py:358
+#, fuzzy
+msgid "Encode settings"
+msgstr "編碼設定"
+
+#: mediaplugin.py:406
+#, fuzzy
+msgid "<b>Author: </b> "
+msgstr "<b>軌： </b>"
+
+#: mediaplugin.py:408
+#, fuzzy
+msgid "<b>Version: </b> "
+msgstr "<b>目的：</b>"
+
+#: mediaplugin.py:637
+#, fuzzy
+msgid "No Generator"
+msgstr "載入渲染參數檔案"
+
+#: mediaplugin.py:769
+#, fuzzy
+msgid "Error in Preview for frame: "
+msgstr "影格預覽： "
+
+#: mediaplugin.py:787
+#, fuzzy
+msgid "_media_plugin_properties"
+msgstr "剪輯片段屬性"
+
+#: mediaplugin.py:813
+#, fuzzy
+msgid "Generator properties load failed!"
+msgstr "渲染內容"
+
+#: projectaddmediafolder.py:34
+#, fuzzy
+msgid "Add Media From Folder"
+msgstr "移動選擇的媒體到容器"
+
+#: projectaddmediafolder.py:46
+#, fuzzy
+msgid "Add Media from Folder:"
+msgstr "移動選擇的媒體到容器"
+
+#: projectaddmediafolder.py:50
+#, fuzzy
+msgid "Search subfolders"
+msgstr "選擇資料夾"
+
+#: projectaddmediafolder.py:55
+#, fuzzy
+msgid "All Media Files"
+msgstr "全部檔案"
+
+#: projectaddmediafolder.py:58
+#, fuzzy
+msgid "Image Files"
+msgstr "影像大小："
+
+#: projectaddmediafolder.py:61
+#, fuzzy
+msgid "File types to add:"
+msgstr "解析度比例："
+
+#: projectaddmediafolder.py:67
+#, fuzzy
+msgid "Filter by file extension"
+msgstr "解析度比例："
+
+#: projectaddmediafolder.py:76
+#, fuzzy
+msgid "File extension:"
+msgstr "解析度比例："
+
+#: projectaddmediafolder.py:89
+#, fuzzy
+msgid "No files loaded."
+msgstr "未選擇檔案"
+
+#: projectaddmediafolder.py:101
+#, fuzzy
+msgid "Load Add Files Set"
+msgstr "新增濾鏡"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+msgid "Files to load: "
+msgstr ""
+
+#: projectaddmediafolder.py:112
+#, fuzzy
+msgid "Add Media"
+msgstr "媒體"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr ""
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr ""
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr ""
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr ""
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr ""
+
+#: projectaddmediafolder.py:157
+#, fuzzy
+msgid "Searching..."
+msgstr "渲染中"
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr ""
+
 #~ msgid "Export To Tool"
 #~ msgstr "匯出到工具"
 
@@ -10566,10 +10723,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Proxy Clip"
 #~ msgstr "沒有剪輯片段"
-
-#, fuzzy
-#~ msgid "Generator Clip"
-#~ msgstr "混合器"
 
 #, fuzzy
 #~ msgid "Tracking Data"
@@ -10937,24 +11090,8 @@ msgstr ""
 #~ msgstr "建立新的序列"
 
 #, fuzzy
-#~ msgid "Search subfolders"
-#~ msgstr "選擇資料夾"
-
-#, fuzzy
-#~ msgid "Image Files"
-#~ msgstr "影像大小："
-
-#, fuzzy
-#~ msgid "File extension:"
-#~ msgstr "解析度比例："
-
-#, fuzzy
 #~ msgid "Media Folder Add Info"
 #~ msgstr "媒體重疊資訊"
-
-#, fuzzy
-#~ msgid "Add Files"
-#~ msgstr "新增濾鏡"
 
 #, fuzzy
 #~ msgid " files?"
@@ -11395,9 +11532,6 @@ msgstr ""
 
 #~ msgid "JACK Audio..."
 #~ msgstr "JACK 音訊..."
-
-#~ msgid "Natron Animations"
-#~ msgstr "Natron 動畫"
 
 #~ msgid "Select Thumbnail Folder"
 #~ msgstr "選擇縮略圖資料夾"

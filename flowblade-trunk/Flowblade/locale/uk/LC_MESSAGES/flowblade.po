@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2021-01-15 21:19+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -272,6 +272,7 @@ msgid "Render launch failed!"
 msgstr "Помилка запуску візуалізації!"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "Повідомлення про помилку: "
 
@@ -1182,7 +1183,7 @@ msgstr "Гаразд"
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -1222,6 +1223,7 @@ msgstr "Новий профіль"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "Вибір теки"
 
@@ -2021,7 +2023,7 @@ msgstr "Послідовність водяного знака"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "Закрити"
 
@@ -2041,7 +2043,7 @@ msgstr "Встановити файл водяних знаків"
 msgid "Remove Watermark"
 msgstr "Видалити водяний знак"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "Не встановлено"
 
@@ -2790,7 +2792,7 @@ msgstr ""
 msgid "Lossless"
 msgstr ""
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 #, fuzzy
 msgid "Image Sequence"
 msgstr "Послідовність зображень"
@@ -5325,8 +5327,9 @@ msgid "Typewriter"
 msgstr "Перезаписати"
 
 #: translations.py:874
-msgid "Multiline Text"
-msgstr ""
+#, fuzzy
+msgid "Multiline Animation"
+msgstr "Матриця"
 
 #: translations.py:875
 #, fuzzy
@@ -7579,6 +7582,7 @@ msgid "no preview"
 msgstr "без перегляду"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "Перегляд"
 
@@ -8556,7 +8560,7 @@ msgstr "Закрити інструмент"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 msgid "Clip Frame"
 msgstr ""
 
@@ -9041,7 +9045,7 @@ msgstr "Візуалізація елементу "
 msgid "Add Transition"
 msgstr "Додати перехід"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "Застосувати"
 
@@ -9266,11 +9270,11 @@ msgstr "7 колонок"
 msgid "All Files"
 msgstr "Всі файли"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "Відеофайли"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "Аудіофайли"
 
@@ -10031,6 +10035,153 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
+#: mediaplugin.py:284 mediaplugin.py:380
+#, fuzzy
+msgid "Add Generator"
+msgstr "Додати папку медіа..."
+
+#: mediaplugin.py:292
+#, fuzzy
+msgid "Generator:"
+msgstr "Загальне"
+
+#: mediaplugin.py:346
+#, fuzzy
+msgid "Add as Container Clip"
+msgstr "Створити контейнерний кліп"
+
+#: mediaplugin.py:347
+#, fuzzy
+msgid "Add as Rendered Clip"
+msgstr "Додати кліп послідовності зображень"
+
+#: mediaplugin.py:350
+#, fuzzy
+msgid "Import Action:"
+msgstr "Дія:"
+
+#: mediaplugin.py:356
+#, fuzzy
+msgid "Generator Length:"
+msgstr "Зміна довжини кліпу"
+
+#: mediaplugin.py:358
+#, fuzzy
+msgid "Encode settings"
+msgstr "Кодування"
+
+#: mediaplugin.py:406
+#, fuzzy
+msgid "<b>Author: </b> "
+msgstr "<b>Доріжка: </b>"
+
+#: mediaplugin.py:408
+#, fuzzy
+msgid "<b>Version: </b> "
+msgstr "<b>Пункт призначення: </b>"
+
+#: mediaplugin.py:637
+#, fuzzy
+msgid "No Generator"
+msgstr "Додати папку медіа..."
+
+#: mediaplugin.py:769
+msgid "Error in Preview for frame: "
+msgstr ""
+
+#: mediaplugin.py:787
+#, fuzzy
+msgid "_media_plugin_properties"
+msgstr "Властивості кліпу"
+
+#: mediaplugin.py:813
+#, fuzzy
+msgid "Generator properties load failed!"
+msgstr "Властивості обробити"
+
+#: projectaddmediafolder.py:34
+#, fuzzy
+msgid "Add Media From Folder"
+msgstr "Додати носій із папки"
+
+#: projectaddmediafolder.py:46
+msgid "Add Media from Folder:"
+msgstr "Додати носій із папки:"
+
+#: projectaddmediafolder.py:50
+msgid "Search subfolders"
+msgstr "Шукати в папках"
+
+#: projectaddmediafolder.py:55
+#, fuzzy
+msgid "All Media Files"
+msgstr "Всі файли"
+
+#: projectaddmediafolder.py:58
+msgid "Image Files"
+msgstr "Файли зображень"
+
+#: projectaddmediafolder.py:61
+msgid "File types to add:"
+msgstr "Типи файлів для додавання:"
+
+#: projectaddmediafolder.py:67
+msgid "Filter by file extension"
+msgstr "Фільтрувати за розширенням файлу"
+
+#: projectaddmediafolder.py:76
+msgid "File extension:"
+msgstr "Суфікс назви файла:"
+
+#: projectaddmediafolder.py:89
+#, fuzzy
+msgid "No files loaded."
+msgstr "Файл не вибрано"
+
+#: projectaddmediafolder.py:101
+#, fuzzy
+msgid "Load Add Files Set"
+msgstr "Додати файли"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+#, fuzzy
+msgid "Files to load: "
+msgstr "Типи файлів для додавання:"
+
+#: projectaddmediafolder.py:112
+#, fuzzy
+msgid "Add Media"
+msgstr "Медіа"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr "29"
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr "49"
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr "99"
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr "199"
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr "Кількість файлів для імпорту:"
+
+#: projectaddmediafolder.py:157
+#, fuzzy
+msgid "Searching..."
+msgstr "Збереження..."
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr ""
+
 #~ msgid "Export To Tool"
 #~ msgstr "Експорт до інструменту"
 
@@ -10262,10 +10413,6 @@ msgstr ""
 #~ msgstr "Проміжний кліп"
 
 #, fuzzy
-#~ msgid "Generator Clip"
-#~ msgstr "Загальне"
-
-#, fuzzy
 #~ msgid "Tracking Data"
 #~ msgstr "Доріжка "
 
@@ -10351,9 +10498,6 @@ msgstr ""
 
 #~ msgid "User Created Custom Profiles"
 #~ msgstr "Користувацькі профілі, створені користувачем"
-
-#~ msgid "Saving..."
-#~ msgstr "Збереження..."
 
 #~ msgid "Current Job:"
 #~ msgstr "Поточне завдання:"
@@ -10505,47 +10649,11 @@ msgstr ""
 #~ msgid "This can take up to a few minutes, please wait..."
 #~ msgstr "Це може зайняти кілька хвилин, зачекайте..."
 
-#~ msgid "Add Media from Folder:"
-#~ msgstr "Додати носій із папки:"
-
 #~ msgid "Create new Bin"
 #~ msgstr "Створіть новий бункер"
 
-#~ msgid "Search subfolders"
-#~ msgstr "Шукати в папках"
-
-#~ msgid "Image Files"
-#~ msgstr "Файли зображень"
-
-#~ msgid "File types to add:"
-#~ msgstr "Типи файлів для додавання:"
-
-#~ msgid "Filter by file extension"
-#~ msgstr "Фільтрувати за розширенням файлу"
-
-#~ msgid "File extension:"
-#~ msgstr "Суфікс назви файла:"
-
-#~ msgid "29"
-#~ msgstr "29"
-
-#~ msgid "49"
-#~ msgstr "49"
-
-#~ msgid "99"
-#~ msgstr "99"
-
-#~ msgid "199"
-#~ msgstr "199"
-
-#~ msgid "Max. number of files to import:"
-#~ msgstr "Кількість файлів для імпорту:"
-
 #~ msgid "Media Folder Add Info"
 #~ msgstr "Медіа-папка додає інформацію"
-
-#~ msgid "Add Files"
-#~ msgstr "Додати файли"
 
 #~ msgid "Number of files to add exceeds currently set limit!"
 #~ msgstr ""

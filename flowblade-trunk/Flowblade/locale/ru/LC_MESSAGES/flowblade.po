@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2023-06-20 15:06+0300\n"
 "Last-Translator: Смольянинов Николай <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: ru\n"
@@ -282,6 +282,7 @@ msgid "Render launch failed!"
 msgstr "Не удалось запустить сборку!"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "Сообщение об ошибке: "
 
@@ -1176,7 +1177,7 @@ msgstr "Ok"
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -1216,6 +1217,7 @@ msgstr "Новый профиль"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "Выберите папку"
 
@@ -2004,7 +2006,7 @@ msgstr "Водяной знак в видеоряде"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "Закрыть"
 
@@ -2024,7 +2026,7 @@ msgstr "Установить водяной знак"
 msgid "Remove Watermark"
 msgstr "Удалить водяной знак"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "Не установлено"
 
@@ -2779,7 +2781,7 @@ msgstr "MPEG"
 msgid "Lossless"
 msgstr "Без потерь"
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 msgid "Image Sequence"
 msgstr "Серия изображений"
 
@@ -5241,7 +5243,8 @@ msgid "Typewriter"
 msgstr "Пишущая машинка"
 
 #: translations.py:874
-msgid "Multiline Text"
+#, fuzzy
+msgid "Multiline Animation"
 msgstr "Многострочный текст"
 
 #: translations.py:875
@@ -7538,6 +7541,7 @@ msgid "no preview"
 msgstr "без предпросмотра"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "Предпросмотр"
 
@@ -8610,7 +8614,7 @@ msgstr "Закрыть"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 msgid "Clip Frame"
 msgstr "Кадр клипа"
 
@@ -9088,7 +9092,7 @@ msgstr "Пересборка элемента "
 msgid "Add Transition"
 msgstr "Добавить переход"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "Применить"
 
@@ -9318,11 +9322,11 @@ msgstr "7 Столбцов"
 msgid "All Files"
 msgstr "Все файлы"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "Видеофайлы"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "Звуковые файлы"
 
@@ -10092,6 +10096,148 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
+#: mediaplugin.py:284 mediaplugin.py:380
+#, fuzzy
+msgid "Add Generator"
+msgstr "Добавить генератор..."
+
+#: mediaplugin.py:292
+#, fuzzy
+msgid "Generator:"
+msgstr "Сгенерированный клип"
+
+#: mediaplugin.py:346
+#, fuzzy
+msgid "Add as Container Clip"
+msgstr "Контейнерные клипы"
+
+#: mediaplugin.py:347
+#, fuzzy
+msgid "Add as Rendered Clip"
+msgstr "Добавление клипа из серии изображений"
+
+#: mediaplugin.py:350
+#, fuzzy
+msgid "Import Action:"
+msgstr "Действие:"
+
+#: mediaplugin.py:356
+#, fuzzy
+msgid "Generator Length:"
+msgstr "Длительность генератора:"
+
+#: mediaplugin.py:358
+#, fuzzy
+msgid "Encode settings"
+msgstr "Параметры кодирования"
+
+#: mediaplugin.py:406
+#, fuzzy
+msgid "<b>Author: </b> "
+msgstr "<b>Автосопровождение</b>"
+
+#: mediaplugin.py:408
+#, fuzzy
+msgid "<b>Version: </b> "
+msgstr "<b>Назначение:</b>"
+
+#: mediaplugin.py:637
+#, fuzzy
+msgid "No Generator"
+msgstr "Добавить генератор..."
+
+#: mediaplugin.py:769
+#, fuzzy
+msgid "Error in Preview for frame: "
+msgstr "Предпросмотр кадра: "
+
+#: mediaplugin.py:787
+#, fuzzy
+msgid "_media_plugin_properties"
+msgstr "Сведения о клипе"
+
+#: mediaplugin.py:813
+#, fuzzy
+msgid "Generator properties load failed!"
+msgstr "При сборке не удалось скопировать элемент файла проекта!"
+
+#: projectaddmediafolder.py:34
+msgid "Add Media From Folder"
+msgstr "Добавление медиа из папки"
+
+#: projectaddmediafolder.py:46
+msgid "Add Media from Folder:"
+msgstr "Добавить медиа из папки:"
+
+#: projectaddmediafolder.py:50
+msgid "Search subfolders"
+msgstr "Поиск во вложенных папках"
+
+#: projectaddmediafolder.py:55
+#, fuzzy
+msgid "All Media Files"
+msgstr "Все медиафайлы"
+
+#: projectaddmediafolder.py:58
+msgid "Image Files"
+msgstr "Файлы изображений"
+
+#: projectaddmediafolder.py:61
+msgid "File types to add:"
+msgstr "Тип файлов для добавления:"
+
+#: projectaddmediafolder.py:67
+msgid "Filter by file extension"
+msgstr "Фильтр по расширению файла"
+
+#: projectaddmediafolder.py:76
+msgid "File extension:"
+msgstr "Расширение файла:"
+
+#: projectaddmediafolder.py:89
+msgid "No files loaded."
+msgstr "Файлы не загружены."
+
+#: projectaddmediafolder.py:101
+msgid "Load Add Files Set"
+msgstr "Загрузить файлы"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+msgid "Files to load: "
+msgstr "Загруженно файлов: "
+
+#: projectaddmediafolder.py:112
+msgid "Add Media"
+msgstr "Добавить медиа"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr "29"
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr "49"
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr "99"
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr "199"
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr "Макс. количество файлов для импорта:"
+
+#: projectaddmediafolder.py:157
+msgid "Searching..."
+msgstr "Идёт поиск..."
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr " из найденных файлов загружены не будут."
+
 #~ msgid "Export To Tool"
 #~ msgstr "Экспорт в инструменты"
 
@@ -10349,9 +10495,6 @@ msgstr ""
 
 #~ msgid "Proxy Clip"
 #~ msgstr "Прокси-клип"
-
-#~ msgid "Generator Clip"
-#~ msgstr "Сгенерированный клип"
 
 #, fuzzy
 #~ msgid "Tracking Data"
@@ -10847,9 +10990,6 @@ msgstr ""
 #~ "<b>Композиторов</b>, а их расположение и<b>дорожки</b> назначения легко "
 #~ "изменить."
 
-#~ msgid "<b>Auto Follow</b>"
-#~ msgstr "<b>Автосопровождение</b>"
-
 #~ msgid ""
 #~ "<b>Compositors</b> follow their origin clips automatically and users can "
 #~ "only\n"
@@ -10873,60 +11013,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Вы можете изменить <b>режим композитинга</b> для текущего\n"
 #~ "<b>видеоряда</b>, используя меню <b>Видеоряд -> Режим композитинга</b>."
-
-#~ msgid "Add Media From Folder"
-#~ msgstr "Добавление медиа из папки"
-
-#~ msgid "Add Media from Folder:"
-#~ msgstr "Добавить медиа из папки:"
-
-#~ msgid "Search subfolders"
-#~ msgstr "Поиск во вложенных папках"
-
-#~ msgid "Image Files"
-#~ msgstr "Файлы изображений"
-
-#~ msgid "File types to add:"
-#~ msgstr "Тип файлов для добавления:"
-
-#~ msgid "Filter by file extension"
-#~ msgstr "Фильтр по расширению файла"
-
-#~ msgid "File extension:"
-#~ msgstr "Расширение файла:"
-
-#~ msgid "No files loaded."
-#~ msgstr "Файлы не загружены."
-
-#~ msgid "Load Add Files Set"
-#~ msgstr "Загрузить файлы"
-
-#~ msgid "Files to load: "
-#~ msgstr "Загруженно файлов: "
-
-#~ msgid "Add Media"
-#~ msgstr "Добавить медиа"
-
-#~ msgid "29"
-#~ msgstr "29"
-
-#~ msgid "49"
-#~ msgstr "49"
-
-#~ msgid "99"
-#~ msgstr "99"
-
-#~ msgid "199"
-#~ msgstr "199"
-
-#~ msgid "Max. number of files to import:"
-#~ msgstr "Макс. количество файлов для импорта:"
-
-#~ msgid "Searching..."
-#~ msgstr "Идёт поиск..."
-
-#~ msgid " of found files will not be loaded."
-#~ msgstr " из найденных файлов загружены не будут."
 
 #~ msgid "Set All Expanded"
 #~ msgstr "Развернуть все эффекты"

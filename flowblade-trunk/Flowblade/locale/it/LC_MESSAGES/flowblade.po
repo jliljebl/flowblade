@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -273,6 +273,7 @@ msgid "Render launch failed!"
 msgstr "Avvio rendering fallito!"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "Messaggio di errore: "
 
@@ -1208,7 +1209,7 @@ msgstr "Ok"
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -1248,6 +1249,7 @@ msgstr "Nuovo Profilo"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "Seleziona cartella"
 
@@ -2057,7 +2059,7 @@ msgstr "Watermark della sequenza"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "Chiudi"
 
@@ -2077,7 +2079,7 @@ msgstr "Imposta un file per il Watermark"
 msgid "Remove Watermark"
 msgstr "Rimuovi il Watermark"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "Non impostato"
 
@@ -2852,7 +2854,7 @@ msgstr ""
 msgid "Lossless"
 msgstr ""
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 #, fuzzy
 msgid "Image Sequence"
 msgstr "Aggiungi sequenza d'immagini"
@@ -5438,8 +5440,9 @@ msgid "Typewriter"
 msgstr "Sovrascrivi"
 
 #: translations.py:874
-msgid "Multiline Text"
-msgstr ""
+#, fuzzy
+msgid "Multiline Animation"
+msgstr "Animazioni Natron"
 
 #: translations.py:875
 #, fuzzy
@@ -7788,6 +7791,7 @@ msgid "no preview"
 msgstr "nessuna anteprima"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "Anteprima"
 
@@ -8863,7 +8867,7 @@ msgstr "Chiudi"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 #, fuzzy
 msgid "Clip Frame"
 msgstr "Nome clip:"
@@ -9381,7 +9385,7 @@ msgstr "Elementi in elaborazione "
 msgid "Add Transition"
 msgstr "Aggiungi Transizione"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "Applica"
 
@@ -9618,11 +9622,11 @@ msgstr "7 colonne"
 msgid "All Files"
 msgstr "Tutti i file"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "File video"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "File audio"
 
@@ -10403,6 +10407,160 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
+#: mediaplugin.py:284 mediaplugin.py:380
+#, fuzzy
+msgid "Add Generator"
+msgstr "Aggiungi Clip..."
+
+#: mediaplugin.py:292
+#, fuzzy
+msgid "Generator:"
+msgstr "Mixer"
+
+#: mediaplugin.py:346
+#, fuzzy
+msgid "Add as Container Clip"
+msgstr "Copia Clip"
+
+#: mediaplugin.py:347
+#, fuzzy
+msgid "Add as Rendered Clip"
+msgstr "Aggiungi una Sequenza di immagini"
+
+#: mediaplugin.py:350
+#, fuzzy
+msgid "Import Action:"
+msgstr "Azione:"
+
+#: mediaplugin.py:356
+#, fuzzy
+msgid "Generator Length:"
+msgstr "Lunghezza clip esportata:"
+
+#: mediaplugin.py:358
+#, fuzzy
+msgid "Encode settings"
+msgstr "Impostazioni codifica"
+
+#: mediaplugin.py:406
+#, fuzzy
+msgid "<b>Author: </b> "
+msgstr "<b>Traccia: </b>"
+
+#: mediaplugin.py:408
+#, fuzzy
+msgid "<b>Version: </b> "
+msgstr "<b>Posizione:</b>"
+
+#: mediaplugin.py:637
+#, fuzzy
+msgid "No Generator"
+msgstr "Aggiungi Clip..."
+
+#: mediaplugin.py:769
+#, fuzzy
+msgid "Error in Preview for frame: "
+msgstr "Anteprima per fotogramma: "
+
+#: mediaplugin.py:787
+#, fuzzy
+msgid "_media_plugin_properties"
+msgstr "Proprietà della Clip"
+
+#: mediaplugin.py:813
+#, fuzzy
+msgid "Generator properties load failed!"
+msgstr "Proprietà di elaborazione"
+
+#: projectaddmediafolder.py:34
+#, fuzzy
+msgid "Add Media From Folder"
+msgstr "Aggiungi Media al Bin"
+
+#: projectaddmediafolder.py:46
+#, fuzzy
+msgid "Add Media from Folder:"
+msgstr "Aggiungi Media al Bin"
+
+#: projectaddmediafolder.py:50
+#, fuzzy
+msgid "Search subfolders"
+msgstr "Seleziona cartella"
+
+#: projectaddmediafolder.py:55
+#, fuzzy
+msgid "All Media Files"
+msgstr "Tutti i file"
+
+#: projectaddmediafolder.py:58
+#, fuzzy
+msgid "Image Files"
+msgstr "Risoluzione:"
+
+#: projectaddmediafolder.py:61
+#, fuzzy
+msgid "File types to add:"
+msgstr "Dimensione:"
+
+#: projectaddmediafolder.py:67
+#, fuzzy
+msgid "Filter by file extension"
+msgstr "Dimensione:"
+
+#: projectaddmediafolder.py:76
+#, fuzzy
+msgid "File extension:"
+msgstr "Dimensione:"
+
+#: projectaddmediafolder.py:89
+#, fuzzy
+msgid "No files loaded."
+msgstr "Nessun file selezionato"
+
+#: projectaddmediafolder.py:101
+#, fuzzy
+msgid "Load Add Files Set"
+msgstr "Aggiungi filtro"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+#, fuzzy
+msgid "Files to load: "
+msgstr "File Luma in Alpha"
+
+#: projectaddmediafolder.py:112
+#, fuzzy
+msgid "Add Media"
+msgstr "Media"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr ""
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr ""
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr ""
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr ""
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr ""
+
+#: projectaddmediafolder.py:157
+#, fuzzy
+msgid "Searching..."
+msgstr "Elaborazione"
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr ""
+
 #~ msgid "No Target Bins"
 #~ msgstr "Nessuna Raccolta di destinazione"
 
@@ -10814,10 +10972,6 @@ msgstr ""
 #~ msgstr "Nessuna Clip"
 
 #, fuzzy
-#~ msgid "Generator Clip"
-#~ msgstr "Mixer"
-
-#, fuzzy
 #~ msgid "Job Type"
 #~ msgstr "Tipo"
 
@@ -10991,32 +11145,12 @@ msgstr ""
 #~ msgstr "L'operazione può richiedere alcuni minuti, attendere..."
 
 #, fuzzy
-#~ msgid "Add Media from Folder:"
-#~ msgstr "Aggiungi Media al Bin"
-
-#, fuzzy
 #~ msgid "Create new Bin"
 #~ msgstr "Crea una Nuova Sequenza"
 
 #, fuzzy
-#~ msgid "Search subfolders"
-#~ msgstr "Seleziona cartella"
-
-#, fuzzy
-#~ msgid "Image Files"
-#~ msgstr "Risoluzione:"
-
-#, fuzzy
-#~ msgid "File extension:"
-#~ msgstr "Dimensione:"
-
-#, fuzzy
 #~ msgid "Media Folder Add Info"
 #~ msgstr "Informazioni sulla sovrapposizione dei media"
-
-#, fuzzy
-#~ msgid "Add Files"
-#~ msgstr "Aggiungi filtro"
 
 #, fuzzy
 #~ msgid " files?"
@@ -11465,9 +11599,6 @@ msgstr ""
 #~ msgid "JACK Audio..."
 #~ msgstr "JACK Audio..."
 
-#~ msgid "Natron Animations"
-#~ msgstr "Animazioni Natron"
-
 #~ msgid "Select Thumbnail Folder"
 #~ msgstr "Seleziona la cartella per le miniature"
 
@@ -11653,9 +11784,6 @@ msgstr ""
 
 #~ msgid "Pos:"
 #~ msgstr "Pos:"
-
-#~ msgid "<b>Position:</b>"
-#~ msgstr "<b>Posizione:</b>"
 
 #~ msgid "<b>Clip:</b>"
 #~ msgstr "<b>Clip:</b>"

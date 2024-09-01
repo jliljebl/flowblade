@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-28 09:13+0300\n"
+"POT-Creation-Date: 2024-09-01 19:04+0300\n"
 "PO-Revision-Date: 2021-04-04 15:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
@@ -275,6 +275,7 @@ msgid "Render launch failed!"
 msgstr "İşleyici başlatma başarısız oldu!"
 
 #: projectaction.py:916 projectaction.py:930 tools/batchrendering.py:357
+#: mediaplugin.py:814
 msgid "Error message: "
 msgstr "Hata iletisi: "
 
@@ -1183,7 +1184,7 @@ msgstr "Tamam"
 #: dialogutils.py:186 exporting.py:444 containeractions.py:390
 #: containerclip.py:168 tools/scripttool.py:297 tools/scripttool.py:333
 #: tools/scripttool.py:581 tools/scripttool.py:601 singletracktransition.py:554
-#: singletracktransition.py:733
+#: singletracktransition.py:733 mediaplugin.py:659
 msgid "Cancel"
 msgstr "İptal"
 
@@ -1223,6 +1224,7 @@ msgstr "Yeni Profil"
 #: dialogs.py:175 dialogs.py:227 rendergui.py:871 tools/gmic.py:749
 #: tools/toolsencoding.py:322 tools/scripttool.py:841
 #: projectdatavaultgui.py:110 projectdatavaultgui.py:579
+#: projectaddmediafolder.py:37
 msgid "Select Folder"
 msgstr "Dosya Seç"
 
@@ -2028,7 +2030,7 @@ msgstr "Sıra Filigranı"
 #: dialogs.py:1627 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:836 tools/gmic.py:934 diskcachemanagement.py:157
 #: tools/scripttool.py:918 tools/scripttool.py:1082 projectdatavaultgui.py:265
-#: projectdatavaultgui.py:724
+#: projectdatavaultgui.py:724 mediaplugin.py:378 projectaddmediafolder.py:110
 msgid "Close"
 msgstr "Kapat"
 
@@ -2048,7 +2050,7 @@ msgstr "Filigran Dosyasını Ayarla"
 msgid "Remove Watermark"
 msgstr "Filigranı Kaldır"
 
-#: dialogs.py:1638 menuactions.py:178
+#: dialogs.py:1638 menuactions.py:178 projectaddmediafolder.py:103
 msgid "Not Set"
 msgstr "Ayarlanmadı"
 
@@ -2811,7 +2813,7 @@ msgstr ""
 msgid "Lossless"
 msgstr ""
 
-#: translations.py:174
+#: translations.py:174 mediaplugin.py:601
 #, fuzzy
 msgid "Image Sequence"
 msgstr "Görüntü Dizileri"
@@ -5348,8 +5350,9 @@ msgid "Typewriter"
 msgstr "Üstüneyaz"
 
 #: translations.py:874
-msgid "Multiline Text"
-msgstr ""
+#, fuzzy
+msgid "Multiline Animation"
+msgstr "Düzey Türü"
 
 #: translations.py:875
 #, fuzzy
@@ -7672,6 +7675,7 @@ msgid "no preview"
 msgstr "önizleme yok"
 
 #: tools/gmic.py:663 tools/simpleeditors.py:922 tools/scripttool.py:794
+#: mediaplugin.py:314 mediaplugin.py:661
 msgid "Preview"
 msgstr "Önizleme"
 
@@ -8738,7 +8742,7 @@ msgstr "Aracı Kapat"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:913
+#: tools/simpleeditors.py:913 mediaplugin.py:308
 msgid "Clip Frame"
 msgstr "Klip Kare"
 
@@ -9238,7 +9242,7 @@ msgstr "Öğe oluştur "
 msgid "Add Transition"
 msgstr "Geçiş Ekle"
 
-#: singletracktransition.py:734
+#: singletracktransition.py:734 mediaplugin.py:663
 msgid "Apply"
 msgstr "Uygula"
 
@@ -9470,11 +9474,11 @@ msgstr "7 Sütunlar"
 msgid "All Files"
 msgstr "Tüm Dosyalar"
 
-#: guipopover.py:543
+#: guipopover.py:543 projectaddmediafolder.py:56
 msgid "Video Files"
 msgstr "Video Dosyaları"
 
-#: guipopover.py:544
+#: guipopover.py:544 projectaddmediafolder.py:57
 msgid "Audio Files"
 msgstr "Ses Dosyaları"
 
@@ -10246,6 +10250,154 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
+#: mediaplugin.py:284 mediaplugin.py:380
+#, fuzzy
+msgid "Add Generator"
+msgstr "Ortam Dosyası Ekle..."
+
+#: mediaplugin.py:292
+#, fuzzy
+msgid "Generator:"
+msgstr "Karıştıcı Klip"
+
+#: mediaplugin.py:346
+#, fuzzy
+msgid "Add as Container Clip"
+msgstr "Kapsayıcı Klipler"
+
+#: mediaplugin.py:347
+#, fuzzy
+msgid "Add as Rendered Clip"
+msgstr "Görüntü Sırası Klibi Ekle"
+
+#: mediaplugin.py:350
+#, fuzzy
+msgid "Import Action:"
+msgstr "Aksiyon:"
+
+#: mediaplugin.py:356
+#, fuzzy
+msgid "Generator Length:"
+msgstr "Oluştuma Uzunluğu:"
+
+#: mediaplugin.py:358
+#, fuzzy
+msgid "Encode settings"
+msgstr "Kodlama ayarları"
+
+#: mediaplugin.py:406
+#, fuzzy
+msgid "<b>Author: </b> "
+msgstr "<b>Parça: </b>"
+
+#: mediaplugin.py:408
+#, fuzzy
+msgid "<b>Version: </b> "
+msgstr "<b>Hedef:</b>"
+
+#: mediaplugin.py:637
+#, fuzzy
+msgid "No Generator"
+msgstr "Ortam Dosyası Ekle..."
+
+#: mediaplugin.py:769
+#, fuzzy
+msgid "Error in Preview for frame: "
+msgstr "Kare için önizleme: "
+
+#: mediaplugin.py:787
+#, fuzzy
+msgid "_media_plugin_properties"
+msgstr "Klip Özellikleri"
+
+#: mediaplugin.py:813
+#, fuzzy
+msgid "Generator properties load failed!"
+msgstr "Oluşturma Özellikleri"
+
+#: projectaddmediafolder.py:34
+#, fuzzy
+msgid "Add Media From Folder"
+msgstr "Klasörden Ortam Ekle"
+
+#: projectaddmediafolder.py:46
+msgid "Add Media from Folder:"
+msgstr "Klasörden Ortam Ekle:"
+
+#: projectaddmediafolder.py:50
+msgid "Search subfolders"
+msgstr "Arama alt klasörleri"
+
+#: projectaddmediafolder.py:55
+#, fuzzy
+msgid "All Media Files"
+msgstr "Tüm Ortam Dosyaları"
+
+#: projectaddmediafolder.py:58
+msgid "Image Files"
+msgstr "Resim Dosyaları"
+
+#: projectaddmediafolder.py:61
+msgid "File types to add:"
+msgstr "Eklemek için Dosya Türleri:"
+
+#: projectaddmediafolder.py:67
+msgid "Filter by file extension"
+msgstr "Dosya uzantısına göre filtre"
+
+#: projectaddmediafolder.py:76
+msgid "File extension:"
+msgstr "Dosya uzantısı:"
+
+#: projectaddmediafolder.py:89
+#, fuzzy
+msgid "No files loaded."
+msgstr "Hiçbir dosya seçilmedi"
+
+#: projectaddmediafolder.py:101
+#, fuzzy
+msgid "Load Add Files Set"
+msgstr "Dosya Ekle"
+
+#: projectaddmediafolder.py:103 projectaddmediafolder.py:230
+#, fuzzy
+msgid "Files to load: "
+msgstr "Eklemek için Dosya Türleri:"
+
+#: projectaddmediafolder.py:112
+#, fuzzy
+msgid "Add Media"
+msgstr "Ortam"
+
+#: projectaddmediafolder.py:123
+msgid "29"
+msgstr "29"
+
+#: projectaddmediafolder.py:124
+msgid "49"
+msgstr "49"
+
+#: projectaddmediafolder.py:125
+msgid "99"
+msgstr "99"
+
+#: projectaddmediafolder.py:126
+msgid "199"
+msgstr "199"
+
+#: projectaddmediafolder.py:129
+msgid "Max. number of files to import:"
+msgstr "Maks. içe aktarılacak dosya sayısı:"
+
+#: projectaddmediafolder.py:157
+#, fuzzy
+msgid "Searching..."
+msgstr "Kaydet..."
+
+#: projectaddmediafolder.py:234
+msgid " of found files will not be loaded."
+msgstr ""
+
 #~ msgid "Export To Tool"
 #~ msgstr "Araca Aktar"
 
@@ -10505,10 +10657,6 @@ msgstr ""
 #~ msgstr "Vekil Klip"
 
 #, fuzzy
-#~ msgid "Generator Clip"
-#~ msgstr "Karıştıcı Klip"
-
-#, fuzzy
 #~ msgid "Tracking Data"
 #~ msgstr "Parça "
 
@@ -10665,9 +10813,6 @@ msgstr ""
 
 #~ msgid "Set Position"
 #~ msgstr "Pozisyonu Ayarla"
-
-#~ msgid "Saving..."
-#~ msgstr "Kaydet..."
 
 #~ msgid "Jobs Remaining Item:"
 #~ msgstr "Kalan İşler:"
@@ -10883,47 +11028,11 @@ msgstr ""
 #~ msgid "This can take up to a few minutes, please wait..."
 #~ msgstr "Bu birkaç dakika kadar sürebilir, lütfen bekleyin..."
 
-#~ msgid "Add Media from Folder:"
-#~ msgstr "Klasörden Ortam Ekle:"
-
 #~ msgid "Create new Bin"
 #~ msgstr "Yeni bölüm oluştur"
 
-#~ msgid "Search subfolders"
-#~ msgstr "Arama alt klasörleri"
-
-#~ msgid "Image Files"
-#~ msgstr "Resim Dosyaları"
-
-#~ msgid "File types to add:"
-#~ msgstr "Eklemek için Dosya Türleri:"
-
-#~ msgid "Filter by file extension"
-#~ msgstr "Dosya uzantısına göre filtre"
-
-#~ msgid "File extension:"
-#~ msgstr "Dosya uzantısı:"
-
-#~ msgid "29"
-#~ msgstr "29"
-
-#~ msgid "49"
-#~ msgstr "49"
-
-#~ msgid "99"
-#~ msgstr "99"
-
-#~ msgid "199"
-#~ msgstr "199"
-
-#~ msgid "Max. number of files to import:"
-#~ msgstr "Maks. içe aktarılacak dosya sayısı:"
-
 #~ msgid "Media Folder Add Info"
 #~ msgstr "Ortam Klasörüne Bilgi Ekle"
-
-#~ msgid "Add Files"
-#~ msgstr "Dosya Ekle"
 
 #~ msgid "Number of files to add exceeds currently set limit!"
 #~ msgstr "Eklenecek dosya sayısı, şu anda ayarlanan sınırı aşıyor!"
