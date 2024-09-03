@@ -54,7 +54,7 @@ def init_script(fctx):
     fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
     
     fctx.add_editor_group("Animation")
-    fctx.add_editor("Fade In Frames", fluxity.EDITOR_FLOAT_RANGE, (1.0, 0.0, 20.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (10.0, 0.0, 40.0))
 
     fctx.add_editor_group("Text")
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, DEFAULT_SCROLL_MARKUP_TEXT)
@@ -361,7 +361,9 @@ class ScroolAnimationRunner:
             block.exec_command(fctx, cr, frame, mutable_layout_data)
 
     def draw_blocks(self, fctx, cr, frame):
-        y = 0
+        speed = fctx.get_editor_value("Speed")
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+        y = screen_h - frame * speed
         BLOCK_GAP = 20
         for block in self.scroll_blocks:
             block.draw(fctx, cr, y)
