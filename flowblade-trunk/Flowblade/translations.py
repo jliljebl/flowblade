@@ -878,4 +878,5 @@ def load_filters_translations():
     plugin_editor_groups["Text"] = _("Text")
     plugin_editor_groups["Animation"] = _("Animation")
     plugin_editor_groups["Background"] = _("Background")
-
+    plugin_editor_groups["Layout"] = _("Layout")
+    plugin_editor_groups["Fonts"] = _("Fonts")

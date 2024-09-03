@@ -26,30 +26,38 @@ NON_CREDITED_NAME_ERROR = 0
 BAD_LINE_ERROR = 1
 PARSE_CRASH_ERROR = 2
 SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR = 3
-    
+
+
+DEFAULT_SCROLL_MARKUP_TEXT = \
+"""
+# CREDIT TITLE 1
+Alice Andersson
+
+# CREDIT TITLE 2
+Bob Banner
+"""
+
 def init_script(fctx):
-    fctx.set_name("Multiline Text")
+    fctx.set_name("Scrolling Credits")
     fctx.set_version(2)
     fctx.set_author("Janne Liljeblad")
 
 
     fctx.add_editor_group("Layout")
-    
     fctx.add_editor("Credits Layout", fluxity.EDITOR_OPTIONS, (0, ["Single Line Centered", "Two Line Centered", "Single Line Right Justified", "Two Line Right Justified"]))
 
     fctx.add_editor_group("Fonts")
-
     font_default_values = ("Liberation Serif", "Regular", 80, Pango.Alignment.LEFT, (0.0, 0.0, 0.0, 1.0), \
                        True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
-    fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
-
-    fctx.add_editor_group("Animation")
+    fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
     
+    fctx.add_editor_group("Animation")
     fctx.add_editor("Fade In Frames", fluxity.EDITOR_FLOAT_RANGE, (1.0, 0.0, 20.0))
+
     fctx.add_editor_group("Text")
-        
-    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nInteger nec odio.")
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, DEFAULT_SCROLL_MARKUP_TEXT)
     """
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 200)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 200)
@@ -140,7 +148,11 @@ def init_render(fctx):
     lines = text.splitlines()
     blocks_generator = ScrollBlocksGenerator(lines, fctx)
     scroll_blocks, err = blocks_generator.get_blocks()
-    fctx.set_data_obj("linetexts", scroll_blocks)
+    fctx.log_line("blocks count " + str(len(scroll_blocks)))
+    fctx.log_line("BLOCKS")
+    for block in scroll_blocks:
+        fctx.log_line(str(block))
+    fctx.set_data_obj("scroll_blocks", scroll_blocks)
 
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
@@ -150,8 +162,9 @@ def render_frame(frame, fctx, w, h):
     cr.rectangle(0, 0, w, h)
     cr.fill()
     
-    #mla = MultiLineAnimation(fctx)
-    #mla.draw(cr, fctx, frame)
+    anim_runner = ScroolAnimationRunner(fctx)
+    anim_runner.init_blocks(fctx, cr, frame)
+    anim_runner.draw_blocks(fctx, cr, frame)
 
 
 class ScrollBlocksGenerator:
@@ -172,38 +185,45 @@ class ScrollBlocksGenerator:
         self.err_list = []
         
         while self.running == True:
-            try:
-                line = self.lines[self.current_line]
-                line_type = self.get_line_type(line)
+            #try:
+            line = self.lines[self.current_line]
+            line_type = self.get_line_type(line)
 
-                if line_type == LINE_TYPE_CLEAR:
-                    self.do_line_clear(line)
-                elif line_type == LINE_TYPE_CREDIT:
-                    self.do_credit_line(line)
-                elif line_type == LINE_TYPE_NAME:
-                    self.do_name_line(line)
-                elif line_type == LINE_TYPE_COMMAND:
-                    self.do_command_line(line)
-                elif line_type == LINE_TYPE_SECTION_TITLE:
-                    self.do_section_title_line(line)
-                else:
-                    self.add_error(BAD_LINE_ERROR, line)
+            if line_type == LINE_TYPE_CLEAR:
+                self.do_line_clear(line)
+            elif line_type == LINE_TYPE_CREDIT:
+                self.do_credit_line(line)
+            elif line_type == LINE_TYPE_NAME:
+                self.do_name_line(line)
+            elif line_type == LINE_TYPE_COMMAND:
+                self.do_command_line(line)
+            elif line_type == LINE_TYPE_SECTION_TITLE:
+                self.do_section_title_line(line)
+            else:
+                self.add_error(BAD_LINE_ERROR, line)
 
-                self.current_line += 1
+            self.current_line += 1
+    
+            """
             except Exception as e:
                 if hasattr(e, 'message'):
                     msg = e.message
                 else:
                     msg = str(e)
-                self.add_error(ScrollBlocksGenerator.PARSE_CRASH_ERROR, line, msg)
+                self.add_error(PARSE_CRASH_ERROR, line, msg)
                 self.running = False 
+            """
             
             if self.current_line > len(self.lines) - 1:
+                if self.state == STATE_WAITING_NEXT_NAME:
+                     self.add_credit_block()
                 self.running = False 
             
-        return ([], None)
+        return (self.blocks, None)
 
     def do_line_clear(self, line):
+        self.print_line(LINE_TYPE_CLEAR, line)
+
         if self.state == STATE_CLEAR:
             return
         else:
@@ -213,6 +233,8 @@ class ScrollBlocksGenerator:
            self.state = STATE_CLEAR
         
     def do_credit_line(self, line):
+        self.print_line(LINE_TYPE_CREDIT, line)
+
         if self.state == STATE_CLEAR:
             credit_title = self.get_line_contents_str(line)
             self.current_credit_block_data = CredidBlockData(credit_title)
@@ -226,6 +248,8 @@ class ScrollBlocksGenerator:
             self.state = STATE_WAITING_NEXT_NAME
         
     def do_name_line(self, line):
+        self.print_line(LINE_TYPE_NAME, line)
+        
         if self.state == STATE_WAITING_NEXT_NAME:
             self.current_credit_block_data.add_name(line)
         else:
@@ -286,12 +310,15 @@ class ScrollBlocksGenerator:
         elif line_type ==  LINE_TYPE_NAME:
             return line.strip()
         else:
-            return line[1,-1].strip()
+            return line[1:].strip()
 
     def add_credit_block(self):
         bloc_creator_func = BLOC_CREATOR_FUNCS[self.current_layout]
         block = bloc_creator_func(self)
-        self.blocks_append(block)
+        self.blocks.append(block)
+
+        log_str = "adding block, line " + str(self.current_line) + " " + str(block)
+        self.fctx.log_line(log_str)
 
     def add_error(self, error_code, line, crash_msg=None):
         error_info = {  NON_CREDITED_NAME_ERROR:"Added neme without specifying credit for it",  
@@ -304,6 +331,43 @@ class ScrollBlocksGenerator:
         
         self.err_list.append(( error_code, line,error_info,  self.current_line))
 
+    def print_line(self, line_type, line):
+        line_type_strs = { \
+            LINE_TYPE_NAME:"NAME",
+            LINE_TYPE_CREDIT:"CREDIT",
+            LINE_TYPE_SECTION_TITLE:"SECTION_TITLE",
+            LINE_TYPE_COMMAND:"COMMAND",
+            LINE_TYPE_CLEAR:"CLEAR",
+            LINE_TYPE_BAD:"BAD"}
+        
+        log_str = str(self.current_line) + " " + line_type_strs[line_type] + " " + str(self.get_line_contents_str(line))
+        self.fctx.log_line(log_str)
+
+
+class ScroolAnimationRunner:
+    
+    def __init__(self, fctx):
+        self.scroll_blocks = fctx.get_data_obj("scroll_blocks")
+        self.fctx = fctx
+
+    def init_blocks(self, fctx, cr,  frame):
+        mutable_layout_data = { \
+            "credit_font_data":fctx.get_editor_value("Credit Font"),
+            "name_font_data":fctx.get_editor_value("Name Font")}
+
+        # Create layouts now that we have cairo.Context.
+        for block in self.scroll_blocks:
+            block.init_layout(fctx, cr, frame, mutable_layout_data)
+            block.exec_command(fctx, cr, frame, mutable_layout_data)
+
+    def draw_blocks(self, fctx, cr, frame):
+        y = 0
+        BLOCK_GAP = 20
+        for block in self.scroll_blocks:
+            block.draw(fctx, cr, y)
+            y += (block.block_height + BLOCK_GAP)
+
+
 
 class CredidBlockData:
 
@@ -315,7 +379,28 @@ class CredidBlockData:
         self.names.append(name)
 
 
-class AbstractCreditBlock:
+class AbstractBlock:
+    
+    def __init__(self):
+        self.block_height = 0
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        pass
+
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        pass
+
+    def draw(self, fctx, cr, y):
+        pass
+
+    def _get_height_str(self):
+        return "block_height: " + str(self.block_height)
+
+    def __str__(self):
+        return "AbstractBlock, " + self._get_height_str()
+
+
+class AbstractCreditBlock(AbstractBlock):
     
     # These eindexs must match those in editor "Credits Layout".
     LAYOUT_SINGLE_LINE_CENTERED = 0
@@ -325,22 +410,108 @@ class AbstractCreditBlock:
     
     def __init__(self, block_gen):
         block_data = block_gen.current_credit_block_data
+
         self.credit_title = block_data.credit_title
         self.names = block_data.names
-        self.fctx = fctx
+        self.fctx = block_gen.fctx
+        self.draw_items = []
     
-    def init_layout(self):
-        pass
+        AbstractBlock.__init__(self)
 
-    def draw_layout(self, cr, frame):
-        pass
-    
+    def create_layouts(self, fctx, cr, mutable_layout_data):
+
+        # fluxity.PangoTextLayout objects probably SHOULD NOT be cached because all actual work
+        # is done by PangoCairo.PangoLayout objects that hold reference to cairo.Context objects 
+        # that are re-created for every new frame. Caching them somehow worked, but changed it to be sure.
+        self.credit_layout = fctx.create_text_layout(mutable_layout_data["credit_font_data"])
+        self.credit_layout.create_pango_layout(cr, self.credit_title)
+        self.credit_pixel_size = self.credit_layout.pixel_size
+
+        self.name_layouts = []
+        for name in self.names:
+            name_layout = fctx.create_text_layout(mutable_layout_data["name_font_data"])
+            name_layout.create_pango_layout(cr, name)
+            name_pixel_size = name_layout.pixel_size
+            self.name_layouts.append((name_layout, name_pixel_size))
+
+    def add_text_draw_item(self, text, x, y, font_data):
+        self.draw_items.append((text, x, y, font_data))
+
+    def draw(self, fctx, cr, y):
+        fctx.log_line("hereeee")
+        if y + self.block_height < 0:
+            return
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+        if y > screen_h:
+            return
+        
+        for draw_item in self.draw_items:
+            text, tx, ty, font_data = draw_item
+            layout = fctx.create_text_layout(font_data)
+            layout.create_pango_layout(cr, text)
+            layout.draw_layout(fctx, text, cr, tx, y + ty)
+        
+    def _get_credits_str(self):
+        data_str = "credit_title: " + self.credit_title + "\n" + \
+        "names: "
+        for name in self.names:
+            data_str = data_str + name + "n"
+        
+        return data_str
+
+    def __str__(self):
+        msg = type(self).__name__ + ", "  + self._get_height_str() + "\n" \
+        + self._get_credits_str()
+        return msg
+
 
 
 class SingleLineCentered(AbstractCreditBlock):
     def __init__(self, block_gen):
         AbstractCreditBlock.__init__(self, block_gen)
 
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+
+        CENTER_GAP = 10
+        LINE_GAP = 10
+        
+        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+        
+        # Compute layout positions data.
+        max_w = 0
+        names_height = 0
+        for layout in self.name_layouts:
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            fctx.log_line("h:" + str(h))
+            if w > max_w:
+                w = max_w
+            names_height += (h + LINE_GAP)
+    
+        names_height = names_height - LINE_GAP
+        fctx.log_line("names_height:" + str(names_height))
+    
+        cw, ch = self.credit_pixel_size
+    
+        total_width = cw + CENTER_GAP + max_w
+        total_height = names_height
+        if total_height < ch:
+            total_height = ch
+        
+        # Create draw items
+        self.add_text_draw_item(self.credit_title,screen_w / 2 - cw, 0, mutable_layout_data["credit_font_data"])
+        
+        y = 0
+        for layout, name in zip(self.name_layouts, self.names):
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            self.add_text_draw_item(name, screen_w / 2, y, mutable_layout_data["name_font_data"])
+
+        self.block_height = total_height
+        fctx.log_line("block_height:" + str(self.block_height))
+        
 def _get_single_line_centered(block_gen):
     return SingleLineCentered(block_gen)
 
