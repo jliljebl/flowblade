@@ -48,10 +48,10 @@ def init_script(fctx):
     fctx.add_editor("Center Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Credit Block Gap", fluxity.EDITOR_INT, 40)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 0)
-    fctx.add_editor("Horizontal X Position", fluxity.EDITOR_INT, 150)
-    fctx.add_editor("Name X Offset", fluxity.EDITOR_INT, 0)
-    fctx.add_editor("Credit Name Gap", fluxity.EDITOR_INT, 0)
-    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (0, ["Transparent", "Solid Color"]))
+    fctx.add_editor("Justified X Position", fluxity.EDITOR_INT, 150)
+    fctx.add_editor("Name X Offset", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Name Y Offset", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (1, ["Transparent", "Solid Color"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
 
     fctx.add_editor_group("Fonts")
@@ -95,10 +95,14 @@ def init_render(fctx):
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 
-    bg_color = cairo.SolidPattern(0.8, 0.50, 0.3, 1.0)
-    cr.set_source(bg_color)
-    cr.rectangle(0, 0, w, h)
-    cr.fill()
+    bg_selection = fctx.get_editor_value("Background")
+
+    if bg_selection == 1:
+        hue = fctx.get_editor_value("Background Color")
+        bg_color = cairo.SolidPattern(*hue)
+        cr.set_source(bg_color)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
     
     anim_runner = ScroolAnimationRunner(fctx)
     anim_runner.init_blocks(fctx, cr, frame)
@@ -414,6 +418,8 @@ class SingleLineCentered(AbstractCreditBlock):
  
         CENTER_GAP =  fctx.get_editor_value("Center Gap")
         LINE_GAP =  fctx.get_editor_value("Line Gap")
+        NAME_Y_OFF = fctx.get_editor_value("Name Y Offset")
+        NAME_X_OFF = fctx.get_editor_value("Name X Offset")
         
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
@@ -437,11 +443,11 @@ class SingleLineCentered(AbstractCreditBlock):
         # Create draw items
         self.add_text_draw_item(self.credit_title,screen_w / 2.0 - cw - CENTER_GAP / 2.0, 0, mutable_layout_data["credit_font_data"])
         
-        y = 0
+        y =  NAME_Y_OFF
         for layout, name in zip(self.name_layouts, self.names):
             fluxity_layout, pixel_size = layout
             w, h = pixel_size
-            self.add_text_draw_item(name, screen_w / 2 + CENTER_GAP / 2.0, y, mutable_layout_data["name_font_data"])
+            self.add_text_draw_item(name, screen_w / 2 + CENTER_GAP / 2.0 + NAME_X_OFF, y, mutable_layout_data["name_font_data"])
             y += (h + LINE_GAP)
 
         self.block_height = total_height
