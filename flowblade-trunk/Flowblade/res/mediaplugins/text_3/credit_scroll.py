@@ -59,9 +59,12 @@ def init_script(fctx):
                        True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Creadit Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Name Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Use Credit Font for Name", fluxity.EDITOR_CHECK_BOX, False)
     fctx.add_editor("Section Title Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Section Title Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Use Credit Font for Section Title", fluxity.EDITOR_CHECK_BOX, False)
 
     fctx.add_editor_group("Animation")
@@ -293,9 +296,15 @@ class ScroolAnimationRunner:
         self.fctx = fctx
 
     def init_blocks(self, fctx, cr,  frame):
+        
+        if fctx.get_editor_value("Use Credit Font for Name") == False:
+            name_font = fctx.get_editor_value("Name Font")
+        else:
+            name_font = fctx.get_editor_value("Credit Font")
+
         mutable_layout_data = { \
             "credit_font_data":fctx.get_editor_value("Credit Font"),
-            "name_font_data":fctx.get_editor_value("Name Font")}
+            "name_font_data":name_font}
 
         # Create layouts now that we have cairo.Context.
         for block in self.scroll_blocks:
@@ -346,12 +355,17 @@ class AbstractBlock:
 
 class AbstractCreditBlock(AbstractBlock):
     
-    # These eindexs must match those in editor "Credits Layout".
+    # These indexs must match those in editor "Credits Layout".
     LAYOUT_SINGLE_LINE_CENTERED = 0
     LAYOUT_TWO_LINE_CENTERED = 1
     LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED = 2
     LAYOUT_TWO_LINE_RIGHT_JUSTIFIED = 3
-    
+
+    # These indexs must match those in editors "Creadit Case" etc.
+    CASE_NO_CHANGES = 0
+    CASE_UPPERCASE = 1
+    CASE_LOWERCASE = 2
+
     def __init__(self, block_gen):
         block_data = block_gen.current_credit_block_data
 
@@ -378,7 +392,12 @@ class AbstractCreditBlock(AbstractBlock):
             name_pixel_size = name_layout.pixel_size
             self.name_layouts.append((name_layout, name_pixel_size))
 
-    def add_text_draw_item(self, text, x, y, font_data):
+    def add_text_draw_item(self, text, x, y, font_data, case):
+        if case == AbstractCreditBlock.CASE_UPPERCASE:
+            text = text.upper()
+        elif case == AbstractCreditBlock.CASE_LOWERCASE:
+            text = text.lower()
+                    
         self.draw_items.append((text, x, y, font_data))
 
     def draw(self, fctx, cr, y):
@@ -439,15 +458,18 @@ class SingleLineCentered(AbstractCreditBlock):
         total_height = names_height
         if total_height < ch:
             total_height = ch
-        
+
+        CREDIT_CASE = fctx.get_editor_value("Creadit Case")
+        NAME_CASE = fctx.get_editor_value("Name Case")
+
         # Create draw items
-        self.add_text_draw_item(self.credit_title,screen_w / 2.0 - cw - CENTER_GAP / 2.0, 0, mutable_layout_data["credit_font_data"])
+        self.add_text_draw_item(self.credit_title,screen_w / 2.0 - cw - CENTER_GAP / 2.0, 0, mutable_layout_data["credit_font_data"], CREDIT_CASE)
         
         y =  NAME_Y_OFF
         for layout, name in zip(self.name_layouts, self.names):
             fluxity_layout, pixel_size = layout
             w, h = pixel_size
-            self.add_text_draw_item(name, screen_w / 2 + CENTER_GAP / 2.0 + NAME_X_OFF, y, mutable_layout_data["name_font_data"])
+            self.add_text_draw_item(name, screen_w / 2 + CENTER_GAP / 2.0 + NAME_X_OFF, y, mutable_layout_data["name_font_data"], NAME_CASE)
             y += (h + LINE_GAP)
 
         self.block_height = total_height
