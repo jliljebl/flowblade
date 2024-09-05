@@ -42,6 +42,7 @@ Carl Carruthers
 
 ! ypad 40
 ! set-layout single-line-sides-justified
+! font-size credit 100
 
 # CREDIT TITLE3
 Donald Drake
@@ -657,7 +658,10 @@ def _get_ypad_command(tokens):
 def _get_set_layout_command(tokens):
     return SetLayoutCommand(tokens)
     
-
+def _get_font_size_command(tokens):
+    return FontSizeCommand(tokens)
+    
+    
 class AbstractCommandBlock(AbstractBlock):
     
     TARGET_CREDIT = "credit"
@@ -665,9 +669,10 @@ class AbstractCommandBlock(AbstractBlock):
     TARGET_SECTION_TITLE = "section-title"
     
     TARGETS = [TARGET_CREDIT, TARGET_NAME, TARGET_SECTION_TITLE]
-
+    
     Y_PADDING = "ypad"
     SET_LAYOUT = "set-layout"
+    FONT_SIZE = "font-size"
 
     def __init__(self, command_type, tokens):
         self.command_type = command_type
@@ -695,7 +700,6 @@ class AbstractCommandBlock(AbstractBlock):
                     return BAD_ARGUMENT_TYPE_ERROR
                     
         for token_index, argument_allowed_values in self.ARGUMENT_ALLOW_VALUES.items():
-            fctx.log_line("CHECKING------" + str(self.tokens[token_index] ) + str(argument_allowed_values))
             if not(self.tokens[token_index] in argument_allowed_values):
                 return BAD_ARGUMENT_VALUE_ERROR
 
@@ -739,7 +743,54 @@ class SetLayoutCommand(AbstractCommandBlock):
         new_layout = SetLayoutCommand.LAYOUT_VALUES[self.tokens[2]]
         blocks_generator.current_layout = new_layout
 
+class AbstractFontCommand(AbstractCommandBlock):
+
+    # These corrspond with order and count with data in font data tuples 
+    # provided for fluxity.PangoTextLayout objects on creation.
+    FONT_DATA_PARAMS = ["font-family", "font-face", "font-size", "alignment", \
+        "color-rgba", "fill-on", "outline_color-rgba", "outline-on", \
+        "outline-width", "shadow-on", "shadow-color-rgb", "shadow-opacity", \
+        "shadow-xoff", "shadow-yoff", "shadow-blur", "gradient-color-rgba", \
+        "gradient-direction"]
+
+    TARGETS_TO_FONT_EDITORS = {AbstractCommandBlock.TARGET_CREDIT:"Credit Font", AbstractCommandBlock.TARGET_NAME:"Name Font", AbstractCommandBlock.TARGET_SECTION_TITLE:"Section Title Font"}
+        
+    def __init__(self, command_type, tokens):
+        AbstractCommandBlock.__init__(self, command_type, tokens)
+    
+    def set_font_param(self, target, param_name, value, mutable_data):
+        target_editor = AbstractFontCommand.TARGETS_TO_FONT_EDITORS[target]
+        new_font_data = self.get_updated_font_data( mutable_data[target_editor], 
+                                                    param_name, 
+                                                    value)
+        mutable_data[target_editor] = new_font_data
+ 
+    def get_updated_font_data(self, font_data, param_name, new_value):
+        param_index = AbstractFontCommand.FONT_DATA_PARAMS.index(param_name)
+        param_list = list(font_data)
+        param_list[param_index] = new_value
+        return tuple(param_list)
+
+class FontSizeCommand(AbstractFontCommand):
+    
+    def __init__(self, tokens):
+        
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_SIZE, tokens)
+
+        ALLOWED_TOKEN_COUNTS = [4]
+        ARGUMENT_TYPES = {2:str, 3:int}
+        ARGUMENT_ALLOW_VALUES = {2:AbstractCommandBlock.TARGETS}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
+        
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        param_name = "font-size"
+        target = self.tokens[2]
+        new_size = int(self.tokens[3])
+        self.set_font_param(target, param_name, new_size, mutable_layout_data)
+
 
 COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
-                         AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command}
+                         AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command,
+                         AbstractCommandBlock.FONT_SIZE:_get_font_size_command}
 
