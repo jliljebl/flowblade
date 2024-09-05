@@ -26,7 +26,10 @@ NON_CREDITED_NAME_ERROR = 0
 BAD_LINE_ERROR = 1
 PARSE_CRASH_ERROR = 2
 SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR = 3
-
+COMMAND_INSIDE_CREDIT_BLOCK_ERROR = 4
+BAD_ARGUMENT_COUNT_ERROR = 5
+BAD_ARGUMENT_TYPE_ERROR = 6
+BAD_ARGUMENT_VALUE = 7
 
 DEFAULT_SCROLL_MARKUP_TEXT = \
 """
@@ -37,12 +40,16 @@ Alice Andersson
 Bob Banner
 Carl Carruthers
 
+! ypad 40
+
 # CREDIT TITLE3
 Donald Drake
 Earl Easter
 """
 
 def init_script(fctx):
+    pypes = [int, int, str]
+    fctx.log_line(str(pypes))
     fctx.set_name("Scrolling Credits")
     fctx.set_version(2)
     fctx.set_author("Janne Liljeblad")
@@ -198,11 +205,21 @@ class ScrollBlocksGenerator:
             self.add_error(NON_CREDITED_NAME_ERROR, line)
         
     def do_command_line(self, line):
-        command_exec_func, err = _get_command_exec_func(line)
-        if err != None:
-            self.add_error(BAD_COMMAND_ERROR, line)
-        else:
-            command_exec_func(line, self)
+        self.print_line(LINE_TYPE_COMMAND, line)
+        
+        if self.state == STATE_WAITING_NEXT_NAME:
+            self.add_error(COMMAND_INSIDE_CREDIT_BLOCK_ERROR, line)
+            return
+        
+        tokens = line.split(" ")
+        command_block_creator_func = COMMAND_CREATOR_FUNCS[tokens[1]]
+        block = command_block_creator_func(tokens)
+        err = block.check_command(self.fctx)
+        self.fctx.log_line("error:" + str(err))
+        self.blocks.append(block)
+
+        log_str = "adding command block, line " + str(self.current_line) + " " + str(block)
+        self.fctx.log_line(log_str)
 
     def do_section_title_line(self, line):
         if self.state == STATE_WAITING_NEXT_NAME:
@@ -347,6 +364,8 @@ class AbstractBlock:
     def __str__(self):
         return "AbstractBlock, " + self._get_height_str()
 
+
+# ----------------------------------------------------- CREDIT BLOCKS
 
 class AbstractCreditBlock(AbstractBlock):
     
@@ -563,7 +582,6 @@ class TwoLineRJustified(AbstractCreditBlock):
 
         self.block_height = y - line_gap
 
-
 class SingleLineLJustified(AbstractCreditBlock):
 
     def __init__(self, block_gen):
@@ -643,3 +661,63 @@ BLOC_CREATOR_FUNCS = {AbstractCreditBlock.LAYOUT_SINGLE_LINE_CENTERED:_get_singl
                       AbstractCreditBlock.LAYOUT_TWO_LINE_RIGHT_JUSTIFIED:_get_two_line_rjustified,
                       AbstractCreditBlock.LAYOUT_SINGLE_LINE_LEFT_JUSTIFIED:_get_single_line_ljustified,
                       AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED:_get_two_line_ljustified}
+
+
+
+
+
+# ----------------------------------------------------- COMMAND BLOCKS
+def _get_ypad_command(tokens):
+    return YPaddingCommand(tokens)
+
+
+class AbstractCommandBlock(AbstractBlock):
+    
+    Y_PADDING = "ypad"
+    SET_LAYOUT = "set-layout"
+
+    def __init__(self, command_type, tokens):
+        self.command_type = command_type
+        self.tokens = tokens
+        self.ALLOWED_TOKEN_COUNTS = None # list int
+        self.ARGUMENT_TYPES = None # dict {token_index:argument_type,...}
+
+        AbstractBlock.__init__(self)
+
+    def set_verification_data(self, token_counts, argument_types):
+        self.ALLOWED_TOKEN_COUNTS = token_counts
+        self.ARGUMENT_TYPES = argument_types
+        
+    def check_command(self, fctx):
+        if not(len(self.tokens) in self.ALLOWED_TOKEN_COUNTS):
+            return BAD_ARGUMENT_COUNT_ERROR
+            
+        for token_index, argument_type in self.ARGUMENT_TYPES.items():
+            if argument_type == int:
+                try:
+                    int(self.tokens[token_index])
+                except:
+                    return BAD_ARGUMENT_TYPE_ERROR
+
+        return None
+
+    def __str__(self):
+        return self.command_type
+
+class YPaddingCommand(AbstractCommandBlock):
+
+    def __init__(self, tokens):
+        AbstractCommandBlock.__init__(self, AbstractCommandBlock.Y_PADDING, tokens)
+        
+        ALLOWED_TOKEN_COUNTS = [3]
+        ARGUMENT_TYPES = {2:int}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES)
+
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        self.block_height = int(self.tokens[2])
+
+
+COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
+                         AbstractCommandBlock.SET_LAYOUT:_get_ypad_command}
+
