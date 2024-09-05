@@ -200,6 +200,7 @@
     |:--------|:--------|
     | 1 | Initial release. |
     | 2 | Added methods FluxityContext.required_api_version(), FluxityContext.add_editor_group() |
+    | 3 | Added methods FluxityContext.get_editors_values_clone_dict()|
 
     # FLUXITY API
 """
@@ -368,7 +369,7 @@ KEYFRAME_SMOOTH = 1
 KEYFRAME_DISCRETE = 2
 """Value after keyframe of this type is value at keyframe."""
 
-API_VERSION = 2
+API_VERSION = 3
 """API version number, increasing integer for each Flowblade release with changes."""
 
 # ---------------------------------------------------------- script object
@@ -669,6 +670,27 @@ class FluxityContext:
         except Exception as e:
             exception_msg = "No editor for name '" + name + "' found."
             _raise_fluxity_error(exception_msg)
+
+    def get_editors_values_clone_dict(self):
+        """         
+        Return dictionary containing values of all edited data.
+        
+        **Returns:** (dict) Dictionary {name:value} containing all editors.
+        """
+        editor_values = {}
+        
+        for name, value_item in self.editors.items():
+            type, value = value_item
+            if type == EDITOR_INT_RANGE or type == EDITOR_FLOAT_RANGE:
+                val, min, max = value
+                value = val 
+            elif type == EDITOR_OPTIONS:
+                selected_index, options = value
+                value = selected_index
+            
+            editor_values[name] = value
+        
+        return editor_values
 
     def get_script_data(self):
         """             
