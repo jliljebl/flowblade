@@ -30,12 +30,16 @@ SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR = 3
 
 DEFAULT_SCROLL_MARKUP_TEXT = \
 """
-# CREDIT TITLE 1
+# CREDIT TITLE1
 Alice Andersson
 
-# CREDIT TITLE 2
+# CREDIT TITLE2
 Bob Banner
 Carl Carruthers
+
+# CREDIT TITLE3
+Donald Drake
+Earl Easter
 """
 
 def init_script(fctx):
@@ -44,18 +48,20 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
 
     fctx.add_editor_group("Layout")
-    fctx.add_editor("Credits Layout", fluxity.EDITOR_OPTIONS, (1, ["Single Line Centered", "Two Line Centered", "Single Line Right Justified", "Two Line Right Justified"]))
+    fctx.add_editor("Credits Layout", fluxity.EDITOR_OPTIONS, (5, ["Single Line Centered", "Two Line Centered", "Single Line Right Justified", "Two Line Right Justified",
+                    "Single Line Sides Justified", "Two Line Left Justified"]))
     fctx.add_editor("Center Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Credit Block Gap", fluxity.EDITOR_INT, 40)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 0)
     fctx.add_editor("Justified X Position", fluxity.EDITOR_INT, 150)
+    fctx.add_editor("Justified X Position Offset", fluxity.EDITOR_INT, 1300)
     fctx.add_editor("Name X Offset", fluxity.EDITOR_INT, 0)
     fctx.add_editor("Name Y Offset", fluxity.EDITOR_INT, 0)
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (1, ["Transparent", "Solid Color"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
 
     fctx.add_editor_group("Fonts")
-    font_default_values = ("Liberation Sans", "Regular", 50, Pango.Alignment.LEFT, (0.0, 0.0, 0.0, 1.0), \
+    font_default_values = ("Liberation Sans", "Regular", 35, Pango.Alignment.LEFT, (0.0, 0.0, 0.0, 1.0), \
                        True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
@@ -73,24 +79,13 @@ def init_script(fctx):
     fctx.add_editor_group("Text")
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, DEFAULT_SCROLL_MARKUP_TEXT)
 
-
 def init_render(fctx):
-    # Get editor values
-    
-    """
-     hue = fctx.get_editor_value("Background Color")
-    r, g, b, alpha = hue
-    fctx.set_data_obj("bg_color", cairo.SolidPattern(r, g, b, alpha))
-    """
-    
     text = fctx.get_editor_value("Text")
-        
-    # Create linetext objects
     lines = text.splitlines()
     blocks_generator = ScrollBlocksGenerator(lines, fctx)
     scroll_blocks, err = blocks_generator.get_blocks()
-    fctx.log_line("blocks count " + str(len(scroll_blocks)))
-    fctx.log_line("BLOCKS")
+    #fctx.log_line("blocks count " + str(len(scroll_blocks)))
+    #fctx.log_line("BLOCKS")
     for block in scroll_blocks:
         fctx.log_line(str(block))
     fctx.set_data_obj("scroll_blocks", scroll_blocks)
@@ -106,7 +101,7 @@ def render_frame(frame, fctx, w, h):
         cr.set_source(bg_color)
         cr.rectangle(0, 0, w, h)
         cr.fill()
-    
+
     anim_runner = ScroolAnimationRunner(fctx)
     anim_runner.init_blocks(fctx, cr, frame)
     anim_runner.draw_blocks(fctx, cr, frame)
@@ -360,7 +355,9 @@ class AbstractCreditBlock(AbstractBlock):
     LAYOUT_TWO_LINE_CENTERED = 1
     LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED = 2
     LAYOUT_TWO_LINE_RIGHT_JUSTIFIED = 3
-
+    LAYOUT_SINGLE_LINE_LEFT_JUSTIFIED = 4
+    LAYOUT_TWO_LINE_LEFT_JUSTIFIED = 5
+    
     # These indexs must match those in editors "Creadit Case" etc.
     CASE_NO_CHANGES = 0
     CASE_UPPERCASE = 1
@@ -492,6 +489,7 @@ class SingleLineCentered(AbstractCreditBlock):
 
 
 class TwoLineCentered(AbstractCreditBlock):
+
     def __init__(self, block_gen):
         AbstractCreditBlock.__init__(self, block_gen)
 
@@ -502,8 +500,6 @@ class TwoLineCentered(AbstractCreditBlock):
         screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
         
         cw, ch = self.credit_pixel_size
-        
-        total_height = ch + name_y_off + self.names_height 
 
         # Create draw items
         self.add_text_draw_item(self.credit_title,screen_w / 2.0 - cw / 2.0, 0, mutable_layout_data["credit_font_data"], name_case)
@@ -513,6 +509,110 @@ class TwoLineCentered(AbstractCreditBlock):
             fluxity_layout, pixel_size = layout
             w, h = pixel_size
             self.add_text_draw_item(name, screen_w / 2 - w / 2.0 + name_x_off, y, mutable_layout_data["name_font_data"], credit_case)
+            y += (h + line_gap)
+
+        self.block_height = y - line_gap
+
+class SingleLineRJustified(AbstractCreditBlock):
+
+    def __init__(self, block_gen):
+        AbstractCreditBlock.__init__(self, block_gen)
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+ 
+        center_gap, line_gap, justified_x, name_y_off, name_x_off, credit_case, name_case, \
+        screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
+        
+        cw, ch = self.credit_pixel_size
+
+        # Create draw items
+        self.add_text_draw_item(self.credit_title, justified_x, 0, mutable_layout_data["credit_font_data"], name_case)
+        
+        y =  name_y_off
+        for layout, name in zip(self.name_layouts, self.names):
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            self.add_text_draw_item(name, justified_x + cw + name_x_off + center_gap, y, mutable_layout_data["name_font_data"], credit_case)
+            y += (h + line_gap)
+
+        self.block_height = y - line_gap + name_y_off
+
+class TwoLineRJustified(AbstractCreditBlock):
+
+    def __init__(self, block_gen):
+        AbstractCreditBlock.__init__(self, block_gen)
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+ 
+        center_gap, line_gap, justified_x, name_y_off, name_x_off, credit_case, name_case, \
+        screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
+        
+        cw, ch = self.credit_pixel_size
+
+        # Create draw items
+        self.add_text_draw_item(self.credit_title, justified_x, 0, mutable_layout_data["credit_font_data"], name_case)
+        
+        y = ch +  name_y_off
+        for layout, name in zip(self.name_layouts, self.names):
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            self.add_text_draw_item(name, justified_x + name_x_off, y, mutable_layout_data["name_font_data"], credit_case)
+            y += (h + line_gap)
+
+        self.block_height = y - line_gap
+
+
+class SingleLineLJustified(AbstractCreditBlock):
+
+    def __init__(self, block_gen):
+        AbstractCreditBlock.__init__(self, block_gen)
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+ 
+        center_gap, line_gap, justified_x, name_y_off, name_x_off, credit_case, name_case, \
+        screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
+        justified_x_offset = fctx.get_editor_value("Justified X Position Offset")
+                        
+        cw, ch = self.credit_pixel_size
+
+        # Create draw items
+        y =  name_y_off
+        first_w = None
+        for layout, name in zip(self.name_layouts, self.names):
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            self.add_text_draw_item(name, justified_x + justified_x_offset - w, y, mutable_layout_data["name_font_data"], credit_case)
+            y += (h + line_gap)
+
+        self.add_text_draw_item(self.credit_title, justified_x,\
+        0, mutable_layout_data["credit_font_data"], name_case)
+        
+        self.block_height = y - line_gap + name_y_off
+
+class TwoLineLJustified(AbstractCreditBlock):
+
+    def __init__(self, block_gen):
+        AbstractCreditBlock.__init__(self, block_gen)
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+ 
+        center_gap, line_gap, justified_x, name_y_off, name_x_off, credit_case, name_case, \
+        screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
+        
+        cw, ch = self.credit_pixel_size
+
+        # Create draw items
+        self.add_text_draw_item(self.credit_title, screen_w - justified_x - cw, 0, mutable_layout_data["credit_font_data"], name_case)
+        
+        y = ch +  name_y_off
+        for layout, name in zip(self.name_layouts, self.names):
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            self.add_text_draw_item(name, screen_w - justified_x - w, y, mutable_layout_data["name_font_data"], credit_case)
             y += (h + line_gap)
 
         self.block_height = y - line_gap
@@ -530,8 +630,16 @@ def _get_single_line_rjustified(block_gen):
 def _get_two_line_rjustified(block_gen):
     return TwoLineRJustified(block_gen)
     
+def _get_single_line_ljustified(block_gen):
+    return SingleLineLJustified(block_gen)
+    
+def _get_two_line_ljustified(block_gen):
+    return TwoLineLJustified(block_gen)
+
 
 BLOC_CREATOR_FUNCS = {AbstractCreditBlock.LAYOUT_SINGLE_LINE_CENTERED:_get_single_line_centered,
                       AbstractCreditBlock.LAYOUT_TWO_LINE_CENTERED:_get_two_line_centered,
                       AbstractCreditBlock.LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED:_get_single_line_rjustified,
-                      AbstractCreditBlock.LAYOUT_TWO_LINE_RIGHT_JUSTIFIED:_get_two_line_rjustified}
+                      AbstractCreditBlock.LAYOUT_TWO_LINE_RIGHT_JUSTIFIED:_get_two_line_rjustified,
+                      AbstractCreditBlock.LAYOUT_SINGLE_LINE_LEFT_JUSTIFIED:_get_single_line_ljustified,
+                      AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED:_get_two_line_ljustified}
