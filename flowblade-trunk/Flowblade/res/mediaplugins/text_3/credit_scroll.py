@@ -31,6 +31,7 @@ BAD_ARGUMENT_COUNT_ERROR = 5
 BAD_ARGUMENT_TYPE_ERROR = 6
 BAD_ARGUMENT_VALUE_ERROR = 7
 
+
 DEFAULT_SCROLL_MARKUP_TEXT = \
 """
 # CREDIT TITLE1
@@ -43,15 +44,17 @@ Carl Carruthers
 ! ypad 40
 ! set-layout single-line-sides-justified
 ! font-size credit 100
+! font-family credit Ubuntu Sans
+! font-face name italic
+! font-property credit color-rgba (1.0,0.0,0.0,1.0)
 
+ 
 # CREDIT TITLE3
 Donald Drake
 Earl Easter
 """
 
 def init_script(fctx):
-    pypes = [int, int, str]
-    fctx.log_line(str(pypes))
     fctx.set_name("Scrolling Credits")
     fctx.set_version(2)
     fctx.set_author("Janne Liljeblad")
@@ -71,7 +74,7 @@ def init_script(fctx):
 
     fctx.add_editor_group("Fonts")
     font_default_values = ("Liberation Sans", "Regular", 35, Pango.Alignment.LEFT, (0.0, 0.0, 0.0, 1.0), \
-                       True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
+                       True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (1.0, 0.0, 0.0), \
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
     fctx.add_editor("Creadit Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
@@ -95,8 +98,8 @@ def init_render(fctx):
     scroll_blocks, err = blocks_generator.get_blocks()
     #fctx.log_line("blocks count " + str(len(scroll_blocks)))
     #fctx.log_line("BLOCKS")
-    for block in scroll_blocks:
-        fctx.log_line(str(block))
+    #for block in scroll_blocks:
+    #    fctx.log_line(str(block))
     fctx.set_data_obj("scroll_blocks", scroll_blocks)
 
 def render_frame(frame, fctx, w, h):
@@ -217,12 +220,12 @@ class ScrollBlocksGenerator:
         command_block_creator_func = COMMAND_CREATOR_FUNCS[tokens[1]]
         block = command_block_creator_func(tokens)
         err = block.check_command(self.fctx)
-        self.fctx.log_line("error:" + str(err))
+        #self.fctx.log_line("error:" + str(err))
         block.exec_parse_command(self)
         self.blocks.append(block)
 
         log_str = "adding command block, line " + str(self.current_line) + " " + str(block)
-        self.fctx.log_line(log_str)
+        #self.fctx.log_line(log_str)
 
     def do_section_title_line(self, line):
         if self.state == STATE_WAITING_NEXT_NAME:
@@ -278,7 +281,7 @@ class ScrollBlocksGenerator:
         self.blocks.append(block)
 
         log_str = "adding block, line " + str(self.current_line) + " " + str(block)
-        self.fctx.log_line(log_str)
+        #self.fctx.log_line(log_str)
 
     def add_error(self, error_code, line, crash_msg=None):
         error_info = {  NON_CREDITED_NAME_ERROR:"Added neme without specifying credit for it",  
@@ -301,7 +304,7 @@ class ScrollBlocksGenerator:
             LINE_TYPE_BAD:"BAD"}
         
         log_str = str(self.current_line) + " " + line_type_strs[line_type] + " " + str(self.get_line_contents_str(line))
-        self.fctx.log_line(log_str)
+        #self.fctx.log_line(log_str)
 
 
 class ScroolAnimationRunner:
@@ -661,6 +664,14 @@ def _get_set_layout_command(tokens):
 def _get_font_size_command(tokens):
     return FontSizeCommand(tokens)
     
+def _get_font_family_command(tokens):
+    return FontFontFamilyCommand(tokens)
+
+def _get_font_face_command(tokens):
+    return FontFaceCommand(tokens)
+
+def _get_font_property_command(tokens):
+    return FontPropertyCommand(tokens)
     
 class AbstractCommandBlock(AbstractBlock):
     
@@ -673,6 +684,9 @@ class AbstractCommandBlock(AbstractBlock):
     Y_PADDING = "ypad"
     SET_LAYOUT = "set-layout"
     FONT_SIZE = "font-size"
+    FONT_FALMILY = "font-family"
+    FONT_FACE = "font-face"
+    FONT_PROPERTY = "font-property"
 
     def __init__(self, command_type, tokens):
         self.command_type = command_type
@@ -753,7 +767,18 @@ class AbstractFontCommand(AbstractCommandBlock):
         "shadow-xoff", "shadow-yoff", "shadow-blur", "gradient-color-rgba", \
         "gradient-direction"]
 
+    FONT_DATA_PARAMS_TYPES = [str,str,int,int,tuple,bool,tuple,bool,\
+                              int,bool,tuple,int,int,int,float,tuple,int]
+
     TARGETS_TO_FONT_EDITORS = {AbstractCommandBlock.TARGET_CREDIT:"Credit Font", AbstractCommandBlock.TARGET_NAME:"Name Font", AbstractCommandBlock.TARGET_SECTION_TITLE:"Section Title Font"}
+    
+    FONT_REGULAR = "regular"
+    FONT_ITALIC = "italic"
+    FONT_BOLD = "bold"
+    FONT_FACES = [FONT_REGULAR, FONT_ITALIC, FONT_BOLD]
+    FONT_FACES_TO_PANGO = {FONT_REGULAR:"Regular",
+                           FONT_ITALIC:"Italic",
+                           FONT_BOLD:"Bold"}
         
     def __init__(self, command_type, tokens):
         AbstractCommandBlock.__init__(self, command_type, tokens)
@@ -764,7 +789,7 @@ class AbstractFontCommand(AbstractCommandBlock):
                                                     param_name, 
                                                     value)
         mutable_data[target_editor] = new_font_data
- 
+  
     def get_updated_font_data(self, font_data, param_name, new_value):
         param_index = AbstractFontCommand.FONT_DATA_PARAMS.index(param_name)
         param_list = list(font_data)
@@ -789,8 +814,102 @@ class FontSizeCommand(AbstractFontCommand):
         new_size = int(self.tokens[3])
         self.set_font_param(target, param_name, new_size, mutable_layout_data)
 
+class FontFontFamilyCommand(AbstractFontCommand):
+    
+    def __init__(self, tokens):
+        
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FALMILY, tokens)
 
+        ALLOWED_TOKEN_COUNTS = [4,5,6,7,8,9,10,11,12,13] # Font family names can have quite many parts in them.
+        ARGUMENT_TYPES = {2:str}
+        ARGUMENT_ALLOW_VALUES = {2:AbstractCommandBlock.TARGETS}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
+        
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        param_name = "font-family"
+        target = self.tokens[2]
+        new_family = ""
+        token = 3
+        while token < len(self.tokens):
+            new_family = new_family + self.tokens[token] + " "
+            token += 1
+        
+        new_family = new_family[0:-1]
+        self.set_font_param(target, param_name, new_family, mutable_layout_data)
+
+class FontFaceCommand(AbstractFontCommand):
+    
+    def __init__(self, tokens):
+        
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FACE, tokens)
+
+        ALLOWED_TOKEN_COUNTS = [4]
+        ARGUMENT_TYPES = {2:str, 3:str}
+        ARGUMENT_ALLOW_VALUES = {2:AbstractCommandBlock.TARGETS, 3:AbstractFontCommand.FONT_FACES}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
+        
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        param_name = "font-face"
+        target = self.tokens[2]
+        new_face = AbstractFontCommand.FONT_FACES_TO_PANGO[self.tokens[3]]
+        self.set_font_param(target, param_name, new_face, mutable_layout_data)
+
+class FontPropertyCommand(AbstractFontCommand):
+    
+    def __init__(self, tokens):
+        
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_PROPERTY, tokens)
+
+        ALLOWED_TOKEN_COUNTS = [5,6,7,8,9,10,11,12,13]
+        ARGUMENT_TYPES = {2:str, 3:str}
+        ARGUMENT_ALLOW_VALUES = {2:AbstractCommandBlock.TARGETS, 3:AbstractFontCommand.FONT_DATA_PARAMS}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
+        
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        target = self.tokens[2]
+        param_name = self.tokens[3]
+        new_value, err =  self.get_typed_font_param_value(param_name, self.tokens[4])
+        fctx.log_line("PARAM TYPE:" + param_name + self.tokens[4] + str(new_value) + str(err))
+        self.set_font_param(target, param_name, new_value, mutable_layout_data)
+
+    def get_typed_font_param_value(self, param_name, value):
+        if value == None:
+            return (None, None)
+        
+        param_index = AbstractFontCommand.FONT_DATA_PARAMS.index(param_name)
+        param_type = AbstractFontCommand.FONT_DATA_PARAMS_TYPES[param_index]
+        
+        try:
+            if param_type == int:
+                return (int(value), None)
+            elif param_type == float:
+                return (float(value), None)
+            elif param_type == float:
+                return (str(value), None)
+            elif param_type == bool:
+                if value == "False":
+                    out_val = False
+                elif value == "True":
+                    out_val = True
+                else:
+                    return (None, BAD_ARGUMENT_TYPE_ERROR)
+                return (out_val, None)
+            else:
+                value = value[1:-1]
+                value = value.replace(" ", "")
+                tuple_tokens = value.split(",")
+                tuple_tokens_float = [float(i) for i in tuple_tokens]
+                return (tuple(tuple_tokens_float), None)
+        except:
+            return (None, BAD_ARGUMENT_TYPE_ERROR)
+            
 COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
                          AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command,
-                         AbstractCommandBlock.FONT_SIZE:_get_font_size_command}
+                         AbstractCommandBlock.FONT_SIZE:_get_font_size_command,
+                         AbstractCommandBlock.FONT_FALMILY:_get_font_family_command,
+                         AbstractCommandBlock.FONT_FACE:_get_font_face_command,
+                         AbstractCommandBlock.FONT_PROPERTY:_get_font_property_command}
 
