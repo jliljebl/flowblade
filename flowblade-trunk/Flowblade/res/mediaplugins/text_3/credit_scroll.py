@@ -4,6 +4,7 @@
 """
 
 import cairo
+import copy
 from gi.repository import Pango
 
 import fluxity
@@ -47,8 +48,16 @@ Carl Carruthers
 ! font-family credit Ubuntu Sans
 ! font-face name italic
 ! font-property credit color-rgba (1.0,0.0,0.0,1.0)
-
+! set-layout-property name-y-off -100
  
+# CREDIT TITLE3
+Donald Drake
+Earl Easter
+
+! font-size section-title 60
+
+## This is some section title
+
 # CREDIT TITLE3
 Donald Drake
 Earl Easter
@@ -69,6 +78,7 @@ def init_script(fctx):
     fctx.add_editor("Justified X Position Offset", fluxity.EDITOR_INT, 1300)
     fctx.add_editor("Name X Offset", fluxity.EDITOR_INT, 0)
     fctx.add_editor("Name Y Offset", fluxity.EDITOR_INT, 0)
+    fctx.add_editor("Section Title Alignment", fluxity.EDITOR_OPTIONS, (0, ["Centered", "Left Justified", "Right Justified"]))
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (1, ["Transparent", "Solid Color"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
 
@@ -78,10 +88,10 @@ def init_script(fctx):
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
     fctx.add_editor("Creadit Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
-    fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, copy.deepcopy(font_default_values))
     fctx.add_editor("Name Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Use Credit Font for Name", fluxity.EDITOR_CHECK_BOX, False)
-    fctx.add_editor("Section Title Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
+    fctx.add_editor("Section Title Font", fluxity.EDITOR_PANGO_FONT, copy.deepcopy(font_default_values))
     fctx.add_editor("Section Title Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Use Credit Font for Section Title", fluxity.EDITOR_CHECK_BOX, False)
 
@@ -257,12 +267,12 @@ class ScrollBlocksGenerator:
             return LINE_TYPE_SECTION_TITLE
 
     def get_line_markup(self, line):
-        if line.startswith(MARKUP_CREDIT):
-            return MARKUP_CREDIT
-        elif line.startswith(MARKUP_COMMAND):
+        if line.startswith(MARKUP_COMMAND):
             return MARKUP_COMMAND
         elif line.startswith(MARKUP_SECTION_TITLE):
             return MARKUP_SECTION_TITLE
+        elif line.startswith(MARKUP_CREDIT):
+            return MARKUP_CREDIT
         else:
             return None
 
@@ -377,7 +387,41 @@ class AbstractBlock:
 
 # ----------------------------------------------------- CREDIT BLOCKS
 
-class AbstractCreditBlock(AbstractBlock):
+class AbstractTextBlock(AbstractBlock):
+    
+    # These indexs must match those in editors "Creadit Case" etc.
+    CASE_NO_CHANGES = 0
+    CASE_UPPERCASE = 1
+    CASE_LOWERCASE = 2
+
+    def __init__(self):
+        self.draw_items = []
+    
+        AbstractBlock.__init__(self)
+
+    def add_text_draw_item(self, text, x, y, font_data, case):
+        if case == AbstractTextBlock.CASE_UPPERCASE:
+            text = text.upper()
+        elif case == AbstractTextBlock.CASE_LOWERCASE:
+            text = text.lower()
+                    
+        self.draw_items.append((text, x, y, font_data))
+
+    def draw(self, fctx, cr, y):
+        if y + self.block_height < 0:
+            return
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+        if y > screen_h:
+            return
+        
+        for draw_item in self.draw_items:
+            text, tx, ty, font_data = draw_item
+            layout = fctx.create_text_layout(font_data)
+            layout.create_pango_layout(cr, text)
+            layout.draw_layout(fctx, text, cr, tx, y + ty)
+            
+
+class AbstractCreditBlock(AbstractTextBlock):
     
     # These indexs must match those in editor "Credits Layout".
     LAYOUT_SINGLE_LINE_CENTERED = 0
@@ -386,11 +430,6 @@ class AbstractCreditBlock(AbstractBlock):
     LAYOUT_TWO_LINE_RIGHT_JUSTIFIED = 3
     LAYOUT_SINGLE_SIDES_JUSTIFIED = 4
     LAYOUT_TWO_LINE_LEFT_JUSTIFIED = 5
-    
-    # These indexs must match those in editors "Creadit Case" etc.
-    CASE_NO_CHANGES = 0
-    CASE_UPPERCASE = 1
-    CASE_LOWERCASE = 2
 
     def __init__(self, block_gen):
         block_data = block_gen.current_credit_block_data
@@ -400,7 +439,7 @@ class AbstractCreditBlock(AbstractBlock):
         self.fctx = block_gen.fctx
         self.draw_items = []
     
-        AbstractBlock.__init__(self)
+        AbstractTextBlock.__init__(self)
 
     def create_layouts(self, fctx, cr, mutable_layout_data):
 
@@ -432,27 +471,6 @@ class AbstractCreditBlock(AbstractBlock):
                 mutable_layout_data["Name Y Offset"], mutable_layout_data["Name X Offset"],
                 mutable_layout_data["Creadit Case"], mutable_layout_data["Name Case"],
                 fctx.get_profile_property(fluxity.PROFILE_WIDTH), fctx.get_profile_property(fluxity.PROFILE_HEIGHT))
-
-    def add_text_draw_item(self, text, x, y, font_data, case):
-        if case == AbstractCreditBlock.CASE_UPPERCASE:
-            text = text.upper()
-        elif case == AbstractCreditBlock.CASE_LOWERCASE:
-            text = text.lower()
-                    
-        self.draw_items.append((text, x, y, font_data))
-
-    def draw(self, fctx, cr, y):
-        if y + self.block_height < 0:
-            return
-        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
-        if y > screen_h:
-            return
-        
-        for draw_item in self.draw_items:
-            text, tx, ty, font_data = draw_item
-            layout = fctx.create_text_layout(font_data)
-            layout.create_pango_layout(cr, text)
-            layout.draw_layout(fctx, text, cr, tx, y + ty)
         
     def _get_credits_str(self):
         data_str = "credit_title: " + self.credit_title + "\n" + \
@@ -624,6 +642,7 @@ class TwoLineLJustified(AbstractCreditBlock):
         self.block_height = y - line_gap
 
 
+
 def _get_single_line_centered(block_gen):
     return SingleLineCentered(block_gen)
 
@@ -651,7 +670,34 @@ BLOC_CREATOR_FUNCS = {AbstractCreditBlock.LAYOUT_SINGLE_LINE_CENTERED:_get_singl
                       AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED:_get_two_line_ljustified}
 
 
+# ----------------------------------------------------- SECTION TITLE BLOCK
+class SectionTitleBlock(AbstractTextBlock):
 
+    def __init__(self, section_title):
+        AbstractTextBlock.__init__(self)
+
+        self.section_title = section_title
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        section_title_font = mutable_layout_data["Section Title Font"]
+        fctx.log_line(str(section_title_font))
+        section_title_layout = fctx.create_text_layout(section_title_font)
+        section_title_layout.create_pango_layout(cr, self.section_title)
+        stw, sth  = section_title_layout.pixel_size
+        stcase = mutable_layout_data["Section Title Case"]
+        alignment = mutable_layout_data["Section Title Alignment"]
+        justified_x = mutable_layout_data["Justified X Position"]
+        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+ 
+        # Index values correspond with option in "Section Alignment" editor.
+        if alignment == 0: # centered
+            self.add_text_draw_item(self.section_title, screen_w / 2.0 - stw / 2.0, 0, section_title_font, stcase)
+        elif alignment == 1: # Left justified
+            self.add_text_draw_item(self.section_title, justified_x, 0, section_title_font, stcase)
+        else: # Right justified
+            self.add_text_draw_item(self.section_title, screen_w - justified_x - stw, 0, section_title_font, stcase)
+
+        self.block_height = sth
 
 
 # ----------------------------------------------------- COMMAND BLOCKS
@@ -672,7 +718,11 @@ def _get_font_face_command(tokens):
 
 def _get_font_property_command(tokens):
     return FontPropertyCommand(tokens)
-    
+
+def _get_set_layout_property_command(tokens):
+    return SetLayoutPropertyCommand(tokens)
+
+
 class AbstractCommandBlock(AbstractBlock):
     
     TARGET_CREDIT = "credit"
@@ -687,6 +737,7 @@ class AbstractCommandBlock(AbstractBlock):
     FONT_FALMILY = "font-family"
     FONT_FACE = "font-face"
     FONT_PROPERTY = "font-property"
+    SET_LAYOUT_PROPERTY = "set-layout-property"
 
     def __init__(self, command_type, tokens):
         self.command_type = command_type
@@ -905,11 +956,44 @@ class FontPropertyCommand(AbstractFontCommand):
                 return (tuple(tuple_tokens_float), None)
         except:
             return (None, BAD_ARGUMENT_TYPE_ERROR)
-            
+
+
+class SetLayoutPropertyCommand(AbstractCommandBlock):
+    
+    LAYOUT_PARAMS = ["center-gap", "line-gap","creadit-block-gap",
+                     "justified-x", "justified-x-off", "name-y-off",
+                     "name-x-off", "credit-case", "name-case"]
+    
+    LAYOUT_PARAMS_TO_EDITORS = { "center-gap":"Center Gap",
+                                 "line-gap":"Line Gap",
+                                 "creadit-block-gap":"Credit Block Gap",
+                                 "justified-x":"Justified X Position", 
+                                 "justified-x-off":"Justified X Position Offset", 
+                                 "name-y-off":"Name Y Offset",
+                                 "name-x-off":"Name X Offset"}
+    def __init__(self, tokens):
+        
+        AbstractCommandBlock. __init__(self, AbstractCommandBlock.SET_LAYOUT_PROPERTY, tokens)
+
+        ALLOWED_TOKEN_COUNTS = [4]
+        ARGUMENT_TYPES = {2:str, 3:int}
+        ARGUMENT_ALLOW_VALUES = {2:SetLayoutPropertyCommand.LAYOUT_PARAMS}
+
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
+        
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        param_name = self.tokens[2]
+        new_value = int(self.tokens[3])
+        editor_name = SetLayoutPropertyCommand.LAYOUT_PARAMS_TO_EDITORS[param_name]
+        mutable_layout_data[editor_name] = new_value
+
+
+
 COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
                          AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command,
                          AbstractCommandBlock.FONT_SIZE:_get_font_size_command,
                          AbstractCommandBlock.FONT_FALMILY:_get_font_family_command,
                          AbstractCommandBlock.FONT_FACE:_get_font_face_command,
-                         AbstractCommandBlock.FONT_PROPERTY:_get_font_property_command}
+                         AbstractCommandBlock.FONT_PROPERTY:_get_font_property_command,
+                         AbstractCommandBlock.SET_LAYOUT_PROPERTY:_get_set_layout_property_command}
 
