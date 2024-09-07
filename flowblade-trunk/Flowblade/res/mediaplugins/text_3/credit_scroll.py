@@ -42,6 +42,35 @@ Alice Andersson
 Bob Banner
 Carl Carruthers
 
+
+
+    
+# CREDIT TITLE3
+Donald Drake
+Earl Easter
+
+! font-size section-title 60
+! set-layout-property section-title-alignment right-justified
+
+## This is some section title
+
+! set-layout single-columns-centered
+! font-size name 30
+
+# CREDIT TITLE3
+Donald Drake
+Earl Easter
+Bob Banner
+Carl Carruthers
+Donald Drake
+Earl Easter
+Alice Andersson
+Earl Easter
+Bob Banner
+Carl Carruthers
+Donald Drake
+"""
+"""
 ! ypad 40
 ! set-layout single-line-sides-justified
 ! font-size credit 100
@@ -50,18 +79,6 @@ Carl Carruthers
 ! font-property credit color-rgba (1.0,0.0,0.0,1.0)
 ! set-layout-property name-y-off -100
 ! text-case name lowercase
- 
-# CREDIT TITLE3
-Donald Drake
-Earl Easter
-
-! font-size section-title 60
-
-## This is some section title
-
-# CREDIT TITLE3
-Donald Drake
-Earl Easter
 """
 
 def init_script(fctx):
@@ -71,7 +88,7 @@ def init_script(fctx):
 
     fctx.add_editor_group("Layout")
     fctx.add_editor("Credits Layout", fluxity.EDITOR_OPTIONS, (0, ["Single Line Centered", "Two Line Centered", "Single Line Right Justified", "Two Line Right Justified",
-                    "Single Line Sides Justified", "Two Line Left Justified"]))
+                    "Single Line Sides Justified", "Two Line Left Justified", "Two Columns Centered"]))
     fctx.add_editor("Center Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Credit Block Gap", fluxity.EDITOR_INT, 40)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 0)
@@ -427,6 +444,7 @@ class AbstractCreditBlock(AbstractTextBlock):
     LAYOUT_TWO_LINE_RIGHT_JUSTIFIED = 3
     LAYOUT_SINGLE_SIDES_JUSTIFIED = 4
     LAYOUT_TWO_LINE_LEFT_JUSTIFIED = 5
+    LAYOUT_TWO_COLUMNS_CENTERED = 6
 
     def __init__(self, block_gen):
         block_data = block_gen.current_credit_block_data
@@ -639,6 +657,38 @@ class TwoLineLJustified(AbstractCreditBlock):
 
         self.block_height = y - line_gap
 
+class TwoColumnsCentered(AbstractCreditBlock):
+
+    def __init__(self, block_gen):
+        AbstractCreditBlock.__init__(self, block_gen)
+
+    def init_layout(self, fctx, cr, frame, mutable_layout_data):
+        self.create_layouts(fctx, cr, mutable_layout_data)
+ 
+        center_gap, line_gap, justified_x, name_y_off, name_x_off, credit_case, name_case, \
+        screen_w, screen_h = self.get_layout_data(fctx, mutable_layout_data)
+        
+        cw, ch = self.credit_pixel_size
+
+        # Create draw items
+        self.add_text_draw_item(self.credit_title,screen_w / 2.0 - cw / 2.0, 0, mutable_layout_data["Credit Font"], credit_case)
+
+        y = ch +  name_y_off
+        for i in range(0, len(self.names)):
+            layout = self.name_layouts[i]
+            name = self.names[i]
+            fluxity_layout, pixel_size = layout
+            w, h = pixel_size
+            if i%2 == 0:
+                # left column
+                self.add_text_draw_item(name, justified_x + ((screen_w / 2.0 - justified_x) - w) / 2.0, y, mutable_layout_data["Name Font"], name_case)
+            else:
+                # right column
+                self.add_text_draw_item(name, screen_w / 2.0 + ((screen_w / 2.0 - justified_x) - w) / 2.0, y, mutable_layout_data["Name Font"], name_case)
+            if i%2 == 0 and i != 0:
+                y += (h + line_gap)
+
+        self.block_height = y - line_gap
 
 
 def _get_single_line_centered(block_gen):
@@ -659,13 +709,17 @@ def _get_single_line_sides_justified(block_gen):
 def _get_two_line_ljustified(block_gen):
     return TwoLineLJustified(block_gen)
 
+def _get_two_column_centered(block_gen):
+    return TwoColumnsCentered(block_gen)
+    
 
 BLOC_CREATOR_FUNCS = {AbstractCreditBlock.LAYOUT_SINGLE_LINE_CENTERED:_get_single_line_centered,
                       AbstractCreditBlock.LAYOUT_TWO_LINE_CENTERED:_get_two_line_centered,
                       AbstractCreditBlock.LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED:_get_single_line_rjustified,
                       AbstractCreditBlock.LAYOUT_TWO_LINE_RIGHT_JUSTIFIED:_get_two_line_rjustified,
                       AbstractCreditBlock.LAYOUT_SINGLE_SIDES_JUSTIFIED:_get_single_line_sides_justified,
-                      AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED:_get_two_line_ljustified}
+                      AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED:_get_two_line_ljustified,
+                      AbstractCreditBlock.LAYOUT_TWO_COLUMNS_CENTERED:_get_two_column_centered}
 
 
 # ------------------------------------------------- SECTION TITLE BLOCK
@@ -818,7 +872,8 @@ class SetLayoutCommand(AbstractCommandBlock):
                         "single-line-right-justified": AbstractCreditBlock.LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED,
                         "two-line-right-justified": AbstractCreditBlock.LAYOUT_TWO_LINE_RIGHT_JUSTIFIED,
                         "single-line-sides-justified": AbstractCreditBlock.LAYOUT_SINGLE_SIDES_JUSTIFIED,
-                        "two-line-left-justified": AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED}
+                        "two-line-left-justified": AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED,
+                        "two-columns-centered": AbstractCreditBlock.LAYOUT_TWO_COLUMNS_CENTERED}
 
     def __init__(self, tokens):
         AbstractCommandBlock.__init__(self, AbstractCommandBlock.SET_LAYOUT, tokens)
@@ -987,7 +1042,7 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
     
     LAYOUT_PARAMS = ["center-gap", "line-gap","creadit-block-gap",
                      "justified-x", "justified-x-off", "name-y-off",
-                     "name-x-off", "credit-case", "name-case"]
+                     "name-x-off", "section-title-alignment",]
     
     LAYOUT_PARAMS_TO_EDITORS = { "center-gap":"Center Gap",
                                  "line-gap":"Line Gap",
@@ -995,7 +1050,11 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
                                  "justified-x":"Justified X Position", 
                                  "justified-x-off":"Justified X Position Offset", 
                                  "name-y-off":"Name Y Offset",
-                                 "name-x-off":"Name X Offset"}
+                                 "name-x-off":"Name X Offset",
+                                 "section-title-alignment":"Section Title Alignment"}
+    
+    ALIGNMENTS = ["centered", "left-justified", "right-justified"]
+    
     def __init__(self, tokens):
         
         AbstractCommandBlock. __init__(self, AbstractCommandBlock.SET_LAYOUT_PROPERTY, tokens)
@@ -1008,7 +1067,19 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
         
     def exec_command(self, fctx, cr, frame, mutable_layout_data):
         param_name = self.tokens[2]
-        new_value = int(self.tokens[3])
+         # Here param type checking happens later then usual
+         # because params can have two types (int, str) but whatever.
+        if param_name == "section-title-alignment":
+            if self.tokens[3] in self.ALIGNMENTS:
+                new_value =  self.ALIGNMENTS.index(self.tokens[3])
+            else:
+                pass # throw error here
+        else:
+            try:
+                new_value = int(self.tokens[3])
+            except:
+                pass # throw error here
+                
         editor_name = SetLayoutPropertyCommand.LAYOUT_PARAMS_TO_EDITORS[param_name]
         mutable_layout_data[editor_name] = new_value
 
