@@ -54,7 +54,7 @@ Earl Easter
 
 ## This is some section title
 
-! set-layout single-columns-centered
+! set-layout two-columns-centered
 ! font-size name 30
 
 # CREDIT TITLE3
