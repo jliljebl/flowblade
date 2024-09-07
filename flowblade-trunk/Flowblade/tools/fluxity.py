@@ -420,6 +420,8 @@ class FluxityScript:
         """
         try:
             self.namespace['init_render'](fctx)
+        except FluxityUserMessageError as e:
+            _raise_message_error(str(e))
         except Exception as e:
             _raise_fluxity_error("error calling function 'init_render()':\n\n" + str(e))
           
@@ -429,6 +431,8 @@ class FluxityScript:
         """
         try:
             self.namespace['render_frame'](frame, fctx, w, h)
+        except FluxityUserMessageError as e:
+            _raise_message_error(str(e))
         except Exception as e:
             _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
 
@@ -1361,6 +1365,19 @@ def _raise_compile_error(exception_msg):
 def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
+
+class FluxityUserMessageError(Exception):
+    """
+    Errors used to communicate particular info to user without traceback.
+    """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return self.value
+
+def _raise_message_error(exception_msg):
+    raise FluxityUserMessageError(exception_msg)
+            
 # ------------------------------------------------------ rendering
 def render_preview_frame(script, script_file, frame, generator_length, out_folder, profile_file_path, editors_data_json=None):
     """
@@ -1380,7 +1397,7 @@ def render_preview_frame(script, script_file, frame, generator_length, out_folde
     
     **Returns:** (FluxityContext) Object created during rendering. This object has attributes *error* and *log_msg* providing error and logging information.
     """
- 
+
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
@@ -1410,6 +1427,9 @@ def render_preview_frame(script, script_file, frame, generator_length, out_folde
         w, h = fctx.get_dimensions()
         fscript.call_render_frame(frame, fctx, w, h)
 
+        return fctx
+    except FluxityUserMessageError as e:
+        fctx.error = str(e)
         return fctx
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)

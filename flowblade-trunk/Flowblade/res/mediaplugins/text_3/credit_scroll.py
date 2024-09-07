@@ -144,7 +144,26 @@ def render_frame(frame, fctx, w, h):
     anim_runner.init_blocks(fctx, cr, frame)
     anim_runner.draw_blocks(fctx, cr, frame)
 
-#------------------------------------------------- BLOCKS CREATION
+#------------------------------------------------- ERROR HANDLING
+def throw_user_message_error(error_type, line, msg, current_line = None):
+    type_name = { \
+        NON_CREDITED_NAME_ERROR: "Name Outside Credit Bloc Error",
+        BAD_LINE_ERROR: "BAD_LINE_ERROR",
+        PARSE_CRASH_ERROR:"PARSE_CRASH_ERROR",
+        SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR:"SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR",
+        COMMAND_INSIDE_CREDIT_BLOCK_ERROR:"COMMAND_INSIDE_CREDIT_BLOCK_ERROR",
+        BAD_ARGUMENT_COUNT_ERROR:"BAD_ARGUMENT_COUNT_ERROR",
+        BAD_ARGUMENT_TYPE_ERROR :"BAD_ARGUMENT_TYPE_ERROR",
+        BAD_ARGUMENT_VALUE_ERROR:"BAD_ARGUMENT_VALUE_ERROR"}
+
+    line_number = str(current_line)
+    if current_line == None:
+        line_number = "unknown"
+    error_str = type_name[error_type] + ", line " + line_number +  "  '" + line + "'.\n" + msg
+
+    raise fluxity.FluxityUserMessageError(error_str)
+        
+#-------------------------------------------------- BLOCKS CREATION
 class ScrollBlocksGenerator:
 
 
@@ -233,7 +252,7 @@ class ScrollBlocksGenerator:
         else:
             # We're trying to add name to without specifying 
             # credit for it, add error info.
-            self.add_error(NON_CREDITED_NAME_ERROR, line)
+            throw_user_message_error(NON_CREDITED_NAME_ERROR, line, "Names must be given on consecutive lines after credit title.", self.current_line)
         
     def do_command_line(self, line):
         self.print_line(LINE_TYPE_COMMAND, line)

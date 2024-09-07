@@ -538,7 +538,14 @@ class AddMediaPluginWindow(Gtk.Window):
     def _show_preview(self):
         global _selected_plugin, _current_screenshot_surface
         fctx = self._render_preview(int(self.producer.frame()))
-        _current_screenshot_surface = fctx.priv_context.frame_surface
+        
+        if fctx.error == None:
+            _current_screenshot_surface = fctx.priv_context.frame_surface
+        else:
+           _current_screenshot_surface = _selected_plugin.get_screenshot_surface()
+           primary_txt = _("Generator Render Error")
+           secondary_txt = str(fctx.error)
+           dialogutils. warning_message(primary_txt, secondary_txt, self)
 
         self.screenshot_canvas.queue_draw()
 
