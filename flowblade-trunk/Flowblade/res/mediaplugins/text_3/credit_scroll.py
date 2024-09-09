@@ -42,9 +42,6 @@ Alice Andersson
 Bob Banner
 Carl Carruthers
 
-
-
-    
 # CREDIT TITLE3
 Donald Drake
 Earl Easter
@@ -122,10 +119,6 @@ def init_render(fctx):
     lines = text.splitlines()
     blocks_generator = ScrollBlocksGenerator(lines, fctx)
     scroll_blocks, err = blocks_generator.get_blocks()
-    #fctx.log_line("blocks count " + str(len(scroll_blocks)))
-    #fctx.log_line("BLOCKS")
-    #for block in scroll_blocks:
-    #    fctx.log_line(str(block))
     fctx.set_data_obj("scroll_blocks", scroll_blocks)
 
 def render_frame(frame, fctx, w, h):
@@ -148,10 +141,10 @@ def render_frame(frame, fctx, w, h):
 def throw_user_message_error(error_type, line, msg, current_line = None):
     type_name = { \
         NON_CREDITED_NAME_ERROR: "Name Outside Credit Block Error",
-        BAD_LINE_ERROR: "BAD_LINE_ERROR",
-        PARSE_CRASH_ERROR:"PARSE_CRASH_ERROR",
-        SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR:"SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR",
-        COMMAND_INSIDE_CREDIT_BLOCK_ERROR:"COMMAND_INSIDE_CREDIT_BLOCK_ERROR",
+        BAD_LINE_ERROR: "Bad Line Error",
+        PARSE_CRASH_ERROR:"Parse Crash Error",
+        SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR:"Title Section Inside Credit Block Error",
+        COMMAND_INSIDE_CREDIT_BLOCK_ERROR:"Command Inside Credit Block Error",
         BAD_ARGUMENT_COUNT_ERROR:"Bad Argument Count Error",
         BAD_ARGUMENT_TYPE_ERROR :"Bad Argument Type Error",
         BAD_ARGUMENT_VALUE_ERROR:"Bad Argument Value Error",
@@ -183,7 +176,7 @@ class ScrollBlocksGenerator:
         self.err_list = []
         
         while self.running == True:
-            #try:
+
             line = self.lines[self.current_line]
             line_type = self.get_line_type(line)
 
@@ -198,20 +191,10 @@ class ScrollBlocksGenerator:
             elif line_type == LINE_TYPE_SECTION_TITLE:
                 self.do_section_title_line(line)
             else:
-                throw_user_message_error(BAD_LINE_ERROR, line, "", self.current_line)
+                throw_user_message_error(BAD_LINE_ERROR, line, "Maybe you provided markup without line content?", self.current_line)
 
             self.current_line += 1
-    
-            """
-            except Exception as e:
-                if hasattr(e, 'message'):
-                    msg = e.message
-                else:
-                    msg = str(e)
-                self.add_error(PARSE_CRASH_ERROR, line, msg)
-                self.running = False 
-            """
-            
+
             if self.current_line > len(self.lines) - 1:
                 if self.state == STATE_WAITING_NEXT_NAME:
                      self.add_credit_block()
@@ -259,8 +242,7 @@ class ScrollBlocksGenerator:
         self.print_line(LINE_TYPE_COMMAND, line)
         
         if self.state == STATE_WAITING_NEXT_NAME:
-            self.add_error(COMMAND_INSIDE_CREDIT_BLOCK_ERROR, line)
-            return
+            throw_user_message_error(COMMAND_INSIDE_CREDIT_BLOCK_ERROR, line, "All commands must be given outside credit blocks.", self.current_line)
         
         tokens = line.split(" ")
         try:
@@ -270,17 +252,13 @@ class ScrollBlocksGenerator:
             throw_user_message_error(UNKNOWN_COMMAND_ERROR, line, msg, self.current_line)
             
         block = command_block_creator_func(tokens, self, line)
-        err = block.check_command(self.fctx)
-        #self.fctx.log_line("error:" + str(err))
+        block.check_command(self.fctx)
         block.exec_parse_command(self)
         self.blocks.append(block)
 
-       # log_str = "adding command block, line " + str(self.current_line) + " " + str(block)
-        #self.fctx.log_line(log_str)
-
     def do_section_title_line(self, line):
         if self.state == STATE_WAITING_NEXT_NAME:
-            self.add_error(SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR, line)
+            throw_user_message_error(SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR, line, "Cannot put Title Section line inside Credit Block.", self.current_line)
         else:
             section_title = self.get_line_contents_str(line)
             self.blocks.append(SectionTitleBlock(section_title))
@@ -297,16 +275,18 @@ class ScrollBlocksGenerator:
             else:
                 return LINE_TYPE_NAME
 
-        if len(line) < 2:
+        if len(list(filter(None, line.split(" ")))) < 2:
             return LINE_TYPE_BAD
 
         if markup == MARKUP_CREDIT:
             return LINE_TYPE_CREDIT
         elif markup == MARKUP_COMMAND:
             return LINE_TYPE_COMMAND
-        else:
+        elif  markup == MARKUP_SECTION_TITLE:
             return LINE_TYPE_SECTION_TITLE
 
+        return LINE_TYPE_BAD # shouldn't hit this
+            
     def get_line_markup(self, line):
         if line.startswith(MARKUP_COMMAND):
             return MARKUP_COMMAND
@@ -321,8 +301,10 @@ class ScrollBlocksGenerator:
         line_type = self.get_line_type(line)
         if line_type == LINE_TYPE_CLEAR or line_type == LINE_TYPE_BAD:
             return None
-        elif line_type ==  LINE_TYPE_NAME:
+        elif line_type == LINE_TYPE_NAME:
             return line.strip()
+        elif line_type == LINE_TYPE_SECTION_TITLE:
+            return line[2:].strip()
         else:
             return line[1:].strip()
 
@@ -330,9 +312,6 @@ class ScrollBlocksGenerator:
         bloc_creator_func = BLOC_CREATOR_FUNCS[self.current_layout]
         block = bloc_creator_func(self)
         self.blocks.append(block)
-
-        log_str = "adding block, line " + str(self.current_line) + " " + str(block)
-        #self.fctx.log_line(log_str)
 
     def add_error(self, error_code, line, crash_msg=None):
         error_info = {  NON_CREDITED_NAME_ERROR:"Added neme without specifying credit for it",  
@@ -353,9 +332,7 @@ class ScrollBlocksGenerator:
             LINE_TYPE_COMMAND:"COMMAND",
             LINE_TYPE_CLEAR:"CLEAR",
             LINE_TYPE_BAD:"BAD"}
-        
-        log_str = str(self.current_line) + " " + line_type_strs[line_type] + " " + str(self.get_line_contents_str(line))
-        #self.fctx.log_line(log_str)
+
 
 class CredidBlockData:
 
@@ -506,7 +483,6 @@ class AbstractCreditBlock(AbstractTextBlock):
         self.names_height = self.names_height - line_gap
 
     def get_layout_data(self, fctx, mutable_layout_data):
-        fctx.log_line(str(mutable_layout_data["Name Case"]))
         return (mutable_layout_data["Center Gap"], mutable_layout_data["Line Gap"],
                 mutable_layout_data["Justified X Position"],
                 mutable_layout_data["Name Y Offset"], mutable_layout_data["Name X Offset"],
@@ -700,6 +676,9 @@ class TwoColumnsCentered(AbstractCreditBlock):
 
         y = ch +  name_y_off
         for i in range(0, len(self.names)):
+            if i%2 == 0 and i != 0:
+                y += (h + line_gap)
+                
             layout = self.name_layouts[i]
             name = self.names[i]
             fluxity_layout, pixel_size = layout
@@ -710,8 +689,7 @@ class TwoColumnsCentered(AbstractCreditBlock):
             else:
                 # right column
                 self.add_text_draw_item(name, screen_w / 2.0 + ((screen_w / 2.0 - justified_x) - w) / 2.0, y, mutable_layout_data["Name Font"], name_case)
-            if i%2 == 0 and i != 0:
-                y += (h + line_gap)
+
 
         self.block_height = y - line_gap
 
@@ -757,7 +735,6 @@ class SectionTitleBlock(AbstractTextBlock):
 
     def init_layout(self, fctx, cr, frame, mutable_layout_data):
         section_title_font = mutable_layout_data["Section Title Font"]
-        fctx.log_line(str(section_title_font))
         section_title_layout = fctx.create_text_layout(section_title_font)
         section_title_layout.create_pango_layout(cr, self.section_title)
         stw, sth  = section_title_layout.pixel_size
@@ -838,7 +815,6 @@ class AbstractCommandBlock(AbstractBlock):
         self.ARGUMENT_ALLOW_VALUES = argument_allowed_values
 
     def check_command(self, fctx):
-        fctx.log_line(str(len(self.tokens)) + " " + str(self.ALLOWED_TOKEN_COUNTS) + "  " + str((len(self.tokens) in self.ALLOWED_TOKEN_COUNTS)))
         if not(len(self.tokens) in self.ALLOWED_TOKEN_COUNTS):
             
             if len(self.ALLOWED_TOKEN_COUNTS) == 1:
@@ -857,14 +833,12 @@ class AbstractCommandBlock(AbstractBlock):
                     int(self.tokens[token_index])
                 except:
                     msg = "Argument at position " + str(token_index) + " has wrong type. Was " + str(type(self.tokens[token_index]))  + ", expected 'inẗ́'."
-                    throw_user_message_error(BAD_ARGUMENT_COUNT_ERROR, self.line, msg, self.blocks_gen.current_line)
+                    throw_user_message_error(BAD_ARGUMENT_TYPE_ERROR, self.line, msg, self.blocks_gen.current_line)
 
         for token_index, argument_allowed_values in self.ARGUMENT_ALLOW_VALUES.items():
             if not(self.tokens[token_index] in argument_allowed_values):
                 msg = "Argument at position " + str(token_index) + " has unknown value. Was " + self.tokens[token_index] + ", expected " +  str(argument_allowed_values) + "."
                 throw_user_message_error(BAD_ARGUMENT_VALUE_ERROR, self.line, msg, self.blocks_gen.current_line)
-
-        return None
 
     def __str__(self):
         return self.command_type
@@ -902,7 +876,6 @@ class TextCaseCommand(AbstractCommandBlock):
         target = self.tokens[2]
         new_case = TextCaseCommand.CASES.index(self.tokens[3])
         target_editor = TextCaseCommand.TARGETS_TO_CASE_EDITORS[target]
-        fctx.log_line(target + str(new_case) + target_editor)
         mutable_layout_data[target_editor] = new_case
 
 class SetLayoutCommand(AbstractCommandBlock):
@@ -1043,7 +1016,6 @@ class FontPropertyCommand(AbstractFontCommand):
         target = self.tokens[2]
         param_name = self.tokens[3]
         new_value, err =  self.get_typed_font_param_value(param_name, self.tokens[4])
-        fctx.log_line("PARAM TYPE:" + param_name + self.tokens[4] + str(new_value) + str(err))
         self.set_font_param(target, param_name, new_value, mutable_layout_data)
 
     def get_typed_font_param_value(self, param_name, value):
@@ -1066,7 +1038,8 @@ class FontPropertyCommand(AbstractFontCommand):
                 elif value == "True":
                     out_val = True
                 else:
-                    return (None, BAD_ARGUMENT_TYPE_ERROR)
+                    msg = "Argument '" + value + "' was expected to be a boolean valuen, but cannot be interpreted as such."
+                    throw_user_message_error(BAD_ARGUMENT_TYPE_ERROR, self.line, msg, self.blocks_gen.current_line)
                 return (out_val, None)
             else:
                 value = value[1:-1]
@@ -1075,7 +1048,8 @@ class FontPropertyCommand(AbstractFontCommand):
                 tuple_tokens_float = [float(i) for i in tuple_tokens]
                 return (tuple(tuple_tokens_float), None)
         except:
-            return (None, BAD_ARGUMENT_TYPE_ERROR)
+            msg = "Argument '" + value + "' has wrong type. Was " + str(type(value))  + ", expected " + str(param_type) + "."
+            throw_user_message_error(BAD_ARGUMENT_TYPE_ERROR, self.line, msg, self.blocks_gen.current_line)
 
 
 class SetLayoutPropertyCommand(AbstractCommandBlock):
@@ -1113,12 +1087,14 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
             if self.tokens[3] in self.ALIGNMENTS:
                 new_value =  self.ALIGNMENTS.index(self.tokens[3])
             else:
-                pass # throw error here
+                msg = "Argument " + self.tokens[3] + " has unknown valu,, expected " +  str(self.ALIGNMENTS) + "."
+                throw_user_message_error(BAD_ARGUMENT_VALUE_ERROR, self.line, msg, self.blocks_gen.current_line)
         else:
             try:
                 new_value = int(self.tokens[3])
             except:
-                pass # throw error here
+                msg = "Argument '" + self.tokens[3] + "' has wrong type. Was " + str(type(self.tokens[3]))  + ", expected 'int'."
+                throw_user_message_error(BAD_ARGUMENT_TYPE_ERROR, self.line, msg, self.blocks_gen.current_line)
                 
         editor_name = SetLayoutPropertyCommand.LAYOUT_PARAMS_TO_EDITORS[param_name]
         mutable_layout_data[editor_name] = new_value
