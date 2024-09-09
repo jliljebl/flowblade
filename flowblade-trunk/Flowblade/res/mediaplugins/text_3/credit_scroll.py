@@ -31,7 +31,7 @@ COMMAND_INSIDE_CREDIT_BLOCK_ERROR = 4
 BAD_ARGUMENT_COUNT_ERROR = 5
 BAD_ARGUMENT_TYPE_ERROR = 6
 BAD_ARGUMENT_VALUE_ERROR = 7
-
+UNKNOWN_COMMAND_ERROR = 8
 
 DEFAULT_SCROLL_MARKUP_TEXT = \
 """
@@ -147,14 +147,15 @@ def render_frame(frame, fctx, w, h):
 #------------------------------------------------- ERROR HANDLING
 def throw_user_message_error(error_type, line, msg, current_line = None):
     type_name = { \
-        NON_CREDITED_NAME_ERROR: "Name Outside Credit Bloc Error",
+        NON_CREDITED_NAME_ERROR: "Name Outside Credit Block Error",
         BAD_LINE_ERROR: "BAD_LINE_ERROR",
         PARSE_CRASH_ERROR:"PARSE_CRASH_ERROR",
         SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR:"SECTION_TITLE_INSIDE_CREDIT_SECTION_ERROR",
         COMMAND_INSIDE_CREDIT_BLOCK_ERROR:"COMMAND_INSIDE_CREDIT_BLOCK_ERROR",
-        BAD_ARGUMENT_COUNT_ERROR:"BAD_ARGUMENT_COUNT_ERROR",
-        BAD_ARGUMENT_TYPE_ERROR :"BAD_ARGUMENT_TYPE_ERROR",
-        BAD_ARGUMENT_VALUE_ERROR:"BAD_ARGUMENT_VALUE_ERROR"}
+        BAD_ARGUMENT_COUNT_ERROR:"Bad Argument Count Error",
+        BAD_ARGUMENT_TYPE_ERROR :"Bad Argument Type Error",
+        BAD_ARGUMENT_VALUE_ERROR:"Bad Argument Value Error",
+        UNKNOWN_COMMAND_ERROR:"Unknown Command Error"}
 
     line_number = str(current_line)
     if current_line == None:
@@ -197,7 +198,7 @@ class ScrollBlocksGenerator:
             elif line_type == LINE_TYPE_SECTION_TITLE:
                 self.do_section_title_line(line)
             else:
-                self.add_error(BAD_LINE_ERROR, line)
+                throw_user_message_error(BAD_LINE_ERROR, line, "", self.current_line)
 
             self.current_line += 1
     
@@ -262,14 +263,19 @@ class ScrollBlocksGenerator:
             return
         
         tokens = line.split(" ")
-        command_block_creator_func = COMMAND_CREATOR_FUNCS[tokens[1]]
-        block = command_block_creator_func(tokens)
+        try:
+           command_block_creator_func = COMMAND_CREATOR_FUNCS[tokens[1]]
+        except:
+            msg = "Unknown command '" + tokens[1] + "'."
+            throw_user_message_error(UNKNOWN_COMMAND_ERROR, line, msg, self.current_line)
+            
+        block = command_block_creator_func(tokens, self, line)
         err = block.check_command(self.fctx)
         #self.fctx.log_line("error:" + str(err))
         block.exec_parse_command(self)
         self.blocks.append(block)
 
-        log_str = "adding command block, line " + str(self.current_line) + " " + str(block)
+       # log_str = "adding command block, line " + str(self.current_line) + " " + str(block)
         #self.fctx.log_line(log_str)
 
     def do_section_title_line(self, line):
@@ -772,29 +778,29 @@ class SectionTitleBlock(AbstractTextBlock):
 
 
 # ----------------------------------------------------- COMMAND BLOCKS
-def _get_ypad_command(tokens):
-    return YPaddingCommand(tokens)
+def _get_ypad_command(tokens, blocks_gen, line):
+    return YPaddingCommand(tokens, blocks_gen, line)
 
-def _get_set_layout_command(tokens):
-    return SetLayoutCommand(tokens)
+def _get_set_layout_command(tokens, blocks_gen, line):
+    return SetLayoutCommand(tokens, blocks_gen, line)
     
-def _get_font_size_command(tokens):
-    return FontSizeCommand(tokens)
+def _get_font_size_command(tokens, blocks_gen, line):
+    return FontSizeCommand(tokens, blocks_gen, line)
     
-def _get_font_family_command(tokens):
-    return FontFontFamilyCommand(tokens)
+def _get_font_family_command(tokens, blocks_gen, line):
+    return FontFontFamilyCommand(tokens, blocks_gen, line)
 
-def _get_font_face_command(tokens):
-    return FontFaceCommand(tokens)
+def _get_font_face_command(tokens, blocks_gen, line):
+    return FontFaceCommand(tokens, blocks_gen, line)
 
-def _get_font_property_command(tokens):
-    return FontPropertyCommand(tokens)
+def _get_font_property_command(tokens, blocks_gen, line):
+    return FontPropertyCommand(tokens, blocks_gen, line)
 
-def _get_set_layout_property_command(tokens):
-    return SetLayoutPropertyCommand(tokens)
+def _get_set_layout_property_command(tokens, blocks_gen, line):
+    return SetLayoutPropertyCommand(tokens, blocks_gen, line)
 
-def _get_text_case_command(tokens):
-    return TextCaseCommand(tokens)
+def _get_text_case_command(tokens, blocks_gen, line):
+    return TextCaseCommand(tokens, blocks_gen, line)
 
 
 class AbstractCommandBlock(AbstractBlock):
@@ -814,9 +820,12 @@ class AbstractCommandBlock(AbstractBlock):
     SET_LAYOUT_PROPERTY = "set-layout-property"
     TEXT_CASE = "text-case"
     
-    def __init__(self, command_type, tokens):
+    def __init__(self, command_type, tokens, blocks_gen, line):
         self.command_type = command_type
         self.tokens = tokens
+        self.blocks_gen = blocks_gen
+        self.line = line
+        
         self.ALLOWED_TOKEN_COUNTS = None # list int
         self.ARGUMENT_TYPES = None # dict {token_index:argument_type,...}
         self.ARGUMENT_ALLOW_VALUES = None # dict (toke_index:[allowde_value_1,...]}
@@ -829,19 +838,31 @@ class AbstractCommandBlock(AbstractBlock):
         self.ARGUMENT_ALLOW_VALUES = argument_allowed_values
 
     def check_command(self, fctx):
+        fctx.log_line(str(len(self.tokens)) + " " + str(self.ALLOWED_TOKEN_COUNTS) + "  " + str((len(self.tokens) in self.ALLOWED_TOKEN_COUNTS)))
         if not(len(self.tokens) in self.ALLOWED_TOKEN_COUNTS):
-            return BAD_ARGUMENT_COUNT_ERROR
+            
+            if len(self.ALLOWED_TOKEN_COUNTS) == 1:
+                expected = str(max(self.ALLOWED_TOKEN_COUNTS))
+            elif len(self.ALLOWED_TOKEN_COUNTS) == 2:
+                expected = str(self.ALLOWED_TOKEN_COUNTS[0]) + " or " + str(self.ALLOWED_TOKEN_COUNTS[1])
+            else:
+                expected = "more then " + str(self.ALLOWED_TOKEN_COUNTS[0])
+
+            msg = "Wrong number of tokens in command. Line token count " + str(len(self.tokens)) + ", expected " + expected + "."
+            throw_user_message_error(BAD_ARGUMENT_COUNT_ERROR, self.line, msg, self.blocks_gen.current_line)
             
         for token_index, argument_type in self.ARGUMENT_TYPES.items():
             if argument_type == int:
                 try:
                     int(self.tokens[token_index])
                 except:
-                    return BAD_ARGUMENT_TYPE_ERROR
-                    
+                    msg = "Argument at position " + str(token_index) + " has wrong type. Was " + str(type(self.tokens[token_index]))  + ", expected 'inẗ́'."
+                    throw_user_message_error(BAD_ARGUMENT_COUNT_ERROR, self.line, msg, self.blocks_gen.current_line)
+
         for token_index, argument_allowed_values in self.ARGUMENT_ALLOW_VALUES.items():
             if not(self.tokens[token_index] in argument_allowed_values):
-                return BAD_ARGUMENT_VALUE_ERROR
+                msg = "Argument at position " + str(token_index) + " has unknown value. Was " + self.tokens[token_index] + ", expected " +  str(argument_allowed_values) + "."
+                throw_user_message_error(BAD_ARGUMENT_VALUE_ERROR, self.line, msg, self.blocks_gen.current_line)
 
         return None
 
@@ -850,8 +871,8 @@ class AbstractCommandBlock(AbstractBlock):
 
 class YPaddingCommand(AbstractCommandBlock):
 
-    def __init__(self, tokens):
-        AbstractCommandBlock.__init__(self, AbstractCommandBlock.Y_PADDING, tokens)
+    def __init__(self, tokens, blocks_gen, line):
+        AbstractCommandBlock.__init__(self, AbstractCommandBlock.Y_PADDING, tokens, blocks_gen, line)
         
         ALLOWED_TOKEN_COUNTS = [3]
         ARGUMENT_TYPES = {2:int}
@@ -868,8 +889,8 @@ class TextCaseCommand(AbstractCommandBlock):
                                AbstractCommandBlock.TARGET_NAME:"Name Case",
                                AbstractCommandBlock.TARGET_SECTION_TITLE:"Section title Case"}
     
-    def __init__(self, tokens):
-        AbstractCommandBlock.__init__(self, AbstractCommandBlock.TEXT_CASE, tokens)
+    def __init__(self, tokens, blocks_gen, line):
+        AbstractCommandBlock.__init__(self, AbstractCommandBlock.TEXT_CASE, tokens, blocks_gen, line)
         
         ALLOWED_TOKEN_COUNTS = [4]
         ARGUMENT_TYPES = {2:str, 3:str}
@@ -894,8 +915,8 @@ class SetLayoutCommand(AbstractCommandBlock):
                         "two-line-left-justified": AbstractCreditBlock.LAYOUT_TWO_LINE_LEFT_JUSTIFIED,
                         "two-columns-centered": AbstractCreditBlock.LAYOUT_TWO_COLUMNS_CENTERED}
 
-    def __init__(self, tokens):
-        AbstractCommandBlock.__init__(self, AbstractCommandBlock.SET_LAYOUT, tokens)
+    def __init__(self, tokens, blocks_gen, line):
+        AbstractCommandBlock.__init__(self, AbstractCommandBlock.SET_LAYOUT, tokens, blocks_gen, line)
         
         ALLOWED_TOKEN_COUNTS = [3]
         ARGUMENT_TYPES = {2:str}
@@ -930,8 +951,8 @@ class AbstractFontCommand(AbstractCommandBlock):
                            FONT_ITALIC:"Italic",
                            FONT_BOLD:"Bold"}
         
-    def __init__(self, command_type, tokens):
-        AbstractCommandBlock.__init__(self, command_type, tokens)
+    def __init__(self, command_type, tokens, blocks_gen, line):
+        AbstractCommandBlock.__init__(self, command_type, tokens, blocks_gen, line)
     
     def set_font_param(self, target, param_name, value, mutable_data):
         target_editor = AbstractFontCommand.TARGETS_TO_FONT_EDITORS[target]
@@ -948,9 +969,9 @@ class AbstractFontCommand(AbstractCommandBlock):
 
 class FontSizeCommand(AbstractFontCommand):
     
-    def __init__(self, tokens):
+    def __init__(self, tokens, blocks_gen, line):
         
-        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_SIZE, tokens)
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_SIZE, tokens, blocks_gen, line)
 
         ALLOWED_TOKEN_COUNTS = [4]
         ARGUMENT_TYPES = {2:str, 3:int}
@@ -966,9 +987,9 @@ class FontSizeCommand(AbstractFontCommand):
 
 class FontFontFamilyCommand(AbstractFontCommand):
     
-    def __init__(self, tokens):
+    def __init__(self, tokens, blocks_gen, line):
         
-        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FALMILY, tokens)
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FALMILY, tokens, blocks_gen, line)
 
         ALLOWED_TOKEN_COUNTS = [4,5,6,7,8,9,10,11,12,13] # Font family names can have quite many parts in them.
         ARGUMENT_TYPES = {2:str}
@@ -990,11 +1011,11 @@ class FontFontFamilyCommand(AbstractFontCommand):
 
 class FontFaceCommand(AbstractFontCommand):
     
-    def __init__(self, tokens):
+    def __init__(self, tokens, blocks_gen, line):
         
-        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FACE, tokens)
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FACE, tokens, blocks_gen, line)
 
-        ALLOWED_TOKEN_COUNTS = [4]
+        ALLOWED_TOKEN_COUNTS = [4, 5]
         ARGUMENT_TYPES = {2:str, 3:str}
         ARGUMENT_ALLOW_VALUES = {2:AbstractCommandBlock.TARGETS, 3:AbstractFontCommand.FONT_FACES}
         
@@ -1008,9 +1029,9 @@ class FontFaceCommand(AbstractFontCommand):
 
 class FontPropertyCommand(AbstractFontCommand):
     
-    def __init__(self, tokens):
+    def __init__(self, tokens, blocks_gen, line):
         
-        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_PROPERTY, tokens)
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_PROPERTY, tokens, blocks_gen, line)
 
         ALLOWED_TOKEN_COUNTS = [5,6,7,8,9,10,11,12,13]
         ARGUMENT_TYPES = {2:str, 3:str}
@@ -1074,12 +1095,12 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
     
     ALIGNMENTS = ["centered", "left-justified", "right-justified"]
     
-    def __init__(self, tokens):
+    def __init__(self, tokens, blocks_gen, line):
         
-        AbstractCommandBlock. __init__(self, AbstractCommandBlock.SET_LAYOUT_PROPERTY, tokens)
+        AbstractCommandBlock. __init__(self, AbstractCommandBlock.SET_LAYOUT_PROPERTY, tokens, blocks_gen, line)
 
         ALLOWED_TOKEN_COUNTS = [4]
-        ARGUMENT_TYPES = {2:str, 3:int}
+        ARGUMENT_TYPES = {2:str}
         ARGUMENT_ALLOW_VALUES = {2:SetLayoutPropertyCommand.LAYOUT_PARAMS}
 
         self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, ARGUMENT_ALLOW_VALUES)
