@@ -610,6 +610,10 @@ class AddMediaPluginWindow(Gtk.Window):
 
 
 class PosBarProducer:
+    """
+    Object of this class pretends to a MLT.Producer clip to make position bar and
+    timecode display widgets work here.
+    """
     
     def __init__(self):
         self.length = 200

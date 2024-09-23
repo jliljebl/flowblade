@@ -327,6 +327,7 @@ def load_filters_translations():
 
 
     # param names
+    # From version 2.10 onwards Media Plugins editable parameters names go here too.
     global param_names
 
     param_names["Position"] = _("Position")
@@ -640,7 +641,6 @@ def load_filters_translations():
     param_names["Glitch frequency"] = _("Glitch Frequency")
     param_names["Shift intensity"] = _("Shift Intensity")
     param_names["Color glitching intensity"] = _("Color Intensity")
-    # From version 2.10 onwards Media Plugins editable parameters names go here too.
     param_names["Speed"] = _("Speed")
     param_names["Speed Variation %"] = _("Speed Variation %")
     param_names["Number of Items"] = _("Number of Items")
@@ -714,6 +714,7 @@ def load_filters_translations():
     param_names["Copy Channel To:"] = _("Copy Channel To:") 
 
     # Combo options
+    # From version 2.10 onwards Media Plugins combo options go here too.
     global combo_options
     combo_options["Shave"] = _("Shave")
     combo_options["Rectangle"] = _("Rectangle")
@@ -806,7 +807,6 @@ def load_filters_translations():
     combo_options["Bicubic Smooth"] = _("Bicubic Smooth")
     combo_options["Bicubic Sharp"] = _("Bicubic Sharp")
     combo_options["Spline"] = _("Spline")
-    # From version 2.10 onwards Media Plugins combo options go here too.
     combo_options["Mondrian"] = _("Mondrian")
     combo_options["Pastels"] = _("Pastels")
     combo_options["User Hue"] = _("User Hue")
