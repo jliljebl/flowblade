@@ -1,6 +1,5 @@
 
 
-
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
@@ -13,6 +12,11 @@
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 
+**Due to moving the project is on a short break starting 3.10.24.** 
+
+**After boxes are unpacked we are hoping to get going again by mid-October.**
+
+---
 
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
