@@ -132,6 +132,9 @@ import workflow
 _app = None
 _window = None
 
+_app_init_complete = False
+_force_sdl2 = True # For development use.
+
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
 instance_autosave_id_str = None
@@ -356,8 +359,9 @@ class FlowbladeApplication(Gtk.Application):
         # Inits widgets with current sequence data.
         init_sequence_gui()
 
-        # Launch player now that data and gui exist.
-        launch_player()
+        # Launch SDL 1 player now that data and gui exist if using that.
+        if editorstate.prefer_sdl2_consumer() == False and _force_sdl2 == False:
+            launch_player()
 
         # Editor and modules need some more initializing.
         init_editor_state()
@@ -410,12 +414,6 @@ class FlowbladeApplication(Gtk.Application):
                 print("Launch assoc file:", assoc_file_path)
                 global assoc_timeout_id
                 assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
-            
-        # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visible
-        #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state consideration still
-        #    print "SDL2 timeout launch"
-        #    global sdl2_timeout_id
-        #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
         
         # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
         Gtk.Settings.get_default().set_property("gtk-error-bell", False)
@@ -432,9 +430,21 @@ class FlowbladeApplication(Gtk.Application):
         for arg in sys.argv:
             if arg == "--launchall":
                 GLib.timeout_add(1000, _launch_all)
-                    
+
+        global _app_init_complete
+        _app_init_complete = True
+
+        # Launch SDL 2 player now that data and gui exist if using that.
+        if editorstate.prefer_sdl2_consumer() == True or _force_sdl2 == True:
+            global sdl2_timeout_id
+            sdl2_timeout_id = GLib.timeout_add(1500, _create_sdl_2_consumer)
+
         self.add_window(_window)
 
+
+def _create_sdl_2_consumer():
+    GLib.source_remove(sdl2_timeout_id)
+    launch_player()
 
 
 # ----------------------------------- callback setting
@@ -566,7 +576,8 @@ def create_player():
 def launch_player():
     # Create SDL output consumer.
     editorstate.player.set_sdl_xwindow(gui.tline_display)
-    editorstate.player.create_sdl_consumer()
+    use_sdl2_consumer = (editorstate.prefer_sdl2_consumer() == True or _force_sdl2 == True)
+    editorstate.player.create_sdl_consumer(use_sdl2_consumer)
 
     # Display current sequence tractor.
     updater.display_sequence_in_monitor()
@@ -777,6 +788,10 @@ def change_current_sequence(index):
     updater.init_tline_view()
 
 def display_current_sequence():
+    # On launch we need to set up SDL player differntly.
+    if _app_init_complete == False:
+        return
+
     # Get shorter alias.
     player = editorstate.player
 

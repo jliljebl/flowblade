@@ -49,7 +49,7 @@ class Player:
         self.init_for_profile(profile)
         self.last_slowmo_seektime = 0.0
         self.slowmo_ticker = None
-        self.start_ticker()
+        self.consumer = None
             
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
@@ -61,18 +61,27 @@ class Player:
         self.loop_end = -1
         self.is_looping = False
         
-    def create_sdl_consumer(self):
+    def create_sdl_consumer(self, use_sdl2_consumer):
         """
         Creates consumer with sdl output to a gtk+ widget.
         """
-        print("Create SDL1 consumer...")
+
         # Create consumer and set params
-        self.consumer = mlt.Consumer(self.profile, "sdl")
+        if use_sdl2_consumer == True:
+            print("Create SDL2 consumer...")
+            self.consumer = mlt.Consumer(self.profile, "sdl2")
+            self.consumer.set("window_id", self.window_xid)
+        else:
+            print("Create SDL1 consumer...")
+            self.consumer = mlt.Consumer(self.profile, "sdl")
+            # SDL 1 consumer uses env param to communicate 
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
+        self.start_ticker()
+        
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
     
@@ -86,8 +95,9 @@ class Player:
         """
         Connects SDL output to display widget's xwindow
         """
-        os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        Gdk.flush()
+        self.window_xid = widget.get_window().get_xid()
+        #os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
+        #Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
         """
@@ -101,6 +111,9 @@ class Player:
         self.connect_and_start()
 
     def refresh(self): # Window events need this to get picture back
+        if self.consumer == None:
+            return 
+
         self.stop_timer_slowmo_playback()
 
         self.consumer.stop()

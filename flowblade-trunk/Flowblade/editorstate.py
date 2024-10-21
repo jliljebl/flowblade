@@ -223,7 +223,7 @@ def mlt_version_is_greater_correct(test_version):
         if runtime_ver[1] > test_ver[1]:
             return True
         elif runtime_ver[1] == test_ver[1]:
-            if  runtime_ver[2] >  test_ver[2]:
+            if  runtime_ver[2] > test_ver[2]:
                 return True
     
     return False
@@ -299,7 +299,12 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
 
-
+def prefer_sdl2_consumer():
+    if mlt_version_is_greater_correct("7.28.0") or app_running_from == RUNNING_FROM_FLATPAK:
+        return True
+    else:
+        return False
+ 
 # Called from tline "motion_notify_event" when drag is not on.
 # This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):
