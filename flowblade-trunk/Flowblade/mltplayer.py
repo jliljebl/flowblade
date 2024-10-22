@@ -71,6 +71,10 @@ class Player:
             print("Create SDL2 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
+            w = gui.tline_display.get_allocated_width()
+            h = gui.tline_display.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
         else:
             print("Create SDL1 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl")
@@ -84,7 +88,14 @@ class Player:
         
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
-    
+
+    def display_resized(self):
+        if self.consumer != None:
+            w = gui.tline_display.get_allocated_width()
+            h = gui.tline_display.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
+
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
             self.consumer.set("scrub_audio", 1)

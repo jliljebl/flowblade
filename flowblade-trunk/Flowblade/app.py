@@ -151,6 +151,7 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 resize_timeout_id = -1
+monitor_resize_id = -1
 
 _log_file = None
 
@@ -370,11 +371,13 @@ class FlowbladeApplication(Gtk.Application):
         global _window
         _window = gui.editor_window.window
         
-        # Tracks need to be re-centered if window is resized.
+        # Tracks need to be re-centered if window is resized and sdl2 consumer resized if
+        # monitor widget resized.
         # Connect listener for this now that the tline panel size allocation is sure to be available.
-        global window_resize_id, window_state_id
+        global window_resize_id, window_state_id, monitor_resize_id
         window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
         window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+        monitor_resize_id = gui.tline_display.connect("size-allocate", lambda w, e:tline_display_resized())
 
         # Get existing autosave files
         autosave_files = get_autosave_files()
@@ -441,11 +444,13 @@ class FlowbladeApplication(Gtk.Application):
 
         self.add_window(_window)
 
-
+# --------------------------------------- display
 def _create_sdl_2_consumer():
     GLib.source_remove(sdl2_timeout_id)
     launch_player()
 
+def tline_display_resized():
+    editorstate.PLAYER().display_resized()
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
