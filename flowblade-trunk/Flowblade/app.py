@@ -133,7 +133,7 @@ _app = None
 _window = None
 
 _app_init_complete = False
-_force_sdl2 = False # For development use.
+_force_sdl2 = True # For development use.
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"

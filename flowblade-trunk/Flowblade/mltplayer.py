@@ -118,8 +118,8 @@ class Player:
         """
         Connects SDL output to display widget's xwindow
         """
+        self.window_xid = widget.get_window().get_xid()
         if _sdl_consumer_version == SDL_1:
-            self.window_xid = widget.get_window().get_xid()
             os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
             Gdk.flush()
 
