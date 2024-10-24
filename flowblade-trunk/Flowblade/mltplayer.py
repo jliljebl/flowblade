@@ -42,6 +42,18 @@ TICKER_DELAY = 250 # in millis
 RENDER_TICKER_DELAY = 0.05
 SLOWMO_FRAME_DELAY = 0.1
 
+SDL_1 = 1
+SDL_2 = 2
+
+_sdl_consumer_version = SDL_1
+
+def set_sdl_consumer_version(consumer_version):
+    global _sdl_consumer_version
+    _sdl_consumer_version = consumer_version
+
+def get_sdl_consumer_version():
+    return _sdl_consumer_version
+
 class Player:
     
     def __init__(self, profile):
@@ -49,7 +61,7 @@ class Player:
         self.init_for_profile(profile)
         self.last_slowmo_seektime = 0.0
         self.slowmo_ticker = None
-        self.start_ticker()
+        self.consumer = None
             
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
@@ -65,17 +77,37 @@ class Player:
         """
         Creates consumer with sdl output to a gtk+ widget.
         """
-        print("Create SDL1 consumer...")
+
         # Create consumer and set params
-        self.consumer = mlt.Consumer(self.profile, "sdl")
+        if _sdl_consumer_version == SDL_2:
+            print("Create SDL2 consumer...")
+            self.consumer = mlt.Consumer(self.profile, "sdl2")
+            self.consumer.set("window_id", self.window_xid)
+            w = gui.tline_display.get_allocated_width()
+            h = gui.tline_display.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
+        else:
+            print("Create SDL1 consumer...")
+            self.consumer = mlt.Consumer(self.profile, "sdl")
+            # SDL 1 consumer uses env param to communicate 
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
+        self.start_ticker()
+        
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
-    
+
+    def display_resized(self):
+        if self.consumer != None and _sdl_consumer_version == SDL_2:
+            w = gui.tline_display.get_allocated_width()
+            h = gui.tline_display.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
+
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
             self.consumer.set("scrub_audio", 1)
@@ -86,8 +118,10 @@ class Player:
         """
         Connects SDL output to display widget's xwindow
         """
-        os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        Gdk.flush()
+        if _sdl_consumer_version == SDL_1:
+            self.window_xid = widget.get_window().get_xid()
+            os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
+            Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
         """
@@ -101,6 +135,9 @@ class Player:
         self.connect_and_start()
 
     def refresh(self): # Window events need this to get picture back
+        if self.consumer == None:
+            return 
+
         self.stop_timer_slowmo_playback()
 
         self.consumer.stop()

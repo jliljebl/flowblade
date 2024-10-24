@@ -47,10 +47,6 @@ CUT = 13
 KF_TOOL = 14
 MULTI_TRIM = 15
 
-# SDL version (Not used currently)
-SDL_1 = 1
-SDL_2 = 2
-
 # Gtk.Application object for main app. 
 app = None
 
@@ -223,7 +219,7 @@ def mlt_version_is_greater_correct(test_version):
         if runtime_ver[1] > test_ver[1]:
             return True
         elif runtime_ver[1] == test_ver[1]:
-            if  runtime_ver[2] >  test_ver[2]:
+            if  runtime_ver[2] > test_ver[2]:
                 return True
     
     return False
@@ -298,8 +294,7 @@ def add_cached_trim_clip(clip):
 def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
-
-
+ 
 # Called from tline "motion_notify_event" when drag is not on.
 # This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):

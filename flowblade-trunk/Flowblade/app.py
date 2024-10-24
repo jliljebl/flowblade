@@ -132,6 +132,9 @@ import workflow
 _app = None
 _window = None
 
+_app_init_complete = False
+_force_sdl2 = False # For development use.
+
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
 instance_autosave_id_str = None
@@ -148,6 +151,7 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 resize_timeout_id = -1
+monitor_resize_id = -1
 
 _log_file = None
 
@@ -356,8 +360,16 @@ class FlowbladeApplication(Gtk.Application):
         # Inits widgets with current sequence data.
         init_sequence_gui()
 
-        # Launch player now that data and gui exist.
-        launch_player()
+        # Set SDL consumer version to be used.
+        if editorstate.mlt_version_is_greater_correct("7.28.0") or _force_sdl2 == True \
+            or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            mltplayer.set_sdl_consumer_version(mltplayer.SDL_2)
+        else:
+            mltplayer.set_sdl_consumer_version(mltplayer.SDL_1)
+
+        # Launch player if we're using SDL 1 consumer.
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1:
+            launch_player()
 
         # Editor and modules need some more initializing.
         init_editor_state()
@@ -366,11 +378,13 @@ class FlowbladeApplication(Gtk.Application):
         global _window
         _window = gui.editor_window.window
         
-        # Tracks need to be re-centered if window is resized.
+        # Tracks need to be re-centered if window is resized and sdl2 consumer resized if
+        # monitor widget resized.
         # Connect listener for this now that the tline panel size allocation is sure to be available.
-        global window_resize_id, window_state_id
+        global window_resize_id, window_state_id, monitor_resize_id
         window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
         window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+        monitor_resize_id = gui.tline_display.connect("size-allocate", lambda w, e:tline_display_resized())
 
         # Get existing autosave files
         autosave_files = get_autosave_files()
@@ -410,12 +424,6 @@ class FlowbladeApplication(Gtk.Application):
                 print("Launch assoc file:", assoc_file_path)
                 global assoc_timeout_id
                 assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
-            
-        # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visible
-        #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state consideration still
-        #    print "SDL2 timeout launch"
-        #    global sdl2_timeout_id
-        #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
         
         # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
         Gtk.Settings.get_default().set_property("gtk-error-bell", False)
@@ -432,10 +440,24 @@ class FlowbladeApplication(Gtk.Application):
         for arg in sys.argv:
             if arg == "--launchall":
                 GLib.timeout_add(1000, _launch_all)
-                    
+
+        global _app_init_complete
+        _app_init_complete = True
+
+        # Launch SDL 2 player now that data and gui exist if using that.
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_2:
+            global sdl2_timeout_id
+            sdl2_timeout_id = GLib.timeout_add(1500, _create_sdl_2_consumer)
+
         self.add_window(_window)
 
+# --------------------------------------- display
+def _create_sdl_2_consumer():
+    GLib.source_remove(sdl2_timeout_id)
+    launch_player()
 
+def tline_display_resized():
+    editorstate.PLAYER().display_resized()
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
@@ -777,6 +799,10 @@ def change_current_sequence(index):
     updater.init_tline_view()
 
 def display_current_sequence():
+    # On launch we need to set up SDL player differntly.
+    if _app_init_complete == False:
+        return
+
     # Get shorter alias.
     player = editorstate.player
 
