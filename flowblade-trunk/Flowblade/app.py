@@ -133,7 +133,7 @@ _app = None
 _window = None
 
 _app_init_complete = False
-_force_sdl2 = True # For development use.
+_force_sdl2 = False # For development use.
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
@@ -360,8 +360,15 @@ class FlowbladeApplication(Gtk.Application):
         # Inits widgets with current sequence data.
         init_sequence_gui()
 
-        # Launch SDL 1 player now that data and gui exist if using that.
-        if editorstate.prefer_sdl2_consumer() == False and _force_sdl2 == False:
+        # Set SDL consumer version to be used.
+        if editorstate.mlt_version_is_greater_correct("7.28.0") or _force_sdl2 == True \
+            or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            mltplayer.set_sdl_consumer_version(mltplayer.SDL_2)
+        else:
+            mltplayer.set_sdl_consumer_version(mltplayer.SDL_1)
+
+        # Launch player if we're using SDL 1 consumer.
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1:
             launch_player()
 
         # Editor and modules need some more initializing.
@@ -438,7 +445,7 @@ class FlowbladeApplication(Gtk.Application):
         _app_init_complete = True
 
         # Launch SDL 2 player now that data and gui exist if using that.
-        if editorstate.prefer_sdl2_consumer() == True or _force_sdl2 == True:
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_2:
             global sdl2_timeout_id
             sdl2_timeout_id = GLib.timeout_add(1500, _create_sdl_2_consumer)
 
@@ -581,8 +588,7 @@ def create_player():
 def launch_player():
     # Create SDL output consumer.
     editorstate.player.set_sdl_xwindow(gui.tline_display)
-    use_sdl2_consumer = (editorstate.prefer_sdl2_consumer() == True or _force_sdl2 == True)
-    editorstate.player.create_sdl_consumer(use_sdl2_consumer)
+    editorstate.player.create_sdl_consumer()
 
     # Display current sequence tractor.
     updater.display_sequence_in_monitor()

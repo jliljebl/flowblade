@@ -42,6 +42,18 @@ TICKER_DELAY = 250 # in millis
 RENDER_TICKER_DELAY = 0.05
 SLOWMO_FRAME_DELAY = 0.1
 
+SDL_1 = 1
+SDL_2 = 2
+
+_sdl_consumer_version = SDL_1
+
+def set_sdl_consumer_version(consumer_version):
+    global _sdl_consumer_version
+    _sdl_consumer_version = consumer_version
+
+def get_sdl_consumer_version():
+    return _sdl_consumer_version
+
 class Player:
     
     def __init__(self, profile):
@@ -61,13 +73,13 @@ class Player:
         self.loop_end = -1
         self.is_looping = False
         
-    def create_sdl_consumer(self, use_sdl2_consumer):
+    def create_sdl_consumer(self):
         """
         Creates consumer with sdl output to a gtk+ widget.
         """
 
         # Create consumer and set params
-        if use_sdl2_consumer == True:
+        if _sdl_consumer_version == SDL_2:
             print("Create SDL2 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
@@ -90,7 +102,7 @@ class Player:
         self.sdl_consumer = self.consumer 
 
     def display_resized(self):
-        if self.consumer != None:
+        if self.consumer != None and _sdl_consumer_version == SDL_2:
             w = gui.tline_display.get_allocated_width()
             h = gui.tline_display.get_allocated_height()
             self.consumer.set("window_width", w)
@@ -106,9 +118,10 @@ class Player:
         """
         Connects SDL output to display widget's xwindow
         """
-        self.window_xid = widget.get_window().get_xid()
-        #os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        #Gdk.flush()
+        if _sdl_consumer_version == SDL_1:
+            self.window_xid = widget.get_window().get_xid()
+            os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
+            Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
         """
