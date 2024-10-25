@@ -83,6 +83,7 @@ _app = None
 _window = None
 
 _player = None
+sdl2_timeout_id = -1
 _ticker = None
 _plugin_renderer = None
 
@@ -193,7 +194,6 @@ class ScriptToolApplication(Gtk.Application):
         # Get launch profile and init player and display GUI params for it. 
         global _current_profile_name
         _current_profile_name = _get_arg_value(sys.argv, "profile_name")
-        _init_player_and_profile_data(_current_profile_name)
 
         # Show window.
         global _window
@@ -203,11 +203,33 @@ class ScriptToolApplication(Gtk.Application):
 
         os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
 
-        _init_playback()
-        update_length(_script_length)
+        # Set SDL consumer version to be used.
+        if editorstate.mlt_version_is_greater_correct("7.28.0") or editorstate.force_sdl2 == True \
+            or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_2)
+        else:
+            gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_1)
         
+        # Launch player if we're using SDL 1 consumer.
+        if gmicplayer.get_sdl_consumer_version() == gmicplayer.SDL_1:
+            _init_player_and_profile_data(_current_profile_name)
+            _init_playback()
+            update_length(_script_length)
+        else:
+            # Launch SDL 2 player now that data and gui exist if using that.
+            global sdl2_timeout_id
+            sdl2_timeout_id = GLib.timeout_add(200, _create_sdl_2_consumer)
+            
         self.add_window(_window)
 
+# --------------------------------------- display
+def _create_sdl_2_consumer():
+    GLib.source_remove(sdl2_timeout_id)
+
+    _init_player_and_profile_data(_current_profile_name)
+    _init_playback()
+    update_length(_script_length)
+    
 
 # ------------------------------------------------- folders init
 def _init_frames_dirs():
@@ -227,6 +249,8 @@ def _init_player_and_profile_data(profile_name):
     global _player, _ticker
     _ticker = utils.Ticker(_ticker_event, TICKER_DELAY)
     _player = gmicplayer.GmicPlayer(respaths.FLUXITY_EMPTY_BG_RES_PATH, _ticker)
+    _player.set_display_widget(_window.monitor)
+    _window.monitor.connect("size-allocate", lambda w, e:_player.display_resized())
 
 def _init_playback():
     _window.set_fps()

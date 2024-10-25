@@ -90,7 +90,8 @@ class Player:
         else:
             print("Create SDL1 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl")
-            # SDL 1 consumer uses env param to communicate 
+            # SDL 1 consumer uses env param to communicate xid and 
+            # that has already been set.
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)

@@ -149,6 +149,9 @@ _trim_clips_cache = {}
 # Value set in gmic.py module. 
 gmic_path = None
 
+# For development and test use.
+force_sdl2 = True 
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

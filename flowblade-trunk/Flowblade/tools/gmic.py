@@ -337,8 +337,18 @@ def _finish_clip_open(use_default_profile):
 
     global _player, _frame_writer
     _player = gmicplayer.GmicPlayer(_current_path)
+    _player.set_display_widget(_window.monitor)
+    _window.monitor.connect("size-allocate", lambda w, e:_player.display_resized())
+ 
     _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
 
+    # Set SDL consumer version to be used.
+    if editorstate.mlt_version_is_greater_correct("7.28.0") or editorstate.force_sdl2 == True \
+        or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_2)
+    else:
+        gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_1)
+            
     _window.set_fps()
     _window.set_monitor_sizes()
     if use_default_profile == False:

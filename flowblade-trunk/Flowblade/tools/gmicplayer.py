@@ -45,6 +45,18 @@ RENDER_TICKER_DELAY = 0.05
 
 _current_profile = None
 
+SDL_1 = 1
+SDL_2 = 2
+
+_sdl_consumer_version = SDL_1
+
+
+def set_sdl_consumer_version(consumer_version):
+    global _sdl_consumer_version
+    _sdl_consumer_version = consumer_version
+
+def get_sdl_consumer_version():
+    return _sdl_consumer_version
 
 def set_current_profile(clip_path):
     profile = mltprofiles.get_default_profile()
@@ -80,7 +92,8 @@ class GmicPlayer:
         self.producer.mark_in = -1
         self.producer.mark_out = -1
         self.ticker = ticker
-        
+        self.consumer = None
+
     def set_producer(self, producer):
         if self.producer != None:
             self.consumer.stop()
@@ -103,13 +116,30 @@ class GmicPlayer:
             self.producer.mark_out = -1
     
         self.connect_and_start()
-                
+
+    def set_display_widget(self, display_widget):
+        self.display_widget = display_widget
+        self.window_xid = display_widget.get_window().get_xid()
+
     def create_sdl_consumer(self):
         """
         Creates consumer with sdl output to a gtk+ widget.
         """
         # Create consumer and set params
-        self.consumer = mlt.Consumer(_current_profile, "sdl")
+        # Create consumer and set params
+        if _sdl_consumer_version == SDL_2:
+            print("Create SDL2 consumer...")
+            self.consumer = mlt.Consumer(_current_profile, "sdl2")
+            self.consumer.set("window_id", self.window_xid)
+            w = self.display_widget.get_allocated_width()
+            h = self.display_widget.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
+        else:
+            print("Create SDL1 consumer...")
+            self.consumer = mlt.Consumer(_current_profile, "sdl")
+            # SDL 1 consumer uses env param to communicate xid and 
+            # that has already been set.
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
@@ -118,6 +148,13 @@ class GmicPlayer:
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
+
+    def display_resized(self):
+        if self.consumer != None and _sdl_consumer_version == SDL_2:
+            w = self.display_widget.get_allocated_width()
+            h =self.display_widget.get_allocated_height()
+            self.consumer.set("window_width", w)
+            self.consumer.set("window_height", h)
 
     def refresh(self): # Window events need this to get picture back
         self.consumer.stop()
