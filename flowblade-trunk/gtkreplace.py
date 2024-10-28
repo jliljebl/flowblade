@@ -209,7 +209,7 @@ def _file_line_replace(target_filename, line_number, sub_string, replace_string)
         print("Changed line ", str(line_number) ," in file ", target_filename, "into: ", replace_string)
     else:
         print("ERROR: ", target_filename, line_number, sub_string, replace_string)
-
+"""
 _substring_replace(' Gtk.VBox', ' gtkbox.VBox')
 _substring_replace(' Gtk.HBox', ' gtkbox.HBox')
 
@@ -319,4 +319,5 @@ _substring_replace("get_children()[0]", "get_first_child()")
 _comment_out_with_substring('self.uimanager', False)
 
 _comment_out_with_substring('gui.editor_window.init_compositing_mode_menu()')
+"""
 

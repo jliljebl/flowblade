@@ -31,6 +31,7 @@ import gui
 import guicomponents
 import guipopover
 import guiutils
+import gtkbuilder
 from editorstate import current_sequence
 import renderconsumer
 import utils
@@ -869,6 +870,7 @@ class RenderFilePanel():
     def __init__(self):
 
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
+        #self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
         gui.render_out_folder = self.out_folder

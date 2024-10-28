@@ -24,6 +24,7 @@ Widget builder module to help moving to Gtk4.
 
 from gi.repository import Gtk
 
+import os
 
 def HPaned():
     paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
@@ -43,11 +44,31 @@ def VPaned():
     """
     return paned
 
+def get_file_chooser_button(title):
+    b = Gtk.Button.new_with_label(title)
+    b.connect("clicked", _file_chooser_button_clicked)
+    b.set_action = lambda a : _set_file_action(b, a)
+    b.set_current_folder = lambda fp : _set_current_folder(b, fp)
+    return b
+
+
+    
 # ---------------------------------------------------- Gtk 4 replace methods.
+# H/VPaned
 def _pack1(paned, child, resize, shrink):
     paned.set_start_child(child)
 
 def _pack2(paned, child, resize, shrink):
     paned.set_end_child(child)
 
+# FileChooserButton
+def _set_file_action(b, action):
+    b.priv_action = action
     
+def _set_current_folder(b, file_path):
+    b.current_folder = file_path
+    b.set_label(_filename(file_path))
+    
+def _filename(path):
+    path = path.rstrip("/")
+    return os.path.basename(path)
