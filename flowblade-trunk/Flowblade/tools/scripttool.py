@@ -216,15 +216,13 @@ class ScriptToolApplication(Gtk.Application):
             _init_playback()
             update_length(_script_length)
         else:
-            # Launch SDL 2 player now that data and gui exist if using that.
-            global sdl2_timeout_id
-            sdl2_timeout_id = GLib.timeout_add(200, _create_sdl_2_consumer)
-            
+            # Launch SDL 2 player after data and gui exist if using that.
+            GLib.idle_add(_create_sdl_2_consumer)
+                        
         self.add_window(_window)
 
 # --------------------------------------- display
 def _create_sdl_2_consumer():
-    GLib.source_remove(sdl2_timeout_id)
 
     _init_player_and_profile_data(_current_profile_name)
     _init_playback()

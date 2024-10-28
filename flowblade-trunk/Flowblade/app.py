@@ -445,14 +445,12 @@ class FlowbladeApplication(Gtk.Application):
 
         # Launch SDL 2 player now that data and gui exist if using that.
         if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_2:
-            global sdl2_timeout_id
-            sdl2_timeout_id = GLib.timeout_add(1500, _create_sdl_2_consumer)
+            GLib.idle_add(_create_sdl_2_consumer)
 
         self.add_window(_window)
 
 # --------------------------------------- display
 def _create_sdl_2_consumer():
-    GLib.source_remove(sdl2_timeout_id)
     launch_player()
 
 def tline_display_resized():
@@ -798,7 +796,7 @@ def change_current_sequence(index):
     updater.init_tline_view()
 
 def display_current_sequence():
-    # On launch we need to set up SDL player differntly.
+    # On launch we need to set up SDL player differently.
     if _app_init_complete == False:
         return
 
