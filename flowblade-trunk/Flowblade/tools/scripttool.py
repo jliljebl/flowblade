@@ -83,7 +83,6 @@ _app = None
 _window = None
 
 _player = None
-sdl2_timeout_id = -1
 _ticker = None
 _plugin_renderer = None
 
