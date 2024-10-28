@@ -210,11 +210,13 @@ def _file_line_replace(target_filename, line_number, sub_string, replace_string)
     else:
         print("ERROR: ", target_filename, line_number, sub_string, replace_string)
 
-"""
 _substring_replace(' Gtk.VBox', ' gtkbox.VBox')
 _substring_replace(' Gtk.HBox', ' gtkbox.HBox')
 
 _insert_line_after("from gi.repository import", "Gtk", "import gtkbox")
+
+_substring_replace("gi.require_version('Gtk', '3.0')","gi.require_version('Gtk', '4.0')")
+
 
 _substring_replace('class RenderQueueView(Gtk.VBox):', 'class RenderQueueView(Gtk.Box):')
 _insert_line_after('class RenderQueueView(Gtk.Box):', 'Gtk.Box', '        gtkbox.build_vertical(self)', 5, True)
@@ -256,16 +258,65 @@ for hbox in hboxes:
 _substring_replace("class TimeLineScroller(Gtk.HScrollbar):", "class TimeLineScroller(Gtk.Scrollbar):")
 _insert_line_after('class TimeLineScroller(Gtk.Scrollbar):', 'Gtk.Scrollbar', '        self.set_orientation (Gtk.Orientation.HORIZONTAL)', 10, True)
 
-#_substring_replace("Gtk.IconSize.BUTTON", "Gtk.IconSize.NORMAL")
+_comment_out_with_substring("show_all", False)
+_comment_out_with_substring("dnd.", False)
+_comment_out_with_substring("add_events", False)
+
+_substring_replace(".add(", ".set_child(")
+
+_comment_out_with_substring("override_font", False)
+_comment_out_with_substring("modify_font", False)
+
+_line_end_replace("Gtk.FileChooserButton", "gtkbox.get_file_chooser_button()")
+
+_file_line_replace("rendergui.py", 566, "self.set_child(Gtk.Label())", "self.append(Gtk.Label())")
+
+_substring_replace("self.args_popover = Gtk.Popover.new(self.args_edit_launch.widget)", "self.args_popover = Gtk.Popover.new()")
+_insert_line_after("        self.args_popover", "self.args_popover", "        self.args_popover.set_default_widget(self.args_edit_launch.widget)", 0, False)
+
+_substring_replace("Gtk.IconSize.BUTTON", "Gtk.IconSize.NORMAL")
+
+_comment_out_with_substring('connect("clicked"', False, True)
+
+_comment_out_with_substring("set_image", False, True)
 
 _substring_replace(' Gtk.EventBox', ' gtkbox.EventBox')
-"""
-_substring_replace(' Gtk.HPaned', ' gtkbuilder.HPaned')
 
-_substring_replace(' Gtk.VPaned', ' gtkbuilder.VPaned')
+_substring_replace(' Gdk.Color', ' Gdk.RGBA')
 
-#_substring_replace("get_children()[0]", "get_first_child()")
+_comment_out_with_substring("modify_bg", False)
 
+_comment_out_with_substring('connect("focus-out-event"')
 
+_comment_out_with_substring('.connect_launched_menu(workflow._tools_menu)')
 
+_comment_out_with_substring("override_background_color", False, True)
+
+_substring_replace('pack_end', 'pack_start')
+
+_substring_replace(' Gtk.HPaned', ' gtkbox.HPaned')
+
+_substring_replace(' Gtk.VPaned', ' gtkbox.VPaned')
+
+_comment_out_with_substring('self.menubar', False, True)
+
+_comment_out_with_substring('self._init_view_menu', False)
+
+_comment_out_with_substring('self.window.resize', False)
+
+_comment_out_with_substring('self.window.set_position', False, True)
+
+_comment_out_with_substring('self.window2.resize', False, True)
+
+_comment_out_with_substring('editor_window.uimanager.get_widget', False, True)
+
+_comment_out_with_substring("key-press-event", False, True)
+
+_comment_out_with_substring("gui.editor_window.uimanager", False, True)
+
+_substring_replace("get_children()[0]", "get_first_child()")
+
+_comment_out_with_substring('self.uimanager', False)
+
+_comment_out_with_substring('gui.editor_window.init_compositing_mode_menu()')
 
