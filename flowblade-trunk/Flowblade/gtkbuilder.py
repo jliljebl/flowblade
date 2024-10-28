@@ -27,13 +27,27 @@ from gi.repository import Gtk
 
 def HPaned():
     paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
-    #paned.pack1 = lambda child, resize, shrink: _pack1(paned, child, resize, shrink)
-    #paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
+    """
+    Uncomment for eventual Gtk4.
+    paned.pack1 = lambda child, resize, shrink: _pack1(paned, child, resize, shrink)
+    paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
+    """
     return paned
 
 def VPaned():
     paned = Gtk.Paned.new(Gtk.Orientation.VERTICAL)
-    #paned.pack1 = lambda child, resize, shrink: _pack1(paned, child, resize, shrink)
-    #paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
+    """
+    Uncomment for eventual Gtk4.
+    paned.pack1 = lambda child, resize, shrink: _pack1(paned, child, resize, shrink)
+    paned.pack2 = lambda child, resize, shrink: _pack2(paned, child, resize, shrink)
+    """
     return paned
 
+# ---------------------------------------------------- Gtk 4 replace methods.
+def _pack1(paned, child, resize, shrink):
+    paned.set_start_child(child)
+
+def _pack2(paned, child, resize, shrink):
+    paned.set_end_child(child)
+
+    

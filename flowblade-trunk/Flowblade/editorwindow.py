@@ -47,6 +47,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import gtkbuilder
 import jobs
 import keyevents
 import medialinker
@@ -203,7 +204,7 @@ class EditorWindow:
 
     def _get_app_pane(self): 
         # VPaned top row / timeline
-        self.app_v_paned = Gtk.VPaned()
+        self.app_v_paned = gtkbuilder.VPaned()
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
 
@@ -349,7 +350,7 @@ class EditorWindow:
             self.mm_paned.add(media_panel)
 
         else:
-            self.mm_paned = Gtk.HPaned()
+            self.mm_paned = gtkbuilder.HPaned()
             guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
@@ -763,7 +764,7 @@ class EditorWindow:
             self.left_column_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
 
         # Top row paned
-        self.top_paned = Gtk.HPaned()
+        self.top_paned = gtkbuilder.HPaned()
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             self.top_paned.pack1(self.notebook_frame , resize=True, shrink=False)
             self.top_paned.pack2(self.monitor_frame, resize=True, shrink=False)
