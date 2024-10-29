@@ -19,7 +19,7 @@
 """
 
 """
-Widget builder module to help moving to Gtk4.
+Widget builder module to help moving to Gtk 4.
 """
 
 from gi.repository import Gtk
@@ -52,32 +52,33 @@ def VPaned():
     """
     return paned
 
-def get_file_chooser_button(title, selection_done_callback=None):
+def get_file_chooser_button(title, parent=None):
     b = Gtk.Button.new_with_label(title)
     b.title = title
     b.priv_action = None
     b.priv_current_folder = None
     b.priv_filenames = None
-    b.priv_done_callback = selection_done_callback
+    b.priv_parent = parent
     b.connect("clicked", _file_chooser_button_clicked)
     b.set_action = lambda a : _set_file_action(b, a)
     b.set_current_folder = lambda fp : _set_current_folder(b, fp)
     b.get_current_folder = lambda : _get_current_folder(b)
     b.get_filenames = lambda : _get_filenames(b)
-
+    b.get_filename = lambda : _get_filename(b)
+    
     return b
 
 # ---------------------------------------------------- Gtk 4 replace methods.
-# H/VPaned
+# --- H/VPaned
 def _pack1(paned, child, resize, shrink):
     paned.set_start_child(child)
 
 def _pack2(paned, child, resize, shrink):
     paned.set_end_child(child)
 
-# FileChooserButton
+# --- FileChooserButton
 def _file_chooser_button_clicked(b):
-    dialog = Gtk.FileChooserDialog(b.title, gui.editor_window.window,
+    dialog = Gtk.FileChooserDialog(b.title, b.priv_parent,
                                    b.priv_action,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _get_file_chooser_action_ok_name(b.priv_action), Gtk.ResponseType.ACCEPT))
@@ -100,14 +101,12 @@ def _file_selection_done(dialog, response_id):
     
     dialog.destroy()
 
-    if b.priv_done_callback != None: 
-        b.priv_done_callback() 
-
 def _set_file_action(b, action):
     b.priv_action = action
     
 def _set_current_folder(b, file_path):
     b.priv_current_folder = file_path
+    b.priv_filenames = [file_path]
     b.set_label(_filename(file_path))
     
 def _filename(path):
@@ -118,9 +117,14 @@ def _get_file_chooser_action_ok_name(action):
     if GTK_VERSION == GTK_3:
         if action == Gtk.FileChooserAction.SELECT_FOLDER:
             return _("Open")
+        else:
+            return _("Open")
 
 def _get_filenames(b):
     return b.priv_filenames
+
+def _get_filename(b):
+    return b.priv_filenames[0]
 
 def _get_current_folder(b):
     return b.priv_current_folder

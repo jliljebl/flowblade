@@ -41,6 +41,7 @@ from editorstate import current_sequence
 import exportardour
 import gui
 import guiutils
+import gtkbuilder
 import renderconsumer
 import utils
 import userfolders
@@ -444,8 +445,8 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     cancel_str = _("Cancel")
     ok_str = _("Export Image")
     dialog = Gtk.Dialog(_("Export Frame Image"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        None,
+                        None,
                         (cancel_str, Gtk.ResponseType.CANCEL,
                         ok_str, Gtk.ResponseType.YES))
 
@@ -470,6 +471,7 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
     name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
  
     out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder = gtkbuilder.get_file_chooser_button(_("Select target Folder"), dialog)
     out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     out_folder.set_current_folder(os.path.expanduser("~") + "/")
     
