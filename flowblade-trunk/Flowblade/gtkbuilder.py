@@ -26,6 +26,14 @@ from gi.repository import Gtk
 
 import os
 
+import gui
+
+
+GTK_3 = 3
+GTK_3 = 4
+GTK_VERSION = GTK_3 # Flip when moving over.
+
+
 def HPaned():
     paned = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL)
     """
@@ -44,15 +52,21 @@ def VPaned():
     """
     return paned
 
-def get_file_chooser_button(title):
+def get_file_chooser_button(title, selection_done_callback=None):
     b = Gtk.Button.new_with_label(title)
+    b.title = title
+    b.priv_action = None
+    b.priv_current_folder = None
+    b.priv_filenames = None
+    b.priv_done_callback = selection_done_callback
     b.connect("clicked", _file_chooser_button_clicked)
     b.set_action = lambda a : _set_file_action(b, a)
     b.set_current_folder = lambda fp : _set_current_folder(b, fp)
+    b.get_current_folder = lambda : _get_current_folder(b)
+    b.get_filenames = lambda : _get_filenames(b)
+
     return b
 
-
-    
 # ---------------------------------------------------- Gtk 4 replace methods.
 # H/VPaned
 def _pack1(paned, child, resize, shrink):
@@ -62,13 +76,51 @@ def _pack2(paned, child, resize, shrink):
     paned.set_end_child(child)
 
 # FileChooserButton
+def _file_chooser_button_clicked(b):
+    dialog = Gtk.FileChooserDialog(b.title, gui.editor_window.window,
+                                   b.priv_action,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _get_file_chooser_action_ok_name(b.priv_action), Gtk.ResponseType.ACCEPT))
+    dialog.b = b
+    dialog.set_action(b.priv_action)
+    dialog.set_current_folder(b.priv_current_folder)
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.connect('response', _file_selection_done)
+    dialog.show()
+
+def _file_selection_done(dialog, response_id):
+    if response_id == Gtk.ResponseType.CANCEL:
+        dialog.destroy()
+        return
+    b = dialog.b
+    b.priv_filenames = dialog.get_filenames()
+    if b.priv_action == Gtk.FileChooserAction.SELECT_FOLDER:
+        b.priv_current_folder = b.priv_filenames[0] 
+    b.set_label(_filename(b.priv_filenames[0]))
+    
+    dialog.destroy()
+
+    if b.priv_done_callback != None: 
+        b.priv_done_callback() 
+
 def _set_file_action(b, action):
     b.priv_action = action
     
 def _set_current_folder(b, file_path):
-    b.current_folder = file_path
+    b.priv_current_folder = file_path
     b.set_label(_filename(file_path))
     
 def _filename(path):
     path = path.rstrip("/")
     return os.path.basename(path)
+
+def _get_file_chooser_action_ok_name(action):
+    if GTK_VERSION == GTK_3:
+        if action == Gtk.FileChooserAction.SELECT_FOLDER:
+            return _("Open")
+
+def _get_filenames(b):
+    return b.priv_filenames
+
+def _get_current_folder(b):
+    return b.priv_current_folder

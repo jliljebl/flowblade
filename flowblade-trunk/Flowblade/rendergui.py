@@ -869,8 +869,8 @@ class RenderFilePanel():
 
     def __init__(self):
 
-        self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
-        #self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
+        #self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
+        self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
         gui.render_out_folder = self.out_folder
@@ -893,6 +893,7 @@ class RenderFilePanel():
         self.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
         self.movie_name.set_tooltip_text(_("Give name for rendered file"))
 
+        
 
 class RenderRangePanel():
     
