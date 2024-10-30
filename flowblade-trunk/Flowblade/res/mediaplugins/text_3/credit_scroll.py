@@ -46,6 +46,8 @@ Carl Carruthers
 Donald Drake
 Earl Easter
 
+! page 50
+
 ! font-size section-title 60
 ! set-layout-property section-title-alignment right-justified
 
@@ -66,6 +68,17 @@ Earl Easter
 Bob Banner
 Carl Carruthers
 Donald Drake
+
+! page 100
+! set-layout single-line-sides-justified
+
+# CREDIT TITLE3
+Donald Drake
+Earl Easter
+Bob Banner
+Carl Carruthers
+Donald Drake
+
 """
 """
 ! ypad 40
@@ -109,7 +122,9 @@ def init_script(fctx):
     fctx.add_editor("Section Title Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
 
     fctx.add_editor_group("Animation")
+    fctx.add_editor("Animation Type", fluxity.EDITOR_OPTIONS, (0, ["Scrolled", "Paged"]))
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (10.0, 0.0, 40.0))
+    fctx.add_editor("Default Frames Per Page", fluxity.EDITOR_INT_RANGE, (100, 5, 2000))
 
     fctx.add_editor_group("Text")
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, DEFAULT_SCROLL_MARKUP_TEXT)
@@ -133,7 +148,11 @@ def render_frame(frame, fctx, w, h):
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-    anim_runner = ScroolAnimationRunner(fctx)
+    if fctx.get_editor_value("Animation Type") == 0:
+        anim_runner = ScrollAnimationRunner(fctx)
+    else:
+        anim_runner = PagedAnimationRunner(fctx)
+
     anim_runner.init_blocks(fctx, cr, frame)
     anim_runner.draw_blocks(fctx, cr, frame)
 
@@ -347,7 +366,7 @@ class CredidBlockData:
 
 # ---------------------------------------------------- ANIMATION RUNNER
 
-class ScroolAnimationRunner:
+class ScrollAnimationRunner:
     
     def __init__(self, fctx):
         self.scroll_blocks = fctx.get_data_obj("scroll_blocks")
@@ -371,6 +390,68 @@ class ScroolAnimationRunner:
             y += (block.block_height + BLOCK_GAP)
 
 
+class PagedAnimationRunner:
+    
+    def __init__(self, fctx):
+        self.scroll_blocks = fctx.get_data_obj("scroll_blocks")
+        self.fctx = fctx
+        self.pages = []
+
+    def init_blocks(self, fctx, cr,  frame):
+        mutable_layout_data = fctx.get_editors_values_clone_dict()
+
+        # Create layouts now that we have cairo.Context.
+        current_page = []
+        current_page_length = fctx.get_editor_value("Default Frames Per Page")
+
+        for block in self.scroll_blocks:
+            block.init_layout(fctx, cr, frame, mutable_layout_data)
+            block.exec_command(fctx, cr, frame, mutable_layout_data)
+            current_page.append(block)
+            if block.page_length != AbstractBlock.PAGE_LENGTH_NOT_SET:
+                if len(current_page) == 0:
+                    # At start of with multiple paging commands we just set current page length.
+                    current_page_length = block.page_length
+                else:
+                    self.pages.append((current_page_length, current_page))
+                    current_page_length = block.page_length
+                    current_page = []
+        
+        # Add last page
+        if len(current_page) > 0:
+            self.pages.append((current_page_length, current_page))
+
+    def draw_blocks(self, fctx, cr, frame):
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+        
+        # Get page.
+        display_page = None
+        current_page_end = 0
+        for page_item in self.pages:
+            page_length, page = page_item
+            current_page_end += page_length
+            if frame < current_page_end:
+                display_page = page
+                break
+        
+        # Get page height.
+        h = 0
+        BLOCK_GAP = fctx.get_editor_value("Credit Block Gap")
+        for block in display_page:
+            if block.block_height != 0:
+            	h += (block.block_height + BLOCK_GAP)
+
+        # Center page vertically if fits, else just display from top.
+        if h - BLOCK_GAP > screen_h:
+            y = 0
+        else:
+            y = (screen_h - h + BLOCK_GAP) / 2.0
+
+        # Draw page.
+        for block in display_page:
+            block.draw(fctx, cr, y)
+            y += (block.block_height + BLOCK_GAP)
+
 
 
 # ----------------------------------------------------- BLOCKS
@@ -382,8 +463,11 @@ class AbstractBlock:
     CASE_UPPERCASE = 1
     CASE_LOWERCASE = 2
     
+    PAGE_LENGTH_NOT_SET = -1
+    
     def __init__(self):
         self.block_height = 0
+        self.page_length = self.PAGE_LENGTH_NOT_SET
 
     def init_layout(self, fctx, cr, frame, mutable_layout_data):
         pass
@@ -758,6 +842,9 @@ class SectionTitleBlock(AbstractTextBlock):
 def _get_ypad_command(tokens, blocks_gen, line):
     return YPaddingCommand(tokens, blocks_gen, line)
 
+def _get_paging_command(tokens, blocks_gen, line):
+    return PagingCommand(tokens, blocks_gen, line)
+
 def _get_set_layout_command(tokens, blocks_gen, line):
     return SetLayoutCommand(tokens, blocks_gen, line)
     
@@ -789,6 +876,7 @@ class AbstractCommandBlock(AbstractBlock):
     TARGETS = [TARGET_CREDIT, TARGET_NAME, TARGET_SECTION_TITLE]
     
     Y_PADDING = "ypad"
+    PAGING = "page"
     SET_LAYOUT = "set-layout"
     FONT_SIZE = "font-size"
     FONT_FALMILY = "font-family"
@@ -856,6 +944,22 @@ class YPaddingCommand(AbstractCommandBlock):
     def exec_command(self, fctx, cr, frame, mutable_layout_data):
         self.block_height = int(self.tokens[2])
 
+class PagingCommand(AbstractCommandBlock):
+
+    def __init__(self, tokens, blocks_gen, line):
+        AbstractCommandBlock.__init__(self, AbstractCommandBlock.PAGING, tokens, blocks_gen, line)
+        
+        ALLOWED_TOKEN_COUNTS = [2, 3]
+        ARGUMENT_TYPES = {2:int}
+        
+        self.set_verification_data(ALLOWED_TOKEN_COUNTS, ARGUMENT_TYPES, {})
+
+    def exec_command(self, fctx, cr, frame, mutable_layout_data):
+        try:
+            self.page_length = int(self.tokens[2])
+        except:
+            self.page_length = fctx.get_editor_value("Default Frames Per Page")
+
 class TextCaseCommand(AbstractCommandBlock):
 
     CASES = ["no-changes", "uppercase", "lowercase"]
@@ -903,7 +1007,7 @@ class SetLayoutCommand(AbstractCommandBlock):
 
 class AbstractFontCommand(AbstractCommandBlock):
 
-    # These corrspond with order and count with data in font data tuples 
+    # These correspond with order and count with data in font data tuples 
     # provided for fluxity.PangoTextLayout objects on creation.
     FONT_DATA_PARAMS = ["font-family", "font-face", "font-size", "alignment", \
         "color-rgba", "fill-on", "outline_color-rgba", "outline-on", \
@@ -1087,7 +1191,7 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
             if self.tokens[3] in self.ALIGNMENTS:
                 new_value =  self.ALIGNMENTS.index(self.tokens[3])
             else:
-                msg = "Argument " + self.tokens[3] + " has unknown valu,, expected " +  str(self.ALIGNMENTS) + "."
+                msg = "Argument " + self.tokens[3] + " has unknown value, expected " +  str(self.ALIGNMENTS) + "."
                 throw_user_message_error(BAD_ARGUMENT_VALUE_ERROR, self.line, msg, self.blocks_gen.current_line)
         else:
             try:
@@ -1102,6 +1206,7 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
 
 
 COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
+                         AbstractCommandBlock.PAGING: _get_paging_command,
                          AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command,
                          AbstractCommandBlock.FONT_SIZE:_get_font_size_command,
                          AbstractCommandBlock.FONT_FALMILY:_get_font_family_command,
