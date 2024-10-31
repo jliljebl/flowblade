@@ -52,20 +52,23 @@ def VPaned():
     """
     return paned
 
-def get_file_chooser_button(title, parent=None):
+def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=None):
     b = Gtk.Button.new_with_label(title)
     b.title = title
-    b.priv_action = None
+    b.priv_action = action
     b.priv_current_folder = None
     b.priv_filenames = None
     b.priv_parent = parent
+    b.priv_file_filter = None
+    b.priv_local_only = False
     b.connect("clicked", _file_chooser_button_clicked)
     b.set_action = lambda a : _set_file_action(b, a)
     b.set_current_folder = lambda fp : _set_current_folder(b, fp)
     b.get_current_folder = lambda : _get_current_folder(b)
     b.get_filenames = lambda : _get_filenames(b)
     b.get_filename = lambda : _get_filename(b)
-    
+    b.add_filter = lambda ff :_add_filter(b, ff)
+    b.set_local_only = lambda lo : _set_local_only(b, lo)
     return b
 
 # ---------------------------------------------------- Gtk 4 replace methods.
@@ -86,6 +89,9 @@ def _file_chooser_button_clicked(b):
     dialog.set_action(b.priv_action)
     dialog.set_current_folder(b.priv_current_folder)
     dialog.set_do_overwrite_confirmation(True)
+    if b.priv_file_filter != None:
+        dialog.set_filter(b.priv_file_filter) 
+    dialog.set_local_only(b.priv_local_only)
     dialog.connect('response', _file_selection_done)
     dialog.show()
 
@@ -128,3 +134,9 @@ def _get_filename(b):
 
 def _get_current_folder(b):
     return b.priv_current_folder
+    
+def _add_filter(b, ff):
+    b.priv_file_filter = ff
+
+def _set_local_only(b, lo):
+    b.priv_local_only = lo

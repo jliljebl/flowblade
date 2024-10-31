@@ -33,6 +33,7 @@ from editorstate import PROJECT
 from editorstate import current_sequence
 import gui
 import guiutils
+import gtkbuilder
 import projectaction
 import respaths
 import toolsencoding
@@ -153,7 +154,7 @@ def clone_clip(clip):
 def _get_file_select_row_and_editor(label_text, file_filter=None, title=None):
     if title == None:
         title = _("Select A File")
-    file_chooser = Gtk.FileChooserButton.new(title, Gtk.FileChooserAction.OPEN)
+    file_chooser = gtkbuilder.get_file_chooser_button(title, Gtk.FileChooserAction.OPEN)
     file_chooser.set_size_request(250, 25)
     file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -168,8 +169,8 @@ def _open_rows_dialog(callback, title, rows, data):
     cancel_str = _("Cancel")
     ok_str = _("Ok")
     dialog = Gtk.Dialog(title,
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        None,
+                        None,
                         (cancel_str, Gtk.ResponseType.CANCEL,
                         ok_str, Gtk.ResponseType.ACCEPT))
 
