@@ -452,7 +452,7 @@ class FilePathEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
 
-        self.file_choose = Gtk.FileChooserButton.new("", Gtk.FileChooserAction.OPEN)
+        self.file_choose = gtkbuilder.get_file_chooser_button("", Gtk.FileChooserAction.OPEN)
         
         self.build_editor(label_text, self.file_choose)
         self.editor_type = SIMPLE_EDITOR_FILE_PATH

@@ -78,7 +78,7 @@ def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=Non
     b.get_filename = lambda : _get_filename(b)
     b.add_filter = lambda ff :_add_filter(b, ff)
     b.set_local_only = lambda lo : _set_local_only(b, lo)
-    b.connect_selection_changed = lambda obj, data, listener : _connect_selection_changed(b, obj, data, listener) 
+    b.connect_selection_changed = lambda data, listener : _connect_selection_changed(b, data, listener) 
     b.dialog = None
     
     return b
@@ -133,11 +133,7 @@ def _file_selection_done(dialog, response_id):
     dialog.destroy()
     
     if b.priv_selection_changed_listener != None:
-        obj, data = b.priv_selection_changed_data
-        if obj != None:
-            b.priv_selection_changed_listener(obj, b, data)
-        else:
-            b.priv_selection_changed_listener(b, data)
+        b.priv_selection_changed_listener(b, b.priv_selection_changed_data)
     
 
 def _set_file_action(b, action):
@@ -160,10 +156,16 @@ def _get_file_chooser_action_ok_name(action):
         return _("Open")
 
 def _get_filenames(b):
-    return b.priv_filenames
+    try:
+        return b.priv_filenames
+    except:
+        return None
 
 def _get_filename(b):
-    return b.priv_filenames[0]
+    try:
+        return b.priv_filenames[0]
+    except:
+        return None
 
 def _get_current_folder(b):
     return b.priv_current_folder
@@ -174,7 +176,7 @@ def _add_filter(b, ff):
 def _set_local_only(b, lo):
     b.priv_local_only = lo
 
-def _connect_selection_changed(b, obj, data, listener):
+def _connect_selection_changed(b, data, listener):
     b.priv_selection_changed_listener = listener
-    b.priv_selection_changed_data = (obj, data)
+    b.priv_selection_changed_data = data
     

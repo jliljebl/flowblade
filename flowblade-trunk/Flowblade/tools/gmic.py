@@ -538,8 +538,8 @@ def _encode_settings_clicked():
     align = dialogutils.get_default_alignment(_encoding_panel)
     
     dialog = Gtk.Dialog(_("Video Encoding Settings"),
-                        _window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        None,
+                        None,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Set Encoding"), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
@@ -759,7 +759,7 @@ class GmicWindow(Gtk.Window):
 
         self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-        self.out_folder.connect_selection_changed(self, None, self.folder_selection_changed)
+        self.out_folder.connect_selection_changed(None, self.folder_selection_changed)
         self.out_label = Gtk.Label(label=_("Frames Folder:"))
         
         self.frame_name = Gtk.Entry()

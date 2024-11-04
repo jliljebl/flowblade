@@ -25,6 +25,7 @@ import os
 
 import appconsts
 import guiutils
+import gtkbuilder
 import mltprofiles
 import renderconsumer
 import utils
@@ -52,7 +53,7 @@ class ToolsRenderData():
     """
     def __init__(self):
         self.profile_index = None
-        # DEPRECATED values are part of save data and cannot be removed without braking save files.
+        # The DEPRECATED values are part of save data and cannot be removed without braking save files.
         self.use_default_profile = None # DEPRECATED, 'profile_index' is used.
         self.use_preset_encodings = None  # DEPRECATED 'encoding_option_index', 'quality_option_index' are used.
         self.presets_index = None  # DEPRECATED, 'encoding_option_index', 'quality_option_index' are used.
@@ -241,7 +242,7 @@ def get_render_data_for_current_selections():
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
     render_data.presets_index = 0 # presents rendering not available
     render_data.use_preset_encodings = False # presents rendering not available
-    render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
+    render_data.render_dir = widgets.file_panel.out_folder.get_filename()
     render_data.file_name = widgets.file_panel.movie_name.get_text()
     render_data.file_extension = widgets.file_panel.extension_label.get_text()
     
@@ -271,25 +272,6 @@ def get_encoding_desc(args_vals_list):
 
 
 # ----------------------------------------------------------------- helper functions
-"""
-def _render_type_changed(w):
-    if w.get_active() == 0: # User Defined
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
-        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
-    else: # Preset Encodings
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
-        _preset_selection_changed(widgets.render_type_panel.presets_selector.widget)
-
-def _preset_selection_changed(w):
-    encs = renderconsumer.non_user_encodings
-    if disable_audio_encoding == True:
-        encs = renderconsumer.get_video_non_user_encodigs()
-
-    enc_index = w.get_active()
-    ext = encs[enc_index].extension
-    widgets.file_panel.extension_label.set_text("." + ext)
-"""
-
 def _out_profile_changed(categorized_combo):
     profile = mltprofiles.get_profile(categorized_combo.get_selected())
     _fill_info_box(profile)
@@ -309,7 +291,7 @@ def _fill_info_box(profile):
 class RenderFilePanel():
 
     def __init__(self, create_container_file_panel):
-
+        
         if create_container_file_panel == True:
             self.render_location_combo = Gtk.ComboBoxText() # filled later when current sequence known
             self.render_location_combo.append_text(_("Save Rendered Container Media Internally"))
@@ -319,10 +301,9 @@ class RenderFilePanel():
         else:
             self.render_location_combo = None
             
-        self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
+        self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
-        self.out_folder.set_local_only(True)
         self.out_folder_label = Gtk.Label(label=_("Folder:"))
         out_folder_row = guiutils.get_two_column_box(self.out_folder_label, self.out_folder, 60)
                               

@@ -175,8 +175,8 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
 
     name, ext = os.path.splitext(file_name)
         
-    dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+    dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), None,
+                        None,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
                         _("Render"), Gtk.ResponseType.ACCEPT))
 
@@ -208,7 +208,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     name_row.pack_start(fb_widgets.file_name, True, True, 0)
     name_row.pack_start(fb_widgets.extension_label, False, False, 4)
     
-    fb_widgets.out_folder = Gtk.FileChooserButton(_("Select Target Folder"))
+    fb_widgets.out_folder = gtkbuilder.get_file_chooser_button(_("Select Target Folder"))
     fb_widgets.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     fb_widgets.out_folder.set_current_folder(folder)
     
@@ -507,8 +507,8 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
 
     name, ext = os.path.splitext(file_name)
         
-    dialog = Gtk.Dialog(_("Render Reverse Motion Video File"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+    dialog = Gtk.Dialog(_("Render Reverse Motion Video File"), None,
+                        None,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
                         _("Render"), Gtk.ResponseType.ACCEPT))
 
@@ -540,7 +540,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     name_row.pack_start(fb_widgets.file_name, True, True, 0)
     name_row.pack_start(fb_widgets.extension_label, False, False, 4)
     
-    fb_widgets.out_folder = Gtk.FileChooserButton(_("Select Target Folder"))
+    fb_widgets.out_folder = gtkbuilder.get_file_chooser_button(_("Select Target Folder"))
     fb_widgets.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     fb_widgets.out_folder.set_current_folder(folder)
     
@@ -869,7 +869,6 @@ class RenderFilePanel():
 
     def __init__(self):
 
-        #self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
         self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
