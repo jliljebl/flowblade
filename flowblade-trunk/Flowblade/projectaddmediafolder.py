@@ -5,6 +5,7 @@ import os
 
 import gui
 import guiutils
+import gtkbuilder
 import editorpersistance
 import projectaction
 import utils
@@ -29,12 +30,12 @@ def _close_clicked():
 class AddMediaWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
-        self.set_modal(True)
+        self.set_modal(False)
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Add Media From Folder"))
         self.connect("delete-event", lambda w, e:_close_window())
         
-        file_chooser = Gtk.FileChooserButton(_("Select Folder"))
+        file_chooser = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         file_chooser.set_size_request(250, 25)
         if ((editorpersistance.prefs.open_in_last_opended_media_dir == True)
             and (editorpersistance.prefs.last_opened_media_dir != None)):

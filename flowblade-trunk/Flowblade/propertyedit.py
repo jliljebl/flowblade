@@ -1011,6 +1011,10 @@ class FileResourceProperty(EditableProperty):
         else:
             self.write_value(str(""))
 
+        # We're using the gtkbuilder.get_file_chooser_button_with_dialog() thing here.
+        dialog.b.set_label(dialog.b._filename(res_path))
+        dialog.hide()
+
 
 class RectNoKeyframes(EditableProperty):
 

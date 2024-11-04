@@ -29,6 +29,7 @@ import dialogutils
 import editorpersistance
 import gui
 import guiutils
+import gtkbuilder
 import mltprofiles
 import utilsgtk
 
@@ -40,7 +41,7 @@ PREFERENCES_LEFT = 410
 def preferences_dialog():
 
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
-                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    None,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
                     _("OK"), Gtk.ResponseType.ACCEPT))
 
@@ -122,15 +123,15 @@ def _general_options_panel():
     load_order_combo.append_text(_("Absolute paths only"))
     load_order_combo.set_active(prefs.media_load_order)
 
-    render_folder_select = Gtk.FileChooserButton.new (_("Select Default Render Folder"), Gtk.FileChooserAction.SELECT_FOLDER)
+    render_folder_select = gtkbuilder.get_file_chooser_button(_("Select Default Render Folder"), Gtk.FileChooserAction.SELECT_FOLDER)
     if prefs.default_render_directory == None or prefs.default_render_directory == appconsts.USER_HOME_DIR \
         or (not os.path.exists(prefs.default_render_directory)) \
         or (not os.path.isdir(prefs.default_render_directory)):
-        render_folder_select.set_current_folder_uri(os.path.expanduser("~") + "/")
+        render_folder_select.set_current_folder(os.path.expanduser("~") + "/")
     else:
-        render_folder_select.set_current_folder_uri(prefs.default_render_directory)
+        render_folder_select.set_current_folder(prefs.default_render_directory)
 
-    disk_cache_warning_combo  = Gtk.ComboBoxText()
+    disk_cache_warning_combo = Gtk.ComboBoxText()
     disk_cache_warning_combo.append_text(_("Off"))
     disk_cache_warning_combo.append_text(_("500 MB"))
     disk_cache_warning_combo.append_text(_("1 GB"))

@@ -51,6 +51,7 @@ import editorstate
 import editorpersistance
 import gui
 import guiutils
+import gtkbuilder
 import mltinit
 import mltprofiles
 import persistance
@@ -1129,8 +1130,8 @@ def show_change_render_item_path_dialog(callback, render_item):
     cancel_str = _("Cancel")
     ok_str = _("Change Path")
     dialog = Gtk.Dialog(_("Change Render Item Path"),
-                        batch_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        None,
+                        None,
                         (cancel_str, Gtk.ResponseType.CANCEL,
                         ok_str, Gtk.ResponseType.YES))
 
@@ -1138,7 +1139,7 @@ def show_change_render_item_path_dialog(callback, render_item):
     
     folder, f_name = os.path.split(render_item.render_path)
 
-    out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder = gtkbuilder.get_file_chooser_button(_("Select target folder"))
     out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     out_folder.set_current_folder(folder)
     

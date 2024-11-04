@@ -470,7 +470,6 @@ def export_screenshot_dialog(callback, frame, parent_window, project_name):
 
     name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Export file name:")), name_pack, INPUT_LABELS_WITDH)
  
-    out_folder = Gtk.FileChooserButton(_("Select target folder"))
     out_folder = gtkbuilder.get_file_chooser_button(_("Select target Folder"), None, dialog)
     out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     out_folder.set_current_folder(os.path.expanduser("~") + "/")

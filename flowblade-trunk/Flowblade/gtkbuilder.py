@@ -53,7 +53,11 @@ def VPaned():
     return paned
 
 def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=None):
-    b = Gtk.Button.new_with_label(title)
+    if action == Gtk.FileChooserAction.OPEN:
+        b_title = _("(None)")
+    else:
+        b_title = title
+    b = Gtk.Button.new_with_label(b_title)
     b.title = title
     b.priv_action = action
     b.priv_current_folder = None
@@ -61,16 +65,30 @@ def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=Non
     b.priv_parent = parent
     b.priv_file_filter = None
     b.priv_local_only = False
+    b.priv_selection_changed_listener = None
+    b.priv_selection_changed_data = None
+    b._filename = _filename
+    
     b.connect("clicked", _file_chooser_button_clicked)
     b.set_action = lambda a : _set_file_action(b, a)
     b.set_current_folder = lambda fp : _set_current_folder(b, fp)
     b.get_current_folder = lambda : _get_current_folder(b)
+    b.set_current_folder_uri = lambda : _set_current_folder_uri(b)
     b.get_filenames = lambda : _get_filenames(b)
     b.get_filename = lambda : _get_filename(b)
     b.add_filter = lambda ff :_add_filter(b, ff)
     b.set_local_only = lambda lo : _set_local_only(b, lo)
+    b.connect_selection_changed = lambda obj, data, listener : _connect_selection_changed(b, obj, data, listener) 
+    b.dialog = None
+    
     return b
 
+def get_file_chooser_button_with_dialog(dialog):
+    b = get_file_chooser_button("dummy")
+    b.dialog = dialog
+    dialog.b = b
+    return b
+    
 # ---------------------------------------------------- Gtk 4 replace methods.
 # --- H/VPaned
 def _pack1(paned, child, resize, shrink):
@@ -81,16 +99,22 @@ def _pack2(paned, child, resize, shrink):
 
 # --- FileChooserButton
 def _file_chooser_button_clicked(b):
+    if b.dialog != None:
+        b.dialog.show()
+        return 
+        
     dialog = Gtk.FileChooserDialog(b.title, b.priv_parent,
                                    b.priv_action,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _get_file_chooser_action_ok_name(b.priv_action), Gtk.ResponseType.ACCEPT))
     dialog.b = b
     dialog.set_action(b.priv_action)
-    dialog.set_current_folder(b.priv_current_folder)
+    if b.priv_current_folder != None:
+        dialog.set_current_folder(b.priv_current_folder)
     dialog.set_do_overwrite_confirmation(True)
     if b.priv_file_filter != None:
-        dialog.set_filter(b.priv_file_filter) 
+        dialog.set_filter(b.priv_file_filter)
+    dialog.set_select_multiple(False)
     dialog.set_local_only(b.priv_local_only)
     dialog.connect('response', _file_selection_done)
     dialog.show()
@@ -99,6 +123,7 @@ def _file_selection_done(dialog, response_id):
     if response_id == Gtk.ResponseType.CANCEL:
         dialog.destroy()
         return
+
     b = dialog.b
     b.priv_filenames = dialog.get_filenames()
     if b.priv_action == Gtk.FileChooserAction.SELECT_FOLDER:
@@ -106,6 +131,14 @@ def _file_selection_done(dialog, response_id):
     b.set_label(_filename(b.priv_filenames[0]))
     
     dialog.destroy()
+    
+    if b.priv_selection_changed_listener != None:
+        obj, data = b.priv_selection_changed_data
+        if obj != None:
+            b.priv_selection_changed_listener(obj, b, data)
+        else:
+            b.priv_selection_changed_listener(b, data)
+    
 
 def _set_file_action(b, action):
     b.priv_action = action
@@ -113,18 +146,18 @@ def _set_file_action(b, action):
 def _set_current_folder(b, file_path):
     b.priv_current_folder = file_path
     b.priv_filenames = [file_path]
-    b.set_label(_filename(file_path))
+    if b.priv_action == Gtk.FileChooserAction.SELECT_FOLDER:
+        b.set_label(_filename(file_path))
     
 def _filename(path):
     path = path.rstrip("/")
     return os.path.basename(path)
 
 def _get_file_chooser_action_ok_name(action):
-    if GTK_VERSION == GTK_3:
-        if action == Gtk.FileChooserAction.SELECT_FOLDER:
-            return _("Open")
-        else:
-            return _("Open")
+    if action == Gtk.FileChooserAction.SELECT_FOLDER:
+        return _("Open")
+    else:
+        return _("Open")
 
 def _get_filenames(b):
     return b.priv_filenames
@@ -140,3 +173,8 @@ def _add_filter(b, ff):
 
 def _set_local_only(b, lo):
     b.priv_local_only = lo
+
+def _connect_selection_changed(b, obj, data, listener):
+    b.priv_selection_changed_listener = listener
+    b.priv_selection_changed_data = (obj, data)
+    
