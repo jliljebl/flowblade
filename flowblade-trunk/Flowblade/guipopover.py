@@ -103,7 +103,13 @@ _rated_section = None
 _rated_submenu = None
 _ratings_radio_section = None
 _ratings_radio_submenu = None
- 
+_monitor_section = None
+_mf_properties_section = None
+_icon_section = None
+_mf_render_section = None
+_mf_proxy_section = None
+
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
@@ -567,7 +573,8 @@ def file_filter_popover_show(launcher, widget, callback):
     _file_filter_popover = new_popover(widget, _file_filter_menu, launcher)
 
 def media_file_popover_show(media_file, widget, x, y, callback, callback_rating):
-    global _media_file_popover, _media_file_menu, _rated_section, _rated_submenu
+    global _media_file_popover, _media_file_menu, _rated_section, _rated_submenu, _monitor_section, \
+    _mf_properties_section, _icon_section, _mf_render_section, _mf_proxy_section
 
     if _media_file_menu == None:
         _media_file_menu = menu_clear_or_create(_media_file_menu)
@@ -576,19 +583,10 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         add_menu_action(file_action_section, _("Rename"), "mediapanel.mediafile.rename", ("Rename", None), callback)
         add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafile.delete", ("Delete", None), callback)
         _media_file_menu.append_section(None, file_action_section)
-        
-        if hasattr(media_file, "container_data"): 
-            if media_file.container_data == None:
-                monitor_item_active = True
-            else:
-                monitor_item_active = False
-        else:
-            monitor_item_active = True
 
-        if monitor_item_active == True:
-            monitor_section = Gio.Menu.new()
-            add_menu_action(monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", None), callback)
-            _media_file_menu.append_section(None, monitor_section)
+        _monitor_section = Gio.Menu.new()
+        _fill_monitor_section(_monitor_section, media_file, callback)
+        _media_file_menu.append_section(None, _monitor_section)
 
         items_data =[(_("Unrated"), "unrated"), (_("Favorite"), "favorite"), \
                     (_("Bad"), "bad")]
@@ -599,31 +597,23 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         add_menu_action_all_items_radio(_rated_submenu, items_data, "mediapanel.mediafile", active_index, callback_rating)
         _rated_section.append_submenu(_("Rating"), _rated_submenu)
         _media_file_menu.append_section(None, _rated_section)
-        
-        if media_file.type != appconsts.PATTERN_PRODUCER:
-            properties_section = Gio.Menu.new()
-            add_menu_action(properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", None), callback)
-            _media_file_menu.append_section(None, properties_section)
 
-        if hasattr(media_file, "container_data") == True and media_file.container_data == None:
-            if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
-                icon_section = Gio.Menu.new()
-                add_menu_action(icon_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", None), callback)
-                add_menu_action(icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", None), callback)
-                _media_file_menu.append_section(None, icon_section)
+        _mf_properties_section = Gio.Menu.new()
+        _fill_mf_properties_section(_mf_properties_section, media_file, callback)
+        _media_file_menu.append_section(None, _mf_properties_section)
 
-        if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
-            render_section = Gio.Menu.new()
-            if media_file.type != appconsts.IMAGE_SEQUENCE:
-                add_menu_action(render_section, _("Render Slow/Fast Motion File"), "mediapanel.mediafile.slow", ("Render Slow/Fast Motion File", None), callback)
-            if media_file.type != appconsts.IMAGE_SEQUENCE:
-                add_menu_action(render_section, _("Render Reverse Motion File"), "mediapanel.mediafile.reverse", ("Render Reverse Motion File", None), callback)
-            _media_file_menu.append_section(None, render_section)
-                
-        if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
-            proxy_section = Gio.Menu.new()
-            add_menu_action(proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", None), callback)
-            _media_file_menu.append_section(None, proxy_section)
+        _icon_section = Gio.Menu.new()
+        _fill_mf_icon_sectiion(_icon_section, media_file, callback)
+        _media_file_menu.append_section(None, _icon_section)
+
+        _mf_render_section = Gio.Menu.new()
+        _fill_mf_render_section(_mf_render_section, media_file, callback)
+        _media_file_menu.append_section(None, _mf_render_section)
+
+        _mf_proxy_section = Gio.Menu.new()
+        _fill_mf_proxy_section(_mf_proxy_section, media_file, callback)
+        _media_file_menu.append_section(None, _mf_proxy_section)
+
     else:
         items_data =[(_("Unrated"), "unrated"), (_("Favorite"), "favorite"), \
                     (_("Bad"), "bad")]
@@ -631,8 +621,65 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         _rated_submenu = menu_clear_or_create(_rated_submenu)
         add_menu_action_all_items_radio(_rated_submenu, items_data, "mediapanel.mediafile", active_index, callback_rating)
 
+        menu_clear_or_create(_monitor_section)
+        _fill_monitor_section(_monitor_section, media_file, callback)
+
+        menu_clear_or_create(_mf_properties_section)
+        _fill_mf_properties_section(_mf_properties_section, media_file, callback)
+
+        menu_clear_or_create(_icon_section)
+        _fill_mf_icon_sectiion(_icon_section, media_file, callback)
+
+        menu_clear_or_create(_mf_render_section)
+        _fill_mf_render_section(_mf_render_section, media_file, callback)
+
+        menu_clear_or_create(_mf_proxy_section)
+        _fill_mf_proxy_section(_mf_proxy_section, media_file, callback)
+        
     rect = create_rect(x, y)
     _media_file_popover = new_mouse_popover(widget, _media_file_menu, rect)
+
+def _fill_monitor_section(_monitor_section, media_file, callback):
+    if hasattr(media_file, "container_data"): 
+        if media_file.container_data == None:
+            monitor_item_active = True
+        else:
+            monitor_item_active = False
+    else:
+        monitor_item_active = True
+
+    add_menu_action(_monitor_section, _("Open in Clip Monitor"), "mediapanel.mediafile.clipmonitor", ("Open in Clip Monitor", None), callback, monitor_item_active)
+
+def _fill_mf_properties_section(_mf_properties_section, media_file, callback):
+    if media_file.type != appconsts.PATTERN_PRODUCER:
+        active = True 
+    else:
+        active = False
+    add_menu_action(_mf_properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", None), callback, active)
+
+def _fill_mf_icon_sectiion(_icon_section, media_file, callback):
+    active = False
+    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
+        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
+            active = True
+
+    add_menu_action(_icon_section, _("Replace Media In Project"), "mediapanel.mediafile.replace", ("Replace", None), callback, active)
+    add_menu_action(_icon_section, _("Recreate Icon"), "mediapanel.mediafile.icon", ("Recreate Icon", None), callback, active)
+
+def _fill_mf_render_section(_mf_render_section, media_file, callback):
+    active = False
+    if media_file.type == appconsts.VIDEO and hasattr(media_file, "container_data") == True and media_file.container_data == None:
+        active = True
+    
+    add_menu_action(_mf_render_section, _("Render Slow/Fast Motion File"), "mediapanel.mediafile.slow", ("Render Slow/Fast Motion File", None), callback, active)
+    add_menu_action(_mf_render_section, _("Render Reverse Motion File"), "mediapanel.mediafile.reverse", ("Render Reverse Motion File", None), callback, active)
+
+def _fill_mf_proxy_section(_mf_proxy_section, media_file, callback):
+    active = False
+    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+        active = True
+
+    add_menu_action(_mf_proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", None), callback, active)
 
 def jobs_menu_popover_show(launcher, widget, callback):
     global _jobs_popover, _jobs_menu
