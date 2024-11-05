@@ -587,7 +587,6 @@ def _fill_compositors_section(compositor_section, clip, track, callback):
     add_menu_action(compositor_section, _("Delete Compositor"), "clipmenu.deletecompositors",  ("delete_compositors", None), callback, active)
 
 def _fill_title_section(title_section, clip, callback):
-    #if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
     active = (clip.titler_data != None)
     add_menu_action(title_section, _("Edit Title"), "clipmenu.edittitle",  ("edit_title", None), callback, active)
     
