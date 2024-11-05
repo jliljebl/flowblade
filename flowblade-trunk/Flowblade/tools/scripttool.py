@@ -50,6 +50,7 @@ import fluxityheadless
 import gui
 import guiutils
 import glassbuttons
+import gtkbuilder
 import gmicplayer
 import mediaplugin
 import mltinit
@@ -597,8 +598,8 @@ def _encode_settings_clicked():
     align = dialogutils.get_default_alignment(_encoding_panel)
     
     dialog = Gtk.Dialog(_("Video Encoding Settings"),
-                        _window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        None,
+                        None,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Set Encoding"), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
@@ -859,9 +860,9 @@ class ScriptToolWindow(Gtk.Window):
         marks_row.pack_start(out_row, True, True, 0)
         marks_row.pack_start(length_row, True, True, 0)
 
-        self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
+        self.out_folder = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-        self.out_folder.connect("selection-changed", self.folder_selection_changed) 
+        self.out_folder.connect_selection_changed(None, self.folder_selection_changed)
         self.out_label = Gtk.Label(label=_("Frames Folder:"))
 
         self.frame_name = Gtk.Entry()
@@ -1069,7 +1070,7 @@ class ScriptToolWindow(Gtk.Window):
             self.render_status_info.set_markup("<small>" + info_str + "</small>")
             self.render_button.set_sensitive(True)
             
-    def folder_selection_changed(self, chooser):
+    def folder_selection_changed(self, chooser, data):
         self.update_render_status_info()
 
     def hamburger_launch_pressed_popover(self, widget, event):

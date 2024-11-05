@@ -928,7 +928,6 @@ class GmicWindow(Gtk.Window):
             self.render_button.set_sensitive(True)
             
     def folder_selection_changed(self, chooser, data):
-        print("asdddddddddd")
         self.update_render_status_info()
 
     def hamburger_launch_pressed(self, widget, event):

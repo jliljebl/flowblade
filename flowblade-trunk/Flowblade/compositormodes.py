@@ -21,6 +21,7 @@
 """
 Module handles editing positions and clip ends of compositors on timeline.
 """
+
 import appconsts
 import gui
 import edit
