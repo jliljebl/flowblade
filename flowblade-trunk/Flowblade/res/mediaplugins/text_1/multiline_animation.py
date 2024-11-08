@@ -51,7 +51,9 @@ def init_script(fctx):
 
     fctx.add_editor_group("Background")
 
-    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
+    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", \
+                                                               "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought", \
+                                                              "Lines Solid From Left", "Lines Solid From Right"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
@@ -121,7 +123,9 @@ class MultiLineAnimation:
     HORIZONTAL_LINES = 6
     UNDERLINE = 7
     STRIKETHROUGHT = 8
-    
+    LINE_SOLID_FROM_LEFT = 9
+    LINE_SOLID_FROM_RIGHT = 10
+
     CONSTRAINT_OFF = 0   
     CONSTRAINT_CENTER = 1
     CONSTRAINT_HORIZONTAL = 2
@@ -383,6 +387,19 @@ class MultiLineAnimation:
                 w, h = linetext.pixel_size
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx, self)
                 cr.rectangle(0, ry - p, screen_w + 1, rh + 2 * p)
+                cr.fill()
+        elif self.bg_type == MultiLineAnimation.LINE_SOLID_FROM_LEFT:
+            for linetext in self.linetexts:
+                w, h = linetext.pixel_size
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx, self)
+                cr.rectangle(0, ry - p, w + 2 * p + rx, rh + 2 * p)
+                cr.fill()
+        elif self.bg_type == MultiLineAnimation.LINE_SOLID_FROM_RIGHT:
+            screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+            for linetext in self.linetexts:
+                w, h = linetext.pixel_size
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx, self)
+                cr.rectangle(linetext.text_x - p, ry - p, screen_w, rh + 2 * p)
                 cr.fill()
         elif self.bg_type == MultiLineAnimation.BOX:
             cr.rectangle(ax, ay, aw, ah)
