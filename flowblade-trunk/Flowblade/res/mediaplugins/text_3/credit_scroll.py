@@ -1010,7 +1010,7 @@ class AbstractFontCommand(AbstractCommandBlock):
     # These correspond with order and count with data in font data tuples 
     # provided for fluxity.PangoTextLayout objects on creation.
     FONT_DATA_PARAMS = ["font-family", "font-face", "font-size", "alignment", \
-        "color-rgba", "fill-on", "outline_color-rgba", "outline-on", \
+        "color-rgba", "fill-on", "outline-color-rgba", "outline-on", \
         "outline-width", "shadow-on", "shadow-color-rgb", "shadow-opacity", \
         "shadow-xoff", "shadow-yoff", "shadow-blur", "gradient-color-rgba", \
         "gradient-direction"]
@@ -1164,7 +1164,7 @@ class SetLayoutPropertyCommand(AbstractCommandBlock):
     
     LAYOUT_PARAMS_TO_EDITORS = { "center-gap":"Center Gap",
                                  "line-gap":"Line Gap",
-                                 "creadit-block-gap":"Credit Block Gap",
+                                 "credit-block-gap":"Credit Block Gap",
                                  "justified-x":"Justified X Position", 
                                  "justified-x-off":"Justified X Position Offset", 
                                  "name-y-off":"Name Y Offset",

@@ -403,7 +403,181 @@ A typical use would be to e.g. blur a person's face to make them unrecognizable.
 </p>
 
 
-<h2>9. Jog / Shuttle Support</h2>
+<h2>9. Credits Scroll Generator</h2>
+<p>
+Jog/shuttle support is not on by default in Flowblade, and must be enabled.
+</p>
+
+<h3>Commands</h3>
+<p>
+<b>ypad</b> ypad <i>PIXELS</i> 
+</p>
+
+<p> Adds padding between credit items.
+</p>
+<p>
+E.g. <i>! ypad 40</i>
+</p>
+<p>
+<b>set-layout</b> set-layout <i>[single-line-centered | two line-centered |  single-line-right-justified |  two-line-right-justified |  single-line-sides-justified | two-line-left-justified | two-columns-centered ]</i> 
+</p>
+<p> 
+Switches to use defined credit item layout.
+</p>
+<p> 
+E.g. <i>! set-layout single-line-sides-justified</i>.
+</p>
+
+<p>
+    <b>font-size</b> <i>[ credit | name ] FONTSIZE</i>
+</p>
+<p>
+Sets font size for credit or name text.
+</p>    
+<p>
+    E.g. <i>! font-size credit 100</i>
+</p>
+
+<p>
+    <b>font-family</b> <i>[ credit | name ] FONTFAMILY</i>
+</p>
+
+<p>
+Sets font family for credit or name text. Available values for <i> FONTFAMILY</i> depend on system.
+</p>
+<p>    
+E.g. <i>! font-family credit Ubuntu Sans</i>
+</p> 
+<p> 
+ <b>font-face</b> <i>[ credit | name ] [ normal | italic | bold ]</i> 
+</p>
+<p>
+Sets font face for credit or name text.
+</p>
+<p>    
+E.g. <i>! font-face name italic</i>
+</p>
+
+<p> 
+<b>font-property </b> <i>[ credit | name ] [alignment | color-rgba | fill-on | outline-color-rgba | outline-on | outline-width | shadow-on | shadow-color-rgb | shadow-opacity | shadow-xoff | shadow-yoff | shadow-blur | gradient-color-rgba | gradient-direction ] PROPERTYVALUE </i>
+</p>
+<p>
+Sets value for named font property for credit or name text. Allowed <i>PROPERTYVALUE</i> values are different for different named properties. 
+</p>
+
+<p>    
+<i>Font Properties</i>
+</p>
+<table>
+<thead>
+<tr>
+<th>Property               </th><th> Value type</th><th>Example</th>
+</tr>
+</thead>
+<tr>
+<td>    color-rgba     </td><td> color tuple </td><td>  color-rgba (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td>    fill-on     </td><td> boolean </td><td> fill-on False </td>
+</tr>
+<tr>
+<td>    outline-color-rgba     </td><td> color tuple  </td><td> outline-color-rgba (1.0,0.0,0.0,1.0)  </td>
+</tr>
+<tr>
+<td>      outline-on   </td><td> boolean </td><td>    outline-on True </td>
+</tr>
+<tr>
+<td>  outline-width       </td><td>  int <i>(pixels)</i> </td><td>  outline-width 4 </td>
+</tr>
+<tr>
+<td>   shadow-on      </td><td> boolean </td><td>  shadow-on True </td>
+</tr>
+<tr>
+<td>    shadow-color-rgb</td><td> color tuple  </td><td>   shadow-color-rgb (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td> shadow-opacity   </td><td> int[0-100] </td><td> shadow-opacity 50</td>
+</tr>
+<tr>
+<td>  shadow-xoff  </td><td> int <i>(pixels)</i></td><td>  shadow-xoff 10 </td>
+</tr>
+<tr>
+<td>  shadow-yoff  </td><td> int <i>(pixels)</i></td><td> shadow-yoff 7 </td>
+</tr>
+<tr>
+<td>  shadow-blur </td><td>  int <i>(pixels)</i> </td><td>   shadow-blur 8 </td>
+</tr>
+<tr>
+<td>  gradient-color-rgba  </td><td> color tuple </td><td>  gradient-color-rgba  (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td>   gradient-direction </td><td> int[0,1] <i>(VERTICAL = 0
+HORIZONTAL = 1)</i></td><td>  gradient-direction 1 </td>
+</tr>
+</table>
+
+<p>    
+E.g. <i>! font-property credit color-rgba (1.0,0.0,0.0,1.0)
+</p>
+<p>    
+<i>! font-property name outline-on True 
+</p>
+<p>    
+<i>! font-property credit  shadow-yoff 7 
+</p>
+<p>    
+<i>! font-property name gradient-direction 1
+</p>
+
+<p>
+<b>set-layout-property</b> <i>[ center-gap | line-gap | credit-block-gap | justified-x | justified-x-off | name-y-off | name-x-off | section-title-alignment ] PROETYVALUE </i>
+</p>
+
+
+
+<table>
+<thead>
+<tr>
+<th>Property               </th><th> Description</th>
+</tr>
+</thead>
+<tr>
+<td>    center-gap    </td><td> Gap between name and credit when on same line. </td>
+</tr>
+<tr>
+<td>  line-gap    </td><td> Gap between lines. </td>
+</tr>
+<tr>
+<td>    credit-block-gap   </td><td> Gap between credit block </td>
+</tr>
+<tr>
+<td>   justified-x    </td><td> Position of justified edge when using justified text layouts  </td>
+</tr>
+<tr>
+<td>   justified-x-off   </td><td>  </td>
+</tr>
+<tr>
+<td>    name-y-off  </td><td> Y offset of name position from default position in current layout </td>
+</tr>
+<tr>
+<td>     name-x-off  </td><td> X offset of name position from default position in current layout  </td>
+</tr>
+<tr>
+<td>     section-title-alignment </td><td>  </td>
+</tr>
+</table>
+
+     set-layout-property name-y-off -100
+! text-case name lowercase
+
+"alignment", \
+    "color-rgba", "fill-on", "outline_color-rgba", "outline-on", \
+    "outline-width", "shadow-on", "shadow-color-rgb", "shadow-opacity", \
+    "shadow-xoff", "shadow-yoff", "shadow-blur", "gradient-color-rgba", \
+    "gradient-direction"]
+    
+
+<h2>10. Jog / Shuttle Support</h2>
 
 
 <h3>Overview</h3>
