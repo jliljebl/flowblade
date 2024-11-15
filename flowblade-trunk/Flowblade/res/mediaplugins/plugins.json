@@ -1,7 +1,7 @@
 {
 "plugins":[ 
 		{ "folder":"animations_1", "scriptfile":"floating_boxes.py", "name":"Floating Boxes", "category":"Backgrounds", "defaultrender":"clip"},
-		{ "folder":"animations_2", "scriptfile":"hex_colors.py", "name":"Hex Colors", "category":"Backgrounds", "defaultrender":"clip"},
+		{ "folder":"animations_2", "scriptfile":"hex_colors.py", "name":"Color Polygons", "category":"Backgrounds", "defaultrender":"clip"},
 		{ "folder":"transitions_1", "scriptfile":"lines_sweep.py", "name":"Lines Sweep", "category":"Cover Transitions", "defaultrender":"alphaclip"},
 		{ "folder":"transitions_2", "scriptfile":"hex_overlay.py", "name":"Hex Overlay", "category":"Cover Transitions", "defaultrender":"alphaclip"},
 		{ "folder":"text_1", "scriptfile":"multiline_animation.py", "name":"Multiline Animation", "category":"Animated Texts", "defaultrender":"alphaclip"},
