@@ -879,7 +879,7 @@ class AbstractCommandBlock(AbstractBlock):
     PAGING = "page"
     SET_LAYOUT = "set-layout"
     FONT_SIZE = "font-size"
-    FONT_FALMILY = "font-family"
+    FONT_FAMILY = "font-family"
     FONT_FACE = "font-face"
     FONT_PROPERTY = "font-property"
     SET_LAYOUT_PROPERTY = "set-layout-property"
@@ -1066,7 +1066,7 @@ class FontFontFamilyCommand(AbstractFontCommand):
     
     def __init__(self, tokens, blocks_gen, line):
         
-        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FALMILY, tokens, blocks_gen, line)
+        AbstractFontCommand. __init__(self, AbstractCommandBlock.FONT_FAMILY, tokens, blocks_gen, line)
 
         ALLOWED_TOKEN_COUNTS = [4,5,6,7,8,9,10,11,12,13] # Font family names can have quite many parts in them.
         ARGUMENT_TYPES = {2:str}
@@ -1209,7 +1209,7 @@ COMMAND_CREATOR_FUNCS = {AbstractCommandBlock.Y_PADDING:_get_ypad_command,
                          AbstractCommandBlock.PAGING: _get_paging_command,
                          AbstractCommandBlock.SET_LAYOUT:_get_set_layout_command,
                          AbstractCommandBlock.FONT_SIZE:_get_font_size_command,
-                         AbstractCommandBlock.FONT_FALMILY:_get_font_family_command,
+                         AbstractCommandBlock.FONT_FAMILY:_get_font_family_command,
                          AbstractCommandBlock.FONT_FACE:_get_font_face_command,
                          AbstractCommandBlock.FONT_PROPERTY:_get_font_property_command,
                          AbstractCommandBlock.SET_LAYOUT_PROPERTY:_get_set_layout_property_command,

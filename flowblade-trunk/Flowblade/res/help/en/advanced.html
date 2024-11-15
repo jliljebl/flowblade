@@ -404,11 +404,59 @@ A typical use would be to e.g. blur a person's face to make them unrecognizable.
 
 
 <h2>9. Credits Scroll Generator</h2>
+<h3>Overview</h3>
 <p>
-Jog/shuttle support is not on by default in Flowblade, and must be enabled.
+Flowblade offeres a <b>Credits Scroll Generator</b> to easily create title sequences. 
 </p>
 
+<p>
+<b>Credits Scroll Generator</b> has a number of editors to set <i>initial</i> properties of text font and layout.
+Displayed text and commands to modify text presentation is inputted in text editor box in the <i>Text</i> panel. 
+</p>
+
+<p>
+    Text is given using a <i>light weight markup syntax</i> that accepts three types of input: <b>credit blocks, section titles</b> and <b>commands</b>.  
+</P>
+
+<h3>Credit Blocks</h3>
+<p>
+    <b>Credit block</b> is a block of text beginning with a line starting with '#' followed by credit text, followed by one or more sequential lines giving names associated with the credit.
+</p>
+<p>
+    <b>Credit block</b> ends when empty line is encountered.
+</p>
+
+<div class="code-text">
+<p>    # Camera operators </p>
+<p>    Donald Drake </p>
+<p>    Earl Easter </p>
+</div>
+
+<h3>Section Titles</h3>
+<p>
+    <b>Section Title</b> is a single line of text starting with '##' and followed by section title text.
+</p>
+
+<div class="code-text">
+<p>    ## Camera crew in Antarctica </p>
+</div>
+
+
 <h3>Commands</h3>
+
+<p>
+    <b>Command</b> is a single line of text starting with '!' and followed by command arguments.
+</p>
+
+<p>
+    <b>Command</b> lines change font and layout properties from the ones given initially by user or do some other additional changes in the way that text is presented.
+</p>
+
+<div class="code-text">
+<p>  ! set-layout single-line-sides-justified</p>
+</div>
+
+<h3>Commands List</h3>
 <p>
 <b>ypad</b> ypad <i>PIXELS</i> 
 </p>
@@ -426,6 +474,32 @@ Switches to use defined credit item layout.
 </p>
 <p> 
 E.g. <i>! set-layout single-line-sides-justified</i>.
+</p>
+
+<p>
+<b>text-case</b> <i>[ credit | name ] [ no-changes | uppercase | lowercase ]</i>
+</p>    
+
+
+<p>
+Sets credit or name text to be uppercase, lowercase or as written.
+</p>    
+
+<p>
+E.g. <i> ! text-case name lowercase </i>
+</p>
+
+<p>
+<b>page</b> <i>[ PAGELENGHT]</i>
+</p>    
+
+
+<p>
+Begins new text page if animation set to be paged. Optionally sets length of time page is displayed in frames. If no time is given, the user set default value is used.
+</p>    
+
+<p>
+E.g. <i> ! page 230 </i>
 </p>
 
 <p>
@@ -449,7 +523,7 @@ Sets font family for credit or name text. Available values for <i> FONTFAMILY</i
 E.g. <i>! font-family credit Ubuntu Sans</i>
 </p> 
 <p> 
- <b>font-face</b> <i>[ credit | name ] [ normal | italic | bold ]</i> 
+ <b>font-face</b> <i>[ credit | name ] [ regular | italic | bold ]</i> 
 </p>
 <p>
 Sets font face for credit or name text.
@@ -520,20 +594,22 @@ HORIZONTAL = 1)</i></td><td>  gradient-direction 1 </td>
 E.g. <i>! font-property credit color-rgba (1.0,0.0,0.0,1.0)
 </p>
 <p>    
-<i>! font-property name outline-on True 
+! font-property name outline-on True
 </p>
 <p>    
-<i>! font-property credit  shadow-yoff 7 
+! font-property credit  shadow-yoff 7 
 </p>
 <p>    
-<i>! font-property name gradient-direction 1
+! font-property name gradient-direction 1</i> 
 </p>
 
 <p>
-<b>set-layout-property</b> <i>[ center-gap | line-gap | credit-block-gap | justified-x | justified-x-off | name-y-off | name-x-off | section-title-alignment ] PROETYVALUE </i>
+<b>set-layout-property</b> <i>[ center-gap | line-gap | credit-block-gap | justified-x | justified-x-off | name-y-off | name-x-off | section-title-alignment ] PROPERTYVALUE </i>
 </p>
 
-
+<p>
+Sets layout property value. <i>PROPERTYVALUE</i> integer value for number of pixels or pixel position.
+</p>
 
 <table>
 <thead>
@@ -548,34 +624,29 @@ E.g. <i>! font-property credit color-rgba (1.0,0.0,0.0,1.0)
 <td>  line-gap    </td><td> Gap between lines. </td>
 </tr>
 <tr>
-<td>    credit-block-gap   </td><td> Gap between credit block </td>
+<td>    credit-block-gap   </td><td> Gap between credit blocks. </td>
 </tr>
 <tr>
-<td>   justified-x    </td><td> Position of justified edge when using justified text layouts  </td>
+<td>   justified-x    </td><td> Position of justified edge when using justified text layouts.  </td>
 </tr>
 <tr>
 <td>   justified-x-off   </td><td>  </td>
 </tr>
 <tr>
-<td>    name-y-off  </td><td> Y offset of name position from default position in current layout </td>
+<td>    name-y-off  </td><td> Y offset of name position from default position in current layout. </td>
 </tr>
 <tr>
-<td>     name-x-off  </td><td> X offset of name position from default position in current layout  </td>
+<td>     name-x-off  </td><td> X offset of name position from default position in current layout.  </td>
 </tr>
 <tr>
-<td>     section-title-alignment </td><td>  </td>
+<td>     section-title-alignment </td><td>  Sets section titles to be either centered or edge justified using justified-x value.</td>
 </tr>
 </table>
 
-     set-layout-property name-y-off -100
-! text-case name lowercase
+<p>    
+E.g. <i>! set-layout-property name-y-off -100</i>
+</p>
 
-"alignment", \
-    "color-rgba", "fill-on", "outline_color-rgba", "outline-on", \
-    "outline-width", "shadow-on", "shadow-color-rgb", "shadow-opacity", \
-    "shadow-xoff", "shadow-yoff", "shadow-blur", "gradient-color-rgba", \
-    "gradient-direction"]
-    
 
 <h2>10. Jog / Shuttle Support</h2>
 
@@ -654,7 +725,7 @@ Become the root user, and create a new text file at
 `/etc/udev/rules.d/90-flowblade.rules` with the following contents:
 </p>
 
-<div class="note">
+<div class="code-text">
 <p># Grant unprivileged users access to USB HID jog/shuttle devices</p>
 
 <p># Contour Design ShuttleXpress, Contour A/V Solutions SpaceShuttle</p>

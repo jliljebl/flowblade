@@ -147,6 +147,14 @@ body {
 	font-size:12px;
 }
 
+.code-text {
+	font-family: "Lucida Console", "Courier New", monospace;
+	background-color: #f3f3f0;
+	padding: 10px;
+	margin-bottom: 5px ;
+	line-height: 10px
+}
+
 .subject-header {
 	text-transform: uppercase;
 	margin-top:10px;
