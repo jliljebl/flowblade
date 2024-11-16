@@ -327,6 +327,8 @@ EDITOR_PANGO_FONT = 10
 """ Editor for setting pango font properties."""
 EDITOR_TEXT_AREA = 11
 """ Editor for creating multiline text."""
+EDITOR_HTML_LINK = 12
+""" Editor for opening a HTML page, generally to make some additional documentation available."""
 
 EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Liberation Serif", "Regular", 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
               True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
@@ -607,6 +609,8 @@ class FluxityContext:
           
           * `EDITOR_INT_RANGE`(3-tuple with int values, (default, min, max))
           
+          * `EDITOR_HTML_LINK`(str),
+          
           * `EDITOR_PANGO_FONT` (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
                   fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
                   shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur, 
@@ -656,7 +660,9 @@ class FluxityContext:
           * `EDITOR_FLOAT_RANGE`(3-tuple with float values, (default, min, max)), 
           
           * `EDITOR_INT_RANGE`(3-tuple with int values, (default, min, max))
-
+          
+          * `EDITOR_HTML_LINK`(str),
+          
           * `EDITOR_PANGO_FONT`(17-tuple (font_family, font_face, font_size, alignment, color_rgba,
                   fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
                   shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur,

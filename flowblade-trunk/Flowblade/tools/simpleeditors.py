@@ -35,6 +35,7 @@ import editorstate
 import guiutils
 import respaths
 import translations
+import webbrowser
 import utils
 
 # NOTE: These need to correspond exactly with fluxity.FluxityContext.<editor> enum values because we do not want to import anything into fluxity.py.    
@@ -50,6 +51,7 @@ SIMPLE_EDITOR_FLOAT_RANGE = 8
 SIMPLE_EDITOR_INT_RANGE = 9
 SIMPLE_EDITOR_PANGO_FONT = 10
 SIMPLE_EDITOR_TEXT_AREA = 11
+SIMPLE_EDITOR_HTML_LINK = 12
 
 FACE_REGULAR = "Regular"
 FACE_BOLD = "Bold"
@@ -273,6 +275,8 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return PangoFontEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_TEXT_AREA:
         return TextAreaEditor(id_data, label_text, value, tooltip)
+    elif editor_type == SIMPLE_EDITOR_HTML_LINK:
+        return HTMlLinkEditor(id_data, label_text, value, tooltip)
     elif editor_type == EDITOR_GROUP_LABEL:
         return GroupLabel(text)
         
@@ -886,6 +890,43 @@ class TextAreaEditor(AbstractSimpleEditor):
         text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
         return text
 
+class HTMlLinkEditor(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+
+        self.value = value
+
+        self.button = Gtk.Button(label=label_text)
+        self.button.connect("clicked", lambda w: self._button_pressed())
+        
+        widget = self.button
+        widget.set_tooltip_text (self.tooltip)
+
+        internal_box = Gtk.HBox(0, False)
+        internal_box.pack_start(Gtk.Label(), True, True, 0)
+        internal_box.pack_start(widget, False, False, 0)
+        internal_box.pack_start(Gtk.Label(), True, True, 0)
+
+        internal_box.set_margin_top(12)
+        internal_box.set_margin_top(12)
+        internal_box.set_margin_start(4)
+        internal_box.set_margin_end(4)
+
+        self.pack_start(internal_box, True, True, 0)
+
+        self.editor_type = SIMPLE_EDITOR_HTML_LINK
+
+    def _button_pressed(self):
+        try:
+            url = "file://" + respaths.ROOT_PATH + self.value # "/res/help/en/advanced.html#9._Credits_Scroll_Generator"
+            print(url)
+            webbrowser.open(url)
+        except:
+            dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)
+        
+    def get_value(self):
+        return self.value
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):
