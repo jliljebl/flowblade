@@ -200,7 +200,7 @@
     |:--------|:--------|
     | 1 | Initial release. |
     | 2 | Added methods FluxityContext.required_api_version(), FluxityContext.add_editor_group() |
-    | 3 | Added methods FluxityContext.get_editors_values_clone_dict()|
+    | 3 | Added method FluxityContext.get_editors_values_clone_dict(), Added editor EDITOR_HTML_LINK, added global variable LOCAL_ROOT |
 
     # FLUXITY API
 """
@@ -370,6 +370,9 @@ KEYFRAME_SMOOTH = 1
 """Value after keyframe of this type is calculated using a Catmull-Rom curve created from four surrounding keyframe values."""
 KEYFRAME_DISCRETE = 2
 """Value after keyframe of this type is value at keyframe."""
+
+LOCAL_ROOT = "##LOCAL##"
+
 
 API_VERSION = 3
 """API version number, increasing integer for each Flowblade release with changes."""
@@ -609,7 +612,7 @@ class FluxityContext:
           
           * `EDITOR_INT_RANGE`(3-tuple with int values, (default, min, max))
           
-          * `EDITOR_HTML_LINK`(str),
+          * `EDITOR_HTML_LINK`((str) A path to a HTML resource, either local or in the web),
           
           * `EDITOR_PANGO_FONT` (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
                   fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
@@ -621,6 +624,8 @@ class FluxityContext:
         Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
         
         Data describing editors can be accessed with *get_script_data(self)*. Edited values are made available for script with *set_editors_data(self, editors_data_json)*.
+        
+        EDITOR_HTML_LINK can use global variable fluxity.LOCAL_ROOT to point to installation root directory as part of a path to an installed resource.
         
         Must be called in script method *init_script()*.
         """

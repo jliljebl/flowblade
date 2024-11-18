@@ -31,6 +31,7 @@ import cairo
 import copy
 
 import cairoarea
+import dialogutils
 import editorstate
 import guiutils
 import respaths
@@ -52,6 +53,8 @@ SIMPLE_EDITOR_INT_RANGE = 9
 SIMPLE_EDITOR_PANGO_FONT = 10
 SIMPLE_EDITOR_TEXT_AREA = 11
 SIMPLE_EDITOR_HTML_LINK = 12
+
+LOCAL_ROOT = "##LOCAL##" # magic value shared with fluxity.py to indicate that we are accessing local file that is part of installation. 
 
 FACE_REGULAR = "Regular"
 FACE_BOLD = "Bold"
@@ -919,6 +922,9 @@ class HTMlLinkEditor(AbstractSimpleEditor):
 
     def _button_pressed(self):
         try:
+            if self.value.startswith(LOCAL_ROOT):
+                print("jj")
+                self.value = self.value[len(LOCAL_ROOT):]
             url = "file://" + respaths.ROOT_PATH + self.value # "/res/help/en/advanced.html#9._Credits_Scroll_Generator"
             print(url)
             webbrowser.open(url)
@@ -988,7 +994,3 @@ class PreviewPanel(Gtk.VBox):
             cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.rectangle(0, 0, w, h)
             cr.fill()
-
-
-# ---------------------------------------------------------- Group label editor
-        return GroupLabel(text)

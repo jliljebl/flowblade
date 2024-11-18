@@ -97,7 +97,7 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
 
     fctx.add_editor_group("Layout")
-    fctx.add_editor("Show Info", fluxity.EDITOR_HTML_LINK, "/res/help/en/advanced.html#9._Credits_Scroll_Generator")
+    fctx.add_editor("Show Info", fluxity.EDITOR_HTML_LINK, fluxity.LOCAL_ROOT + "/res/help/en/advanced.html#9._Credits_Scroll_Generator")
     fctx.add_editor("Credits Layout", fluxity.EDITOR_OPTIONS, (0, ["Single Line Centered", "Two Line Centered", "Single Line Right Justified", "Two Line Right Justified",
                     "Single Line Sides Justified", "Two Line Left Justified", "Two Columns Centered"]))
     fctx.add_editor("Center Gap", fluxity.EDITOR_INT, 30)
