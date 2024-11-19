@@ -25,7 +25,7 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
 
     fctx.add_editor("Shape", fluxity.EDITOR_OPTIONS, \
-                    (0, ["Hexagon","Box","Triangle"]))
+                    (0, ["Hexagon","Square","Triangle"]))
     fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.3, 0.3, 0.3, 1.0))
     fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (1.0, 0.1, 5.0))
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.8, 0.1, 5.0))
