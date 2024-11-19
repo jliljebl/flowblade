@@ -712,7 +712,24 @@ def load_filters_translations():
     param_names["Tracking Coords Interpretation"] = _("Tracking Coords Interpretation")
     param_names["Copy Channel From:"] = _("Copy Channel From:")
     param_names["Copy Channel To:"] = _("Copy Channel To:") 
+    param_names["Show Info"] = _("Show Info")
+    param_names["Credits Layout"] = _("Credits Layout")
+    param_names["Center Gap"] = _("Center Gap")
+    param_names["Credit Block Gap"] = _("Credit Block Gap")
+    param_names["Justified X Position"] = _("Justified X Position")
+    param_names["Justified X Position Offset"] = _("Justified X Position Offset")
+    param_names["Name X Offset"] = _("Name X Offset")
+    param_names["Name Y Offset"] = _("Name Y Offset")
+    param_names["Section Title Alignment"] = _("Section Title Alignment")
+    param_names["Credit Font"] = _("Credit Font")
+    param_names["Credit Case"] = _("Credit Case")
+    param_names["Name Font"] = _("Name Font")
+    param_names["Name Case"] = _("Name Case")
+    param_names["Section Title Font"] = _("Section Title Font")
+    param_names["Section Title Case"] = _("Section Title Case")
+    param_names["Default Frames Per Page"] = _("Default Frames Per Page")
 
+     
     # Combo options
     # From version 2.10 onwards Media Plugins combo options go here too.
     global combo_options
@@ -859,6 +876,26 @@ def load_filters_translations():
     combo_options["Top Left Justified"] = _("Top Left Justified")
     combo_options["Not Scaled"] = _("Not Scaled")
     combo_options["Scaled To Box"] = _("Scaled To Box")
+    combo_options["Single Line Centered"] = _("Single Line Centered")
+    combo_options["Two Line Centered"] = _("Two Line Centered")
+    combo_options["Single Line Right Justified"] = _("Single Line Right Justified")
+    combo_options["Two Line Right Justified"] = _("Two Line Right Justified")
+    combo_options["Single Line Sides Justified"] = _("Single Line Sides Justified")
+    combo_options["Two Line Left Justified"] = _("Two Line Left Justified")
+    combo_options["Two Columns Centered"] = _("Two Columns Centered")
+    combo_options["Left Justified"] = _("Left Justified")
+    combo_options["Centered"] = _("Centered")
+    combo_options["Right Justified"] = _("Right Justified")
+    combo_options["Transparent"] = _("Transparent")
+    combo_options["Solid Color"] = _("Solid Color")
+    combo_options["No Changes"] = _("No Changes")
+    combo_options["Uppercase"] = _("Uppercase")
+    combo_options["Lowercase"] = _("Lowercase")
+    combo_options["Scrolled"] = _("Scrolled")
+    combo_options["Paged"] = _("Paged")
+    combo_options["Hexagon"] = _("Hexagon")
+    combo_options["Square"] = _("Square")
+    combo_options["Triangle"] = _("Triangle")
 
     # Added for 2.10
     global plugin_groups
@@ -868,7 +905,7 @@ def load_filters_translations():
     
     global plugin_names
     plugin_names["Lines Sweep"] = _("Lines Sweep")
-    plugin_names["Hex Colors"] = _("Hex Colors")
+    plugin_names["Color Polygons"] = _("Color Polygons")
     plugin_names["Floating Boxes"] = _("Floating Boxes")
     plugin_names["Typewriter"] = _("Typewriter")
     plugin_names["Multiline Animation"] = _("Multiline Animation")

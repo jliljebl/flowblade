@@ -93,7 +93,7 @@ Donald Drake
 
 def init_script(fctx):
     fctx.set_name("Scrolling Credits")
-    fctx.set_version(2)
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
 
     fctx.add_editor_group("Layout")
@@ -116,7 +116,7 @@ def init_script(fctx):
                        True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (1.0, 0.0, 0.0), \
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Credit Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
-    fctx.add_editor("Creadit Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
+    fctx.add_editor("Credit Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Name Font", fluxity.EDITOR_PANGO_FONT, copy.deepcopy(font_default_values))
     fctx.add_editor("Name Case", fluxity.EDITOR_OPTIONS, (0, ["No Changes", "Uppercase", "Lowercase"]))
     fctx.add_editor("Section Title Font", fluxity.EDITOR_PANGO_FONT, copy.deepcopy(font_default_values))
@@ -571,7 +571,7 @@ class AbstractCreditBlock(AbstractTextBlock):
         return (mutable_layout_data["Center Gap"], mutable_layout_data["Line Gap"],
                 mutable_layout_data["Justified X Position"],
                 mutable_layout_data["Name Y Offset"], mutable_layout_data["Name X Offset"],
-                mutable_layout_data["Creadit Case"], mutable_layout_data["Name Case"],
+                mutable_layout_data["Credit Case"], mutable_layout_data["Name Case"],
                 fctx.get_profile_property(fluxity.PROFILE_WIDTH), fctx.get_profile_property(fluxity.PROFILE_HEIGHT))
         
     def _get_credits_str(self):
@@ -964,7 +964,7 @@ class PagingCommand(AbstractCommandBlock):
 class TextCaseCommand(AbstractCommandBlock):
 
     CASES = ["no-changes", "uppercase", "lowercase"]
-    TARGETS_TO_CASE_EDITORS = {AbstractCommandBlock.TARGET_CREDIT:"Creadit Case",
+    TARGETS_TO_CASE_EDITORS = {AbstractCommandBlock.TARGET_CREDIT:"Credit Case",
                                AbstractCommandBlock.TARGET_NAME:"Name Case",
                                AbstractCommandBlock.TARGET_SECTION_TITLE:"Section title Case"}
     
