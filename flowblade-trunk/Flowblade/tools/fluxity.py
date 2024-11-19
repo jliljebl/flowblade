@@ -372,7 +372,7 @@ KEYFRAME_DISCRETE = 2
 """Value after keyframe of this type is value at keyframe."""
 
 LOCAL_ROOT = "##LOCAL##"
-
+"""This value is replaced with an absolute path to local installation root directory when creating a path to a local resource."""
 
 API_VERSION = 3
 """API version number, increasing integer for each Flowblade release with changes."""
