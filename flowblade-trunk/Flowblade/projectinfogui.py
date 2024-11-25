@@ -56,16 +56,14 @@ def get_project_info_panel():
     project_info_hbox.pack_start(Gtk.Label(), True, True, 0)
     
     widgets.project_name_label = project_name_label
-    widgets.desc_label = desc_label
+    widgets.monitor_desc_label = desc_label
     widgets.info_box = info_box
 
     return project_info_hbox
 
 def get_top_level_project_info_panel():
-    project_name_label = guiutils.bold_label(_("Project Profile"))
-    project_name_label.set_justify(Gtk.Justification.LEFT)
-    name_row = guiutils.set_margins(guiutils.get_left_justified_box([project_name_label]), 0, 4,0,0)
     
+    # This all is now just a text in topbar with manu bar and monitors rc info widget.
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
     if editorstate.screen_size_small_height() == True:
@@ -76,25 +74,29 @@ def get_top_level_project_info_panel():
     desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
     desc_row.set_margin_start(4)
-    # We are leaving this for updates for now because smaller window sizes use this reference 'widgets.info_box' still.
-    info_box = guicomponents.get_profile_info_reduced_small_box(profile)
-    
-    project_info_vbox = Gtk.VBox()
-    project_info_vbox.pack_start(name_row, False, True, 0)
-    project_info_vbox.pack_start(desc_row, False, True, 0)
-    guiutils.set_margins(project_info_vbox, 4,0,4,4)
+
+    project_info_vbox = Gtk.HBox()
+    dash_label = Gtk.Label()
+    dash_label.set_text("-")
+    dash_label.modify_font(Pango.FontDescription(font_desc))
+    dash_label.set_sensitive(False)
+    project_info_vbox.pack_start(dash_label, False, False, 0)
+    project_info_vbox.pack_start(desc_row, False, False, 0)
+    guiutils.set_margins(project_info_vbox, 2,0,4,0)
 
     project_info_vbox.set_tooltip_text(guicomponents.get_full_profile_info_text(profile))
 
-    widgets.project_name_label = project_name_label
-    widgets.desc_label = desc_label
+    widgets.monitor_desc_label = desc_label
+
+    # We are leaving this to keep updates working for now because smaller window sizes use this reference 'widgets.info_box' still.
+    info_box = guicomponents.get_profile_info_reduced_small_box(profile)
     widgets.info_box = info_box
  
     return project_info_vbox
     
 def update_project_info():
     profile = PROJECT().profile
-    widgets.desc_label.set_text(profile.description())
+    widgets.monitor_desc_label.set_text(profile.description())
     profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
 

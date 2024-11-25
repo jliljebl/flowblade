@@ -338,7 +338,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     
     buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    
+
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     if editorstate.screen_size_small_width() == False:
         buttons_row.set_homogeneous(True)

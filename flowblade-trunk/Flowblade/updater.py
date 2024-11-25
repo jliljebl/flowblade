@@ -26,6 +26,8 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GLib
 
+import os
+
 import appconsts
 import clipeffectseditor
 import compositeeditor
@@ -41,6 +43,7 @@ import editorpersistance
 import kftoolmode
 import monitorevent
 import mediaplugin
+import mltprofiles
 import utils
 import respaths
 import tlinewidgets
@@ -472,6 +475,23 @@ def display_monitor_clip_name():#we're displaying length and range length also
     gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name + " - ")
     gui.editor_window.monitor_tc_info.set_source_tc(clip_len)
 
+    if MONITOR_MEDIA_FILE().type == appconsts.VIDEO:
+        try:
+            best_media_profile_index = mltprofiles.get_closest_matching_profile_index(MONITOR_MEDIA_FILE().info)
+            profile = mltprofiles.get_profile_for_index(best_media_profile_index)
+            gui.editor_window.monitor_desc_label.set_text(profile.description())
+        except:
+            # We're being a bit paranoid here, this is going in late in the cycle.
+            print("except at display_monitor_clip_name:")
+            profile = PROJECT().profile
+            gui.editor_window.monitor_desc_label.set_text(profile.description())
+    elif MONITOR_MEDIA_FILE().type == appconsts.AUDIO or MONITOR_MEDIA_FILE().type == appconsts.IMAGE: 
+        (f_name, ext) = os.path.splitext(MONITOR_MEDIA_FILE().name)
+        gui.editor_window.monitor_desc_label.set_text(ext[1:])
+    elif MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
+        (f_oath, ext) = MONITOR_MEDIA_FILE().path.split(".")
+        gui.editor_window.monitor_desc_label.set_text(ext + "(image sequence)")
+
     gui.editor_window.monitor_tc_info.set_range_info(*range_info)
 
 def display_sequence_in_monitor():
@@ -507,11 +527,14 @@ def update_seqence_info_text():
     prog_len = PLAYER().producer.get_length()
     if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
         prog_len = 0
-    tc_info = utils.get_tc_string(prog_len)
+    len_tc = utils.get_tc_string(prog_len)
 
     gui.editor_window.monitor_tc_info.set_source_name(name + " - ")
-    gui.editor_window.monitor_tc_info.set_source_tc(tc_info)
+    gui.editor_window.monitor_tc_info.set_source_tc(len_tc)
 
+    profile = PROJECT().profile
+    gui.editor_window.monitor_desc_label.set_text(profile.description())
+    
     range_info = _get_marks_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
     gui.editor_window.monitor_tc_info.set_range_info(*range_info)
 

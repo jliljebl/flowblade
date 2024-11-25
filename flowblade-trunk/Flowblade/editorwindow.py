@@ -228,6 +228,9 @@ class EditorWindow:
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
         monitor_source_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
         monitor_source_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        monitor_desc_panel = projectinfogui.get_top_level_project_info_panel()
+        self.monitor_desc_label = projectinfogui.widgets.monitor_desc_label
+        monitor_source_box.pack_start(monitor_desc_panel, False, False, 0)
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
 
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
@@ -478,12 +481,13 @@ class EditorWindow:
         # Project panel
         if editorlayout.top_level_project_panel() == True:
             # Project info
-            project_info_panel = projectinfogui.get_top_level_project_info_panel()
+            #project_info_panel = projectinfogui.get_top_level_project_info_panel()
             top_project_vbox = Gtk.VBox()
-            top_project_vbox.pack_start(project_info_panel, False, False, 0)
+            #top_project_vbox.pack_start(project_info_panel, False, False, 0)
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 4)
+
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 4, 4, 0, 4)
             self.project_panel = None
         else:
             # Notebook project panel for smallest screens
