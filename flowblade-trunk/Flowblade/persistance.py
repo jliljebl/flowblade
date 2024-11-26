@@ -213,6 +213,9 @@ def get_p_sequence(sequence):
         tracks.append(get_p_playlist(track))
     s_seq.tracks = tracks
 
+    # Clear hidden track.
+    s_seq.tracks[len(sequence.tracks) - 1].clips = []
+
     # Replace compositors with pwckleable objects
     s_compositors = get_p_compositors(sequence.compositors)
     s_seq.compositors = s_compositors
