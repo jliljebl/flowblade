@@ -35,6 +35,7 @@ from os.path import isfile, join, expanduser
 from PIL import Image
 import re
 import shutil
+import subprocess
 import time
 import threading
 
@@ -80,6 +81,7 @@ import projectinfogui
 import projectmediaimport
 import propertyparse
 import projectdatavault
+import projectdatavaultgui
 import proxyediting
 import render
 import renderconsumer
@@ -803,8 +805,75 @@ def was_edited_since_last_save():
     
     return True
 
-def view_project_events():
-    projectinfogui.show_project_events_dialog()
+def show_project_info():
+
+    data_folder_path = projectdatavault.get_project_data_folder()
+    folder_handle = projectdatavault.ProjectDataFolderHandle(data_folder_path)
+    savefile_path, len_savefiles, date_time = folder_handle.get_save_info()
+
+    profile = PROJECT().profile
+    info_box = guicomponents.get_profile_info_box(profile)
+    
+    pvbox = Gtk.VBox()
+    pvbox.pack_start(info_box, False, True, 0)
+    profile_panel = guiutils.get_named_frame(_("Profile"), pvbox, 4)
+    profile_panel.set_margin_bottom(12)
+
+    creation_label = guiutils.bold_label(_("Created:"))
+    creation_label.set_margin_end(4)
+    try:
+        data_file = PROJECT().vault_folder + "/" + PROJECT().project_data_id
+        completed_process = subprocess.run(["stat", "-c", "'%w'", data_file], capture_output=True, check=True, text=True)
+        creation_date = completed_process.stdout
+        creation_date = creation_date.strip("'").split(".")[0]
+    except:
+        creation_date = "N/A"
+    creation_row = guiutils.get_left_justified_box([creation_label, Gtk.Label(label=creation_date)])
+
+    save_name_label = guiutils.bold_label(_("Last Saved File:"))
+    save_name_label.set_margin_end(4)
+    try:
+        save_file_name = Gtk.Label(label=str(os.path.basename(savefile_path)))
+    except:
+        save_file_name = Gtk.Label(label=_("Not Saved"))
+    save_name_row = guiutils.get_left_justified_box([save_name_label, save_file_name])
+
+    save_label = guiutils.bold_label(_("Last Saved:"))
+    save_label.set_margin_end(4)
+    if str(date_time) != "0":
+        save_date = Gtk.Label(label=str(date_time).split(".")[0])
+    else:
+        save_date = Gtk.Label(label=_("Not Saved"))
+    save_date_row = guiutils.get_left_justified_box([save_label, save_date])
+
+    save_times_label = guiutils.bold_label(_("Saved Times:"))
+    save_times_label.set_margin_end(4)
+    save_times_row = guiutils.get_left_justified_box([save_times_label, Gtk.Label(label=str(len_savefiles))])
+    save_times_row.set_margin_bottom(12)
+
+    media_files_label = guiutils.bold_label(_("Media Items:"))
+    media_files_label.set_margin_end(4)
+    media_files_row = guiutils.get_left_justified_box([media_files_label, Gtk.Label(label=str(len(PROJECT().media_files)))])
+
+    bins_label = guiutils.bold_label(_("Bins:"))
+    bins_label.set_margin_end(4)
+    bins_row = guiutils.get_left_justified_box([bins_label, Gtk.Label(label=str(len(PROJECT().bins)))])
+
+    sequences_label = guiutils.bold_label(_("Sequences:"))
+    sequences_label.set_margin_end(4)
+    sequences_row = guiutils.get_left_justified_box([sequences_label, Gtk.Label(label=str(len(PROJECT().bins)))])
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(save_name_row, False, False, 0)
+    vbox.pack_start(creation_row, False, False, 0)
+    vbox.pack_start(save_date_row, False, False, 0)
+    vbox.pack_start(save_times_row, False, False, 0)
+    vbox.pack_start(profile_panel, False, False, 0)
+    vbox.pack_start(media_files_row, False, False, 0)
+    vbox.pack_start(bins_row, False, False, 0)
+    vbox.pack_start(sequences_row, False, False, 0)
+
+    projectdatavaultgui.show_current_project_data_store_info_window(vbox)
 
 # ---------------------------------- rendering
 def do_rendering():

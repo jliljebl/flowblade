@@ -65,7 +65,7 @@ def _close_window():
     _project_data_manager_window.set_visible(False)
     _project_data_manager_window.destroy()
 
-def show_current_project_data_store_info_window():
+def show_current_project_data_store_info_window(info_panel):
     if PROJECT().vault_folder == None:
         primary_txt = _("Project created with version 2.10 or lower!")
         secondary_txt = _("This feature available only for projects created with version 2.12 or higher.")
@@ -74,7 +74,7 @@ def show_current_project_data_store_info_window():
         
     global _current_project_info_window
     
-    _current_project_info_window = CurrenProjectDataInfoWindow()
+    _current_project_info_window = CurrenProjectDataInfoWindow(info_panel)
 
 def _close_info_window():
     global _current_project_info_window
@@ -134,7 +134,17 @@ def show_create_data_dialog(callback, data=None):
         widgets = (data_folder_button, name_entry, data)
     dialogutils.panel_ok_cancel_dialog(_("Create Data Store"), vbox, _("Create Data Store"), callback, widgets)
 
-        
+def get_current_vault_name():
+    if PROJECT().vault_folder == projectdatavault.get_default_vault_folder():
+        vault_name = self.default_vault_name 
+    else:
+        vaults = projectdatavault.get_vaults_object()
+        vault_name = vaults.get_user_vault_folder_name(PROJECT().vault_folder)
+        if vault_name == None:
+            vault_name = _("Project Data Store is not active")
+
+    return vault_name
+
 # --------------------------------------------------------- window classes
 class AbstractDataStoreWindow(Gtk.Window):
 
@@ -143,33 +153,34 @@ class AbstractDataStoreWindow(Gtk.Window):
         
         self.default_vault_name = _("Default XDG Data Store")
     
-    def folder_properties_panel(self, folder_handle):
+    def folder_properties_panel(self, folder_handle, show_save_data=True):
         
         info = folder_handle.data_folders_info()
         
         vbox = Gtk.VBox(False, 2)
 
-        savefile, times_saved, last_date = folder_handle.get_save_info()
+        if show_save_data == True:
+            savefile, times_saved, last_date = folder_handle.get_save_info()
 
-        save__name_label = guiutils.bold_label(_("Last Saved File:"))
-        save__name_label.set_margin_end(4)
-        try:
-            save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
-        except:
-            save_file_name = Gtk.Label(label=_("Not Saved"))
-        row = guiutils.get_left_justified_box([save__name_label, save_file_name])
-        vbox.pack_start(row, False, False, 0)
-        
-        save_label = guiutils.bold_label(_("Last Saved Time:"))
-        save_label.set_margin_end(4)
-        if str(last_date) != "0":
-            save_date = Gtk.Label(label=str(last_date))
-        else:
-            save_date = Gtk.Label(label=_("Not Saved"))
+            save__name_label = guiutils.bold_label(_("Last Saved File:"))
+            save__name_label.set_margin_end(4)
+            try:
+                save_file_name = Gtk.Label(label=str(os.path.basename(savefile)))
+            except:
+                save_file_name = Gtk.Label(label=_("Not Saved"))
+            row = guiutils.get_left_justified_box([save__name_label, save_file_name])
+            vbox.pack_start(row, False, False, 0)
+            
+            save_label = guiutils.bold_label(_("Last Saved Time:"))
+            save_label.set_margin_end(4)
+            if str(last_date) != "0":
+                save_date = Gtk.Label(label=str(last_date))
+            else:
+                save_date = Gtk.Label(label=_("Not Saved"))
 
-        row = guiutils.get_left_justified_box([save_label, save_date])
-        row.set_margin_bottom(12)
-        vbox.pack_start(row, False, False, 0)
+            row = guiutils.get_left_justified_box([save_label, save_date])
+            row.set_margin_bottom(12)
+            vbox.pack_start(row, False, False, 0)
         
         data_id_label = guiutils.bold_label(_("Data ID:"))
         data_id_label.set_margin_end(4)
@@ -273,7 +284,8 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(vaults_frame, False, False, 0)
         vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
-        vbox.pack_start(selections_frame, True, True, 0)
+        vbox.pack_start(selections_frame, False, False, 0)
+        vbox.pack_start(Gtk.Label(), True, True, 0)
         vbox.pack_start(close_hbox, False, False, 0)
 
         vbox = guiutils.set_margins(vbox, 12, 12, 12, 12)
@@ -687,7 +699,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
 
 class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
     
-    def __init__(self):
+    def __init__(self, info_panel):
         AbstractDataStoreWindow.__init__(self)
 
         data_folder_path = projectdatavault.get_project_data_folder()
@@ -695,13 +707,7 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
 
         vbox = Gtk.VBox(False, 2)
 
-        if PROJECT().vault_folder == projectdatavault.get_default_vault_folder():
-            vault_name = self.default_vault_name 
-        else:
-            vaults = projectdatavault.get_vaults_object()
-            vault_name = vaults.get_user_vault_folder_name(PROJECT().vault_folder)
-            if vault_name == None:
-                vault_name = _("Project Data Store is not active")
+        vault_name = get_current_vault_name()
         store_name_label = guiutils.bold_label(_("Project Data Store:"))
         store_name_label.set_margin_end(4)
         row = guiutils.get_left_justified_box([store_name_label, Gtk.Label(label=vault_name)])
@@ -719,7 +725,7 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         row.set_margin_bottom(24)
         vbox.pack_start(row, False, False, 0)
         
-        vbox.pack_start(self.folder_properties_panel(folder_handle), False, False, 0)
+        vbox.pack_start(self.folder_properties_panel(folder_handle, False), False, False, 0)
 
         close_button = Gtk.Button(_("Close"))
         close_button.connect("clicked", lambda w: _close_info_window())
@@ -731,11 +737,15 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         
         vbox.pack_start(close_hbox, False, False, 0)
         
-        pane = guiutils.set_margins(vbox, 12, 12, 12, 12)
+        hbox = Gtk.HBox(False, 12)
+        hbox.pack_start(info_panel, True, True, 0)
+        hbox.pack_start(vbox, True, True, 0)
+        
+        pane = guiutils.set_margins(hbox, 12, 12, 12, 12)
         pane.set_size_request(400, 250)
 
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Project Data"))
+        self.set_title(_("Project Info and Data"))
         self.connect("delete-event", lambda w, e:_close_info_window())
 
         self.add(pane)

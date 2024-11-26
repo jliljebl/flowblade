@@ -100,11 +100,6 @@ def update_project_info():
     profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
 
-def show_project_events_dialog():
-    events_list = ProjectEventListView()
-    events_list.fill_data_model()
-    events_list.set_size_request(620, 200)
-    dialogutils.panel_ok_dialog(_("Project Events"), events_list)
 
 class ProjectEventListView(Gtk.VBox):
 

@@ -36,9 +36,12 @@ def default_behaviour(dialog):
     dialog.set_resizable(False)
 
 def panel_ok_dialog(title, panel):
+    panel_dialog(title, panel, _("OK"))
+    
+def panel_dialog(title, panel, ok_msg):
     dialog = Gtk.Dialog(title, None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK"), Gtk.ResponseType.OK))
+                        (ok_msg, Gtk.ResponseType.OK))
                         
     alignment = get_default_alignment(panel)
     

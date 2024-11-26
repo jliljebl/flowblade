@@ -1887,3 +1887,6 @@ def set_bin_grfx_default_length_dialog(bin, current_default_length, callback):
     panel = dialogutils.get_alignment2(hbox)
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, value_spin)
+
+
+    
