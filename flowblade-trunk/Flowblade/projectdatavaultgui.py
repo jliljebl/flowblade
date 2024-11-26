@@ -771,6 +771,7 @@ class ProjectCloneWindow(Gtk.Window):
         GObject.GObject.__init__(self)
 
         self.clone_project_path = None
+        self.default_vault_name = _("Default XDG Data Store")
 
         # Create Data store selection combo. This is a bit involved because default valult and uservaults 
         # are not in the same data structure.
