@@ -31,6 +31,7 @@ import os
 from os.path import isfile, join, isdir
 import pickle
 import shutil
+import traceback
 
 import atomicfile
 from editorstate import PROJECT
@@ -136,7 +137,7 @@ def show_create_data_dialog(callback, data=None):
 
 def get_current_vault_name():
     if PROJECT().vault_folder == projectdatavault.get_default_vault_folder():
-        vault_name = self.default_vault_name 
+        vault_name = _("Default XDG Data Store")
     else:
         vaults = projectdatavault.get_vaults_object()
         vault_name = vaults.get_user_vault_folder_name(PROJECT().vault_folder)
@@ -882,11 +883,17 @@ class ProjectCloneWindow(Gtk.Window):
             # Copy Project data 
             md_key = str(datetime.datetime.now()) + str(os.urandom(16))
             clone_project_data_id_str = hashlib.md5(md_key.encode('utf-8')).hexdigest()
-            clone_vault_name = self.vaults_combo.get_active_text()
-            clone_vault_path = projectdatavault.get_vaults_object().get_vault_path_for_name(clone_vault_name)
+            if self.vaults_combo.get_active() != 0:
+                clone_vault_name = self.vaults_combo.get_active_text()
+                clone_vault_path = projectdatavault.get_vaults_object().get_vault_path_for_name(clone_vault_name)
+            else:
+                # Default XDG Data Store
+                clone_vault_path = projectdatavault.get_default_vault_folder()
+                
             clone_project_data_folder_path = join(clone_vault_path, clone_project_data_id_str) + "/"
             source_data_folder = projectdatavault.get_project_data_folder()
 
+                
             shutil.copytree(source_data_folder, clone_project_data_folder_path)
 
             # Create copy of project via saving to temp file.
@@ -910,6 +917,7 @@ class ProjectCloneWindow(Gtk.Window):
                 filehandle = open(cloneproject.last_save_path, 'w')
                 filehandle.close()
             except IOError as ioe:
+                print(traceback.format_exc())
                 primary_txt = "I/O error({0})".format(ioe.errno)
                 secondary_txt = "Project cloning failed:" + ioe.strerror + "."
                 dialogutils.warning_message(primary_txt, secondary_txt, self, is_info=False)
@@ -950,6 +958,7 @@ class ProjectCloneWindow(Gtk.Window):
             GLib.timeout_add(750, self.cloning_completed)
 
         except Exception as e:
+            print(traceback.format_exc())
             primary_txt = "Cloning failed"
             secondary_txt = "Project cloning failed: " + str(e) + "."
             dialogutils.warning_message(primary_txt, secondary_txt, self, is_info=False)
