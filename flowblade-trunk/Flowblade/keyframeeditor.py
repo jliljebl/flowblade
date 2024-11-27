@@ -1893,18 +1893,21 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
         self.update_property_value()
         self.update_editor_view()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         frame = self.clip_editor.get_active_kf_frame()
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
 
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
