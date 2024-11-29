@@ -544,7 +544,14 @@ def get_producer_as_tractor(producer, last_frame):
     multitrack.connect(track0, 0)
     track0.insert(producer, 0, 0, last_frame)
     return tractor
-            
+
+def get_clipped_producer_as_tractor(producer, clip_in, clip_out):
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist(producer.profile())
+    multitrack.connect(track0, 0)
+    track0.insert(producer, 0, clip_in, clip_out)
+    return tractor
 
 class FileRenderPlayer(threading.Thread):
     def __init__(self, file_name, producer, consumer, start_frame, stop_frame):

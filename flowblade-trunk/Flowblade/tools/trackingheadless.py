@@ -55,23 +55,25 @@ def delete_session_folders(parent_folder, session_id):
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, parent_folder, profile_desc, clip_path, write_file, data_file_path, step, algo, rect):
+def main(root_path, session_id, parent_folder, profile_desc, clip_path, clip_in, clip_out, write_file, data_file_path, step, algo, rect):
     
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
-    _render_thread = TrackingHeadlessRunnerThread(profile_desc, clip_path, write_file, data_file_path, step, algo, rect)
+    _render_thread = TrackingHeadlessRunnerThread(profile_desc, clip_path,  clip_in, clip_out, write_file, data_file_path, step, algo, rect)
     _render_thread.start()
 
 
 class TrackingHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, profile_desc, clip_path, write_file, data_file_path, step, algo, rect):
+    def __init__(self, profile_desc, clip_path, clip_in, clip_out, write_file, data_file_path, step, algo, rect):
         threading.Thread.__init__(self)
 
         self.clip_path = clip_path
         self.write_file = write_file
         self.data_file_path = data_file_path
+        self.clip_in = clip_in
+        self.clip_out = clip_out
         self.steps = step
         self.algo = algo
         self.rect = rect
@@ -83,7 +85,7 @@ class TrackingHeadlessRunnerThread(threading.Thread):
 
         profile = mltprofiles.get_profile(self.profile_desc) 
         producer = mlt.Producer(profile, str(self.clip_path)) # this runs 0.5s+ on some clips
-        
+
         tracker_filter = mlt.Filter(profile, "opencv.tracker")
         tracker_filter.set("rect", str(self.rect))
         tracker_filter.set("shape_width", str(4))
@@ -93,18 +95,24 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         tracker_filter.set("blur_type", str(0))
         tracker_filter.set("steps", str(self.steps))
         tracker_filter.set("algo", str(self.algo))
+        tracker_filter.set("disable", 0)
+        #tracker_filter.clear("results")
+
+        #tracker_filter.set("in", str(self.clip_in))
+        #tracker_filter.set("out", str(self.clip_out))
 
         # Add filter to producer.
         producer.attach(tracker_filter)
 
         # Create tractor and track to get right length
-        tractor = renderconsumer.get_producer_as_tractor(producer, producer.get_length() - 1)
+        tractor = renderconsumer.get_clipped_producer_as_tractor(producer, int(self.clip_in), int(self.clip_out))
 
         # Get render consumer
         xml_consumer = mlt.Consumer(profile, "xml", str(self.write_file))
         xml_consumer.set("all", "1")
         xml_consumer.set("real_time", "-1")
-
+        xml_consumer.set("audio_off", "1")
+ 
         tractor.set_speed(0)
         tractor.seek(0)
         
@@ -119,7 +127,7 @@ class TrackingHeadlessRunnerThread(threading.Thread):
 
         # Wait until done
         while xml_consumer.is_stopped() == False:
-            render_fraction = float(producer.frame()) / float(producer.get_length())
+            render_fraction = float(tractor.frame()) / float(producer.get_length())
             self.render_update(render_fraction)
             time.sleep(0.3)
         

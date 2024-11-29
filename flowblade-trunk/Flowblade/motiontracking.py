@@ -65,15 +65,14 @@ def apply_tracking( tracking_data_id, filter, editable_properties,
     results = f.read()
     f.close()
 
-    kf_list = get_kf_list_from_tracking_data(results)
+    kf_list = get_kf_list_from_tracking_data(results, True)
     kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in, source_width, source_height)
-    
     trans_rect_value = get_transition_rect_str_from_kf_list(kf_list_user)
 
     trans_rect_prop = [ep for ep in editable_properties if ep.name == "transition.rect"][0]
     trans_rect_prop.write_value(trans_rect_value)
 
-def get_kf_list_from_tracking_data(results):
+def get_kf_list_from_tracking_data(results, start_kfs_from_zero=False):
     # Results are text file with kf info in format: '...;1430~=753 98 100 100 0;1431~=753 98 100 100 0'
     
     kf_strs = results.split(";")
@@ -84,6 +83,15 @@ def get_kf_list_from_tracking_data(results):
         rect_tokens = kf_parts[1].split(" ")
         kf = (int(kf_parts[0]), int(rect_tokens[0]), int(rect_tokens[1]), int(rect_tokens[2]), int(rect_tokens[3]))
         kf_list.append(kf)
+
+    if start_kfs_from_zero == True:
+        kf_list_fixed = []
+        frame_zero, x, y, w, h  = kf_list[0]
+        for kf in kf_list:
+            frame,  x, y, w, h  = kf
+            fix_kf = (frame - frame_zero, x, y, w, h)
+            kf_list_fixed.append(fix_kf)
+        kf_list = kf_list_fixed
 
     return kf_list
 
@@ -106,7 +114,6 @@ def get_user_edits_kf_list(kf_list, xoff, yoff, interpretation, size, clip_in, c
         source_width = w
         source_height = h
 
-    # Apply tracking starting from 'clip_in' frame.
     if clip_in != 0:
         kf = (frame, x + xoff, y + yoff, source_width, source_height)
         kf_list_user.append(kf)
@@ -140,8 +147,7 @@ def apply_filter_mask_tracking( tracking_data_id, filter, editable_properties,  
     f.close()
 
     kf_list = get_kf_list_from_tracking_data(results)
-    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, COORDINATES_ABSOLUTE, SIZE_SCALED, clip_in, -1, -1)
-
+    kf_list_user = get_user_edits_kf_list(kf_list, xoff, yoff, COORDINATES_ABSOLUTE, SIZE_SCALED, 0, -1, -1)
     profile_w = float(PROJECT().profile.width())
     profile_h = float(PROJECT().profile.height())
 

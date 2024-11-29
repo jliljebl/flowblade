@@ -1209,8 +1209,8 @@
         <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
         <propertynonmlt name="selected_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
         <propertynonmlt name="last_applied_tracking_data" args="editor=no_editor exptype=not_parsed">!!##TRACKINGDATANOTSET##!!</propertynonmlt>
-        <propertynonmlt name="xoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=X!Offset">0</propertynonmlt>
-        <propertynonmlt name="yoff" args="editor=no_editor range_in=-200,200 range_out=-200,200 displayname=Y!Offset">0</propertynonmlt>
+        <propertynonmlt name="xoff" args="editor=no_editor range_in=-2000,2000 range_out=-2000,2000 displayname=X!Offset">0</propertynonmlt>
+        <propertynonmlt name="yoff" args="editor=no_editor range_in=-2000,2000 range_out=-2000,2000 displayname=Y!Offset">0</propertynonmlt>
         <propertynonmlt name="interpretation" args="editor=no_editor cbopts=Absolute:absolute,Top!Left!Justified:topleft displayname=Tracking!Coords!Interpretation exptype=not_parsed">absolute</propertynonmlt>
         <propertynonmlt name="size" args="editor=no_editor cbopts=Not!Scaled:notscaled,Scaled!To!Box:scaled displayname=Size exptype=not_parsed">notscaled</propertynonmlt>
         <extraeditor name="applymotion"></extraeditor> 

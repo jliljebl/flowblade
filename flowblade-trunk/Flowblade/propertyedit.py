@@ -745,7 +745,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
 
         val_str = val_str.strip(";")
         self.write_value(val_str)
-
+        print(val_str)
 
 class KeyFrameFilterRotatingGeometryProperty:
 
