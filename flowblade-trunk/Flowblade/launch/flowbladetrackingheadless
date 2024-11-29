@@ -27,6 +27,8 @@ try:
     write_file = _get_arg_value(sys.argv, "write_file")
     data_file_path = _get_arg_value(sys.argv, "data_file_path")
     clip_path = _get_arg_value(sys.argv, "clip_path")
+    clip_in = _get_arg_value(sys.argv, "clip_in")
+    clip_out = _get_arg_value(sys.argv, "clip_out")
     step = _get_arg_value(sys.argv, "step")
     algo = _get_arg_value(sys.argv, "algo")
     rect_under_score = _get_arg_value(sys.argv, "rect")
@@ -35,12 +37,12 @@ try:
     profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
                                                               # Now we take underscores out to get correct MLT profile names.
 except Exception as err:
-    print ("Failed to import statbilizeheadless")
+    print ("Failed to import trackingheadless")
     print ("ERROR:", err)
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-trackingheadless.main(modules_path, session_id, parent_folder, profile_desc, clip_path, write_file, data_file_path, step, algo, rect)
+trackingheadless.main(modules_path, session_id, parent_folder, profile_desc, clip_path, clip_in, clip_out, write_file, data_file_path, step, algo, rect)
 
 
 

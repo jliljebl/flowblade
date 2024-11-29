@@ -1231,7 +1231,7 @@ class AnalyzeMotionTrackingFilterEditor:
         self.filter = filter
         # We need to turn this because otherwise filter keeps attemting to 
         # analyze tracking continuosly. We want analyzing to happen in the 
-        # dedecated process and only results be displayed.
+        # dedicated process and only results be displayed.
         # ...aaand this only has effect if we have some results?
         self.filter.mlt_filter.set("analyze", "0")
 
@@ -1304,6 +1304,8 @@ class AnalyzeMotionTrackingFilterEditor:
         session_id = utils.create_render_session_uid()
         profile_desc = PROJECT().profile_desc.replace(" ", "_")
         clip_path = self.editable_properties[0].clip.path
+        clip_in = str(self.editable_properties[0].clip.clip_in)
+        clip_out = str(self.editable_properties[0].clip.clip_out)
         step_prop = [ep for ep in self.editable_properties if ep.name == "steps"][0]
         algo_prop = [ep for ep in self.editable_properties if ep.name == "algo"][0]
         rect_prop = [ep for ep in self.editable_properties if ep.name == "rect"][0]
@@ -1312,6 +1314,8 @@ class AnalyzeMotionTrackingFilterEditor:
         args = ("session_id:" + str(session_id),
                 "profile_desc:" + str(profile_desc),
                 "clip_path:" + clip_path,
+                "clip_in:" + clip_in,
+                "clip_out:" + clip_out,
                 "rect:" + str(rect_value),
                 "algo:" + str(algo_prop.value),
                 "step:" + str(step_prop.value))
@@ -1349,7 +1353,6 @@ class AnalyzeMotionTrackingFilterEditor:
         self.filter.mlt_filter.set("results", "")
         self.filter.mlt_filter.set("reload", "1")
         self.filter.mlt_filter.set("shape_color", "#aa2222")
-        self.filter.mlt_filter.set("analyze", "0")
         self.box_gui_editor.geom_kf_edit.active = True
         self.box_gui_editor.geom_kf_edit.widget.queue_draw()
         self.set_buttons_state()
