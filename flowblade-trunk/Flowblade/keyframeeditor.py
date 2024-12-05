@@ -996,14 +996,6 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         guipopover.add_menu_action_all_items_radio(kftype_section, items_data, action_id, active_index, callback)
         menu.append_section(None, kftype_section)
 
-        """
-        kfcopy_section = Gio.Menu.new()
-        add_menu_action(kfcopy_section,_("Copy Keyframe Value"), "kftoolkftypemenu.copykf",  ("copykf", None), callback)
-        add_menu_action(kfcopy_section,_("Paste Keyframe Value"), "kftoolkftypemenu.pastekf",  ("pastekf", None), callback)
-        add_menu_action(kfcopy_section,_("Copy Keyframe Value From Next"), "kftoolkftypemenu.clonenextkf",  ("clonekfnext", None), callback)
-        add_menu_action(kfcopy_section,_("Copy Keyframe Value From Previous"), "kftoolkftypemenu.cloneprevkf",  ("clonekfprev", None), callback)
-        menu.append_section(None, kfcopy_section)
-        """
         
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1165,6 +1157,13 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self._create_keyframe_type_submenu(kf_type, _kf_right_mouse_menu,  "keyframes.typeselecttwo", self._kf_type_menu_item_activated)
         _kf_right_mouse_menu.append_section(None, main_section)
 
+        kfcopy_section = Gio.Menu.new()
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value (Control + C)"), "keyframes.typeselecttwo.copykf",  ("copykf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Paste Keyframe Value (Control + V)"), "keyframes.typeselecttwo.pastekf",  ("pastekf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Next"), "keyframes.typeselecttwo.clonenextkf",  ("clonekfnext", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Previous"), "keyframes.typeselecttwo.cloneprevkf",  ("clonekfprev", None), self._menu_item_activated)
+        _kf_right_mouse_menu.append_section(None, kfcopy_section)
+        
         rect = guipopover.create_rect(event.x, event.y)
 
         _kf_right_mouse_popover = Gtk.Popover.new_from_model(self.clip_editor.widget, _kf_right_mouse_menu)
@@ -1173,19 +1172,24 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_right_mouse_popover.show()
     
     def _menu_item_activated(self, action, variant, data):
-        if data == "linear":
+        try:
+            msg, data2  = data
+        except:
+            msg = data
+
+        if msg == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-        elif data == "smooth":
+        elif msg == "smooth":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-        elif data == "discrete":
+        elif msg == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-        elif data == "copy_kf":
+        elif msg == "copy_kf":
             keyevents.copy_action()
-        elif data == "paste_kf":
+        elif msg == "paste_kf":
             keyevents.paste_action()
-        elif data  == "clonekfnext":
+        elif msg  == "clonekfnext":
             self.clip_editor.clone_value_from_next()
-        elif data  == "clonekfprev":
+        elif msg  == "clonekfprev":
             self.clip_editor.clone_value_from_prev()
     
         self.queue_draw()
@@ -1224,10 +1228,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_menu.append_section(None, main_section)
         
         copy_section = Gio.Menu.new()
-        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykf", "copy_kf", self._menu_item_activated)
-        guipopover.add_menu_action(copy_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekf", "paste_kf", self._menu_item_activated)
-        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value From Next"), "keyframes.clonenextkf",  "clonekfnext", self._menu_item_activated)
-        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value From Previous"), "keyframes.cloneprevkf",  "clonekfprev", self._menu_item_activated)
+        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value (Control + C)"), "keyframes.typeselectthree.copykf", "copy_kf", self._menu_item_activated)
+        guipopover.add_menu_action(copy_section, _("Paste Keyframe Value (Control + V)"), "keyframes.typeselectthree.pastekf", "paste_kf", self._menu_item_activated)
+        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value From Next"), "keyframes.typeselectthree.clonenextkf",  "clonekfnext", self._menu_item_activated)
+        guipopover.add_menu_action(copy_section, _("Copy Keyframe Value From Previous"), "keyframes.typeselectthree.cloneprevkf",  "clonekfprev", self._menu_item_activated)
         _kf_menu.append_section(None, copy_section)
 
         before_kfs = len(self.clip_editor.get_out_of_range_before_kfs())
@@ -1600,6 +1604,13 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self._create_keyframe_type_submenu(kf_type, _kf_right_mouse_menu,  "keyframes.typeselectthree", self._kf_type_menu_item_activated)
         _kf_right_mouse_menu.append_section(None, main_section)
 
+        kfcopy_section = Gio.Menu.new()
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value (Control + C)"), "keyframes.typeselectthree.copykf",  ("copykf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Paste Keyframe Value (Control + V)"), "keyframes.typeselectthree.pastekf",  ("pastekf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Next"), "keyframes.typeseletypeselectthreettwo.clonenextkf",  ("clonekfnext", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Previous"), "keyframes.typeselectthree.cloneprevkf",  ("clonekfprev", None), self._menu_item_activated)
+        _kf_right_mouse_menu.append_section(None, kfcopy_section)
+        
         rect = guipopover.create_rect(event.x, event.y)
 
         _kf_right_mouse_popover = Gtk.Popover.new_from_model(self.clip_editor.widget, _kf_right_mouse_menu)
@@ -1608,24 +1619,30 @@ class GeometryEditor(AbstractKeyFrameEditor):
         _kf_right_mouse_popover.show()
                     
     def _menu_item_activated(self, action, variant, data):
-        if data == "reset":
+
+        try:
+            msg, data2  = data
+        except:
+            msg = data
+            
+        if msg == "reset":
             self._reset_rect_pressed()
-        elif data == "ratio":
+        elif msg == "ratio":
             self._reset_rect_ratio_pressed()
-        elif data == "hcenter":
+        elif msg == "hcenter":
             self._center_horizontal()
-        elif data == "vcenter":
+        elif msg == "vcenter":
             self._center_vertical()
-        elif data == "hvcenter":
+        elif msg == "hvcenter":
             self._center_horizontal()
             self._center_vertical()
-        elif data == "copy_kf":
+        elif msg == "copy_kf":
             keyevents.copy_action()
-        elif data == "paste_kf":
+        elif msg == "paste_kf":
             keyevents.paste_action()
-        elif data == "clonekfnext":
+        elif msg == "clonekfnext":
             self._clone_value_from_next()
-        elif data == "clonekfprev":
+        elif msg == "clonekfprev":
             self._clone_value_from_prev()
 
         self.queue_draw()
@@ -2082,11 +2099,13 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         _kf_type_submenu = guipopover.menu_clear_or_create(_kf_type_submenu)
         self._create_keyframe_type_submenu(kf_type, _kf_type_submenu,  "keyframes.typeselectfive", self._kf_type_menu_item_activated)
         main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
+        
+        kf_section = Gio.Menu.new()
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykffive", "copy_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekffive", "paste_kf", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value From Next"), "keyframes.clonenextkftwo",  "clonekfnext", self._menu_item_activated)
         guipopover.add_menu_action(main_section, _("Copy Keyframe Value From Previous"), "keyframes.cloneprevkftwo",  "clonekfprev", self._menu_item_activated)
-        _kf_menu.append_section(None, main_section)
+        _kf_menu.append_section(None, kf_section)
 
         action_section = Gio.Menu.new()
         guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
@@ -2108,6 +2127,13 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self._create_keyframe_type_submenu(kf_type, _kf_right_mouse_menu,  "keyframes.typeselectfive", self._kf_type_menu_item_activated)
         _kf_right_mouse_menu.append_section(None, main_section)
 
+        kfcopy_section = Gio.Menu.new()
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value (Control + C)"), "keyframes.typeselectfive.copykf",  ("copykf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Paste Keyframe Value (Control + V)"), "keyframes.typeselectfive.pastekf",  ("pastekf", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Next"), "keyframes.typeselectfive.clonenextkf",  ("clonekfnext", None), self._menu_item_activated)
+        guipopover.add_menu_action(kfcopy_section,_("Copy Keyframe Value From Previous"), "keyframes.typeselectfive.cloneprevkf",  ("clonekfprev", None), self._menu_item_activated)
+        _kf_right_mouse_menu.append_section(None, kfcopy_section)
+        
         rect = guipopover.create_rect(event.x, event.y)
 
         _kf_right_mouse_popover = Gtk.Popover.new_from_model(self.clip_editor.widget, _kf_right_mouse_menu)
@@ -2116,32 +2142,37 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         _kf_right_mouse_popover.show()
 
     def _menu_item_activated(self, action, variant, data):
-        if data == "reset":
+        try:
+            msg, data2  = data
+        except:
+            msg = data
+            
+        if msg == "reset":
             self._reset_rect_pressed()
-        elif data == "ratio":
+        elif msg == "ratio":
             self._reset_rect_ratio_pressed()
-        elif data == "hcenter": #TODO: BROKENNNNNN FIX BEFORE 2.12
+        elif msg == "hcenter": #TODO: BROKENNNNNN FIX BEFORE 2.12
             self._center_horizontal()
-        elif data == "vcenter":
+        elif msg == "vcenter":
             self._center_vertical()
-        elif data == "hvcenter":
+        elif msg == "hvcenter":
             self._center_horizontal()
             self._center_vertical()
-        elif data  == "clonekfnext":
+        elif msg  == "clonekfnext":
             self.geom_kf_edit.clone_value_from_next(self.clip_editor.active_kf_index)
             frame = self.clip_editor.get_active_kf_frame()
             self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
             self.update_editor_view_with_frame(frame)
             self.update_property_value()
-        elif data  == "clonekfprev":
+        elif msg  == "clonekfprev":
             self.geom_kf_edit.clone_value_from_prev(self.clip_editor.active_kf_index)
             frame = self.clip_editor.get_active_kf_frame()
             self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
             self.update_editor_view_with_frame(frame)
             self.update_property_value()
-        elif data == "copy_kf":
+        elif msg == "copy_kf":
             keyevents.copy_action()
-        elif data == "paste_kf":
+        elif msg == "paste_kf":
             keyevents.paste_action()
 
         self.queue_draw()
