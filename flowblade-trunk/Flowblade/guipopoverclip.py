@@ -772,8 +772,8 @@ def kftype_select_popover_menu_show(widget, kf_type, x, y, callback):
     kfcopy_section = Gio.Menu.new()
     add_menu_action(kfcopy_section,_("Copy Keyframe Value"), "kftoolkftypemenu.copykf",  ("copykf", None), callback)
     add_menu_action(kfcopy_section,_("Paste Keyframe Value"), "kftoolkftypemenu.pastekf",  ("pastekf", None), callback)
-    add_menu_action(kfcopy_section,_("Clone Keyframe Value From Next"), "kftoolkftypemenu.clonenextkf",  ("clonekfnext", None), callback)
-    add_menu_action(kfcopy_section,_("Clone Keyframe Value From Previous"), "kftoolkftypemenu.cloneprevkf",  ("clonekfprev", None), callback)
+    add_menu_action(kfcopy_section,_("Copy Keyframe Value From Next"), "kftoolkftypemenu.clonenextkf",  ("clonekfnext", None), callback)
+    add_menu_action(kfcopy_section,_("Copy Keyframe Value From Previous"), "kftoolkftypemenu.cloneprevkf",  ("clonekfprev", None), callback)
     _kf_select_menu.append_section(None, kfcopy_section)
 
     rect = guipopover.create_rect(x, y)

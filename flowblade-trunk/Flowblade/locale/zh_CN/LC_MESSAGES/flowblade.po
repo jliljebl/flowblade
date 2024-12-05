@@ -5690,12 +5690,12 @@ msgstr ""
 #: keyframeeditor.py:1227 keyframeeditor.py:1722 keyframeeditor.py:2080
 #: guipopoverclip.py:775
 #, fuzzy
-msgid "Clone Keyframe Value From Next"
+msgid "Copy Keyframe Value From Next"
 msgstr "关键帧向后移动一帧"
 
 #: keyframeeditor.py:1228 keyframeeditor.py:1723 keyframeeditor.py:2081
 #: guipopoverclip.py:776
-msgid "Clone Keyframe Value From Previous"
+msgid "Copy Keyframe Value From Previous"
 msgstr ""
 
 #: keyframeeditor.py:1235 keyframeeditor.py:1731 guipopoverclip.py:711
