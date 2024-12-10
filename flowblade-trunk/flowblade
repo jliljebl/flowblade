@@ -24,8 +24,8 @@ import os
 import sys
 
 
-print ("FLOWBLADE MOVIE EDITOR 2.17-dev")
-print ("-------------------------------")
+print ("FLOWBLADE MOVIE EDITOR 2.18")
+print ("---------------------------")
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
