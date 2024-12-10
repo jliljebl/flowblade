@@ -298,6 +298,8 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
  
+ 
+ 
 # Called from tline "motion_notify_event" when drag is not on.
 # This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):
