@@ -42,6 +42,7 @@ import diskcachemanagement
 import gui
 import guicomponents
 import guiutils
+import gtkbuilder
 import persistance
 import projectdatavault
 import userfolders
@@ -727,29 +728,33 @@ class CurrenProjectDataInfoWindow(AbstractDataStoreWindow):
         vbox.pack_start(row, False, False, 0)
         
         vbox.pack_start(self.folder_properties_panel(folder_handle, False), False, False, 0)
+        
+        guiutils.set_margins(info_panel, 12, 12, 12, 12)
+        guiutils.set_margins(vbox, 12, 12, 12, 12)
+        
+        notebook = Gtk.Notebook()                 
+        notebook.append_page(info_panel, Gtk.Label(label=_("Info")))
+        notebook.append_page(vbox, Gtk.Label(label=_("Data Store")))
 
         close_button = Gtk.Button(_("Close"))
         close_button.connect("clicked", lambda w: _close_info_window())
-
         close_hbox = Gtk.HBox(False, 2)
         close_hbox.pack_start(Gtk.Label(), True, True, 0)
         close_hbox.pack_start(close_button, False, False, 0)
         close_hbox.set_margin_top(18)
         
-        vbox.pack_start(close_hbox, False, False, 0)
+        vbox2 = Gtk.VBox(False, 2)
+        vbox2.pack_start(notebook, True, True, 0)
+        vbox2.pack_start(close_hbox, False, False, 0)
         
-        hbox = Gtk.HBox(False, 12)
-        hbox.pack_start(info_panel, True, True, 0)
-        hbox.pack_start(vbox, True, True, 0)
-        
-        pane = guiutils.set_margins(hbox, 12, 12, 12, 12)
-        pane.set_size_request(400, 250)
+        guiutils.set_margins(vbox2, 0, 12, 12, 12)
+        vbox2.set_size_request(400, 220)
 
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Project Info and Data"))
         self.connect("delete-event", lambda w, e:_close_info_window())
 
-        self.add(pane)
+        self.add(vbox2)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
 
