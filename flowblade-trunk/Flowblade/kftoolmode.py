@@ -380,6 +380,11 @@ def mouse_press(event, frame):
 
     clip = track.clips[clip_index]
 
+    # Exit on pressing blank clip.
+    if clip.is_blanck_clip == True:
+        exit_tool()
+        return
+
     if _has_deprecated_volume_filter(clip) == True:
         set_no_clip_edit_data()
         primary_txt = _("This Clip has a deprecated Volume filter and cannot be edited with Keyframe Tool!")
