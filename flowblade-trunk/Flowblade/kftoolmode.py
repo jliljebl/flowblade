@@ -637,7 +637,7 @@ class TLineKeyFrameEditor:
                 kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
                 # This is trying to get rid of some draw artifacts by limiting x positions.
                 # kf_pos_x can get really large values with long clips and large zooms
-                # and Cairo fails and handling those values.
+                # and Cairo fails at handling those values.
                 if kf_pos_x < -10000:
                     kf_pos_x = -10000
                 if kf_pos_x > 10000:

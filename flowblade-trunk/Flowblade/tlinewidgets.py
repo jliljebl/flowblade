@@ -2987,6 +2987,11 @@ class KFToolFrameScale:
         if big_tick_step != -1:
             count = int(seq.get_length() / big_tick_step)
             for i in range(1, count):
+                if ((i * big_tick_step) + to_seconds_fix_add) < clip_start_in_timeline:
+                    continue 
+                if ((i * big_tick_step) + to_seconds_fix_add) > (clip_start_in_timeline + clip_length):
+                    continue 
+                
                 x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
                 cr.move_to(x, ytop)
@@ -2996,7 +3001,7 @@ class KFToolFrameScale:
             if tc_draw_step != small_tick_step:
                 start = int(view_start_frame / tc_draw_step)
                 # Get draw range in steps from 0
-                if start == pos:
+                if start <= clip_start_in_timeline:
                     start += 1 # don't draw line on first pixel of scale display
                 # +1 to ensure coverage
                 end = int(view_end_frame / tc_draw_step) + 1 
@@ -3011,7 +3016,7 @@ class KFToolFrameScale:
             else:
                 # Get draw range in steps from 0
                 start = int(view_start_frame / small_tick_step)
-                if start * small_tick_step == pos:
+                if start * small_tick_step <= clip_start_in_timeline:
                     start += 1 # don't draw line on first pixel of scale display
                 # +1 to ensure coverage
                 end = int(view_end_frame / small_tick_step) + 1 
