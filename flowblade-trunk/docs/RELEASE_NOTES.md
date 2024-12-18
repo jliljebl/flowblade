@@ -1,5 +1,127 @@
 # Release Notes
+Date: December 18, 2024
 
+With this release we worked on gradual improvement on features, correctness and code structure. We had some great progress in moving forward from SDL 1 video display, but there ware still some issues, so that was postponed for now.
+
+
+### Timeline Clip slowmotion
+
+Previously Flowblade only offered workflow in which slowmotion needed to be created by adding new rendered Media Items.
+
+With this release Timeline Clips can be directly turned into slowmotion or reversed clips, a more interactive and responsive workflow requested by users.
+
+### Generator work
+
+- **Credits Scroll Generator** With this new generator scrolled or paged credit sequences can be created easily and with great amount of control over presentation. Text presentation and layout changes are controlled using a bit of MarkDown inspired markup, see documentation. Users can set initial layout parameters with GUI editors.
+
+**Other improvements:**
+
+- Upgrade **Hex Colors** generator to do boxes and triangles too, changed generator name to **Color Polygons**.
+  
+- Added **From Left Solid** and **From Right Solid** background types to **Multiline Animation** generator.
+  
+- Made generators use appropriate video clip default renders instead of frame sequences. This provided a nice performance for text animation generators.
+  
+- Made new HTML Link Button editor available to be used with generator to link to outside resources for e.g. added documentation.
+  
+
+### Alpha video rendering
+
+Support for rendering VP9 WebM videos with alpha channel included was added.
+
+### Gtk 4 work
+
+Object creation for quite many often used widgets is subtly different between Gtk3 and Gtk4.
+
+We added a builder module so that when we make the eventual switch we can only edit a few tens of lines of code instead of hundrends code points at widget creation sites.
+
+Work was started by porting Gtk.HPaned / Vpaned and Gtk.FileChooserButton widgets to use the new module, and for the next few cycles will work to include all possible widgets.
+
+### GUI / UX updates
+
+- Add new Project Info and Data -dialog
+  
+- Move to 3-column view for Jobs whendisplayed in left column panel
+  
+- Make Media panel minimum size configurable
+  
+- Display Project Profile in topbar
+  
+- Add box selection functionality to Insert tool
+  
+- Add mute and unmute actions to multiclip popup
+  
+- Add keyboard shortcuts for showing vector scope and rgbparade
+  
+- Improve filter edit panels expanded states initialization after moves or mask adds
+  
+
+### Contributions
+
+- Updated Polish translation by Stanisław Polak, who also provided a lot of valuable help in finding and fixing some missing translations.
+  
+- Typo fix from user Surfoo.
+  
+- Spanish translation update by David Gámiz Jiménez.
+  
+
+### Bug fixes, UX updates and other work
+
+- Fix motion several tracking bugs
+  
+- Fix non-updating numerical entry values when swicthing keyframes in GUI canvas editors
+  
+- Fix save bug when image sequence being displayed on monitor
+  
+- Fix cloning to default XDG Data Store
+  
+- Fix project Data Store clone selection combo creation bug
+  
+- Fix default renders for generator clones
+  
+- Fix media item popover initialization
+  
+- Fix mouse scrolling for GeometryNoKeyframes editor
+  
+- Fix multiclip menu delete action
+  
+- Fix multiclip menu add filter action
+  
+- Fix SyntaxWarnings for regexes
+  
+- Fix G'Mic launch visual glitch
+  
+- Fix G'Mic containers
+  
+- Update Compositing chapter in docs
+  
+- Create shortcutsdialog.py module
+  
+- Add arg to launch all tools
+  
+- Code cleanups, move monkeypatches to dedicated bridge modules
+  
+- Add kf copy from next/prev menu items to kf popovers
+  
+- Update kf editor hamburger menu
+  
+- Make file name and path ellipsized in File Properties dialog
+  
+- Fix media item popovers
+  
+- Make GUI box editor handles bigger
+  
+- Update tc mark in / mark out icons
+  
+- Send arrow key events to focused editor component in GeometryEditor
+  
+- Send arrow key events to focused editor component in FilterRectGeometryEditor
+  
+- Correct mouse side scroll speed for sequence length
+  
+- Add filters copy/paste as popover menu items
+  
+- Add clone kf value functionality to RotatingGeometryEditor
 
 ## FLOWBLADE 2.16.3
 Fixes G'Mic tool visual glitch and media items popover regression.
