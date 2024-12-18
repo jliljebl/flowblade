@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Advanced Editing</title>
@@ -88,12 +88,52 @@ Audio syncing looks for best mathematical match between two audio waveforms, so 
 </div>
 
 
-<h2>3. Slow / Fast Motion and Reverse Clips</h2>
+<h2>3. Slow / Fast Motion and Reverse</h2>
 
 <p>
-In Flowblade motion effects are achieved by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
+In Flowblade there are two ways to do motion effects:
 </p>
-<h3> Creating Motion Clips </h3>
+<ul>
+<li> Changing Clip Speed and direction in Timeline</li>
+<li> Creating new New Media Items in Bins</li>
+</ul>
+
+
+<h3> Changing Timeline Clip Speed and direction</h3>
+<h4> Creating Slow / Fast Motion Clips </h4>
+<ol>
+<li> Right click on a Timeline Clip File and select <b>Slow Motion -> Slow / Fast</b> from popup menu.</li>
+<li> Edit parameters for the new motion Clip</li>
+<ul>
+<li> Set speed</li>
+<li> Set encoding and quality</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Current Clip Content</li>
+<li> Full Media</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new motion Timeline Clip.</li>
+</ol>
+
+<h4> Creating Reverse Motion Clips</h4>
+<ol>
+<li> Right click on a Timeline Clip File and select <b>Slow Motion -> Reverse</b> from popup menu.</li>
+<li> Edit parameters for the new motion Clip</li>
+<ul>
+<li> Set speed</li>
+<li> Set encoding and quality</li>
+<li> Select render range, either:</li>
+<ul>
+<li> Current Clip Content</li>
+<li> Full Media</li>
+</ul>
+</ul>
+<li> Click <b>Render</b> button to create a new reverse Timeline Clip.</li>
+</ol>
+
+<h3> Creating Motion Media Items </h3>
+<h4> Creating Slow / Fast Media Items </h4>
 <ol>
 <li> Right click on a Media File and select <b>Render Slow / Fast Motion File</b> from menu</li>
 <li>Edit parameters for the new motion Clip
@@ -107,10 +147,10 @@ In Flowblade motion effects are achieved by <b>rendering slow / fast motion  or 
 <li> From Source Clip Mark In to Mark Out</li>
 </ul>
 </ul>
-<li> Click <b>Render</b> button to create a new motion Clip</li>
+<li> Click <b>Render</b> button to create a new motion Media Item</li>
 </ol>
 
-<h3> Creating Reverse Clips </h3>
+<h4> Creating Reverse Media Items </h4>
 <ol>
 <li> Right click on a Media File and select <b>Render Reverse Motion File</b> from menu</li>
 <li>Edit parameters for the new motion Clip
@@ -124,8 +164,9 @@ In Flowblade motion effects are achieved by <b>rendering slow / fast motion  or 
 <li> From Source Clip Mark In to Mark Out</li>
 </ul>
 </ul>
-<li> Click <b>Render</b> button to create a new reverse Clip</li>
+<li> Click <b>Render</b> button to create a new reverse Media Item</li>
 </ol>
+
 
 <h2>4. Synched Audio Splits and Clip Parenting</h2>
 
@@ -403,7 +444,252 @@ A typical use would be to e.g. blur a person's face to make them unrecognizable.
 </p>
 
 
-<h2>9. Jog / Shuttle Support</h2>
+<h2>9. Credits Scroll Generator</h2>
+<h3>Overview</h3>
+<p>
+Flowblade offeres a <b>Credits Scroll Generator</b> to easily create title sequences. 
+</p>
+
+<p>
+<b>Credits Scroll Generator</b> has a number of editors to set <i>initial</i> properties of text font and layout.
+Displayed text and commands to modify text presentation is inputted in text editor box in the <i>Text</i> panel. 
+</p>
+
+<p>
+    Text is given using a <i>light weight markup syntax</i> that accepts three types of input: <b>credit blocks, section titles</b> and <b>commands</b>.  
+</P>
+
+<h3>Credit Blocks</h3>
+<p>
+    <b>Credit block</b> is a block of text beginning with a line starting with '#' followed by credit text, followed by one or more sequential lines giving names associated with the credit.
+</p>
+<p>
+    <b>Credit block</b> ends when empty line is encountered.
+</p>
+
+<div class="code-text">
+<p>    # Camera operators </p>
+<p>    Donald Drake </p>
+<p>    Earl Easter </p>
+</div>
+
+<h3>Section Titles</h3>
+<p>
+    <b>Section Title</b> is a single line of text starting with '##' and followed by section title text.
+</p>
+
+<div class="code-text">
+<p>    ## Camera crew in Antarctica </p>
+</div>
+
+
+<h3>Commands</h3>
+
+<p>
+    <b>Command</b> is a single line of text starting with '!' and followed by command arguments.
+</p>
+
+<p>
+    <b>Command</b> lines change font and layout properties from the ones given initially by user or do some other additional changes in the way that text is presented.
+</p>
+
+<div class="code-text">
+<p>  ! set-layout single-line-sides-justified</p>
+</div>
+
+<h3>Commands List</h3>
+<p>
+<b>ypad</b> ypad <i>PIXELS</i> 
+</p>
+
+<p> Adds padding between credit items.
+</p>
+<p>
+E.g. <i>! ypad 40</i>
+</p>
+<p>
+<b>set-layout</b> set-layout <i>[single-line-centered | two line-centered |  single-line-right-justified |  two-line-right-justified |  single-line-sides-justified | two-line-left-justified | two-columns-centered ]</i> 
+</p>
+<p> 
+Switches to use defined credit item layout.
+</p>
+<p> 
+E.g. <i>! set-layout single-line-sides-justified</i>.
+</p>
+
+<p>
+<b>text-case</b> <i>[ credit | name ] [ no-changes | uppercase | lowercase ]</i>
+</p>    
+
+
+<p>
+Sets credit or name text to be uppercase, lowercase or as written.
+</p>    
+
+<p>
+E.g. <i> ! text-case name lowercase </i>
+</p>
+
+<p>
+<b>page</b> <i>[ PAGELENGHT]</i>
+</p>    
+
+
+<p>
+Begins new text page if animation set to be paged. Optionally sets length of time page is displayed in frames. If no time is given, the user set default value is used.
+</p>    
+
+<p>
+E.g. <i> ! page 230 </i>
+</p>
+
+<p>
+    <b>font-size</b> <i>[ credit | name ] FONTSIZE</i>
+</p>
+<p>
+Sets font size for credit or name text.
+</p>    
+<p>
+    E.g. <i>! font-size credit 100</i>
+</p>
+
+<p>
+    <b>font-family</b> <i>[ credit | name ] FONTFAMILY</i>
+</p>
+
+<p>
+Sets font family for credit or name text. Available values for <i> FONTFAMILY</i> depend on system.
+</p>
+<p>    
+E.g. <i>! font-family credit Ubuntu Sans</i>
+</p> 
+<p> 
+ <b>font-face</b> <i>[ credit | name ] [ regular | italic | bold ]</i> 
+</p>
+<p>
+Sets font face for credit or name text.
+</p>
+<p>    
+E.g. <i>! font-face name italic</i>
+</p>
+
+<p> 
+<b>font-property </b> <i>[ credit | name ] [alignment | color-rgba | fill-on | outline-color-rgba | outline-on | outline-width | shadow-on | shadow-color-rgb | shadow-opacity | shadow-xoff | shadow-yoff | shadow-blur | gradient-color-rgba | gradient-direction ] PROPERTYVALUE </i>
+</p>
+<p>
+Sets value for named font property for credit or name text. Allowed <i>PROPERTYVALUE</i> values are different for different named properties. 
+</p>
+
+<p>    
+<i>Font Properties</i>
+</p>
+<table>
+<thead>
+<tr>
+<th>Property               </th><th> Value type</th><th>Example</th>
+</tr>
+</thead>
+<tr>
+<td>    color-rgba     </td><td> color tuple </td><td>  color-rgba (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td>    fill-on     </td><td> boolean </td><td> fill-on False </td>
+</tr>
+<tr>
+<td>    outline-color-rgba     </td><td> color tuple  </td><td> outline-color-rgba (1.0,0.0,0.0,1.0)  </td>
+</tr>
+<tr>
+<td>      outline-on   </td><td> boolean </td><td>    outline-on True </td>
+</tr>
+<tr>
+<td>  outline-width       </td><td>  int <i>(pixels)</i> </td><td>  outline-width 4 </td>
+</tr>
+<tr>
+<td>   shadow-on      </td><td> boolean </td><td>  shadow-on True </td>
+</tr>
+<tr>
+<td>    shadow-color-rgb</td><td> color tuple  </td><td>   shadow-color-rgb (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td> shadow-opacity   </td><td> int[0-100] </td><td> shadow-opacity 50</td>
+</tr>
+<tr>
+<td>  shadow-xoff  </td><td> int <i>(pixels)</i></td><td>  shadow-xoff 10 </td>
+</tr>
+<tr>
+<td>  shadow-yoff  </td><td> int <i>(pixels)</i></td><td> shadow-yoff 7 </td>
+</tr>
+<tr>
+<td>  shadow-blur </td><td>  int <i>(pixels)</i> </td><td>   shadow-blur 8 </td>
+</tr>
+<tr>
+<td>  gradient-color-rgba  </td><td> color tuple </td><td>  gradient-color-rgba  (1.0,0.0,0.0,1.0) </td>
+</tr>
+<tr>
+<td>   gradient-direction </td><td> int[0,1] <i>(VERTICAL = 0
+HORIZONTAL = 1)</i></td><td>  gradient-direction 1 </td>
+</tr>
+</table>
+
+<p>    
+E.g. <i>! font-property credit color-rgba (1.0,0.0,0.0,1.0)
+</p>
+<p>    
+! font-property name outline-on True
+</p>
+<p>    
+! font-property credit  shadow-yoff 7 
+</p>
+<p>    
+! font-property name gradient-direction 1</i> 
+</p>
+
+<p>
+<b>set-layout-property</b> <i>[ center-gap | line-gap | credit-block-gap | justified-x | justified-x-off | name-y-off | name-x-off | section-title-alignment ] PROPERTYVALUE </i>
+</p>
+
+<p>
+Sets layout property value. <i>PROPERTYVALUE</i> integer value for number of pixels or pixel position.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Property               </th><th> Description</th>
+</tr>
+</thead>
+<tr>
+<td>    center-gap    </td><td> Gap between name and credit when on same line. </td>
+</tr>
+<tr>
+<td>  line-gap    </td><td> Gap between lines. </td>
+</tr>
+<tr>
+<td>    credit-block-gap   </td><td> Gap between credit blocks. </td>
+</tr>
+<tr>
+<td>   justified-x    </td><td> Position of justified edge when using justified text layouts.  </td>
+</tr>
+<tr>
+<td>   justified-x-off   </td><td>Sets column width in "Single Line Sides Justified" layout.</td>
+</tr>
+<tr>
+<td>    name-y-off  </td><td> Y offset of name position from default position in current layout. </td>
+</tr>
+<tr>
+<td>     name-x-off  </td><td> X offset of name position from default position in current layout.  </td>
+</tr>
+<tr>
+<td>     section-title-alignment </td><td>  Sets section titles to be either centered or edge justified using justified-x value.</td>
+</tr>
+</table>
+
+<p>    
+E.g. <i>! set-layout-property name-y-off -100</i>
+</p>
+
+
+<h2>10. Jog / Shuttle Support</h2>
 
 
 <h3>Overview</h3>
@@ -480,7 +766,7 @@ Become the root user, and create a new text file at
 `/etc/udev/rules.d/90-flowblade.rules` with the following contents:
 </p>
 
-<div class="note">
+<div class="code-text">
 <p># Grant unprivileged users access to USB HID jog/shuttle devices</p>
 
 <p># Contour Design ShuttleXpress, Contour A/V Solutions SpaceShuttle</p>

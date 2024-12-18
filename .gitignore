@@ -4,6 +4,7 @@
 __pycache__/
 *.py[cod]
 mlt.py
+/flowblade-trunk/mlt7.py
 
 # C extensions
 *.so
