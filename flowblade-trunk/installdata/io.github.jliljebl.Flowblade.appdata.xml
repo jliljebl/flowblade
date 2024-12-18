@@ -21,13 +21,13 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
-     <release version="2.18" date="2024-12-10">
+     <release version="2.18" date="2024-12-18">
       <description>
       <p>New features:</p>
         <ul>
-          <li>SDL 2 playback</li>
           <li>Credits Scroll Generator</li>
           <li>Slow motion creation from Timeline Clips</li>
+          <li>Alpha video rendering</li>
         </ul>
       </description>
     </release>
