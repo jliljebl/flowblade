@@ -2,6 +2,8 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
+**New release 2.18 available. See release notes [here,](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Releases](https://github.com/jliljebl/flowblade#releases)
