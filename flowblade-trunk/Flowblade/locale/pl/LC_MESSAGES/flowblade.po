@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-13 10:37+0200\n"
+"POT-Creation-Date: 2024-12-18 10:56+0200\n"
 "PO-Revision-Date: 2024-08-27 10:29+0200\n"
 "Last-Translator: Stanislaw Polak <polak@agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -34,11 +34,11 @@ msgstr ""
 msgid "5 min"
 msgstr ""
 
-#: app.py:938
+#: app.py:939
 msgid "XDG Data folder location has changed!"
 msgstr "Zmieniła się lokalizacja folderu danych XDG!"
 
-#: app.py:939
+#: app.py:940
 msgid ""
 "Location of <b>Default XDG Data Store</b> has changed because value of "
 "<b>XDG Data Home</b> variable has changed.\n"
@@ -47,7 +47,7 @@ msgstr ""
 "Lokalizacja <b>Domyślnego magazynu danych XDG</b> uległa zmianie, ponieważ "
 "zmieniła się wartość zmiennej <b>XDG Data Home</b>.\n"
 
-#: app.py:940
+#: app.py:941
 msgid ""
 "Existing Projects with project data saved in <b>Default XDG Data Store</b> "
 "will continue to work,\n"
@@ -55,7 +55,7 @@ msgstr ""
 "Istniejące projekty z danymi projektu zapisanymi w <b>Domyślnym magazynie "
 "danych XDG</b> będą nadal działać,\n"
 
-#: app.py:941
+#: app.py:942
 msgid ""
 "but new projects will have data saved in the location specified by the new "
 "value <b>XDG Data Home</b> variable ."
@@ -63,42 +63,42 @@ msgstr ""
 "ale nowe projekty będą miały dane zapisane w lokalizacji określonej przez "
 "nową wartość zmiennej <b>XDG Data Home</b>."
 
-#: app.py:1026
+#: app.py:1027
 msgid "Too small screen for this application."
 msgstr "Zbyt mały ekran dla tej aplikacji."
 
-#: app.py:1028
+#: app.py:1029
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimalne wymiary ekranu dla tej aplikacji to 1152 x 768.\n"
 
-#: app.py:1029
+#: app.py:1030
 msgid "Your screen dimensions are "
 msgstr "Wymiary twojego ekranu to "
 
-#: app.py:1040
+#: app.py:1041
 msgid "Cannot launch application because XDG folders init error."
 msgstr ""
 "Nie można uruchomić aplikacji, ponieważ wystąpił błąd inicjalizacji folderów "
 "XDG."
 
-#: app.py:1051
+#: app.py:1052
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr ""
 "Flowblade w wersji 2.6 (lub nowszej) wymaga do działania MLT w wersji 6.18"
 
-#: app.py:1052
+#: app.py:1053
 msgid "Your MLT version is: "
 msgstr "Twoja wersja MLT to: "
 
-#: app.py:1052
+#: app.py:1053
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Zainstaluj MLT 6.18 lub nowszy, aby uruchomić Flowblade."
 
-#: app.py:1126 projectaction.py:555 projectaction.py:757
+#: app.py:1127 projectaction.py:555 projectaction.py:757
 msgid "Project has not been saved previously"
 msgstr "Projekt nie został wcześniej zapisany"
 
-#: app.py:1127 projectaction.py:556 projectaction.py:758
+#: app.py:1128 projectaction.py:556 projectaction.py:758
 msgid "Save project with File -> Save As before closing."
 msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
@@ -911,8 +911,8 @@ msgid "Project Data"
 msgstr "Dane projektu"
 
 #: editorwindow.py:878 rendergui.py:181 rendergui.py:309 rendergui.py:401
-#: rendergui.py:513 tools/batchrendering.py:957 tools/gmic.py:816
-#: containeractions.py:382 editorlayout.py:230 tools/scripttool.py:919
+#: rendergui.py:513 tools/batchrendering.py:957 tools/gmic.py:817
+#: containeractions.py:382 editorlayout.py:230 tools/scripttool.py:920
 msgid "Render"
 msgstr "Renderowanie"
 
@@ -944,11 +944,11 @@ msgstr "Edytor tytułów"
 msgid "Audio Mixer"
 msgstr "Mikser dźwięku"
 
-#: editorwindow.py:886 tools/gmic.py:876 toolsintegration.py:108
+#: editorwindow.py:886 tools/gmic.py:877 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "Efekty G'MIC"
 
-#: editorwindow.py:887 tools/scripttool.py:1014
+#: editorwindow.py:887 tools/scripttool.py:1015
 msgid "Generator Script Editor"
 msgstr "Edytor skryptów generatora"
 
@@ -1193,7 +1193,7 @@ msgid "Data Store"
 msgstr "Magazyn danych"
 
 #: dialogs.py:88 dialogs.py:1195 dialogs.py:1412 dialogs.py:1454
-#: menuactions.py:220 containerclip.py:170 tools/scripttool.py:624
+#: menuactions.py:220 containerclip.py:170 tools/scripttool.py:625
 msgid "Ok"
 msgstr ""
 
@@ -1210,10 +1210,10 @@ msgstr ""
 #: rendergui.py:139 rendergui.py:1176 rendergui.py:1441 preferenceswindow.py:45
 #: tools/batchrendering.py:1057 tools/batchrendering.py:1130
 #: proxyediting.py:322 patternproducer.py:337 patternproducer.py:370
-#: patternproducer.py:401 tools/gmic.py:377 tools/gmic.py:401 tools/gmic.py:543
+#: patternproducer.py:401 tools/gmic.py:378 tools/gmic.py:402 tools/gmic.py:544
 #: dialogutils.py:57 dialogutils.py:129 dialogutils.py:189 exporting.py:445
-#: containeractions.py:390 containerclip.py:169 tools/scripttool.py:319
-#: tools/scripttool.py:355 tools/scripttool.py:603 tools/scripttool.py:623
+#: containeractions.py:390 containerclip.py:169 tools/scripttool.py:320
+#: tools/scripttool.py:356 tools/scripttool.py:604 tools/scripttool.py:624
 #: singletracktransition.py:554 singletracktransition.py:733 mediaplugin.py:670
 msgid "Cancel"
 msgstr "Anuluj"
@@ -1251,8 +1251,8 @@ msgstr ""
 msgid "New Profile"
 msgstr "Nowy profil"
 
-#: dialogs.py:176 rendergui.py:872 tools/gmic.py:760 tools/toolsencoding.py:304
-#: tools/scripttool.py:863 projectdatavaultgui.py:112
+#: dialogs.py:176 rendergui.py:872 tools/gmic.py:761 tools/toolsencoding.py:304
+#: tools/scripttool.py:864 projectdatavaultgui.py:112
 #: projectdatavaultgui.py:593 projectaddmediafolder.py:38
 msgid "Select Folder"
 msgstr "Wybierz folder"
@@ -1294,8 +1294,8 @@ msgstr "Wybierz plik projektu"
 #: dialogs.py:577 dialogs.py:703 dialogs.py:824 dialogs.py:838 dialogs.py:1170
 #: dialogs.py:1582 propertyeditorbuilder.py:697 middlebar.py:474
 #: rendergui.py:108 preferenceswindow.py:46 tools/batchrendering.py:447
-#: tools/gmic.py:402 dialogutils.py:39 dialogutils.py:96 dialogutils.py:109
-#: dialogutils.py:124 tools/scripttool.py:356
+#: tools/gmic.py:403 dialogutils.py:39 dialogutils.py:96 dialogutils.py:109
+#: dialogutils.py:124 tools/scripttool.py:357
 msgid "OK"
 msgstr "OK"
 
@@ -1309,8 +1309,8 @@ msgstr "Zapisz projekt jako"
 
 #: dialogs.py:265 dialogs.py:293 dialogs.py:342 dialogs.py:377 dialogs.py:495
 #: dialogs.py:507 dialogs.py:544 dialogs.py:566 rendergui.py:122
-#: tools/batchrendering.py:1058 tools/gmic.py:378 tools/scripttool.py:320
-#: tools/scripttool.py:1085
+#: tools/batchrendering.py:1058 tools/gmic.py:379 tools/scripttool.py:321
+#: tools/scripttool.py:1086
 msgid "Save"
 msgstr "Zapisz"
 
@@ -1995,8 +1995,8 @@ msgid "Sequence Watermark"
 msgstr "Sekwencja znaków wodnych"
 
 #: dialogs.py:1536 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
-#: tools/gmic.py:847 tools/gmic.py:945 diskcachemanagement.py:157
-#: tools/scripttool.py:940 tools/scripttool.py:1104 projectdatavaultgui.py:278
+#: tools/gmic.py:848 tools/gmic.py:946 diskcachemanagement.py:157
+#: tools/scripttool.py:941 tools/scripttool.py:1105 projectdatavaultgui.py:278
 #: projectdatavaultgui.py:739 mediaplugin.py:378 projectaddmediafolder.py:111
 msgid "Close"
 msgstr "Zamknij"
@@ -2407,7 +2407,7 @@ msgstr ""
 msgid "Number of Tracks:"
 msgstr "Liczba ścieżek:"
 
-#: guicomponents.py:2419 tools/scripttool.py:631
+#: guicomponents.py:2419 tools/scripttool.py:632
 msgid "Frames:"
 msgstr "Klatki:"
 
@@ -2490,11 +2490,11 @@ msgstr "Najlepszy profil:"
 msgid "Matches Project Profile:"
 msgstr "Pasuje do profilu projektu:"
 
-#: panels.py:236 tools/gmic.py:743 tools/scripttool.py:845
+#: panels.py:236 tools/gmic.py:744 tools/scripttool.py:846
 msgid "Mark In:"
 msgstr "Znacznik początkowy:"
 
-#: panels.py:237 tools/gmic.py:744 tools/scripttool.py:846
+#: panels.py:237 tools/gmic.py:745 tools/scripttool.py:847
 msgid "Mark Out:"
 msgstr "Znacznik końcowy:"
 
@@ -2518,7 +2518,7 @@ msgstr "Typ:"
 msgid "Wipe Pattern:"
 msgstr "Wzorzec wytarcia:"
 
-#: panels.py:307 panels.py:383 tools/gmic.py:745
+#: panels.py:307 panels.py:383 tools/gmic.py:746
 msgid "Length:"
 msgstr "Długość:"
 
@@ -2799,7 +2799,7 @@ msgstr "Przycinanie"
 msgid "Alpha Shape"
 msgstr "Kształt alfa"
 
-#: translations.py:184 kftoolmode.py:489
+#: translations.py:184 kftoolmode.py:494
 msgid "Volume"
 msgstr "Głośność"
 
@@ -2968,7 +2968,7 @@ msgstr "Odwróć"
 msgid "Hue"
 msgstr "Odcień"
 
-#: translations.py:227 kftoolmode.py:490
+#: translations.py:227 kftoolmode.py:495
 msgid "Brightness"
 msgstr "Jasność"
 
@@ -7577,144 +7577,144 @@ msgstr ""
 msgid "Select Video Media"
 msgstr "Wybierz multimedia wideo"
 
-#: tools/gmic.py:361 tools/gmic.py:783 tools/scripttool.py:886
+#: tools/gmic.py:362 tools/gmic.py:784 tools/scripttool.py:887
 msgid "not set"
 msgstr "nie ustawiono"
 
-#: tools/gmic.py:375
+#: tools/gmic.py:376
 msgid "Save Gmic Script As"
 msgstr "Zapisz skrypt Gmic jako"
 
-#: tools/gmic.py:399
+#: tools/gmic.py:400
 msgid "Load Gmic Script"
 msgstr "Załaduj skrypt Gmic"
 
-#: tools/gmic.py:520
+#: tools/gmic.py:521
 msgid "Rendering preview..."
 msgstr "Podgląd renderowania..."
 
-#: tools/gmic.py:540 tools/scripttool.py:600
+#: tools/gmic.py:541 tools/scripttool.py:601
 msgid "Video Encoding Settings"
 msgstr "Ustawienia kodowania obrazu"
 
-#: tools/gmic.py:544 containeractions.py:385 tools/scripttool.py:604
+#: tools/gmic.py:545 containeractions.py:385 tools/scripttool.py:605
 msgid "Set Encoding"
 msgstr "Ustaw kodowanie"
 
-#: tools/gmic.py:592 tools/gmic.py:940
+#: tools/gmic.py:593 tools/gmic.py:941
 msgid "Load Clip"
 msgstr "Załaduj klip"
 
-#: tools/gmic.py:596
+#: tools/gmic.py:597
 msgid "no clip loaded"
 msgstr "nie załadowano klipu"
 
-#: tools/gmic.py:619 tools/simpleeditors.py:948
+#: tools/gmic.py:620 tools/simpleeditors.py:948
 msgid "no preview"
 msgstr "brak podglądu"
 
-#: tools/gmic.py:674 tools/simpleeditors.py:969 tools/scripttool.py:816
+#: tools/gmic.py:675 tools/simpleeditors.py:969 tools/scripttool.py:817
 #: mediaplugin.py:314 mediaplugin.py:672
 msgid "Preview"
 msgstr "Podgląd"
 
-#: tools/gmic.py:703
+#: tools/gmic.py:704
 msgid "Add to Script"
 msgstr "Dodaj do skryptu"
 
-#: tools/gmic.py:763 tools/scripttool.py:866
+#: tools/gmic.py:764 tools/scripttool.py:867
 msgid "Frames Folder:"
 msgstr "Folder klatek:"
 
-#: tools/gmic.py:774 tools/scripttool.py:877
+#: tools/gmic.py:775 tools/scripttool.py:878
 msgid "Encode Video"
 msgstr "Koduj wideo"
 
-#: tools/gmic.py:780 tools/scripttool.py:883
+#: tools/gmic.py:781 tools/scripttool.py:884
 msgid "Encoding settings"
 msgstr "Ustawienia kodowania"
 
-#: tools/gmic.py:799
+#: tools/gmic.py:800
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr ""
 "Aby renderowanie było prawidłowe, wstaw znacznik początkowy, końcowy oraz "
 "określ folder klatek"
 
-#: tools/gmic.py:814 shortcuts.py:375 tools/scripttool.py:917
+#: tools/gmic.py:815 shortcuts.py:375 tools/scripttool.py:918
 msgid "Stop"
 msgstr "Zatrzymaj"
 
-#: tools/gmic.py:842 tools/scripttool.py:353
+#: tools/gmic.py:843 tools/scripttool.py:354
 msgid "Load Script"
 msgstr "Wczytaj skrypt"
 
-#: tools/gmic.py:844
+#: tools/gmic.py:845
 msgid "Save Script"
 msgstr "Zapisz skrypt"
 
-#: tools/gmic.py:905 tools/scripttool.py:1043
+#: tools/gmic.py:906 tools/scripttool.py:1044
 msgid "frames"
 msgstr "klatek"
 
-#: tools/gmic.py:923 tools/scripttool.py:1066
+#: tools/gmic.py:924 tools/scripttool.py:1067
 msgid " no video file"
 msgstr " brak pliku wideo"
 
-#: tools/gmic.py:925 tools/scripttool.py:1068
+#: tools/gmic.py:926 tools/scripttool.py:1069
 msgid " render video file"
 msgstr " renderuj plik wideo"
 
-#: tools/gmic.py:926 tools/scripttool.py:1069
+#: tools/gmic.py:927 tools/scripttool.py:1070
 msgid " frame(s),"
 msgstr " klatki(ek),"
 
-#: tools/gmic.py:941
+#: tools/gmic.py:942
 msgid "G'Mic Webpage"
 msgstr "Strona G'Mic"
 
-#: tools/gmic.py:1181 tools/scripttool.py:558
+#: tools/gmic.py:1182 tools/scripttool.py:559
 msgid "Preview for frame: "
 msgstr "Podgląd dla klatki: "
 
-#: tools/gmic.py:1182
+#: tools/gmic.py:1183
 msgid ", render time: "
 msgstr ", czas renderowania: "
 
-#: tools/gmic.py:1187
+#: tools/gmic.py:1188
 msgid "Extracting PNG frames from this file failed!"
 msgstr "Wyodrębnianie klatek PNG z tego pliku nie powiodło się!"
 
-#: tools/gmic.py:1227
+#: tools/gmic.py:1228
 msgid "Waiting for frames write to complete..."
 msgstr "Oczekiwanie na zakończenie zapisywania klatek..."
 
-#: tools/gmic.py:1264 tools/gmic.py:1337 tools/scripttool.py:1517
-#: tools/scripttool.py:1544
+#: tools/gmic.py:1265 tools/gmic.py:1338 tools/scripttool.py:1518
+#: tools/scripttool.py:1545
 msgid "Render stopped!"
 msgstr "Renderowanie zatrzymało się!"
 
-#: tools/gmic.py:1268 tools/scripttool.py:1521
+#: tools/gmic.py:1269 tools/scripttool.py:1522
 msgid "Rendering video, "
 msgstr "Renderowanie wideo, "
 
-#: tools/gmic.py:1268 tools/scripttool.py:1521
+#: tools/gmic.py:1269 tools/scripttool.py:1522
 #, python-format
 msgid "% done"
 msgstr "% gotowe"
 
-#: tools/gmic.py:1274 tools/scripttool.py:1527 tools/scripttool.py:1602
+#: tools/gmic.py:1275 tools/scripttool.py:1528 tools/scripttool.py:1603
 msgid "Render complete!"
 msgstr "Renderowanie zakończone!"
 
-#: tools/gmic.py:1286 tools/scripttool.py:1608
+#: tools/gmic.py:1287 tools/scripttool.py:1609
 msgid "Writing clip frame: "
 msgstr "Zapis klatki klipu: "
 
-#: tools/gmic.py:1295
+#: tools/gmic.py:1296
 msgid "Rendering frame: "
 msgstr "Renderowanie klatki: "
 
-#: tools/gmic.py:1305
+#: tools/gmic.py:1306
 msgid "Render error!"
 msgstr "Błąd renderowania!"
 
@@ -8642,7 +8642,7 @@ msgstr ""
 msgid "Keyboard shortcut: "
 msgstr "Skróty klawiszowe: "
 
-#: kftoolmode.py:385
+#: kftoolmode.py:390
 msgid ""
 "This Clip has a deprecated Volume filter and cannot be edited with Keyframe "
 "Tool!"
@@ -8650,7 +8650,7 @@ msgstr ""
 "Ten klip ma przestarzały filtr głośności i nie można go edytować za pomocą "
 "narzędzia klatek kluczowych!"
 
-#: kftoolmode.py:386
+#: kftoolmode.py:391
 msgid ""
 "Flowblade 2.8 changed to use Volume filtes with dB values.\n"
 "\n"
@@ -8664,7 +8664,7 @@ msgstr ""
 "Filtry głośności starego typu będą nadal działać, ale muszą byćzastąpione\n"
 "aby edytować ten klip za pomocą narzędzia klatek kluczowych."
 
-#: kftoolmode.py:488
+#: kftoolmode.py:493
 msgid "Media Frame: "
 msgstr "Klatka  multimediów: "
 
@@ -8980,68 +8980,68 @@ msgstr ""
 "Zmień położenie paneli lub usuń przyciski z paska środkowego\n"
 "aby układ zmieścił się na ekranie."
 
-#: tools/scripttool.py:317 tools/scripttool.py:1084
+#: tools/scripttool.py:318 tools/scripttool.py:1085
 msgid "Save Script As"
 msgstr "Zapisz skrypt jako"
 
-#: tools/scripttool.py:337
+#: tools/scripttool.py:338
 msgid "Saving"
 msgstr "Zapisywanie"
 
-#: tools/scripttool.py:571 tools/scripttool.py:705 tools/scripttool.py:1333
-#: tools/scripttool.py:1393 tools/scripttool.py:1579
+#: tools/scripttool.py:572 tools/scripttool.py:706 tools/scripttool.py:1334
+#: tools/scripttool.py:1394 tools/scripttool.py:1580
 msgid "No Preview"
 msgstr "Brak podglądu"
 
-#: tools/scripttool.py:621
+#: tools/scripttool.py:622
 msgid "Change Generator Length"
 msgstr "Zmień długość generatora"
 
-#: tools/scripttool.py:698
+#: tools/scripttool.py:699
 msgid "Reload Script"
 msgstr "Ponownie wczytaj skrypt"
 
-#: tools/scripttool.py:818
+#: tools/scripttool.py:819
 msgid "Preview Range"
 msgstr "Zakres podglądu"
 
-#: tools/scripttool.py:847
+#: tools/scripttool.py:848
 msgid "Generator Media Length:"
 msgstr "Długość medium generatora:"
 
-#: tools/scripttool.py:902
+#: tools/scripttool.py:903
 msgid "Set Frames Folder for valid render"
 msgstr "Ustaw folder klatek dla prawidłowego renderowania"
 
-#: tools/scripttool.py:1083
+#: tools/scripttool.py:1084
 msgid "Open Script"
 msgstr "Otwórz skrypt"
 
-#: tools/scripttool.py:1091
+#: tools/scripttool.py:1092
 msgid "Load Generator Code"
 msgstr "Załaduj kod generatora"
 
-#: tools/scripttool.py:1095
+#: tools/scripttool.py:1096
 msgid "Change Generator Media Length"
 msgstr "Zmień długość medium generatora"
 
-#: tools/scripttool.py:1099
+#: tools/scripttool.py:1100
 msgid "API Docs"
 msgstr "Lokalna dokumentacja API"
 
-#: tools/scripttool.py:1100
+#: tools/scripttool.py:1101
 msgid "API Docs Web"
 msgstr "Webowa dokumentacja API"
 
-#: tools/scripttool.py:1291
+#: tools/scripttool.py:1292
 msgid "Rendering..."
 msgstr "Renderowanie..."
 
-#: tools/scripttool.py:1354
+#: tools/scripttool.py:1355
 msgid "Rendered frame "
 msgstr "Renderowana klatka: "
 
-#: tools/scripttool.py:1390
+#: tools/scripttool.py:1391
 msgid "Range preview for frame range "
 msgstr "Podgląd zakresu dla zakresu klatek "
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-13 10:37+0200\n"
+"POT-Creation-Date: 2024-12-18 10:56+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -33,63 +33,63 @@ msgstr "2 perc"
 msgid "5 min"
 msgstr "5 perc"
 
-#: app.py:938
+#: app.py:939
 msgid "XDG Data folder location has changed!"
 msgstr ""
 
-#: app.py:939
+#: app.py:940
 msgid ""
 "Location of <b>Default XDG Data Store</b> has changed because value of "
 "<b>XDG Data Home</b> variable has changed.\n"
 "\n"
 msgstr ""
 
-#: app.py:940
+#: app.py:941
 msgid ""
 "Existing Projects with project data saved in <b>Default XDG Data Store</b> "
 "will continue to work,\n"
 msgstr ""
 
-#: app.py:941
+#: app.py:942
 msgid ""
 "but new projects will have data saved in the location specified by the new "
 "value <b>XDG Data Home</b> variable ."
 msgstr ""
 
-#: app.py:1026
+#: app.py:1027
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:1028
+#: app.py:1029
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:1029
+#: app.py:1030
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:1040
+#: app.py:1041
 msgid "Cannot launch application because XDG folders init error."
 msgstr ""
 
-#: app.py:1051
+#: app.py:1052
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr ""
 
-#: app.py:1052
+#: app.py:1053
 #, fuzzy
 msgid "Your MLT version is: "
 msgstr "MLT változat: "
 
-#: app.py:1052
+#: app.py:1053
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr ""
 
-#: app.py:1126 projectaction.py:555 projectaction.py:757
+#: app.py:1127 projectaction.py:555 projectaction.py:757
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:1127 projectaction.py:556 projectaction.py:758
+#: app.py:1128 projectaction.py:556 projectaction.py:758
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -937,8 +937,8 @@ msgid "Project Data"
 msgstr "Projekt"
 
 #: editorwindow.py:878 rendergui.py:181 rendergui.py:309 rendergui.py:401
-#: rendergui.py:513 tools/batchrendering.py:957 tools/gmic.py:816
-#: containeractions.py:382 editorlayout.py:230 tools/scripttool.py:919
+#: rendergui.py:513 tools/batchrendering.py:957 tools/gmic.py:817
+#: containeractions.py:382 editorlayout.py:230 tools/scripttool.py:920
 msgid "Render"
 msgstr "Renderelés"
 
@@ -971,11 +971,11 @@ msgstr "Feliratozó"
 msgid "Audio Mixer"
 msgstr "Hangkeverő"
 
-#: editorwindow.py:886 tools/gmic.py:876 toolsintegration.py:108
+#: editorwindow.py:886 tools/gmic.py:877 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "G'Mic hatások"
 
-#: editorwindow.py:887 tools/scripttool.py:1014
+#: editorwindow.py:887 tools/scripttool.py:1015
 #, fuzzy
 msgid "Generator Script Editor"
 msgstr "Geometria szerkesztő"
@@ -1238,7 +1238,7 @@ msgid "Data Store"
 msgstr ""
 
 #: dialogs.py:88 dialogs.py:1195 dialogs.py:1412 dialogs.py:1454
-#: menuactions.py:220 containerclip.py:170 tools/scripttool.py:624
+#: menuactions.py:220 containerclip.py:170 tools/scripttool.py:625
 msgid "Ok"
 msgstr "Rendben"
 
@@ -1255,10 +1255,10 @@ msgstr "Rendben"
 #: rendergui.py:139 rendergui.py:1176 rendergui.py:1441 preferenceswindow.py:45
 #: tools/batchrendering.py:1057 tools/batchrendering.py:1130
 #: proxyediting.py:322 patternproducer.py:337 patternproducer.py:370
-#: patternproducer.py:401 tools/gmic.py:377 tools/gmic.py:401 tools/gmic.py:543
+#: patternproducer.py:401 tools/gmic.py:378 tools/gmic.py:402 tools/gmic.py:544
 #: dialogutils.py:57 dialogutils.py:129 dialogutils.py:189 exporting.py:445
-#: containeractions.py:390 containerclip.py:169 tools/scripttool.py:319
-#: tools/scripttool.py:355 tools/scripttool.py:603 tools/scripttool.py:623
+#: containeractions.py:390 containerclip.py:169 tools/scripttool.py:320
+#: tools/scripttool.py:356 tools/scripttool.py:604 tools/scripttool.py:624
 #: singletracktransition.py:554 singletracktransition.py:733 mediaplugin.py:670
 msgid "Cancel"
 msgstr "Mégsem"
@@ -1297,8 +1297,8 @@ msgstr ""
 msgid "New Profile"
 msgstr "Új profil"
 
-#: dialogs.py:176 rendergui.py:872 tools/gmic.py:760 tools/toolsencoding.py:304
-#: tools/scripttool.py:863 projectdatavaultgui.py:112
+#: dialogs.py:176 rendergui.py:872 tools/gmic.py:761 tools/toolsencoding.py:304
+#: tools/scripttool.py:864 projectdatavaultgui.py:112
 #: projectdatavaultgui.py:593 projectaddmediafolder.py:38
 msgid "Select Folder"
 msgstr "Mappa kiválasztása"
@@ -1343,8 +1343,8 @@ msgstr "Projektfájl kiválasztása"
 #: dialogs.py:577 dialogs.py:703 dialogs.py:824 dialogs.py:838 dialogs.py:1170
 #: dialogs.py:1582 propertyeditorbuilder.py:697 middlebar.py:474
 #: rendergui.py:108 preferenceswindow.py:46 tools/batchrendering.py:447
-#: tools/gmic.py:402 dialogutils.py:39 dialogutils.py:96 dialogutils.py:109
-#: dialogutils.py:124 tools/scripttool.py:356
+#: tools/gmic.py:403 dialogutils.py:39 dialogutils.py:96 dialogutils.py:109
+#: dialogutils.py:124 tools/scripttool.py:357
 msgid "OK"
 msgstr "Rendben"
 
@@ -1358,8 +1358,8 @@ msgstr "Projekt mentése másként"
 
 #: dialogs.py:265 dialogs.py:293 dialogs.py:342 dialogs.py:377 dialogs.py:495
 #: dialogs.py:507 dialogs.py:544 dialogs.py:566 rendergui.py:122
-#: tools/batchrendering.py:1058 tools/gmic.py:378 tools/scripttool.py:320
-#: tools/scripttool.py:1085
+#: tools/batchrendering.py:1058 tools/gmic.py:379 tools/scripttool.py:321
+#: tools/scripttool.py:1086
 msgid "Save"
 msgstr "Mentés"
 
@@ -2070,8 +2070,8 @@ msgid "Sequence Watermark"
 msgstr "Jelenet vízjele"
 
 #: dialogs.py:1536 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
-#: tools/gmic.py:847 tools/gmic.py:945 diskcachemanagement.py:157
-#: tools/scripttool.py:940 tools/scripttool.py:1104 projectdatavaultgui.py:278
+#: tools/gmic.py:848 tools/gmic.py:946 diskcachemanagement.py:157
+#: tools/scripttool.py:941 tools/scripttool.py:1105 projectdatavaultgui.py:278
 #: projectdatavaultgui.py:739 mediaplugin.py:378 projectaddmediafolder.py:111
 msgid "Close"
 msgstr "Bezárás"
@@ -2493,7 +2493,7 @@ msgstr "Hang:"
 msgid "Number of Tracks:"
 msgstr "Sávok száma:"
 
-#: guicomponents.py:2419 tools/scripttool.py:631
+#: guicomponents.py:2419 tools/scripttool.py:632
 #, fuzzy
 msgid "Frames:"
 msgstr "képkocka"
@@ -2578,11 +2578,11 @@ msgstr "Legjobb profil:"
 msgid "Matches Project Profile:"
 msgstr "A projekt profiljával egyező:"
 
-#: panels.py:236 tools/gmic.py:743 tools/scripttool.py:845
+#: panels.py:236 tools/gmic.py:744 tools/scripttool.py:846
 msgid "Mark In:"
 msgstr "\"A\" jelző:"
 
-#: panels.py:237 tools/gmic.py:744 tools/scripttool.py:846
+#: panels.py:237 tools/gmic.py:745 tools/scripttool.py:847
 msgid "Mark Out:"
 msgstr "\"B\" jelző:"
 
@@ -2606,7 +2606,7 @@ msgstr "Típus:"
 msgid "Wipe Pattern:"
 msgstr "Áttolás mintája:"
 
-#: panels.py:307 panels.py:383 tools/gmic.py:745
+#: panels.py:307 panels.py:383 tools/gmic.py:746
 msgid "Length:"
 msgstr "Hossz:"
 
@@ -2891,7 +2891,7 @@ msgstr "Levágás (crop)"
 msgid "Alpha Shape"
 msgstr "Alfa alakzat"
 
-#: translations.py:184 kftoolmode.py:489
+#: translations.py:184 kftoolmode.py:494
 msgid "Volume"
 msgstr "Hangerő"
 
@@ -3062,7 +3062,7 @@ msgstr "Megfordítás"
 msgid "Hue"
 msgstr "Árnyalat"
 
-#: translations.py:227 kftoolmode.py:490
+#: translations.py:227 kftoolmode.py:495
 msgid "Brightness"
 msgstr "Fényesség"
 
@@ -7926,142 +7926,142 @@ msgstr ""
 msgid "Select Video Media"
 msgstr "Videó média kiválasztása"
 
-#: tools/gmic.py:361 tools/gmic.py:783 tools/scripttool.py:886
+#: tools/gmic.py:362 tools/gmic.py:784 tools/scripttool.py:887
 msgid "not set"
 msgstr "nincs megadva"
 
-#: tools/gmic.py:375
+#: tools/gmic.py:376
 msgid "Save Gmic Script As"
 msgstr "G'Mic script mentése "
 
-#: tools/gmic.py:399
+#: tools/gmic.py:400
 msgid "Load Gmic Script"
 msgstr "G'Mic szkript betöltése"
 
-#: tools/gmic.py:520
+#: tools/gmic.py:521
 msgid "Rendering preview..."
 msgstr "Előnézet renderelése..."
 
-#: tools/gmic.py:540 tools/scripttool.py:600
+#: tools/gmic.py:541 tools/scripttool.py:601
 msgid "Video Encoding Settings"
 msgstr "Videokódolás beállításai"
 
-#: tools/gmic.py:544 containeractions.py:385 tools/scripttool.py:604
+#: tools/gmic.py:545 containeractions.py:385 tools/scripttool.py:605
 msgid "Set Encoding"
 msgstr "Kódolás megadása"
 
-#: tools/gmic.py:592 tools/gmic.py:940
+#: tools/gmic.py:593 tools/gmic.py:941
 msgid "Load Clip"
 msgstr "Klip betöltése"
 
-#: tools/gmic.py:596
+#: tools/gmic.py:597
 msgid "no clip loaded"
 msgstr "nincs klip betöltve"
 
-#: tools/gmic.py:619 tools/simpleeditors.py:948
+#: tools/gmic.py:620 tools/simpleeditors.py:948
 msgid "no preview"
 msgstr "nincs előnézet"
 
-#: tools/gmic.py:674 tools/simpleeditors.py:969 tools/scripttool.py:816
+#: tools/gmic.py:675 tools/simpleeditors.py:969 tools/scripttool.py:817
 #: mediaplugin.py:314 mediaplugin.py:672
 msgid "Preview"
 msgstr "Előnézet"
 
-#: tools/gmic.py:703
+#: tools/gmic.py:704
 msgid "Add to Script"
 msgstr "Hozzáadás a szkripthez"
 
-#: tools/gmic.py:763 tools/scripttool.py:866
+#: tools/gmic.py:764 tools/scripttool.py:867
 msgid "Frames Folder:"
 msgstr "Képkockák mappája:"
 
-#: tools/gmic.py:774 tools/scripttool.py:877
+#: tools/gmic.py:775 tools/scripttool.py:878
 msgid "Encode Video"
 msgstr "Videó kódolása"
 
-#: tools/gmic.py:780 tools/scripttool.py:883
+#: tools/gmic.py:781 tools/scripttool.py:884
 msgid "Encoding settings"
 msgstr "Kódolás beállításai"
 
-#: tools/gmic.py:799
+#: tools/gmic.py:800
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr "Az \"A\" és \"B\" jelzők valamint a képkockák mappájának beállítása"
 
-#: tools/gmic.py:814 shortcuts.py:375 tools/scripttool.py:917
+#: tools/gmic.py:815 shortcuts.py:375 tools/scripttool.py:918
 msgid "Stop"
 msgstr "Leállítás"
 
-#: tools/gmic.py:842 tools/scripttool.py:353
+#: tools/gmic.py:843 tools/scripttool.py:354
 msgid "Load Script"
 msgstr "Szkript betöltése"
 
-#: tools/gmic.py:844
+#: tools/gmic.py:845
 msgid "Save Script"
 msgstr "Szkript mentése"
 
-#: tools/gmic.py:905 tools/scripttool.py:1043
+#: tools/gmic.py:906 tools/scripttool.py:1044
 msgid "frames"
 msgstr "képkocka"
 
-#: tools/gmic.py:923 tools/scripttool.py:1066
+#: tools/gmic.py:924 tools/scripttool.py:1067
 msgid " no video file"
 msgstr " nincs videó fájl"
 
-#: tools/gmic.py:925 tools/scripttool.py:1068
+#: tools/gmic.py:926 tools/scripttool.py:1069
 msgid " render video file"
 msgstr " videó fájl renderelése"
 
-#: tools/gmic.py:926 tools/scripttool.py:1069
+#: tools/gmic.py:927 tools/scripttool.py:1070
 msgid " frame(s),"
 msgstr " képkocka,"
 
-#: tools/gmic.py:941
+#: tools/gmic.py:942
 msgid "G'Mic Webpage"
 msgstr "G'Mic honlap"
 
-#: tools/gmic.py:1181 tools/scripttool.py:558
+#: tools/gmic.py:1182 tools/scripttool.py:559
 msgid "Preview for frame: "
 msgstr "Képkocka előnézete:"
 
-#: tools/gmic.py:1182
+#: tools/gmic.py:1183
 msgid ", render time: "
 msgstr ", renderelés ideje: "
 
-#: tools/gmic.py:1187
+#: tools/gmic.py:1188
 msgid "Extracting PNG frames from this file failed!"
 msgstr ""
 
-#: tools/gmic.py:1227
+#: tools/gmic.py:1228
 msgid "Waiting for frames write to complete..."
 msgstr "Várakozás a képkockák írásának befejezésére..."
 
-#: tools/gmic.py:1264 tools/gmic.py:1337 tools/scripttool.py:1517
-#: tools/scripttool.py:1544
+#: tools/gmic.py:1265 tools/gmic.py:1338 tools/scripttool.py:1518
+#: tools/scripttool.py:1545
 msgid "Render stopped!"
 msgstr "Renderelés leállítva!"
 
-#: tools/gmic.py:1268 tools/scripttool.py:1521
+#: tools/gmic.py:1269 tools/scripttool.py:1522
 msgid "Rendering video, "
 msgstr "Video renderelése, "
 
-#: tools/gmic.py:1268 tools/scripttool.py:1521
+#: tools/gmic.py:1269 tools/scripttool.py:1522
 #, python-format
 msgid "% done"
 msgstr "% kész"
 
-#: tools/gmic.py:1274 tools/scripttool.py:1527 tools/scripttool.py:1602
+#: tools/gmic.py:1275 tools/scripttool.py:1528 tools/scripttool.py:1603
 msgid "Render complete!"
 msgstr "Renderelés kész!"
 
-#: tools/gmic.py:1286 tools/scripttool.py:1608
+#: tools/gmic.py:1287 tools/scripttool.py:1609
 msgid "Writing clip frame: "
 msgstr "Klip képkockájának írása:"
 
-#: tools/gmic.py:1295
+#: tools/gmic.py:1296
 msgid "Rendering frame: "
 msgstr "Képkocka renderelése:"
 
-#: tools/gmic.py:1305
+#: tools/gmic.py:1306
 msgid "Render error!"
 msgstr "Renderelési hiba!"
 
@@ -8965,13 +8965,13 @@ msgstr ""
 msgid "Keyboard shortcut: "
 msgstr "Gyorsbillentyűk"
 
-#: kftoolmode.py:385
+#: kftoolmode.py:390
 msgid ""
 "This Clip has a deprecated Volume filter and cannot be edited with Keyframe "
 "Tool!"
 msgstr ""
 
-#: kftoolmode.py:386
+#: kftoolmode.py:391
 msgid ""
 "Flowblade 2.8 changed to use Volume filtes with dB values.\n"
 "\n"
@@ -8980,7 +8980,7 @@ msgid ""
 "to edit this Clip with Keyframe Tool."
 msgstr ""
 
-#: kftoolmode.py:488
+#: kftoolmode.py:493
 #, fuzzy
 msgid "Media Frame: "
 msgstr "Média útvonala:"
@@ -9337,80 +9337,80 @@ msgid ""
 "to make layout fit on screen."
 msgstr ""
 
-#: tools/scripttool.py:317 tools/scripttool.py:1084
+#: tools/scripttool.py:318 tools/scripttool.py:1085
 #, fuzzy
 msgid "Save Script As"
 msgstr "Szkript mentése"
 
-#: tools/scripttool.py:337
+#: tools/scripttool.py:338
 msgid "Saving"
 msgstr ""
 
-#: tools/scripttool.py:571 tools/scripttool.py:705 tools/scripttool.py:1333
-#: tools/scripttool.py:1393 tools/scripttool.py:1579
+#: tools/scripttool.py:572 tools/scripttool.py:706 tools/scripttool.py:1334
+#: tools/scripttool.py:1394 tools/scripttool.py:1580
 #, fuzzy
 msgid "No Preview"
 msgstr "Előnézet"
 
-#: tools/scripttool.py:621
+#: tools/scripttool.py:622
 #, fuzzy
 msgid "Change Generator Length"
 msgstr "Áttolás a klip hosszában"
 
-#: tools/scripttool.py:698
+#: tools/scripttool.py:699
 #, fuzzy
 msgid "Reload Script"
 msgstr "Szkript betöltése"
 
-#: tools/scripttool.py:818
+#: tools/scripttool.py:819
 #, fuzzy
 msgid "Preview Range"
 msgstr "Előző képkocka"
 
-#: tools/scripttool.py:847
+#: tools/scripttool.py:848
 #, fuzzy
 msgid "Generator Media Length:"
 msgstr "Renderelt klip hossza:"
 
-#: tools/scripttool.py:902
+#: tools/scripttool.py:903
 #, fuzzy
 msgid "Set Frames Folder for valid render"
 msgstr "Az \"A\" és \"B\" jelzők valamint a képkockák mappájának beállítása"
 
-#: tools/scripttool.py:1083
+#: tools/scripttool.py:1084
 #, fuzzy
 msgid "Open Script"
 msgstr "Szkript mentése"
 
-#: tools/scripttool.py:1091
+#: tools/scripttool.py:1092
 #, fuzzy
 msgid "Load Generator Code"
 msgstr "Renderelés paramétereinek betöltése fájlból"
 
-#: tools/scripttool.py:1095
+#: tools/scripttool.py:1096
 #, fuzzy
 msgid "Change Generator Media Length"
 msgstr "Áttolás a klip hosszában"
 
-#: tools/scripttool.py:1099
+#: tools/scripttool.py:1100
 msgid "API Docs"
 msgstr ""
 
-#: tools/scripttool.py:1100
+#: tools/scripttool.py:1101
 msgid "API Docs Web"
 msgstr ""
 
-#: tools/scripttool.py:1291
+#: tools/scripttool.py:1292
 #, fuzzy
 msgid "Rendering..."
 msgstr "Renderelés"
 
-#: tools/scripttool.py:1354
+#: tools/scripttool.py:1355
 #, fuzzy
 msgid "Rendered frame "
 msgstr "Képkocka renderelése:"
 
-#: tools/scripttool.py:1390
+#: tools/scripttool.py:1391
 #, fuzzy
 msgid "Range preview for frame range "
 msgstr "Képkocka előnézete:"
