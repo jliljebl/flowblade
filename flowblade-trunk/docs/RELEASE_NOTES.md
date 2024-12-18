@@ -1,4 +1,6 @@
 # Release Notes
+
+## FLOWBLADE 2.18
 Date: December 18, 2024
 
 With this release we worked on gradual improvement on features, correctness and code structure. We had some great progress in moving forward from SDL 1 video display, but there ware still some issues, so that was postponed for now.
