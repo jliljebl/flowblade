@@ -339,7 +339,7 @@ class PlayerButtons(AbstractGlassButtons):
                 self.icons = [prev_icon, next_icon, play_pause_icon,
                           mark_in_icon, mark_out_icon,
                           marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-                self.image_x = [ 5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [ 5*size_adj, 7*size_adj, 11*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 0*size_adj]
         else:
             #  go to start end
             if (editorpersistance.prefs.timeline_start_end == True):
