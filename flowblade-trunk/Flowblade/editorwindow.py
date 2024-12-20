@@ -543,6 +543,8 @@ class EditorWindow:
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_top(4)
+        player_buttons_row.set_margin_left(12)
+        player_buttons_row.set_margin_right(12)
         self.player_buttons_row = player_buttons_row
 
         # Switch / pos bar row
