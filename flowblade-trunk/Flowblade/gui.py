@@ -182,6 +182,23 @@ def apply_gtk_css():
 
     return True
 
+def apply_widget_css(widget, widget_css_name, css_file):
+    css_path = respaths.ROOT_PATH + "/res/css3/" + css_file
+
+    provider = Gtk.CssProvider()
+    provider.load_from_path(css_path)
+    
+    widget.set_name(widget_css_name)
+    widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+def apply_widget_css_class(widget, widget_css_class_name, css_file):
+    css_path = respaths.ROOT_PATH + "/res/css3/" + css_file
+    provider = Gtk.CssProvider()
+    provider.load_from_path(css_path)
+    
+    widget.get_style_context().add_class(widget_css_class_name)
+    widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    
 def get_default_filter_icon():
     return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
     
