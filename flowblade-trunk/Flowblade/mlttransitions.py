@@ -22,6 +22,7 @@
 Module contains objects that wrap mlt.Transition objects used to mix video between
 two tracks.
 """
+
 import copy
 try:
     import mlt7 as mlt

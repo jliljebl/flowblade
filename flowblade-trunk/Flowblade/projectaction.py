@@ -2322,6 +2322,8 @@ def media_file_menu_item_selected(action, variant, data):
         render.render_frame_buffer_clip(media_file)
     if item_id == "Render Reverse Motion File":
         render.render_reverse_clip(media_file)
+    if item_id == "Render Stabilized File":
+        display_render_stabilized_dialog(media_file)
     if item_id == "Rename":
         display_media_file_rename_dialog(media_file)
     if item_id == "Delete":
@@ -2364,5 +2366,22 @@ def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     row = max(rows[0])
     return (row, title)
 
+def display_render_stabilized_dialog(media_file):
+    dialog = Gtk.Dialog(_("Render Stabilized Media"),
+                        gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.CANCEL,
+                        _("Render"), Gtk.ResponseType.OK))
 
+
+    alignment = guiutils.set_margins(Gtk.Label("asdadadasd"), 6, 24, 24, 24)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', _stabilizing_sialog_callback, alignment, media_file)
+    dialog.show_all()
+
+def _stabilizing_sialog_callback(dialog, response_id, alignment, media_file):
+    dialog.destroy()
 

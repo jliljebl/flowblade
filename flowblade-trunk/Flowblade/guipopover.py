@@ -108,7 +108,7 @@ _mf_properties_section = None
 _icon_section = None
 _mf_render_section = None
 _mf_proxy_section = None
-
+_mf_stabilize_section = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
@@ -574,7 +574,7 @@ def file_filter_popover_show(launcher, widget, callback):
 
 def media_file_popover_show(media_file, widget, x, y, callback, callback_rating):
     global _media_file_popover, _media_file_menu, _rated_section, _rated_submenu, _monitor_section, \
-    _mf_properties_section, _icon_section, _mf_render_section, _mf_proxy_section
+    _mf_properties_section, _icon_section, _mf_render_section, _mf_stabilize_section, _mf_proxy_section
 
     if _media_file_menu == None:
         _media_file_menu = menu_clear_or_create(_media_file_menu)
@@ -610,6 +610,10 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         _fill_mf_render_section(_mf_render_section, media_file, callback)
         _media_file_menu.append_section(None, _mf_render_section)
 
+        _mf_stabilize_section  = Gio.Menu.new()
+        _fill_mf_stabilize_section(_mf_stabilize_section, media_file, callback)
+        _media_file_menu.append_section(None, _mf_stabilize_section)
+
         _mf_proxy_section = Gio.Menu.new()
         _fill_mf_proxy_section(_mf_proxy_section, media_file, callback)
         _media_file_menu.append_section(None, _mf_proxy_section)
@@ -633,6 +637,9 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         menu_clear_or_create(_mf_render_section)
         _fill_mf_render_section(_mf_render_section, media_file, callback)
 
+        menu_clear_or_create(_mf_stabilize_section)
+        _fill_mf_stabilize_section(_mf_stabilize_section, media_file, callback)
+        
         menu_clear_or_create(_mf_proxy_section)
         _fill_mf_proxy_section(_mf_proxy_section, media_file, callback)
         
@@ -681,6 +688,13 @@ def _fill_mf_proxy_section(_mf_proxy_section, media_file, callback):
 
     add_menu_action(_mf_proxy_section, _("Render Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", None), callback, active)
 
+def _fill_mf_stabilize_section(_mf_proxy_section, media_file, callback):
+    active = False
+    if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
+        active = True
+
+    add_menu_action(_mf_proxy_section, _("Render Stabilized File"), "mediapanel.mediafile.stabilize", ("Render Stabilized File", None), callback, active)
+    
 def jobs_menu_popover_show(launcher, widget, callback):
     global _jobs_popover, _jobs_menu
 

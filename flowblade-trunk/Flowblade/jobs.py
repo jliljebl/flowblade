@@ -553,7 +553,7 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
         # Set writefile.
         data_file_uid = utils.get_uid_str()
         self.write_file = userfolders.get_render_dir() + data_file_uid + appconsts.STABILIZE_DATA_EXTENSION
-        print(self.write_file)
+
         # Create command list and launch process.
         command_list = [sys.executable]
         command_list.append(respaths.LAUNCH_DIR + "flowbladestabilizeheadless")
