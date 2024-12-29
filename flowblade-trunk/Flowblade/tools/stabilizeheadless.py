@@ -52,24 +52,26 @@ def delete_session_folders(parent_folder, session_id):
      ccrutils.delete_internal_folders(parent_folder, session_id)
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness):
+def main(root_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom):
     
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
-    _render_thread = StabilizeHeadlessRunnerThread(profile_desc, write_file, clip_path, accuracy, shakiness)
+    _render_thread = StabilizeHeadlessRunnerThread(profile_desc, write_file, clip_path, accuracy, shakiness,  smoothing, zoom)
     _render_thread.start()
 
 
 class StabilizeHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, profile_desc, write_file, clip_path, accuracy, shakiness):
+    def __init__(self, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom):
         threading.Thread.__init__(self)
 
         self.write_file = write_file
         self.clip_path = clip_path
         self.shakiness = shakiness
         self.accuracy = accuracy
+        self.smoothing = smoothing
+        self.zoom = zoom
         self.profile_desc = profile_desc
         self.abort = False
 
@@ -103,6 +105,8 @@ class StabilizeHeadlessRunnerThread(threading.Thread):
         stabilize_filter.set("filename", str(self.write_file))
         stabilize_filter.set("shakiness", str(self.shakiness))
         stabilize_filter.set("accuracy", str(self.accuracy))
+        stabilize_filter.set("smoothing", str(self.smoothing))
+        stabilize_filter.set("zoom", str(self.zoom))
 
         # Add filter to producer.
         producer.attach(stabilize_filter)

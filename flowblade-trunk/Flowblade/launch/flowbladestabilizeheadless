@@ -28,6 +28,8 @@ try:
     clip_path = _get_arg_value(sys.argv, "clip_path")
     accuracy = _get_arg_value(sys.argv, "accuracy")
     shakiness = _get_arg_value(sys.argv, "shakiness")
+    smoothing = _get_arg_value(sys.argv, "smoothing")
+    zoom = _get_arg_value(sys.argv, "zoom")
     profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
     profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
                                                               # Now we take underscores out to get correct MLT profile names.
@@ -37,7 +39,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-stabilizeheadless.main(modules_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness)
+stabilizeheadless.main(modules_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom)
 
 
 

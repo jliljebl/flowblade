@@ -1209,12 +1209,16 @@ class AnalyzeStabilizeFilterEditor:
         clip_path = self.editable_properties[0].clip.path
         accuracy_prop = [ep for ep in self.editable_properties if ep.name == "accuracy"][0]
         shakiness_prop = [ep for ep in self.editable_properties if ep.name == "shakiness"][0]
+        smoothing_prop = [ep for ep in self.editable_properties if ep.name == "smoothing"][0]
+        zoom_prop = [ep for ep in self.editable_properties if ep.name == "zoom"][0]
         
         args = ("session_id:" + str(session_id),
                 "profile_desc:" + str(profile_desc),
                 "clip_path:" + str(clip_path),
                 "shakiness:" + str(shakiness_prop.value),
-                "accuracy:" + str(accuracy_prop.value))
+                "accuracy:" + str(accuracy_prop.value),
+                "smoothing:" + str(smoothing_prop.value),
+                "zoom:" + str(zoom_prop.value))
 
         job = jobs.StablizeDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args)
         job.add_to_queue()
