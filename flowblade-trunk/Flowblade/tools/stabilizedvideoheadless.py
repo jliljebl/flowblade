@@ -52,92 +52,71 @@ def delete_session_folders(parent_folder, session_id):
      ccrutils.delete_internal_folders(parent_folder, session_id)
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom):
-    
+def main(root_path, session_id, parent_folder, write_file, results_file, 
+         profile_desc, encoding_option_index, quality_option_index, source_path):
+        
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
-    _render_thread = StabilizeHeadlessRunnerThread(profile_desc, write_file, clip_path, accuracy, shakiness,  smoothing, zoom)
+    _render_thread = StaxbilizedVideoRenderThread(  write_file, results_file, profile_desc, encoding_option_index,
+                                                    quality_option_index, source_path)
     _render_thread.start()
 
+       
 
-class StabilizeHeadlessRunnerThread(threading.Thread):
+class StaxbilizedVideoRenderThread(threading.Thread):
 
-    def __init__(self, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom):
+    def __init__(self, write_file, results_file, profile_desc, encoding_option_index,
+                                                    quality_option_index, source_path):
         threading.Thread.__init__(self)
 
         self.write_file = write_file
-        self.clip_path = clip_path
-        self.shakiness = shakiness
-        self.accuracy = accuracy
-        self.smoothing = smoothing
-        self.zoom = zoom
         self.profile_desc = profile_desc
+        self.encoding_option_index = int(encoding_option_index)
+        self.quality_option_index = int(quality_option_index)
+        self.source_path = source_path
+        self.results_file = results_file
+
         self.abort = False
 
     def run(self):
         self.start_time = time.monotonic()
 
         profile = mltprofiles.get_profile(self.profile_desc) 
-        producer = mlt.Producer(profile, str(self.clip_path)) # this runs 0.5s+ on some clips
+        producer = mlt.Producer(profile, str(self.source_path)) # this runs 0.5s+ on some clips
         
         stabilize_filter = mlt.Filter(profile, "vidstab")
-        # Initial values.
-        stabilize_filter.set("stepsize", "6")
-        stabilize_filter.set("algo", "1")
-        stabilize_filter.set("mincontrast", 0.3)
-        stabilize_filter.set("show", "0")
-        stabilize_filter.set("tripod", "0")
-        stabilize_filter.set("smoothing", "15")
-        stabilize_filter.set("maxshift", "1")
-        stabilize_filter.set("maxangle", "-1")
-        stabilize_filter.set("crop", "0")
-        stabilize_filter.set("invert", "0")
-        stabilize_filter.set("relative", "1")
-        stabilize_filter.set("zoom", "0")
-        stabilize_filter.set("optzoom", "1")
-        stabilize_filter.set("zoomspeed", "0.25")
-        stabilize_filter.set("reload", "0")
-        stabilize_filter.set("analyze", "0")
-
-        # Apply user set analyze parameters
-        stabilize_filter.set("filename", str(self.write_file))
-        stabilize_filter.set("shakiness", str(self.shakiness))
-        stabilize_filter.set("accuracy", str(self.accuracy))
-        stabilize_filter.set("smoothing", str(self.smoothing))
-        stabilize_filter.set("zoom", str(self.zoom))
+        stabilize_filter.set("results", str(self.results_file))
 
         # Add filter to producer.
         producer.attach(stabilize_filter)
 
         # Create tractor and track to get right length
         tractor = renderconsumer.get_producer_as_tractor(producer, producer.get_length() - 1)
-
-        # Get render consumer
-        xml_consumer = mlt.Consumer(profile, "xml", str(self.write_file) + ".xml")
-        xml_consumer.set("all", "1")
-        xml_consumer.set("real_time", "-1")
-
-        tractor.set_speed(0)
-        tractor.seek(0)
+        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, self.encoding_option_index, self.quality_option_index)
         
-        stabilize_filter.set("analyze", 1)
-        
-        # Wait until producer is at start
-        while tractor.frame() != 0:
-            time.sleep(0.1)
+        # start and end frames, renderer stop behaviour
+        start_frame = 0
+        end_frame = producer.get_length() - 1
 
-        # Connect and start rendering
-        xml_consumer.connect(tractor)
-        xml_consumer.start()
-        tractor.set_speed(1)
+        # Launch render
+        self.render_player = renderconsumer.FileRenderPlayer(self.write_file, tractor, consumer, start_frame, end_frame)
+        self.render_player.wait_for_producer_end_stop = True
+        self.render_player.start()
 
-        # Wait until done
-        while xml_consumer.is_stopped() == False:
-            render_fraction = float(producer.frame()) / float(producer.get_length())
-            self.render_update(render_fraction)
+        while self.render_player.stopped == False:
+            
+            self.check_abort_requested()
+            
+            if self.abort == True:
+                self.render_player.shutdown()
+                return
+            
+            fraction = self.render_player.get_render_fraction()
+            self.render_update(fraction)
+
             time.sleep(0.3)
-        
+
         # Write out completed flag file.
         ccrutils.write_completed_message()
 

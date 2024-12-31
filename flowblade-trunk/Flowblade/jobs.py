@@ -46,6 +46,7 @@ import proxyheadless
 import renderconsumer
 import respaths
 import stabilizeheadless
+import stabilizedvideoheadless
 import trackingheadless
 import userfolders
 import utils
@@ -64,6 +65,7 @@ PROXY_RENDER = 5
 CONTAINER_CLIP_RENDER_FLUXITY = 6
 STABILIZE_DATA_RENDER = 7
 MOTION_TRACKING_DATA_RENDER = 8
+STABILIZED_MEDIA_ITEM_RENDER = 9
 
 FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
 FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
@@ -611,6 +613,156 @@ class StablizeDataRenderJobQueueObject(AbstractJobQueueObject):
         #remove_as_status_polling_object(self)
         stabilizeheadless.abort_render(self.parent_folder, self.get_session_id())
 
+
+class StablizedMediaItemDataRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, media_file, render_params, data_render_comple_callback, args):
+        
+        AbstractJobQueueObject.__init__(self, session_id, STABILIZE_DATA_RENDER)
+        
+        self.media_file = media_file
+        self.render_params = render_params
+        self.args = args
+        self.parent_folder = userfolders.get_temp_render_dir() # This is used for message passing, output file goes to path given by 'write_file'.
+        self.data_render_comple_callback = data_render_comple_callback
+        
+    def start_render(self):
+        
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
+        
+        # Set writefile.
+        data_file_uid = utils.get_uid_str()
+        self.write_file = userfolders.get_render_dir() + data_file_uid + appconsts.STABILIZE_DATA_EXTENSION
+
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladestabilizeheadless")
+        for arg in self.args:
+            command_list.append(arg)
+        parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+        command_list.append(parent_folder_arg)
+        write_file_arg = "write_file:" + str(self.write_file)
+        command_list.append(write_file_arg)
+        
+        subprocess.Popen(command_list)
+        
+    def update_render_status(self):
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
+
+        if stabilizeheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
+            
+            job_msg = self.get_completed_job_message()
+            update_job_queue(job_msg)
+            
+            stabilizeheadless.delete_session_folders(self.parent_folder, self.get_session_id())
+            
+            GLib.idle_add(self.data_render_done)
+
+        else:
+            status = stabilizeheadless.get_session_status(self.parent_folder, self.get_session_id())
+            if status != None:
+                fraction, elapsed = status
+                
+                self.progress = float(fraction)
+                if self.progress > 1.0:
+                    # A fix for how progress is calculated because producers can render a bit longer then required.
+                    self.progress = 1.0
+
+                self.elapsed = float(elapsed)
+                self.text = _("Stabilizing Analysis") + " " + self.media_file.name
+                
+                job_msg = self.get_job_queue_message()
+                
+                update_job_queue(job_msg)
+            else:
+                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
+                pass
+
+    def data_render_done(self):
+        self.data_render_comple_callback(self.media_file, self.render_params, self.write_file)
+        
+    def abort_render(self):
+        #remove_as_status_polling_object(self)
+        stabilizeheadless.abort_render(self.parent_folder, self.get_session_id())
+
+
+class StabilizedMediaItemVideoRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, write_file, args):
+        
+        AbstractJobQueueObject.__init__(self, session_id, STABILIZED_MEDIA_ITEM_RENDER)
+        
+        self.write_file = write_file
+        self.args = args
+        self.parent_folder = userfolders.get_temp_render_dir() # THis is just used for message passing, output file goes where user decided.
+                
+    def get_job_name(self):
+        folder, file_name = os.path.split(self.write_file)
+        return file_name
+        
+    def start_render(self):
+        
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
+        
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladestabilizedvideoheadless")
+        for arg in self.args:
+            command_list.append(arg)
+        parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+        command_list.append(parent_folder_arg)
+            
+        subprocess.Popen(command_list)
+        
+    def update_render_status(self):
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
+
+        if stabilizedvideoheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
+            job_msg = self.get_completed_job_message()
+            update_job_queue(job_msg)
+            
+            stabilizedvideoheadless.delete_session_folders(self.parent_folder, self.get_session_id())
+            
+            GLib.idle_add(self.create_media_item)
+
+        else:
+            status = stabilizedvideoheadless.get_session_status(self.parent_folder, self.get_session_id())
+
+            if status != None:
+                fraction, elapsed = status
+
+                self.progress = float(fraction)
+                if self.progress > 1.0:
+                    # A fix for how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                    self.progress = 1.0
+
+                self.elapsed = float(elapsed)
+                self.text = _("Stabilized Clip Render") + " " + self.get_job_name()
+                
+                job_msg = self.get_job_queue_message()
+
+                update_job_queue(job_msg)
+            else:
+                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
+                pass
+
+    def abort_render(self):
+        stabilizedvideoheadless.abort_render(self.parent_folder, self.get_session_id())
+        
+    def create_media_item(self):
+        callbackbridge.projectaction_open_rendered_file(self.write_file)
+
+            
 
 class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
 

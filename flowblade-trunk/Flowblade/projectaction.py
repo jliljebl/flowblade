@@ -58,6 +58,7 @@ import gui
 import guicomponents
 import guipopover
 import guiutils
+import gtkbuilder
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -67,6 +68,7 @@ from editorstate import PLAYER
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
 import editorpersistance
+import jobs
 import kftoolmode
 import medialinker
 import medialog
@@ -2373,15 +2375,144 @@ def display_render_stabilized_dialog(media_file):
                         (_("Cancel"), Gtk.ResponseType.CANCEL,
                         _("Render"), Gtk.ResponseType.OK))
 
+    folder, file_name = os.path.split(media_file.path)
+    if media_file.is_proxy_file:
+        folder, file_name = os.path.split(media_file.second_file_path)
 
-    alignment = guiutils.set_margins(Gtk.Label("asdadadasd"), 6, 24, 24, 24)
+    name, ext = os.path.splitext(file_name)
+
+    media_file_label = Gtk.Label(label=_("Source Media File: "))
+    media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")
+    media_name.set_use_markup(True)
+    SOURCE_PAD = 8
+    SOURCE_HEIGHT = 20
+    mf_row = guiutils.get_left_justified_box([media_file_label,  guiutils.pad_label(SOURCE_PAD, SOURCE_HEIGHT), media_name])
+
+    stab_widgets = utils.EmptyClass()
+
+    stab_widgets.file_name = Gtk.Entry()
+    stab_widgets.file_name.set_text(name + "_MOTION")
+    
+    stab_widgets.extension_label = Gtk.Label()
+    stab_widgets.extension_label.set_size_request(45, 20)
+
+    name_row = Gtk.HBox(False, 4)
+    name_row.pack_start(stab_widgets.file_name, True, True, 0)
+    name_row.pack_start(stab_widgets.extension_label, False, False, 4)
+    
+    stab_widgets.out_folder = gtkbuilder.get_file_chooser_button(_("Select Target Folder"))
+    stab_widgets.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    stab_widgets.out_folder.set_current_folder(folder)
+
+    accuracy_box, stab_widgets.accuracy = guiutils.get_non_property_slider_row(1, 15, 0.1, value=4, listener=None, scale_digits=1)
+    shakiness_box, stab_widgets.shakiness = guiutils.get_non_property_slider_row(1, 10, 1, value=1, listener=None, scale_digits=0)
+    zoom_box, stab_widgets.zoom = guiutils.get_non_property_slider_row(-500, 500, 1, value=0, listener=None, scale_digits=0)
+    smoothing_box, stab_widgets.smoothing = guiutils.get_non_property_slider_row(0, 100, 15, value=15, listener=None, scale_digits=0)
+
+    profile_selector = rendergui.ProfileSelector()
+    profile_selector.set_initial_selection()
+    profile_selector.widget.set_sensitive(True)
+    stab_widgets.categories_combo = profile_selector.categories_combo
+
+    quality_selector = rendergui.RenderQualitySelector()
+    stab_widgets.quality_cb = quality_selector.widget
+    
+    # Encoding
+    encoding_selector = rendergui.RenderEncodingSelector(quality_selector, stab_widgets.extension_label, None)
+    encoding_selector.encoding_selection_changed()
+    stab_widgets.encodings_cb = encoding_selector.widget
+
+    # Build gui
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(mf_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Shakiness:")), shakiness_box, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Accuracy:")), accuracy_box, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Zoom:")), zoom_box, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Smoothing:")), smoothing_box, 120), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), stab_widgets.out_folder, 120), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), stab_widgets.categories_combo.widget, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), stab_widgets.encodings_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), stab_widgets.quality_cb, 200), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
+
+    alignment = guiutils.set_margins(vbox, 6, 24, 24, 24)
     
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
-    dialog.connect('response', _stabilizing_sialog_callback, alignment, media_file)
+    dialog.connect('response', _stabilizing_dialog_callback, stab_widgets, media_file)
     dialog.show_all()
 
-def _stabilizing_sialog_callback(dialog, response_id, alignment, media_file):
-    dialog.destroy()
+def _stabilizing_dialog_callback(dialog, response_id, stab_widgets, media_file):
+    if response_id != Gtk.ResponseType.OK:
+        dialog.destroy()
+        return
 
+    # Render data for stabilizing data render
+    session_id = utils.create_render_session_uid()
+    profile_desc = PROJECT().profile_desc.replace(" ", "_")
+    clip_path = media_file.path
+    if media_file.is_proxy_file:
+        folder, clip_path = os.path.split(media_file.second_file_path)
+
+    # Parameters for stabilizing data render.
+    accuracy = stab_widgets.accuracy.get_adjustment().get_value()
+    shakiness = stab_widgets.shakiness.get_adjustment().get_value()
+    smoothing = stab_widgets.smoothing.get_adjustment().get_value()
+    zoom = stab_widgets.zoom.get_adjustment().get_value()
+
+    # Media item render params
+    render_params = utils.EmptyClass()
+    
+    file_name = stab_widgets.file_name.get_text()
+    filenames = stab_widgets.out_folder.get_filenames()
+    folder = filenames[0]
+    render_params.write_file = folder + "/"+ file_name + stab_widgets.extension_label.get_text()
+
+    if os.path.exists(render_params.write_file):
+        primary_txt = _("A File with given path exists!")
+        secondary_txt = _("Select another name for file.") 
+        dialogutils.warning_message(primary_txt, secondary_txt, dialog)
+        return
+        
+    render_params.profile_desc = stab_widgets.categories_combo.get_selected()
+    profile = mltprofiles.get_profile(profile_desc)
+    render_params.profile_desc = profile_desc.replace(" ", "_")
+    render_params.encoding_option_index = stab_widgets.encodings_cb.get_active()
+    render_params.quality_option_index = stab_widgets.quality_cb.get_active()
+
+    dialog.destroy()
+        
+    args = ("session_id:" + str(session_id),
+            "profile_desc:" + str(profile_desc),
+            "clip_path:" + str(clip_path),
+            "shakiness:" + str(shakiness),
+            "accuracy:" + str(accuracy),
+            "smoothing:" + str(smoothing),
+            "zoom:" + str(zoom))
+
+    job = jobs.StablizedMediaItemDataRenderJobQueueObject(session_id, media_file, render_params, _stabilizing_data_render_complete, args)
+    job.add_to_queue()
+    
+def _stabilizing_data_render_complete(media_file, render_params, results_file):
+    print("completed, results file: ", results_file)
+
+    source_path = media_file.path
+    if media_file.is_proxy_file == True:
+        source_path = media_file.second_file_path
+
+    session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+
+    args = ("session_id:" + str(session_id),
+            "write_file:" + str(render_params.write_file),
+            "profile_desc:" + str(render_params.profile_desc),
+            "encoding_option_index:" + str(render_params.encoding_option_index),
+            "quality_option_index:" + str(render_params.quality_option_index),
+            "source_path:" + str(source_path),
+            "results_file:" + str(results_file))
+
+    job_queue_object = jobs.StabilizedMediaItemVideoRenderJobQueueObject(session_id, render_params.write_file, args)
+    job_queue_object.add_to_queue()
