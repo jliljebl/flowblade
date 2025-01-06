@@ -2308,10 +2308,14 @@ def do_compositing_mode_change(new_compositing_mode):
 
 # --------------------------------------------------------- pop-up menus
 def media_file_popover_mouse_right_pressed(widget, media_file, event):
-    global _popover_media_file # we need this for media_file_menu_rating_item_selected()
-    _popover_media_file = media_file 
-    guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected, media_file_menu_rating_item_selected)
-    
+    if len(gui.media_list_view.selected_objects) < 2:
+        gui.media_list_view.clear_selection()
+        global _popover_media_file # we need this for media_file_menu_rating_item_selected()
+        _popover_media_file = media_file 
+        guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected, media_file_menu_rating_item_selected)
+    else:
+        guipopover.media_file_popover_multi_show(widget, event.x, event.y, media_file_multi_menu_item_selected)
+        
 def media_file_menu_item_selected(action, variant, data):
     item_id, unused = data
     global _popover_media_file
@@ -2355,6 +2359,21 @@ def media_file_menu_rating_item_selected(action, variant):
     guipopover._media_file_popover.hide()
     gui.media_list_view.widget.queue_draw()
 
+def media_file_multi_menu_item_selected(action, variant, msg):
+    selected = gui.media_list_view.selected_objects
+
+    if msg == "Delete":
+        delete_media_files()
+    if msg == "Render Proxy":
+        proxyediting.create_proxy_files_pressed()
+    if msg == "Append to Timeline":
+        append_selected_media_clips_into_timeline()
+    if msg == "Move to Clicked Position":
+        gui.media_list_view.init_move()
+    
+    if msg != "Move to Clicked Position":
+        gui.media_list_view.clear_selection()
+    
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))

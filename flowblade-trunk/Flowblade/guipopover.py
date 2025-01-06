@@ -66,6 +66,8 @@ _file_filter_popover = None
 _file_filter_menu = None
 _media_file_popover = None
 _media_file_menu = None
+_media_file_multi_popover = None
+_media_file_menu_multi = None
 _jobs_popover = None
 _jobs_menu = None
 _effects_popover = None
@@ -645,6 +647,29 @@ def media_file_popover_show(media_file, widget, x, y, callback, callback_rating)
         
     rect = create_rect(x, y)
     _media_file_popover = new_mouse_popover(widget, _media_file_menu, rect)
+
+def media_file_popover_multi_show(widget, x, y, callback):
+    global _media_file_multi_popover, _media_file_menu_multi
+
+    if _media_file_menu_multi == None:
+        _media_file_menu_multi = menu_clear_or_create(_media_file_menu_multi)
+
+        file_action_section = Gio.Menu.new()
+        add_menu_action(file_action_section, _("Delete"), "mediapanel.mediafilemulti.delete", "Delete", callback)
+        _media_file_menu_multi.append_section(None, file_action_section)
+
+        media_item_action_section = Gio.Menu.new()
+        add_menu_action(media_item_action_section, _("Move to Clicked Position..."), "mediapanel.mediafilemulti.movetoclicked", "Move to Clicked Position", callback)
+        add_menu_action(media_item_action_section, _("Render Proxy File"), "mediapanel.mediafilemulti.proxy", "Render Proxy", callback)
+        _media_file_menu_multi.append_section(None, media_item_action_section)
+        
+        edit_action_section = Gio.Menu.new()
+        add_menu_action(edit_action_section, _("Append to Timeline"), "mediapanel.mediafilemulti.append", "Append to Timeline", callback)
+        _media_file_menu_multi.append_section(None, edit_action_section)
+            
+    rect = create_rect(x, y)
+    _media_file_multi_popover = new_mouse_popover(widget, _media_file_menu_multi, rect)
+
 
 def _fill_monitor_section(_monitor_section, media_file, callback):
     if hasattr(media_file, "container_data"): 

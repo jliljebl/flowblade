@@ -1236,7 +1236,8 @@ class MediaPanel():
                     self.selected_objects.append(media_object)
 
         elif event.button == 3:
-            self.clear_selection()
+            if self.media_object_selected_test(media_object) == False:
+                self.clear_selection()
             self.media_file_popup_cb(media_object.widget,
                                      media_object.media_file,
                                      event)
