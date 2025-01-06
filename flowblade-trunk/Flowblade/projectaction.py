@@ -1034,6 +1034,8 @@ def _hamburger_menu_item_selected(action, variant, msg):
         dialogs.set_bin_grfx_default_length_dialog( current_bin(),
                                                     current_default_length,
                                                     _set_bin_grfx_default_length_callback)
+    elif msg == "delete":
+        delete_media_files()
     else:
         target_bin_index = int(msg)
         

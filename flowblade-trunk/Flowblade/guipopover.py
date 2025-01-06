@@ -482,6 +482,10 @@ def media_hamburger_popover_show(launcher, widget, callback):
     global _media_panel_hamburger_popover, _media_panel_hamburger_menu
 
     _media_panel_hamburger_menu = menu_clear_or_create(_media_panel_hamburger_menu)
+
+    delete_section = Gio.Menu.new()
+    add_menu_action(delete_section, _("Delete"), "mediapanel.delete", "delete", callback)
+    _media_panel_hamburger_menu.append_section(None, delete_section)
     
     proxy_section = Gio.Menu.new()
     add_menu_action(proxy_section, _("Render Proxy Files For Selected Media"), "mediapanel.proxyrender", "render proxies", callback)
