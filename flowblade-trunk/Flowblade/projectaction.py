@@ -1018,6 +1018,7 @@ def _hamburger_menu_item_selected(action, variant, msg):
         proxyediting.create_proxy_files_pressed(True)
     elif msg == "select all":
         gui.media_list_view.select_all()
+        gui.media_list_view.selected_objects[0].widget.grab_focus()
     elif msg == "select none":
         gui.media_list_view.clear_selection()
     elif msg == "append all":
