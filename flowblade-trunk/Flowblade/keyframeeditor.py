@@ -1191,7 +1191,18 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.clone_value_from_next()
         elif msg  == "clonekfprev":
             self.clip_editor.clone_value_from_prev()
-    
+        elif msg == "openinkftool":
+            track = self.editable_property.track
+            clip = self.editable_property.clip
+            displayname = self.editable_property.args["displayname"].replace("!", " ")
+            filter_index = self.editable_property.filter_index
+            filter = clip.filters[filter_index]
+            prop = filter.properties[self.editable_property.property_index]
+            param_name, val, type = prop
+            callbackbridge.modesetting_kftool_mode_from_kf_editor(clip, track, param_name, filter, filter_index, displayname)
+
+            return
+            
         self.queue_draw()
         self.update_property_value()
 
@@ -1260,6 +1271,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
 
         _kf_menu.append_section(None, kfs_section)
 
+        open_in_kf_tool_section = Gio.Menu.new()
+        guipopover.add_menu_action(open_in_kf_tool_section, _("Open in Keyframe Tool"), "keyframes.openinkftool",  "openinkftool", self._menu_item_activated)
+        _kf_menu.append_section(None, open_in_kf_tool_section)
+        
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
 
 

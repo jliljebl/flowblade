@@ -483,6 +483,7 @@ def monkeypatch_callbacks():
     callbackbridge.mediaplugin_get_clip = mediaplugin.get_clip
     callbackbridge.mediaplugin_set_plugin_to_be_edited = mediaplugin.set_plugin_to_be_edited
     callbackbridge.modesetting_set_default_edit_mode = modesetting.set_default_edit_mode
+    callbackbridge.modesetting_kftool_mode_from_kf_editor = modesetting.kftool_mode_from_kf_editor
     callbackbridge.movemodes_select_clip = movemodes.select_clip
     callbackbridge.movemodes_select_from_box_selection = movemodes.select_from_box_selection
     callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file

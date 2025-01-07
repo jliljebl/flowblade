@@ -208,6 +208,10 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
+def init_for_clip_filter_and_param(clip, track, param_name, filter, filter_index, dispay_name):
+    param_data = (param_name, filter, filter_index, dispay_name)
+    init_tool_for_clip(clip, track, PARAM_KF_EDIT, param_data)
+
 def get_clip_kftool_editable_params_data(clip):
     kftool_editable_params = []
     for i in range(0, len(clip.filters)):
@@ -332,7 +336,7 @@ def exit_tool():
     global enter_mode
     if enter_mode != None:
         # Exit to enter mode if we had one.
-        gui.editor_window.tline_cursor_manager.tline_cursor_manager.kf_tool_exit_to_mode(enter_mode)
+        gui.editor_window.tline_cursor_manager.kf_tool_exit_to_mode(enter_mode)
         enter_mode = None
     else:
         # Exit to default mode if no editor was open.

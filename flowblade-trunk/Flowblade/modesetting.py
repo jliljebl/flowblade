@@ -339,3 +339,23 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
     gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
     clipeffectseditor.keyframe_editor_widgets = []
+
+def kftool_mode_from_kf_editor(clip, track, param_name, filter, filter_index, displayname):
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    kftoolmode.enter_mode = editorstate.edit_mode 
+    editorstate.edit_mode = editorstate.KF_TOOL
+        
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
+    movemodes.clear_selected_clips() # Entering this edit mode clears selection 
+
+    kftoolmode.set_no_clip_edit_data()
+
+    #kftoolmode.init_tool_for_clip(clip, track, edit_type)
+    kftoolmode.init_for_clip_filter_and_param(clip, track, param_name, filter, filter_index, displayname)
+    kftoolmode.edit_data["initializing"] = False
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
+
+    clipeffectseditor.keyframe_editor_widgets = []
+    

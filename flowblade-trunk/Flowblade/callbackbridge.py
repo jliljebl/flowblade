@@ -50,6 +50,7 @@ mediaplugin_get_clip = None
 mediaplugin_set_plugin_to_be_edited = None
 
 modesetting_set_default_edit_mode = None
+modesetting_kftool_mode_from_kf_editor = None
 
 movemodes_select_clip = None
 movemodes_select_from_box_selection = None
