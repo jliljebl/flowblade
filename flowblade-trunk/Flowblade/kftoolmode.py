@@ -1702,6 +1702,10 @@ class TLineKeyFrameEditor:
             global _playhead_follow_kf
             _playhead_follow_kf = new_state
             action.set_state(GLib.Variant.new_boolean(new_state))
+        elif msg == "editpanel":
+            ep = edit_data["editable_property"]
+            clipeffectseditor.set_clip_and_filter(ep.clip, ep.track, ep.clip_index, ep.filter_index)
+            exit_tool()
         elif msg == "exit":
             set_no_clip_edit_data()
     

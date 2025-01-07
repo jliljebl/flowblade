@@ -461,6 +461,11 @@ def set_clip(clip, track, clip_index, show_tab=True):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
 
+
+def set_clip_and_filter(clip, track, clip_index, filter_index):
+    set_clip(clip, track, clip_index, True)
+    _filter_stack.set_single_expanded(filter_index)
+
 def refresh_clip():
     if _filter_stack == None:
         return 

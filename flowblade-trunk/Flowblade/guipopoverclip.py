@@ -679,6 +679,7 @@ def kftool_popover_menu_show(widget, kftool, x, y, callback, callback_snapping):
         _kftool_menu.append_section(None, plyhead_section)
 
         exit_section = Gio.Menu.new()
+        add_menu_action(exit_section, _("Open in Edit Panel Keyframe Editor"), "kftoolmenu.editpanel",  ("editpanel", None), callback)
         add_menu_action(exit_section, _("Exit Edit"), "kftoolmenu.exit",  ("exit", None), callback)
         _kftool_menu.append_section(None, exit_section)
 
