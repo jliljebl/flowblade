@@ -825,6 +825,7 @@ class EditorWindow:
             ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:tlineaction.range_overwrite_pressed()),
             ('CutClip', None, _('Cut Clip At Playhead'), None, None, lambda a:tlineaction.cut_pressed()),
             ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
+            ('SequenceDuplicate', None, _('Duplicate Sequence'), None, None, lambda a:projectaction.duplicate_sequence()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
             ('ResyncSelected', None, _('Resync Track'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
@@ -1006,6 +1007,7 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
+                    <menuitem action='SequenceDuplicate'/>
                     <separator/>
                     <menuitem action='AddVideoTrack'/>
                     <menuitem action='AddAudioTrack'/>

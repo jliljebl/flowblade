@@ -2115,6 +2115,55 @@ def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_s
     else:
         _insert_sequence(seq)
 
+def duplicate_sequence():
+    # Get dialog data 
+    name = current_sequence().name + _("_duplicate_") + str(PROJECT().next_seq_number)
+
+    v_tracks, a_tracks = current_sequence().get_track_counts()
+
+    # Get index for selected sequence
+    selection = gui.sequence_list_view.treeview.get_selection()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    
+    # Set default track counts as module global values, this is not a good design.
+    sequence.AUDIO_TRACKS_COUNT = a_tracks
+    sequence.VIDEO_TRACKS_COUNT = v_tracks
+
+    # Current sequence will be appended on newly created empty sequence to create a
+    # duplicate sequence.
+    import_seq = current_sequence()
+
+    # Add new sequence.
+    PROJECT().add_named_sequence(name)
+    gui.sequence_list_view.fill_data_model()
+
+    # Change to new sequence
+    callbackbridge.app_change_current_sequence(len(PROJECT().sequences) - 1)
+    gui.editor_window.init_compositing_mode_menu()
+    
+    # Add duplicated sequence content.
+    _append_sequence(import_seq)
+
+    # We get single empty frame in beginning from using _append_sequence method originally
+    # created for different usage, delete it.
+    data = {
+        "tracks":current_sequence().tracks,
+        "mark_in_frame":0,
+        "mark_out_frame":1
+    }
+
+    action = edit.range_delete_action(data)
+    action.do_edit()
+
+    undo.clear_undos()
+
+    primary_txt = _("Duplicate Sequence created")
+    secondary_txt = _("Duplicate sequence <b>%s</b> was created\nfrom sequence <b>%s</b> .")%(name,import_seq.name)
+
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
+
 def _append_sequence(import_seq):
     start_track_range, end_track_range = _get_sequence_import_range(import_seq)
     tracks_off = current_sequence().first_video_index - import_seq.first_video_index
@@ -2166,7 +2215,7 @@ def _append_sequence(import_seq):
 
     undo.clear_undos()
 
-    updater.repaint_tline()
+    updater.zoom_project_length()
 
 def _insert_sequence(import_seq):
     insert_frame = editorstate.PLAYER().current_frame()
