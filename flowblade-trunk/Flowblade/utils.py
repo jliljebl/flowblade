@@ -387,7 +387,7 @@ def get_file_producer_info(file_producer):
     info = {}
     info["width"] = clip.get_int("width")
     info["height"] = clip.get_int("height")
-    info["length"]  = clip.get_length()
+    info["length"] = clip.get_length()
     
     video_index = clip.get_int("video_index")
     audio_index = clip.get_int("audio_index")
@@ -395,7 +395,9 @@ def get_file_producer_info(file_producer):
     long_audio_property = "meta.media." + str(audio_index) + ".codec.long_name"
     sample_rate_property = "meta.media." + str(audio_index) + ".codec.sample_rate"
     channels_property = "meta.media." + str(audio_index) +  ".codec.channels"
-    
+    pix_ftm_property = "meta.media." + str(video_index) + ".codec.pix_fmt"
+    color_space_property = "meta.media." + str(video_index) + ".codec.colorspace"
+
     info["vcodec"] = clip.get(str(long_video_property))
     info["acodec"] = clip.get(str(long_audio_property))
     info["channels"] = clip.get_int(str(channels_property))
@@ -405,7 +407,9 @@ def get_file_producer_info(file_producer):
     info["fps_den"] = frame.get_double("meta.media.frame_rate_den")
     info["progressive"] = frame.get_int("meta.media.progressive") == 1
     info["top_field_first"] = frame.get_int("meta.media.top_field_first") == 1
-    
+    info["pixel_format"] = clip.get(str(pix_ftm_property))
+    info["colorspace"] = clip.get(str(color_space_property))
+
     resource = clip.get("resource")
     name, ext = os.path.splitext(resource)
     ext = ext.lstrip(".")

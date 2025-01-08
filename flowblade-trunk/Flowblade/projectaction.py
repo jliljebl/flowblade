@@ -1400,9 +1400,13 @@ def _display_file_info(media_file):
     if media_file.type == appconsts.VIDEO:
         match_profile_index = mltprofiles.get_closest_matching_profile_index(info)
         match_profile_name =  mltprofiles.get_profile_name_for_index(match_profile_index)
+        pixel_format = info["pixel_format"]
+        colorspace = info["colorspace"]
     else:
         match_profile_name = _("N/A")
-    
+        pixel_format = _("N/A")
+        colorspace = _("N/A")
+
     if media_file.type == appconsts.VIDEO:
         if media_file.matches_project_profile():
             matches_project_profile = _("Yes")
@@ -1417,8 +1421,10 @@ def _display_file_info(media_file):
         fps = utils.get_fps_str_with_two_decimals(str(float(num/den)))
     except:
         fps = _("N/A")
-    
-    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_project_profile))
+
+    dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, 
+                                    channels, frequency, fps, match_profile_name, 
+                                    matches_project_profile, pixel_format, colorspace))
 
 def remove_unused_media():
     unused = PROJECT().get_unused_media()

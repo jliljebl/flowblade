@@ -194,7 +194,9 @@ def get_two_text_panel(primary_txt, secondary_txt):
     return align
 
 def get_file_properties_panel(data):
-    media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_current_profile = data
+    media_file, img, size, length, vcodec, acodec, channels, frequency, \
+    fps, match_profile_name, matches_current_profile, pixel_format, colorspace = data
+
     name_label = Gtk.Label(label=media_file.name)
     name_label.set_max_width_chars(100)
     name_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
@@ -212,7 +214,9 @@ def get_file_properties_panel(data):
     row5 = get_two_column_box_fixed(get_bold_label(_("Audio Sample Rate:")), Gtk.Label(label=frequency))
     row6 = get_two_column_box_fixed(get_bold_label(_("Best Profile:")), Gtk.Label(label=match_profile_name))
     row7 = get_two_column_box_fixed(get_bold_label(_("Matches Project Profile:")), Gtk.Label(label=matches_current_profile))
-    
+    row8 = get_two_column_box_fixed(get_bold_label(_("Colorspace:")), Gtk.Label(label=colorspace))
+    row9 = get_two_column_box_fixed(get_bold_label(_("Pixel Format:")), Gtk.Label(label=pixel_format))
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(img, False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(12, 16), False, False, 0)
@@ -222,6 +226,8 @@ def get_file_properties_panel(data):
     vbox.pack_start(row111, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
+    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
