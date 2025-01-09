@@ -57,51 +57,21 @@ def play_pressed():
     if editorstate.current_is_active_trim_mode() and trimmodes.submode != trimmodes.NOTHING_ON:
         return
 
-    if current_is_move_mode():
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        trimmodes.oneroll_play_pressed()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        trimmodes.tworoll_play_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
-        trimmodes.slide_play_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.KF_TOOL:
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.MULTI_TRIM:
-        movemodes.play_pressed()
-    elif EDIT_MODE() == editorstate.CUT:
-        movemodes.play_pressed()
+    PLAYER().start_playback()
+    gui.editor_window.player_buttons.show_playing_state(True)
 
 def stop_pressed():
-    if current_is_move_mode():
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        trimmodes.oneroll_stop_pressed()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        trimmodes.tworoll_stop_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
-        trimmodes.slide_stop_pressed()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.KF_TOOL:
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.MULTI_TRIM:
-        movemodes.stop_pressed()
-    elif EDIT_MODE() == editorstate.CUT:
-        movemodes.stop_pressed()
-
+    PLAYER().stop_playback()
+    gui.editor_window.player_buttons.show_playing_state(False)
+    
     updater.maybe_autocenter()
 
+def play_stop_pressed():
+    if PLAYER().is_playing():
+        stop_pressed()
+    else:
+        play_pressed()
+            
 #------------------------------------------  go to start, end
 def start_pressed():
     if current_is_move_mode():

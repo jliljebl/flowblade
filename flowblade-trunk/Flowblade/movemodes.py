@@ -69,23 +69,6 @@ blank_press_data = None
 # Data/state for ongoing edit.
 edit_data = None
 
-#------------------------------ playback control
-# These four buttons act differently in trimmodes and move modes
-def play_pressed():
-    # This handles only move modes, see trimmodes.py module for others.
-    # Jul-2016 - SvdB - Added code to handle play/pause button
-    if editorpersistance.prefs.play_pause == True:
-        if PLAYER().is_playing():
-            PLAYER().stop_playback()
-        else:
-            PLAYER().start_playback()
-    else:
-        # Original code
-        PLAYER().start_playback()
-
-def stop_pressed():
-    # This handles only move modes, see trimmodes.py module for others.
-    PLAYER().stop_playback()
 
 #------------------------------------------ go to start end
 def start_pressed():
@@ -95,6 +78,7 @@ def start_pressed():
 def end_pressed():
     # This handles only move modes, see trimmodes.py module for others.
     PLAYER().seek_frame(PLAYER().get_active_length() - 1)
+    
 #------------------------------------------ End of  go to start end
 def prev_pressed():
     # This handles only move modes, see trimmodes.py module for others.

@@ -425,6 +425,7 @@ class Player:
         self.ticker.start_ticker()
     
     def stop_ticker(self):
+        gui.editor_window.player_buttons.show_playing_state(False)
         self.ticker.destroy_ticker()
 
 

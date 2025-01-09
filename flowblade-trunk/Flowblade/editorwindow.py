@@ -1310,7 +1310,7 @@ class EditorWindow:
     def connect_player(self, mltplayer):
 
         pressed_callback_funcs = [monitorevent.prev_pressed,
-                                  monitorevent.play_pressed,
+                                  monitorevent.play_stop_pressed,
                                   monitorevent.next_pressed]
 
 

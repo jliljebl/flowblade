@@ -277,6 +277,7 @@ class AbstractGlassButtons:
             x += self.button_width
 
     def show_prelight_icons(self):
+        self.prelight_icons = []
         for icon in self.icons:
             surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width(), icon.get_height())
             cr = cairo.Context(surface_prelight)
@@ -435,10 +436,10 @@ class PlayerButtonsCompact(AbstractGlassButtons):
 
         self.play_icon = guiutils.get_cairo_image("play_2_s")
         self.stop_icon = guiutils.get_cairo_image("stop_s")
-        next_icon = guiutils.get_cairo_image("next_frame_s")
-        prev_icon = guiutils.get_cairo_image("prev_frame_s")
+        self.next_icon = guiutils.get_cairo_image("next_frame_s")
+        self.prev_icon = guiutils.get_cairo_image("prev_frame_s")
 
-        self.icons = [prev_icon, self.play_icon, next_icon]
+        self.icons = [self.prev_icon, self.play_icon, self.next_icon]
         self.image_x = [0, 0, 0]
 
 
@@ -452,11 +453,28 @@ class PlayerButtonsCompact(AbstractGlassButtons):
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
         self.show_prelight_icons()
-
+        self.stopped_prelight_icons = self.prelight_icons 
+        self.icons = [self.prev_icon, self.stop_icon, self.next_icon]
+        self.show_prelight_icons()
+        self.playing_prelight_icons = self.prelight_icons 
+        
+        self.icons = [self.prev_icon, self.play_icon, self.next_icon]
+        self.prelight_icons = self.stopped_prelight_icons 
+        
     def set_normal_sensitive_pattern(self):
         self.set_sensitive(True)
         self.widget.queue_draw()
 
+    def show_playing_state(self, is_playing):
+        if is_playing == True:
+            self.icons = [self.prev_icon, self.stop_icon, self.next_icon]
+            self.prelight_icons = self.playing_prelight_icons 
+        else:
+            self.icons = [self.prev_icon, self.play_icon, self.next_icon]
+            self.prelight_icons = self.stopped_prelight_icons
+                
+        self.widget.queue_draw()
+        
     # ------------------------------------------------------------- mouse events
     def _press_event(self, event):
         """
