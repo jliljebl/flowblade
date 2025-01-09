@@ -373,6 +373,10 @@ class EditorWindow:
 
         # Effects select panel
         effect_select_panel, effect_select_list_view, effect_select_combo_box  = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
+        # example code for using widget css from deleted test dev branch
+        #gui.apply_widget_css_class(effect_select_list_view.treeview, "bold-text", "bold-text-class.css")
+        #effect_select_list_view.treeview.set_name("light-text")
+        #gui.apply_widget_css(effect_select_list_view.treeview, "light-text", "light-text-id.css")
         self.effect_select_panel = effect_select_panel
         self.effect_select_list_view = effect_select_list_view
         self.effect_select_combo_box = effect_select_combo_box
