@@ -423,7 +423,93 @@ class PlayerButtons(AbstractGlassButtons):
         self.button_x = mid_x - (buttons_width // 2)
         self._draw_buttons(cr, w, h)
 
+class PlayerButtonsCompact(AbstractGlassButtons):
 
+    def __init__(self):
+        # Aug-2019 - SvdB - BB - Multiple changes - size_ind, size_adj, get_cairo_image
+        size_ind = 0
+        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
+
+        # Force no decorations for player buttons, this cannot be made to work.
+        self.no_decorations = True 
+
+        self.play_icon = guiutils.get_cairo_image("play_2_s")
+        self.stop_icon = guiutils.get_cairo_image("stop_s")
+        next_icon = guiutils.get_cairo_image("next_frame_s")
+        prev_icon = guiutils.get_cairo_image("prev_frame_s")
+
+        self.icons = [prev_icon, self.play_icon, next_icon]
+        self.image_x = [0, 0, 0]
+
+
+        for i in range(0, len(self.icons)):
+            self.image_y.append(MB_BUTTON_IMAGE_Y - 6)
+        
+        self.pressed_callback_funcs = None # set using set_callbacks()
+
+        self.set_sensitive(True)
+
+        focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
+
+        self.show_prelight_icons()
+
+    def set_normal_sensitive_pattern(self):
+        self.set_sensitive(True)
+        self.widget.queue_draw()
+
+    # ------------------------------------------------------------- mouse events
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+        self.pressed_button = self._get_hit_code(event.x, event.y)
+        if self.pressed_button >= 0 and self.pressed_button < len(self.icons):
+            callback_func = self.pressed_callback_funcs[self.pressed_button] # index is set to match at editorwindow.py where callback func list is created
+            callback_func()
+        self.widget.queue_draw()
+
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        button_under = self._get_hit_code(x, y)
+        if self.pressed_button != button_under: # pressed button is released
+            self.pressed_button = NO_HIT
+
+        if len(self.prelight_icons) > 0:
+            self.prelight_index = button_under
+            
+        self.widget.queue_draw()
+
+    def _release_event(self, event):
+        """
+        Mouse release callback
+        """
+        self.pressed_button = -1
+        self.widget.queue_draw()
+
+    def _leave_notify_event(self, event):
+        self.prelight_index = -1
+        self.widget.queue_draw()
+
+    def _enter_notify_event(self, event):
+        self.prelight_index = -1
+        
+    def set_callbacks(self, pressed_callback_funcs):
+        self.pressed_callback_funcs = pressed_callback_funcs
+
+    # ---------------------------------------------------------------- painting
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+        self.allocation = allocation
+
+        mid_x = w // 2
+        buttons_width = self.button_width * len(self.icons)
+        # Jul-2016 - SvdB - No changes made here, but because of the calculation of button_x the row of buttons is slightly moved right if play/pause
+        # is enabled. This could be solved by setting self.button_x = 1, if wished.
+        self.button_x = mid_x - (buttons_width // 2)
+        self._draw_buttons(cr, w, h)
+        
 class GmicButtons(AbstractGlassButtons):
 
     def __init__(self):

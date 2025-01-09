@@ -1699,12 +1699,13 @@ def get_monitor_view_select_launcher(callback):
     if guiutils.double_icon_size():
        size_adj = 2
     surface = guiutils.get_cairo_image("program_view_2")
-    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
+    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=16*size_adj)
     if guiutils.double_icon_size():
         menu_launch.surface_y = 8*size_adj
     else:
         menu_launch.surface_y = 3
-        
+    
+    menu_launch.widget.set_margin_top(2)
     return menu_launch
 
 def get_trim_view_select_launcher(callback):
@@ -1715,12 +1716,13 @@ def get_trim_view_select_launcher(callback):
     if guiutils.double_icon_size():
        size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
-    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
+    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=16*size_adj)
     if guiutils.double_icon_size():
         menu_launch.surface_y = 8*size_adj
     else:
         menu_launch.surface_y = 3
-        
+
+    menu_launch.widget.set_margin_top(2)
     return menu_launch
     
 def get_compositor_track_select_combo(source_track, target_track, callback):
@@ -2790,7 +2792,7 @@ class HamburgerPressLaunch:
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 76
-        self.HEIGHT = 14
+        self.HEIGHT = 10
         
         self.press_fix = 6 # we don't get want to divide press exactly half, timeline gets more
         

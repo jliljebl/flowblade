@@ -518,19 +518,8 @@ class EditorWindow:
         self._create_monitor_buttons()
         self._create_monitor_row_widgets()
 
-        self.player_buttons = glassbuttons.PlayerButtons()
-        if (editorpersistance.prefs.play_pause == True):
-            if (editorpersistance.prefs.timeline_start_end is True):
-            # ------------------------------ timeline_start_end_button
-                tooltips = [_("Start - Home key"), _("End - End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play/Pause- Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
-            else:
-                tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play/Pause - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
-        else:
-            if (editorpersistance.prefs.timeline_start_end is True):
-                tooltips = [_("Start - Home key"), _("End - End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
-            else:
-                tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
-            # ------------------------------End of timeline_start_end_button
+        self.player_buttons = glassbuttons.PlayerButtonsCompact()
+        tooltips = [_("Prev Frame - Arrow Left"),  _("Play/Pause - Space"), _("Next Frame - Arrow Right")]
         tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, tooltips)
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
@@ -546,9 +535,14 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
-        player_buttons_row.set_margin_top(4)
+        player_buttons_row.set_margin_top(8)
+        player_buttons_row.set_margin_bottom(6)
         player_buttons_row.set_margin_left(12)
         player_buttons_row.set_margin_right(12)
+
+        player_buttons_row.set_name("player-bar")
+        gui.apply_widget_css(player_buttons_row, "player-bar", "player-bar-id.css")
+        
         self.player_buttons_row = player_buttons_row
 
         # Switch / pos bar row
@@ -581,7 +575,9 @@ class EditorWindow:
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
         self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
-            
+        #self.edit_buttons_frame.set_name("middlebar")
+        #gui.apply_widget_css(player_buttons_row, "middlebar", "middlebar-id.css")
+                    
     def _init_tline(self):
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)
@@ -1238,15 +1234,6 @@ class EditorWindow:
             menu.append(new_item)
             new_item.show()
 
-    """
-    def hide_tline_render_strip(self):
-        guiutils.remove_children(self.tline_renderer_hbox)
-
-    def show_tline_render_strip(self):
-        self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
-        self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
-    """
-    
     def _change_windows_preference(self, widget, new_window_layout):
         if widget.get_active() == False:
             return
@@ -1307,6 +1294,7 @@ class EditorWindow:
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
+        self.monitor_switch.widget.set_margin_top(2)
 
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
@@ -1320,54 +1308,11 @@ class EditorWindow:
             updater.display_clip_in_monitor()
 
     def connect_player(self, mltplayer):
-        # Buttons
-        # NOTE: ORDER OF CALLBACKS IS THE SAME AS ORDER OF BUTTONS FROM LEFT TO RIGHT
-        # Jul-2016 - SvdB - For play/pause button
-        if editorpersistance.prefs.play_pause == False:
-            # ------------------------------timeline_start_end_button
-            if (editorpersistance.prefs.timeline_start_end is True):
-                pressed_callback_funcs = [monitorevent.start_pressed,  #  go to start
-                                          monitorevent.end_pressed,   #  go to  end
-                                          monitorevent.prev_pressed,
-                                          monitorevent.next_pressed,
-                                          monitorevent.play_pressed,
-                                          monitorevent.stop_pressed,
-                                          monitorevent.mark_in_pressed,
-                                          monitorevent.mark_out_pressed,
-                                          monitorevent.marks_clear_pressed,
-                                          monitorevent.to_mark_in_pressed,
-                                          monitorevent.to_mark_out_pressed]
-            else:
-                pressed_callback_funcs = [monitorevent.prev_pressed,
-                                          monitorevent.next_pressed,
-                                          monitorevent.play_pressed,
-                                          monitorevent.stop_pressed,
-                                          monitorevent.mark_in_pressed,
-                                          monitorevent.mark_out_pressed,
-                                          monitorevent.marks_clear_pressed,
-                                          monitorevent.to_mark_in_pressed,
-                                          monitorevent.to_mark_out_pressed]
-        else:
-            if (editorpersistance.prefs.timeline_start_end is True):
-                pressed_callback_funcs = [monitorevent.start_pressed,  #  go to start
-                                          monitorevent.end_pressed,   #  go to  end
-                                          monitorevent.prev_pressed,
-                                          monitorevent.next_pressed,
-                                          monitorevent.play_pressed,
-                                          monitorevent.mark_in_pressed,
-                                          monitorevent.mark_out_pressed,
-                                          monitorevent.marks_clear_pressed,
-                                          monitorevent.to_mark_in_pressed,
-                                          monitorevent.to_mark_out_pressed]
-            else:
-                pressed_callback_funcs = [monitorevent.prev_pressed,
-                                          monitorevent.next_pressed,
-                                          monitorevent.play_pressed,
-                                          monitorevent.mark_in_pressed,
-                                          monitorevent.mark_out_pressed,
-                                          monitorevent.marks_clear_pressed,
-                                          monitorevent.to_mark_in_pressed,
-                                          monitorevent.to_mark_out_pressed]
+
+        pressed_callback_funcs = [monitorevent.prev_pressed,
+                                  monitorevent.play_pressed,
+                                  monitorevent.next_pressed]
+
 
         self.player_buttons.set_callbacks(pressed_callback_funcs)
 
