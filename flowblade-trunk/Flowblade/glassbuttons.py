@@ -25,6 +25,7 @@ import cairoarea
 import editorpersistance
 import gui
 import guiutils
+import respaths
 
 BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),
@@ -706,6 +707,21 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
     def _release_event(self, event):
         pass
 
+class MarkButtons(GlassButtonsGroup):
+    
+    def __init__(self, callbacks):
+            
+        GlassButtonsGroup.__init__(self, 16, 18, 0, 0, 2)
+            
+        self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_in_xs.png"), self.pressed)
+        self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_out_xs.png"), self.pressed)
+        self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_clear_xs.png"), self.pressed)
+        self.no_decorations = True 
+        
+        self.show_prelight_icons()
+        
+    def pressed(self):
+        print("p")
 
 
 class TooltipRunner:
