@@ -367,11 +367,6 @@ def _view_prefs_panel():
     tracks_combo.append_text(_("2 x - 100px, 50px"))
     tracks_combo.set_active(prefs.tracks_scale)
 
-    icons_combo = Gtk.ComboBoxText()
-    icons_combo.append_text(_("Default"))
-    icons_combo.append_text(_("Double"))
-    icons_combo.set_active(prefs.icons_scale)
-
     monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
 
@@ -409,7 +404,6 @@ def _view_prefs_panel():
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Icons Size:")), icons_combo, PREFERENCES_LEFT))
 
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Edit panel width:")), edit_panel_width_spin, PREFERENCES_LEFT))
@@ -424,7 +418,6 @@ def _view_prefs_panel():
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
@@ -434,7 +427,7 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
-                  tracks_combo, icons_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
+                  tracks_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
                   layout_monitor, filter_select_width_spin)
 
 

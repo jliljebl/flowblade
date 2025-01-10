@@ -602,9 +602,6 @@ class EditorWindow:
         size_adj = 1
         size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22
         size_y = tlinewidgets.SCALE_HEIGHT
-        if editorpersistance.prefs.double_track_hights:
-            size_adj = 1.4
-            size_x = tlinewidgets.COLUMN_WIDTH - (66*size_adj)
 
         info_h.set_size_request(size_x, size_y)
 

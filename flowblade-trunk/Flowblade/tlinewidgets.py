@@ -2610,12 +2610,8 @@ class TimeLineFrameScale:
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 
-        # Aug-2019 - SvdB - BB - Increase indicator triangles by 1 for double track height. size_adj for tick lines
         max_range = 3
         size_adj = 1
-        if editorpersistance.prefs.double_track_hights:
-           max_range = 4
-           size_adj = 1.4
 
         # Draw start indicator triangles
         if pos == 0:
