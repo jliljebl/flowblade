@@ -441,7 +441,7 @@ class PlayerButtonsCompact(AbstractGlassButtons):
         self.prev_icon = guiutils.get_cairo_image("prev_frame_s")
 
         self.icons = [self.prev_icon, self.play_icon, self.next_icon]
-        self.image_x = [0, 0, 0]
+        self.image_x = [0, 0, -1]
 
 
         for i in range(0, len(self.icons)):

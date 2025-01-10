@@ -1304,7 +1304,7 @@ class EditorWindow:
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
         self.monitor_switch.widget.set_margin_top(2)
-        self.monitor_switch.widget.set_margin_right(48)
+        self.monitor_switch.widget.set_margin_right(59)
         
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
