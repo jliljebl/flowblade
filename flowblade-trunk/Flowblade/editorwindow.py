@@ -528,9 +528,14 @@ class EditorWindow:
         self.view_mode_select.widget.set_margin_end(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
 
-        markbuttons = glassbuttons.MarkButtons(None)
+        callbacks = [monitorevent.mark_in_pressed,
+                     monitorevent.mark_out_pressed,
+                     monitorevent.marks_clear_pressed]
+        markbuttons = glassbuttons.MarkButtons(callbacks)
         markbuttons.widget.set_margin_right(12)
-
+        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"), _("Clear Marks - Alt + K")]
+        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, mbtooltips)
+        
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
