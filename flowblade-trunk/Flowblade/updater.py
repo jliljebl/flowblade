@@ -543,18 +543,18 @@ def _get_marks_range_info(mark_in, mark_out):
     if mark_in != -1:
         mark_in_info = utils.get_tc_string(mark_in)
     else:
-        mark_in_info = "--:--:--:--" 
+        mark_in_info = "" 
 
     if mark_out != -1:
         mark_out_info = utils.get_tc_string(mark_out)
     else:
-        mark_out_info = "--:--:--:--"
+        mark_out_info = ""
 
     range_len = mark_out - mark_in + 1 # +1, out incl.
     if mark_in != -1 and mark_out != -1:
         range_info = utils.get_tc_string(range_len)
     else:
-        range_info = "--:--:--:--" 
+        range_info = "" 
     
     return (mark_in_info, mark_out_info, range_info)
 

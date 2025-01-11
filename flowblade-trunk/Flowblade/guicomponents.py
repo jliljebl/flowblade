@@ -2171,14 +2171,14 @@ class MonitorInfoDisplay:
         self.widget = cairoarea.CairoDrawableArea2( widget_width,
                                                     18,
                                                     self._draw)
-        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 8")
+        self.font_desc = Pango.FontDescription("sans bold 9")
         self.mark_in_img = guiutils.get_cairo_image("mark_in_tc", force=False) 
         self.mark_out_img = guiutils.get_cairo_image("mark_out_tc", force=False)
         self.marks_length_img = guiutils.get_cairo_image("marks_length_tc", force=False)
 
-        self.in_str = "--:--:--:--"
-        self.out_str = "--:--:--:--"
-        self.len_str = "--:--:--:--"
+        self.in_str = ""
+        self.out_str = ""
+        self.len_str = ""
         
         # Draw consts
         x = 2
@@ -2223,6 +2223,7 @@ class MonitorInfoDisplay:
         cr.set_line_width(1)
         cr.stroke()
 
+        """
         # Get current TIMELINE frame str
         if self.use_internal_frame:
             frame = self._frame
@@ -2241,7 +2242,8 @@ class MonitorInfoDisplay:
             frame_str = str(self._frame).rjust(6)
     
             self.mark_in_img
-
+        """
+        
         cr.set_source_surface(self.mark_in_img, 12, 5)
         cr.paint()
         cr.set_source_surface(self.mark_out_img, 110, 5)
@@ -2250,13 +2252,25 @@ class MonitorInfoDisplay:
         cr.paint()
         
         # Tc Texts
+        self.draw_tc(cr, self.in_str, 21, 2)
+        self.draw_tc(cr, self.out_str, 118, 2)
+        self.draw_tc(cr, self.len_str, 218, 2)
+        """
         layout = PangoCairo.create_layout(cr)
-        # Some spaces to get the desired text printed with one layout, about like this: "] --:--:--:-- [ 00:00:00:00 ][ --:--:--:--"
-        layout.set_text("  " + self.in_str + "     " + self.out_str + "      " + self.len_str, -1)
+        layout.set_text(self.in_str) #+ "     " + self.out_str + "      " + self.len_str, -1)
         layout.set_font_description(self.font_desc)
-
         cr.set_source_rgb(0.7, 0.7, 0.7)
         cr.move_to(10, 4)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        """
+        
+    def draw_tc(self, cr, tc_text, x, y):
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(tc_text) #+ "     " + self.out_str + "      " + self.len_str, -1)
+        layout.set_font_description(self.font_desc)
+        cr.set_source_rgb(0.7, 0.7, 0.7)
+        cr.move_to(x, y)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
@@ -2270,65 +2284,6 @@ class MonitorInfoDisplay:
         cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path ()
         
-""" delete when you see this again.
-class MonitorTCInfo:
-    def __init__(self):
-        if editorstate.screen_size_small_height() == True:
-            font_desc = "sans bold 8"
-        else:
-            font_desc = "sans bold 9"
-            
-        self.widget = Gtk.HBox()
-        self.widget.set_tooltip_text(_("Current Sequence / Clip name and length"))
-        
-        self.monitor_source = Gtk.Label()
-        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
-        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.set_sensitive(False)
-        
-        self.monitor_tc = Gtk.Label()
-        self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
-        #self.monitor_tc.set_name("accent-fg-widget")
-        
-        self.in_label = Gtk.Label(label="] ")
-        self.in_label.modify_font(Pango.FontDescription(font_desc))
-
-        self.out_label = Gtk.Label(label="[ ")
-        self.out_label.modify_font(Pango.FontDescription(font_desc))
-        
-        self.marks_length_label = Gtk.Label(label="][ ")
-        self.marks_length_label.modify_font(Pango.FontDescription(font_desc))
-        
-        self.in_value = Gtk.Label(label="--:--:--:--")
-        self.in_value.modify_font(Pango.FontDescription(font_desc))
-
-        self.out_value = Gtk.Label(label="--:--:--:--")
-        self.out_value.modify_font(Pango.FontDescription(font_desc))
-        
-        self.marks_length_value = Gtk.Label(label="--:--:--:--")
-        self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
-        
-        self.widget.pack_start(self.in_label, False, False, 0)
-        self.widget.pack_start(self.in_value, False, False, 0)
-        self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
-        self.widget.pack_start(self.out_label, False, False, 0)
-        self.widget.pack_start(self.out_value, False, False, 0)
-        self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
-        self.widget.pack_start(self.marks_length_label, False, False, 0)
-        self.widget.pack_start(self.marks_length_value, False, False, 0)
-            
-    def set_source_name(self, source_name):
-        self.monitor_source.set_text(source_name)
-        
-    def set_source_tc(self, tc_str):
-        self.monitor_tc.set_text(tc_str)
-    
-    def set_range_info(self, in_str, out_str, len_str):
-        if editorstate.screen_size_small_width() == False:
-            self.in_value.set_text(in_str)
-            self.out_value.set_text(out_str)
-        self.marks_length_value.set_text(len_str)
-"""
 
 class TimeLineLeftBottom:
     def __init__(self, comp_mode_launch, tline_render_mode_launcher):
