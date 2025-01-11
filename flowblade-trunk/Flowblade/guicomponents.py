@@ -2145,25 +2145,17 @@ class MonitorMarksTCInfo:
         self.widget = Gtk.HBox()
         self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
 
-            
     def set_source_name(self, source_name):
         self.monitor_source.set_text(source_name)
         
     def set_source_tc(self, tc_str):
         self.monitor_tc.set_text(tc_str)
     
-    def set_range_info(self, in_str, out_str, len_str):
-        self.marks_tc_display.in_str = in_str
-        self.marks_tc_display.out_str = out_str
-        self.marks_tc_display.len_str = len_str
-        
+    def set_range_info(self, mark_in, mark_out):
+        self.marks_tc_display.set_marks_range_info(mark_in, mark_out)
         self.marks_tc_display.widget.queue_draw()
-        #if editorstate.screen_size_small_width() == False:
-        #    self.in_value.set_text(in_str)
-        #    self.out_value.set_text(out_str)
-        #self.marks_length_value.set_text(len_str)
-    
-    
+
+
 
 class MonitorInfoDisplay:
 
@@ -2179,6 +2171,10 @@ class MonitorInfoDisplay:
         self.in_str = ""
         self.out_str = ""
         self.len_str = ""
+
+        self.in_zeros_overlay = ""
+        self.out_zeros_overlay = ""
+        self.len_zeros_overlay = ""
         
         # Draw consts
         x = 2
@@ -2206,6 +2202,35 @@ class MonitorInfoDisplay:
         self._frame = frame # this is used in tools, editor window uses PLAYER frame
         self.widget.queue_draw()
 
+    def set_marks_range_info(self, mark_in, mark_out):
+        self.in_zeros_overlay = ""
+        self.out_zeros_overlay = ""
+        self.len_zeros_overlay = ""
+        
+        if mark_in != -1:
+            mark_in_info = utils.get_tc_string(mark_in)
+            self.in_zeros_overlay = utils.get_tc_zeros_overlay(mark_in)
+        else:
+            mark_in_info = ""
+        self.in_str = mark_in_info
+        
+        if mark_out != -1:
+            mark_out_info = utils.get_tc_string(mark_out)
+            self.out_zeros_overlay = utils.get_tc_zeros_overlay(mark_out)
+        else:
+            mark_out_info = ""
+        self.out_str = mark_out_info
+
+        range_len = mark_out - mark_in + 1 # +1, out incl.
+        if mark_in != -1 and mark_out != -1:
+            range_info = utils.get_tc_string(range_len)
+            self.len_zeros_overlay = utils.get_tc_zeros_overlay(range_len)
+        else:
+            range_info = "" 
+        self.len_str = range_info
+
+        print(self.in_zeros_overlay, self.out_zeros_overlay , self.len_zeros_overlay)
+        
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
@@ -2222,27 +2247,6 @@ class MonitorInfoDisplay:
         
         cr.set_line_width(1)
         cr.stroke()
-
-        """
-        # Get current TIMELINE frame str
-        if self.use_internal_frame:
-            frame = self._frame
-        else:
-            frame = PLAYER().tracktor_producer.frame() # is this used actually?
-
-        if self.display_tc == True:
-            if self.use_internal_fps == False:
-                frame_str = utils.get_tc_string(frame)
-            else:
-                if  self.fps != self.FPS_NOT_SET:
-                    frame_str = utils.get_tc_string_with_fps(frame, self.fps)
-                else:
-                    frame_str = ""
-        else:
-            frame_str = str(self._frame).rjust(6)
-    
-            self.mark_in_img
-        """
         
         cr.set_source_surface(self.mark_in_img, 12, 5)
         cr.paint()
@@ -2252,24 +2256,21 @@ class MonitorInfoDisplay:
         cr.paint()
         
         # Tc Texts
-        self.draw_tc(cr, self.in_str, 21, 2)
-        self.draw_tc(cr, self.out_str, 118, 2)
-        self.draw_tc(cr, self.len_str, 218, 2)
-        """
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(self.in_str) #+ "     " + self.out_str + "      " + self.len_str, -1)
-        layout.set_font_description(self.font_desc)
-        cr.set_source_rgb(0.7, 0.7, 0.7)
-        cr.move_to(10, 4)
-        PangoCairo.update_layout(cr, layout)
-        PangoCairo.show_layout(cr, layout)
-        """
-        
-    def draw_tc(self, cr, tc_text, x, y):
+        self.draw_tc(cr, self.in_str, 21, 2, True)
+        self.draw_tc(cr, self.in_zeros_overlay, 21, 2, False)
+        self.draw_tc(cr, self.out_str, 118, 2, True)
+        self.draw_tc(cr, self.out_zeros_overlay, 118, 2, False)
+        self.draw_tc(cr, self.len_str, 218, 2, True)
+        self.draw_tc(cr, self.len_zeros_overlay, 218, 2, False)
+
+    def draw_tc(self, cr, tc_text, x, y, is_tc):
         layout = PangoCairo.create_layout(cr)
         layout.set_text(tc_text) #+ "     " + self.out_str + "      " + self.len_str, -1)
         layout.set_font_description(self.font_desc)
-        cr.set_source_rgb(0.7, 0.7, 0.7)
+        if is_tc == True:
+            cr.set_source_rgb(0.7, 0.7, 0.7)
+        else:
+            cr.set_source_rgb(0.4, 0.4, 0.4)
         cr.move_to(x, y)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)

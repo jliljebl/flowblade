@@ -470,7 +470,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 
 def display_monitor_clip_name():#we're displaying length and range length also
     clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
-    range_info = _get_marks_range_info(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
     gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name + " - ")
     gui.editor_window.monitor_tc_info.set_source_tc(clip_len)
@@ -492,7 +491,7 @@ def display_monitor_clip_name():#we're displaying length and range length also
         (f_oath, ext) = MONITOR_MEDIA_FILE().path.split(".")
         gui.editor_window.monitor_desc_label.set_text(ext + "(image sequence)")
 
-    gui.editor_window.monitor_tc_info.set_range_info(*range_info)
+    gui.editor_window.monitor_tc_info.set_range_info(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
 def display_sequence_in_monitor():
     """
@@ -535,28 +534,7 @@ def update_seqence_info_text():
     profile = PROJECT().profile
     gui.editor_window.monitor_desc_label.set_text(profile.description())
     
-    range_info = _get_marks_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
-    gui.editor_window.monitor_tc_info.set_range_info(*range_info)
-
-def _get_marks_range_info(mark_in, mark_out):
-
-    if mark_in != -1:
-        mark_in_info = utils.get_tc_string(mark_in)
-    else:
-        mark_in_info = "" 
-
-    if mark_out != -1:
-        mark_out_info = utils.get_tc_string(mark_out)
-    else:
-        mark_out_info = ""
-
-    range_len = mark_out - mark_in + 1 # +1, out incl.
-    if mark_in != -1 and mark_out != -1:
-        range_info = utils.get_tc_string(range_len)
-    else:
-        range_info = "" 
-    
-    return (mark_in_info, mark_out_info, range_info)
+    gui.editor_window.monitor_tc_info.set_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
 
 def switch_monitor_display():
     monitorevent.stop_pressed()

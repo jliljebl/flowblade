@@ -189,6 +189,63 @@ def get_tc_string_with_fps(frame, frames_per_sec):
     mins = mins % 60
     return "%02d:%02d:%02d:%02d" % (hours, mins, sec, fr)
 
+def get_tc_zeros_overlay(frame):
+    return get_tc_zeros_overlay_string_with_fps_v2(frame, fps())
+    
+def get_tc_zeros_overlay_string_with_fps(frame, frames_per_sec):
+    # convert fractional frame rates (like 23.976) into integers,
+    # otherwise the timeline will slowly drift over time
+    frames_per_sec = int(round(frames_per_sec))
+
+    fr = frame % frames_per_sec
+    sec = frame // frames_per_sec
+    mins = sec // 60
+    sec = sec % 60
+    hours = mins // 60
+    mins = mins % 60
+
+    if hours > 9:
+        return ""
+    elif hours > 0:
+        return "0"
+    elif hours == 0 and mins > 9:
+        return "00:"
+    elif mins > 0:
+        return "00:0"
+    elif sec > 9:
+        return "00:00:"
+    elif sec > 0:
+        return "00:00:0"
+    elif fr > 9:
+        return "00:00:00:"
+    elif fr > 0:
+        return "00:00:00:0"
+    else:
+        return "00:00:00:00"
+
+def get_tc_zeros_overlay_string_with_fps_v2(frame, frames_per_sec):
+    # convert fractional frame rates (like 23.976) into integers,
+    # otherwise the timeline will slowly drift over time
+    frames_per_sec = int(round(frames_per_sec))
+
+    fr = frame % frames_per_sec
+    sec = frame // frames_per_sec
+    mins = sec // 60
+    sec = sec % 60
+    hours = mins // 60
+    mins = mins % 60
+
+    if hours > 0:
+        return ""
+    elif mins > 0:
+        return "00:"
+    elif sec > 0:
+        return "00:00:"
+    elif fr > 0:
+        return "00:00:00:"
+    else:
+        return "00:00:00:00"
+        
 def get_tc_string_with_fps_for_filename(frame, frames_per_sec):
     frames_per_sec = int(round(frames_per_sec))
 
@@ -199,7 +256,7 @@ def get_tc_string_with_fps_for_filename(frame, frames_per_sec):
     hours = mins / 60
     mins = mins % 60
     return "%02d-%02d-%02d-%02d" % (hours, mins, sec, fr)
-    
+
 def get_time_str_for_sec_float(sec):
     mins = sec / 60
     sec = sec % 60
