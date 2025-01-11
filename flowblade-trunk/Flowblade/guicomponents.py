@@ -2229,8 +2229,6 @@ class MonitorInfoDisplay:
             range_info = "" 
         self.len_str = range_info
 
-        print(self.in_zeros_overlay, self.out_zeros_overlay , self.len_zeros_overlay)
-        
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
