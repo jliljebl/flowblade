@@ -191,6 +191,9 @@ def get_tc_string_with_fps(frame, frames_per_sec):
 
 def get_tc_zeros_overlay(frame):
     return get_tc_zeros_overlay_string_with_fps_v2(frame, fps())
+
+def get_tc_zeros_overlay_fine_grained(frame):
+    return get_tc_zeros_overlay_string_with_fps(frame, fps())
     
 def get_tc_zeros_overlay_string_with_fps(frame, frames_per_sec):
     # convert fractional frame rates (like 23.976) into integers,

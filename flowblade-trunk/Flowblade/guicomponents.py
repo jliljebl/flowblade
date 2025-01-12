@@ -66,6 +66,7 @@ MEDIA_OBJECT_WIDGET_HEIGHT = 105
 CLIP_EDITOR_LEFT_WIDTH = 200
 
 TC_COLOR = (0.7, 0.7, 0.7)
+TC_ZEROS_COLOR = (0.4, 0.4, 0.4)
 
 BIG_TC_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
                         (0.8, 1, 1, 1, 0),
@@ -1935,9 +1936,6 @@ class BigTCDisplay:
         self.TEXT_X = 18
         self.TEXT_Y = 1
 
-        global TC_COLOR
-        TC_COLOR = (0.55, 0.55, 0.55)
-
         self.widget.connect("button-press-event", self._button_press)
         self.widget.set_margin_top(1)
 
@@ -1972,6 +1970,23 @@ class BigTCDisplay:
         cr.set_source_rgb(*TC_COLOR)
         cr.move_to(self.TEXT_X, self.TEXT_Y)
 
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        
+        try:
+            frame = PLAYER().tracktor_producer.frame()
+            frame_str = utils.get_tc_zeros_overlay_fine_grained(frame)
+        except:
+            print("execpt")
+            frame_str = "00:00:00:00"
+            
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
+        layout.set_font_description(self.font_desc)
+
+        cr.set_source_rgb(*TC_ZEROS_COLOR)
+        cr.move_to(self.TEXT_X, self.TEXT_Y)
+        
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
                 
