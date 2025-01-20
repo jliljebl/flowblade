@@ -562,6 +562,8 @@ def create_gui():
     editorlayout.set_positions_frames_visibility()
         
     # All widgets are now realized and references captured so can find out theme colors.
+    # TODO: Delete this code, we are not detecting anything anymore and theme colors not
+    # variable anymore.
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
     gui.pos_bar.set_dark_bg_color()
