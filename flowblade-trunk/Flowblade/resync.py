@@ -63,12 +63,13 @@ def sequence_changed(new_sequence):
     calculate_and_set_child_clip_sync_states()
 
 def calculate_and_set_child_clip_sync_states():
-    parent_track = current_sequence().first_video_track()
+    #parent_track = current_sequence().first_video_track()
     for child_clip, track in sync_children.items():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in
 
         parent_clip = child_clip.sync_data.master_clip
+        parent_track = child_clip.sync_data.master_clip_track 
         try:
             parent_index = parent_track.clips.index(parent_clip)
         except:
@@ -89,7 +90,7 @@ def get_resync_data_list_for_clip_list(clips_list):
     # Returns list of tuples with data needed to do resync.
     # Return tuples are of type (clip, track, index, child_clip_start_on_timeline, pos_off)
     resync_data = []
-    parent_track = current_sequence().first_video_track()
+
     for clip_track_tuple in clips_list:
         child_clip, track = clip_track_tuple
         child_index = track.clips.index(child_clip)
@@ -97,6 +98,7 @@ def get_resync_data_list_for_clip_list(clips_list):
         child_clip_start = child_clip_pos_on_tline - child_clip.clip_in
 
         parent_clip = child_clip.sync_data.master_clip
+        parent_track = child_clip.sync_data.master_clip_track
         try:
             parent_index = parent_track.clips.index(parent_clip)
         except:

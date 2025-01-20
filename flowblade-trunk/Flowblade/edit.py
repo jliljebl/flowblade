@@ -555,6 +555,7 @@ class SyncData:
         self.clip_in = None
         self.clip_out = None
         self.master_clip = None
+        self.master_clip_track = None
         self.master_inframe = None
         self.master_audio_index = None # this does nothing? try to remove.
            
@@ -2445,7 +2446,7 @@ def _set_sync_undo(self):
 def _set_sync_redo(self):
     # Get clips
     child_clip = self.child_track.clips[self.child_index]
-    parent_clip = get_track(current_sequence().first_video_index).clips[self.parent_index]
+    parent_clip = get_track(self.parent_track.id).clips[self.parent_index]
 
     # Get offset
     child_clip_start = self.child_track.clip_start(self.child_index) - child_clip.clip_in
@@ -2456,6 +2457,7 @@ def _set_sync_redo(self):
     child_clip.sync_data = SyncData()
     child_clip.sync_data.pos_offset = pos_offset
     child_clip.sync_data.master_clip = parent_clip
+    child_clip.sync_data.master_clip_track = self.parent_track
     child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
 
     resync.clip_added_to_timeline(child_clip, self.child_track)

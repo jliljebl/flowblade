@@ -341,10 +341,12 @@ def get_p_compositors(compositors):
 
 def get_p_sync_data(sync_data):
     s_sync_data = copy.copy(sync_data)
-    if isinstance( sync_data.master_clip, int ): # When saving relinked projects sync_data.master_clip 
-                                                   # is already int and does not need to be replaced
+    if isinstance( sync_data.master_clip, int ):   # When saving relinked projects sync_data.master_clip 
+                                                   # and s_sync_data.master_clip_track are already ints
+                                                   # because they havent been replacved with live objects.
         return s_sync_data
     s_sync_data.master_clip = sync_data.master_clip.id
+    s_sync_data.master_clip_track = sync_data.master_clip_track.id
     return s_sync_data
 
 def remove_attrs(obj, remove_attrs):
@@ -576,7 +578,14 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
         clip, track = clip_n_track
         try:
             master_clip = all_clips[clip.sync_data.master_clip] # master clip has been replaced with its id on save
-            clip.sync_data.master_clip = master_clip # put back reference to master clip
+            if hasattr(clip.sync_data, "master_clip_track"):
+                master_clip_track = seq.tracks[clip.sync_data.master_clip_track]
+            else:
+                # All sync parents were previously on track V1.
+                master_clip_track = seq.tracks[seq.first_video_index]
+            # put back references to objects
+            clip.sync_data.master_clip = master_clip
+            clip.sync_data.master_clip_track = master_clip_track
             resync.clip_added_to_timeline(clip, track) # save data to enagble sync states monitoring after eddits
         except KeyError:
             clip.sync_data = None # masterclip no longer on track V1
