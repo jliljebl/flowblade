@@ -252,7 +252,7 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("set_track_sync"), tlineaction.resync_track_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
-    tooltips = [_("Split Audio Synched"), _("Set Track Sync Containing Selected Clip/s"), _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clip")]
+    tooltips = [_("Split Audio Synched"), _("Set Sync for Track Containing Selected Clip/s"), _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clip")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
