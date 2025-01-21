@@ -38,6 +38,8 @@ _markers_popover = None
 _markers_menu = None
 _tline_properties_popover = None
 _tline_properties_menu = None
+_sync_popover = None
+_sync_menu = None
 _all_tracks_popover = None
 _all_tracks_menu = None
 _compositing_mode_popover = None
@@ -267,6 +269,29 @@ def tline_properties_menu_show(launcher, widget, callback, mouse_zoom_callback):
     launcher.connect_launched_menu(_tline_properties_popover)
     _tline_properties_popover.show()
 
+def sync_menu_show(launcher, widget, properties_set_callback, split_mirror_callback):
+    global _sync_popover, _sync_menu
+
+    _sync_menu = menu_clear_or_create(_sync_menu)
+        
+    properties_section = Gio.Menu.new()
+    add_menu_action_check(properties_section, _("Auto Sync Split Video Clips on Add"), "midbar.sync.autosplit", editorpersistance.prefs.sync_autosplit, "autosplit", properties_set_callback)
+    add_menu_action_check(properties_section, _("Dual Trim Synched Clips"), "midbar.sync.dualtrim", editorpersistance.prefs.sync_dualtrim, "dualtrim", properties_set_callback)
+    _sync_menu.append_section(None, properties_section)
+
+    mirror_section = Gio.Menu.new()
+    items_data =[(_("Audio Split To Mirrored Track"), "splitmirror"), (_("Audio Split To V1 Always"), "splitv1")]
+    if  editorpersistance.prefs.sync_mirror == True:
+        active_index = 0
+    else:
+        active_index = 1
+    add_menu_action_all_items_radio(mirror_section, items_data, "midbar.sync.mirror", active_index, split_mirror_callback)
+    _sync_menu.append_section(None, mirror_section)
+    
+    _sync_popover = Gtk.Popover.new_from_model(widget, _sync_menu)
+    launcher.connect_launched_menu(_sync_popover)
+    _sync_popover.show()
+    
 def all_tracks_menu_show(launcher, widget, callback):
     global _all_tracks_popover, _all_tracks_menu
 
@@ -948,8 +973,20 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
 
     _tracks_column_menu.append_section(None, mute_section)
 
+    active = not(track == current_sequence().first_video_index)
+
+    sync_set_section = Gio.Menu.new()
+    add_menu_action(sync_set_section, _("Set Track Sync..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Reset Track Sync To Current Positions"), "trackcolumn.sync.resetsync", (track,"resetsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Clear Track Sync"), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, active)
+    _tracks_column_menu.append_section(None, sync_set_section)
+
+    resync_section = Gio.Menu.new()
+    add_menu_action(resync_section, _("Resync Track"), "trackcolumn.sync.resync", (track,"resync", None), callback, active)
+    _tracks_column_menu.append_section(None, resync_section)
+
     rect = create_rect(x, y)
-    
+
     _tracks_column_popover = Gtk.Popover.new_from_model(widget, _tracks_column_menu)
     _tracks_column_popover.set_pointing_to(rect) 
     _tracks_column_popover.show()

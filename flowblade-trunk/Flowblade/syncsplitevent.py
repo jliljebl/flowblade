@@ -22,7 +22,7 @@
 Module handles events related to audiosplits and setting clip sync relationships.
 """
 
-from gi.repository import Gdk
+from gi.repository import Gdk, GLib
 
 import appconsts
 import dialogutils
@@ -30,7 +30,9 @@ import edit
 import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
+import editorpersistance
 import gui
+import guipopover
 import movemodes
 import resync
 import tlinewidgets
@@ -93,7 +95,31 @@ def split_audio_synched_from_clips_list(clips, track):
 
     sync_consolidated_action = edit.ConsolidatedEditAction(set_sync_actions)
     sync_consolidated_action.do_consolidated_edit()
-    
+
+def sync_menu_launch_pressed(launcher, widget, event):
+    guipopover.sync_menu_show(launcher, widget, _sync_property_item_activated, _sync_split_property_activated)
+
+def _sync_property_item_activated(action, event, msg):
+    new_state = not(action.get_state().get_boolean())
+
+    if msg == "autosplit":
+        editorpersistance.prefs.sync_autosplit = new_state
+    elif msg == "dualtrim":
+        editorpersistance.prefs.sync_dualtrim = new_state
+
+
+    action.set_state(GLib.Variant.new_boolean(new_state))
+
+def _sync_split_property_activated(action, variant):
+    if variant.get_string() == "splitmirror":
+        editorpersistance.prefs.sync_mirror = True
+    else:
+        editorpersistance.prefs.sync_mirror = False
+
+    action.set_state(variant)
+    editorpersistance.save()
+    #guipopover._tline_properties_popover.hide()
+
 def _get_set_sync_action(child_clip_track, child_clip, parent_clip):
     # This is quarenteed because GUI option to do this is only available on this track
     parent_track = current_sequence().tracks[current_sequence().first_video_index]

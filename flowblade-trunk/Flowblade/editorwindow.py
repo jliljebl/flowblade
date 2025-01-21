@@ -74,6 +74,7 @@ import scripttool
 import shortcuts
 import shortcutsdialog
 import singletracktransition
+import syncsplitevent
 import titler
 import tlineaction
 import tlinecursors
@@ -600,7 +601,7 @@ class EditorWindow:
         info_h.pack_start(Gtk.Label(), True, True, 0)
         # Aug-2019 - SvdB - BB - Height doesn't need to be doubled. 1.4x is nicer
         size_adj = 1
-        size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22
+        size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22 - 22
         size_y = tlinewidgets.SCALE_HEIGHT
 
         info_h.set_size_request(size_x, size_y)
@@ -615,9 +616,13 @@ class EditorWindow:
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
 
+        sync_launcher_surface = guiutils.get_cairo_image("sync_menu_launch")
+        sync_launcher = guicomponents.PressLaunchPopover(syncsplitevent.sync_menu_launch_pressed, sync_launcher_surface, 22*size_adj, 22*size_adj)
+
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
+        tline_hbox_1.pack_start(sync_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(levels_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(markers_launcher.widget, False, False, 0)

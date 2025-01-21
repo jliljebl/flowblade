@@ -387,3 +387,6 @@ class EditorPreferences:
         self.project_panel_width = PROJECT_PANEL_WIDTH_MIN
         self.editor_panel_width = EDIT_PANEL_WIDTH_MIN 
         self.media_panel_width = MEDIA_PANEL_WIDTH_MIN
+        self.sync_autosplit = False
+        self.sync_mirror = True
+        self.sync_dualtrim = False
