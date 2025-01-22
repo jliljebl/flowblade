@@ -37,6 +37,7 @@ from editorstate import PLAYER
 import movemodes
 import projectaction
 import snapping
+import syncsplitevent
 import tlinewidgets
 import updater
 
@@ -74,6 +75,13 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
+def clear_track_sync(track_index):
+    track = get_track(track_index)
+    if len(track.clips) == 0:
+        return
+
+    syncsplitevent.clear_track_clips_sync(track)
+     
 def toggle_track_output():
     if movemodes.selected_track == -1:
         return
@@ -389,4 +397,5 @@ def track_center_pressed(data):
 
 POPUP_HANDLERS = {"lock":lock_track,
                   "unlock":unlock_track,
-                  "mute_track":mute_track}
+                  "mute_track":mute_track,
+                  "clearsync":clear_track_sync}

@@ -201,6 +201,28 @@ def set_track_clips_sync(child_track, parent_track):
     action = edit.set_track_sync_action(data)
     action.do_edit()
 
+def clear_track_clips_sync(child_track):
+    orig_sync_data = {}
+    sync_data_exists = False
+    for clip in child_track.clips:
+        if clip.is_blanck_clip == True:
+            continue
+        if  clip.sync_data != None:
+            sync_data_exists = True
+        
+        orig_sync_data[clip] = clip.sync_data
+    
+    # Let's not put noop edits in undo stack.
+    if sync_data_exists == False:
+        return
+
+    data = {"child_track":child_track,
+            "orig_sync_data":orig_sync_data}
+    
+    action = edit.clear_track_sync_action(data)
+    action.do_edit()
+
+
 # ---------------------------------------------- sync parent clips
 def init_select_master_clip(popup_data):
     clip, track, item_id, x = popup_data
