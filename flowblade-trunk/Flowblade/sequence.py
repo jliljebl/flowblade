@@ -1020,6 +1020,33 @@ class Sequence:
                 
         return cut_frame
 
+    def find_parent_clip_for_clip_start(self, parent_track, clip_start_frame):
+        parent_clip = None
+        last_pos_diff = None
+        for i in range(1, len(parent_track.clips)):
+
+            clip = parent_track.clips[i]            
+            parent_clip_start_frame = parent_track.clip_start(i)
+            if clip.is_blanck_clip == True:
+                continue
+            
+            new_diff = parent_clip_start_frame - clip_start_frame
+
+            if parent_clip == None:
+                parent_clip = clip
+                last_pos_diff = new_diff
+            else:
+                if new_diff >= 0:
+                    if abs(new_diff) <= abs(last_pos_diff):
+                        return clip
+                    else:
+                        return parent_clip
+                else:
+                    parent_clip = clip
+                    last_pos_diff = new_diff
+
+        return parent_clip
+
     def find_prev_cut_frame(self, tline_frame):
         """
         Returns frame of next cut in active tracks relative to timeline.

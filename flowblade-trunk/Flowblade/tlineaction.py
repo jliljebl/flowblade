@@ -831,6 +831,12 @@ def resync_button_pressed():
 def resync_track_button_pressed():
     syncsplitevent.resync_track()
 
+def set_track_sync_button_pressed():
+    if movemodes.selected_track != -1:
+        child_track = current_sequence().tracks[movemodes.selected_track]
+        parent_track = current_sequence().first_video_track()
+        syncsplitevent.set_track_clips_sync(child_track, parent_track)
+
 def sync_compositor(compositor):
     track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
     origin_clip = None

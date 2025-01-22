@@ -75,9 +75,10 @@ def calculate_and_set_child_clip_sync_states():
         except:
             child_clip.sync_data.sync_state = appconsts.SYNC_PARENT_GONE
             continue
-        parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
 
+        parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
         pos_offset = child_clip_start - parent_clip_start
+
         if pos_offset == child_clip.sync_data.pos_offset:
             child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
         else:
@@ -104,8 +105,8 @@ def get_resync_data_list_for_clip_list(clips_list):
         except:
             # Parent clip no longer awailable
             continue
+            
         parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
-
         pos_offset = child_clip_start - parent_clip_start
 
         resync_data.append((child_clip, track, child_index, child_clip_pos_on_tline, pos_offset))
@@ -120,6 +121,35 @@ def get_track_resync_clips_data_list(track):
             clips_data.append((clip, track))
     
     return clips_data
+
+def get_track_all_resync_action_data(child_track, parent_track):
+    orig_sync_data = {}
+    for clip in child_track.clips:
+        if clip.is_blanck_clip == True:
+            continue
+        orig_sync_data[clip] = clip.sync_data
+    
+    new_sync_data = {}
+    for i in range(0, len(child_track.clips)):
+        clip = child_track.clips[i]
+        if clip.is_blanck_clip == True:
+            continue
+        clip_start_frame = child_track.clip_start(i)
+        parent_clip = current_sequence().find_parent_clip_for_clip_start(parent_track, clip_start_frame)
+        if parent_clip != None:
+            parent_index = parent_track.clips.index(parent_clip)
+
+            # Get offset
+            child_clip_start = clip_start_frame - clip.clip_in
+            parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
+            pos_offset = child_clip_start - parent_clip_start
+            sync_data = (pos_offset, parent_clip, parent_track)
+        else:
+            sync_data = (None, None, None)
+            
+        new_sync_data[clip] = sync_data
+    
+    return (orig_sync_data, new_sync_data)
 
 def print_sync_children():
     for child_clip, track in sync_children.items():

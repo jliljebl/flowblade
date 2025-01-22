@@ -191,6 +191,16 @@ def _get_split_audio_edit_action(popup_data):
     
     return (action, clip, audio_clip, to_track)
 
+def set_track_clips_sync(child_track, parent_track):
+    orig_sync_data, new_sync_data = resync.get_track_all_resync_action_data(child_track, parent_track)
+    
+    data = {"child_track":child_track,
+            "orig_sync_data":orig_sync_data,
+            "new_sync_data":new_sync_data}
+    
+    action = edit.set_track_sync_action(data)
+    action.do_edit()
+
 # ---------------------------------------------- sync parent clips
 def init_select_master_clip(popup_data):
     clip, track, item_id, x = popup_data

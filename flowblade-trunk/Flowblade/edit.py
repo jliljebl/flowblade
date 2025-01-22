@@ -2462,6 +2462,40 @@ def _set_sync_redo(self):
 
     resync.clip_added_to_timeline(child_clip, self.child_track)
 
+# -------------------------------------------- SET TRACK SYNC
+"child_track", "orig_sync_data", "new_sync_data"
+def set_track_sync_action(data):
+    return EditAction(_set_track_sync_undo, _set_track_sync_redo, data)
+
+def _set_track_sync_undo(self):
+    for child_clip in self.child_track.clips:
+        resync.clip_removed_from_timeline(child_clip)
+        try:
+            # "orig_sync_data" created in resync.get_track_all_resync_action_data()
+            sync_data = self.orig_sync_data[child_clip]
+            child_clip.sync_data = sync_data
+        except:
+            pass
+            
+        resync.clip_added_to_timeline(child_clip, self.child_track)
+
+def _set_track_sync_redo(self):
+    for child_clip in self.child_track.clips:
+        resync.clip_removed_from_timeline(child_clip)
+        try:
+            # "new_sync_data" created in resync.get_track_all_resync_action_data()
+            pos_offset, parent_clip, parent_track = self.new_sync_data[child_clip]
+            
+            child_clip.sync_data = SyncData()
+            child_clip.sync_data.pos_offset = pos_offset
+            child_clip.sync_data.master_clip = parent_clip
+            child_clip.sync_data.master_clip_track = parent_track
+            child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
+        except:
+            pass
+            
+        resync.clip_added_to_timeline(child_clip, self.child_track)
+
 # ------------------------------------------------- CLEAR SYNC
 # "child_clip","child_track"
 def clear_sync_action(data):
