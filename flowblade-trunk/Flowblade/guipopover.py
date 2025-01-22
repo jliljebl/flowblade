@@ -976,9 +976,8 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
     active = not(track == current_sequence().first_video_index)
 
     sync_set_section = Gio.Menu.new()
-    add_menu_action(sync_set_section, _("Set Track Sync..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
-    add_menu_action(sync_set_section, _("Reset Track Sync To Current Positions"), "trackcolumn.sync.resetsync", (track,"resetsync", None), callback, active)
-    add_menu_action(sync_set_section, _("Clear Track Sync"), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Set Sync for All Clips on Track..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Clear Sync for All Clips on Track "), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, active)
     _tracks_column_menu.append_section(None, sync_set_section)
 
     resync_section = Gio.Menu.new()
