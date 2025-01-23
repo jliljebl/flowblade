@@ -467,6 +467,15 @@ class ConsolidatedEditAction:
             # Tracks autoexpand-on-drop feature needs to be here to avoid caching data.
             tracks_clips_count_before = current_sequence().get_tracks_clips_counts()
 
+            # Some actions like audio splice may need the previous edit_action to 
+            # complete before they can be created, so for these we provide a lambda 
+            # that cretes the edit action.
+            if callable(edit_action) == True:
+                new_edit_action = edit_action()
+                old_index = self.edit_actions.index(edit_action)
+                self.edit_actions[old_index] = new_edit_action
+                edit_action = new_edit_action
+                
             edit_action.redo()
 
             if edit_action.turn_on_stop_for_edit:
@@ -2225,7 +2234,7 @@ def _move_compositor_redo(self):
     compositeeditor.set_compositor(self.compositor) # This is different to updating e.g filter kfeditors, those are done in EditAction._update_gui()
 
 #----------------- AUDIO SPLICE
-# "parent_clip", "audio_clip", "track"
+# "parent_clip", "audio_clip", "track", "to_track"
 def audio_splice_action(data):
     action = EditAction(_audio_splice_undo, _audio_splice_redo, data)
     return action
@@ -2304,6 +2313,115 @@ def _audio_splice_redo(self):
 
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
+    
+#----------------- AUDIO SPLICE SYNCHED
+# "parent_clip", "audio_clip", "track", "to_track"
+def audio_synched_splice_action(data):
+    action = EditAction(_audio_synched_splice_undo, _audio_synched_splice_redo, data)
+    return action
+
+def _audio_synched_splice_undo(self):
+    to_track = self.to_track
+
+    # Remove add audio clip
+    in_index = to_track.get_clip_index_at(self.over_in)
+    _remove_clip(to_track, in_index)
+        
+    # Fix in clip and remove cut created clip if in was cut
+    if self.in_clip_out != -1:
+        in_clip = _remove_clip(to_track, in_index - 1)
+        _insert_clip(to_track, in_clip, in_index - 1,
+                     in_clip.clip_in, self.in_clip_out)
+        self.removed_clips.pop(0)
+
+    # Fix out clip and remove cut created clip if out was cut
+    if self.out_clip_in != -1:
+        # If moved clip/s were last in the track and were moved slightly 
+        # forward and were still last in track after move
+        # this leaves a trailing black that has been removed and this will fail
+        try:
+            out_clip = _remove_clip(to_track, in_index)
+            if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
+                _insert_clip(to_track, out_clip, in_index,
+                         self.out_clip_in, out_clip.clip_out)
+                self.removed_clips.pop(-1) 
+        except:
+            pass
+    
+    # Put back old clips
+    for i in range(0, len(self.removed_clips)):
+        clip = self.removed_clips[i]
+        _insert_clip(to_track, clip, in_index + i, clip.clip_in,
+                     clip.clip_out)
+
+    _do_clip_unmute(self.parent_clip)
+    
+    child_clip = self.audio_clip
+     
+    # Clear child sync data
+    child_clip.sync_data = None
+
+    # Clear resync data
+    resync.clip_sync_cleared(child_clip)
+
+def _audio_synched_splice_redo(self):
+    # Get shorter name for readability
+    to_track = self.to_track
+    
+    # Find out if overwrite starts after track end and pad track with blank if so.
+    if self.over_in >= to_track.get_length():
+        self.starts_after_end = True
+        gap = self.over_out - to_track.get_length()
+        _insert_blank(to_track, len(to_track.clips), gap)
+    else:
+        self.starts_after_end = False
+
+    # Cut at in frame of overwrite range. 
+    clip_in, clip_out = _overwrite_cut_track(to_track, self.over_in)
+    self.in_clip_out = clip_out
+
+    # Cut at out frame of overwrite range 
+    if to_track.get_length() > self.over_out:
+        clip_in, clip_out = _overwrite_cut_track(to_track, self.over_out)
+        self.out_clip_in = clip_in
+    else:
+        self.out_clip_in = -1
+    
+    # Splice out clips in overwrite range
+    self.removed_clips = []
+    in_index = to_track.get_clip_index_at(self.over_in)
+    out_index = to_track.get_clip_index_at(self.over_out)
+
+    for i in range(in_index, out_index):
+        self.removed_clips.append(_remove_clip(to_track, in_index))
+
+    # Insert audio clip
+    _insert_clip(to_track, self.audio_clip, in_index, self.parent_clip.clip_in, self.parent_clip.clip_out)
+
+    filter = _create_mute_volume_filter(current_sequence())
+    _do_clip_mute(self.parent_clip, filter)
+
+    # "parent_clip", "audio_clip", "track", "to_track"
+    child_clip = self.audio_clip
+    parent_clip = self.parent_clip
+    child_track = to_track
+    parent_track = self.track
+    child_index = child_track.clips.index(child_clip)
+    parent_index = parent_track.clips.index(parent_clip)
+
+    # Get offset
+    child_clip_start = child_track.clip_start(child_index) - child_clip.clip_in
+    parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
+    pos_offset = child_clip_start - parent_clip_start
+    
+    # Set sync data
+    child_clip.sync_data = SyncData()
+    child_clip.sync_data.pos_offset = pos_offset
+    child_clip.sync_data.master_clip = parent_clip
+    child_clip.sync_data.master_clip_track = parent_track
+    child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
+
+    resync.clip_added_to_timeline(child_clip, child_track)
 
 # ------------------------------------------------- RESYNC CLIP
 # "clips"

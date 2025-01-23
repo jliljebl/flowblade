@@ -1718,9 +1718,9 @@ class TimeLineCanvas:
         clip_start_frame = clip_start_in_tline - pos
 
         # Check if we need to collect positions for drawing sync relations 
-        collect_positions = False
-        if track.id == current_sequence().first_video_index:
-            collect_positions = True
+        #collect_positions = False
+        #if track.id == current_sequence().first_video_index:
+        #    collect_positions = True
 
         proxy_paths = current_proxy_media_paths()
 
@@ -1739,8 +1739,8 @@ class TimeLineCanvas:
             scale_in = clip_start_frame * pix_per_frame
             
             # Collect positions for drawing sync relations 
-            if collect_positions:
-                self.parent_positions[clip.id] = scale_in
+            #if collect_positions:
+            self.parent_positions[clip.id] = scale_in
             
             # Fill clip bg 
             if scale_length > FILL_MIN:

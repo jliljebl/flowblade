@@ -192,6 +192,25 @@ def _get_split_audio_edit_action(popup_data):
     
     return (action, clip, audio_clip, to_track)
 
+def get_synched_split_action_for_clip_and_track(clip, track):
+    to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
+
+    index = track.clips.index(clip)
+    frame = track.clip_start(index)
+
+    audio_clip = current_sequence().create_file_producer_clip(clip.path, None, False, clip.ttl)
+    audio_clip.media_type = appconsts.AUDIO
+    split_length = clip.clip_out - clip.clip_in + 1 # +1 out is inclusive and we're looking for length
+    data = { "parent_clip":clip,
+             "audio_clip":audio_clip,
+             "over_in":frame,
+             "over_out":frame + split_length,
+             "to_track":to_track,
+             "track":track}
+
+    action = edit.audio_synched_splice_action(data)
+    return action
+
 def set_track_clips_sync(child_track):
     dialogs.set_parent_track_dialog(child_track, _parent_track_selected)
  

@@ -95,7 +95,7 @@ def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
             "clip_in":clip_in,
             "clip_out":clip_out}
     action = edit.insert_action(data)
-    action.do_edit()
+    _do_action_and_maybe_autosplit_action(action, new_clip, track)
     
     updater.display_tline_cut_frame(track, index)
 
@@ -137,6 +137,7 @@ def  _attempt_dnd_overwrite(track, clip, frame):
     # Dropping on first available frame after last clip is append 
     # and is handled by insert code
     if track.get_length() == frame:
+        print("insert")
         return False
 
     # Clip dropped after last clip on track
@@ -152,7 +153,8 @@ def  _attempt_dnd_overwrite(track, clip, frame):
                 "clip_in":clip.mark_in,
                 "clip_out":clip.mark_out}
         action = edit.dnd_after_track_end_action(data)
-        action.do_edit()
+        _do_action_and_maybe_autosplit_action(action, clip, track)
+
 
         updater.display_tline_cut_frame(track, index + 1)
         return True
@@ -181,7 +183,7 @@ def  _attempt_dnd_overwrite(track, clip, frame):
                         "index":index,
                         "clip_in":clip.mark_in}
                 action = edit.dnd_on_blank_replace_action(data)
-                action.do_edit()
+                _do_action_and_maybe_autosplit_action(action, clip, track)
             else: # If dropped clip shorter then blank, replace start part of blank
                 data = {"track":track,
                         "clip":clip,
@@ -190,7 +192,7 @@ def  _attempt_dnd_overwrite(track, clip, frame):
                         "clip_in":clip.mark_in,
                         "clip_out":clip.mark_out}
                 action = edit.dnd_on_blank_start_action(data)
-                action.do_edit()
+                _do_action_and_maybe_autosplit_action(action, clip, track)
 
             updater.display_tline_cut_frame(track, index)
             return True
@@ -206,7 +208,7 @@ def  _attempt_dnd_overwrite(track, clip, frame):
                     "clip_in":clip.mark_in,
                     "clip_out":clip.mark_out}
             action = edit.dnd_on_blank_end_action(data)
-            action.do_edit()
+            _do_action_and_maybe_autosplit_action(action, clip, track)
         else: # Overwrite part of blank ei toimi
             data = {"track":track,
                     "clip":clip,
@@ -216,13 +218,22 @@ def  _attempt_dnd_overwrite(track, clip, frame):
                     "clip_in":clip.mark_in,
                     "clip_out":clip.mark_out}
             action = edit.dnd_on_blank_middle_action(data)
-            action.do_edit()
+            _do_action_and_maybe_autosplit_action(action, clip, track)
             
         updater.display_tline_cut_frame(track, index + 1)
         return True
 
     return False # this won't be hit
-    
+
+def _do_action_and_maybe_autosplit_action(action, clip, track):
+    if editorpersistance.prefs.sync_autosplit == False:
+        action.do_edit()
+    else:
+        split_action = lambda : syncsplitevent.get_synched_split_action_for_clip_and_track(clip, track)
+        edit_actions = [action, split_action]
+        action = edit.ConsolidatedEditAction(edit_actions)
+        action.do_consolidated_edit()
+
 def _get_insert_index(track, tline_pos):
     cut_frame = current_sequence().get_closest_cut_frame(track.id, tline_pos)
     index = current_sequence().get_clip_index(track, cut_frame)
