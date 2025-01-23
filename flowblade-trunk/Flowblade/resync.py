@@ -63,7 +63,6 @@ def sequence_changed(new_sequence):
     calculate_and_set_child_clip_sync_states()
 
 def calculate_and_set_child_clip_sync_states():
-    #parent_track = current_sequence().first_video_track()
     for child_clip, track in sync_children.items():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in

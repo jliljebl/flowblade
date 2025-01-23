@@ -1023,7 +1023,7 @@ class Sequence:
     def find_parent_clip_for_clip_start(self, parent_track, clip_start_frame):
         parent_clip = None
         last_pos_diff = None
-        for i in range(1, len(parent_track.clips)):
+        for i in range(0, len(parent_track.clips)):
 
             clip = parent_track.clips[i]            
             parent_clip_start_frame = parent_track.clip_start(i)

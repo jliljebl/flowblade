@@ -22,9 +22,10 @@
 Module handles events related to audiosplits and setting clip sync relationships.
 """
 
-from gi.repository import Gdk, GLib
+from gi.repository import Gdk, GLib, Gtk
 
 import appconsts
+import dialogs
 import dialogutils
 import edit
 import editorstate
@@ -191,7 +192,26 @@ def _get_split_audio_edit_action(popup_data):
     
     return (action, clip, audio_clip, to_track)
 
-def set_track_clips_sync(child_track, parent_track):
+def set_track_clips_sync(child_track):
+    dialogs.set_parent_track_dialog(child_track, _parent_track_selected)
+ 
+def _parent_track_selected(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        child_track, selection_data, tracks_combo = data
+        parent_track = selection_data[tracks_combo.get_active()]
+        
+        dialog.destroy()
+        
+        _do_set_track_clips_sync(child_track, parent_track)
+    else:
+        dialog.destroy()
+
+def _do_set_track_clips_sync(child_track, parent_track):
+    if len(parent_track.clips) == 0:
+        return
+    if len(child_track.clips) == 0:
+        return
+        
     orig_sync_data, new_sync_data = resync.get_track_all_resync_action_data(child_track, parent_track)
     
     data = {"child_track":child_track,
@@ -327,8 +347,13 @@ def _do_single_clip_resync(clip, track):
 def resync_track():
     if movemodes.selected_track == -1:
         return
+
+    selected_track = get_track(movemodes.selected_track)
+    resync_selected_track(selected_track)
+
+def resync_selected_track(selected_track):
     
-    resync_clips_data_list = resync.get_track_resync_clips_data_list(get_track(movemodes.selected_track))
+    resync_clips_data_list = resync.get_track_resync_clips_data_list(selected_track)
     
     if len(resync_clips_data_list) == 0:
         return

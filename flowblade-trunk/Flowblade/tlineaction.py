@@ -834,8 +834,8 @@ def resync_track_button_pressed():
 def set_track_sync_button_pressed():
     if movemodes.selected_track != -1:
         child_track = current_sequence().tracks[movemodes.selected_track]
-        parent_track = current_sequence().first_video_track()
-        syncsplitevent.set_track_clips_sync(child_track, parent_track)
+        #parent_track = current_sequence().first_video_track()
+        syncsplitevent.set_track_clips_sync(child_track)
 
 def clear_track_sync_button_pressed():
     if movemodes.selected_track != -1:

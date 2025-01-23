@@ -1888,5 +1888,39 @@ def set_bin_grfx_default_length_dialog(bin, current_default_length, callback):
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, value_spin)
 
+def set_parent_track_dialog(child_track, callback):
+    title = _("Set Parent Track")
+    accept_text = _("Set")
+    
+    child_track_name = utils.get_track_name(child_track, editorstate.current_sequence())
+    label_text = _("Set Sync Parent Track for Track {}:").format(child_track_name)
+    info_label = Gtk.Label(label=label_text)
+    info_label.set_margin_right(4)
 
+    tracks_combo = Gtk.ComboBoxText()
+    selection_data = []
+    active_index = 0
+    for i in range(len(editorstate.current_sequence().tracks) - 2, 0, -1):
+        track = editorstate.current_sequence().tracks[i]
+        if track is child_track:
+            continue
+        selection_data.append(track)
+        tracks_combo.append_text(utils.get_track_name(track, editorstate.current_sequence()))
+
+    active_index = 0
+    for i in range(0, len(selection_data)):
+        if selection_data[i] is editorstate.current_sequence().first_video_track():
+            active_index = i
+    tracks_combo.set_active(active_index)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(info_label, False, False, 0)
+    hbox.pack_start(tracks_combo, False, False, 0)
+
+    panel = dialogutils.get_alignment2(hbox)
+
+    dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (child_track, selection_data, tracks_combo))
+    
+
+    
     
