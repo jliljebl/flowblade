@@ -239,6 +239,10 @@ def get_p_playlist(playlist):
 
     s_playlist.clips = add_clips
     
+    # Replace parent track with its id.
+    if s_playlist.parent_track != None:
+        s_playlist.parent_track = s_playlist.parent_track.id
+    
     # Remove unpicleable attributes
     remove_attrs(s_playlist, PLAY_LIST_REMOVE)
    
@@ -524,6 +528,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and fill MLT tracks.
     for py_track in py_tracks:
         mlt_track = seq.add_track(py_track.type)
+        persistancecompat.FIX_MISSING_TRACK_ATTRS(mlt_track)
         if py_track.id == len(py_tracks) - 1:
             continue # Do not try to fill hidden track even if somehow a clip was saved there.
         fill_track_mlt(mlt_track, py_track)
@@ -531,7 +536,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
         if hasattr(mlt_track, "gain_filter"): # Hidden track and black track do not have these
             mlt_track.gain_filter.set("gain", str(mlt_track.audio_gain))
         if mlt_track.audio_pan != appconsts.NO_PAN:
-            seq.add_track_pan_filter(mlt_track, mlt_track.audio_pan) # only rtack with non-center pan values have pan filters
+            seq.add_track_pan_filter(mlt_track, mlt_track.audio_pan) # only track with non-center pan values have pan filters
     
     # Create and connect compositors.
     mlt_compositors = []
@@ -590,6 +595,12 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
         except KeyError:
             clip.sync_data = None # masterclip no longer on track V1
             resync.clip_removed_from_timeline(clip)
+
+    # Replace track ids with track objects on parented tracks.
+    for i in range(1, len(seq.tracks) - 1):
+        track = seq.tracks[i]
+        if track.parent_track != None:
+            track.parent_track = seq.tracks[track.parent_track]
 
     # This sets MLT properties that actually do mute
     seq.set_tracks_mute_state()

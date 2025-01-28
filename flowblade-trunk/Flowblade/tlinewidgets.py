@@ -105,7 +105,8 @@ LOCK_POS = (26, 5)
 INSRT_ICON_POS_HIGH = (108, 32)
 INSRT_ICON_POS = (108, 18)
 INSRT_ICON_POS_SMALL = (108, 6)
-
+SYNC_ICON_POS_HIGH = (88, 12)
+ 
 # tracks column icons
 FULL_LOCK_ICON = None
 TRACK_BG_ICON = None
@@ -115,6 +116,7 @@ MUTE_AUDIO_A_ICON =  None
 MUTE_ALL_ICON = None
 TRACK_ALL_ON_V_ICON = None
 TRACK_ALL_ON_A_ICON = None
+SYNC_ICON = None
 
 # clip icons
 FILTER_CLIP_ICON = None
@@ -342,7 +344,7 @@ def load_icons_and_set_colors():
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
     LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON, \
-    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE, TITLE_ICON 
+    INSERT_ARROW_ICON_INACTIVE, INSERT_ARROW_ICON_UP_INACTIVE, TITLE_ICON, SYNC_ICON 
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
@@ -360,6 +362,7 @@ def load_icons_and_set_colors():
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
+    SYNC_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_sync_icon.png")
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
     TITLE_ICON = guiutils.get_cairo_image("open_titler")
         
@@ -1717,11 +1720,6 @@ class TimeLineCanvas:
         # the first maybe partially displayed clip.
         clip_start_frame = clip_start_in_tline - pos
 
-        # Check if we need to collect positions for drawing sync relations 
-        #collect_positions = False
-        #if track.id == current_sequence().first_video_index:
-        #    collect_positions = True
-
         proxy_paths = current_proxy_media_paths()
 
         global clip_thumbnails
@@ -1740,7 +1738,7 @@ class TimeLineCanvas:
             
             # Collect positions for drawing sync relations 
             #if collect_positions:
-            self.parent_positions[clip.id] = scale_in
+            self.parent_positions[clip.id] = (scale_in, track.id)
             
             # Fill clip bg 
             if scale_length > FILL_MIN:
@@ -2264,7 +2262,9 @@ class TimeLineCanvas:
         cr.paint()
     
     def draw_sync_relations(self, cr):
-        parent_y = _get_track_y(current_sequence().first_video_index)
+        if editorpersistance.prefs.show_sync == False:
+            return
+
         radius = 4
         small_radius = 2
         pad = 6
@@ -2273,10 +2273,11 @@ class TimeLineCanvas:
             child_clip, track, child_x = child_data
             child_y = _get_track_y(track.id)
             try:
-                parent_x = self.parent_positions[child_clip.sync_data.master_clip.id]
+                parent_x, parent_track_id = self.parent_positions[child_clip.sync_data.master_clip.id]
+                parent_y = _get_track_y(parent_track_id)
             except KeyError: # parent clip not in tline view, don't draw - think about another solution
                 continue
-                
+
             cr.set_line_width(2.0)
             cr.set_source_rgb(0.1, 0.1, 0.1)
             cr.move_to(child_x + pad, child_y + pad)
@@ -2502,6 +2503,7 @@ class TimeLineColumn:
             cr.paint()
 
         # Draw audio level info.
+
         if track.audio_gain != 1.0:
             pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
             # Draw track name
@@ -2516,10 +2518,27 @@ class TimeLineColumn:
                 text_y = ID_PAD_Y + 4
             elif track.height == appconsts.TRACK_HEIGHT_SMALL:
                 text_y = ID_PAD_Y_SMALL + 4
-            cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X + 31, y + text_y)
+            if track.parent_track != None:
+                 xadd = 21
+            else:
+                 xadd = 31
+            cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X + xadd, y + text_y)
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
-                    
+
+        if track.parent_track != None:
+            ix, iy = SYNC_ICON_POS_HIGH
+            if track.height == appconsts.TRACK_HEIGHT_HIGH:
+                iy += 22
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
+                iy += 9
+            elif track.height == appconsts.TRACK_HEIGHT_SMALL:
+                iy += -4
+                
+            cr.set_source_surface(SYNC_ICON, ix, y + iy)
+            cr.paint()
+            
+        
     def _add_gradient_color_stops(self, grad, track):
         if track.id == current_sequence().first_video_index: 
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP1)

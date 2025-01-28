@@ -107,8 +107,9 @@ def _sync_property_item_activated(action, event, msg):
         editorpersistance.prefs.sync_autosplit = new_state
     elif msg == "dualtrim":
         editorpersistance.prefs.sync_dualtrim = new_state
-
-
+    elif msg == "showsync":
+        editorpersistance.prefs.show_sync = new_state
+        
     action.set_state(GLib.Variant.new_boolean(new_state))
 
 def _sync_split_property_activated(action, variant):
@@ -193,8 +194,12 @@ def _get_split_audio_edit_action(popup_data):
     return (action, clip, audio_clip, to_track)
 
 def get_synched_split_action_for_clip_and_track(clip, track):
-    to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
-
+    if editorpersistance.prefs.sync_mirror == False:
+        to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
+    else:
+        to_track_id = (current_sequence().first_video_index - 1) - (track.id - current_sequence().first_video_index)  
+        to_track = current_sequence().tracks[to_track_id]
+        
     index = track.clips.index(clip)
     frame = track.clip_start(index)
 
@@ -221,11 +226,12 @@ def _parent_track_selected(dialog, response_id, data):
         
         dialog.destroy()
         
-        _do_set_track_clips_sync(child_track, parent_track)
+        do_set_track_clips_sync(child_track, parent_track)
+        child_track.parent_track = parent_track
     else:
         dialog.destroy()
 
-def _do_set_track_clips_sync(child_track, parent_track):
+def do_set_track_clips_sync(child_track, parent_track):
     if len(parent_track.clips) == 0:
         return
     if len(child_track.clips) == 0:
@@ -391,6 +397,6 @@ def clear_sync_relation(popup_data):
 
     # Edit consumes selection
     movemodes.clear_selected_clips()
-    
+
     updater.repaint_tline()
 

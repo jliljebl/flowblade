@@ -390,3 +390,4 @@ class EditorPreferences:
         self.sync_autosplit = False
         self.sync_mirror = True
         self.sync_dualtrim = False
+        self.show_sync = True

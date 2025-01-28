@@ -257,6 +257,7 @@ class Sequence:
         
         # Add method that returns track name
         new_track.get_name = lambda : utils.get_track_name(new_track, self) 
+        new_track.parent_track = None
         
         return new_track
 

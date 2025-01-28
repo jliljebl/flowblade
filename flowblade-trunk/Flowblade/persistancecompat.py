@@ -127,4 +127,7 @@ def FIX_MISSING_PROJECT_ATTRS(project):
 def FIX_MISSING_BIN_ATTRS(bin):
     if(not hasattr(bin, "uid")):
         bin.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    
+
+def FIX_MISSING_TRACK_ATTRS(track):
+    if(not hasattr(track, "parent_track")):
+        track.parent_track = None

@@ -2637,10 +2637,15 @@ def _clear_track_sync_undo(self):
             
         resync.clip_added_to_timeline(child_clip, self.child_track)
 
+    self.child_track.parent_track = self.orig_parent_track
+    
 def _clear_track_sync_redo(self):
     for child_clip in self.child_track.clips:
         resync.clip_removed_from_timeline(child_clip)
         child_clip.sync_data = None
+
+    self.orig_parent_track = self.child_track.parent_track
+    self.child_track.parent_track = None
 
 # ------------------------------------------------- CLEAR SYNC
 # "child_clip","child_track"

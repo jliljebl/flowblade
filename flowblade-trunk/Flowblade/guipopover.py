@@ -114,6 +114,7 @@ _mf_render_section = None
 _mf_proxy_section = None
 _mf_stabilize_section = None
 
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
@@ -277,6 +278,7 @@ def sync_menu_show(launcher, widget, properties_set_callback, split_mirror_callb
     properties_section = Gio.Menu.new()
     add_menu_action_check(properties_section, _("Auto Sync Split Video Clips on Add"), "midbar.sync.autosplit", editorpersistance.prefs.sync_autosplit, "autosplit", properties_set_callback)
     add_menu_action_check(properties_section, _("Dual Trim Synched Clips"), "midbar.sync.dualtrim", editorpersistance.prefs.sync_dualtrim, "dualtrim", properties_set_callback)
+    add_menu_action_check(properties_section, _("Show Synch Relations"), "midbar.sync.showsync", editorpersistance.prefs.show_sync, "showsync", properties_set_callback)
     _sync_menu.append_section(None, properties_section)
 
     mirror_section = Gio.Menu.new()
@@ -976,8 +978,10 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
     active = not(track == current_sequence().first_video_index)
 
     sync_set_section = Gio.Menu.new()
-    add_menu_action(sync_set_section, _("Set Sync for All Clips on Track..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
-    add_menu_action(sync_set_section, _("Clear Sync for All Clips on Track "), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Set Sync for All Clips on Track..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, True)
+    active = track_obj.parent_track != None
+    add_menu_action(sync_set_section, _("Reset Clips Sync to Current Positions"), "trackcolumn.sync.resetsync",  (track,"ressetsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Clear Sync"), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, True)
     _tracks_column_menu.append_section(None, sync_set_section)
 
     resync_section = Gio.Menu.new()

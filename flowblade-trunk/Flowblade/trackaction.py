@@ -78,8 +78,12 @@ def unlock_track(track_index):
 
 def set_track_sync(track_index):
     child_track = get_track(track_index)
-    #parent_track = current_sequence().first_video_track()
     syncsplitevent.set_track_clips_sync(child_track)
+
+def reset_treack_sync(track_index):
+    child_track = get_track(track_index)
+    parent_track = child_track.parent_track
+    syncsplitevent.do_set_track_clips_sync(child_track, parent_track)
 
 def clear_track_sync(track_index):
     track = get_track(track_index)
@@ -413,4 +417,5 @@ POPUP_HANDLERS = {"lock":lock_track,
                   "mute_track":mute_track,
                   "clearsync":clear_track_sync,
                   "resync":resync_track,
-                  "setsync":set_track_sync}
+                  "setsync":set_track_sync,
+                  "ressetsync":reset_treack_sync}
