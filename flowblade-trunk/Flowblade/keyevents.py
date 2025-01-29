@@ -162,7 +162,7 @@ def key_down(widget, event):
         _handle_clip_key_event(event)
         return True
         
-    #  Handle non-timeline delete .
+    #  Handle non-timeline delete.
     if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
 

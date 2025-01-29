@@ -19,7 +19,7 @@
 """
 
 """
-Handles Box tool functionality.
+Handles box selection functionality, moves and deletes.
 """
 
 import appconsts
@@ -97,7 +97,7 @@ def mouse_release(x, y, frame):
         
     if box_selection_data == None: # mouse action is to select
         box_selection_data = BoxMoveData(edit_data["press_point"], (x, y))
-        
+
         locked_track = box_selection_data.get_possible_locked_track()
         if locked_track != None:
             dialogutils.track_lock_check_and_user_info(locked_track)
@@ -298,7 +298,7 @@ class BoxTrackSelection:
     def __init__(self, i, start_frame, end_frame):
         self.track_id = i
         self.selected_range_in  = -1
-        self.selected_range_out = -1
+        self.selected_range_out = -1 # inclusive
         self.range_frame_in  = -1
         self.range_frame_out = -1
         self.clip_lengths = []
@@ -372,4 +372,36 @@ class BoxTrackSelection:
 
         return False
 
+def box_selection_splice_out():
+    global box_selection_data, edit_data
+    
+    # Do edit
+    data = {"box_selection_data":box_selection_data}
+    action = edit.box_splice_out_action(data)
+    action.do_edit()
 
+    # Back to start state
+    edit_data = None
+    box_selection_data = None
+    
+    # Exit box mode if entered from overwrite with empty selection
+    if entered_from_overwrite == True:
+        _exit_to_overwrite()
+        return
+
+def box_selection_lift():
+    global box_selection_data, edit_data
+    
+    # Do edit
+    data = {"box_selection_data":box_selection_data}
+    action = edit.box_lift_action(data)
+    action.do_edit()
+
+    # Back to start state
+    edit_data = None
+    box_selection_data = None
+    
+    # Exit box mode if entered from overwrite with empty selection
+    if entered_from_overwrite == True:
+        _exit_to_overwrite()
+        return

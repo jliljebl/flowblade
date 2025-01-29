@@ -1284,6 +1284,82 @@ def _box_overwrite_move_redo(self):
     for comp in self.box_selection_data.selected_compositors:
         comp.move(self.delta)
 
+
+#----------------- BOX SPLICE OUT
+# "box_selection_data"
+def box_splice_out_action(data):
+    action = EditAction(_box_splice_out_undo, _box_splice_out_redo, data)
+    action.turn_on_stop_for_edit = True
+    return action
+
+def _box_splice_out_undo(self):
+    # Do track splice edits
+    for splice_data in self.track_splices:
+        for clip in splice_data["removed_clips"]:
+            _insert_clip(splice_data["track"], clip, splice_data["selected_range_in"],
+                         clip.clip_in, clip.clip_out)
+
+def _box_splice_out_redo(self):
+    # Create data for track splice outs
+    if not hasattr(self, "track_splices"):
+        self.track_splices = []
+        for track_selection in self.box_selection_data.track_selections:
+            if track_selection.range_frame_in != -1:
+                track_splice_data = {"track":current_sequence().tracks[track_selection.track_id],
+                                    "selected_range_in":track_selection.selected_range_in,
+                                    "selected_range_out":track_selection.selected_range_out,
+                                    "removed_clips":[]}
+
+                self.track_splices.append(track_splice_data)
+
+    # Do track splice edits
+    for splice_data in self.track_splices:
+        range_length = splice_data["selected_range_out"] - splice_data["selected_range_in"] + 1
+        splice_data["removed_clips"] = []
+        for i in range(splice_data["selected_range_in"], splice_data["selected_range_in"] + range_length):
+            clip = _remove_clip(splice_data["track"], splice_data["selected_range_in"])
+            splice_data["removed_clips"].append(clip)
+
+#----------------- BOX LIFT OUT
+# "box_selection_data"
+def box_lift_action(data):
+    action = EditAction(_box_lift_undo, _box_lift_redo, data)
+    action.turn_on_stop_for_edit = True
+    return action
+
+def _box_lift_undo(self):
+    # Do track splice edits
+    for splice_data in self.track_splices:
+        _remove_clip(splice_data["track"], splice_data["selected_range_in"])
+        for clip in splice_data["removed_clips"]:
+            _insert_clip(splice_data["track"], clip, splice_data["selected_range_in"],
+                         clip.clip_in, clip.clip_out)
+
+def _box_lift_redo(self):
+    # Create data for track splice outs
+    if not hasattr(self, "track_splices"):
+        self.track_splices = []
+        for track_selection in self.box_selection_data.track_selections:
+            if track_selection.range_frame_in != -1:
+                track_splice_data = {"track":current_sequence().tracks[track_selection.track_id],
+                                    "selected_range_in":track_selection.selected_range_in,
+                                    "selected_range_out":track_selection.selected_range_out,
+                                    "removed_clips":[]}
+
+                self.track_splices.append(track_splice_data)
+
+    # Do track splice edits
+    for splice_data in self.track_splices:
+        blank_length = 0
+        range_length = splice_data["selected_range_out"] - splice_data["selected_range_in"] + 1
+        splice_data["removed_clips"] = []
+        for i in range(splice_data["selected_range_in"], splice_data["selected_range_in"] + range_length):
+            clip = _remove_clip(splice_data["track"], splice_data["selected_range_in"])
+            splice_data["removed_clips"].append(clip)
+            blank_length += clip.clip_out - clip.clip_in + 1
+        _insert_blank(splice_data["track"], splice_data["selected_range_in"], blank_length)
+
+
 #----------------- MULTITRACK OVERWRITE MOVE
 # "track","to_track","over_in","over_out","selected_range_in"
 # "selected_range_out","move_edit_done_func"

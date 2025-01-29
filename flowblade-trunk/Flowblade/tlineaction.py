@@ -377,6 +377,10 @@ def splice_out_button_pressed():
     Removes 1 - n long continuous clip range from track and closes
     the created gap.
     """
+    if boxmove.box_selection_data != None:
+        boxmove.box_selection_splice_out()
+        return
+
     if movemodes.selected_track == -1:
         return
 
@@ -497,6 +501,10 @@ def lift_button_pressed():
     Removes 1 - n long continuous clip range from track and fills
     the created gap with a blank clip
     """
+    if boxmove.box_selection_data != None:
+        boxmove.box_selection_lift()
+        return
+
     if movemodes.selected_track == -1:
         return
 
