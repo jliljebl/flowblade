@@ -264,7 +264,7 @@ OVERWRITE_OVERLAY_COLOR = (0.2, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
-BOX_BOUND_COLOR =(0.137, 0.80, 0.85)
+BOX_BOUND_COLOR =(0.8, 0.8, 0.8, 0.3)
 TRIM_MAX_RED = (1.0,0.1,0.1)
 
 POINTER_TRIANGLE_COLOR = (0.6, 0.7, 0.8, 0.7)
@@ -693,6 +693,7 @@ def draw_overwrite_box_overlay(cr, data):
         s_data = data["box_selection_data"]
 
         # Draw moved clips
+        cr.set_source_rgba(*BOX_BOUND_COLOR)
         for i in range(0, len(s_data.track_selections)):
             track_selection = s_data.track_selections[i]
             y = _get_track_y(track_selection.track_id)
@@ -727,7 +728,7 @@ def draw_overwrite_box_overlay(cr, data):
                     
         # Draw bounding box
         cr.set_line_width(6.0)
-        cr.set_source_rgb(*BOX_BOUND_COLOR)
+        cr.set_source_rgba(*BOX_BOUND_COLOR)
         x = (s_data.topleft_frame  - pos + data["delta"]) * pix_per_frame
         w = s_data.width_frames * pix_per_frame
         y = _get_track_y(s_data.topleft_track)
