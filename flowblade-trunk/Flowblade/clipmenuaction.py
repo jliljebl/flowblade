@@ -472,6 +472,25 @@ def _delete_clip(data):
 
 def _lift(data):
     tlineaction.lift_button_pressed()
+
+def _ripple_delete(data):
+    clip, track, item_id, item_data = data
+    clip_index = track.clips.index(clip)
+    clip_start_in_tline = track.clip_start(clip_index)
+    clip_end_in_tline = clip_start_in_tline + (clip.clip_out - clip.clip_in)
+
+    orig_mark_in = current_sequence().tractor.mark_in 
+    orig_mark_out = current_sequence().tractor.mark_out
+    
+    current_sequence().tractor.mark_in = clip_start_in_tline
+    current_sequence().tractor.mark_out = clip_end_in_tline
+
+    tlineaction.delete_range_button_pressed()
+
+    current_sequence().tractor.mark_in = orig_mark_in
+    current_sequence().tractor.mark_out = orig_mark_out
+    
+    updater.repaint_tline()
     
 def _set_length(data):
     clip, track, item_id, item_data = data
@@ -1004,7 +1023,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
                   "delete":_delete_clip,
-                  "lift":_lift, 
+                  "lift":_lift,
+                  "ripplerange":_ripple_delete,
                   "length":_set_length,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,

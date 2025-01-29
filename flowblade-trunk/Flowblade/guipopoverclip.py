@@ -504,6 +504,7 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     del_section = Gio.Menu.new()
     add_menu_action(del_section,_("Delete"), "clipmenu.delete",  ("delete", None), callback)
     add_menu_action(del_section,_("Lift"), "clipmenu.delete",  ("lift", None), callback)
+    add_menu_action(del_section, _("Ripple Delete Clip Range"), "clipmenu.ripplerange",  ("ripplerange", None), callback)
     edit_actions_menu.append_section(None, del_section)
 
     if track.id != current_sequence().first_video_index:
