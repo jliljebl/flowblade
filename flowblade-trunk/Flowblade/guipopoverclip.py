@@ -171,8 +171,8 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, False, False)
         filters_copy_section.append_submenu(_("Clone Filter"), clone_sub_menu)
-        add_menu_action(filters_copy_section, _("Copy Filters"), "clipmenu.openinmonitor.copyfilters",  ("copy_filters", None), callback)
-        add_menu_action(filters_copy_section, _("Paste Filters"), "clipmenu.openinmonitor.pastefilters",  ("paste_filters", None), callback)
+        add_menu_action(filters_copy_section, _("Copy Filters"), "clipmenu.copyfilters",  ("copy_filters", None), callback)
+        add_menu_action(filters_copy_section, _("Paste Filters"), "clipmenu.pastefilters",  ("paste_filters", None), callback)
         _clip_menu.append_section(None, filters_copy_section)
 
         _title_section = Gio.Menu.new()
@@ -267,6 +267,7 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_clone_filters_menu(clone_sub_menu, callback, False, True)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
         add_menu_action(filters_section, _("Clear Filters"), "audioclipmenu.clearfilters",  ("clear_filters", None), callback)
+        add_menu_action(filters_section, _("Paste Filters"), "audioclipmenu.pastefilters",  ("paste_filters", None), callback)
         _audio_clip_menu.append_section(None, filters_section)
 
         edit_bottom_section = Gio.Menu.new()
@@ -331,13 +332,19 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_clone_filters_menu(clone_sub_menu, callback, True, False)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
         add_menu_action(filters_section, _("Clear Filters"), "multiclipmenu.clearfilters",  ("clear_filters", None), callback)
+        add_menu_action(filters_section, _("Paste Filters"), "multiclipmenu.pastefilters",  ("paste_filters", None), callback)
         _multi_clip_menu.append_section(None, filters_section)
 
         delete_section = Gio.Menu.new()
         add_menu_action(delete_section, _("Delete"), "multiclipmenu.delete",  ("delete", None), callback)
         add_menu_action(delete_section, _("Lift"), "multiclipmenu.lift",  ("lift", None), callback)
+        add_menu_action(delete_section, _("Ripple Delete Selection Range"), "multiclipmenu.ripplerange",  ("ripplerangeselection", None), callback)
         _multi_clip_menu.append_section(None, delete_section)
 
+        mark_section = Gio.Menu.new()
+        add_menu_action(mark_section, _("Mark Selection Range"), "multiclipmenu.markselectionrange",  ("mark_selection_range", None), callback)
+        _multi_clip_menu.append_section(None, mark_section)
+    
     else: # Menu items with possible state changes need to recreated.
         guipopover.menu_clear_or_create(_multi_audio_section)
         _fill_multi_audio_section(_multi_audio_section, clip, track, callback)
@@ -391,6 +398,7 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_clone_filters_menu(clone_sub_menu, callback, False, False, True)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
         add_menu_action(filters_section, _("Clear Filters"), "transitionclipmenu.clearfilters",  ("clear_filters", None), callback)
+        add_menu_action(filters_section, _("Paste Filters"), "transitionclipmenu.pastefilters",  ("paste_filters", None), callback)
         _transition_menu.append_section(None, filters_section)
 
     else: # Menu items with possible state changes need to recreated.
@@ -545,8 +553,14 @@ def _fill_select_menu(select_menu, callback, is_audio_select=False):
         pre_id = "audio"
     else:
         pre_id = ""
-    add_menu_action(select_menu, _("All Clips After"), pre_id + "clipmenu.selectallafter",  ("select_all_after", None), callback)
-    add_menu_action(select_menu, _("All Clips Before"), pre_id + "clipmenu.selectallbefore",  ("select_all_before", None), callback)
+    select_section = Gio.Menu.new()
+    add_menu_action(select_section, _("All Clips After"), pre_id + "clipmenu.selectallafter",  ("select_all_after", None), callback)
+    add_menu_action(select_section, _("All Clips Before"), pre_id + "clipmenu.selectallbefore",  ("select_all_before", None), callback)
+    select_menu.append_section(None, select_section)
+
+    mark_section = Gio.Menu.new()
+    add_menu_action(mark_section, _("Mark Clip Range"), pre_id + "clipmenu.markcliprange",  ("mark_clip_range", None), callback)
+    select_menu.append_section(None, mark_section)
 
 def _fill_filters_menus(sub_menu, callback, item_id, action_id):
     j = 0
@@ -622,6 +636,7 @@ def _fill_audio_edit_actions_menu(edit_actions_menu, callback):
     del_section = Gio.Menu.new()
     add_menu_action(del_section,_("Delete"), "audioclipmenu.delete",  ("delete", None), callback)
     add_menu_action(del_section,_("Lift"), "audioclipmenu.delete",  ("lift", None), callback)
+    add_menu_action(del_section, _("Ripple Delete Clip Range"), "audioclipmenu.ripplerange",  ("ripplerange", None), callback)
     edit_actions_menu.append_section(None, del_section)
 
     length_section = Gio.Menu.new()

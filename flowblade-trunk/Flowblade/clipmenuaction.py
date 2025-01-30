@@ -491,7 +491,29 @@ def _ripple_delete(data):
     current_sequence().tractor.mark_out = orig_mark_out
     
     updater.repaint_tline()
+
+def _ripple_delete_selection(data):
+    clip, track, item_id, item_data = data
+
+    start_clip_start_in_tline = track.clip_start(movemodes.selected_range_in)
+
+    end_clip = track.clips[movemodes.selected_range_out]
+    end_clip_start_in_tline = track.clip_start(movemodes.selected_range_out)
+    end_clip_end_in_tline = end_clip_start_in_tline + (end_clip.clip_out - end_clip.clip_in)
+
+    orig_mark_in = current_sequence().tractor.mark_in 
+    orig_mark_out = current_sequence().tractor.mark_out
     
+    current_sequence().tractor.mark_in = start_clip_start_in_tline
+    current_sequence().tractor.mark_out = end_clip_end_in_tline
+
+    tlineaction.delete_range_button_pressed()
+
+    current_sequence().tractor.mark_in = orig_mark_in
+    current_sequence().tractor.mark_out = orig_mark_out
+    
+    updater.repaint_tline()
+
 def _set_length(data):
     clip, track, item_id, item_data = data
     dialogs.clip_length_change_dialog(_change_clip_length_dialog_callback, clip, track)
@@ -726,8 +748,10 @@ def _paste_filters(data):
     source_clip = paste_clips[0]
 
     # Currently selected clips are target clips
-    target_clips = [clip]
-    
+    target_clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+         target_clips.append(track.clips[i])
+
     actions = []    
     for target_clip in target_clips:
         data = {"clip":target_clip,"clone_source_clip":source_clip}
@@ -796,6 +820,32 @@ def _select_all_before(data):
     movemodes._select_multiple_clips(track.id, 0, track.clips.index(clip))
     updater.repaint_tline()
 
+def _mark_clip_range(data):
+    clip, track, item_id, item_data = data
+
+    clip_index = track.clips.index(clip)
+    clip_start_in_tline = track.clip_start(clip_index)
+    clip_end_in_tline = clip_start_in_tline + (clip.clip_out - clip.clip_in)
+    
+    current_sequence().tractor.mark_in = clip_start_in_tline
+    current_sequence().tractor.mark_out = clip_end_in_tline
+
+    updater.repaint_tline()
+
+def _mark_selection_range(data):
+    clip, track, item_id, item_data = data
+
+    start_clip_start_in_tline = track.clip_start(movemodes.selected_range_in)
+
+    end_clip = track.clips[movemodes.selected_range_out]
+    end_clip_start_in_tline = track.clip_start(movemodes.selected_range_out)
+    end_clip_end_in_tline = end_clip_start_in_tline + (end_clip.clip_out - end_clip.clip_in)
+    
+    current_sequence().tractor.mark_in = start_clip_start_in_tline
+    current_sequence().tractor.mark_out = end_clip_end_in_tline
+    
+    updater.repaint_tline()
+    
 def _add_clip_marker(data):
     clip, track, item_id, item_data = data
     current_frame = PLAYER().current_frame()
@@ -807,7 +857,6 @@ def _add_clip_marker(data):
         current_frame_clip = None
     
     if current_frame_clip != clip:
-        # Playhead is not on popup clip
         return
 
     clip_start_in_tline = track.clip_start(current_frame_clip_index)
@@ -1022,9 +1071,12 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "clear_filters": _clear_filters,
                   "select_all_after": _select_all_after,
                   "select_all_before":_select_all_before,
+                  "mark_clip_range":_mark_clip_range,
+                  "mark_selection_range":_mark_selection_range,
                   "delete":_delete_clip,
                   "lift":_lift,
                   "ripplerange":_ripple_delete,
+                  "ripplerangeselection":_ripple_delete_selection,
                   "length":_set_length,
                   "stretch_next":_stretch_next, 
                   "stretch_prev":_stretch_prev,
