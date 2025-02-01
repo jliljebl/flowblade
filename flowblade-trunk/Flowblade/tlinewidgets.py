@@ -264,6 +264,7 @@ OVERWRITE_OVERLAY_COLOR = (0.2, 0.2, 0.2, 0.5)
 INSERT_MODE_COLOR = (0.9,0.9,0.0)
 OVERWRITE_MODE_COLOR = (0.9,0.0,0.0)
 OVERLAY_TRIM_COLOR = (0.81, 0.82, 0.3)
+OVERLAY_TRIM_OVERWRITE_COLOR = (0.81, 0.3, 0.3)
 BOX_BOUND_COLOR =(0.8, 0.8, 0.8, 0.3)
 TRIM_MAX_RED = (1.0,0.1,0.1)
 
@@ -1190,7 +1191,10 @@ def draw_clip_end_drag_overlay(cr, data):
     cr.rectangle(scale_in, int(y) + 1.5, int(scale_length), track_height - 2.0)
     cr.set_source_rgba(*CLIP_END_DRAG_OVERLAY_COLOR)
     cr.fill_preserve()
-    cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
+    if data["submode"] == 0: # INSERT 
+        cr.set_source_rgb(*OVERLAY_TRIM_COLOR)
+    else:
+        cr.set_source_rgb(*OVERLAY_TRIM_OVERWRITE_COLOR)
     cr.stroke()
 
     if editorpersistance.prefs.delta_overlay == True:

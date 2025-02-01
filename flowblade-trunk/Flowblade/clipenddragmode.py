@@ -22,6 +22,7 @@
 Module handles clip end dragging edits.
 """
 
+from gi.repository import Gdk
 
 import appconsts
 import gui
@@ -35,8 +36,16 @@ import updater
 _enter_mode = None
 _enter_draw_func = None
 
+# we are handling difference between insert on overwrite drags internally in
+# this module.
+INSERT_DRAG = 0
+OVERWRITE_DRAG = 1
+_submode = INSERT_DRAG
 
-def maybe_init_for_mouse_press(event, frame): 
+def get_submode():
+    return _sub_mode
+
+def maybe_init_for_mouse_press(event, frame):
     # See if we actually hit a clip
     track = tlinewidgets.get_track(event.y)
     if track == None:
@@ -53,10 +62,20 @@ def maybe_init_for_mouse_press(event, frame):
     
     if clip.is_blanck_clip:
         return
+
+    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
     
+    if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
+        _init_overwrite_drag(clip, clip_index, track, frame, cut_frame)
+    else:
+        _init_insert_drag(clip, clip_index, track, frame, cut_frame)
+
+def _init_insert_drag(clip, clip_index, track, frame, cut_frame):
+    global _submode
+    _submode = INSERT_DRAG
+
     # Now we will in fact enter CLIP_END_DRAG edit mode
     # See if we're dragging clip end or start
-    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
     editing_clip_end = True
     if frame >= cut_frame:
         editing_clip_end = False
@@ -70,7 +89,7 @@ def maybe_init_for_mouse_press(event, frame):
             bound_end = bound_end - 1
     else: # clip beginning drags
         bound_start = cut_frame - clip.clip_in 
-        bound_end =  cut_frame + (clip.clip_out - clip.clip_in) + 1
+        bound_end = cut_frame + (clip.clip_out - clip.clip_in) + 1
 
     global _enter_mode, _enter_draw_func, _edit_data
 
@@ -91,18 +110,99 @@ def maybe_init_for_mouse_press(event, frame):
     _edit_data["track_height"] = track.height
     _edit_data["orig_in"] = cut_frame - 1
     _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
+    _edit_data["submode"] = _submode
 
+    _enter_mouse_drag_edit(editing_clip_end)
+
+def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
+    global _submode
+    _submode = OVERWRITE_DRAG
+    
+    # Now we will in fact enter CLIP_END_DRAG edit mode
+    # See if we're dragging clip end or start
+    editing_clip_end = True
+    edit_frame = cut_frame # we're using teo edit action
+        
+    if frame >= cut_frame:
+        editing_clip_end = False
+    else:
+        cut_frame = cut_frame - (clip.clip_out - clip.clip_in)
+
+    # Can't do overwrite drag on track first clip start or last clip end. 
+    if clip_index == 0 and editing_clip_end == False:
+        _init_insert_drag(clip, clip_index, track, frame, cut_frame)
+        return
+    elif clip_index == (len(track.clips) - 1) and editing_clip_end == True:
+        _init_insert_drag(clip, clip_index, track, frame, cut_frame)
+        return
+
+    from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end, track, clip_index)
+
+    # Get edit bounds.
+    if editing_clip_end == True: # clip end drags
+        to_clip_start = track.clip_start(clip_index + 1) + to_clip.clip_length()
+        from_clip_end = cut_frame - from_clip.clip_in + from_clip.get_length()
+        
+        if to_clip_start < from_clip_end:
+            bound_end = to_clip_start
+        else:
+            bound_end = from_clip_end
+        bound_start = cut_frame - 1
+    else: # clip beginning drags
+        to_clip_start = track.clip_start(clip_index) - to_clip.clip_in
+        from_clip_start = track.clip_start(clip_index - 1)
+        if to_clip_start > from_clip_start:
+            bound_start = to_clip_start
+        else:
+            bound_start = from_clip_start
+
+        bound_end = cut_frame + (clip.clip_out - clip.clip_in) + 1
+        
+    global _enter_mode, _enter_draw_func, _edit_data
+
+    _enter_mode = editorstate.edit_mode
+    editorstate.edit_mode = editorstate.CLIP_END_DRAG
+    
+    _enter_draw_func = tlinewidgets.canvas_widget.edit_mode_overlay_draw_func
+
+    _edit_data = {}
+    _edit_data["track"] = track
+    _edit_data["clip_index"] = clip_index
+    _edit_data["clip_media_type"] = clip.media_type
+    _edit_data["frame"] = frame
+    _edit_data["press_frame"] = frame
+    _edit_data["edit_frame"] = edit_frame
+    _edit_data["editing_clip_end"] = editing_clip_end
+    _edit_data["bound_end"] = bound_end
+    _edit_data["bound_start"] = bound_start
+    _edit_data["track_height"] = track.height
+    _edit_data["orig_in"] = cut_frame - 1
+    _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
+    _edit_data["submode"] = _submode
+
+    _enter_mouse_drag_edit(editing_clip_end)
+
+def _enter_mouse_drag_edit(editing_clip_end):
     tlinewidgets.set_edit_mode(_edit_data, tlinewidgets.draw_clip_end_drag_overlay)
 
     if tlinewidgets.pointer_context == appconsts.POINTER_CONTEXT_NONE:
-        # We did CTRL + Mouse Right to get here, we need to set pointer context to left or right
         if editing_clip_end == True:
             tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
         else:
             tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_LEFT
 
     gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
-
+    
+def _get_from_clip_and_to_clip(editing_clip_end, track, clip_index):
+    if editing_clip_end == True:
+        from_clip = track.clips[clip_index]
+        to_clip = track.clips[clip_index + 1]
+    else:
+        from_clip = track.clips[clip_index - 1]
+        to_clip = track.clips[clip_index]
+    
+    return (from_clip, to_clip)
+    
 def mouse_press(event, frame):
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
@@ -115,6 +215,13 @@ def mouse_move(x, y, frame, state):
     updater.repaint_tline()
 
 def mouse_release(x, y, frame, state):
+    if _submode == INSERT_DRAG:
+        _do_insert_trim(x, y, frame, state)
+    else:
+        _do_overwrite_trim(x, y, frame, state)
+
+
+def _do_insert_trim(x, y, frame, state):
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
     updater.repaint_tline()
@@ -201,7 +308,51 @@ def mouse_release(x, y, frame, state):
     _exit_clip_end_drag()
 
     updater.repaint_tline()
-        
+
+def _do_overwrite_trim(x, y, frame, state):
+    frame = _legalize_frame(frame)
+
+    updater.repaint_tline()
+
+    track = _edit_data["track"]
+    clip_index = _edit_data["clip_index"]
+    editing_clip_end = _edit_data["editing_clip_end"] 
+    
+    from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end,  track, clip_index)
+
+    non_edit_side_blank = False
+    if (_edit_data["editing_clip_end"] == False) and (track.clips[clip_index - 1].is_blanck_clip == True):
+        non_edit_side_blank = True
+    elif (_edit_data["editing_clip_end"] == True) and (track.clips[clip_index + 1].is_blanck_clip == True):
+        non_edit_side_blank = True
+
+    # Code here thinks "clip_index" is always index of trimmed clip,
+    # but we are using existing edit.tworoll_trim_action() code to do the edit, and 
+    # that assumes index to be between clips.
+    if editing_clip_end == True:
+        clip_index += 1
+
+    # Get edit data
+    delta = frame - _edit_data["edit_frame"]
+    data = {"track":track,
+            "index":clip_index,
+            "from_clip":from_clip,
+            "to_clip":to_clip,
+            "delta":delta,
+            "edit_done_callback":_dummy_cb,
+            "cut_frame": _edit_data["edit_frame"],
+            "to_side_being_edited":not editing_clip_end,
+            "non_edit_side_blank":non_edit_side_blank,
+            "first_do":True}
+                
+    action = edit.tworoll_trim_action(data)
+    edit.do_gui_update = True
+    action.do_edit()
+
+    _exit_clip_end_drag()
+
+    updater.repaint_tline()
+
 def _exit_clip_end_drag(): 
     # Go back to enter mode
     editorstate.edit_mode = _enter_mode
@@ -230,3 +381,7 @@ def _legalize_frame(frame):
             frame = start
     
     return frame
+
+def _dummy_cb(was_redo, cut_frame, delta, track, to_side_being_edited):
+    # Edit code we use was made for trim edits and need a callback, but we don't need one here.
+    pass

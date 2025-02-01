@@ -78,7 +78,7 @@ def init_data():
                   }
                   
     _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
-                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to select a clip, or to move clip or clip range into new position.\n<b>CTRL + Left Mouse</b> to select a clip range.\n\n<b>Left Mouse</b> near clip's end to trim clip length.<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips. Multitrack selection disallows moving clips to another track."),
+                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to select a clip, or to move clip or clip range into new position.\n<b>CTRL + Left Mouse</b> to select a clip range.\n\n<b>Left Mouse</b> near clip's end to trim clip length.n\n<b>ALT + Left Mouse</b> near clip's end to overwrite trim clip length.<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips. Multitrack selection disallows moving clips to another track."),
                     appconsts.TLINE_TOOL_TRIM:          _("<b>Left Mouse</b> to trim closest clip end.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_ROLL:          _("<b>Left Mouse</b> to move closest edit point between 2 clips.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_SLIP:          _("<b>Left Mouse</b> to move clip contents within clip.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
