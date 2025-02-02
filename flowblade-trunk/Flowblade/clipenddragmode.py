@@ -64,7 +64,7 @@ def maybe_init_for_mouse_press(event, frame):
         return
 
     cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
-    
+
     if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
         _init_overwrite_drag(clip, clip_index, track, frame, cut_frame)
     else:
@@ -107,6 +107,8 @@ def _init_insert_drag(clip, clip_index, track, frame, cut_frame):
     _edit_data["editing_clip_end"] = editing_clip_end
     _edit_data["bound_end"] = bound_end
     _edit_data["bound_start"] = bound_start
+    _edit_data["clip_end"] = bound_end
+    _edit_data["clip_start"] = bound_start
     _edit_data["track_height"] = track.height
     _edit_data["orig_in"] = cut_frame - 1
     _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
@@ -121,12 +123,10 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
     # Now we will in fact enter CLIP_END_DRAG edit mode
     # See if we're dragging clip end or start
     editing_clip_end = True
-    edit_frame = cut_frame # we're using teo edit action
+    edit_frame = cut_frame 
         
     if frame >= cut_frame:
         editing_clip_end = False
-    else:
-        cut_frame = cut_frame - (clip.clip_out - clip.clip_in)
 
     # Can't do overwrite drag on track first clip start or last clip end. 
     if clip_index == 0 and editing_clip_end == False:
@@ -138,31 +138,45 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
 
     from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end, track, clip_index)
 
-    # Get edit bounds.
+    # Get edit bounds and clip start/end on tline for draw func
     if editing_clip_end == True: # clip end drags
-        to_clip_start = track.clip_start(clip_index + 1) + to_clip.clip_length()
-        from_clip_end = cut_frame - from_clip.clip_in + from_clip.get_length()
-        
-        if to_clip_start < from_clip_end:
-            bound_end = to_clip_start
-        else:
-            bound_end = from_clip_end
-        bound_start = cut_frame - 1
-    else: # clip beginning drags
-        to_clip_start = track.clip_start(clip_index) - to_clip.clip_in
-        from_clip_start = track.clip_start(clip_index - 1)
-        if to_clip_start > from_clip_start:
-            bound_start = to_clip_start
-        else:
-            bound_start = from_clip_start
 
-        bound_end = cut_frame + (clip.clip_out - clip.clip_in) + 1
+        clip_start = cut_frame - (clip.clip_out - clip.clip_in)
+        clip_end = cut_frame
+
+        to_clip_start = track.clip_start(clip_index + 1) - to_clip.clip_in
+        to_clip_end = track.clip_start(clip_index + 1) + to_clip.clip_length() 
+        from_clip_start = track.clip_start(clip_index) 
+        from_clip_end = track.clip_start(clip_index) + from_clip.get_length() - from_clip.clip_in
+    else: # clip beginning drags
+        clip_start = cut_frame
+        clip_end = cut_frame + (to_clip.clip_out - to_clip.clip_in) + 1
         
+        to_clip_start = track.clip_start(clip_index) - to_clip.clip_in
+        to_clip_end = track.clip_start(clip_index) + to_clip.clip_length()
+        from_clip_start = track.clip_start(clip_index - 1)
+        from_clip_end = track.clip_start(clip_index - 1) - from_clip.clip_in + from_clip.get_length() 
+        
+    if to_clip_start > from_clip_start:
+        bound_start = to_clip_start
+    else:
+        bound_start = from_clip_start
+    
+    if from_clip_end < to_clip_end:
+        bound_end = from_clip_end
+    else:
+        bound_end = to_clip_end
+
+
+        if data["editing_clip_end"] == True:
+            x = scale_in + scale_length
+            delta = data["frame"] - data["orig_out"]
+            
     global _enter_mode, _enter_draw_func, _edit_data
 
     _enter_mode = editorstate.edit_mode
     editorstate.edit_mode = editorstate.CLIP_END_DRAG
-    
+
     _enter_draw_func = tlinewidgets.canvas_widget.edit_mode_overlay_draw_func
 
     _edit_data = {}
@@ -175,9 +189,11 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
     _edit_data["editing_clip_end"] = editing_clip_end
     _edit_data["bound_end"] = bound_end
     _edit_data["bound_start"] = bound_start
+    _edit_data["clip_end"] = clip_end
+    _edit_data["clip_start"] = clip_start
     _edit_data["track_height"] = track.height
-    _edit_data["orig_in"] = cut_frame - 1
-    _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
+    _edit_data["orig_in"] = clip_start - 1
+    _edit_data["orig_out"] = clip_end
     _edit_data["submode"] = _submode
 
     _enter_mouse_drag_edit(editing_clip_end)

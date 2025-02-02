@@ -1172,10 +1172,10 @@ def draw_slide_overlay(cr, data):
 def draw_clip_end_drag_overlay(cr, data):
     if data["editing_clip_end"] == True:
         end = data["frame"]  - pos
-        start = data["bound_start"]  - pos
+        start = data["clip_start"]  - pos
     else:
         start = data["frame"]  - pos
-        end = data["bound_end"]  - pos
+        end = data["clip_end"]  - pos
 
     y = _get_track_y(data["track"].id)
     
