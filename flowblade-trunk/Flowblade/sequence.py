@@ -28,6 +28,8 @@ except:
     import mlt
 import os
 
+import hashlib
+
 import appconsts
 import edit
 import editorstate
@@ -116,7 +118,8 @@ class Sequence:
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
         self.compositing_mode = initial_comp_mode
-
+        self.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+ 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
         
@@ -506,6 +509,7 @@ class Sequence:
         clip.titler_data = None # titler_data != None defines clips as a title clip that can be edited in Titler.
         clip.slowmo_data = None # tuple (slowmo_type, orig_media_file_path, slowmo_clip_media_area, slowmo_speed_data,
                                 #        orig_media_in, orig_media_out)
+        clip.link_seq_data = None # link_seq_data is uid of linked sequence
 
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]

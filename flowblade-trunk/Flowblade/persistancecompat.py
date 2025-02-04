@@ -21,7 +21,10 @@
 """
 This module holds functions that maintain compatibility between project savefiles
 created by different versions of application.
+
+When new attributes are added to persistant classes they are added here to classes in save files created by older versions.  
 """
+
 import hashlib
 import os
 
@@ -53,6 +56,9 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     if not hasattr(media_file, "rating"):
         media_file.rating = appconsts.MEDIA_FILE_UNRATED
 
+    if not hasattr(media_file, "link_seq_data"):
+        media_file.link_seq_data = None
+
 def FIX_MISSING_CLIP_ATTRS(clip):
     # Add color attribute if not found
     if not hasattr(clip, "color"):
@@ -77,7 +83,10 @@ def FIX_MISSING_CLIP_ATTRS(clip):
     # Add container data if not found.
     if not hasattr(clip, "slowmo_data"):
         clip.slowmo_data = None
-        
+
+    if not hasattr(clip, "link_seq_data"):
+        clip.link_seq_data = None 
+
 def FIX_MISSING_FILTER_ATTRS(filter):
     if not hasattr(filter.info, "filter_mask_filter"):
         filter.info.filter_mask_filter = None
@@ -93,6 +102,9 @@ def FIX_MISSING_SEQUENCE_ATTRS(seq):
     if not hasattr(seq, "compositing_mode"):
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
+    if(not hasattr(seq, "uid")):
+        seq.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        
 def FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq):
     # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->, we just convert it 
     # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE.

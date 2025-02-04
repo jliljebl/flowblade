@@ -65,7 +65,7 @@ This module creates <ConatainerClipType>Actions wrapper objects for container cl
 all actions on container clips data.
 
 Objects of class containerclips.ContainerData are persistent data for container clips, 
-objects in this module created and discarded as needed.
+objects in this module are created and discarded as needed.
 """
 
 FULL_RENDER = 0
@@ -78,6 +78,7 @@ GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
 BLENDER_TYPE_ICON = None # Deprecated
 FLUXITY_TYPE_ICON = None
+SEQUENCE_LINK_TYPE_ICON = None
 
 NEWLINE = '\n'
 
@@ -90,11 +91,13 @@ def get_action_object(container_data):
          return MLTXMLContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
          return FluxityContainerActions(container_data)
+    elif container_data.container_type == appconsts.CONTAINER_CLIP_SEQUENCE_LINK:
+         return SequenceLinkContainerActions(container_data)
          
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
-    # TODO: When we get third move this into action objects.
-    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, FLUXITY_TYPE_ICON
+    # TODO: We should move this into action objects.
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, FLUXITY_TYPE_ICON, SEQUENCE_LINK_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
@@ -102,6 +105,8 @@ def _get_type_icon(container_type):
         MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
     if FLUXITY_TYPE_ICON == None:
         FLUXITY_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_fluxity.png")
+    if SEQUENCE_LINK_TYPE_ICON == None:
+        SEQUENCE_LINK_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_sequence_link_icon.png")
         
     if container_type == appconsts.CONTAINER_CLIP_GMIC:
         return GMIC_TYPE_ICON
@@ -109,7 +114,9 @@ def _get_type_icon(container_type):
         return MLT_XML_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_FLUXITY:  
         return FLUXITY_TYPE_ICON
-        
+    elif container_type == appconsts.CONTAINER_CLIP_SEQUENCE_LINK:
+        return SEQUENCE_LINK_TYPE_ICON
+
 def _write_thumbnail_image(profile, file_path, action_object):
     """
     Writes thumbnail image from file producer
@@ -956,6 +963,104 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def abort_render(self):
         mltxmlheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
+
+class SequenceLinkContainerActions(AbstractContainerActionObject):
+
+    def __init__(self, container_data):
+        AbstractContainerActionObject.__init__(self, container_data)
+        self.do_filters_clone = True
+        self.parent_folder = userfolders.get_container_clips_dir()
+        
+    def validate_program(self):
+        # These are created by application and are quaranteed to be valid.
+        # This method is not even called.
+        return True
+        
+    def get_job_proxy(self):
+        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML
+        return job_proxy
+
+    def get_job_name(self):
+        return self.container_data.get_unrendered_media_name()
+
+    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
+        self.create_data_dirs_if_needed()
+        self.render_range_in = range_in
+        self.render_range_out = range_out
+        self.clip_start_offset = clip_start_offset
+ 
+        mltxmlheadless.clear_flag_files(self.parent_folder, self.get_container_program_id())
+    
+        # We need data to be available for render process, 
+        # create video_render_data object with default values if not available.
+        if self.container_data.render_data == None:
+            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            
+        mltxmlheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
+        
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = jobs.RENDERING
+        jobs.update_job_queue(job_msg)
+
+        args = ("session_id:" + self.get_container_program_id(),
+                "parent_folder:" + str(self.parent_folder),
+                "clip_path:" + str(self.container_data.unrendered_media),
+                "range_in:" + str(range_in),
+                "range_out:"+ str(range_out),
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
+                "xml_file_path:" + str(self.container_data.unrendered_media))
+
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowblademltxmlheadless")
+        for arg in args:
+            command_list.append(arg)
+
+        subprocess.Popen(command_list)
+
+    def update_render_status(self):
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
+                    
+        if mltxmlheadless.session_render_complete(self.parent_folder, self.get_container_program_id()) == True:
+            #self.remove_as_status_polling_object()
+
+            job_msg = self.get_completed_job_message()
+            jobs.update_job_queue(job_msg)
+            
+            GLib.idle_add(self.create_producer_and_do_update_edit, None)
+                
+        else:
+            status = mltxmlheadless.get_session_status(self.parent_folder, self.get_container_program_id())
+
+            if status != None:
+                fraction, elapsed = status
+
+                if self.container_data.render_data.do_video_render == True:
+                    msg = _("Video for Selection Clip: ") + self.clip.name 
+
+                job_msg = self.get_job_queue_message()
+                job_msg.progress = float(fraction)
+                job_msg.elapsed = float(elapsed)
+                job_msg.text = msg
+                
+                jobs.update_job_queue(job_msg)
+            else:
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+
+    def create_icon(self):
+        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+        cr, surface = _create_image_surface(icon_path)
+        type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_SEQUENCE_LINK)
+        cr.set_source_surface(type_icon, 0, 0)
+        cr.paint()
+        return (surface, length, icon_path)
+
+    def abort_render(self):
+        mltxmlheadless.abort_render(self.parent_folder, self.get_container_program_id())
 
 # -------------------------------------------------------------- creating unrendered clip
 def create_unrendered_clip(length, image_file, data, callback, window_text):

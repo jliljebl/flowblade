@@ -27,9 +27,11 @@ from PIL import Image
 from gi.repository import GLib
 from gi.repository import Gtk
 
+import copy
 from operator import itemgetter
 import os
 import time
+import hashlib
 
 import audiosync
 import appconsts
@@ -53,12 +55,14 @@ import modesetting
 import movemodes
 import projectaction
 import render
+import renderconsumer
 import singletracktransition
 import syncsplitevent
 import titler
 import tlinewidgets
 import tlineaction
 import updater
+import userfolders
 import utils
 
 # --------------------------------------------- menu data for each invocation.
@@ -972,6 +976,46 @@ def _render_tline_generator_callback(combo):
     TODO: see if "cc_render_full_media", "cc_render_settings" can be deleted below.
     """
 
+def _update_seq_link(data):
+    clip, track, item_id, item_data = data
+
+
+    link_sequence = PROJECT().get_sequence_for_uid(clip.link_seq_data)
+    if link_sequence == None:
+        # Sequence has been deleted
+        # TODO: info
+        return 
+
+    # Create unique file path in hidden render folder
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    write_file = folder + uuid_str + ".xml"
+    
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_link_update_xml_render_done_callback, 
+                                                    (clip, track, write_file), link_sequence, 
+                                                    PROJECT(), PLAYER())
+    render_player.start()
+
+def _sequence_link_update_xml_render_done_callback(data):
+    # We do GUI updates on add, so we need GLib thread.
+    clip, track, write_file = data
+
+    # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
+    new_clip = current_sequence().create_file_producer_clip(write_file, clip.name, False, clip.ttl)
+    new_clip.container_data = copy.deepcopy(clip.container_data)
+    new_clip.link_seq_data =  copy.deepcopy(clip.link_seq_data)
+
+    clip_index = track.clips.index(clip)
+    
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index, 
+            "clip_in":clip.clip_in, 
+            "clip_out":clip.clip_out}
+    action = edit.clip_replace(data)
+    action.do_edit()
+
 def _tline_clip_slowfast(data):
     clip, track, item_id, item_data = data
     render.render_slow_fast_timeline_clip(clip, track, _tline_clip_slow_fast_render_complete)
@@ -1103,6 +1147,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_settings":containerclip.set_render_settings,
                   "cc_edit_program":containerclip.edit_program,
                   "cc_clone_generator":mediaplugin.add_media_plugin_clone,
+                  "cc_update_seq_link":_update_seq_link,
                   "edit_title":_edit_title,
                   "slowfast":_tline_clip_slowfast,
                   "revert":_revert_to_original_clip_from_slowmo_clip,

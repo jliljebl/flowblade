@@ -204,6 +204,10 @@ class Project:
         
     def add_container_clip_media_object(self, media_object):
         self._add_media_object(media_object)
+
+    def add_sequence_link_media_object(self, media_object, link_seq_uid):
+        media_object.link_seq_data = link_seq_uid
+        self._add_media_object(media_object)
         
     def _add_media_object(self, media_object, target_bin=None):
         """
@@ -322,6 +326,12 @@ class Project:
         """
         name = _("sequence_") + str(self.next_seq_number)
         self.add_named_sequence(name)
+
+    def get_sequence_for_uid(self, seq_uid):
+        for seq in self.sequences:
+            if seq.uid == seq_uid:
+                return seq
+        return None
 
     def get_current_bin_graphics_default_length(self):
         try:
@@ -466,6 +476,7 @@ class MediaFile:
 
         self.container_data = None
         self.titler_data = None
+        self.link_seq_data = None
         
         self.info = info
         self.rating = appconsts.MEDIA_FILE_UNRATED

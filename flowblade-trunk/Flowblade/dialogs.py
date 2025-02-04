@@ -1920,7 +1920,30 @@ def set_parent_track_dialog(child_track, callback):
     panel = dialogutils.get_alignment2(hbox)
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (child_track, selection_data, tracks_combo))
-    
 
+def select_link_sequence_for_container(callback):
+    title = _("Create Sequnce Link Cantainer Clip")
+    accept_text = _("Create Sequence Link Container")
+    
+    label_text = _("Create Sequence Link Container for Sequence:")
+    info_label = Gtk.Label(label=label_text)
+    info_label.set_margin_right(4)
+
+    sequences_combo = Gtk.ComboBoxText()
+    selection_data = []
+    active_index = 0
+    for i in range(0, len(editorstate.PROJECT().sequences)):
+        seq = editorstate.PROJECT().sequences[i]
+        selection_data.append(seq)
+        sequences_combo.append_text(seq.name)
+    sequences_combo.set_active(0)
+
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(info_label, False, False, 0)
+    hbox.pack_start(sequences_combo, False, False, 0)
+
+    panel = dialogutils.get_alignment2(hbox)
+
+    dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (sequences_combo, selection_data))
     
     

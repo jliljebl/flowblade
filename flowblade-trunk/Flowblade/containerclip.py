@@ -415,6 +415,13 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
     _update_gui_for_media_object_add()
 
 
+# ---------------------------------------------------------------------- SEQUENCE LINK
+def create_sequence_link_media_item(xml_file_path, media_name, linked_sequence_uid):
+    container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_SEQUENCE_LINK, xml_file_path, xml_file_path)
+    media_item = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
+    PROJECT().add_sequence_link_media_object(media_item, linked_sequence_uid)
+    _update_gui_for_media_object_add()
+    
 
 # ---------------------------------------------------------------- MEDIA FILE OBJECT
 
@@ -440,7 +447,8 @@ class ContainerClipMediaItem:
         self.has_proxy_file = False
         self.is_proxy_file = False
         self.second_file_path = None
-
+        self.link_seq_data = None
+        
         self.ttl = None
 
         self.current_frame = 0

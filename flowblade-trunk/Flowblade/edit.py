@@ -186,6 +186,7 @@ def _create_clip_clone(clip):
     new_clip.name = clip.name
     new_clip.titler_data = copy.deepcopy(clip.titler_data)
     new_clip.slowmo_data = copy.deepcopy(clip.slowmo_data)
+    new_clip.link_seq_data = copy.deepcopy(clip.link_seq_data)
     if clip.sync_data != None:
         new_clip.sync_data = SyncData()
         new_clip.sync_data.pos_offset = clip.sync_data.pos_offset

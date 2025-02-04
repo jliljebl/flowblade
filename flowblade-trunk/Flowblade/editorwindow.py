@@ -875,6 +875,7 @@ class EditorWindow:
             ('LoadMediaPluginScript', None, _('Load Generator Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
+            ('CreateSequenceLinkContainerItem', None, _("Sequence Link Container Clip..."), None, None, lambda a:projectaction.create_sequence_link_container()),
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
             ('AudioSyncCompoundClip', None, _('Audio Sync Merge Clip From 2 Media Items '), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
@@ -985,6 +986,8 @@ class EditorWindow:
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
+                        <separator/>
+                        <menuitem action='CreateSequenceLinkContainerItem'/>
                         <separator/>
                         <menuitem action='CreateGMicContainerItem'/>
                     </menu>

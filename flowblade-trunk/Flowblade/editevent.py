@@ -572,6 +572,8 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
             new_clip.container_data = copy.deepcopy(media_file.container_data)
             new_clip.container_data.generate_clip_id()
+            new_clip.link_seq_data = media_file.link_seq_data
+            #print("new_clip.link_seq_data", new_clip.link_seq_data)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
 
@@ -617,7 +619,7 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
 
     # Images fom media panel get bin default length.
     use_clip_in = False
-    if dnd.drag_source != dnd.SOURCE_MONITOR_WIDGET and  new_clip.media_type == appconsts.IMAGE:
+    if dnd.drag_source != dnd.SOURCE_MONITOR_WIDGET and new_clip.media_type == appconsts.IMAGE:
         default_grfx_length = PROJECT().get_current_bin_graphics_default_length()
         in_fr = (new_clip.get_length() - 1) // 2 - (default_grfx_length // 2)
         out_fr = in_fr + default_grfx_length - 1

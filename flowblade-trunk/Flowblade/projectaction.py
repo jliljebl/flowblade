@@ -1584,8 +1584,6 @@ def create_sequence_compound_clip():
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Container Clip"))
 
-
-
 def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -1662,6 +1660,39 @@ def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_ent
 def _get_compound_clip_default_name_date_str():
     return str(datetime.date.today()) + "_" + time.strftime("%H%M%S")
 
+def create_sequence_link_container():
+    dialogs.select_link_sequence_for_container(_do_create_sequence_link_container)
+
+def _do_create_sequence_link_container(dialog, response_id, data):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    sequences_combo, selection_data = data
+    selected_sequence = selection_data[sequences_combo.get_active()]
+    media_name = selected_sequence.name + _(" LINK")
+
+    dialog.destroy()
+
+    # Create unique file path in hidden render folder
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    write_file = folder + uuid_str + ".xml"
+    
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_link_xml_render_done_callback, 
+                                                    (selected_sequence, write_file, media_name), selected_sequence, 
+                                                    PROJECT(), PLAYER())
+    render_player.start()
+
+def _sequence_link_xml_render_done_callback(data):
+    # We do GUI updates on add, so we need GLib thread.
+    selected_sequence, write_file, media_name = data
+    GLib.idle_add(_do_sequence_link_item_add, data)
+
+def _do_sequence_link_item_add(data):
+    selected_sequence, xml_file_path, media_name = data
+    containerclip.create_sequence_link_media_item(xml_file_path, media_name, selected_sequence.uid)
+    
 def append_all_media_clips_into_timeline():
     media_files = []
     for file_id in PROJECT().c_bin.file_ids:
