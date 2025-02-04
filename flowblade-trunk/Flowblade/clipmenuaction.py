@@ -1003,8 +1003,12 @@ def _sequence_link_update_xml_render_done_callback(data):
     # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
     new_clip = current_sequence().create_file_producer_clip(write_file, clip.name, False, clip.ttl)
     new_clip.container_data = copy.deepcopy(clip.container_data)
+    new_clip.container_data.rendered_media = None # updated sequence has not been rendered to video.
+    new_clip.container_data.rendered_media_range_in = -1
+    new_clip.container_data.rendered_media_range_out = -1
+    
     new_clip.link_seq_data =  copy.deepcopy(clip.link_seq_data)
-
+    
     clip_index = track.clips.index(clip)
     
     data = {"old_clip":clip,
