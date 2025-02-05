@@ -61,7 +61,7 @@ class ContainerClipData:
             self.container_clip_uid = -1 # This is set at clip creation time.
 
             self.container_type = container_type
-            self.program = program # path to program file
+            self.program = program # path to program file, used by genrator and gmic containers.
 
             self.rendered_media = None
             self.rendered_media_range_in = -1
@@ -142,6 +142,7 @@ def edit_program(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.edit_program(clip)
+
 
 
 #------------------------------------------------------------- Cloning
@@ -462,6 +463,9 @@ class ContainerClipMediaItem:
         print("create_mlt_producer() not implemented")
 
     def create_icon(self):
+        # NOTE: self.container_data.unrendered_length GETS SET HERE!!!!
+        # it IS NOT VERY OBIVOUS OR EXPECTED THAT THIS IS THE PLACE WHERE THIS GETS DONE!!!
+        # TODO: CHANGE FUNCTION NAME.
         try:
             action_object = containeractions.get_action_object(self.container_data)
             if self.icon_path == None:

@@ -45,6 +45,7 @@ import toolsencoding
 
 _render_thread = None
 
+NO_RENDER_TARGET_FILE_SPECIFIED = "###¤¤%%NOTARGET%%¤¤##"
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
@@ -70,23 +71,24 @@ def abort_render(parent_folder, session_id):
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, parent_folder, xml_file_path, range_in, range_out, profile_desc):
+def main(root_path, session_id, parent_folder, xml_file_path, video_file_name, range_in, range_out, profile_desc):
     
     render_data = mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
-    _render_thread = MLTXMLHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
+    _render_thread = MLTXMLHeadlessRunnerThread(render_data, xml_file_path, video_file_name, range_in, range_out, profile_desc)
     _render_thread.start()
 
        
 
 class MLTXMLHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, render_data, xml_file_path, range_in, range_out, profile_desc):
+    def __init__(self, render_data, xml_file_path, video_file_name, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.render_data = render_data # toolsencoding.ToolsRenderData object
         self.xml_file_path = xml_file_path
+        self.video_file_name = video_file_name
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
@@ -106,9 +108,14 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
         # Video clip consumer
         if self.render_data.do_video_render == True:
             if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder_saved_global() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                # "video_file_name" is used to to create differently named versions of internally saved video clips for sequence link containers. 
+                if self.video_file_name == NO_RENDER_TARGET_FILE_SPECIFIED:
+                    video_file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME
+                else:
+                    video_file_name = self.video_file_name
+                file_path = ccrutils.session_folder_saved_global() + "/" + video_file_name + self.render_data.file_extension
             else:
-                file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
+                file_path = self.render_data.render_dir + "/" + self.render_data.file_name + self.render_data.file_extension
 
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
 

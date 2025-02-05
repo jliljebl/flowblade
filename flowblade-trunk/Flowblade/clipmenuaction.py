@@ -979,7 +979,6 @@ def _render_tline_generator_callback(combo):
 def _update_seq_link(data):
     clip, track, item_id, item_data = data
 
-
     link_sequence = PROJECT().get_sequence_for_uid(clip.link_seq_data)
     if link_sequence == None:
         # Sequence has been deleted
@@ -997,6 +996,10 @@ def _update_seq_link(data):
     render_player.start()
 
 def _sequence_link_update_xml_render_done_callback(data):
+    # We need to do this in a Gdk lock holding thread because it does GUI updates.
+    GLib.idle_add(_do_seq_link_tline_edit, data)
+
+def _do_seq_link_tline_edit(data):
     # We do GUI updates on add, so we need GLib thread.
     clip, track, write_file = data
 
@@ -1006,8 +1009,8 @@ def _sequence_link_update_xml_render_done_callback(data):
     new_clip.container_data.rendered_media = None # updated sequence has not been rendered to video.
     new_clip.container_data.rendered_media_range_in = -1
     new_clip.container_data.rendered_media_range_out = -1
-    
-    new_clip.link_seq_data =  copy.deepcopy(clip.link_seq_data)
+
+    new_clip.link_seq_data = copy.deepcopy(clip.link_seq_data)
     
     clip_index = track.clips.index(clip)
     
@@ -1019,6 +1022,15 @@ def _sequence_link_update_xml_render_done_callback(data):
             "clip_out":clip.clip_out}
     action = edit.clip_replace(data)
     action.do_edit()
+
+    # Unlike every other clip replace we need updated container data, e.g. 'unrendered_media' in container data is different between 
+    # new clip and old clip, 'unrendered_media' is used if this updated xml clip is rendered.
+    new_clip.container_data.unrendered_media = write_file
+    new_clip.container_data.program = write_file # for consistencys sake, not used in this container type.
+    new_clip.container_data.rendered_media = None # updated sequence has not been rendered to video.
+    new_clip.container_data.rendered_media_range_in = -1
+    new_clip.container_data.rendered_media_range_out = -1
+    new_clip.container_data.unrendered_length = new_clip.get_length() - 1
 
 def _tline_clip_slowfast(data):
     clip, track, item_id, item_data = data

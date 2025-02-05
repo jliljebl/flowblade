@@ -147,13 +147,11 @@ def _get_session_folder(parent_folder, session_id):
     session_folder_path = parent_folder + session_id
     return session_folder_path
 
-    #return userfolders.get_container_clips_dir() + session_id
-
 def get_session_folder(parent_folder, session_id):
     session_folder_path = parent_folder + session_id
     return session_folder_path
 
-    #return userfolders.get_container_clips_dir() + session_id
+    # Why two methods?
     
 def get_render_folder_for_session_id(parent_folder, session_id):
     return _get_session_folder(parent_folder, session_id) + RENDERED_FRAMES_DIR 

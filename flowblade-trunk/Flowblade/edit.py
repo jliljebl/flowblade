@@ -3238,6 +3238,8 @@ def _container_clip_full_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 
+    self.new_clip.link_seq_data = self.old_clip.link_seq_data
+
 
 # -------------------------------------------------------- CONTAINER CLIP CLIP RENDER MEDIA REPLACE
 # "old_clip", "new_clip","rendered_media_path","track", "index", "do_filters_clone"
@@ -3273,7 +3275,8 @@ def _container_clip_clip_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_in = self.old_clip.clip_in
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
-
+    self.new_clip.link_seq_data = self.old_clip.link_seq_data
+    
 # -------------------------------------------------------- CONTAINER CLIP SWITCH TO UNRENDERED CLIP MEDIA REPLACE
 # "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
@@ -3310,6 +3313,9 @@ def _container_clip_switch_to_unrendered_replace_redo(self):
         self.new_clip.filters = self.clone_filters
         _attach_all(self.new_clip)
 
+    self.new_clip.name = self.old_clip.name
+    self.new_clip.link_seq_data = self.old_clip.link_seq_data
+    
     self.new_clip.container_data.clear_rendered_media()
     
 

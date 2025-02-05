@@ -30,6 +30,7 @@ try:
     session_id = _get_arg_value(sys.argv, "session_id")
     parent_folder = _get_arg_value(sys.argv, "parent_folder")
     xml_file_path = _get_arg_value(sys.argv, "xml_file_path")
+    video_file_name = _get_arg_value(sys.argv, "video_file_name")
     range_in = _get_arg_value(sys.argv, "range_in")
     range_out = _get_arg_value(sys.argv, "range_out")
     profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
@@ -41,7 +42,7 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-mltxmlheadless.main(modules_path, session_id, parent_folder, xml_file_path, range_in, range_out, profile_desc)
+mltxmlheadless.main(modules_path, session_id, parent_folder, xml_file_path, video_file_name, range_in, range_out, profile_desc)
 
 
 

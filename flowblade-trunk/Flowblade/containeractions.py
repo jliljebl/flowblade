@@ -37,6 +37,7 @@ import time
 
 import appconsts
 import callbackbridge
+import ccrutils
 import dialogutils
 import edit
 import editorstate
@@ -165,7 +166,8 @@ class AbstractContainerActionObject:
         self.container_data = container_data
         self.render_type = -1 # to be set in methods below
         self.do_filters_clone = False
-        
+        self.video_file_name = None
+
     def create_data_dirs_if_needed(self):
         session_folder = self.get_session_dir()
         clip_frames_folder = session_folder + appconsts.CC_CLIP_FRAMES_DIR
@@ -297,9 +299,13 @@ class AbstractContainerActionObject:
 
     def get_rendered_video_clip_path(self):
         if self.container_data.render_data.save_internally == True:
-            resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
+            if self.video_file_name == None:
+                file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME
+            else:
+                file_name = self.video_file_name
+            resource_path = self.get_session_dir() + "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
         else:
-            resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
+            resource_path = self.container_data.render_data.render_dir + "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
     
         return resource_path
     
@@ -317,7 +323,7 @@ class AbstractContainerActionObject:
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
 
-    def create_producer_and_do_update_edit(self, unused_data):
+    def create_producer_and_do_update_edit(self, unused_data, video_file_name=None):
 
         # Using frame sequence as clip
         if  self.container_data.render_data.do_video_render == False:
@@ -912,10 +918,10 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
         args = ("session_id:" + self.get_container_program_id(),
                 "parent_folder:" + str(self.parent_folder),
-                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
+                "video_file_name:" + mltxmlheadless.NO_RENDER_TARGET_FILE_SPECIFIED,
                 "xml_file_path:" + str(self.container_data.unrendered_media))
 
         # Create command list and launch process.
@@ -998,7 +1004,19 @@ class SequenceLinkContainerActions(AbstractContainerActionObject):
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
         mltxmlheadless.set_render_data(self.parent_folder, self.get_container_program_id(), self.container_data.render_data)
-        
+
+        self.video_file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME
+        session_folder = ccrutils.get_session_folder(self.parent_folder, self.get_container_program_id())
+        number = 2
+        retry = True
+        while retry == True:
+            file_path = session_folder + "/" + self.video_file_name + self.container_data.render_data.file_extension
+            if os.path.isfile(file_path) == False:
+                retry = False
+            else:
+                self.video_file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + str(number) 
+                number += 1
+
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
         job_msg.status = jobs.RENDERING
@@ -1006,10 +1024,10 @@ class SequenceLinkContainerActions(AbstractContainerActionObject):
 
         args = ("session_id:" + self.get_container_program_id(),
                 "parent_folder:" + str(self.parent_folder),
-                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
+                "video_file_name:" + str(self.video_file_name),
                 "xml_file_path:" + str(self.container_data.unrendered_media))
 
         # Create command list and launch process.
