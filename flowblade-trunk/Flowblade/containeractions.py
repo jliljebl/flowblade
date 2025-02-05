@@ -1069,6 +1069,10 @@ class SequenceLinkContainerActions(AbstractContainerActionObject):
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
+    def get_rendered_thumbnail(self):
+        surface, length, icon_path = self.create_icon()
+        return surface
+        
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
         cr, surface = _create_image_surface(icon_path)
