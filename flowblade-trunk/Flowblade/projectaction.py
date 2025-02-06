@@ -1626,7 +1626,27 @@ def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_en
                                                     (write_file, media_name), selected_sequence, 
                                                     PROJECT(), PLAYER())
     render_player.start()
+
+
+def create_sequence_link_container_clip_from_selected():
+    selection = gui.sequence_list_view.treeview.get_selection()
+    model, iter = selection.get_selected()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    selected_sequence = PROJECT().sequences[row]
+
+    media_name = selected_sequence.name + _(" LINK")
+
+    # Create unique file path in hidden render folder.
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    write_file = folder + uuid_str + ".xml"
     
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_link_xml_render_done_callback, 
+                                                    (selected_sequence, write_file, media_name), selected_sequence, 
+                                                    PROJECT(), PLAYER())
+    render_player.start()
+
 def create_sequence_freeze_frame_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("frame_") + utils.get_tc_string_with_fps_for_filename(PLAYER().current_frame(), utils.fps()) + ".xml"
@@ -1918,9 +1938,11 @@ def _sequence_menu_item_selected(action, variable, msg):
         delete_selected_sequence()
     elif msg == "edit sequence":
         change_edit_sequence()
-    elif msg == "compound clip":
+    elif msg == "container clip":
         create_sequence_compound_clip_from_selected()
-        
+    elif msg == "sequence link container clip":
+        create_sequence_link_container_clip_from_selected()
+
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)
     dialogs.new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)

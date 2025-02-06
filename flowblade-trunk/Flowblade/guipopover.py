@@ -386,12 +386,13 @@ def sequence_panel_popover_show(widget, x, y, callback):
 
     main_section = Gio.Menu.new()
     add_menu_action(main_section, _("Add New Sequence"), "sequencepanel.add", "add sequence", callback)
-    add_menu_action(main_section, _("Edit Selected Sequence"), "sequencepanel.edit", "edit sequence", callback)
-    add_menu_action(main_section, _("Delete Selected Sequence"), "sequencepanel.delete", "delete sequence", callback)
+    add_menu_action(main_section, _("Edit"), "sequencepanel.edit", "edit sequence", callback)
+    add_menu_action(main_section, _("Delete"), "sequencepanel.delete", "delete sequence", callback)
     _sequence_panel_menu.append_section(None, main_section)
 
     container_section = Gio.Menu.new()
-    add_menu_action(container_section, _("Create Container Clip from Selected Sequence"), "sequencepanel.create", "compound clip", callback)
+    add_menu_action(container_section, _("Create Container Clip"), "sequencepanel.create", "container clip", callback)
+    add_menu_action(container_section, _("Create Sequence Link Container Clip"), "sequencepanel.createseqlink", "sequence link container clip", callback)
     _sequence_panel_menu.append_section(None, container_section)
 
     rect = create_rect(x, y)
