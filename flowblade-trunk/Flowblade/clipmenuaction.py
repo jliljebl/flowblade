@@ -1006,10 +1006,14 @@ def _do_seq_link_tline_edit(data):
     # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
     new_clip = current_sequence().create_file_producer_clip(write_file, clip.name, False, clip.ttl)
     new_clip.container_data = copy.deepcopy(clip.container_data)
+    # Unlike every other seq link update clip replace we need updated container data, e.g. 'unrendered_media' in container data is different between 
+    # new clip and old clip, and 'unrendered_media' is used if this updated xml clip is rendered.
+    new_clip.container_data.unrendered_media = write_file
+    new_clip.container_data.program = write_file # for consistencys sake, not used in this container type.
     new_clip.container_data.rendered_media = None # updated sequence has not been rendered to video.
     new_clip.container_data.rendered_media_range_in = -1
     new_clip.container_data.rendered_media_range_out = -1
-
+    new_clip.container_data.unrendered_length = new_clip.get_length() - 1
     new_clip.link_seq_data = copy.deepcopy(clip.link_seq_data)
     
     clip_index = track.clips.index(clip)
@@ -1022,16 +1026,7 @@ def _do_seq_link_tline_edit(data):
             "clip_out":clip.clip_out}
     action = edit.clip_replace(data)
     action.do_edit()
-
-    # Unlike every other clip replace we need updated container data, e.g. 'unrendered_media' in container data is different between 
-    # new clip and old clip, 'unrendered_media' is used if this updated xml clip is rendered.
-    new_clip.container_data.unrendered_media = write_file
-    new_clip.container_data.program = write_file # for consistencys sake, not used in this container type.
-    new_clip.container_data.rendered_media = None # updated sequence has not been rendered to video.
-    new_clip.container_data.rendered_media_range_in = -1
-    new_clip.container_data.rendered_media_range_out = -1
-    new_clip.container_data.unrendered_length = new_clip.get_length() - 1
-
+    
 def _tline_clip_slowfast(data):
     clip, track, item_id, item_data = data
     render.render_slow_fast_timeline_clip(clip, track, _tline_clip_slow_fast_render_complete)
