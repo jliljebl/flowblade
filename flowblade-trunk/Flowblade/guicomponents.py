@@ -2150,7 +2150,7 @@ class MonitorMarksTCInfo:
         self.monitor_source = Gtk.Label()
         self.monitor_source.modify_font(Pango.FontDescription(font_desc))
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.set_sensitive(False)
+        #self.monitor_source.set_sensitive(False)
         
         self.monitor_tc = Gtk.Label()
         self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
@@ -2844,7 +2844,7 @@ class MonitorSwitch:
 
 class MonitorClipType:
     def __init__(self):
-        self.WIDTH = 30
+        self.WIDTH = 47
         self.HEIGHT = 12
         
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH,
@@ -2854,10 +2854,10 @@ class MonitorClipType:
 
         self.image_surface = guiutils.get_cairo_image("graphics_indicator")
         self.icons_data = {}
-        self.icons_data[appconsts.IMAGE] = (guiutils.get_cairo_image("graphics_indicator"), 0, 4)
-        self.icons_data[appconsts.IMAGE_SEQUENCE] = (guiutils.get_cairo_image("imgseq_indicator"), 0, 4)
-        self.icons_data[appconsts.VIDEO] = (guiutils.get_cairo_image("show_video_files"), 0, 4)
-        self.icons_data[appconsts.AUDIO] = (guiutils.get_cairo_image("audio_indicator"), 0, 4)
+        self.icons_data[appconsts.IMAGE] = (guiutils.get_cairo_image("graphics_indicator"), 24, 4)
+        self.icons_data[appconsts.IMAGE_SEQUENCE] = (guiutils.get_cairo_image("imgseq_indicator"), 24, 4)
+        self.icons_data[appconsts.VIDEO] = (guiutils.get_cairo_image("show_video_files"), 24, 4)
+        self.icons_data[appconsts.AUDIO] = (guiutils.get_cairo_image("audio_indicator"), 24, 4)
  
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation

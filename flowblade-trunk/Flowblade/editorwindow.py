@@ -539,10 +539,12 @@ class EditorWindow:
         
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
-        player_buttons_row.pack_start(self.monitor_clip_type.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        #player_buttons_row.pack_start(self.monitor_clip_type.widget, False, False, 0)
+        #player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        #player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(markbuttons.widget, False, False, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
@@ -1310,10 +1312,10 @@ class EditorWindow:
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
         self.monitor_switch.widget.set_margin_top(2)
-        self.monitor_switch.widget.set_margin_right(12)
+        self.monitor_switch.widget.set_margin_right(57)
 
         self.monitor_clip_type = guicomponents.MonitorClipType()
-        self.monitor_clip_type.widget.set_margin_right(17)
+        #self.monitor_clip_type.widget.set_margin_right(17)
 
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
