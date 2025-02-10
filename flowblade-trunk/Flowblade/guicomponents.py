@@ -2842,6 +2842,34 @@ class MonitorSwitch:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
 
 
+class MonitorClipType:
+    def __init__(self):
+        self.WIDTH = 30
+        self.HEIGHT = 12
+        
+        self.widget = cairoarea.CairoDrawableArea2( self.WIDTH,
+                                                    self.HEIGHT,
+                                                    self._draw)
+        self.widget.set_tooltip_text(_("Clip Media Type"))
+
+        self.image_surface = guiutils.get_cairo_image("graphics_indicator")
+        self.icons_data = {}
+        self.icons_data[appconsts.IMAGE] = (guiutils.get_cairo_image("graphics_indicator"), 0, 4)
+        self.icons_data[appconsts.IMAGE_SEQUENCE] = (guiutils.get_cairo_image("imgseq_indicator"), 0, 4)
+        self.icons_data[appconsts.VIDEO] = (guiutils.get_cairo_image("show_video_files"), 0, 4)
+        self.icons_data[appconsts.AUDIO] = (guiutils.get_cairo_image("audio_indicator"), 0, 4)
+ 
+    def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+
+        if not editorstate.timeline_visible():
+            image_surface, x, y = self.icons_data[editorstate.MONITOR_MEDIA_FILE().type]
+            cr.set_source_surface(image_surface, x, y)
+            cr.paint()
+
+
+
+
 # ------------------------------------------------------- combo boxes with categories
 def get_profiles_combo():
     return CategoriesModelComboBox(mltprofiles._categorized_profiles)
