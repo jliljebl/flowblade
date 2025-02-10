@@ -198,6 +198,14 @@ def apply_widget_css_class(widget, widget_css_class_name, css_file):
     
     widget.get_style_context().add_class(widget_css_class_name)
     widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+def apply_widget_css_class_style_from_string(widget, css_str):#, widget_css_class_name, css_file):
+    css_data = css_str.encode("utf-8")
+    provider = Gtk.CssProvider()
+    provider.load_from_data(css_data)
+    
+    #widget.get_style_context().add_class(widget_css_class_name)
+    widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     
 def get_default_filter_icon():
     return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
