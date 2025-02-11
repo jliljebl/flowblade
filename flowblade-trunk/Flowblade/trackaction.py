@@ -43,7 +43,8 @@ import updater
 
 
 _menu_track_index = None
-        
+
+
 # --------------------------------------- menu events
 def _track_menu_item_activated(widget, action, data):
     track, item_id, selection_data = data
@@ -88,6 +89,8 @@ def reset_treack_sync(track_index):
 def clear_track_sync(track_index):
     track = get_track(track_index)
     if len(track.clips) == 0:
+        track.parent_track = None
+        updater.repaint_tline()
         return
 
     syncsplitevent.clear_track_clips_sync(track)
