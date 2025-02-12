@@ -586,6 +586,10 @@ class AbstractEditCanvas:
     def _draw_edit_shape(self, cr, allocation):
         print("_draw_edit_shape not impl.")
         
+    def print_keyframes(self):
+        for i in range(0, len(self.keyframes)):
+            print(self.keyframes[i])
+
 
 class BoxEditCanvas(AbstractEditCanvas):
     """
@@ -821,9 +825,7 @@ class BoxEditCanvas(AbstractEditCanvas):
         
         self.source_edit_rect.h = self.source_edit_rect.h * (self.source_edit_rect.w / old_w)
 
-    def print_keyframes(self):
-        for i in range(0, len(self.keyframes)):
-            print(self.keyframes[i])
+
 
 
 class RotatingEditCanvas(AbstractEditCanvas):

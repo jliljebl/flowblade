@@ -540,6 +540,26 @@ class ClipKeyFrameEditor:
         self.keyframes.append((frame, prev_value, prev_type))
         self.active_kf_index = len(self.keyframes) - 1
 
+    def add_keyframe_with_type(self, frame, type):
+        # NOTE: This makes added keyframe the active keyframe too.
+        kf_index_on_frame = self.frame_has_keyframe(frame)
+        if kf_index_on_frame != -1:
+            # Trying add on top of existing keyframe makes it active
+            self.active_kf_index = kf_index_on_frame
+            return
+
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value, kf_type = self.keyframes[i]
+            if kf_frame > frame:
+                prev_frame, prev_value, prev_type = self.keyframes[i - 1]
+                self.keyframes.insert(i, (frame, prev_value, type))
+                self.active_kf_index = i
+                return
+
+        prev_frame, prev_value, prev_type = self.keyframes[len(self.keyframes) - 1]
+        self.keyframes.append((frame, prev_value, type))
+        self.active_kf_index = len(self.keyframes) - 1
+        
     def print_keyframes(self, msg="no_msg"):
         print(msg, "clip edit keyframes:")
         for i in range(0, len(self.keyframes)):
@@ -555,6 +575,21 @@ class ClipKeyFrameEditor:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
 
+    def delete_keyframe(self, index):
+        if index == 0:
+            return
+
+        try:
+            self.keyframes.pop(index)
+        except:
+            print("ClipKeyFrameEditor.delete_keyframe index out of range")
+            return
+                
+        if self.active_kf_index >= len(self.keyframes):
+            self.active_kf_index = len(self.keyframes) - 1
+            return
+        self._set_pos_to_active_kf()
+        
     def set_next_active(self):
         """
         Activates next keyframe or keeps last active to stay in range.
@@ -1005,6 +1040,10 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         guipopover.add_menu_action_all_items_radio(kftype_section, items_data, action_id, active_index, callback)
         menu.append_section(None, kftype_section)
 
+    def print_keyframes(self, msg="no_msg"):
+        print(msg, "clip edit keyframes:")
+        for i in range(0, len(self.clip_editor.keyframes)):
+            print(self.clip_editor.keyframes[i])
         
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1875,8 +1914,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         # From now on clip editor opacity values are used until editor is discarded.
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
 
-        print(self.clip_editor.keyframes)
-
         # Build gui
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
@@ -2088,27 +2125,34 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         hbox, slider = guiutils.get_non_property_slider_row(2, 200, 1, 10)
         hbox.set_size_request(300, 20)
 
+        kf_type_combo = Gtk.ComboBoxText()
+        kf_type_combo.append_text(_("Linear"))
+        kf_type_combo.append_text(_("Smooth"))
+        kf_type_combo.set_active(0)
+
         left_width = 170
         row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Movement Type:")), combo.widget, left_width)
         row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Movement Length:")), hbox, left_width)
+        row3 = guiutils.get_two_column_box(Gtk.Label(label=_("Keyframe Type:")), kf_type_combo, left_width)
         
         pane = Gtk.VBox()
         
         pane = Gtk.VBox()
         pane.pack_start(row1, False, False, 0)
         pane.pack_start(row2, False, False, 0)
+        pane.pack_start(row3, False, False, 0)
 
-        dialogutils.panel_ok_cancel_dialog(_("Add Preset Movement"), pane, _("Add Movement"), self._add_movemement_callback, (combo, slider, in_moves, out_moves))
+        dialogutils.panel_ok_cancel_dialog(_("Add Preset Movement"), pane, _("Add Movement"), self._add_movemement_callback, (combo, slider, kf_type_combo, in_moves, out_moves))
 
     def _add_movemement_callback(self, dialog, response_id, data):
         if response_id != Gtk.ResponseType.ACCEPT:
             dialog.destroy()
             return
 
-        combo, slider, in_moves, out_moves = data
+        combo, slider, kf_type_combo, in_moves, out_moves = data
 
         sel = combo.get_selected()
-        length = slider.get_value() 
+        length = int(slider.get_value()) 
         w = current_sequence().profile.width()
         h = current_sequence().profile.height()
         in_frame = self.editable_property.clip.clip_in
@@ -2124,31 +2168,85 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             fr1 = in_frame
             fr2 = in_frame + length
         elif sel == in_moves[1]:
-            pass
+            x1 = w
+            x2 = 0
+            y1 = 0
+            y2 = 0
+            fr1 = in_frame
+            fr2 = in_frame + length
         elif sel == in_moves[2]:
-            pass
+            x1 = 0
+            x2 = 0
+            y1 = -h
+            y2 = 0
+            fr1 = in_frame
+            fr2 = in_frame + length
         elif sel == in_moves[3]:
-            pass
+            x1 = 0
+            x2 = 0
+            y1 = h
+            y2 = 0
+            fr1 = in_frame
+            fr2 = in_frame + length
         elif sel == out_moves[0]:
-            pass
+            x1 = 0
+            x2 = -w
+            y1 = 0
+            y2 = 0
+            fr1 = out_frame - length 
+            fr2 = out_frame
         elif sel == out_moves[1]:
-            pass
+            x1 = 0
+            x2 = w
+            y1 = 0
+            y2 = 0
+            fr1 = out_frame - length 
+            fr2 = out_frame
         elif sel == out_moves[2]:
-            pass
+            x1 = 0
+            x2 = 0
+            y1 = 0
+            y2 = -h
+            fr1 = out_frame - length 
+            fr2 = out_frame
         elif sel == out_moves[3]:
-            pass
+            x1 = 0
+            x2 = 0
+            y1 = 0
+            y2 = h
+            fr1 = out_frame - length 
+            fr2 = out_frame
 
         r1 = [x1, y1, w, h]
         r2 = [x2, y2, w, h]
 
-        kf_type = appconsts.KEYFRAME_LINEAR
+        if kf_type_combo.get_active() == 0:
+            kf_type = appconsts.KEYFRAME_LINEAR
+        else:
+            kf_type = appconsts.KEYFRAME_SMOOTH
+            
+        # Remove all keyframes in motion range.
+        del_kfs_indexes = [] 
+        for i in range(1, len(self.clip_editor.keyframes)):
+            tf, tvalue, ttype = self.clip_editor.keyframes[i]
+            if tf >= fr1 and tf <= fr2:
+                del_kfs_indexes.append(i)
+        try:
+            del_index = del_kfs_indexes[0]
+            for i in range(0, len(del_kfs_indexes)):
+                self.clip_editor.delete_keyframe(del_index)
+                self.geom_kf_edit.delete_active_keyframe(del_index)
+        except:
+            pass
 
+        # Add motion keyframes.
         self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr1, r1, 1.0, kf_type)
-        self.clip_editor.add_keyframe(fr1)
+        self.clip_editor.add_keyframe_with_type(fr1, kf_type)
 
         self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr2, r2, 1.0, kf_type)
-        self.clip_editor.add_keyframe(fr2)
-        
+        self.clip_editor.add_keyframe_with_type(fr2, kf_type)
+
+        # Update view.
         self.clip_editor.set_active_keyframe_to_kf_in_frame(fr1)
         
         frame = self.clip_editor.get_active_kf_frame()
@@ -2226,7 +2324,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         _kf_menu.append_section(None, action_section)
         
         motion_section = Gio.Menu.new()
-        guipopover.add_menu_action(motion_section, _("Add Keyframed Movement..."), "keyframes.addkfmovementfive", "add_movement", self._menu_item_activated)
+        guipopover.add_menu_action(motion_section, _("Add Preset Keyframed Movement..."), "keyframes.addkfmovementfive", "add_movement", self._menu_item_activated)
         _kf_menu.append_section(None, motion_section)
         
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
