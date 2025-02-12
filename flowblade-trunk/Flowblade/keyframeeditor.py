@@ -37,6 +37,7 @@ import appconsts
 import cairoarea
 import callbackbridge
 import compositorfades
+import dialogutils
 from editorstate import PLAYER
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -578,7 +579,15 @@ class ClipKeyFrameEditor:
             self.active_kf_index = len(self.get_out_of_range_before_kfs())
 
         self._set_pos_to_active_kf()
-    
+
+    def set_active_keyframe_to_kf_in_frame(self, frame):
+        # this is noop if no keyframe in frame exists.
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value, kf_type = self.keyframes[i]
+            if kf_frame == frame:
+                self.active_kf_index = i
+                self._set_pos_to_active_kf()
+
     def _set_pos_to_active_kf(self):
         try:
             frame, value, type = self.keyframes[self.active_kf_index]
@@ -1865,7 +1874,9 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         # that contain the property values when opening editor.
         # From now on clip editor opacity values are used until editor is discarded.
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
-      
+
+        print(self.clip_editor.keyframes)
+
         # Build gui
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
@@ -2064,6 +2075,88 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
+    def _show_add_movement_dialog(self):
+        categories_list = []
+        in_moves = [_("Slide In Form Left"), _("Slide In From Right"), _("Slide In From Top"), _("Slide In From Bottom")]
+        categories_list.append((_("Slide In"), in_moves))
+        out_moves = [_("Slide Out To Left"), _("Slide Out To Right"), _("Slide Out To Top"), ("Slide Out To Bottom")]
+        categories_list.append((_("Slide Out"), out_moves))
+
+        combo = guicomponents.CategoriesModelComboBox(categories_list)
+        combo.set_selected(in_moves[0])
+
+        hbox, slider = guiutils.get_non_property_slider_row(2, 200, 1, 10)
+        hbox.set_size_request(300, 20)
+
+        left_width = 170
+        row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Movement Type:")), combo.widget, left_width)
+        row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Movement Length:")), hbox, left_width)
+        
+        pane = Gtk.VBox()
+        
+        pane = Gtk.VBox()
+        pane.pack_start(row1, False, False, 0)
+        pane.pack_start(row2, False, False, 0)
+
+        dialogutils.panel_ok_cancel_dialog(_("Add Preset Movement"), pane, _("Add Movement"), self._add_movemement_callback, (combo, slider, in_moves, out_moves))
+
+    def _add_movemement_callback(self, dialog, response_id, data):
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+
+        combo, slider, in_moves, out_moves = data
+
+        sel = combo.get_selected()
+        length = slider.get_value() 
+        w = current_sequence().profile.width()
+        h = current_sequence().profile.height()
+        in_frame = self.editable_property.clip.clip_in
+        out_frame = self.editable_property.clip.clip_out
+
+        dialog.destroy()
+        
+        if sel == in_moves[0]:# "Slide In Form Left", see _show_add_movement_dialog for meanings af values here.
+            x1 = -w
+            x2 = 0
+            y1 = 0
+            y2 = 0
+            fr1 = in_frame
+            fr2 = in_frame + length
+        elif sel == in_moves[1]:
+            pass
+        elif sel == in_moves[2]:
+            pass
+        elif sel == in_moves[3]:
+            pass
+        elif sel == out_moves[0]:
+            pass
+        elif sel == out_moves[1]:
+            pass
+        elif sel == out_moves[2]:
+            pass
+        elif sel == out_moves[3]:
+            pass
+
+        r1 = [x1, y1, w, h]
+        r2 = [x2, y2, w, h]
+
+        kf_type = appconsts.KEYFRAME_LINEAR
+
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr1, r1, 1.0, kf_type)
+        self.clip_editor.add_keyframe(fr1)
+
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr2, r2, 1.0, kf_type)
+        self.clip_editor.add_keyframe(fr2)
+        
+        self.clip_editor.set_active_keyframe_to_kf_in_frame(fr1)
+        
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
     def update_editor_view(self, seek_tline_frame=True):
         # This gets called when tline frame is changed from outside
         # Call update_editor_view_with_frame that is used when updating from inside the object.
@@ -2114,13 +2207,16 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         _kf_type_submenu = guipopover.menu_clear_or_create(_kf_type_submenu)
         self._create_keyframe_type_submenu(kf_type, _kf_type_submenu,  "keyframes.typeselectfive", self._kf_type_menu_item_activated)
         main_section.append_submenu(_("Active Keyframe Type"), _kf_type_submenu)
+        _kf_menu.append_section(None, main_section)
         
-        kf_section = Gio.Menu.new()
-        guipopover.add_menu_action(main_section, _("Copy Keyframe Value (Control + C)"), "keyframes.copykffive", "copy_kf", self._menu_item_activated)
-        guipopover.add_menu_action(main_section, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekffive", "paste_kf", self._menu_item_activated)
-        guipopover.add_menu_action(main_section, _("Copy Keyframe Value From Next"), "keyframes.clonenextkftwo",  "clonekfnext", self._menu_item_activated)
-        guipopover.add_menu_action(main_section, _("Copy Keyframe Value From Previous"), "keyframes.cloneprevkftwo",  "clonekfprev", self._menu_item_activated)
-        _kf_menu.append_section(None, kf_section)
+        kf_action_submenu = Gio.Menu.new()
+        guipopover.add_menu_action(kf_action_submenu, _("Copy Keyframe Value (Control + C)"), "keyframes.copykffive", "copy_kf", self._menu_item_activated)
+        guipopover.add_menu_action(kf_action_submenu, _("Paste Keyframe Value (Control + V)"), "keyframes.pastekffive", "paste_kf", self._menu_item_activated)
+        guipopover.add_menu_action(kf_action_submenu, _("Copy Keyframe Value From Next"), "keyframes.clonenextkftwo",  "clonekfnext", self._menu_item_activated)
+        guipopover.add_menu_action(kf_action_submenu, _("Copy Keyframe Value From Previous"), "keyframes.cloneprevkftwo",  "clonekfprev", self._menu_item_activated)
+        kf_ection_section = Gio.Menu.new()
+        kf_ection_section.append_submenu(_("Active Keyframe Action"), kf_action_submenu)
+        _kf_menu.append_section(None, kf_ection_section)
 
         action_section = Gio.Menu.new()
         guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
@@ -2128,6 +2224,10 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkffive", "reset", self._menu_item_activated)
         guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
         _kf_menu.append_section(None, action_section)
+        
+        motion_section = Gio.Menu.new()
+        guipopover.add_menu_action(motion_section, _("Add Keyframed Movement..."), "keyframes.addkfmovementfive", "add_movement", self._menu_item_activated)
+        _kf_menu.append_section(None, motion_section)
         
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
 
@@ -2189,6 +2289,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             keyevents.copy_action()
         elif msg == "paste_kf":
             keyevents.paste_action()
+        elif msg == "add_movement":
+            self._show_add_movement_dialog()
 
         self.queue_draw()
         self.update_property_value()

@@ -360,6 +360,17 @@ class AbstractEditCanvas:
         self.keyframes.append((frame, copy.deepcopy(p_shape), copy.deepcopy(p_opacity),  p_type))
         
         self.keyframes.sort(key=_geom_kf_sort)
+
+    def add_keyframe_with_shape_opacity_and_type(self, frame, shape, opacity, kf_type):
+        if self._frame_has_keyframe(frame) == True:
+            kf_index = self._get_frame_keyframe_index(frame)
+            self.keyframes.pop(kf_index)
+            self._update_shape()
+
+        # Add with values, for now we always set opacity to max.
+        self.keyframes.append((frame, shape, opacity,  kf_type))
+        
+        self.keyframes.sort(key=_geom_kf_sort)
         
     def delete_active_keyframe(self, keyframe_index):
         if keyframe_index == 0:
@@ -377,6 +388,15 @@ class AbstractEditCanvas:
 
         return False
 
+    def _get_frame_keyframe_index(self, frame):
+        for i in range(0, len(self.keyframes)):
+            kf = self.keyframes[i]
+            kf_frame, rect, opacity, kf_type = kf
+            if frame == kf_frame:
+                return i
+
+        return None
+        
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
 
