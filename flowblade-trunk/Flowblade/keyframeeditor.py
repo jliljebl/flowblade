@@ -2158,6 +2158,11 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         in_frame = self.editable_property.clip.clip_in
         out_frame = self.editable_property.clip.clip_out
 
+        if kf_type_combo.get_active() == 0:
+            kf_type = appconsts.KEYFRAME_LINEAR
+        else:
+            kf_type = appconsts.KEYFRAME_SMOOTH
+            
         dialog.destroy()
         
         if sel == in_moves[0]:# "Slide In Form Left", see _show_add_movement_dialog for meanings af values here.
@@ -2217,14 +2222,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             fr1 = out_frame - length 
             fr2 = out_frame
 
-        r1 = [x1, y1, w, h]
-        r2 = [x2, y2, w, h]
-
-        if kf_type_combo.get_active() == 0:
-            kf_type = appconsts.KEYFRAME_LINEAR
-        else:
-            kf_type = appconsts.KEYFRAME_SMOOTH
-            
         # Remove all keyframes in motion range.
         del_kfs_indexes = [] 
         for i in range(1, len(self.clip_editor.keyframes)):
@@ -2239,13 +2236,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         except:
             pass
 
-        # Add motion keyframes.
-        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr1, r1, 1.0, kf_type)
-        self.clip_editor.add_keyframe_with_type(fr1, kf_type)
-
-        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr2, r2, 1.0, kf_type)
-        self.clip_editor.add_keyframe_with_type(fr2, kf_type)
-
+        self._write_preset_slide_keyframes(x1, x2, y1, y2, fr1, fr2, kf_type)
+        
         # Update view.
         self.clip_editor.set_active_keyframe_to_kf_in_frame(fr1)
         
@@ -2254,6 +2246,20 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
+    def _write_preset_slide_keyframes(self, x1, x2, y1, y2, fr1, fr2, kf_type):
+        w = current_sequence().profile.width()
+        h = current_sequence().profile.height()
+        
+        r1 = [x1, y1, w, h]
+        r2 = [x2, y2, w, h]
+
+        # Add motion keyframes.
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr1, r1, 1.0, kf_type)
+        self.clip_editor.add_keyframe_with_type(fr1, kf_type)
+
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr2, r2, 1.0, kf_type)
+        self.clip_editor.add_keyframe_with_type(fr2, kf_type)
         
     def update_editor_view(self, seek_tline_frame=True):
         # This gets called when tline frame is changed from outside
@@ -2556,6 +2562,20 @@ class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
         self.geom_kf_edit.keyframe_parser = propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
 
+    def _write_preset_slide_keyframes(self, x1, x2, y1, y2, fr1, fr2, kf_type):
+        w = current_sequence().profile.width()
+        h = current_sequence().profile.height()
+        
+        t1 = [x1 + w/2, y1 + h/2, 1.0, 1.0, 0]
+        t2 = [x2 + w/2, y2 + h/2, 1.0, 1.0, 0]
+
+        # Add motion keyframes.
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr1, t1, 100.0, kf_type)
+        self.clip_editor.add_keyframe_with_type(fr1, kf_type)
+
+        self.geom_kf_edit.add_keyframe_with_shape_opacity_and_type(fr2, t2, 100.0, kf_type)
+        self.clip_editor.add_keyframe_with_type(fr2, kf_type)
+        
 
 
 class RotoMaskKeyFrameEditor(Gtk.VBox):
