@@ -6,6 +6,6 @@
 		{ "folder":"transitions_2", "scriptfile":"hex_overlay.py", "name":"Hex Overlay", "category":"Cover Transitions", "defaultrender":"alphaclip"},
 		{ "folder":"text_1", "scriptfile":"multiline_animation.py", "name":"Multiline Animation", "category":"Animated Texts", "defaultrender":"alphaclip"},
 		{ "folder":"text_2", "scriptfile":"typewriter.py", "name":"Typewriter", "category":"Animated Texts", "defaultrender":"alphaclip"},
-		{ "folder":"text_3", "scriptfile":"credit_scroll.py", "name":"Creadit Scroll", "category":"Animated Texts", "defaultrender":"alphaclip"}
+		{ "folder":"text_3", "scriptfile":"credit_scroll.py", "name":"Credit Scroll", "category":"Animated Texts", "defaultrender":"alphaclip"}
 	 ]
 }
