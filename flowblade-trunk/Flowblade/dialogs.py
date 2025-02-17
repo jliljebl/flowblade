@@ -403,6 +403,38 @@ def load_media_plugin_plugin_properties(callback):
     dialog.connect('response', callback)
     dialog.show()
 
+def save_generator_template(callback, default_name, data):
+    dialog = Gtk.FileChooserDialog( _("Save Generator Template"), None,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("Save"), Gtk.ResponseType.ACCEPT), None)
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Generator Template"))
+    file_filter.add_pattern("*" + "generatortemplate")
+    dialog.add_filter(file_filter)
+    
+    dialog.connect('response', callback, data)
+    dialog.show()
+
+def load_generator_template(callback):
+    dialog = Gtk.FileChooserDialog(_("Load Generator Properties"), None,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Generator Template"))
+    file_filter.add_pattern("*" + "generatortemplate")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def get_media_plugin_length(callback, data):
     dialog = Gtk.Dialog(_("Create Cloned Media Item"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

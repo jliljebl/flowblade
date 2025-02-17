@@ -105,6 +105,16 @@ class MediaPlugin:
         script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/" + self.script_file
         return script_file
 
+    def get_data(self):
+        return (self.folder, self.script_file, self.name, self.category, self.default_render)
+
+
+class GeneratorTemplate:
+    
+    def __init__(self, plugin_data, edited_script_data):
+        self.plugin_data = plugin_data
+        self.edited_script_data = edited_script_data
+
 
 # --------------------------------------------------------------- interface
 def init():
@@ -167,7 +177,7 @@ def _get_categories_list():
     
     return categories_list  
 
-# This method is used by scriptool.py create sub menu to load generator code into 
+# This method is used by scriptool.py to create a sub menu to load generator code into 
 # editor window as an example.
 def fill_media_plugin_sub_menu_gio(app, menu, callback):
     for group_data in _plugins_groups:
@@ -272,14 +282,54 @@ def get_plugin_code(plugin_folder_and_script):
 def get_plugin_script_path(plugin_folder_and_script):
     return respaths.MEDIA_PLUGINS_PATH + plugin_folder_and_script
 
+def _save_current_state_as_generator_template():
+    global _current_plugin_data_object
+    plugin_data = _selected_plugin.get_data()
+    
+    edited_script_data = copy.deepcopy(_current_plugin_data_object)
+    edited_script_data["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
+    edited_script_data["length"] = int(_add_plugin_window.length_spin.get_value())
+
+    gen_data = GeneratorTemplate(plugin_data, edited_script_data)
+    default_name = edited_script_data["name"] + ".generatortemplate"
+    
+    dialogs.save_generator_template(_save_template_callback, default_name, gen_data)
+
+def _save_template_callback(dialog, response_id, save_data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(save_data, write_file)
+
+    dialog.destroy()
+
+def _load_generator_template():
+    dialogs.load_generator_template(_load_template_callback)
+    
+def _load_template_callback(dialog, response_id):
+    global _add_plugin_window
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        try:
+            generator_template = utils.unpickle(load_path)
+            _add_plugin_window._plugin_selection_changed(None, generator_template)
+        except Exception as e:
+            primary_txt = _("Generator Template load failed!")
+            secondary_txt = _("Error message: ") + str(e)
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+            gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+
+
+    dialog.destroy()
+    
 # --------------------------------------------------------- Window
 class AddMediaPluginWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
         
         self.producer = PosBarProducer()
-        
-        self.set_modal(True)
+
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("Add Generator"))
         self.connect("delete-event", lambda w, e:_close_window())
@@ -332,8 +382,7 @@ class AddMediaPluginWindow(Gtk.Window):
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_start(6)
         pos_bar_frame.set_margin_end(2)
-                                                 
-                                                 
+
         control_panel = Gtk.HBox(False, 2)
         control_panel.pack_start(self.tc_display.widget, False, False, 0)
         control_panel.pack_start(pos_bar_frame, True, True, 0)
@@ -379,8 +428,15 @@ class AddMediaPluginWindow(Gtk.Window):
         close_button.connect("clicked", lambda w: _close_clicked())
         self.add_button = guiutils.get_sized_button(_("Add Generator"), 150, 32)
         self.add_button.connect("clicked", lambda w: _add_media_plugin())
+
+        save_button = guiutils.get_sized_button(_("Save Generator Template"), 170, 32)
+        save_button.connect("clicked", lambda w: _save_current_state_as_generator_template())
+        load_button = guiutils.get_sized_button(_("Load Generator Tamplate"), 170, 32)
+        load_button.connect("clicked", lambda w: _load_generator_template())
         
         buttons_row = Gtk.HBox(False, 0)
+        buttons_row.pack_start(save_button, False, False, 0)
+        buttons_row.pack_start(load_button, False, False, 0)
         buttons_row.pack_start(Gtk.Label(), True, True, 0)
         buttons_row.pack_start(close_button, False, False, 0)
         buttons_row.pack_start(self.add_button, False, False, 0)
@@ -456,11 +512,17 @@ class AddMediaPluginWindow(Gtk.Window):
         cr.line_to(mx + 0.5, my + 0.5)
         cr.stroke()
         
-    def _plugin_selection_changed(self, combo):
-        name, new_selected_plugin = self.plugin_select.get_selected()
+    def _plugin_selection_changed(self, combo, plugin_template=None):
+
+        if plugin_template == None:
+            name, new_selected_plugin = self.plugin_select.get_selected()
+            success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
+            script_data_object = json.loads(fctx.get_script_data())
+        else:
+            
+            new_selected_plugin = MediaPlugin(*plugin_template.plugin_data)
+            script_data_object = plugin_template.edited_script_data
         
-        success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
-        script_data_object = json.loads(fctx.get_script_data())
         self._show_plugin_editors_panel(script_data_object)
 
         global _selected_plugin, _current_screenshot_surface, _current_plugin_data_object
