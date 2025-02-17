@@ -1,5 +1,10 @@
 # Release Notes
 
+## FLOWBLADE 2.18.1
+Date: February 17, 2025
+
+Flatpak fix for Credit Scroll generator.
+
 ## FLOWBLADE 2.18
 Date: December 18, 2024
 
