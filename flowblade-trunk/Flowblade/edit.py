@@ -35,6 +35,7 @@ import containerclip
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
+from editorstate import PROJECT
 import mltfilters
 import movemodes
 import mediaplugin
@@ -362,6 +363,8 @@ class EditAction:
 
         trackaction.maybe_do_auto_expand(tracks_clips_count_before)
         
+        undo.force_revert_if_cyclic_seq_links(PROJECT())
+        
     def undo(self):
         PLAYER().stop_playback()
 
@@ -384,7 +387,6 @@ class EditAction:
             PLAYER().consumer.start()
         
         if do_gui_update:
-            #print("undo() _update_gui")
             self._update_gui()
             
     def redo(self):
@@ -498,7 +500,9 @@ class ConsolidatedEditAction:
         # We only want to do one consumer start per group.
         if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
             PLAYER().consumer.start()
-            
+
+        undo.force_revert_if_cyclic_seq_links(PROJECT())
+        
     def redo(self):
         for edit_action in self.edit_actions:
             edit_action.redo()
@@ -506,7 +510,10 @@ class ConsolidatedEditAction:
     def undo(self):
         for edit_action in reversed(self.edit_actions):
             edit_action.undo()
-        
+
+
+
+
 # ---------------------------------------------------- compositor sync methods
 def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)

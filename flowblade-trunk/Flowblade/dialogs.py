@@ -1978,4 +1978,8 @@ def select_link_sequence_for_container(callback):
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (sequences_combo, selection_data))
     
-    
+
+def show_cyclic_error():
+    primary_txt = _("Cyclic relation detected!")
+    secondary_txt = _("Edit would create a cyclink linked sequence relation and was cancelled!")
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)

@@ -40,7 +40,9 @@ clipmenuaction_get_popover_clip_data = None
 clipmenuaction_set_compositor_data = None
 
 compositeeditor_get_compositor = None
- 
+
+dialogs_show_cyclic_error = None
+    
 editevent_tline_range_item_drop = None
 editevent_do_multiple_clip_insert = None
 

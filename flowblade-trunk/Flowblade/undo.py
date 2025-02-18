@@ -22,8 +22,14 @@
 Module manages undo and redo stacks and executes edit actions from them
 on user requests.
 """
+import gi
+from gi.repository import GLib
+
 import time
+
+import callbackbridge
 import editorstate
+import utils
 
 set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports.
 repaint_tline = None
@@ -164,3 +170,78 @@ def undo_redo_stress_test():
             do_redo()
 
             time.sleep(delay)
+
+# ------------------------------------------- LINKED SEQUENCE CYCLIC TESTING
+WHITE = 0
+GREY = 1
+BLACK = 2
+
+is_cyclic = False
+
+class LinkNode:
+    
+    def __init__(self, seq):
+        self.seq = seq
+        self.targets = []
+        self.color = WHITE
+
+    def get_target_nodes(self, nodes):
+        target_nodes = []
+        for node in nodes:
+            if node.seq.uid in self.targets:
+                target_nodes.append(node)
+        return target_nodes
+
+def force_revert_if_cyclic_seq_links(project):
+    test_thread = utils.LaunchThread(project, _run_seq_link_cyclic_test)
+    test_thread.run()
+
+def _run_seq_link_cyclic_test(project):
+    global is_cyclic
+    is_cyclic = False
+    nodes = []
+    
+    for seq in project.sequences:
+        node = LinkNode(seq)
+        nodes.append(node)
+        for track in seq.tracks:
+            for clip in track.clips:
+                if clip.link_seq_data == None:
+                    continue
+                else:
+                    node.targets.append(clip.link_seq_data)
+                    node.targets = set(node.targets) 
+
+    for node in nodes:
+        _visitDFS(node, nodes)
+        
+    if is_cyclic == True:
+        GLib.idle_add(_do_force_undo_with_pop)
+
+def _visitDFS(node, nodes):
+    global is_cyclic
+    
+    node.color = GREY
+    
+    target_nodes = node.get_target_nodes(nodes)
+    
+    for target_node in target_nodes:
+        if target_node.color == GREY:
+            is_cyclic = True
+        if target_node.color == WHITE:
+            _visitDFS(target_node, nodes)
+            
+    node.color = BLACK
+
+
+def _do_force_undo_with_pop():
+    global undo_stack, index
+    
+    # Revert edit 
+    do_undo()
+    
+    # Delete edit action creating cyclic state.
+    if index != len(undo_stack) and (len(undo_stack) != 0):
+        del undo_stack[index:]
+
+    callbackbridge.dialogs_show_cyclic_error()
