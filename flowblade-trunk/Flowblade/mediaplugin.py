@@ -423,7 +423,7 @@ class AddMediaPluginWindow(Gtk.Window):
         values_row = Gtk.HBox(False, 8)
         values_row.pack_start(self.editors_box, False, False, 0)
         values_row.pack_start(right_column_panel, True, True, 0)
-        
+
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
         self.add_button = guiutils.get_sized_button(_("Add Generator"), 150, 32)

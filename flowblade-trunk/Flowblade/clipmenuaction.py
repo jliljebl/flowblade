@@ -981,7 +981,7 @@ def _update_seq_link(data):
 
     link_sequence = PROJECT().get_sequence_for_uid(clip.link_seq_data)
     if link_sequence == None:
-        # Sequence has been deleted
+        # Sequence has been deleted.
         # TODO: info
         return 
 

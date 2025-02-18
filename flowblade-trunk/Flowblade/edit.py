@@ -505,7 +505,6 @@ class ConsolidatedEditAction:
             
     def undo(self):
         for edit_action in reversed(self.edit_actions):
-            #edit_action = self.edit_actions[i]
             edit_action.undo()
         
 # ---------------------------------------------------- compositor sync methods

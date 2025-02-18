@@ -573,7 +573,6 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             new_clip.container_data = copy.deepcopy(media_file.container_data)
             new_clip.container_data.generate_clip_id()
             new_clip.link_seq_data = media_file.link_seq_data
-            #print("new_clip.link_seq_data", new_clip.link_seq_data)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
 
