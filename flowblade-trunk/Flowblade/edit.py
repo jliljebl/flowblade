@@ -1787,7 +1787,7 @@ def _trim_last_clip_end_redo(self):
         self.first_do = False
         self.undo_done_callback(self.track)
 
-#------------------ TRIM IMAGE BEYOND CURRENT LENGHT
+#------------------ TRIM IMAGE BEYOND CURRENT LENGTH
 def trim_image_end_beyond_max_length_action(data):
     action = EditAction(_trim_image_end_beyond_max_length_undo,_trim_image_end_beyond_max_length_redo, data)
     action.exit_active_trimmode_on_edit = False

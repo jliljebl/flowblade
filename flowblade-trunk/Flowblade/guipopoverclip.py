@@ -81,7 +81,7 @@ _kf_select_popover = None
 _kf_select_menu = None
  
  
-# -------------------------------------------------- menuitems builder fuctions
+# -------------------------------------------------- menuitems builder functions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     return guipopover.add_menu_action(menu, label, item_id, data, callback, active, app)
 

@@ -1197,13 +1197,13 @@ def _app_destroy():
     stop_usb_hid_input()
 
     # Now that autosave file is deleted, the data folder contents for unsaved
-    # projects are unreachable and can be destoyed.
+    # projects are unreachable and can be destroyed.
     projectdatavault.delete_unsaved_data_folders()
 
     # Calling _app.quit() will block if Gio.Application.hold() has been called,
     # and the documentation helpfully says "(Note that you may have called 
     # Gio.Application.hold() indirectly, for example through gtk_application_add_window().)"
-    # I'm not calling add_window() on render processess but somehow those call Gio.Application.hold()
+    # I'm not calling add_window() on render processes but somehow those call Gio.Application.hold()
     # but I don't know where. 
     #
     # However, those processes complete and exit cleanly and the only problem 

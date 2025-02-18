@@ -45,7 +45,7 @@ import utils
 # Mouse delta in pix needed before selection is interpreted as move.
 MOVE_START_LIMIT = 5
 
-# Width of area in pixels that is iterpreted as an attempt to place overwrite
+# Width of area in pixels that is interpreted as an attempt to place overwrite
 # clips, starting from edit
 MAGNETIC_AREA_IN_PIX = 5
 

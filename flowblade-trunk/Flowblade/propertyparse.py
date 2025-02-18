@@ -39,7 +39,7 @@ NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 SCREENSIZE = "SCREENSIZE"                                   # replace with "WIDTHxHEIGHT" of profile screensize in pix
 SCREENSIZE2 = "Screensize2"                                 # replace with "WIDTH HEIGHT" of profile screensize in pix
-WIPE_PATH = "WIPE_PATH"                                     # path to folder contining wipe resource images
+WIPE_PATH = "WIPE_PATH"                                     # path to folder containing wipe resource images
 SCREENSIZE_WIDTH = "SCREENSIZE_WIDTH"                       # replace with width of profile screensize in pix
 SCREENSIZE_HEIGHT = "SCREENSIZE_HEIGHT"                     # replace with height of profile screensize in pix
 VALUE_REPLACEMENT = "value_replacement"                     # attr name for replacing value after clip is known
@@ -362,7 +362,7 @@ def rect_NO_keyframes_value_string_to_geom_kf_array(rect_str, out_to_in_func):
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular parameter values
-    # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
+    # scheme to satisfy the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples used by keyframeeditorcanvas.RotatingEditCanvas editor.
@@ -423,7 +423,7 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         # and rotate image automatically around its tramslated center point.
         #
         # So the we need to add half of width and height to mlt values AND 
-        # addional linear correction based on applied scaling when creating
+        # additional linear correction based on applied scaling when creating
         # keyframes for keyframecanvas.RotatingEditCanvas editor.
         x = float(values[0]) + float(screen_width) / 2.0 + \
             ((x_scale * screen_width) - screen_width) / 2.0

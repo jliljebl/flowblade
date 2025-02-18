@@ -524,7 +524,7 @@ class AbstractTextBlock(AbstractBlock):
 
 class AbstractCreditBlock(AbstractTextBlock):
     
-    # These indexs must match those in editor "Credits Layout".
+    # These indexes must match those in editor "Credits Layout".
     LAYOUT_SINGLE_LINE_CENTERED = 0
     LAYOUT_TWO_LINE_CENTERED = 1
     LAYOUT_SINGLE_LINE_RIGHT_JUSTIFIED = 2

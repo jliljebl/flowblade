@@ -236,7 +236,7 @@ class BatchRenderIPC():
     
         # Should not happen.
         if timestamp == None:
-            print("Failed toi read timestamp in BatchRenderIPC.app_running()")
+            print("Failed to read timestamp in BatchRenderIPC.app_running()")
             return False
 
         # Running batch render app lockfile was timestamp longer then 3 ago or

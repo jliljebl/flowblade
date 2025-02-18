@@ -115,7 +115,7 @@ _mf_proxy_section = None
 _mf_stabilize_section = None
 
 
-# -------------------------------------------------- menuitems builder fuctions
+# -------------------------------------------------- menuitems builder functions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
     if active == True:
         menu.append(label, "app." + item_id) 

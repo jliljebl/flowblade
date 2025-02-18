@@ -38,7 +38,7 @@ These are not currently planned. If in the future the port effort is reasonable,
 
 ### Rendering with a profile with different framerate changes video playback speed and loses audio sync
 
-Yes, this will happen. When rendering the video frames are just copied, no complex slowdown/speedup prosessing is done, and audio is **not** resampled.
+Yes, this will happen. When rendering the video frames are just copied, no complex slowdown/speedup processing is done, and audio is **not** resampled.
 
 To maintain sync and playback both Project Profile and Render Profile both need to match the frame rate of original material.  
 

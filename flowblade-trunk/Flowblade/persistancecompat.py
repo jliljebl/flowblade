@@ -22,7 +22,7 @@
 This module holds functions that maintain compatibility between project savefiles
 created by different versions of application.
 
-When new attributes are added to persistant classes they are added here to classes in save files created by older versions.  
+When new attributes are added to persistent classes they are added here to classes in save files created by older versions.  
 """
 
 import hashlib

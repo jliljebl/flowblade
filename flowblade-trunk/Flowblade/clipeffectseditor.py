@@ -322,7 +322,7 @@ class ClipFilterStack:
             edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
             stack_item = FilterStackItem(filter_object, edit_panel, self)
             
-            # Put eveything back
+            # Put everything back
             self.filter_stack.insert(stack_index, stack_item)
             for stack_item in self.filter_stack:
                 self.widget.pack_start(stack_item.widget,False, False, 0)

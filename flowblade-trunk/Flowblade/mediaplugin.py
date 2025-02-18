@@ -19,7 +19,7 @@
 """
 
 """
-Thís module handels creating, editing and cloning of
+Thís module handles creating, editing and cloning of
 Generators.
 
 Generators are container clips that use Fluxity Scripts to render 
@@ -431,7 +431,7 @@ class AddMediaPluginWindow(Gtk.Window):
 
         save_button = guiutils.get_sized_button(_("Save Generator Template"), 170, 32)
         save_button.connect("clicked", lambda w: _save_current_state_as_generator_template())
-        load_button = guiutils.get_sized_button(_("Load Generator Tamplate"), 170, 32)
+        load_button = guiutils.get_sized_button(_("Load Generator Template"), 170, 32)
         load_button.connect("clicked", lambda w: _load_generator_template())
         
         buttons_row = Gtk.HBox(False, 0)

@@ -88,7 +88,7 @@ def init_script(fctx):
 <p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="init_render">init_render()</h3>
 <pre><code>def init_render(fctx):
-    # The script is possibly rendered using multiple prosesses and we need to have the
+    # The script is possibly rendered using multiple processes and we need to have the
     # same sequence of random numbers in all processes. If we don't set seed we'll get completely different
     # ball positions, colors and speeds in different rendering processes.
     random.seed(fctx.get_editor_value(&quot;Random Seed&quot;))
@@ -284,7 +284,7 @@ def _clamp(v):
     ### init_render()
     ```
     def init_render(fctx):
-        # The script is possibly rendered using multiple prosesses and we need to have the
+        # The script is possibly rendered using multiple processes and we need to have the
         # same sequence of random numbers in all processes. If we don&#39;t set seed we&#39;ll get completely different
         # ball positions, colors and speeds in different rendering processes.
         random.seed(fctx.get_editor_value(&#34;Random Seed&#34;))

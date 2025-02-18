@@ -52,7 +52,7 @@ import rendergui
 import userfolders
 import utils
 
-# User defined render agrs file extension
+# User defined render args file extension
 FFMPEG_OPTS_SAVE_FILE_EXTENSION = ".rargs"
 
 # These consts only applicable here, used in timeline clip slowmotion and reverse code.
@@ -414,7 +414,7 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
     dialog.destroy()
 
     # Get render range for new media and information needed for clip.slowmo_data 
-    # used to eanble further slowmo renders to produce timeline clips with the 
+    # used to enable further slowmo renders to produce timeline clips with the 
     # same content area.
     if clip.slowmo_data == None:
         orig_file_path = clip.path
@@ -428,7 +428,7 @@ def _render_tline_clip_slowfast_clip(dialog, response_id, fb_widgets, clip, trac
                                           orig_media_out, speed,
                                           range_selection)
     else:
-        # clip.slowmo_data is set after succesful slowmo render when new rendered clip
+        # clip.slowmo_data is set after successful slowmo render when new rendered clip
         # is placed on timeline.
         slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
 
@@ -549,7 +549,7 @@ def _render_tline_clip_reverse_clip(dialog, response_id, fb_widgets, clip, track
             _compute_reverse_render_range(media_file_length, producer_length, orig_media_in, \
                                           orig_media_out, speed, range_selection)
     else:
-        # clip.slowmo_data is set after succesful slowmo render when new rendered clip
+        # clip.slowmo_data is set after successful slowmo render when new rendered clip
         # is placed on timeline.
         slowmo_type, orig_file_path, slowmo_clip_media_area, current_speed, orig_media_in, orig_media_out = clip.slowmo_data
 

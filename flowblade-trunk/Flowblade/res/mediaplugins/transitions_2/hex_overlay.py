@@ -35,7 +35,7 @@ def init_script(fctx):
     fctx.set_data_obj("points", _points)
     
 def init_render(fctx):
-    # The script is usually rendered using multiple prosesses and we need to have the exact
+    # The script is usually rendered using multiple processes and we need to have the exact
     # same random number sequence in all processes.
     random.seed(fctx.get_editor_value("Random Seed"))
     

@@ -517,7 +517,7 @@ def program_is_installed(program):
 
     return False
     
-# File exntension lists
+# File extension lists
 _audio_file_extensions = [  "act",
                             "aif",
                             "aiff",

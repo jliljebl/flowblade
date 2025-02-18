@@ -58,7 +58,7 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 **Advanced features:**
 * **Generators:** Powerful media generator plugin framework available to create e.g. animated texts and backgrounds.
 * **Range Log:** Save and edit clip in/out ranges to easily utilize best parts of your material
-* **G'Mic Tool:** Create media with beatiful, complex effects not available in any other editor
+* **G'Mic Tool:** Create media with beautiful, complex effects not available in any other editor
 * **Text Tool:** Create text plates with a handy purpose build tool with large set of features like text shadow, outline etc.
 * **Batch Encoding:** Render multiple output clips automatically 
 * **Media re-linking:** Fix projects with missing media to be editable again.

@@ -46,7 +46,7 @@ def init_script(fctx):
     fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
     
 def init_render(fctx):
-    # The script is usually rendered using multiple prosesses so we need to have the
+    # The script is usually rendered using multiple processes so we need to have the
     # same sequence of random numbers in all processes.
     random.seed(fctx.get_editor_value("Random Seed"))
 

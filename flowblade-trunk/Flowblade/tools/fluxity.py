@@ -88,7 +88,7 @@
     ### init_render()
     ```
     def init_render(fctx):
-        # The script is possibly rendered using multiple prosesses and we need to have the
+        # The script is possibly rendered using multiple processes and we need to have the
         # same sequence of random numbers in all processes. If we don't set seed we'll get completely different
         # ball positions, colors and speeds in different rendering processes.
         random.seed(fctx.get_editor_value("Random Seed"))

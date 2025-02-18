@@ -340,7 +340,7 @@ button {
 
   &.flat {
     @include button(undecorated);
-    // to avoid adiacent buttons borders clashing when transitioning, the transition on the normal state is set
+    // to avoid adjacent buttons borders clashing when transitioning, the transition on the normal state is set
     // to none, while it's added back in the hover state, so the button decoration will fade in on hover, but
     // it won't fade out when the pointer leave the button allocation area. To make the transition more evident
     // in this case the duration is increased.

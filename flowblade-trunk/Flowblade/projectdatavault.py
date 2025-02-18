@@ -40,7 +40,7 @@ import utils
 from editorstate import PROJECT
 
 # Project data folder path is accessed with PROJECT() in main application, but 
-# render processses receive it as parameter and set it here in init. 
+# render processes receive it as parameter and set it here in init. 
 _project_data_folder = None
 
 # User folder locations
@@ -85,7 +85,7 @@ VAULTS_INFO = "vaults"
 
 # ------------------------------------------------------------------------ init
 def init(_current_project_data_folder=None):
-    # This data is duplicated with userfolders.py but thats really not an issue.
+    # This data is duplicated with userfolders.py but that's really not an issue.
     global _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir, _project_data_folder
 
     # XDG folders
@@ -152,7 +152,7 @@ def get_vaults_info_path():
 def get_project_data_folder():
     # Render processes don't have access to project data folder path via 'PROJECT()',
     # so they sometimes use '_project_data_folder' which set is in main() to be available
-    # when neeeded.
+    # when needed.
 
     try:
         path = PROJECT().vault_folder + "/" + PROJECT().project_data_id + "/"

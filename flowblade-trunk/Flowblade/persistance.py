@@ -65,7 +65,7 @@ NOT_FOUND = "/not_found_not_found/not_found"
 # Used to send messages when loading project, set at callsite.
 load_dialog = None
 
-# These are used to recrete parenting relationships
+# These are used to recreate parenting relationships
 all_clips = {}
 sync_clips = []
 
@@ -347,7 +347,7 @@ def get_p_sync_data(sync_data):
     s_sync_data = copy.copy(sync_data)
     if isinstance( sync_data.master_clip, int ):   # When saving relinked projects sync_data.master_clip 
                                                    # and s_sync_data.master_clip_track are already ints
-                                                   # because they havent been replacved with live objects.
+                                                   # because they haven't been replacved with live objects.
         return s_sync_data
     s_sync_data.master_clip = sync_data.master_clip.id
     s_sync_data.master_clip_track = sync_data.master_clip_track.id
@@ -517,7 +517,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->
     persistancecompat.FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq)
     
-    # Grap and replace py tracks. Do this way to use same create
+    # Grab and replace py tracks. Do this way to use same create
     # method as when originally created.
     py_tracks = seq.tracks
     seq.tracks = []
@@ -591,7 +591,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             # put back references to objects
             clip.sync_data.master_clip = master_clip
             clip.sync_data.master_clip_track = master_clip_track
-            resync.clip_added_to_timeline(clip, track) # save data to enagble sync states monitoring after eddits
+            resync.clip_added_to_timeline(clip, track) # save data to enagble sync states monitoring after edits
         except KeyError:
             clip.sync_data = None # masterclip no longer on track V1
             resync.clip_removed_from_timeline(clip)

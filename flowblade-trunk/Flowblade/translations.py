@@ -688,7 +688,7 @@ def load_filters_translations():
     param_names["Fade In Type"] = _("Fade In Type")
     param_names["Image"] = _("Image")
     param_names["RMP-peak"] = _("RMP-peak")
-    param_names["Relese(ms)"] = _("Relese(ms)")
+    param_names["Release(ms)"] = _("Release(ms)")
     param_names["Ratio"] = _("Ratio")
     param_names["Knee Radius(dB)"] = _("Knee Radius(dB)")
     param_names["Makeup gain(dB)"] = _("Makeup gain(dB)")
