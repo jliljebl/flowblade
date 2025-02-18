@@ -316,7 +316,8 @@ draw_blank_borders = True
 pointer_context = appconsts.POINTER_CONTEXT_NONE
 DRAG_SENSITIVITY_AREA_WIDTH_PIX = 6
 MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 2
-MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX = 14
+MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX = 20
+MULTI_TRIM_ENDS_SENSITIVITY_AREA_WIDTH_PIX = 18
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
@@ -1591,19 +1592,35 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_MULTI_ROLL
             elif abs(x - clip_end_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_MULTI_ROLL
-            elif abs(x - clip_center_x) < MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX:
-                if clip.is_blanck_clip == True:
-                     return appconsts.POINTER_CONTEXT_NONE
-                return appconsts.POINTER_CONTEXT_MULTI_SLIP
-            elif abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
-                if clip.is_blanck_clip == True:
-                     return appconsts.POINTER_CONTEXT_NONE
-                return appconsts.POINTER_CONTEXT_TRIM_LEFT
+            
+            if editorpersistance.prefs.wide_multitrim_slip == False:
+                if abs(x - clip_center_x) < MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX:
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_MULTI_SLIP
+                elif abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_TRIM_LEFT
+                else:
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_TRIM_RIGHT
             else:
-                if clip.is_blanck_clip == True:
-                     return appconsts.POINTER_CONTEXT_NONE
-                return appconsts.POINTER_CONTEXT_TRIM_RIGHT
-                
+                # Wide slip trim activation area.                        
+                if abs(x - clip_start_frame_x) < MULTI_TRIM_ENDS_SENSITIVITY_AREA_WIDTH_PIX:
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_TRIM_LEFT
+                elif abs(x - clip_end_frame_x) < MULTI_TRIM_ENDS_SENSITIVITY_AREA_WIDTH_PIX:
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_TRIM_RIGHT
+                else:
+                    if clip.is_blanck_clip == True:
+                         return appconsts.POINTER_CONTEXT_NONE
+                    return appconsts.POINTER_CONTEXT_MULTI_SLIP
+
         return appconsts.POINTER_CONTEXT_NONE
 
     def connect_mouse_events(self):

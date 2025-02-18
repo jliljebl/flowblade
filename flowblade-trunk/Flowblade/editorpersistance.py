@@ -118,7 +118,7 @@ def load():
             write_file = afw.get_file()
             pickle.dump(prefs, write_file)
         print("prefs updated to new version, new param count:", len(prefs.__dict__))
-        
+            
 def save():
     """
     Write out prefs and recent_projects files
@@ -391,3 +391,4 @@ class EditorPreferences:
         self.sync_mirror = True
         self.sync_dualtrim = False
         self.show_sync = True
+        self.wide_multitrim_slip = False

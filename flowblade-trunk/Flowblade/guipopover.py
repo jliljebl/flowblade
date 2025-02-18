@@ -243,6 +243,11 @@ def tline_properties_menu_show(launcher, widget, callback, mouse_zoom_callback):
 
     _tline_properties_menu = menu_clear_or_create(_tline_properties_menu)
 
+    wide_multitrim_is_on = editorpersistance.prefs.wide_multitrim_slip
+    edit_prefs_section = Gio.Menu.new()
+    add_menu_action_check(edit_prefs_section, _("Wide Multitrim Slip Target Area"), "midbar.tlineproperties.wideslip", wide_multitrim_is_on, "wideslip", callback)
+    _tline_properties_menu.append_section(None, edit_prefs_section)
+    
     display_section = Gio.Menu.new()
     add_menu_action_check(display_section, _("Display Clip Media Thumbnails"), "midbar.tlineproperties.thumb", editorstate.display_clip_media_thumbnails, "thumbs", callback)
     add_menu_action_check(display_section, _("Display Audio Levels"), "midbar.tlineproperties.all", editorstate.display_all_audio_levels, "all", callback)
