@@ -301,8 +301,11 @@ def _tline_properties_item_activated(action, event, msg):
         editorpersistance.prefs.audio_scrubbing = new_state
         editorpersistance.save()
         PLAYER().set_scrubbing(new_state)
-    elif msg ==  "wideslip":
+    elif msg == "wideslip":
         editorpersistance.prefs.wide_multitrim_slip = new_state
+        editorpersistance.save()
+    elif msg == "disabledrag":
+        editorpersistance.prefs.disable_drag_when_selected = new_state
         editorpersistance.save()
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = new_state

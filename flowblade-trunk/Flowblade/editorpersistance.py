@@ -392,3 +392,4 @@ class EditorPreferences:
         self.sync_dualtrim = False
         self.show_sync = True
         self.wide_multitrim_slip = False
+        self.disable_drag_when_selected = True

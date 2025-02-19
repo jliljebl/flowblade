@@ -1558,12 +1558,13 @@ class TimeLineCanvas:
         
         # INSERT, OVERWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
-            # the + 4 is attempt to center sensitivity area at cut. Because we are doing sensitivity testing on opposite sides of a single clip, not on
-            # both sides of a cut we are having trouble centering the sensitivity area. 
-            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX + 4:
-                return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
-            if abs(x + 4 - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
-                return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
+            if not(editorpersistance.prefs.disable_drag_when_selected == True and clip.selected == True):
+                # the + 4 is attempt to center sensitivity area at cut. Because we are doing sensitivity testing on opposite sides of a single clip, not on
+                # both sides of a cut we are having trouble centering the sensitivity area. 
+                if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX + 4:
+                    return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
+                if abs(x + 4 - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+                    return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
             
             return appconsts.POINTER_CONTEXT_NONE
         # TRIM
