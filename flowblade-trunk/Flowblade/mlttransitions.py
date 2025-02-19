@@ -336,7 +336,7 @@ class CompositorObject:
     
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
                                          # Compositors are recreated often in Sequence.restack_compositors()
-                                         # and cannot be destroyed in undo/redo with object identidy.
+                                         # and cannot be destroyed in undo/redo with object identity.
                                          # This is cloned in clone_properties
 
     def get_length(self):

@@ -201,7 +201,7 @@ def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_l
         # Remove all but first keyframe
         for i in range(0, len(keyframes) - 1):
             keyframes.pop(1)
-        # nOw this the same action as addin default keyframe on creation
+        # Now this the same action as addin default keyframe on creation
         keyframes = _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
     # Case keyframes exists after fade in length
     else:

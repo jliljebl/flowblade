@@ -89,7 +89,7 @@ def init_script(fctx):
 <p>In <em>init_script()</em> we define the editors that will be presented to the user and set some metadata like the name of the script displayed to the user and the script author.</p>
 <h3 id="init_render">init_render()</h3>
 <pre><code>def init_render(fctx):
-    # The script is possibly rendered using multiple prosesses and we need to have the
+    # The script is possibly rendered using multiple processes and we need to have the
     # same sequence of random numbers in all processes. If we don't set seed we'll get completely different
     # ball positions, colors and speeds in different rendering processes.
     random.seed(fctx.get_editor_value(&quot;Random Seed&quot;))

@@ -221,7 +221,7 @@ class FilterObject:
              self.mlt_filter.set("disable", str(1))
 
     def replace_values(self, clip):
-        # We need to initialize some calues based clip length and need wait until clip for
+        # We need to initialize some values based clip length and need wait until clip for
         # filter is known, replace at object creation is done before clip is available
         replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
         if replacement_happened == True:

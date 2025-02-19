@@ -61,7 +61,7 @@ class ContainerClipData:
             self.container_clip_uid = -1 # This is set at clip creation time.
 
             self.container_type = container_type
-            self.program = program # path to program file, used by genrator and gmic containers.
+            self.program = program # path to program file, used by generator and gmic containers.
 
             self.rendered_media = None
             self.rendered_media_range_in = -1
@@ -464,7 +464,7 @@ class ContainerClipMediaItem:
 
     def create_icon(self):
         # NOTE: self.container_data.unrendered_length GETS SET HERE!!!!
-        # it IS NOT VERY OBIVOUS OR EXPECTED THAT THIS IS THE PLACE WHERE THIS GETS DONE!!!
+        # it IS NOT VERY OBVIOUS OR EXPECTED THAT THIS IS THE PLACE WHERE THIS GETS DONE!!!
         # TODO: CHANGE FUNCTION NAME.
         try:
             action_object = containeractions.get_action_object(self.container_data)

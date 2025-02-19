@@ -1153,7 +1153,7 @@ def replace_media_dialog(media_file, callback):
                 "\u2022" + _(" It is recommended that you save Project before completing this operation.\n") + \
                 "\u2022" + _(" There is no Undo for this operation.\n") + \
                 "\u2022" + _(" Current Undo Stack will be destroyed.\n") + \
-                "\u2022" + _(" Replacing current media with shorter or othervise unsuitable media may result in\n   crashes or corrupted project data.")
+                "\u2022" + _(" Replacing current media with shorter or otherwise unsuitable media may result in\n   crashes or corrupted project data.")
     info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
@@ -1863,7 +1863,7 @@ def refuse_to_empty_default_notebook_dialog():
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 def active_jobs_info(active_jobs_count):
-    primary_txt =  _("There are currenly ") + str(active_jobs_count) + _(" active job/s!")
+    primary_txt =  _("There are currently ") + str(active_jobs_count) + _(" active job/s!")
     secondary_txt = _("Let active jobs complete or cancel them before closing the application.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
@@ -1875,7 +1875,7 @@ def show_dead_compositors(number_of_dead_compositors):
 
 def no_timeline_ranges_dialog():
     primary_txt = _("Cannot log Ranges from Timelime!")
-    secondary_txt = _("'Range Log' functionality is intented to log areas of interest\nin Media Items.\n\nTo save interesting positions or ranges on Timeline use\nthe 'Timeline Markers' functionality.")
+    secondary_txt = _("'Range Log' functionality is intended to log areas of interest\nin Media Items.\n\nTo save interesting positions or ranges on Timeline use\nthe 'Timeline Markers' functionality.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 def add_compositor_dialog(compositors, callback):
@@ -1954,7 +1954,7 @@ def set_parent_track_dialog(child_track, callback):
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (child_track, selection_data, tracks_combo))
 
 def select_link_sequence_for_container(callback):
-    title = _("Create Sequnce Link Cantainer Clip")
+    title = _("Create Sequence Link Container Clip")
     accept_text = _("Create Sequence Link Container")
     
     label_text = _("Create Sequence Link Container for Sequence:")

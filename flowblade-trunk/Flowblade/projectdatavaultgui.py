@@ -547,7 +547,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         name = vaults_obj.get_user_vaults_data()[self.view_vault_index - 1]["name"] # -1 because first vault is the default vault
         name_label = Gtk.Label(label=name)
 
-        data_label = Gtk.Label(label=_("Data inside folder will NOT be destroyd."))
+        data_label = Gtk.Label(label=_("Data inside folder will NOT be destroyed."))
         data_label.set_margin_top(24)
 
                 
@@ -568,7 +568,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         drop_index = self.view_vault_index - 1 # -1 because 0 the default vault, 1 - n user vaults
                                                # and we are always dropping _user_ vault.
         
-        # We need to get activa vault path before deleting anythin because active 
+        # We need to get activa vault path before deleting anything because active 
         # vault is saved as index and deleting anything can mess that up
         # and we need to restore correct active vault after droip.
 
@@ -876,7 +876,7 @@ class ProjectCloneWindow(Gtk.Window):
             self.info_label.set_use_markup(True)
 
     def cloning_completed(self):
-        self.info_label.set_text("<small>Project cloned succesfully.</small>")
+        self.info_label.set_text("<small>Project cloned successfully.</small>")
         self.info_label.set_use_markup(True)
         self.create_button.set_sensitive(False)
             

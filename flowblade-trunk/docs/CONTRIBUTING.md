@@ -22,7 +22,7 @@ If you have done something that you think could be interesting to other users or
 
 # Code contributions
 
-**Reqiured skills** Flowblade is Python application so to get going you will need to have some experience in working in that language.
+**Required skills** Flowblade is Python application so to get going you will need to have some experience in working in that language.
 
 * There are many tasks that could maybe taken on at let's say beginner+ level of competence.
 * Solid medium level will very likely be adequate to handle most tasks.

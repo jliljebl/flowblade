@@ -1290,7 +1290,7 @@ class RenderArgsPanelSmall():
         self.display_selection_callback = display_selection_callback
         
         self.args_edit_window = None
-        self.text_buffer = None # only used here for small screen heights with dialog for setting agrs, but this value is always tested to determine where to get agrs if set
+        self.text_buffer = None # only used here for small screen heights with dialog for setting args, but this value is always tested to determine where to get args if set
         self.ext = ""
                 
         self.use_args_label = Gtk.Label(label=_("Render using args"))

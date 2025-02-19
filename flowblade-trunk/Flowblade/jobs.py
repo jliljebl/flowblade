@@ -514,7 +514,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 
-                # This may not necessery to do here.
+                # This may not necessary to do here.
                 if self.tline_clip_data != None:
                     self.target_clip.render_progress = None
 

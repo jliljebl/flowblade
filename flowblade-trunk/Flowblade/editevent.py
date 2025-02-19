@@ -616,7 +616,7 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
                 if media_file.type == appconsts.IMAGE_SEQUENCE:
                     new_clip.mark_out = media_file.length
 
-    # Images fom media panel get bin default length.
+    # Images from media panel get bin default length.
     use_clip_in = False
     if dnd.drag_source != dnd.SOURCE_MONITOR_WIDGET and new_clip.media_type == appconsts.IMAGE:
         default_grfx_length = PROJECT().get_current_bin_graphics_default_length()

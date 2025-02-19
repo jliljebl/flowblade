@@ -129,7 +129,7 @@ class PositionBar:
         length = producer.get_length() # Get from MLT
         self.length = length 
         try:
-            self.mark_in_norm = float(mark_in) / length # Diasables range if mark_in == -1 because self.mark_in_norm < 0
+            self.mark_in_norm = float(mark_in) / length # Disables range if mark_in == -1 because self.mark_in_norm < 0
             self.mark_out_norm = float(mark_out) / length
             frame_pos = producer.frame()
             norm_pos = float(frame_pos) / length

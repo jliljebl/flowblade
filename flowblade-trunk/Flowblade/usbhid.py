@@ -40,7 +40,7 @@ import usbhidconfig
 import usbhiddrivers
 
 # how often should the USB input handler function be called?
-# set this too high, and there will be noticable latency in processing input
+# set this too high, and there will be noticeable latency in processing input
 # set this too low, and performance of everything else will suffer
 HANDLER_FREQUENCY_MSEC = 10
 

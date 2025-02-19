@@ -1233,8 +1233,8 @@ class AnalyzeStabilizeFilterEditor:
 class AnalyzeMotionTrackingFilterEditor:
     def __init__(self, filter, editable_properties):
         self.filter = filter
-        # We need to turn this because otherwise filter keeps attemting to 
-        # analyze tracking continuosly. We want analyzing to happen in the 
+        # We need to turn this because otherwise filter keeps attempting to 
+        # analyze tracking continuously. We want analyzing to happen in the 
         # dedicated process and only results be displayed.
         # ...aaand this only has effect if we have some results?
         self.filter.mlt_filter.set("analyze", "0")
@@ -1349,7 +1349,7 @@ class AnalyzeMotionTrackingFilterEditor:
             self.box_gui_editor.geom_kf_edit.widget.queue_draw()
             self.set_buttons_state()
         except Exception as e :
-            # GUI might havenn destoyed during rendering.
+            # GUI might havenn destroyed during rendering.
             print(e)
 
     def clear_button_clicked(self, button):

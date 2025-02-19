@@ -2549,7 +2549,7 @@ class PressLaunch:
 class PressLaunchPopover(PressLaunch):
     def __init__(self, callback, surface, w=22, h=22):
 
-        # Popovers need access to launcher object fram callback.
+        # Popovers need access to launcher object from callback.
 
         PressLaunch.__init__(self, callback, surface, w, h)
 

@@ -1294,7 +1294,7 @@ class FluxityRangeRenderer(threading.Thread):
     def run(self):
         GLib.idle_add(_update_buffer_text, self.rendering_txt)
 
-        # GUI quarantees valid range here.
+        # GUI guarantees valid range here.
         in_frame = _mark_in
         self.in_frame = in_frame
         out_frame = _mark_out
