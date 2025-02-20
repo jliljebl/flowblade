@@ -166,11 +166,6 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         bound_end = from_clip_end
     else:
         bound_end = to_clip_end
-
-
-        if data["editing_clip_end"] == True:
-            x = scale_in + scale_length
-            delta = data["frame"] - data["orig_out"]
             
     global _enter_mode, _enter_draw_func, _edit_data
 
