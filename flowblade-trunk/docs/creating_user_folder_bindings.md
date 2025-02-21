@@ -12,7 +12,7 @@ See [here](./INSTALLING.md). This installs the runtime dependencies to run Flowb
 Here is list of Ubuntu build dependencies. There could be some omissions, please file a pull request to update the list if something is found to be missing.
 
 ```bash
-sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev libavdevice-dev libswscale-dev libvorbis-dev libsamplerate-dev frei0r-plugins-dev libdv-dev libavformat-dev libquicktime-dev libsox-dev libjack-dev ladspa-sdk
+sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev libavdevice-dev libswscale-dev libvorbis-dev libsamplerate-dev frei0r-plugins-dev libdv-dev libavformat-dev libquicktime-dev libsox-dev libjack-dev ladspa-sdk libopencv-dev librubberband-dev libvidstab-dev
 ```
 
 ### Create work directory 
@@ -31,7 +31,7 @@ Since 2023, MLT only builds with CMAKE.
 #### Configure and build
 With terminal still open in **\<ROOT_DIR\>**.
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=OFF -S ./mlt -B ./build
+cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=OFF -DMOD_OPENCV=ON -S ./mlt -B ./build
 
 cmake --build ./build --config Release
 ```
