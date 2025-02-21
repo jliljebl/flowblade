@@ -227,8 +227,16 @@ def  _attempt_dnd_overwrite(track, clip, frame):
 
 def _do_action_and_maybe_autosplit_action(action, clip, track):
     
-    if track.type == appconsts.AUDIO or editorpersistance.prefs.sync_autosplit == False \
-        or (track.id != current_sequence().first_video_index and track.id != current_sequence().first_video_index + 1):
+    if editorpersistance.prefs.sync_autosplit == appconsts.AUDIO_AUTO_SPLIT_ALL_TACKS:
+        auto_split = True
+    elif editorpersistance.prefs.sync_autosplit == appconsts.AUDIO_AUTO_SPLIT_V1_V2 and (track.id == current_sequence().first_video_index or track.id == current_sequence().first_video_index + 1):
+        auto_split = True
+    elif editorpersistance.prefs.sync_autosplit == appconsts.AUDIO_AUTO_SPLIT_V1 and track.id == current_sequence().first_video_index:
+        auto_split = True
+    else:
+        auto_split = False
+    
+    if track.type == appconsts.AUDIO or auto_split == False:
         action.do_edit()
     else:
         split_action = lambda : syncsplitevent.get_synched_split_action_for_clip_and_track(clip, track)

@@ -98,7 +98,7 @@ def split_audio_synched_from_clips_list(clips, track):
     sync_consolidated_action.do_consolidated_edit()
 
 def sync_menu_launch_pressed(launcher, widget, event):
-    guipopover.sync_menu_show(launcher, widget, _sync_property_item_activated, _sync_split_property_activated)
+    guipopover.sync_menu_show(launcher, widget, _sync_property_item_activated, _sync_split_property_activated, _auto_sync_split_menu_item_item_activated)
 
 def _sync_property_item_activated(action, event, msg):
     new_state = not(action.get_state().get_boolean())
@@ -121,6 +121,12 @@ def _sync_split_property_activated(action, variant):
     action.set_state(variant)
     editorpersistance.save()
     #guipopover._tline_properties_popover.hide()
+
+def _auto_sync_split_menu_item_item_activated(action, new_value_variant):
+    msg = int(new_value_variant.get_string())
+    editorpersistance.prefs.sync_autosplit = msg
+    editorpersistance.save()
+    action.set_state(new_value_variant)
 
 def _get_set_sync_action(child_clip_track, child_clip, parent_clip):
     # This is quarenteed because GUI option to do this is only available on this track
