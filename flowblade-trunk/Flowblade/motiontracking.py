@@ -56,6 +56,22 @@ def get_tracking_data_select_combo(empty_text, current_selection_id):
         tdata_select_combo.set_active(current_selection_index)
     return (tdata_keys, tdata_select_combo)
 
+def get_used_motion_tracking_data():
+    used_tracking_data = []
+    for seq in PROJECT().sequences:
+        for track in seq.tracks:
+            for clip in track.clips:
+                try:
+                    for filt in clip.filters:
+                        if filt.info.mlt_service_id == "affine":
+                            for non_mlt_property in filt.non_mlt_properties:
+                                p_name, p_value, p_type = non_mlt_property
+                                if p_name == "selected_tracking_data":
+                                    used_tracking_data.append(p_value)
+                except:
+                    pass # Blank clip hit
+    return used_tracking_data
+
 def apply_tracking( tracking_data_id, filter, editable_properties, 
                     xoff, yoff, interpretation, size, clip_in,
                     source_width, source_height):

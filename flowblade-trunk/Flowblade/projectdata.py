@@ -444,6 +444,14 @@ class Project:
         self.tracking_data[data_uid] = (final_label, data_file_path)
         return final_label
 
+    def delete_tracking_data(self, tracking_data_id):
+        final_label, data_file_path = self.tracking_data[tracking_data_id]
+        try:
+            os.remove(data_file_path)
+        except:
+            print("ProjectData.delete_tracking_data(): trying to delete non-existing data") 
+        del self.tracking_data[tracking_data_id]
+
     def _tracking_data_label_exists(self, data_label):
         for item in self.tracking_data.items():
             label, data_path = item
