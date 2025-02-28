@@ -1500,16 +1500,21 @@ class FilterMaskApplyMotionTrackingEditor:
         self.non_mlt_properties = non_mlt_properties
         self.non_mlt_editors = non_mlt_editors
         
-        select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
-        select_label.set_margin_right(4)
+        self.select_label = Gtk.Label(label=_("Select Motion Tracking Data:"))
+        self.select_label.set_margin_right(4)
 
         selected_tracking_data = [ep for ep in self.non_mlt_properties if ep.name == "selected_tracking_data"][0].value
         self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"), selected_tracking_data)
 
-        hbox1 = Gtk.HBox()
-        hbox1.pack_start(select_label, False, False, 0) 
-        hbox1.pack_start(self.data_select_combo, True, True, 0)
-        hbox1.set_margin_bottom(24)
+        self.delete_button = Gtk.Button(label=_("Delete"))
+        self.delete_button.connect("clicked", self.delete_data)
+        self.delete_button.set_margin_left(12)
+        
+        self.hbox1 = Gtk.HBox()
+        self.hbox1.pack_start(self.select_label, False, False, 0) 
+        self.hbox1.pack_start(self.data_select_combo, True, True, 0)
+        self.hbox1.pack_start(self.delete_button, False, False, 0) 
+        self.hbox1.set_margin_bottom(24)
 
         self.info_label = Gtk.Label("<small>No Tracking Data Applied</small>")
         last_applied_date_str = [ep for ep in self.non_mlt_properties if ep.name == "last_applied_tracking_data"][0].value
@@ -1521,18 +1526,18 @@ class FilterMaskApplyMotionTrackingEditor:
         self.button = Gtk.Button(label=_("Apply Motion Tracking Data"))
         self.button.connect("clicked", self.apply_tracking)
 
-        hbox2 = Gtk.HBox()
-        hbox2.pack_start(Gtk.Label(), True, True, 0) 
-        hbox2.pack_start(self.info_label, False, False, 0) 
-        hbox2.pack_start(self.button, False, False, 0)
-        hbox2.set_margin_top(24)
-        hbox2.set_margin_bottom(24)
+        self.hbox2 = Gtk.HBox()
+        self.hbox2.pack_start(Gtk.Label(), True, True, 0) 
+        self.hbox2.pack_start(self.info_label, False, False, 0) 
+        self.hbox2.pack_start(self.button, False, False, 0)
+        self.hbox2.set_margin_top(24)
+        self.hbox2.set_margin_bottom(24)
         
         self.widget = Gtk.VBox()
-        self.widget.pack_start(hbox1, False, False, 0)
+        self.widget.pack_start(self.hbox1, False, False, 0)
         for row in self.non_mlt_editors:
             self.widget.pack_start(row, False, False, 0)
-        self.widget.pack_start(hbox2, False, False, 0)
+        self.widget.pack_start(self.hbox2, False, False, 0)
 
     def apply_tracking(self, button):
         tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
@@ -1555,3 +1560,44 @@ class FilterMaskApplyMotionTrackingEditor:
         self.info_label.set_text("<small>" + _("Last applied ") + date_str + "</small>")
         self.info_label.set_use_markup(True)
         self.info_label.queue_draw()
+
+    def delete_data(self, button):
+        used_data = motiontracking.get_used_motion_tracking_data()
+        tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
+        
+        if tracking_data_id in used_data:
+            self.confirm_delete()
+        else:
+            self.delete_selected()
+
+    def confirm_delete(self):
+        title = _("Confirm Motion Tracking Data Delete")
+        text = Gtk.Label(label=_("Current selected motion tracking data was applied somewhere in the project.\n\nDelete anyway?"))
+        panel = guiutils.get_left_justified_box([text])
+        accept_text = _("Delete")
+        dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, self.delete_dialog_callback)
+
+    def delete_dialog_callback(self, dialog, response_id):
+        dialog.destroy()
+        if response_id == Gtk.ResponseType.ACCEPT:
+            self.delete_selected()
+
+    def delete_selected(self):
+        tracking_data_id = self.data_select_keys[self.data_select_combo.get_active()]
+        if tracking_data_id == None:
+            return # no tracking data exists.
+
+        PROJECT().delete_tracking_data(tracking_data_id)
+
+        children = self.hbox1.get_children()
+        for child in children:
+            self.hbox1.remove(child)
+
+        self.data_select_keys, self.data_select_combo = motiontracking.get_tracking_data_select_combo(_("No Tracking Data Available"), -1)
+        self.data_select_combo.show() 
+
+        self.hbox1.pack_start(self.select_label, False, False, 0) 
+        self.hbox1.pack_start(self.data_select_combo, True, True, 0)
+        self.hbox1.pack_start(self.delete_button, False, False, 0) 
+
+        self.widget.queue_draw()
