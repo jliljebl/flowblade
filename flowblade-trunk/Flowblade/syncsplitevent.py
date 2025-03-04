@@ -311,13 +311,6 @@ def _set_sync_parent_clip(event, frame):
     child_clip, child_index, child_clip_track = parent_selection_data
     parent_track = tlinewidgets.get_track(event.y)
     
-    if parent_track != current_sequence().tracks[current_sequence().first_video_index]:
-        dialogutils.warning_message(_("Sync parent clips must be on track V1"), 
-                                _("Selected sync parent clip is on track ")+ utils.get_track_name(parent_track, current_sequence()) + _(".\nYou can only sync to clips that are on track V1."),
-                                gui.editor_window.window,
-                                True)
-        return
-    
     # this can't have parent clip already
     if child_clip.sync_data != None:
         return
@@ -329,9 +322,7 @@ def _set_sync_parent_clip(event, frame):
         return
 
     # Parent and child can't be on the same track.
-    # Now that all parent clips must be on track V1 this is no longer should be possible.
     if parent_track == child_clip_track:
-        print("parent_track == child_clip_track")
         return
         
     parent_clip = parent_track.clips[parent_clip_index]
@@ -355,6 +346,7 @@ def resync_clip_from_button():
     _do_single_clip_resync(clip, track)
 
 def resync_clip(popup_data):
+    
     clip, track, item_id, x = popup_data
     _do_single_clip_resync(clip, track)
 
@@ -362,6 +354,7 @@ def _do_single_clip_resync(clip, track):
     clip_list = [(clip, track)]
     
     resync_data_list = resync.get_resync_data_list_for_clip_list(clip_list)
+
     if len(resync_data_list) == 0:
         return # Parent clip is gone.
 
