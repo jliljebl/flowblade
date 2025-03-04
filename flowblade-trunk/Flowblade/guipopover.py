@@ -1001,7 +1001,7 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
 
     _tracks_column_menu.append_section(None, mute_section)
 
-    active = not(track == current_sequence().first_video_index)
+    active = True
 
     sync_set_section = Gio.Menu.new()
     add_menu_action(sync_set_section, _("Sync All Clips to Track..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
