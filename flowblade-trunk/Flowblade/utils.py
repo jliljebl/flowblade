@@ -90,7 +90,8 @@ class LaunchThread(threading.Thread):
         
     def run(self):
         self.callback(self.data)
-        
+
+
 # -------------------------------- UTIL FUNCTIONS
 def fps():
     return editorstate.PROJECT().profile.fps()

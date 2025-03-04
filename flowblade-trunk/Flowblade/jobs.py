@@ -124,7 +124,15 @@ class JobQueueMessage:  # Jobs communicate with job queue by sending these objec
         self.text = text
         self.elapsed = elapsed
 
-                  
+class ProcessCommandListRunner(threading.Thread):
+    def __init__(self, command_list):
+        threading.Thread.__init__(self)
+        self.command_list = command_list
+        
+    def run(self):
+        process = subprocess.Popen(self.command_list)
+        process.wait()
+
 #---------------------------------------------------------------- interface
 def add_job(job_proxy):
     global _jobs, _jobs_list_view 
@@ -801,15 +809,15 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         command_list.append(write_file_arg)
         data_file_arg = "data_file_path:" + str(self.data_file_path)
         command_list.append(data_file_arg)
-        
+
         subprocess.Popen(command_list)
         
     def update_render_status(self):
         GLib.idle_add(self._update_from_gui_thread)
             
     def _update_from_gui_thread(self):
-
-        if stabilizeheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
+            
+        if trackingheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
             
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)
