@@ -453,6 +453,8 @@ class FlowbladeApplication(Gtk.Application):
             GLib.idle_add(_create_sdl_2_consumer)
 
         self.add_window(_window)
+        if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+            self.add_window(gui.editor_window.window2)
 
 # --------------------------------------- display
 def _create_sdl_2_consumer():
