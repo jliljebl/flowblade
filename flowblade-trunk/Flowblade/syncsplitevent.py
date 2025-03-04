@@ -203,7 +203,9 @@ def get_synched_split_action_for_clip_and_track(clip, track):
     if editorpersistance.prefs.sync_mirror == False:
         to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
     else:
-        to_track_id = (current_sequence().first_video_index - 1) - (track.id - current_sequence().first_video_index)  
+        to_track_id = (current_sequence().first_video_index - 1) - (track.id - current_sequence().first_video_index)
+        if to_track_id < 1:
+            to_track_id = 1
         to_track = current_sequence().tracks[to_track_id]
         
     index = track.clips.index(clip)
