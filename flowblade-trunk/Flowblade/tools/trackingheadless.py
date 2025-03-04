@@ -125,11 +125,24 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         xml_consumer.start()
         tractor.set_speed(1)
 
+        self.producer = producer
+        self.consumer = xml_consumer
+
         # Wait until done
         while xml_consumer.is_stopped() == False:
+
+            self.check_abort_requested()
+            
+            if self.abort == True:
+                ccrutils.write_completed_message()
+                self.shutdown()
+                return
+
             render_fraction = float(tractor.frame()) / float(producer.get_length())
             self.render_update(render_fraction)
             time.sleep(0.3)
+
+        self.shutdown()
         
         # Write out results.
         results = tracker_filter.get("results")
@@ -143,6 +156,9 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         # Write out completed flag file.
         ccrutils.write_completed_message()
 
+        global _render_thread
+        _render_thread = None
+    
     def check_abort_requested(self):
         self.abort = ccrutils.abort_requested()
 
@@ -151,7 +167,9 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         msg = str(fraction) + " " + str(elapsed)
         ccrutils.write_status_message(msg)
 
-
-
+    def shutdown(self):
+        self.consumer.stop()
+        self.producer.set_speed(0)
+        
 
 
