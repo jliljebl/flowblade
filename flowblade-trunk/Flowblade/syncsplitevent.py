@@ -342,8 +342,23 @@ def _set_sync_parent_clip(event, frame):
 
 def resync_clip_from_button():
     track = get_track(movemodes.selected_track)
-    clip = track.clips[movemodes.selected_range_in]
-    _do_single_clip_resync(clip, track)
+    clip_list = [] 
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        clip_list.append(track.clips[i])
+
+    resync_clips_data_list = []
+    for clip in clip_list:
+        if clip.sync_data != None:
+            resync_clips_data_list.append((clip, track))
+            
+    print(len(resync_clips_data_list), resync_clips_data_list)
+
+    if len(resync_clips_data_list) == 0:
+        return # All in sync
+
+    data = {"resync_clips_data_list":resync_clips_data_list}
+    action = edit.resync_track_action(data)
+    action.do_edit()
 
 def resync_clip(popup_data):
     
