@@ -28,12 +28,12 @@
 In Flowblade Movie Editor sync editing workflow is to <b>set clip's positions to follow another clip's positions</b> on request.
 </p>
 <ul>
-<li> Sync relation between two clips is set by either selecting individually, doing audio splits ot setting sync relation for all clips on a track in single action </li>
-<li> Clips that have lost sync with their parent clips can be resynced one or more at a time or by ressyncing whole track in single action.</li>
+<li> Sync relation between two clips is set by either setting relation individually, doing audio splits or setting sync relation for all clips on a track or a box selection in single action </li>
+<li> Clips that have lost sync with their parent clips can be resynced one or more at a time or by resyncing a whole track in single action.</li>
 </ul>
 
 <p>
-Below we give recommended workflows for three typical use cases for utilizing Flowblade's sync editing features.
+Below we give suggested workflows for three typical use cases for utilizing Flowblade's sync editing features.
 </p>
 <ul>
 <li> Generic work preserving sync editing. </li>
@@ -57,7 +57,7 @@ Explicitly set Sync relation between two clips set up by selecting a <b>Sync Par
 
 <ul>
 <li> Click <b>Right Mouse</b> on clip and select <b>Edit->Select Sync Parent Clip...</b>.</li>
-<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as <b>Sync Parent Clip</b>.</li>
+<li> Cursor turns into a Target Cross. Click on a clip to select it as <b>Sync Parent Clip</b>.</li>
 </ul>
 
 <h4>Audio Splitting</h4>
@@ -70,6 +70,7 @@ Split a video clip into two clips: a muted video clip as <b>Sync Parent Clip</b>
 <li> Click <b>Right Mouse</b> on clip and select <b>Audio Edit->Split Audio Synched</b>.
 <li> When multple Clips are selected click <b>Right Mouse</b> on clip and select <b>Split Audio Synched</b>.
 <li>A new synched Audio Clip/s is placed on audio Track, either on V1 or mirrored track based on current preference.</li>
+<li> If you select from <b>Sync Properties</b> menu property <b>Auto Sync Split Video Clips on Add</b> video clips will be split automatically when added to certain tracks. 
 </li>
 </ul>
 
@@ -80,12 +81,12 @@ Set all clips on track as <b>Sync Child Clips</b> to closest clips on the select
 <ul>
 <li> Click <b>Right Mouse</b> on a Track in the left side Tracks Column area and select <b>Sync All Clips To Track... </b>.</li>
 <ul>
-<li>Select sync parenting target track using the dialog window.</li>
+<li>Select sync parenting target Track using the dialog window.</li>
 <li>A sync relation is created for all Clips on Track.</li>
-<li>An icon appers on rtack head in in the Tracks Column to indicate that updating sync is now posibble.</li>
+<li>An icon appers on Track Head in in the Tracks Column to indicate that updating sync is now posibble.</li>
 </ul>
-<li>Once a treack has been auto parented it remembers the target track and parenting can be updated by clicking <b>Right Mouse</b> on a Track Head and selecting <b>Update Sync to Clips' Current Positions</b>.</li>
-<li> Click <b>Right Mouse</b> on a Track Head and select <b>Clear Sync</b> to clear all sync relations on a Track and info parenting target Track.</li>
+<li>Once a Track has been auto parented it remembers the target Track and parenting can be updated by clicking <b>Right Mouse</b> on a Track Head and selecting <b>Update Sync to Clips' Current Positions</b>.</li>
+<li> Click <b>Right Mouse</b> on a Track Head and select <b>Clear Sync</b> to clear all sync relations on a Track and info on parenting target Track.</li>
 </ul>
 
 
@@ -94,13 +95,14 @@ Set all clips on track as <b>Sync Child Clips</b> to closest clips on the select
 <h4>Single Clip</h4>
 <ul>
 <li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
-<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
+<li> Press <b>Resync Selected Clips</b> Button to resync single clip.</li>
 </li>
 </ul>
 
 <h4>Multiple Clips</h4>
 <ul>
-<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
+<li> Press <b>Resync Selected Clips</b> Button to resync selected clips clip.</li>
+<li> Click <b>Right Mouse</b> on <b>Sync Child Clip</b> that is part of a multiclip selection and and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
 </li>
 </ul>
 
