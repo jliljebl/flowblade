@@ -350,8 +350,6 @@ def resync_clip_from_button():
     for clip in clip_list:
         if clip.sync_data != None:
             resync_clips_data_list.append((clip, track))
-            
-    print(len(resync_clips_data_list), resync_clips_data_list)
 
     if len(resync_clips_data_list) == 0:
         return # All in sync
