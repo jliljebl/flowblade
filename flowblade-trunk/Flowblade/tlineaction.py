@@ -838,7 +838,6 @@ def resync_button_pressed():
 
 def resync_track_button_pressed():
     syncsplitevent.resync_track()
-    syncsplitevent.do_set_track_clips_sync(child_track, parent_track)
 
 def set_track_sync_button_pressed():
     if movemodes.selected_track != -1:
