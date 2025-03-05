@@ -57,6 +57,7 @@ Explicitly set Sync relation between two clips set up by selecting a <b>Sync Par
 
 <ul>
 <li> Click <b>Right Mouse</b> on clip and select <b>Edit->Select Sync Parent Clip...</b>.</li>
+<li> Or Click <b>Right Mouse</b> on clip that is part of a multiclip selection and and select <b>Select Sync Parent Clip...</b>.</li>
 <li> Cursor turns into a Target Cross. Click on a clip to select it as <b>Sync Parent Clip</b>.</li>
 </ul>
 
@@ -102,7 +103,7 @@ Set all clips on track as <b>Sync Child Clips</b> to closest clips on the select
 <h4>Multiple Clips</h4>
 <ul>
 <li> Press <b>Resync Selected Clips</b> Button to resync selected clips clip.</li>
-<li> Click <b>Right Mouse</b> on <b>Sync Child Clip</b> that is part of a multiclip selection and and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
+<li> Click <b>Right Mouse</b> on <b>Sync Child Clip</b> that is part of a multiclip selection and and select <b>Resync</b> from popup menu to resync single clip.</li>
 </li>
 </ul>
 
@@ -115,6 +116,7 @@ Set all clips on track as <b>Sync Child Clips</b> to closest clips on the select
 <h3>Clearing Sync Parent Relations </h3>
 <ul>
 <li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Clear Sync Relation</b>.</li>
+<li> Or Click <b>Right Mouse</b> on clip that is part of a multiclip selection and and select <b>>Clear Sync Relations</b>.</li>
 </ul>
 
 <h3>Workflows</h3>
@@ -128,12 +130,13 @@ Many edit actions necessarily change the positions of clips differently on diffe
 </p>
 <ul>
 <li> It is often useful to treat track <b>V1</b> as a master track, and have all other tracks relate positions to track <b>V1</b>.</li>
-<li> Set sync relations individually or use box selection auto parent multiple clips.</li>
+<li> Set sync relations for individual or multiple selected clips.</li>
 <li> If there exists many clips of similar type that require synching, dedicate a track to that type of clips and use track syncing features to keep that track in sync.</li>
 <li> If program features multiple clearly defined complex scenes one approach is to:
     <ul>
     <li> Parent first clip of the scene on each track to the first clip of scene on track <b>V1</b>.</li>
     <li> Use <b>Spacer</b> tool with <b>Control</b> modifier to sync tracks manually at scene start when needed.</li>
+    <li> Or use track syncing.</li>
     </ul>
 </li>
 </ul>
@@ -146,7 +149,7 @@ When creating music videos or voice over driven programs it is useful to use a s
 
 <ul>
 <li> Place the program defining audio of track <b>A1</b> and treat that as a master track.</li>
-<li> Have all other tracks relate their positions to track <b>A1</b>.</li>
+<li> Have all other tracks and clips relate their positions to track <b>A1</b>.</li>
 <li> With music videos it is useful to use a large number of track dedicated to invidual types of visual elements, and use excusively track syncing featues instead of setting sync to individual clips.</li>
 </ul>
 
@@ -156,16 +159,15 @@ Editing dialogue scenes frequently require actor's voice to start before or end 
 </p>
 <ul>
 <li> Dedicate tracks <b>V1</b>, <b>V2</b>, <b>A1</b> and <b>A2</b> to dialoque video and audio.</li>
-<li> Select from <b>Sync Properties</b> menu on the left beahiour that suit your preferences.
+<li> Select from <b>Sync Properties</b> menu on the left behaviour that suits your preferences.
     <ul>
-    <li> <b>Auto Sync Split Video Clips on Add</b> .</li>
-    <li> <b>Dual Trim Synched Clips</b> .</li>
-    <li> <b>Audio Split To Mirrored Track</b> .</li>
+    <li> <b>Auto Sync Split Video Clips on Add</b> has multiple options to select which tracks do this.</li>
+    <li> <b>Audio Split To Mirrored Track</b> behaviour can be turned on and off.</li>
     </ul>
 </li>
 <li> When creating J- or L-cuts use methods that maintain sync to minimize the need to resync:
     <ul>
-    <li> When using <b>Trim</b> tool, use Two Roll Trim instead of One Roll Trim.</li>
+    <li> When using <b>Trim</b> tool, use <i>Two Roll Trim</i> instead of <i>One Roll Trim</i>.</li>
     <li> When dragging clip ends use <b>Alt</b> modifier to do <b>Clip End Overwrite Drag</b> actions.</li>
     </ul>
 </li>
@@ -174,13 +176,16 @@ Editing dialogue scenes frequently require actor's voice to start before or end 
 
 
 <h3>Sync UX</h3>
+<h4>Buttons</h4>
+<h4>Menus</h4>
+<h4>Timeline</h4>
 <p>
 Visually clip's sync state is displayed as follows:
 </p>
 <ul>
-<li> Green means that clip is in sync with parent.</li>
-<li> Red means that clip is NOT in sync with parent.</li>
+<li> Red box with a number means that clip is not in sync with parent.</li>
 <li> Displayed number gives info on how many frames a clip's position is away from being synched.</li>
+<li> Optinally a line is drawn between parent and child clip.</li>
 </ul>
 
 
