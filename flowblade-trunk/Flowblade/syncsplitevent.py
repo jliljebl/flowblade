@@ -472,6 +472,25 @@ def clear_sync_relation(popup_data):
 
     # Edit consumes selection
     movemodes.clear_selected_clips()
+    updater.repaint_tline()
 
+def clear_sync_relation_multi(popup_data):
+    child_clip_track = current_sequence().tracks[movemodes.selected_track]
+
+    # Create edit actions.
+    edit_actions = []
+    for child_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        if child_clip_track.clips[child_index].is_blank == True:
+            continue
+        data = {"child_clip":child_clip_track.clips[child_index],
+                "child_track":child_clip_track}
+        action = edit.clear_sync_action(data)
+        edit_actions.append(action)
+
+    consolidated_action = edit.ConsolidatedEditAction(edit_actions)
+    consolidated_action.do_consolidated_edit()
+
+    # Edit consumes selection
+    movemodes.clear_selected_clips()
     updater.repaint_tline()
 
