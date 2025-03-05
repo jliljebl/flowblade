@@ -400,7 +400,11 @@ def _set_sync_parent_clip_multi(event, frame):
         
     consolidated_action = edit.ConsolidatedEditAction(edit_actions)
     consolidated_action.do_consolidated_edit()
-    
+
+
+def resync_multi(popup_data):
+    resync_clip_from_button()
+
 def resync_clip_from_button():
     track = get_track(movemodes.selected_track)
     clip_list = [] 
