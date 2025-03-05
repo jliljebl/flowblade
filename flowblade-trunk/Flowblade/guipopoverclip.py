@@ -62,6 +62,7 @@ _blank_clip_menu = None
 _multi_clip_popover = None
 _multi_clip_menu = None
 _multi_audio_section = None
+_multi_sync_section = None
 
 _compositor_popover = None
 _compositor_menu = None
@@ -311,7 +312,7 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
         transition_popover_menu_show(widget, clip, track, x, y, callback)
         return
 
-    global _multi_clip_popover, _multi_clip_menu, _multi_audio_section
+    global _multi_clip_popover, _multi_clip_menu, _multi_audio_section, _multi_sync_section
 
     if _multi_clip_menu == None:
         _multi_clip_menu = guipopover.menu_clear_or_create(_multi_clip_menu)
@@ -320,6 +321,10 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_multi_audio_section(_multi_audio_section, clip, track, callback)
         _multi_clip_menu.append_section(None, _multi_audio_section)
 
+        _multi_sync_section = Gio.Menu.new()
+        _fill_multi_sync_section(_multi_sync_section, clip, track, callback)
+        _multi_clip_menu.append_section(None, _multi_sync_section)
+            
         container_section = Gio.Menu.new()
         add_menu_action(container_section, _("Create Container Clip From Selected Clips"), "multiclipmenu.createmulticompound",  ("create_multi_compound", None), callback)
         _multi_clip_menu.append_section(None, container_section)
@@ -348,7 +353,9 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
     else: # Menu items with possible state changes need to recreated.
         guipopover.menu_clear_or_create(_multi_audio_section)
         _fill_multi_audio_section(_multi_audio_section, clip, track, callback)
-
+        guipopover.menu_clear_or_create(_multi_sync_section)
+        _fill_multi_sync_section(_multi_sync_section, clip, track, callback)
+        
     rect = guipopover.create_rect(x, y)
     _multi_clip_popover = guipopover.new_mouse_popover(widget, _multi_clip_menu, rect, Gtk.PositionType.TOP)
 
@@ -413,17 +420,21 @@ def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
     add_menu_action(multi_audio_section, _("Split Audio"), "multiclipmenu.multisplitaudio",  ("multi_split_audio", None), callback, active)
-    active = (track.id == current_sequence().first_video_index)
+    active = True
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
     add_menu_action(multi_audio_section, _("Split Audio Synched"), "multiclipmenu.multisplitaudiosynched",  ("multi_split_audio_synched", None), callback, active)
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
-    else:
-        active = True
+
     add_menu_action(multi_audio_section, _("Mute Audio"), "multiclipmenu.muteaudio",  ("multi_mute_audio", None), callback, active)
     add_menu_action(multi_audio_section, _("Unmute Audio"), "multiclipmenu.unmuteaudio",  ("multi_unmute_audio", None), callback, active)
-    
+
+def _fill_multi_sync_section(sync_section, clip, track, callback):
+    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.multisetmaster",  ("multi_set_master", None), callback)
+    add_menu_action(sync_section,_("Resync"), "clipmenu.multiresync",  ("multi_resync", None), callback)
+    add_menu_action(sync_section,_("Clear Sync Relations"), "clipmenu.multiclearsyncrel",  ("multi_clear_sync_rel", None), callback)
+
 def _fill_audio_menu(audio_submenu, clip, track, callback):
     if track.type == appconsts.VIDEO:
         active = True
@@ -431,7 +442,7 @@ def _fill_audio_menu(audio_submenu, clip, track, callback):
             active = False
         add_menu_action(audio_submenu, _("Split Audio"), "clipmenu.splitaudio",  ("split_audio", None), callback, active)
 
-        active = (track.id == current_sequence().first_video_index)
+        active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
             active = False
         add_menu_action(audio_submenu, _("Split Audio Synched"), "clipmenu.splitaudiosynched", ("split_audio_synched", None), callback, active)
@@ -515,14 +526,15 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     add_menu_action(del_section, _("Ripple Delete Clip Range"), "clipmenu.ripplerange",  ("ripplerange", None), callback)
     edit_actions_menu.append_section(None, del_section)
 
-    if track.id != current_sequence().first_video_index:
-        sync_section = Gio.Menu.new()
-        if clip.sync_data != None:
-            add_menu_action(sync_section,_("Resync"), "clipmenu.resync",  ("resync", None), callback)
-            add_menu_action(sync_section,_("Clear Sync Relation"), "clipmenu.clearsyncrel",  ("clear_sync_rel", None), callback)
-        else:
-            add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.setmaster",  ("set_master", None), callback)
-        edit_actions_menu.append_section(None, sync_section)
+    sync_section = Gio.Menu.new()
+
+    active = (clip.sync_data != None)
+    add_menu_action(sync_section,_("Resync"), "clipmenu.resync",  ("resync", None), callback, active)
+    add_menu_action(sync_section,_("Clear Sync Relation"), "clipmenu.clearsyncrel",  ("clear_sync_rel", None), callback, active)
+
+    active = (clip.sync_data == None)
+    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.setmaster",  ("set_master", None), callback, active)
+    edit_actions_menu.append_section(None, sync_section)
 
     length_section = Gio.Menu.new()
     add_menu_action(length_section, _("Set Clip Length..."), "clipmenu.length",  ("length", None), callback)

@@ -2578,7 +2578,7 @@ def _resync_track_redo(self):
         resync_data = resync.get_resync_data_list_for_clip_list(self.resync_clips_data_list)
 
         # Lift resync clips and insert blank in their place
-        for data_item in resync_data: # + 1 == out inclusive
+        for data_item in resync_data: 
             clip, track, index, child_clip_start, pos_off = data_item
             
             # Do copy of original track on first iteration.
@@ -2586,7 +2586,7 @@ def _resync_track_redo(self):
                 self.orig_track = copy.copy(track.clips)
         
             _remove_clip(track, index)
-            removed_length = clip.clip_out - clip.clip_in
+            removed_length = clip.clip_out - clip.clip_in + 1 # + 1 == out inclusive
             _insert_blank(track, index, removed_length)
 
         # Put resync clips in synched positions.
