@@ -1103,6 +1103,7 @@ def _revert_to_original_clip_from_slowmo_clip(data):
 # set as activation messages in guipopoverclip.py
 # activation_message -> _handler_func
 POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
+                  "multi_set_master":syncsplitevent.init_select_master_clip,
                   "open_in_editor":_open_clip_in_effects_editor,
                   "clip_info":_show_clip_info,
                   "open_in_clip_monitor":_open_clip_in_clip_monitor,

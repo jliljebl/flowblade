@@ -43,6 +43,9 @@ import utils
 
 parent_selection_data = None
 
+CHILD_SELECTION_SINGLE = 1
+CHILD_SELECTION_MULTIPLE = 2
+
 
 # ----------------------------------- split audio
 def split_audio_synched(popup_data):
@@ -278,28 +281,40 @@ def clear_track_clips_sync(child_track):
 
 # ---------------------------------------------- sync parent clips
 def init_select_master_clip(popup_data):
-    clip, track, item_id, x = popup_data
-    frame = tlinewidgets.get_frame(x)
-    child_index = current_sequence().get_clip_index(track, frame)
 
-    if not (track.clips[child_index] == clip):
-        # This should never happen 
-        print("big fu at _init_select_master_clip(...)")
-        return
+    global parent_selection_data
+    try:
+        clip, track, item_id, x = popup_data
+        frame = tlinewidgets.get_frame(x)
+        child_index = current_sequence().get_clip_index(track, frame)
 
+        if not (track.clips[child_index] == clip):
+            # This should never happen, but I think we've seen this print sometimes. 
+            print("problem at _init_select_master_clip(...)")
+            return
+
+        parent_selection_data = (CHILD_SELECTION_SINGLE, clip, child_index, track)
+    except TypeError:
+        # This is from multi selection that does not porvide same data as single selection.
+        parent_selection_data = (CHILD_SELECTION_MULTIPLE, movemodes.selected_range_in, movemodes.selected_range_out, track)
+        
     gdk_window = gui.tline_display.get_parent_window()
     gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP
-    global parent_selection_data
-    parent_selection_data = (clip, child_index, track)
 
 def select_sync_parent_mouse_pressed(event, frame):
-    _set_sync_parent_clip(event, frame)
-    
-    gdk_window = gui.tline_display.get_parent_window()
-    gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR))
    
     global parent_selection_data
+    selection_type, data1, data2, data3 = parent_selection_data
+
+    if selection_type == CHILD_SELECTION_SINGLE:
+        _set_sync_parent_clip(event, frame)
+    else:
+        _set_sync_parent_clip_multi(event, frame)
+
+    gdk_window = gui.tline_display.get_parent_window()
+    gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.LEFT_PTR))
+
     parent_selection_data = None
 
     # Edit consumes selection
@@ -308,7 +323,7 @@ def select_sync_parent_mouse_pressed(event, frame):
     updater.repaint_tline()
 
 def _set_sync_parent_clip(event, frame):
-    child_clip, child_index, child_clip_track = parent_selection_data
+    sel_type, child_clip, child_index, child_clip_track = parent_selection_data
     parent_track = tlinewidgets.get_track(event.y)
     
     # this can't have parent clip already
@@ -340,6 +355,52 @@ def _set_sync_parent_clip(event, frame):
     action = edit.set_sync_action(data)
     action.do_edit()
 
+def _set_sync_parent_clip_multi(event, frame):
+    sel_type,  selected_range_in, selected_range_out, child_clip_track = parent_selection_data
+    parent_track = tlinewidgets.get_track(event.y)
+    if parent_track == None:
+        return 
+    
+    child_clips = []
+    for i in range(selected_range_in, selected_range_out + 1):
+        child_clips.append(child_clip_track.clips[i])
+    
+    # these can't have parent clip already
+    for clip in child_clips:
+        if clip.sync_data != None:
+            return
+
+    parent_clip_index = current_sequence().get_clip_index(parent_track, frame)
+    if parent_clip_index == -1:
+        return
+
+    # Parent and child can't be on the same track.
+    if parent_track == child_clip_track:
+        return
+        
+    parent_clip = parent_track.clips[parent_clip_index]
+    
+    # These cannot be chained.
+    # Now that all parent clips must be on track V1 this is no longer should be possible.
+    if parent_clip.sync_data != None:
+        print("parent_clip.sync_data != None")
+        return
+
+    # Create edit actions.
+    edit_actions = []
+    for child_index in range(selected_range_in, selected_range_out + 1):
+        if child_clip_track.clips[child_index].is_blank == True:
+            continue
+        data = {"child_index":child_index,
+                "child_track":child_clip_track,
+                "parent_index":parent_clip_index,
+                "parent_track":parent_track}
+        action = edit.set_sync_action(data)
+        edit_actions.append(action)
+        
+    consolidated_action = edit.ConsolidatedEditAction(edit_actions)
+    consolidated_action.do_consolidated_edit()
+    
 def resync_clip_from_button():
     track = get_track(movemodes.selected_track)
     clip_list = [] 
