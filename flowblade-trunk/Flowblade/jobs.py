@@ -465,7 +465,6 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         return file_name
         
     def start_render(self):
-        
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
         job_msg.status = RENDERING
@@ -478,8 +477,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             command_list.append(arg)
         parent_folder_arg = "parent_folder:" + str(self.parent_folder)
         command_list.append(parent_folder_arg)
-            
-        subprocess.Popen(command_list)
+
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
         
     def update_render_status(self):
         GLib.idle_add(self._update_from_gui_thread)
@@ -727,8 +728,10 @@ class StabilizedMediaItemVideoRenderJobQueueObject(AbstractJobQueueObject):
             command_list.append(arg)
         parent_folder_arg = "parent_folder:" + str(self.parent_folder)
         command_list.append(parent_folder_arg)
-            
-        subprocess.Popen(command_list)
+
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
         
     def update_render_status(self):
         GLib.idle_add(self._update_from_gui_thread)
@@ -772,7 +775,7 @@ class StabilizedMediaItemVideoRenderJobQueueObject(AbstractJobQueueObject):
 
             
 
-class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
+class TrackingDataRenderJobQueueObject(AbstractJobQueueObject):
 
     def __init__(self, session_id, filter, editable_properties, analyze_editor, args, data_label):
         
@@ -810,7 +813,9 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         data_file_arg = "data_file_path:" + str(self.data_file_path)
         command_list.append(data_file_arg)
 
-        subprocess.Popen(command_list)
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
         
     def update_render_status(self):
         GLib.idle_add(self._update_from_gui_thread)
@@ -899,7 +904,9 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             parent_folder_arg = "parent_folder:" + str(self.parent_folder)
             command_list.append(parent_folder_arg)
 
-            subprocess.Popen(command_list)
+            # We need to wait() in thread.
+            command_list_runner = ProcessCommandListRunner(command_list)
+            command_list_runner.start()
         else:
             # FFMPEG CLI proxy rendering.
             self.is_mlt_render = False
@@ -1014,7 +1021,7 @@ class FFmpegRenderThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        os.system(self.ffmpeg_command)
+        os.system(self.ffmpeg_command) # blocks
         self.completed = True 
 
 

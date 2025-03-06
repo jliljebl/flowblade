@@ -1329,7 +1329,7 @@ class AnalyzeMotionTrackingFilterEditor:
         if len(data_label) == 0:
             data_label = self.get_default_data_label()
         
-        job = jobs.MotionTrackingDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args, data_label)
+        job = jobs.TrackingDataRenderJobQueueObject(session_id, self.filter, self.editable_properties, self, args, data_label)
         job.add_to_queue()
 
     def analysis_complete(self, final_label, data_file_path):

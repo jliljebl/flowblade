@@ -476,6 +476,7 @@ class AbstractContainerActionObject:
     def create_image_surface(self, icon_path):
         return _create_image_surface(icon_path)
 
+
 class GMicContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
@@ -558,7 +559,9 @@ class GMicContainerActions(AbstractContainerActionObject):
         for arg in args:
             command_list.append(arg)
 
-        subprocess.Popen(command_list)
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
         
     def update_render_status(self):
         GLib.idle_add(self._do_update_render_status)
@@ -930,7 +933,9 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         for arg in args:
             command_list.append(arg)
 
-        subprocess.Popen(command_list)
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
 
     def update_render_status(self):
         GLib.idle_add(self._do_update_render_status)
@@ -1036,7 +1041,9 @@ class SequenceLinkContainerActions(AbstractContainerActionObject):
         for arg in args:
             command_list.append(arg)
 
-        subprocess.Popen(command_list)
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
 
     def update_render_status(self):
         GLib.idle_add(self._do_update_render_status)
@@ -1158,5 +1165,15 @@ class CommandLauncherThread(threading.Thread):
         for arg in self.args:
             command_list.append(arg)
 
-        subprocess.Popen(command_list)
+        process = subprocess.Popen(command_list)
+        process.wait()
+
+class ProcessCommandListRunner(threading.Thread):
+    def __init__(self, command_list):
+        threading.Thread.__init__(self)
+        self.command_list = command_list
+        
+    def run(self):
+        process = subprocess.Popen(self.command_list)
+        process.wait()
         

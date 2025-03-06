@@ -18,6 +18,8 @@ sys.path.insert(0, modules_path)
 import processutils
 processutils.update_sys_path(modules_path)
 
+print("process trackingheadless PID:", os.getpid())
+
 try:
     import trackingheadless
     root_dir = modules_path.split("/")[1]

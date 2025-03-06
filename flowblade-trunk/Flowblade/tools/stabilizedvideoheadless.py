@@ -110,6 +110,7 @@ class StaxbilizedVideoRenderThread(threading.Thread):
             
             if self.abort == True:
                 self.render_player.shutdown()
+                os._exit(0) # We are having some issues with causing prosessor usage even after reaching here.
                 return
             
             fraction = self.render_player.get_render_fraction()
@@ -120,6 +121,12 @@ class StaxbilizedVideoRenderThread(threading.Thread):
         # Write out completed flag file.
         ccrutils.write_completed_message()
 
+        global _render_thread
+        _render_thread = None
+
+        self.render_player.shutdown()        
+        os._exit(0) # We are having some issues with causing prosessor usage even after reaching here.
+                
     def check_abort_requested(self):
         self.abort = ccrutils.abort_requested()
 
