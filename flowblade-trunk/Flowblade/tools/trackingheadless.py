@@ -81,6 +81,7 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         self.abort = False
 
     def run(self):
+        global _render_thread
         self.start_time = time.monotonic()
 
         profile = mltprofiles.get_profile(self.profile_desc) 
@@ -96,10 +97,6 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         tracker_filter.set("steps", str(self.steps))
         tracker_filter.set("algo", str(self.algo))
         tracker_filter.set("disable", 0)
-        #tracker_filter.clear("results")
-
-        #tracker_filter.set("in", str(self.clip_in))
-        #tracker_filter.set("out", str(self.clip_out))
 
         # Add filter to producer.
         producer.attach(tracker_filter)
@@ -136,6 +133,8 @@ class TrackingHeadlessRunnerThread(threading.Thread):
             if self.abort == True:
                 ccrutils.write_completed_message()
                 self.shutdown()
+                _render_thread = None
+                os._exit(0)
                 return
 
             render_fraction = float(tractor.frame()) / float(producer.get_length())
@@ -156,9 +155,9 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         # Write out completed flag file.
         ccrutils.write_completed_message()
 
-        global _render_thread
         _render_thread = None
-    
+        os._exit(0) # We are having some issues with causing prosessor usage even after reaching here.
+        
     def check_abort_requested(self):
         self.abort = ccrutils.abort_requested()
 

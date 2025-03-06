@@ -810,7 +810,9 @@ class MotionTrackingDataRenderJobQueueObject(AbstractJobQueueObject):
         data_file_arg = "data_file_path:" + str(self.data_file_path)
         command_list.append(data_file_arg)
 
-        subprocess.Popen(command_list)
+        # We need to wait() in thread.
+        command_list_runner = ProcessCommandListRunner(command_list)
+        command_list_runner.start()
         
     def update_render_status(self):
         GLib.idle_add(self._update_from_gui_thread)
