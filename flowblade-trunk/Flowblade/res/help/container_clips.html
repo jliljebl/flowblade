@@ -33,35 +33,6 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 <li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
 </ol>
 
-
-<h2>G'Mic Script Container Clips</h2>
-
-<h5>Components</h5>
-<p>
-<ul style="list-style-type:none">
-<li><b>Unrendered Media</b> Video Clip.</li>
-<li><b>Program</b> G'Mic script created and saved from G'Mic tool.</li>
-<li><b>Rendered Media</b> A clip rendered with G'mic effect.</li>
-</ul>
-</p>
-<p>
-<h5>Use Cases</h5>
-<ul>
-<li>Render G'Mic effects only on clip ranges used on timeline.</li>
-<li>Make easier to use single user defined G'Mic effect on multiple clips.</li>
-</ul>
-
-<h5> Creating G'Mic Script Container Clips</h5>
-
-<ol>
-<li>Open <b>G'Mic tool</b>.</li>
-<li>Create G'Mic effect script. See section on <b>G'Mic Effects</b> in Chapter <b>Tools</b>.</li>
-<li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
-<li>Select menu item <b>Project -> Create Container Clip -> From G'Mic Script</b>.</li>
-<li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
-</ol>
-
-
 <h2>Selection Container Clips</h2>
 <h5>Components</h5>
 <p>
@@ -116,6 +87,52 @@ Audio syncing looks for best mathemathical match between two audio waveforms, so
 <p>
 <b>Generators</b> are Container Clips too, see more info in chapter <a href="generatorsfluxity.html">Generators and Fluxity API</a>
 </p>
+
+<h2>Sequence Link Container Clips</h2>
+
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> Contents of a Sequence.</li>
+<li><b>Program</b> A MLT XML video clip created or recreated from Contents of a Sequence on request</li>
+<li><b>Rendered Media</b> Clip Rendered from MLT XML Clip.</li>
+</ul>
+</p>
+
+<h5>Use Cases</h5>
+<ul>
+<li>Provide a convenient way to use Sequences as parts of a master Sequence.</li>
+</ul>
+
+<h5> Creating Sequence Link Container Clips</h5>
+<h5> Updating Sequence Link Container Clips</h5>
+<h5> Replacing Sequence Link Container Clip with Sequence Contents</h5>
+
+<h2>G'Mic Script Container Clips</h2>
+
+<h5>Components</h5>
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> Video Clip.</li>
+<li><b>Program</b> G'Mic script created and saved from G'Mic tool.</li>
+<li><b>Rendered Media</b> A clip rendered with G'mic effect.</li>
+</ul>
+</p>
+<p>
+<h5>Use Cases</h5>
+<ul>
+<li>Render G'Mic effects only on clip ranges used on timeline.</li>
+<li>Make easier to use single user defined G'Mic effect on multiple clips.</li>
+</ul>
+
+<h5> Creating G'Mic Script Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Create G'Mic effect script. See section on <b>G'Mic Effects</b> in Chapter <b>Tools</b>.</li>
+<li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
+<li>Select menu item <b>Project -> Create Container Clip -> From G'Mic Script</b>.</li>
+<li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
+</ol>
 
 <h2>Blender Project Container Clips</h2>
 <p><i>
