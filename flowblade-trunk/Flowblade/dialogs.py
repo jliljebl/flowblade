@@ -41,6 +41,7 @@ import mltenv
 import mltprofiles
 import mltfilters
 import mlttransitions
+import mltplayer
 import panels
 import projectdatavaultgui
 import projectdatavault
@@ -520,18 +521,6 @@ def compound_clip_name_dialog(callback, default_name, dialog_title, data=None):
         dialog.connect('response', callback, (data, name_entry))
     dialog.show_all()
     
-def save_env_data_dialog(callback):
-    dialog = Gtk.FileChooserDialog(_("Save Runtime Environment Data"),  gui.editor_window.window,
-                                   Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
-                                   _("Save"), Gtk.ResponseType.ACCEPT))
-    dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name("flowblade_runtime_environment_data")
-    dialog.set_do_overwrite_confirmation(True)
-    dialog.set_select_multiple(False)
-    dialog.connect('response', callback)
-    dialog.show()
-
 def save_cont_clip_edit_data(callback, default_name, edit_data):
     dialog = Gtk.FileChooserDialog(_("Save Container Clip Edit Data"),  gui.editor_window.window,
                                    Gtk.FileChooserAction.SAVE,
@@ -752,14 +741,20 @@ def environment_dialog(parent_window):
         run_type = "FLATPAK"
     else:
         run_type = _("DEVELOPER VERSION")
-
     r4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Running from: ")), Gtk.Label(label=run_type)])
 
+    if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1:
+        p_ver = "SDL 1"
+    else:
+        p_ver = "SDL 2"
+    r5 = guiutils.get_left_justified_box([Gtk.Label(label=_("Consumer type: ")), Gtk.Label(label=p_ver)])
+    
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)
     vbox.pack_start(r3, False, False, 0)
     vbox.pack_start(r4, False, False, 0)
+    vbox.pack_start(r5, False, False, 0)
 
 
     filters = sorted(mltenv.services)
