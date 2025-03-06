@@ -748,7 +748,7 @@ def environment_dialog(parent_window):
     else:
         p_ver = "SDL 2"
     r5 = guiutils.get_left_justified_box([Gtk.Label(label=_("Consumer type: ")), Gtk.Label(label=p_ver)])
-    
+
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(r1, False, False, 0)
     vbox.pack_start(r2, False, False, 0)

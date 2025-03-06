@@ -527,44 +527,6 @@ class SequenceListView(ImageTextImageListView):
                 self.double_click_counter = 0
                 self.double_click_cb()
 
-class MediaListView(ImageTextTextListView):
-    """
-    GUI component displaying list of media files.
-    """
-
-    def __init__(self, row_activated_cb, file_name_edited_cb):
-        ImageTextTextListView.__init__(self)
-
-        # Connect double-click listener and allow multiple selection
-        self.treeview.connect("row-activated",
-                              row_activated_cb)
-
-        tree_sel = self.treeview.get_selection()
-        tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
-        self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.set_property("font-desc", Pango.FontDescription("sans bold 9"))
-        self.text_rend_1.connect("edited",
-                                 file_name_edited_cb,
-                                 (self.storemodel, 1))
-
-        self.text_rend_2.set_property("font-desc", Pango.FontDescription("sans 8"))
-        self.text_rend_2.set_property("yalign", 0.5)
-
-    def fill_data_model(self):
-        """
-        Creates displayed data.
-        Displays thumbnail icon, file name and length
-        """
-        self.storemodel.clear()
-        for file_id in current_bin().file_ids:
-            media_file = PROJECT().media_files[file_id]
-            row_data = [media_file.icon,
-                        media_file.name,
-                        utils.clip_length_string(media_file.length)]
-            self.storemodel.append(row_data)
-            self.scroll.queue_draw()
-
-
 class FilterListView(ImageTextImageListView):
     """
     GUI component displaying list of available filters.
@@ -1408,8 +1370,8 @@ class MediaPanel():
             if ((editorstate.media_view_filter == appconsts.SHOW_IMAGE_SEQUENCES)
                 and (media_file.type != appconsts.IMAGE_SEQUENCE)):
                 continue
-            if ((editorstate.media_view_filter == appconsts.SHOW_PATTERN_PRODUCERS)
-                and (media_file.type != appconsts.PATTERN_PRODUCER)):
+            if ((editorstate.media_view_filter == appconsts.SHOW_CONTAINERS)
+                and (media_file.container_data == None)):
                 continue
             if ((editorstate.media_view_filter == appconsts.SHOW_UNUSED_FILES)
                 and (media_file not in unused_list)):

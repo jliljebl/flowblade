@@ -1437,7 +1437,7 @@ def media_filtering_select_pressed(launcher, widget, event):
 
 def _media_filtering_selector_item_activated(action, new_value_variant):
     try:
-        index = int( new_value_variant.get_string())
+        index = int(new_value_variant.get_string())
     except:
         # This is ratings selection
         _ratings_filtering_item_activated(action, new_value_variant)
