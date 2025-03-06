@@ -1165,7 +1165,8 @@ class CommandLauncherThread(threading.Thread):
         for arg in self.args:
             command_list.append(arg)
 
-        subprocess.Popen(command_list)
+        process = subprocess.Popen(command_list)
+        process.wait()
 
 class ProcessCommandListRunner(threading.Thread):
     def __init__(self, command_list):
