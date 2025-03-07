@@ -21,6 +21,8 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+     <release version="2.18.99" date="2025-03-6">
+    </release>
      <release version="2.18" date="2024-12-18">
       <description>
       <p>New features:</p>
