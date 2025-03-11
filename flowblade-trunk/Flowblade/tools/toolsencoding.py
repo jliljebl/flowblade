@@ -155,8 +155,6 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
     # - panel for G'Mic tool
     # - panels for Clip Containers render settings
 
-    print("get_encoding_panel render_data", render_data)
-
     if create_container_file_panel == False:
         file_panel_title = _("File")
     else:
