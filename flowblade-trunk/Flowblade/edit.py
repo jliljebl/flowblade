@@ -580,7 +580,19 @@ class SyncData:
         self.master_clip_track = None
         self.master_inframe = None
         self.master_audio_index = None # this does nothing? try to remove.
-           
+
+def _switch_synched_clip(child_clip, child_track, old_child_clip):
+    # Set sync data
+    resync.clip_added_to_timeline(child_clip, child_track)
+    resync.clip_removed_from_timeline(old_child_clip)
+
+def _clone_sync_data(new_clip, clip):
+    new_clip.sync_data = SyncData()
+    new_clip.sync_data.pos_offset = clip.sync_data.pos_offset
+    new_clip.sync_data.master_clip = clip.sync_data.master_clip
+    new_clip.sync_data.master_clip_track = clip.sync_data.master_clip_track
+    new_clip.sync_data.sync_state = clip.sync_data.sync_state 
+    
 #-------------------- APPEND CLIP
 # "track","clip","clip_in","clip_out"
 # Appends clip to track
@@ -3225,6 +3237,9 @@ def _container_clip_full_render_replace_undo(self):
         _detach_all(self.new_clip)
         self.new_clip.filters = []
 
+    if self.old_clip.sync_data != None:
+        _switch_synched_clip(self.old_clip, self.track, self.new_clip)
+        
 def _container_clip_full_render_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
@@ -3240,13 +3255,19 @@ def _container_clip_full_render_replace_redo(self):
         self.new_clip.filters = self.clone_filters
         _attach_all(self.new_clip)
 
+
     self.new_clip.container_data.rendered_media = self.rendered_media_path
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 
     self.new_clip.link_seq_data = self.old_clip.link_seq_data
 
-
+    if self.old_clip.sync_data != None:
+        if self.new_clip.sync_data == None:
+            _clone_sync_data(self.new_clip, self.old_clip)
+    
+        _switch_synched_clip(self.new_clip, self.track, self.old_clip)
+ 
 # -------------------------------------------------------- CONTAINER CLIP CLIP RENDER MEDIA REPLACE
 # "old_clip", "new_clip","rendered_media_path","track", "index", "do_filters_clone"
 def container_clip_clip_render_replace(data):
@@ -3260,7 +3281,10 @@ def _container_clip_clip_render_replace_undo(self):
     if self.do_filters_clone == True:
         _detach_all(self.new_clip)
         self.new_clip.filters = []
-    
+
+    if self.old_clip.sync_data != None:
+        _switch_synched_clip(self.old_clip, self.track, self.new_clip)
+        
 def _container_clip_clip_render_replace_redo(self):
     _remove_clip(self.track, self.index)
     new_out = self.old_clip.clip_out - self.old_clip.clip_in
@@ -3282,7 +3306,13 @@ def _container_clip_clip_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
     self.new_clip.link_seq_data = self.old_clip.link_seq_data
+
+    if self.old_clip.sync_data != None:
+        if self.new_clip.sync_data == None:
+            _clone_sync_data(self.new_clip, self.old_clip)
     
+        _switch_synched_clip(self.new_clip, self.track, self.old_clip)
+        
 # -------------------------------------------------------- CONTAINER CLIP SWITCH TO UNRENDERED CLIP MEDIA REPLACE
 # "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
@@ -3296,6 +3326,9 @@ def _container_clip_switch_to_unrendered_replace_undo(self):
     if self.do_filters_clone == True:
         _detach_all(self.new_clip)
         self.new_clip.filters = []
+
+    if self.old_clip.sync_data != None:
+        _switch_synched_clip(self.old_clip, self.track, self.new_clip)
 
 def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
@@ -3323,7 +3356,12 @@ def _container_clip_switch_to_unrendered_replace_redo(self):
     self.new_clip.link_seq_data = self.old_clip.link_seq_data
     
     self.new_clip.container_data.clear_rendered_media()
+
+    if self.old_clip.sync_data != None:
+        if self.new_clip.sync_data == None:
+            _clone_sync_data(self.new_clip, self.old_clip)
     
+        _switch_synched_clip(self.new_clip, self.track, self.old_clip)
 
 #-------------------- APPEND MEDIA LOG
 # "track","clips"
