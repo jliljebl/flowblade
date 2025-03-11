@@ -369,10 +369,8 @@ class RenderVideoClipPanel:
         encoding_vbox.pack_start(encoding_panel, False, False, 0)
 
         encoding_hbox = Gtk.HBox(False, 2)
-        encoding_hbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
         encoding_hbox.pack_start(encoding_vbox, True, True, 0)
 
-        
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(self.video_clip_combo, False, False, 0)
         self.vbox.pack_start(guiutils.pad_label(12, 24), False, False, 0)
@@ -449,7 +447,7 @@ class RenderEncodingPanel():
     
     def __init__(self, extension_label):
         self.quality_selector = RenderQualitySelector()
-        self.quality_selector.widget.set_size_request(110, 34)
+        self.quality_selector.widget.set_size_request(140, 34)
         self.quality_selector.update_quality_selection(0)
         self.audio_desc = Gtk.Label()
         self.encoding_selector = RenderEncodingSelector(self.quality_selector,
@@ -459,10 +457,14 @@ class RenderEncodingPanel():
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
-        quality_row.pack_start(Gtk.Label(), True, False, 0)
+        quality_row.pack_start(Gtk.Label(), True, True, 0)
 
+        enconding_row  = Gtk.HBox()
+        enconding_row.pack_start(self.encoding_selector.widget, False, False, 0)
+        enconding_row.pack_start(Gtk.Label(), True, True, 0)
+        
         self.vbox = Gtk.VBox(False, 2)
-        self.vbox.pack_start(self.encoding_selector.widget, False, False, 0)
+        self.vbox.pack_start(enconding_row, False, False, 0)
         self.vbox.pack_start(quality_row, False, False, 0)
 
     def set_sensitive(self, value):

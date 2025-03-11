@@ -633,7 +633,7 @@ def _fill_generator_section(generator_section, clip, callback):
     active = (clip.container_data != None)
     
     add_menu_action(generator_section, _("Render Clip"), "clipmenu.ccrender",  ("cc_render_clip", None), callback, active)
-    add_menu_action(generator_section, _("Set Encoding"), "clipmenu.ccencoding",  ("cc_render_clip", None), callback, active)
+    add_menu_action(generator_section, _("Set Encoding"), "clipmenu.ccencoding",  ("cc_render_settings", None), callback, active)
     add_menu_action(generator_section, _("Switch to Unrendered Media"), "clipmenu.ccgotounrendered", ("cc_go_to_underdered", None),  callback, active)
 
     
