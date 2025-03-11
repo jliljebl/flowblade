@@ -47,7 +47,7 @@ _tools_submenu = None
 _edit_bottom_section = None
 _compositor_section = None
 _title_section = None
-_generator_section = None
+_generator_sub_menu = None
 
 _audio_clip_popover = None
 _audio_clip_menu = None
@@ -109,7 +109,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
 
     global _clip_popover, _clip_menu, _audio_submenu, _markers_submenu, \
     _markers_submenu_static_items, _reload_section, _edit_actions_menu, \
-    _tools_submenu, _title_section, _compositor_section, _generator_section
+    _tools_submenu, _title_section, _compositor_section, _generator_sub_menu
 
     if _clip_menu == None:
         _clip_menu = guipopover.menu_clear_or_create(_clip_menu)
@@ -124,9 +124,21 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         audio_section.append_submenu(_("Audio Edit"), _audio_submenu)
         _clip_menu.append_section(None, audio_section)
 
-        _generator_section = Gio.Menu.new()
-        _fill_generator_section(_generator_section, clip, callback)
-        _clip_menu.append_section(None, _generator_section)
+        generator_section = Gio.Menu.new()
+        _generator_sub_menu = Gio.Menu.new()
+        active = (clip.container_data != None)
+        genactive = active
+        if clip.container_data != None and clip.container_data.container_type != appconsts.CONTAINER_CLIP_FLUXITY:
+            genactive = False
+        seq_link_active = False 
+        if clip.container_data != None and clip.container_data.container_type == appconsts.CONTAINER_CLIP_SEQUENCE_LINK:
+            seq_link_active = True
+        add_menu_action(generator_section, _("Edit Generator Properties..."), "clipmenu.ccedit",  ("cc_edit_program", None), callback, genactive)
+        add_menu_action(generator_section, _("Create Cloned Generator..."), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, genactive)
+        add_menu_action(generator_section, _("Update Sequence Link Clip"), "clipmenu.updateseqlink", ("cc_update_seq_link", None),  callback, seq_link_active)
+        _fill_generator_section(_generator_sub_menu, clip, callback)
+        generator_section.append_submenu(_("Generator and Container Rendering"), _generator_sub_menu)
+        _clip_menu.append_section(None, generator_section)
         
         clip_data_section = Gio.Menu.new()
         properties_submenu = _get_properties_submenu(callback)
@@ -207,8 +219,8 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         guipopover.menu_clear_or_create(_title_section)
         _fill_title_section(_title_section, clip, callback)
 
-        guipopover.menu_clear_or_create(_generator_section)
-        _fill_generator_section(_generator_section, clip, callback)
+        guipopover.menu_clear_or_create(_generator_sub_menu)
+        _fill_generator_section(_generator_sub_menu, clip, callback)
 
     rect = guipopover.create_rect(x, y)
     _clip_popover = guipopover.new_mouse_popover(widget, _clip_menu, rect, Gtk.PositionType.TOP)
@@ -619,18 +631,11 @@ def _fill_title_section(title_section, clip, callback):
     
 def _fill_generator_section(generator_section, clip, callback):
     active = (clip.container_data != None)
-    genactive = active
-    if clip.container_data != None and clip.container_data.container_type != appconsts.CONTAINER_CLIP_FLUXITY:
-        genactive = False
-    seq_link_active = False 
-    if clip.container_data != None and clip.container_data.container_type == appconsts.CONTAINER_CLIP_SEQUENCE_LINK:
-        seq_link_active = True
     
-    add_menu_action(generator_section, _("Edit Generator Properties..."), "clipmenu.ccedit",  ("cc_edit_program", None), callback, genactive)
-    add_menu_action(generator_section, _("Create Cloned Generator..."), "clipmenu.ccclonegen",  ("cc_clone_generator", None), callback, genactive)
-    add_menu_action(generator_section, _("Generator/Container Render Actions"), "clipmenu.ccrender",  ("cc_render_clip", None), callback, active)
+    add_menu_action(generator_section, _("Render Clip"), "clipmenu.ccrender",  ("cc_render_clip", None), callback, active)
+    add_menu_action(generator_section, _("Set Encoding"), "clipmenu.ccencoding",  ("cc_render_clip", None), callback, active)
     add_menu_action(generator_section, _("Switch to Unrendered Media"), "clipmenu.ccgotounrendered", ("cc_go_to_underdered", None),  callback, active)
-    add_menu_action(generator_section, _("Update Sequence Link Clip"), "clipmenu.updateseqlink", ("cc_update_seq_link", None),  callback, seq_link_active)
+
     
 def _fill_audio_clip_sync_section(sync_section, clip, callback):
     is_synched = (clip.sync_data != None)
