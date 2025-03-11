@@ -965,12 +965,13 @@ def _render_tline_generator(data):
     containerclip.render_tline_generator_clip(clip, _render_tline_generator_callback)
 
 def _render_tline_generator_callback(combo):
+    # Use selected render options are saved in clip.container_data.render_data 
     clip, track, x = _popover_clip_data
-    render_data = (clip, None, None, None) # We keep old data package format for now.
+    render_data_packet = (clip, None, None, None) # We keep old data package format for now.
     if combo.get_active() == 0: # 0 is render full media, see containeractions.set_video_endoding()
-        containerclip.render_full_media(render_data)
+        containerclip.render_full_media(render_data_packet)
     else:
-        containerclip.render_clip_length(render_data)
+        containerclip.render_clip_length(render_data_packet)
 
     """
     TODO: see if "cc_render_full_media", "cc_render_settings" can be deleted below.

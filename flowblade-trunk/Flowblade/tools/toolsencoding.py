@@ -155,6 +155,8 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
     # - panel for G'Mic tool
     # - panels for Clip Containers render settings
 
+    print("get_encoding_panel render_data", render_data)
+
     if create_container_file_panel == False:
         file_panel_title = _("File")
     else:
@@ -183,7 +185,8 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
         widgets.file_panel.movie_name.set_text(render_data.file_name)
         widgets.file_panel.extension_label.set_text(render_data.file_extension)
         widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
-        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(mltprofiles.get_profile_for_index(render_data.encoding_option_index).description())
+        enc_opt = renderconsumer.encoding_options[render_data.encoding_option_index]
+        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_opt.name)
         widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
         profile_desc = mltprofiles.get_profile_for_index(render_data.profile_index).description()
         widgets.profile_panel.out_profile_combo.categories_combo.set_selected(profile_desc)

@@ -3255,7 +3255,6 @@ def _container_clip_full_render_replace_redo(self):
         self.new_clip.filters = self.clone_filters
         _attach_all(self.new_clip)
 
-
     self.new_clip.container_data.rendered_media = self.rendered_media_path
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length

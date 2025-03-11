@@ -189,7 +189,7 @@ class AbstractContainerActionObject:
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
         
-        # Render starts on callback from jobs.py
+        # Render starts on callback from jobs.py self._launch_render()
         
     def render_clip_length_media(self, clip):
         self.render_type = CLIP_LENGTH_RENDER
@@ -375,7 +375,7 @@ class AbstractContainerActionObject:
         # Create default render data if not available, we need to know profile to do this.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
-            
+    
         encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
         if show_render_buttons == True:
             render_combo = Gtk.ComboBoxText()
@@ -743,7 +743,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
             if self.plugin_create_render_complete_callback == None:
                 # Completed render for timeline container clip update is handled here.
                 GLib.idle_add(self.plugin_tline_render_comlete)
-                GLib.idle_add(self.create_producer_and_do_update_edit, None)
             else:
                 # Completed render for adding Generator plugin as rendered video clip is handled here. 
                 if self.container_data.render_data.do_video_render == False:
