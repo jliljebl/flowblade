@@ -100,6 +100,7 @@ class Project:
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
         self.tracking_data = {}
+        self.container_default_encoding = None # Set in coantaineractions.py by user.
 
         self.vault_folder = None
         self.project_data_id = None

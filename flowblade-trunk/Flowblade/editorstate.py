@@ -29,6 +29,8 @@ but looks good when reading code.
 
 import appconsts
 
+# NOTE: This cannot ever be made to import anything else.
+
 # Edit modes
 INSERT_MOVE = 0
 OVERWRITE_MOVE = 1

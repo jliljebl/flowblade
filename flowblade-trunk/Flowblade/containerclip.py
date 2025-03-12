@@ -112,7 +112,7 @@ class ContainerClipData:
 
 def render_tline_generator_clip(clip, callback):
     action_object = containeractions.get_action_object(clip.container_data)
-    action_object.set_video_endoding(None, callback, True)
+    action_object.set_video_endoding(None, callback, True) # All generator tline rendering goes via render settins and continues from given callback.
 
 def render_full_media(data):
     clip, track, item_id, item_data = data
@@ -143,7 +143,10 @@ def edit_program(data):
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.edit_program(clip)
 
-
+def set_project_default_video_endoding(data):
+    clip, track, item_id, item_data = data
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.set_project_default_video_endoding()
 
 #------------------------------------------------------------- Cloning
 def clone_clip(clip):

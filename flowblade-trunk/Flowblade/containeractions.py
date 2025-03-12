@@ -423,7 +423,36 @@ class AbstractContainerActionObject:
                     self.external_encoding_callback(self.render_combo)
                     
         dialog.destroy()
+
+    def set_project_default_video_endoding(self):
+        current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
+        # These need to re-initialized always when using this module.
+        toolsencoding.create_widgets(current_profile_index, True, True)
+
+        encoding_panel = toolsencoding.get_default_encoding_setting_panel(PROJECT().container_default_encoding)
+        encoding_panel.set_margin_right(150)
+        align = dialogutils.get_default_alignment(encoding_panel)
         
+        dialog = Gtk.Dialog(_("Set Container Default Encoding"),
+                            gui.editor_window.window,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            (_("Cancel"), Gtk.ResponseType.REJECT,
+                             (_("Set Default Encoding")), Gtk.ResponseType.ACCEPT))
+        dialog.vbox.pack_start(align, True, True, 0)
+        dialogutils.set_outer_margins(dialog.vbox)
+        dialog.set_resizable(False)
+        dialog.connect('response', self.default_encode_settings_callback)
+        dialog.show_all()
+
+    def default_encode_settings_callback(self, dialog, response_id):
+        if response_id == Gtk.ResponseType.ACCEPT:
+            encoding_panel = toolsencoding.widgets.encoding_panel
+            encoding_option_index = encoding_panel.encoding_selector.get_selected_encoding_index()
+            quality_option_index = encoding_panel.quality_selector.widget.get_active()
+            default_encoding = (encoding_option_index, quality_option_index)
+            PROJECT().container_default_encoding = default_encoding
+        dialog.destroy()
+
     def clone_clip(self, old_clip):
         new_container_data = copy.deepcopy(old_clip.container_data)
         new_container_data.generate_clip_id()

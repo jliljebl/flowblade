@@ -24,6 +24,7 @@ from gi.repository import GObject
 import os
 
 import appconsts
+from editorstate import PROJECT
 import guiutils
 import gtkbuilder
 import mltprofiles
@@ -53,7 +54,7 @@ class ToolsRenderData():
     """
     def __init__(self):
         self.profile_index = None
-        # The DEPRECATED values are part of save data and cannot be removed without braking save files.
+        # The DEPRECATED values are part of save data and cannot be removed without breaking save files.
         self.use_default_profile = None # DEPRECATED, 'profile_index' is used.
         self.use_preset_encodings = None  # DEPRECATED 'encoding_option_index', 'quality_option_index' are used.
         self.presets_index = None  # DEPRECATED, 'encoding_option_index', 'quality_option_index' are used.
@@ -99,6 +100,15 @@ def create_container_clip_default_render_data_object(profile):
     render_data.file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME
     render_data.file_extension = ".mp4"
 
+    # Set default encoding if available. Only main app usage has not-None PROJECT().
+    # Gmic and scriptool TOOLS don't get this data, but when rendered as timeline caontainer clips, data is used. 
+    if PROJECT() != None:
+        default_encoding = PROJECT().container_default_encoding
+        if default_encoding != None:
+            enc_index, q_index = default_encoding
+            render_data.encoding_option_index = enc_index
+            render_data.quality_option_index = q_index
+
     return render_data
 
 def create_container_clip_default_alpha_render_data_object(profile):
@@ -135,6 +145,8 @@ def get_render_type_from_render_data(render_data):
 def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
     """
     Widgets for editing render properties and viewing render progress.
+    
+    These are RE_INITIALIZED always when using this module from main app.
     """
     global widgets, disable_audio_encoding, default_profile_index
     default_profile_index = def_profile_index
@@ -200,8 +212,25 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
             widgets.video_clip_panel.video_clip_combo.set_active(video_clip_combo_index)
             widgets.file_panel.render_location_combo.set_active(render_location_combo_index)
             widgets.file_panel.frame_name.set_text(render_data.frame_name)
-            
+    else:
+        if PROJECT() != None:
+            if PROJECT().container_default_encoding != None:
+                encoding_option_index, quality_option_index =  PROJECT().container_default_encoding 
+                enc_opt = renderconsumer.encoding_options[encoding_option_index]
+                widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_opt.name)
+                widgets.encoding_panel.quality_selector.widget.set_active(quality_option_index)
+
     return render_panel
+
+def get_default_encoding_setting_panel(default_encoding):
+    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
+    if default_encoding != None:
+        encoding_option_index, quality_option_index = default_encoding
+        enc_opt = renderconsumer.encoding_options[encoding_option_index]
+        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_opt.name)
+        widgets.encoding_panel.quality_selector.widget.set_active(quality_option_index)
+
+    return encoding_panel
 
 def get_profile_info_small_box(profile):
     text = get_profile_info_text(profile)
