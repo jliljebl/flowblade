@@ -959,6 +959,9 @@ def _split_audio_synched(data):
 def _set_audio_sync_clip(data):
     audiosync.init_select_tline_sync_clip(_get_data_with_xpos(data))
 
+def _set_container_default_enconding(data):
+    containerclip.set_project_default_video_endoding(data)
+
 def _render_tline_generator(data):
     clip, track, item_id, item_data = data
     clip, track, x = _popover_clip_data
@@ -1159,6 +1162,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":_render_tline_generator,
                   "cc_set_encoding":_render_tline_generator,
+                  "cc_default_encoding":_set_container_default_enconding,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_render_settings":containerclip.set_render_settings,
                   "cc_edit_program":containerclip.edit_program,

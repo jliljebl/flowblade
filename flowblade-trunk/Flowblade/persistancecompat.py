@@ -135,7 +135,10 @@ def FIX_MISSING_PROJECT_ATTRS(project):
 
     if(not hasattr(project, "tracking_data")):
         project.tracking_data = {}
-        
+
+    if(not hasattr(project, "container_default_encoding")):
+        project.container_default_encoding = None
+
 def FIX_MISSING_BIN_ATTRS(bin):
     if(not hasattr(bin, "uid")):
         bin.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
