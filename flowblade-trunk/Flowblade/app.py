@@ -204,10 +204,6 @@ def main(root_path):
 
     editorpersistance.save()
 
-    b = 2
-    a = lambda x:x+b
-    print(type(a))
-
     # Create app.
     app = FlowbladeApplication()
     global _app
