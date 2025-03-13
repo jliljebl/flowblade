@@ -684,9 +684,6 @@ class FadeLengthEditor(Gtk.HBox):
 def _get_fade_length_editor(editable_property):
     return FadeLengthEditor(editable_property)
 
-
-
-
 def _get_file_select_editor(editable_property):
     """
     Returns GUI component for selecting file of determined type
@@ -716,7 +713,7 @@ def _get_file_select_editor(editable_property):
     file_select_button.set_size_request(210, 28)
     # TODO: check this out
     if hasattr(editable_property, "value") and editable_property.value != '' and editable_property.value != '""':
-        file_select_button.set_uri(GLib.filename_to_uri(editable_property.value))
+        file_select_button.set_filename(editable_property.value)
 
     file_select_label = Gtk.Label(label=editable_property.get_display_name())
 

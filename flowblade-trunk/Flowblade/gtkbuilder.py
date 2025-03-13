@@ -74,6 +74,7 @@ def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=Non
     b.set_current_folder = lambda fp : _set_current_folder(b, fp)
     b.get_current_folder = lambda : _get_current_folder(b)
     b.set_current_folder_uri = lambda : _set_current_folder_uri(b)
+    b.set_filename = lambda fn : _set_filename(b, fn)
     b.get_filenames = lambda : _get_filenames(b)
     b.get_filename = lambda : _get_filename(b)
     b.add_filter = lambda ff :_add_filter(b, ff)
@@ -134,7 +135,6 @@ def _file_selection_done(dialog, response_id):
     
     if b.priv_selection_changed_listener != None:
         b.priv_selection_changed_listener(b, b.priv_selection_changed_data)
-    
 
 def _set_file_action(b, action):
     b.priv_action = action
@@ -166,6 +166,11 @@ def _get_filename(b):
         return b.priv_filenames[0]
     except:
         return None
+
+def _set_filename(b, fn):
+    b.priv_filenames = []
+    b.priv_filenames.append(fn)
+    b.set_label(_filename(b.priv_filenames[0]))
 
 def _get_current_folder(b):
     return b.priv_current_folder
