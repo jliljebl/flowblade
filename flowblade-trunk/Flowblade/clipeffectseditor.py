@@ -275,6 +275,7 @@ class FilterStackItem:
         self.widget.pack_start(self.trash_vbox, False, False, 0)
         self.widget.pack_start(self.up_vbox, False, False, 0)
         self.widget.pack_start(self.down_vbox, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(10,2), False, False, 0)
 
         self.widget.show_all()
 
