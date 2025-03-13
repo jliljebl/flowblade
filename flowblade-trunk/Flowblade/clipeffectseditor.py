@@ -248,20 +248,59 @@ class FilterStackItem:
         surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trash.png")
         trash_button = guicomponents.PressLaunch(self.trash_pressed, surface, w=22, h=22)
         
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_up_arrow.png")
+        up_button = guicomponents.PressLaunch(self.up_pressed, surface, w=10, h=22)
+        up_button.surface_x = 0
+
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_down_arrow.png")
+        down_button = guicomponents.PressLaunch(self.down_pressed, surface, w=10, h=22)
+        down_button.surface_x = 0
+        down_button.surface_y = 10
+        
         self.trash_vbox = Gtk.VBox(False, 0)
         self.trash_vbox.pack_start(trash_button.widget, False, False, 0)
         self.trash_vbox.pack_start(Gtk.Label(), True, True, 0)
+
+        self.up_vbox = Gtk.VBox(False, 0)
+        self.up_vbox.pack_start(up_button.widget, False, False, 0)
+        self.up_vbox.pack_start(Gtk.Label(), True, True, 0)
+
+        self.down_vbox = Gtk.VBox(False, 0)
+        self.down_vbox.pack_start(down_button.widget, False, False, 0)
+        self.down_vbox.pack_start(Gtk.Label(), True, True, 0)
         
         self.widget = Gtk.HBox(False, 0)
         self.widget.pack_start(self.active_check_vbox, False, False, 0)
         self.widget.pack_start(self.expander_frame, True, True, 0)
         self.widget.pack_start(self.trash_vbox, False, False, 0)
-        self.widget.pack_start(guiutils.pad_label(10,2), False, False, 0)
+        self.widget.pack_start(self.up_vbox, False, False, 0)
+        self.widget.pack_start(self.down_vbox, False, False, 0)
+
         self.widget.show_all()
 
     def trash_pressed(self, w, e):
         self.filter_stack.delete_filter_for_stack_item(self)
-    
+
+    def up_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == 0:
+            return
+        to_index = from_index - 1
+
+        do_stack_move(self.filter_stack.clip, to_index, from_index, False)
+
+    def down_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == len(self.filter_stack.filter_stack) - 1:
+            return
+        to_index = from_index + 1
+
+        do_stack_move(self.filter_stack.clip, to_index, from_index, False)
+
     def toggle_filter_active(self, widget):
         self.filter_object.active = (self.filter_object.active == False)
         self.filter_object.update_mlt_disabled_value()
@@ -693,7 +732,7 @@ def _toggle_all_pressed():
     update_stack(clip, track, clip_index)
     _filter_stack.set_expanded(expanded_panels)
 
-def do_stack_move(clip, insert_row, delete_row):
+def do_stack_move(clip, insert_row, delete_row, expand=True):
     data = {"clip":clip,
             "insert_index":insert_row,
             "delete_index":delete_row,
@@ -701,7 +740,10 @@ def do_stack_move(clip, insert_row, delete_row):
     action = edit.move_filter_action(data)
     set_stack_update_blocked()
     action.do_edit()
-    _filter_stack.set_single_expanded(insert_row)
+    if expand:
+        _filter_stack.set_single_expanded(insert_row)
+    else:
+        _filter_stack.set_all_filters_expanded_state(False)
     set_stack_update_unblocked()
 
 def reinit_stack_if_needed(force_update):
