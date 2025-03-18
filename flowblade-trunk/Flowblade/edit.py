@@ -607,6 +607,21 @@ def _append_redo(self):
     self.clip.index = self.track.count()
     append_clip(self.track, self.clip, self.clip_in, self.clip_out)
 
+#-------------------- APPEND MULTIPLE CLIPS
+# "track","clips"
+# Appends clip to track
+def append_multiple_action(data):
+    action = EditAction(_append_multiple_undo,_append_multiple_redo, data)
+    return action
+
+def _append_multiple_undo(self):
+    for add_clip in self.clips:
+        self.clip = _remove_clip(self.track, self.append_index)
+
+def _append_multiple_redo(self):
+    self.append_index = self.track.count()
+    for add_clip in self.clips:
+        append_clip(self.track, add_clip, add_clip.clip_in, add_clip.clip_out)
 
 #----------------- REMOVE MULTIPLE CLIPS
 # "track","from_index","to_index"

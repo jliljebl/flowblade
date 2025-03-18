@@ -1032,9 +1032,12 @@ def do_timeline_objects_paste():
         
         # Paste clips.
         # Clips are pasted after track content end.
-        print(track.get_length(), tline_pos)
-        if track.get_length() < tline_pos:
-            print("insert_multiple_after_end_action")
+        if track.get_length() - 2 < tline_pos:
+            data = {"track":track,
+                    "clips":new_clips}
+            action = edit.append_multiple_action(data)
+            action.do_edit()
+        elif track.get_length() < tline_pos:
             blank_length = tline_pos - track.get_length() 
             # Do edit
             data = {"track":track,
@@ -1057,9 +1060,6 @@ def do_timeline_objects_paste():
             if paste_on_cut == True:
                 editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
             else:
-                print("cONSOLIDATED do_multiple_clip_insert")
-                #cut_action = cut_pressed(True)
-
                 # Get index and clip
                 index = track.get_clip_index_at(int(tline_pos))
                 clip = track.clips[index]            
