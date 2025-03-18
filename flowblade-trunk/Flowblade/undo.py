@@ -226,15 +226,15 @@ def _visitDFS(node, nodes):
     global is_cyclic
     
     node.color = GREY
-    
+
     target_nodes = node.get_target_nodes(nodes)
-    
+
     for target_node in target_nodes:
         if target_node.color == GREY:
             is_cyclic = True
         if target_node.color == WHITE:
             _visitDFS(target_node, nodes)
-            
+
     node.color = BLACK
 
 
