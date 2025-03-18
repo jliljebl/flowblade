@@ -662,6 +662,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         cr.set_source_surface(type_icon, 1, 30)
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
+        surface.write_to_png(icon_path)
         return (surface, length, icon_path)
 
 
