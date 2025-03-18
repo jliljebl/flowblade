@@ -209,7 +209,11 @@ def _run_seq_link_cyclic_test(project):
                 if clip.link_seq_data == None:
                     continue
                 else:
-                    node.targets.append(clip.link_seq_data)
+                    try:
+                        node.targets.append(clip.link_seq_data)
+                    except AttributeError:
+                        # Is already a set.
+                        node.targets.add(clip.link_seq_data)
                     node.targets = set(node.targets) 
 
     for node in nodes:
