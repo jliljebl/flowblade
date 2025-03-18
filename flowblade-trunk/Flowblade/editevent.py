@@ -102,9 +102,9 @@ def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
 def do_multiple_clip_insert(track, clips, tline_pos, use_as_action_build_func_for_paste=False):
     index = _get_insert_index(track, tline_pos)
     
-    if use_as_action_build_func_for_paste == True:
-        # For this use case there happens a cut before the insert is done.
-        index += 1
+    #if use_as_action_build_func_for_paste == True:
+    #    # For this use case there happens a cut before the insert is done.
+    #    index += 1
     
     # Can't put audio media on video track
     for new_clip in clips:
