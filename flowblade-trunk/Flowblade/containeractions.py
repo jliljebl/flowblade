@@ -1114,6 +1114,7 @@ class SequenceLinkContainerActions(AbstractContainerActionObject):
         type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_SEQUENCE_LINK)
         cr.set_source_surface(type_icon, 0, 0)
         cr.paint()
+        surface.write_to_png(icon_path)
         return (surface, length, icon_path)
 
     def abort_render(self):
