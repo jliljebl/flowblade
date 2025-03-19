@@ -368,10 +368,6 @@ class EditAction:
     def undo(self):
         PLAYER().stop_playback()
 
-        # HACK, see above in __init()__
-        if self.stop_for_edit:
-            PLAYER().consumer.stop()
-
         movemodes.clear_selected_clips()  # selection not valid after change in sequence
         _remove_trailing_blanks_undo(self)
         _consolidate_all_blanks_undo(self)
@@ -381,20 +377,12 @@ class EditAction:
         _remove_all_trailing_blanks(None)
 
         resync.calculate_and_set_child_clip_sync_states()
-    
-        # HACK, see above.
-        if self.stop_for_edit:
-            PLAYER().consumer.start()
         
         if do_gui_update:
             self._update_gui()
             
     def redo(self):
         PLAYER().stop_playback()
-
-        # HACK, see above in __init()__
-        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
-            PLAYER().consumer.stop()
 
         movemodes.clear_selected_clips() # selection is not valid after a change in sequence
 
@@ -404,10 +392,6 @@ class EditAction:
         _remove_trailing_blanks_redo(self)
 
         resync.calculate_and_set_child_clip_sync_states()
-
-        # HACK, see above.
-        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
-            PLAYER().consumer.start()
                 
         # Update GUI.
         if do_gui_update:
@@ -465,10 +449,6 @@ class ConsolidatedEditAction:
         # same for all the consolidated edits for this to work reliably.
         if self.edit_actions[0].exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
-
-        # We only want to do one consumer stop per group.
-        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
-            PLAYER().consumer.stop()
             
         for edit_action in self.edit_actions:
             edit_action.is_part_of_consolidated_group = True
@@ -496,10 +476,6 @@ class ConsolidatedEditAction:
             trackaction.maybe_do_auto_expand(tracks_clips_count_before)
         
         undo.register_edit(self)
-
-        # We only want to do one consumer start per group.
-        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
-            PLAYER().consumer.start()
 
         undo.force_revert_if_cyclic_seq_links(PROJECT())
         
