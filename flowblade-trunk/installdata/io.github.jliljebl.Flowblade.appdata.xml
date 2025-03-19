@@ -31,6 +31,16 @@
         </ul>
       </description>
     </release>
+     <release version="2.18.1" date="2025-2-16">
+      <description>
+      <p>New features:</p>
+        <ul>
+          <li>Credits Scroll Generator</li>
+          <li>Slow motion creation from Timeline Clips</li>
+          <li>Alpha video rendering</li>
+        </ul>
+      </description>
+    </release>
      <release version="2.18" date="2024-12-18">
       <description>
       <p>New features:</p>
