@@ -285,6 +285,12 @@ def sync_menu_show(launcher, widget, properties_set_callback, split_mirror_callb
         _sync_menu = menu_clear_or_create(_sync_menu)
             
         properties_section = Gio.Menu.new()
+
+        
+        add_menu_action_check(properties_section, _("Show Synch Relations"), "midbar.sync.showsync", editorpersistance.prefs.show_sync, "showsync", properties_set_callback)
+        _sync_menu.append_section(None, properties_section)
+
+        mirror_section = Gio.Menu.new()
         _autosync_split_submenu = menu_clear_or_create(_autosync_split_submenu)
         items_data = [  ( _("Off"), str(appconsts.AUDIO_AUTO_SPLIT_OFF)), 
                         (_("On All Video Tracks"), str(appconsts.AUDIO_AUTO_SPLIT_ALL_TACKS)),
@@ -292,13 +298,7 @@ def sync_menu_show(launcher, widget, properties_set_callback, split_mirror_callb
                         ( _("On Track V1"), str(appconsts.AUDIO_AUTO_SPLIT_V1)) ]
         active_index = editorpersistance.prefs.sync_autosplit
         add_menu_action_all_items_radio(_autosync_split_submenu, items_data,  "midbar.sync.autosplit", active_index, sync_callback)
-        properties_section.append_submenu(_("Auto Sync Split Video Clips on Add"), _autosync_split_submenu)
-        
-        add_menu_action_check(properties_section, _("Dual Trim Synched Clips"), "midbar.sync.dualtrim", editorpersistance.prefs.sync_dualtrim, "dualtrim", properties_set_callback)
-        add_menu_action_check(properties_section, _("Show Synch Relations"), "midbar.sync.showsync", editorpersistance.prefs.show_sync, "showsync", properties_set_callback)
-        _sync_menu.append_section(None, properties_section)
-
-        mirror_section = Gio.Menu.new()
+        mirror_section.append_submenu(_("Auto Sync Split Video Clips on Add"), _autosync_split_submenu)
         items_data =[(_("Audio Split To Mirrored Track"), "splitmirror"), (_("Audio Split To V1 Always"), "splitv1")]
         if  editorpersistance.prefs.sync_mirror == True:
             active_index = 0
