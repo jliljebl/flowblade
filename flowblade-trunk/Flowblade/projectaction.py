@@ -2521,7 +2521,7 @@ def display_render_stabilized_dialog(media_file):
     stab_widgets = utils.EmptyClass()
 
     stab_widgets.file_name = Gtk.Entry()
-    stab_widgets.file_name.set_text(name + "_MOTION")
+    stab_widgets.file_name.set_text(name + "_STABILIZED")
     
     stab_widgets.extension_label = Gtk.Label()
     stab_widgets.extension_label.set_size_request(45, 20)

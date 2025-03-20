@@ -22,6 +22,8 @@ try:
     import mlt7 as mlt
 except:
     import mlt
+    
+import os
 import threading
 import time
 
