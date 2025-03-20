@@ -442,14 +442,17 @@ class ConsolidatedEditAction:
     def do_consolidated_edit(self):
         # There is 1 - n edits in these,
         # and they are assumed to be all of the same type.
-        # ...well, they need to have properties:
+        # More precisely, they need to have properties:
         #    .exit_active_trimmode_on_edit
         #    .turn_on_stop_for_edit
-        #    .exit_active_trimmode_on_edit
         # same for all the consolidated edits for this to work reliably.
         if self.edit_actions[0].exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
-            
+
+        # We only do one gui update.
+        global do_gui_update
+        do_gui_update = False
+
         for edit_action in self.edit_actions:
             edit_action.is_part_of_consolidated_group = True
             
@@ -464,7 +467,11 @@ class ConsolidatedEditAction:
                 old_index = self.edit_actions.index(edit_action)
                 self.edit_actions[old_index] = new_edit_action
                 edit_action = new_edit_action
-                
+
+            # Enable GUI update for last action.
+            if edit_action is self.edit_actions[len(self.edit_actions) - 1]:
+                do_gui_update = True
+
             edit_action.redo()
 
             if edit_action.turn_on_stop_for_edit:
@@ -474,17 +481,33 @@ class ConsolidatedEditAction:
             edit_done_since_last_save = True
 
             trackaction.maybe_do_auto_expand(tracks_clips_count_before)
-        
+
+        do_gui_update = True
+                
         undo.register_edit(self)
 
         undo.force_revert_if_cyclic_seq_links(PROJECT())
         
     def redo(self):
+        # We only do one gui update.
+        global do_gui_update
+        do_gui_update = False
+        
         for edit_action in self.edit_actions:
+            if edit_action is self.edit_actions[len(self.edit_actions) - 1]:
+                do_gui_update = True
+
             edit_action.redo()
             
     def undo(self):
+        # We only do one gui update.
+        global do_gui_update
+        do_gui_update = False
+        
         for edit_action in reversed(self.edit_actions):
+            if edit_action is self.edit_actions[0]:
+                do_gui_update = True
+
             edit_action.undo()
 
 
