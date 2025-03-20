@@ -320,7 +320,10 @@ def _load_template_callback(dialog, response_id):
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
 
-
+    _add_plugin_window.position_listener(0.5, _add_plugin_window.producer.get_length())
+    _add_plugin_window.pos_bar.set_normalized_pos(0.5)
+    _add_plugin_window._show_preview()
+ 
     dialog.destroy()
     
 # --------------------------------------------------------- Window
