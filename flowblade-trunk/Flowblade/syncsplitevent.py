@@ -63,7 +63,7 @@ def split_audio_synched(popup_data):
         
     split_action, parent_clip, child_clip, child_clip_track = _get_split_audio_edit_action(popup_data)
     split_action.do_edit()
-    sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip)
+    sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip, track)
     sync_action.do_edit()
 
 def split_audio_synched_from_clips_list(clips, track):
@@ -94,7 +94,7 @@ def split_audio_synched_from_clips_list(clips, track):
     for split_data in split_actions_data:
         parent_clip, child_clip, child_clip_track = split_data
         
-        sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip)
+        sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip, track)
         set_sync_actions.append(sync_action)
 
     sync_consolidated_action = edit.ConsolidatedEditAction(set_sync_actions)
@@ -131,9 +131,7 @@ def _auto_sync_split_menu_item_item_activated(action, new_value_variant):
     editorpersistance.save()
     action.set_state(new_value_variant)
 
-def _get_set_sync_action(child_clip_track, child_clip, parent_clip):
-    # This is quarenteed because GUI option to do this is only available on this track
-    parent_track = current_sequence().tracks[current_sequence().first_video_index]
+def _get_set_sync_action(child_clip_track, child_clip, parent_clip, parent_track):
     child_index = child_clip_track.clips.index(child_clip)
     parent_clip_index = parent_track.clips.index(parent_clip)
     
@@ -181,10 +179,16 @@ def _do_split_audio_edit(popup_data):
     return _get_split_audio_edit_action(popup_data)
 
 def _get_split_audio_edit_action(popup_data):
-    # NOTE: THIS HARD CODES ALL SPLITS TO HAPPEN TO TRACK A1, THIS MAY CHANGE
-    to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
-
     clip, track, item_id, x = popup_data
+
+    if editorpersistance.prefs.sync_mirror == False:
+        to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
+    else:
+        to_track_id = (current_sequence().first_video_index - 1) - (track.id - current_sequence().first_video_index)
+        if to_track_id < 1:
+            to_track_id = 1
+        to_track = current_sequence().tracks[to_track_id]
+        
     press_frame = tlinewidgets.get_frame(x)
     index = current_sequence().get_clip_index(track, press_frame)
     frame = track.clip_start(index)
