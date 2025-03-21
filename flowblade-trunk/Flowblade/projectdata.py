@@ -277,7 +277,6 @@ class Project:
 
         self.c_bin.file_ids.pop(media_file.id)
 
-
     def get_unused_media(self):
         # Create path -> media item dict
         path_to_media_object = {}

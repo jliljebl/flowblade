@@ -1942,8 +1942,29 @@ class TimeLineCanvas:
                     except: # thumbnail not found  in dict, get it and  paint it.
                         try:
                             if clip.container_data == None:
-                                media_file = PROJECT().get_media_file_for_path(clip.path)
-                                thumb_img = media_file.icon
+                                if clip.slowmo_data == None:
+                                    # normal clip
+                                    media_file = PROJECT().get_media_file_for_path(clip.path)
+                                    thumb_img = media_file.icon
+                                else:
+                                    # slowmo clip
+                                    slowmo_type, orig_media_file_path, \
+                                    slowmo_clip_media_area, slowmo_speed_data,\
+                                    orig_media_in, orig_media_out = clip.slowmo_data
+                                    media_file = PROJECT().get_media_file_for_path(orig_media_file_path)
+                                    if media_file != None:
+                                        thumb_img = media_file.icon
+                                    else:
+                                        # Original media file not present and we don't want to start rendering, 
+                                        # so we'll just use a default slowmo icon.
+                                        icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slowmo.png")
+                                        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+                                        cr2 = cairo.Context(scaled_icon)
+                                        cr2.scale(float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
+                                        cr2.set_source_surface(icon, 0, 0)
+                                        cr2.paint()
+                                        thumb_img = scaled_icon
+                                                
                             else:
                                 media_file = PROJECT().get_media_file_for_path(clip.path)
                                 if media_file != None:
