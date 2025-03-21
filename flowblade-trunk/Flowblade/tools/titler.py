@@ -767,7 +767,7 @@ class Titler(Gtk.Window):
                 toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
             else:
                 dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
-                                                            _("Select Tile Name"),
+                                                            _("Select Title Name"),
                                                             _("Set Name"),
                                                             _("Title Name:"),
                                                             _("Title"))

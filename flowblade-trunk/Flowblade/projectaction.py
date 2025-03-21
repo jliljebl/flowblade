@@ -29,6 +29,8 @@ try:
     import mlt7 as mlt
 except:
     import mlt
+
+import copy
 import os
 from os import listdir
 from os.path import isfile, join, expanduser
@@ -2240,6 +2242,7 @@ def _append_sequence(import_seq):
             import_clip = import_track.clips[j]
             if import_clip.is_blanck_clip != True:
                 import_clip_clone = current_sequence().create_clone_clip(import_clip)
+                _clip_clone_attributes(import_clip_clone, import_clip)
                 edit.append_clip(track, import_clip_clone, import_clip_clone.clip_in, import_clip_clone.clip_out)
             else:
                 edit._insert_blank(track, insert_start_index + j, import_clip.clip_out - import_clip.clip_in + 1)
@@ -2337,7 +2340,12 @@ def _insert_sequence(import_seq):
     undo.clear_undos()
     
     updater.repaint_tline()
-    
+
+def _clip_clone_attributes(import_clip_clone, import_clip):
+    import_clip_clone.name = import_clip.name
+    import_clip_clone.titler_data = copy.deepcopy(import_clip.titler_data)
+    import_clip_clone.slowmo_data = copy.deepcopy(import_clip.slowmo_data)
+
 def _get_sequence_import_range(import_seq):
     # Compute corresponding tracks, import sequence may have less audio and/or video tracks
     first_video_off = current_sequence().first_video_index - import_seq.first_video_index
