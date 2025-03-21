@@ -26,9 +26,9 @@ try:
     import mlt7 as mlt
 except:
     import mlt
-import os
 
 import hashlib
+import os
 
 import appconsts
 import edit
@@ -523,6 +523,7 @@ class Sequence:
         if clip.media_type != appconsts.PATTERN_PRODUCER:
             clone_clip = self.create_file_producer_clip(clip.path, None, False, clip.ttl) # file producer
         else:
+            # Pattern producers are deprecated, look to remove this.
             clone_clip = self.create_pattern_producer(clip.create_data) # pattern producer
         self.clone_clip_and_filters(clip, clone_clip)
         return clone_clip
@@ -533,10 +534,11 @@ class Sequence:
         used in another clip's place, but not id, master_clip and selection
         properties that are part of original clips state in sequence.
         """
+        clone_clip.name = clip.name
         clone_clip.clip_in = clip.clip_in
         clone_clip.clip_out = clip.clip_out
         clone_clip.filters = []
-        
+    
         for f in clip.filters:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)

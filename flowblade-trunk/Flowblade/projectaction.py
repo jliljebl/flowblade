@@ -2205,7 +2205,6 @@ def duplicate_sequence():
         "mark_in_frame":0,
         "mark_out_frame":1
     }
-
     action = edit.range_delete_action(data)
     action.do_edit()
 
