@@ -1498,7 +1498,7 @@ def _media_import_data_ready():
         
     if len(generators_list) > 0:
         primary_txt = _("Generators are not imported from another Projects!")
-        secondary_text = _("You attempted to import %s Generator/s.\n\nPlease use Project/Add Generator/Save/Load Generator Template -feature\nto create reusable Generators.") 
+        secondary_text = _("You attempted to import %s Generator/s.\n\nPlease use <b>Project/Add Generator.../Save/Load Generator Template</b> -feature\nto create reusable Generators.") 
         secondary_text = secondary_text  % (str(len(generators_list)))
 
         dialogutils.info_message(primary_txt, secondary_text, gui.editor_window.window)
