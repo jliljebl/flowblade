@@ -20,6 +20,7 @@
 
 from gi.repository import Gtk, GLib
 
+import copy
 import hashlib
 import os
 import shutil
@@ -61,15 +62,17 @@ class ContainerClipData:
             self.container_clip_uid = -1 # This is set at clip creation time.
 
             self.container_type = container_type
-            self.program = program # path to program file, used by generator and gmic containers.
+            self.program = program # path to program file, used by Generators and Gmic containers.
 
-            self.rendered_media = None
+            self.rendered_media = None # lives in directory specified by 'self.container_clip_uid' in vault 'container_data' directory.
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
             self.last_render_type = containeractions.FULL_RENDER
             
-            self.unrendered_media = unrendered_media
+            self.unrendered_media = unrendered_media # 'unrendered_media' is created before ContainerClipData and 
+                                                     # lives in user file system (GMic) or vault 'rendered_clips' directory (rest).
             self.unrendered_length = None # This is also maximum length for media produced using this container data.
+                                          
             # This gets set later for some container types
             if unrendered_media != None:
                 self.unrendered_type = utils.get_media_type(unrendered_media)
@@ -485,3 +488,12 @@ class ContainerClipMediaItem:
             cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
             self.icon = scaled_icon
 
+# ---------------------------------------------------------------- cloning
+def container_clone(clone_clip, old_clip):
+    clone_clip.container_data = copy.deepcopy(old_clip.container_data)
+    clone_clip.container_data.generate_clip_id()
+
+    action_object = containeractions.get_action_object(clone_clip.container_data)
+    action_object.clone_container_data_files(old_clip)
+    
+    

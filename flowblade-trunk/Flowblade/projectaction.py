@@ -2242,6 +2242,9 @@ def _append_sequence(import_seq):
             import_clip = import_track.clips[j]
             if import_clip.is_blanck_clip != True:
                 import_clip_clone = current_sequence().create_clone_clip(import_clip)
+                if import_clip.container_data != None:
+                    containerclip.container_clone(import_clip_clone, import_clip)
+
                 _clip_clone_attributes(import_clip_clone, import_clip)
                 edit.append_clip(track, import_clip_clone, import_clip_clone.clip_in, import_clip_clone.clip_out)
             else:
@@ -2302,6 +2305,8 @@ def _insert_sequence(import_seq):
             import_clip = import_track.clips[j]
             if import_clip.is_blanck_clip != True:
                 import_clip_clone = current_sequence().create_clone_clip(import_clip)
+                if import_clip.container_data != None:
+                    containerclip.container_clone(import_clip_clone, import_clip)
                 edit._insert_clip(track, import_clip_clone, insert_start_index + j, import_clip_clone.clip_in, import_clip_clone.clip_out)
             else:
                 edit._insert_blank(track, insert_start_index + j, import_clip.clip_out - import_clip.clip_in + 1)

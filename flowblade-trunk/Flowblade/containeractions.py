@@ -22,6 +22,7 @@ from gi.repository import GLib
 
 import cairo
 import copy
+import distutils
 import hashlib
 import json
 try:
@@ -178,6 +179,25 @@ class AbstractContainerActionObject:
             os.mkdir(clip_frames_folder)
         if not os.path.exists(rendered_frames_folder):
             os.mkdir(rendered_frames_folder)
+
+    def clone_container_data_files(self, orig_clip):
+        if orig_clip.container_data.rendered_media != None:
+            orig_clip_action = get_action_object(orig_clip.container_data)
+            src_dir = orig_clip_action.get_session_dir()
+            dst_dir = self.get_session_dir()
+            
+            distutils.dir_util.copy_tree(src_dir, dst_dir)
+
+            # Fix 'rendered_media' path.
+            rendered_path = None
+            for f in os.listdir(orig_clip_action.get_session_dir()):
+                if os.path.basename(f).split()[0] == "caintainer_clip":
+                    rendered_path = f
+
+            self.container_data.rendered_media = rendered_path
+
+        # This is only used between containers in same project so not cloning 
+        # file pointed to by 'container_data.unrendered_media' is acceptable.
 
     def validate_program(self):
         print("AbstractContainerActionObject.validate_program() not impl")
