@@ -73,7 +73,8 @@ class ProjectLoadThread(threading.Thread):
         
         target_project.c_seq = target_project.sequences[target_project.c_seq_index]
 
-        # Media file media assets and generator assets are handled a differently.
+        # Media file media assets are imported and generator assetsfile is used to info user
+        # generator clips are not imported.
         media_assets = ""
         generator_assets = []
 
