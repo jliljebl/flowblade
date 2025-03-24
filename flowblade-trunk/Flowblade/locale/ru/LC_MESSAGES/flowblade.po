@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-18 10:56+0200\n"
+"POT-Creation-Date: 2025-03-24 10:24+0200\n"
 "PO-Revision-Date: 2023-06-20 15:06+0300\n"
 "Last-Translator: Смольянинов Николай <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: ru\n"
@@ -35,112 +35,112 @@ msgstr "каждые 2 минуты"
 msgid "5 min"
 msgstr "каждые 5 минут"
 
-#: app.py:939
+#: app.py:945
 msgid "XDG Data folder location has changed!"
 msgstr ""
 
-#: app.py:940
+#: app.py:946
 msgid ""
 "Location of <b>Default XDG Data Store</b> has changed because value of "
 "<b>XDG Data Home</b> variable has changed.\n"
 "\n"
 msgstr ""
 
-#: app.py:941
+#: app.py:947
 msgid ""
 "Existing Projects with project data saved in <b>Default XDG Data Store</b> "
 "will continue to work,\n"
 msgstr ""
 
-#: app.py:942
+#: app.py:948
 msgid ""
 "but new projects will have data saved in the location specified by the new "
 "value <b>XDG Data Home</b> variable ."
 msgstr ""
 
-#: app.py:1027
+#: app.py:1033
 msgid "Too small screen for this application."
 msgstr "Недостаточное разрешение экрана."
 
-#: app.py:1029
+#: app.py:1035
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Минимальное разрешение экрана должно быть не ниже 1152 х 768.\n"
 
-#: app.py:1030
+#: app.py:1036
 msgid "Your screen dimensions are "
 msgstr "Разрешение вашего экрана "
 
-#: app.py:1041
+#: app.py:1047
 msgid "Cannot launch application because XDG folders init error."
 msgstr "Не удалось запустить приложение из-за ошибки инициализации папок XDG."
 
-#: app.py:1052
+#: app.py:1058
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr "Для запуска Flowblade 2.6 (или выше) требуется версия MLT не ниже 6.18"
 
-#: app.py:1053
+#: app.py:1059
 msgid "Your MLT version is: "
 msgstr "Ваша версия MLT: "
 
-#: app.py:1053
+#: app.py:1059
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Установите MLT 6.18 или выше для запуска Flowblade."
 
-#: app.py:1127 projectaction.py:555 projectaction.py:757
+#: app.py:1133 projectaction.py:559 projectaction.py:761
 msgid "Project has not been saved previously"
 msgstr "Проект не был сохранён"
 
-#: app.py:1128 projectaction.py:556 projectaction.py:758
+#: app.py:1134 projectaction.py:560 projectaction.py:762
 msgid "Save project with File -> Save As before closing."
 msgstr "Сохраните проект перед закрытием (Файл ⇨ Сохранить как...)."
 
-#: projectaction.py:147
+#: projectaction.py:151
 msgid "Opening"
 msgstr "Открытие"
 
-#: projectaction.py:226
+#: projectaction.py:230
 msgid "Media asset was missing!"
 msgstr "Медиафайлы потеряны!"
 
-#: projectaction.py:227
+#: projectaction.py:231
 msgid "Path of missing asset:"
 msgstr "Путь к потерянному файлу:"
 
-#: projectaction.py:228
+#: projectaction.py:232
 msgid ""
 "Relative search for replacement file in sub folders of project file failed."
 msgstr ""
 "Не удалось найти медиафайл по относительному пути во вложенных папках "
 "проекта для его замены."
 
-#: projectaction.py:229
+#: projectaction.py:233
 msgid "To load the project you will need to either:"
 msgstr "Для загрузки проекта выполните одно из действий:"
 
-#: projectaction.py:230
+#: projectaction.py:234
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
 "Откройте проект в «Перелинковщике медиа», чтобы повторно связать пути с "
 "новыми файлами"
 
-#: projectaction.py:231
+#: projectaction.py:235
 msgid "Place a file with the same exact name and path on the hard drive"
 msgstr "Расположите файл по тому же пути и с тем же именем"
 
-#: projectaction.py:232
+#: projectaction.py:236
 msgid "Open project in Media Relinker tool"
 msgstr "Открыть проект в Перелинковщике медиа"
 
-#: projectaction.py:251
+#: projectaction.py:255
 msgid "Profile with Description: '"
 msgstr "Профиль с описанием: '"
 
-#: projectaction.py:251
+#: projectaction.py:255
 msgid "' was not found on load!"
 msgstr "' не найден при загрузке!"
 
-#: projectaction.py:252
+#: projectaction.py:256
 msgid ""
 "It is possible to load the project by creating a User Profile with exactly "
 "the same Description\n"
@@ -150,23 +150,23 @@ msgstr ""
 "были\n"
 "в потерянном профиле. "
 
-#: projectaction.py:253
+#: projectaction.py:257
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr ""
 "Пользовательские профили создаются через меню «Правка ⇨ Менеджер профилей»."
 
-#: projectaction.py:360
+#: projectaction.py:364
 msgid "Opening animated .gif file was refused!"
 msgstr "Открытие анимированного файла .gif невозможно!"
 
-#: projectaction.py:361
+#: projectaction.py:365
 msgid ""
 "Flowblade does not support displaying animated GIF files as media objects.\n"
 msgstr ""
 "Flowblade не поддерживает отображение анимированных файлов GIF\n"
 "в качестве медиаобъектов.\n"
 
-#: projectaction.py:362
+#: projectaction.py:366
 msgid ""
 "A possible workaround is to render GIF into a frame sequence and\n"
 "open that as a media item."
@@ -174,11 +174,11 @@ msgstr ""
 "Возможный обходной путь — это преобразование GIF в видеоряд\n"
 "и его открытие в качестве мультимедийного элемента."
 
-#: projectaction.py:366
+#: projectaction.py:370
 msgid "Opening files with unknown  extensions refused!"
 msgstr "Отказано в открытии файлов с неизвестными расширениями!"
 
-#: projectaction.py:367
+#: projectaction.py:371
 msgid ""
 "Flowblade does not open files that cannot be identified as media from file "
 "extensions.\n"
@@ -190,11 +190,11 @@ msgstr ""
 "Проблемные файлы:\n"
 "\n"
 
-#: projectaction.py:369
+#: projectaction.py:373
 msgid "Too many to list.\n"
 msgstr "Слишком большое количество для перечисления.\n"
 
-#: projectaction.py:374
+#: projectaction.py:378
 msgid ""
 "\n"
 "Add the correct extension to load a problem file."
@@ -202,11 +202,11 @@ msgstr ""
 "\n"
 "Добавьте правильное расширение для загрузки проблемного файла."
 
-#: projectaction.py:445
+#: projectaction.py:449
 msgid "Media files already present in project were opened!"
 msgstr "Клипы уже присутствуют в проекте и были открыты!"
 
-#: projectaction.py:451
+#: projectaction.py:455
 msgid ""
 "Files already present:\n"
 "\n"
@@ -214,7 +214,7 @@ msgstr ""
 "Файлы уже присутствуют:\n"
 "\n"
 
-#: projectaction.py:458
+#: projectaction.py:462
 msgid ""
 "\n"
 "No duplicate media items were added to project."
@@ -222,92 +222,92 @@ msgstr ""
 "\n"
 "Дублирующие медиафайлы не были добавлены в проект."
 
-#: projectaction.py:770
+#: projectaction.py:774
 msgid "Project not found on disk"
 msgstr "Проект не найден"
 
-#: projectaction.py:771
+#: projectaction.py:775
 msgid "Project can't be loaded."
 msgstr "Не удалось загрузить проект."
 
-#: projectaction.py:779
+#: projectaction.py:783
 msgid "Project has not been saved since it was opened."
 msgstr "Открытый проект не был сохранён."
 
-#: projectaction.py:784
+#: projectaction.py:788
 msgid "Project was saved less than a minute ago."
 msgstr "Проект был сохранён менее минуты назад."
 
-#: projectaction.py:787
+#: projectaction.py:791
 msgid "Project was saved one minute ago."
 msgstr "Проект был сохранён минуту назад."
 
-#: projectaction.py:789
+#: projectaction.py:793
 msgid "Project was saved "
 msgstr "Проект был сохранён "
 
-#: projectaction.py:789
+#: projectaction.py:793
 msgid " minutes ago."
 msgstr " минут назад."
 
-#: projectaction.py:819 dialogs.py:69 projectinfogui.py:50
+#: projectaction.py:823 dialogs.py:70 projectinfogui.py:50
 msgid "Profile"
 msgstr "Профиль"
 
-#: projectaction.py:822
+#: projectaction.py:826
 #, fuzzy
 msgid "Created:"
 msgstr "Создать"
 
-#: projectaction.py:833 projectdatavaultgui.py:167
+#: projectaction.py:837 projectdatavaultgui.py:167
 #, fuzzy
 msgid "Last Saved File:"
 msgstr "Вставить эффекты"
 
-#: projectaction.py:838 projectaction.py:846 projectdatavaultgui.py:172
+#: projectaction.py:842 projectaction.py:850 projectdatavaultgui.py:172
 #: projectdatavaultgui.py:181
 #, fuzzy
 msgid "Not Saved"
 msgstr "Не установлено"
 
-#: projectaction.py:841
+#: projectaction.py:845
 #, fuzzy
 msgid "Last Saved:"
 msgstr "Вставить эффекты"
 
-#: projectaction.py:849
+#: projectaction.py:853
 #, fuzzy
 msgid "Saved Times:"
 msgstr "Последний кадр на монтажном столе"
 
-#: projectaction.py:854
+#: projectaction.py:858
 #, fuzzy
 msgid "Media Items:"
 msgstr "Все медиафайлы"
 
-#: projectaction.py:858
+#: projectaction.py:862
 #, fuzzy
 msgid "Bins:"
 msgstr "Корзины"
 
-#: projectaction.py:862
+#: projectaction.py:866
 #, fuzzy
 msgid "Sequences:"
 msgstr "Видеоряд"
 
-#: projectaction.py:884
+#: projectaction.py:888
 msgid "Render target file exists!"
 msgstr "Целевой файл существует!"
 
-#: projectaction.py:885
+#: projectaction.py:889
 msgid "Confirm overwriting existing file."
 msgstr "Подтвердите перезапись существующего файла."
 
-#: projectaction.py:891
+#: projectaction.py:895
 msgid "Project is currently using proxy media!"
 msgstr "В проекте используются прокси-клипы!"
 
-#: projectaction.py:892
+#: projectaction.py:896
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -322,28 +322,28 @@ msgstr ""
 "\n"
 "Выберите «Подтвердить» для сборки из прокси-клипов."
 
-#: projectaction.py:984
+#: projectaction.py:988
 msgid "Render launch failed!"
 msgstr "Не удалось запустить сборку!"
 
-#: projectaction.py:985 projectaction.py:999 tools/batchrendering.py:358
-#: mediaplugin.py:825
+#: projectaction.py:989 projectaction.py:1003 tools/batchrendering.py:358
+#: mediaplugin.py:319 mediaplugin.py:890
 msgid "Error message: "
 msgstr "Сообщение об ошибке: "
 
-#: projectaction.py:998
+#: projectaction.py:1002
 msgid "Adding item to render queue failed!"
 msgstr "Не удалось добавить элемент в очередь!"
 
-#: projectaction.py:1068
+#: projectaction.py:1075
 msgid "Open.."
 msgstr "Открыть.."
 
-#: projectaction.py:1097
+#: projectaction.py:1104
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "Не удаётся открыть файл .mlt или .xml в качестве медиа!"
 
-#: projectaction.py:1098
+#: projectaction.py:1105
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
@@ -353,19 +353,19 @@ msgstr ""
 "\n"
 "Последний MLT XML файл содержит профиль: "
 
-#: projectaction.py:1118
+#: projectaction.py:1125
 msgid "No file was selected"
 msgstr "Ничего не выбрано"
 
-#: projectaction.py:1118
+#: projectaction.py:1125
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Выберите нумерованный файл для добавления серии изображений в проект."
 
-#: projectaction.py:1126
+#: projectaction.py:1133
 msgid "Not a sequence file!"
 msgstr "Файл не относится к серии изображений!"
 
-#: projectaction.py:1126
+#: projectaction.py:1133
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -373,84 +373,102 @@ msgstr ""
 "Выбранный файл не содержит номера в имени,\n"
 "поэтому он не будет отнесён к серии изображений."
 
-#: projectaction.py:1283
+#: projectaction.py:1290
 msgid "Cannot complete media replace action"
 msgstr ""
 
-#: projectaction.py:1284
+#: projectaction.py:1291
 msgid "Original and replace media are not of the same media type."
 msgstr ""
 
-#: projectaction.py:1388 projectaction.py:1390 projectaction.py:1399
-#: projectaction.py:1407 projectaction.py:1414 tools/batchrendering.py:1096
-#: clipmenuaction.py:204 clipmenuaction.py:206
+#: projectaction.py:1395 projectaction.py:1397 projectaction.py:1408
+#: projectaction.py:1409 projectaction.py:1410 projectaction.py:1418
+#: projectaction.py:1425 tools/batchrendering.py:1096 clipmenuaction.py:208
+#: clipmenuaction.py:210
 msgid "N/A"
 msgstr "Н/Д"
 
-#: projectaction.py:1403 guicomponents.py:1862 guicomponents.py:1897
+#: projectaction.py:1414 guicomponents.py:1828 guicomponents.py:1863
 #: projectdatavaultgui.py:327 projectdatavaultgui.py:480
 msgid "Yes"
 msgstr "Да"
 
-#: projectaction.py:1405 guicomponents.py:1864 guicomponents.py:1899
+#: projectaction.py:1416 guicomponents.py:1830 guicomponents.py:1865
 #: projectdatavaultgui.py:482
 msgid "No"
 msgstr "Нет"
 
-#: projectaction.py:1469
+#: projectaction.py:1482
 msgid "Select Project for Media Import"
 msgstr "Выберите проект для импорта медиа"
 
-#: projectaction.py:1515
+#: projectaction.py:1500
+msgid "Generators are not imported from another Projects!"
+msgstr ""
+
+#: projectaction.py:1501
+#, python-format
+msgid ""
+"You attempted to import %s Generator/s.\n"
+"\n"
+"Please use Project/Add Generator/Save/Load Generator Template -feature\n"
+"to create reusable Generators."
+msgstr ""
+
+#: projectaction.py:1512
 msgid "selection_"
 msgstr "выбор_"
 
-#: projectaction.py:1516
+#: projectaction.py:1513
 msgid "Save Selection Container Clip"
 msgstr "Сохранение данных контейнерного клипа"
 
-#: projectaction.py:1573 projectaction.py:1596 projectaction.py:1883
-#: projectaction.py:1899 projectdata.py:323 tlineaction.py:271
+#: projectaction.py:1570 projectaction.py:1591 projectaction.py:1933
+#: projectaction.py:1949 projectdata.py:327 tlineaction.py:271
 msgid "sequence_"
 msgstr "видеоряд_"
 
-#: projectaction.py:1574
+#: projectaction.py:1571
 msgid "Save Sequence Container Clip"
 msgstr "Сохранение контейнерного клипа из видеоряда"
 
-#: projectaction.py:1597
+#: projectaction.py:1592
 msgid "Save Sequence Compound Clip"
 msgstr "Сохранение составного клипа из видеоряда"
 
-#: projectaction.py:1623
+#: projectaction.py:1624 projectaction.py:1679
+msgid " LINK"
+msgstr ""
+
+#: projectaction.py:1638
 msgid "frame_"
 msgstr "кадр_"
 
-#: projectaction.py:1624
+#: projectaction.py:1639
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Создание составного клипа из последовательности стоп-кадров"
 
-#: projectaction.py:1757
+#: projectaction.py:1805
 msgid "Can't remove a non-empty bin"
 msgstr "Не удалось удалить корзину"
 
-#: projectaction.py:1758
+#: projectaction.py:1806
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Перед удалением корзины удалите всё её содержимое."
 
-#: projectaction.py:1766
+#: projectaction.py:1814
 msgid "Can't remove last bin"
 msgstr "Нельзя удалить единственную корзину"
 
-#: projectaction.py:1767
+#: projectaction.py:1815
 msgid "There must always exist at least one bin."
 msgstr "Всегда должна оставаться хотя бы одна корзина."
 
-#: projectaction.py:1856
+#: projectaction.py:1904
 msgid "Selected sequence is already being edited"
 msgstr "Выбранный видеоряд уже редактируется"
 
-#: projectaction.py:1857
+#: projectaction.py:1905
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -458,7 +476,7 @@ msgstr ""
 "Выберите другой видеоряд, или нажатием\n"
 "кнопки «Добавить» создайте новый."
 
-#: projectaction.py:1937
+#: projectaction.py:1987
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -466,612 +484,689 @@ msgstr ""
 "Уверены, что хотите удалить\n"
 "видеоряд'"
 
-#: projectaction.py:1937
+#: projectaction.py:1987
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1938
+#: projectaction.py:1988
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Эту операцию нельзя отменить. Видеоряд будет потерян."
 
-#: projectaction.py:1964
+#: projectaction.py:2014
 msgid "Can't remove last sequence"
 msgstr "Нельзя удалить единственный видеоряд"
 
-#: projectaction.py:1965
+#: projectaction.py:2015
 msgid "There must always exist at least one sequence."
 msgstr "Всегда должен оставаться хотя бы один видеоряд."
 
-#: projectaction.py:2047
+#: projectaction.py:2097
 #, fuzzy
 msgid "Can't add a new Track"
 msgstr "Нельзя вносить изменения в заблокированную дорожку"
 
-#: projectaction.py:2048
+#: projectaction.py:2098
 msgid "Sequence already has 21 tracks, which is the maximum number allowed."
 msgstr ""
 
-#: projectaction.py:2053
+#: projectaction.py:2103
 #, fuzzy
 msgid "Can't delete Video Track"
 msgstr "Максимизация видеодорожек"
 
-#: projectaction.py:2054
+#: projectaction.py:2104
 msgid "Sequence has to have one Video Track."
 msgstr ""
 
-#: projectaction.py:2056
+#: projectaction.py:2106
 #, fuzzy
 msgid "Can't delete Audio Track"
 msgstr "Максимизация звуковых дорожек"
 
-#: projectaction.py:2057
+#: projectaction.py:2107
 msgid "There are no Audio Tracks to delete."
 msgstr ""
 
-#: editorwindow.py:246
+#: projectaction.py:2159
+msgid "_duplicate_"
+msgstr ""
+
+#: projectaction.py:2199
+#, fuzzy
+msgid "Duplicate Sequence created"
+msgstr "Удалить последовательность из проекта"
+
+#: projectaction.py:2200
+#, python-format
+msgid ""
+"Duplicate sequence <b>%s</b> was created\n"
+"from sequence <b>%s</b> ."
+msgstr ""
+
+#: projectaction.py:2498
+#, fuzzy
+msgid "Render Stabilized Media"
+msgstr "Сборка всего медиа..."
+
+#: projectaction.py:2501 dialogs.py:91 dialogs.py:155 dialogs.py:209
+#: dialogs.py:248 dialogs.py:265 dialogs.py:293 dialogs.py:323 dialogs.py:342
+#: dialogs.py:361 dialogs.py:377 dialogs.py:396 dialogs.py:410 dialogs.py:428
+#: dialogs.py:442 dialogs.py:481 dialogs.py:496 dialogs.py:527 dialogs.py:543
+#: dialogs.py:564 dialogs.py:586 dialogs.py:973 dialogs.py:1086 dialogs.py:1113
+#: dialogs.py:1170 dialogs.py:1196 dialogs.py:1221 dialogs.py:1242
+#: dialogs.py:1283 dialogs.py:1311 dialogs.py:1339 dialogs.py:1480
+#: dialogs.py:1520 dialogs.py:1534 dialogs.py:1548 dialogs.py:1608
+#: dialogs.py:1725 dialogs.py:1772 dialogs.py:1810 dialogs.py:1828
+#: dialogs.py:1879 propertyeditorbuilder.py:693 middlebar.py:474
+#: rendergui.py:48 rendergui.py:107 rendergui.py:121 rendergui.py:139
+#: rendergui.py:1176 rendergui.py:1441 preferenceswindow.py:45
+#: tools/batchrendering.py:1057 tools/batchrendering.py:1130
+#: proxyediting.py:322 patternproducer.py:337 patternproducer.py:370
+#: patternproducer.py:401 tools/gmic.py:378 tools/gmic.py:402 tools/gmic.py:544
+#: dialogutils.py:57 dialogutils.py:129 dialogutils.py:189 exporting.py:445
+#: containeractions.py:423 containeractions.py:459 containerclip.py:176
+#: tools/scripttool.py:320 tools/scripttool.py:356 tools/scripttool.py:604
+#: tools/scripttool.py:624 singletracktransition.py:554
+#: singletracktransition.py:733 mediaplugin.py:735
+msgid "Cancel"
+msgstr "Отменить"
+
+#: projectaction.py:2502 editorwindow.py:896 rendergui.py:181 rendergui.py:309
+#: rendergui.py:401 rendergui.py:513 tools/batchrendering.py:957
+#: tools/gmic.py:817 containeractions.py:415 editorlayout.py:230
+#: tools/scripttool.py:920
+msgid "Render"
+msgstr "Сборка"
+
+#: projectaction.py:2510 rendergui.py:183 rendergui.py:515
+msgid "Source Media File: "
+msgstr "Исходный клип: "
+
+#: projectaction.py:2529 rendergui.py:211 rendergui.py:543
+msgid "Select Target Folder"
+msgstr "Выберите целевую папку"
+
+#: projectaction.py:2555
+#, fuzzy
+msgid "Shakiness:"
+msgstr "Резкость"
+
+#: projectaction.py:2556
+msgid "Accuracy:"
+msgstr ""
+
+#: projectaction.py:2557
+#, fuzzy
+msgid "Zoom:"
+msgstr "Масштаб"
+
+#: projectaction.py:2558
+#, fuzzy
+msgid "Smoothing:"
+msgstr "Плавность"
+
+#: projectaction.py:2560 rendergui.py:285 rendergui.py:618
+msgid "Target File:"
+msgstr "Целевой файл:"
+
+#: projectaction.py:2561 rendergui.py:286 rendergui.py:619
+msgid "Target Folder:"
+msgstr "Целевая папка:"
+
+#: projectaction.py:2562 rendergui.py:287 rendergui.py:620
+msgid "Target Profile:"
+msgstr "Целевой профиль:"
+
+#: projectaction.py:2563 rendergui.py:288 rendergui.py:621
+msgid "Target Encoding:"
+msgstr "Целевая кодировка:"
+
+#: projectaction.py:2564 rendergui.py:289 rendergui.py:622
+msgid "Target Quality:"
+msgstr "Целевое качество:"
+
+#: projectaction.py:2602 render.py:340 render.py:649
+msgid "A File with given path exists!"
+msgstr "Файл по этому пути уже создан!"
+
+#: projectaction.py:2603
+#, fuzzy
+msgid "Select another name for file."
+msgstr "Выберите водяной знак"
+
+#: editorwindow.py:247
 msgid "Fullscreen - F11"
 msgstr "Полный экран - F11"
 
-#: editorwindow.py:259
+#: editorwindow.py:260
 msgid "Layouts"
 msgstr "Макеты"
 
-#: editorwindow.py:412
+#: editorwindow.py:417
 msgid "No Edit Target."
 msgstr "Нет целей для правки."
 
-#: editorwindow.py:521 editorwindow.py:526
-msgid "Start - Home key"
-msgstr "К началу (клавиша Home)"
-
-#: editorwindow.py:521 editorwindow.py:526
-msgid "End - End key"
-msgstr "В конец (клавиша End)"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
+#: editorwindow.py:523
 msgid "Prev Frame - Arrow Left"
 msgstr "Перемотать назад (Клавиша со стрелкой влево)"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "Next Frame - Arrow Right"
-msgstr "Перемотать вперёд (Клавиша со стрелкой вправо)"
-
-#: editorwindow.py:521
-msgid "Play/Pause- Space"
-msgstr "Воспроизведение/Пауза (Пробел)"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "Mark In - I"
-msgstr "Выбрать начало участка (I)"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "Mark Out - O"
-msgstr "Выбрать конец участка (O)"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "Clear Marks"
-msgstr "Удалить участок"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "To Mark In"
-msgstr "К началу участка"
-
-#: editorwindow.py:521 editorwindow.py:523 editorwindow.py:526
-#: editorwindow.py:528
-msgid "To Mark Out"
-msgstr "В конец участка"
 
 #: editorwindow.py:523
 msgid "Play/Pause - Space"
 msgstr "Воспроизведение/Пауза (Пробел)"
 
-#: editorwindow.py:526 editorwindow.py:528
-msgid "Play - Space"
-msgstr "Воспроизвести (Пробел)"
+#: editorwindow.py:523
+msgid "Next Frame - Arrow Right"
+msgstr "Перемотать вперёд (Клавиша со стрелкой вправо)"
 
-#: editorwindow.py:526 editorwindow.py:528
-msgid "Stop - Space"
-msgstr "Остановить (Пробел)"
+#: editorwindow.py:537
+msgid "Mark In - I"
+msgstr "Выбрать начало участка (I)"
 
-#: editorwindow.py:666
+#: editorwindow.py:537
+msgid "Mark Out - O"
+msgstr "Выбрать конец участка (O)"
+
+#: editorwindow.py:537
+#, fuzzy
+msgid "Clear Marks - Alt + K"
+msgstr "Удалить участок"
+
+#: editorwindow.py:682
 msgid "Current Sequence Compositing Mode"
 msgstr "Режим композитинга текущего видеоряда"
 
-#: editorwindow.py:799
+#: editorwindow.py:815
 msgid "_File"
 msgstr "_Файл"
 
-#: editorwindow.py:800
+#: editorwindow.py:816
 msgid "_New..."
 msgstr "_Новый проект..."
 
-#: editorwindow.py:801
+#: editorwindow.py:817
 msgid "_Open..."
 msgstr "_Открыть..."
 
-#: editorwindow.py:802
+#: editorwindow.py:818
 msgid "Open Recent"
 msgstr "Недавно открытые"
 
-#: editorwindow.py:803
+#: editorwindow.py:819
 msgid "_Save"
 msgstr "_Сохранить"
 
-#: editorwindow.py:804
+#: editorwindow.py:820
 msgid "_Save As..."
 msgstr "_Сохранить как..."
 
-#: editorwindow.py:805 dialogs.py:209 dialogs.py:449 dialogs.py:1494
+#: editorwindow.py:821 dialogs.py:210 dialogs.py:482 dialogs.py:1521
 msgid "Export"
 msgstr "Экспорт"
 
-#: editorwindow.py:806
+#: editorwindow.py:822
 msgid "MLT XML"
 msgstr "MLT XML"
 
-#: editorwindow.py:807
+#: editorwindow.py:823
 msgid "EDL"
 msgstr "EDL (Монтажный лист)"
 
-#: editorwindow.py:808
+#: editorwindow.py:824
 msgid "Current Frame"
 msgstr "Текущий кадр"
 
-#: editorwindow.py:809
+#: editorwindow.py:825
 msgid "Current Sequence Audio As Ardour Session"
 msgstr "Текущий звуковой ряд, как сеанс Ardour"
 
-#: editorwindow.py:810
+#: editorwindow.py:826
 msgid "_Close"
 msgstr "_Закрыть"
 
-#: editorwindow.py:811
+#: editorwindow.py:827
 msgid "_Quit"
 msgstr "_Выход"
 
-#: editorwindow.py:812
+#: editorwindow.py:828
 msgid "_Edit"
 msgstr "_Правка"
 
-#: editorwindow.py:813
+#: editorwindow.py:829
 msgid "_Undo"
 msgstr "_Отменить"
 
-#: editorwindow.py:814
+#: editorwindow.py:830
 msgid "_Redo"
 msgstr "_Повторить"
 
-#: editorwindow.py:815 workflow.py:75
+#: editorwindow.py:831 workflow.py:75
 msgid "Cut"
 msgstr "Резка"
 
-#: editorwindow.py:816
+#: editorwindow.py:832
 msgid "Copy"
 msgstr "Копировать"
 
-#: editorwindow.py:817
+#: editorwindow.py:833
 msgid "Paste"
 msgstr "Вставить"
 
-#: editorwindow.py:818
+#: editorwindow.py:834
 msgid "Paste Filters / Properties"
 msgstr "Вставить эффект/свойства"
 
-#: editorwindow.py:819
+#: editorwindow.py:835
 msgid "Add Monitor Clip"
 msgstr "Добавить клип из монитора"
 
-#: editorwindow.py:820 shortcuts.py:372
+#: editorwindow.py:836 shortcuts.py:372
 msgid "Append"
 msgstr "Склейка"
 
-#: editorwindow.py:821 shortcuts.py:371 shortcuts.py:389 workflow.py:67
+#: editorwindow.py:837 shortcuts.py:371 shortcuts.py:389 workflow.py:67
 msgid "Insert"
 msgstr "Вставка"
 
-#: editorwindow.py:822
+#: editorwindow.py:838
 msgid "Three Point Overwrite"
 msgstr "Перезапись по трём точкам"
 
-#: editorwindow.py:823
+#: editorwindow.py:839
 msgid "Range Overwrite"
 msgstr "Перезапись участка"
 
-#: editorwindow.py:824
+#: editorwindow.py:840
 msgid "Cut Clip At Playhead"
 msgstr "Разрезать клип по курсору"
 
-#: editorwindow.py:825
+#: editorwindow.py:841
 msgid "Split to new Sequence at Playhead Position"
 msgstr "Разделить видеоряд по указателю"
 
-#: editorwindow.py:826 translations.py:561 guipopoverclip.py:338
-#: guipopoverclip.py:506 guipopoverclip.py:623
+#: editorwindow.py:842
+#, fuzzy
+msgid "Duplicate Sequence"
+msgstr "Создать видеоряд"
+
+#: editorwindow.py:843 translations.py:561 guipopoverclip.py:351
+#: guipopoverclip.py:531 guipopoverclip.py:670
 msgid "Lift"
 msgstr "Удалить без вставки"
 
-#: editorwindow.py:827
+#: editorwindow.py:844
 msgid "Splice Out"
 msgstr "Удалить со вставкой"
 
-#: editorwindow.py:828 shortcuts.py:379
+#: editorwindow.py:845 shortcuts.py:379 guipopover.py:1014
 msgid "Resync Track"
 msgstr ""
 
-#: editorwindow.py:829
+#: editorwindow.py:846
 msgid "Set Sync Parent"
 msgstr "Установить основу синхронизации"
 
-#: editorwindow.py:830
+#: editorwindow.py:847
 msgid "Add Single Track Transition"
 msgstr "Добавить переход"
 
-#: editorwindow.py:831 shortcuts.py:409 guipopoverclip.py:167
-#: guipopoverclip.py:269 guipopoverclip.py:333 guipopoverclip.py:393
+#: editorwindow.py:848 shortcuts.py:409 guipopoverclip.py:171
+#: guipopoverclip.py:276 guipopoverclip.py:345 guipopoverclip.py:413
 msgid "Clear Filters"
 msgstr "Удалить эффекты"
 
-#: editorwindow.py:832
+#: editorwindow.py:849
 msgid "Timeline"
 msgstr "Монтажный стол"
 
-#: editorwindow.py:833
+#: editorwindow.py:850
 msgid "All Filters Off"
 msgstr "Выключить все эффекты"
 
-#: editorwindow.py:834
+#: editorwindow.py:851
 msgid "All Filters On"
 msgstr "Включить все эффекты"
 
-#: editorwindow.py:835 shortcuts.py:410
+#: editorwindow.py:852 shortcuts.py:410
 msgid "Sync All Compositors"
 msgstr "Синхронизировать все композиторы"
 
-#: editorwindow.py:836 dialogs.py:1045 guipopover.py:274
+#: editorwindow.py:853 dialogs.py:1072 guipopover.py:328
 #, fuzzy
 msgid "Add Video Track"
 msgstr "Максимизация видеодорожек"
 
-#: editorwindow.py:837 dialogs.py:1048 guipopover.py:275
+#: editorwindow.py:854 dialogs.py:1075 guipopover.py:329
 #, fuzzy
 msgid "Add Audio Track"
 msgstr "Максимизация звуковых дорожек"
 
-#: editorwindow.py:838 dialogs.py:1052 guipopover.py:276
+#: editorwindow.py:855 dialogs.py:1079 guipopover.py:330
 #, fuzzy
 msgid "Delete Video Track"
 msgstr "Максимизация видеодорожек"
 
-#: editorwindow.py:839 dialogs.py:1055 guipopover.py:277
+#: editorwindow.py:856 dialogs.py:1082 guipopover.py:331
 #, fuzzy
 msgid "Delete Audio Track"
 msgstr "Удалить редактор"
 
-#: editorwindow.py:840
+#: editorwindow.py:857
 msgid "Change Sequence Tracks Count..."
 msgstr "Изменить количество дорожек..."
 
-#: editorwindow.py:841
+#: editorwindow.py:858
 msgid "Watermark..."
 msgstr "Водяной знак..."
 
-#: editorwindow.py:842 profilesmanager.py:46
+#: editorwindow.py:859 profilesmanager.py:46
 msgid "Profiles Manager"
 msgstr "Менеджер профилей"
 
-#: editorwindow.py:843
+#: editorwindow.py:860
 msgid "Preferences"
 msgstr "Настройка Flowblade"
 
-#: editorwindow.py:844 preferenceswindow.py:60
+#: editorwindow.py:861 preferenceswindow.py:60
 msgid "View"
 msgstr "Вид"
 
-#: editorwindow.py:845
+#: editorwindow.py:862
 msgid "Fullscreen"
 msgstr "Полноэкранный"
 
-#: editorwindow.py:846 editorlayout.py:232 editorlayout.py:233
+#: editorwindow.py:863 editorlayout.py:232 editorlayout.py:233
 msgid "Project"
 msgstr "Проект"
 
-#: editorwindow.py:847 guipopover.py:337
+#: editorwindow.py:864 guipopover.py:391
 msgid "Add Video, Audio or Image..."
 msgstr "Добавить видео, музыку или изображения…"
 
-#: editorwindow.py:848
+#: editorwindow.py:865
 msgid "Add Media From Folder..."
 msgstr "Добавить медиа из папки..."
 
-#: editorwindow.py:849 guipopover.py:338
+#: editorwindow.py:866 guipopover.py:392
 msgid "Add Image Sequence..."
 msgstr "Добавить серию изображений…"
 
-#: editorwindow.py:850 guipopover.py:343
+#: editorwindow.py:867 guipopover.py:397
 msgid "Add Color Clip..."
 msgstr "Добавить цветовой клип…"
 
-#: editorwindow.py:851
+#: editorwindow.py:868
 msgid "Bin"
 msgstr "Корзина"
 
-#: editorwindow.py:852 guipopover.py:462
+#: editorwindow.py:869 guipopover.py:517
 msgid "Add Bin"
 msgstr "Добавить корзину"
 
-#: editorwindow.py:853 guipopover.py:463
+#: editorwindow.py:870 guipopover.py:518
 msgid "Delete Selected Bin"
 msgstr "Удалить выбранную корзину"
 
-#: editorwindow.py:854
+#: editorwindow.py:871
 msgid "Sequence"
 msgstr "Видеоряд"
 
-#: editorwindow.py:855 guipopover.py:359
+#: editorwindow.py:872 guipopover.py:413
 msgid "Add New Sequence"
 msgstr "Добавить новый видеоряд"
 
-#: editorwindow.py:856 guipopover.py:360
+#: editorwindow.py:873
 msgid "Edit Selected Sequence"
 msgstr "Править выбранный видеоряд"
 
-#: editorwindow.py:857 guipopover.py:361
+#: editorwindow.py:874
 msgid "Delete Selected Sequence"
 msgstr "Удалить выбранный видеоряд"
 
-#: editorwindow.py:858
+#: editorwindow.py:875
 msgid "Compositing Mode"
 msgstr "Режим композитинга"
 
-#: editorwindow.py:859
+#: editorwindow.py:876
 msgid "Timeline Rendering"
 msgstr "Собирать для предпросмотра"
 
-#: editorwindow.py:860 guipopover.py:342
+#: editorwindow.py:877 guipopover.py:396
 msgid "Add Generator..."
 msgstr "Добавить генератор..."
 
-#: editorwindow.py:861
+#: editorwindow.py:878
 msgid "Load Generator Script..."
 msgstr "Загрузить сценарий генератора..."
 
-#: editorwindow.py:862
+#: editorwindow.py:879
 msgid "From Selected Clips"
 msgstr "Из выбранных клипов"
 
-#: editorwindow.py:863
+#: editorwindow.py:880
 msgid "From Current Sequence"
 msgstr "Из текущего видеоряда"
 
-#: editorwindow.py:864
+#: editorwindow.py:881
+#, fuzzy
+msgid "Add Sequence Link Container Clip..."
+msgstr "Сохранение контейнерного клипа из видеоряда"
+
+#: editorwindow.py:882
 msgid "From Current Sequence With Freeze Frame at Playhead Position"
 msgstr "Из текущего видеоряда со стоп-кадром по указателю воспроизведения"
 
-#: editorwindow.py:865
+#: editorwindow.py:883
 msgid "Audio Sync Merge Clip From 2 Media Items "
 msgstr "Синхронизация звука слиянием 2 клипов "
 
-#: editorwindow.py:866
+#: editorwindow.py:884
 msgid "Import Media From Project..."
 msgstr "Импортировать медиа из проекта..."
 
-#: editorwindow.py:867
+#: editorwindow.py:885 guipopover.py:419
 msgid "Create Container Clip"
 msgstr "Создать контейнерный клип"
 
-#: editorwindow.py:868
+#: editorwindow.py:886
 msgid "From G'Mic Script"
 msgstr "Из сценария G'Mic"
 
-#: editorwindow.py:869
+#: editorwindow.py:887
 msgid "Import Another Sequence Into This Sequence..."
 msgstr "Импортировать ещё один видеоряд..."
 
-#: editorwindow.py:870 shortcuts.py:377
+#: editorwindow.py:888 shortcuts.py:377
 msgid "Log Marked Clip Range"
 msgstr "Добавить отмеченный участок в журнал"
 
-#: editorwindow.py:871
+#: editorwindow.py:889
 msgid "Recreate Media Icons..."
 msgstr "Воссоздать миниатюры медиа..."
 
-#: editorwindow.py:872 projectdatavaultgui.py:754
+#: editorwindow.py:890 projectdatavaultgui.py:754
 #, fuzzy
 msgid "Project Info and Data"
 msgstr "Сведения о проекте"
 
-#: editorwindow.py:873
+#: editorwindow.py:891
 msgid "Remove Unused Media..."
 msgstr "Удалить неиспользуемые медиа..."
 
-#: editorwindow.py:874
+#: editorwindow.py:892
 msgid "Change Project Profile..."
 msgstr "Изменить профиль проекта..."
 
-#: editorwindow.py:875 proxyediting.py:158
+#: editorwindow.py:893 proxyediting.py:158
 msgid "Proxy Manager"
 msgstr "Менеджер прокси"
 
-#: editorwindow.py:876 projectdatavaultgui.py:299
+#: editorwindow.py:894 projectdatavaultgui.py:299
 #, fuzzy
 msgid "Data Store Manager"
 msgstr "Закрыть"
 
-#: editorwindow.py:877
+#: editorwindow.py:895
 #, fuzzy
 msgid "Project Data"
 msgstr "Проект"
 
-#: editorwindow.py:878 rendergui.py:181 rendergui.py:309 rendergui.py:401
-#: rendergui.py:513 tools/batchrendering.py:957 tools/gmic.py:817
-#: containeractions.py:382 editorlayout.py:230 tools/scripttool.py:920
-msgid "Render"
-msgstr "Сборка"
-
-#: editorwindow.py:879
+#: editorwindow.py:897
 msgid "Add To Batch Render Queue..."
 msgstr "Добавить в очередь сборки..."
 
-#: editorwindow.py:880 middlebar.py:283
+#: editorwindow.py:898 middlebar.py:284
 msgid "Batch Render Queue"
 msgstr "Очередь пакетной сборки"
 
-#: editorwindow.py:881
+#: editorwindow.py:899
 msgid "Rerender All Rendered Transitions"
 msgstr "Пересобрать все переходы"
 
-#: editorwindow.py:882
+#: editorwindow.py:900
 msgid "Render Timeline"
 msgstr "Сборка с монтажного стола"
 
-#: editorwindow.py:883
+#: editorwindow.py:901
 msgid "Tools"
 msgstr "Инструменты"
 
-#: editorwindow.py:884 middlebar.py:283 tools/titler.py:263
+#: editorwindow.py:902 middlebar.py:284 tools/titler.py:263
 msgid "Titler"
 msgstr "Редактор титров"
 
-#: editorwindow.py:885 middlebar.py:283
+#: editorwindow.py:903 middlebar.py:284
 msgid "Audio Mixer"
 msgstr "Звуковой микшер"
 
-#: editorwindow.py:886 tools/gmic.py:877 toolsintegration.py:108
+#: editorwindow.py:904 tools/gmic.py:877 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "Эффекты G'Mic"
 
-#: editorwindow.py:887 tools/scripttool.py:1015
+#: editorwindow.py:905 tools/scripttool.py:1015
 msgid "Generator Script Editor"
 msgstr "Редактор сценариев генератора"
 
-#: editorwindow.py:888 medialinker.py:187
+#: editorwindow.py:906 medialinker.py:187
 msgid "Media Relinker"
 msgstr "Перелинковщик медиа"
 
-#: editorwindow.py:889
+#: editorwindow.py:907
 msgid "_Help"
 msgstr "_Справка"
 
-#: editorwindow.py:890
+#: editorwindow.py:908
 msgid "Contents"
 msgstr "Руководство"
 
-#: editorwindow.py:891
+#: editorwindow.py:909
 msgid "Contents Web"
 msgstr "Онлайн-руководство"
 
-#: editorwindow.py:892 dialogs.py:701
+#: editorwindow.py:910 dialogs.py:722
 msgid "Runtime Environment"
 msgstr "Переменное окружение"
 
-#: editorwindow.py:893
+#: editorwindow.py:911
 msgid "Keyboard Shortcuts"
 msgstr "Комбинации клавиш"
 
-#: editorwindow.py:894 dialogs.py:575
+#: editorwindow.py:912 dialogs.py:596
 msgid "About"
 msgstr "О программе"
 
-#: editorwindow.py:1081
+#: editorwindow.py:1101
 msgid "Window Mode"
 msgstr "Оконный режим"
 
-#: editorwindow.py:1084 preferenceswindow.py:357
+#: editorwindow.py:1104 preferenceswindow.py:357
 msgid "Single Window"
 msgstr "Одно окно"
 
-#: editorwindow.py:1088 preferenceswindow.py:358
+#: editorwindow.py:1108 preferenceswindow.py:358
 msgid "Two Windows"
 msgstr "Два окна"
 
-#: editorwindow.py:1112
+#: editorwindow.py:1132
 msgid "Middlebar Configuration..."
 msgstr "Конфигурация средней панели..."
 
-#: editorwindow.py:1117
+#: editorwindow.py:1137
 msgid "Edit Tool Selection Widget"
 msgstr "Инструменты правки в качестве"
 
-#: editorwindow.py:1120
+#: editorwindow.py:1140
 msgid "Middlebar Menu"
 msgstr "Меню средней панели"
 
-#: editorwindow.py:1124
+#: editorwindow.py:1144
 msgid "Dock"
 msgstr "Встроенной панели"
 
-#: editorwindow.py:1142
+#: editorwindow.py:1162
 msgid "Monitor Playback Interpolation"
 msgstr "Интерполяция воспроизведения"
 
-#: editorwindow.py:1146
+#: editorwindow.py:1166
 msgid "Nearest Neighbour (fast)"
 msgstr "Ближайшее соседнее (быстро)"
 
-#: editorwindow.py:1150
+#: editorwindow.py:1170
 msgid "Bilinear (good)"
 msgstr "Билинейная (хорошо)"
 
-#: editorwindow.py:1154
+#: editorwindow.py:1174
 msgid "Bicubic (better)"
 msgstr "Бикубическая (лучше)"
 
-#: editorwindow.py:1159
+#: editorwindow.py:1179
 msgid "Hyper/Lanczos (best)"
 msgstr "Гипер/Ланцош (лучшая)"
 
-#: editorwindow.py:1170 shortcuts.py:397
+#: editorwindow.py:1190 keyframeeditor.py:2122 shortcuts.py:397
 msgid "Zoom In"
 msgstr "Увеличить"
 
-#: editorwindow.py:1173 shortcuts.py:396
+#: editorwindow.py:1193 keyframeeditor.py:2124 shortcuts.py:396
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: editorwindow.py:1176
+#: editorwindow.py:1196
 msgid "Zoom Fit"
 msgstr "В размер окна"
 
-#: editorwindow.py:1186 guipopover.py:312
+#: editorwindow.py:1206 guipopover.py:366
 msgid "Compositors Free Move"
 msgstr "Свободное перемещение композиторов"
 
-#: editorwindow.py:1190 guipopover.py:314
+#: editorwindow.py:1210 guipopover.py:368
 msgid "Standard Full Track"
 msgstr "Стандартный (без композиторов)"
 
-#: editorwindow.py:1228
+#: editorwindow.py:1248
 msgid "Empty"
 msgstr "Пусто"
 
-#: editorwindow.py:1249
+#: editorwindow.py:1260
 msgid "Global Window Mode changed"
 msgstr "Режим глобального окна изменён"
 
-#: editorwindow.py:1250
+#: editorwindow.py:1261
 msgid "Application restart required for the new layout choice to take effect."
 msgstr "Перезапустите приложение, чтобы изменения вступили в силу."
 
-#: editorwindow.py:1395
+#: editorwindow.py:1368
 msgid "Timeline current frame timecode"
 msgstr "Тайм-код монтажного стола"
 
-#: editorwindow.py:1397
+#: editorwindow.py:1370
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "Выберите режим просмотра"
 
-#: editorwindow.py:1398
+#: editorwindow.py:1371
 msgid "Set trim view and match frames"
 msgstr "Просмотр обрезки и соответствия кадров"
 
-#: editorwindow.py:1400
+#: editorwindow.py:1373
 msgid "Sequence / Media current position"
 msgstr "Видеоряд / Текущая позиция медиа"
 
@@ -1111,32 +1206,32 @@ msgstr "Переместить эффект в конец"
 msgid "_effect_values"
 msgstr "_параметры_эффекта"
 
-#: clipeffectseditor.py:457 clipeffectseditor.py:821
+#: clipeffectseditor.py:497 clipeffectseditor.py:869
 msgid "Clip Has No Filters"
 msgstr "К клипу не применены эффекты"
 
-#: clipeffectseditor.py:558
+#: clipeffectseditor.py:603
 msgid "No Clip"
 msgstr "Нет клипа"
 
-#: clipeffectseditor.py:671
+#: clipeffectseditor.py:716
 msgid "unnamed_stack_values"
 msgstr "безымянные_значения_стека"
 
-#: clipeffectseditor.py:786
+#: clipeffectseditor.py:834
 msgid "No editable parameters"
 msgstr "Без параметров"
 
-#: clipeffectseditor.py:978
+#: clipeffectseditor.py:1026
 #, fuzzy
 msgid "Saved Filter data not applicable for this Filter!"
 msgstr "Сохранённые данные неприменимы к этому эффекту!"
 
-#: clipeffectseditor.py:979 compositeeditor.py:364
+#: clipeffectseditor.py:1027 compositeeditor.py:364
 msgid "Saved data is for "
 msgstr "Сохранённые данные для "
 
-#: clipeffectseditor.py:979
+#: clipeffectseditor.py:1027
 msgid "current edited Filter is "
 msgstr "текущего изменённого эффекта "
 
@@ -1174,71 +1269,50 @@ msgstr "Сохранённые данные неприменимы к этому
 msgid ", current compositor is "
 msgstr ", текущего композитора "
 
-#: dialogs.py:62 dialogs.py:166
+#: dialogs.py:63 dialogs.py:167
 msgid "Project profile:"
 msgstr "Профиль проекта:"
 
-#: dialogs.py:74
+#: dialogs.py:75
 msgid "Tracks"
 msgstr "Дорожки"
 
-#: dialogs.py:78
+#: dialogs.py:79
 #, fuzzy
 msgid "Create New Data Store"
 msgstr "Создать новый проект"
 
-#: dialogs.py:86 projectdatavaultgui.py:737
+#: dialogs.py:87 projectdatavaultgui.py:737
 msgid "Data Store"
 msgstr ""
 
-#: dialogs.py:88 dialogs.py:1195 dialogs.py:1412 dialogs.py:1454
-#: menuactions.py:220 containerclip.py:170 tools/scripttool.py:625
+#: dialogs.py:89 dialogs.py:1222 dialogs.py:1439 dialogs.py:1481
+#: menuactions.py:220 containerclip.py:177 tools/scripttool.py:625
 msgid "Ok"
 msgstr "Ok"
 
-#: dialogs.py:90 dialogs.py:154 dialogs.py:208 dialogs.py:247 dialogs.py:264
-#: dialogs.py:292 dialogs.py:322 dialogs.py:341 dialogs.py:360 dialogs.py:376
-#: dialogs.py:395 dialogs.py:409 dialogs.py:448 dialogs.py:463 dialogs.py:494
-#: dialogs.py:506 dialogs.py:522 dialogs.py:543 dialogs.py:565 dialogs.py:946
-#: dialogs.py:1059 dialogs.py:1086 dialogs.py:1143 dialogs.py:1169
-#: dialogs.py:1194 dialogs.py:1215 dialogs.py:1256 dialogs.py:1284
-#: dialogs.py:1312 dialogs.py:1453 dialogs.py:1493 dialogs.py:1507
-#: dialogs.py:1521 dialogs.py:1581 dialogs.py:1698 dialogs.py:1745
-#: dialogs.py:1783 dialogs.py:1801 dialogs.py:1852 propertyeditorbuilder.py:696
-#: middlebar.py:473 rendergui.py:48 rendergui.py:107 rendergui.py:121
-#: rendergui.py:139 rendergui.py:1176 rendergui.py:1441 preferenceswindow.py:45
-#: tools/batchrendering.py:1057 tools/batchrendering.py:1130
-#: proxyediting.py:322 patternproducer.py:337 patternproducer.py:370
-#: patternproducer.py:401 tools/gmic.py:378 tools/gmic.py:402 tools/gmic.py:544
-#: dialogutils.py:57 dialogutils.py:129 dialogutils.py:189 exporting.py:445
-#: containeractions.py:390 containerclip.py:169 tools/scripttool.py:320
-#: tools/scripttool.py:356 tools/scripttool.py:604 tools/scripttool.py:624
-#: singletracktransition.py:554 singletracktransition.py:733 mediaplugin.py:670
-msgid "Cancel"
-msgstr "Отменить"
-
-#: dialogs.py:99
+#: dialogs.py:100
 msgid "New Project"
 msgstr "Новый проект"
 
-#: dialogs.py:133 projectdatavaultgui.py:536
+#: dialogs.py:134 projectdatavaultgui.py:536
 #, fuzzy
 msgid "Selected folder was not empty!"
 msgstr "Выбранная папка содержит файлы"
 
-#: dialogs.py:134 projectdatavaultgui.py:537
+#: dialogs.py:135 projectdatavaultgui.py:537
 msgid "Can't add non-empty folder as new Project Data Folder."
 msgstr ""
 
-#: dialogs.py:152
+#: dialogs.py:153
 msgid "Change Project Profile"
 msgstr "Изменение профиля проекта"
 
-#: dialogs.py:155
+#: dialogs.py:156
 msgid "Save With Changed Profile"
 msgstr "Сохранить профиль"
 
-#: dialogs.py:157
+#: dialogs.py:158
 msgid ""
 "Project Profile can only changed by saving a version\n"
 "with different profile."
@@ -1246,355 +1320,367 @@ msgstr ""
 "Изменение профиля проекта возможно, только после\n"
 "сохранения открытого профиля."
 
-#: dialogs.py:174
+#: dialogs.py:175
 msgid "New Profile"
 msgstr "Новый профиль"
 
-#: dialogs.py:176 rendergui.py:872 tools/gmic.py:761 tools/toolsencoding.py:304
+#: dialogs.py:177 rendergui.py:872 tools/gmic.py:761 tools/toolsencoding.py:334
 #: tools/scripttool.py:864 projectdatavaultgui.py:112
 #: projectdatavaultgui.py:593 projectaddmediafolder.py:38
 msgid "Select Folder"
 msgstr "Выберите папку"
 
-#: dialogs.py:180 rendergui.py:876 tools/batchrendering.py:1146
-#: tools/toolsencoding.py:307
+#: dialogs.py:181 rendergui.py:876 tools/batchrendering.py:1146
+#: tools/toolsencoding.py:337
 msgid "Folder:"
 msgstr "Папка:"
 
-#: dialogs.py:188
+#: dialogs.py:189
 msgid "Project Name:"
 msgstr "Имя проекта:"
 
-#: dialogs.py:192
+#: dialogs.py:193
 msgid "New Project File"
 msgstr "Новый файл проекта"
 
-#: dialogs.py:206
+#: dialogs.py:207
 msgid "Save Sequence Audio As Ardour Session"
 msgstr "Сохранить звуковой ряд как сеанс Ardour"
 
-#: dialogs.py:212
+#: dialogs.py:213
 msgid "Select Ardour Session Folder"
 msgstr "Выберите папку сеанса Ardour"
 
-#: dialogs.py:216
+#: dialogs.py:217
 msgid "Select Ardour Session Folder:"
 msgstr "Выберите папку сеанса Ardour:"
 
-#: dialogs.py:220
+#: dialogs.py:221
 msgid "Sample Rate:"
 msgstr "Частота дискретизации:"
 
-#: dialogs.py:243
+#: dialogs.py:244
 msgid "Select Project File"
 msgstr "Выберите файл проекта"
 
-#: dialogs.py:248 dialogs.py:323 dialogs.py:361 dialogs.py:396 dialogs.py:523
-#: dialogs.py:577 dialogs.py:703 dialogs.py:824 dialogs.py:838 dialogs.py:1170
-#: dialogs.py:1582 propertyeditorbuilder.py:697 middlebar.py:474
-#: rendergui.py:108 preferenceswindow.py:46 tools/batchrendering.py:447
-#: tools/gmic.py:403 dialogutils.py:39 dialogutils.py:96 dialogutils.py:109
-#: dialogutils.py:124 tools/scripttool.py:357
+#: dialogs.py:249 dialogs.py:324 dialogs.py:362 dialogs.py:397 dialogs.py:429
+#: dialogs.py:544 dialogs.py:598 dialogs.py:724 dialogs.py:851 dialogs.py:865
+#: dialogs.py:1197 dialogs.py:1609 propertyeditorbuilder.py:694
+#: middlebar.py:475 rendergui.py:108 preferenceswindow.py:46
+#: tools/batchrendering.py:447 tools/gmic.py:403 dialogutils.py:39
+#: dialogutils.py:96 dialogutils.py:109 dialogutils.py:124
+#: tools/scripttool.py:357
 msgid "OK"
 msgstr "OK"
 
-#: dialogs.py:252
+#: dialogs.py:253
 msgid "Flowblade Projects"
 msgstr "Проекты Flowblade"
 
-#: dialogs.py:262
+#: dialogs.py:263
 msgid "Save Project As"
 msgstr "Сохранить проект как"
 
-#: dialogs.py:265 dialogs.py:293 dialogs.py:342 dialogs.py:377 dialogs.py:495
-#: dialogs.py:507 dialogs.py:544 dialogs.py:566 rendergui.py:122
+#: dialogs.py:266 dialogs.py:294 dialogs.py:343 dialogs.py:378 dialogs.py:411
+#: dialogs.py:528 dialogs.py:565 dialogs.py:587 rendergui.py:122
 #: tools/batchrendering.py:1058 tools/gmic.py:379 tools/scripttool.py:321
 #: tools/scripttool.py:1086
 msgid "Save"
 msgstr "Сохранить"
 
-#: dialogs.py:283
+#: dialogs.py:284
 msgid "Save Effect Values Data"
 msgstr "Сохранение параметров эффекта"
 
-#: dialogs.py:285
+#: dialogs.py:286
 msgid "Save Compositor Values Data"
 msgstr "Сохранение параметров композитора"
 
-#: dialogs.py:288
+#: dialogs.py:289
 msgid "Save Effects Stack Values Data"
 msgstr "Сохранение параметров стека эффектов"
 
-#: dialogs.py:300
+#: dialogs.py:301
 msgid "Stack/Effect/Compositor Values Data"
 msgstr "Параметры Стека/Эффекта/Композитора"
 
-#: dialogs.py:313
+#: dialogs.py:314
 msgid "Load Effect Values Data"
 msgstr "Загрузка параметров эффекта"
 
-#: dialogs.py:315
+#: dialogs.py:316
 msgid "Load Compositor Values Data"
 msgstr "Загрузка параметров композитора"
 
-#: dialogs.py:318
+#: dialogs.py:319
 msgid "Load Effects Stack Values Data"
 msgstr "Загрузка параметров стека эффектов"
 
-#: dialogs.py:327
+#: dialogs.py:328
 msgid "Effect/Compositor Values Data"
 msgstr "Данные параметров Эффекта/Композитора"
 
-#: dialogs.py:339
+#: dialogs.py:340
 msgid "Save Layout"
 msgstr "Сохранение макета"
 
-#: dialogs.py:344
+#: dialogs.py:345
 msgid "flowblade_custom_layout.layout_data"
 msgstr "мой_макет.layout_data"
 
-#: dialogs.py:349 dialogs.py:365
+#: dialogs.py:350 dialogs.py:366
 msgid "Flowblade Layout Data"
 msgstr "Данные макетов Flowblade"
 
-#: dialogs.py:358
+#: dialogs.py:359
 msgid "Load Layout"
 msgstr "Загрузить макет"
 
-#: dialogs.py:374
+#: dialogs.py:375
 msgid "Save Generator Properties"
 msgstr ""
 
-#: dialogs.py:384 dialogs.py:400
+#: dialogs.py:385 dialogs.py:401
 msgid "Flowblade Generator Properties"
 msgstr "Свойства генератора Flowblade"
 
-#: dialogs.py:393
+#: dialogs.py:394 dialogs.py:426
 msgid "Load Generator Properties"
 msgstr ""
 
-#: dialogs.py:407
+#: dialogs.py:408 mediaplugin.py:435
+#, fuzzy
+msgid "Save Generator Template"
+msgstr "Загрузить код генератора"
+
+#: dialogs.py:418 dialogs.py:433
+#, fuzzy
+msgid "Flowblade Generator Template"
+msgstr "Свойства генератора Flowblade"
+
+#: dialogs.py:440
 msgid "Create Cloned Media Item"
 msgstr "Создание клонированного элемента медиа"
 
-#: dialogs.py:410 dialogs.py:464 dialogs.py:1313 patternproducer.py:338
+#: dialogs.py:443 dialogs.py:497 dialogs.py:1340 patternproducer.py:338
 #: patternproducer.py:371 patternproducer.py:402
 msgid "Create"
 msgstr "Создать"
 
-#: dialogs.py:415 panels.py:201 rendergui.py:886 tools/toolsencoding.py:314
+#: dialogs.py:448 panels.py:203 rendergui.py:886 tools/toolsencoding.py:344
 msgid "Name:"
 msgstr "Имя:"
 
-#: dialogs.py:419
+#: dialogs.py:452
 msgid "Length in Frames:"
 msgstr "Длительность в кадрах:"
 
-#: dialogs.py:443
+#: dialogs.py:476
 msgid "Export Project as XML to"
 msgstr "Экспортировать проект как XML в"
 
-#: dialogs.py:471 patternproducer.py:349 tools/toolsencoding.py:316
+#: dialogs.py:504 patternproducer.py:349 tools/toolsencoding.py:346
 msgid "Clip Name:"
 msgstr "Имя клипа:"
 
-#: dialogs.py:492
-msgid "Save Runtime Environment Data"
-msgstr "Сохранение данных переменного окружения"
-
-#: dialogs.py:504
+#: dialogs.py:525
 msgid "Save Container Clip Edit Data"
 msgstr "Сохранение данных контейнерного клипа"
 
-#: dialogs.py:518
+#: dialogs.py:539
 msgid "Load Container Clip Program Edit Data"
 msgstr "Загрузка данных контейнерного клипа"
 
-#: dialogs.py:530
+#: dialogs.py:551
 msgid "Can't make home folder render clips folder"
 msgstr "Невозможно создать папку сборки клипов в домашней папке"
 
-#: dialogs.py:531
+#: dialogs.py:552
 msgid "Please create and select some other folder then '"
 msgstr "Создайте и выберите другую папку '"
 
-#: dialogs.py:532
+#: dialogs.py:553
 msgid "' as render clips folder"
 msgstr "' как папка сборки клипов"
 
-#: dialogs.py:536 dialogs.py:557
+#: dialogs.py:557 dialogs.py:578
 msgid "Save project '"
 msgstr "Сохранить проект '"
 
-#: dialogs.py:536
+#: dialogs.py:557
 msgid "' before exiting?"
 msgstr "' перед выходом?"
 
-#: dialogs.py:542 dialogs.py:564
+#: dialogs.py:563 dialogs.py:585
 msgid "Don't Save"
 msgstr "Не сохранять"
 
-#: dialogs.py:557
+#: dialogs.py:578
 msgid "' before closing project?"
 msgstr "' Перед закрытием проекта?"
 
-#: dialogs.py:584
+#: dialogs.py:605
 msgid "Project page:"
 msgstr "Страница проекта:"
 
-#: dialogs.py:605
+#: dialogs.py:626
 msgid "Upstream:"
 msgstr "Основан на:"
 
-#: dialogs.py:608
+#: dialogs.py:629
 msgid "Tools:"
 msgstr "Инструменты:"
 
-#: dialogs.py:634
+#: dialogs.py:655
 msgid "Lead Developer:"
 msgstr "Ведущий разработчик:"
 
-#: dialogs.py:637
+#: dialogs.py:658
 msgid "Developers:"
 msgstr "Разработчики:"
 
-#: dialogs.py:644
+#: dialogs.py:665
 msgid "Contributors:"
 msgstr "Вкладчики:"
 
-#: dialogs.py:674
+#: dialogs.py:695
 msgid "Translations by:"
 msgstr "Перевод приложения:"
 
-#: dialogs.py:688
+#: dialogs.py:709
 msgid "Application"
 msgstr "Приложение"
 
-#: dialogs.py:689
+#: dialogs.py:710
 msgid "Thanks"
 msgstr "Благодарности"
 
-#: dialogs.py:690
+#: dialogs.py:711
 msgid "License"
 msgstr "Лицензия"
 
-#: dialogs.py:691
+#: dialogs.py:712
 msgid "Developers"
 msgstr "Разработчики"
 
-#: dialogs.py:692
+#: dialogs.py:713
 msgid "Translations"
 msgstr "Переводчики"
 
-#: dialogs.py:707
+#: dialogs.py:728
 msgid "MLT version: "
 msgstr "Версия MLT: "
 
-#: dialogs.py:713
+#: dialogs.py:734
 msgid "GTK version: "
 msgstr "Версия GTK: "
 
-#: dialogs.py:715
+#: dialogs.py:736
 msgid "Locale: "
 msgstr "Локаль: "
 
-#: dialogs.py:718
+#: dialogs.py:739
 msgid "INSTALLATION"
 msgstr "УСТАНОВЛЕН"
 
-#: dialogs.py:722
+#: dialogs.py:743
 msgid "DEVELOPER VERSION"
 msgstr "ВЕРСИЯ В РАЗРАБОТКЕ"
 
-#: dialogs.py:724
+#: dialogs.py:744
 msgid "Running from: "
 msgstr "Сведения об установке: "
 
-#: dialogs.py:752
+#: dialogs.py:750
+#, fuzzy
+msgid "Consumer type: "
+msgstr "Формат кадра:"
+
+#: dialogs.py:779
 msgid " AVAILABLE"
 msgstr " ДОСТУПЕН"
 
-#: dialogs.py:754
+#: dialogs.py:781
 msgid " NOT AVAILABLE, "
 msgstr " НЕДОСТУПЕН, "
 
-#: dialogs.py:754
+#: dialogs.py:781
 msgid " MISSING"
 msgstr " ОТСУТСТВУЕТ"
 
-#: dialogs.py:760
+#: dialogs.py:787
 msgid " FOR FILTER "
 msgstr " ДЛЯ ФИЛЬТРА "
 
-#: dialogs.py:760 dialogs.py:763
+#: dialogs.py:787 dialogs.py:790
 msgid " NOT FOUND"
 msgstr " НЕ НАЙДЕНО"
 
-#: dialogs.py:763
+#: dialogs.py:790
 msgid " FOR TRANSITION "
 msgstr " ДЛЯ ПЕРЕХОДА "
 
-#: dialogs.py:767 preferenceswindow.py:57
+#: dialogs.py:794 preferenceswindow.py:57
 msgid "General"
 msgstr "Общие"
 
-#: dialogs.py:768
+#: dialogs.py:795
 msgid "MLT Filters"
 msgstr "MLT Эффекты"
 
-#: dialogs.py:769
+#: dialogs.py:796
 msgid "MLT Transitions"
 msgstr "MLT Переходы"
 
-#: dialogs.py:770
+#: dialogs.py:797
 msgid "Missing MLT Services"
 msgstr "Отсутствующие MLT службы"
 
-#: dialogs.py:773
+#: dialogs.py:800
 msgid "Video Codecs"
 msgstr "Видеокодеки"
 
-#: dialogs.py:774
+#: dialogs.py:801
 msgid "Audio Codecs"
 msgstr "Звуковые кодеки"
 
-#: dialogs.py:775
+#: dialogs.py:802
 msgid "Formats"
 msgstr "Форматы"
 
-#: dialogs.py:776
+#: dialogs.py:803
 msgid "Render Options"
 msgstr "Параметры сборки"
 
-#: dialogs.py:822 guipopover.py:658
+#: dialogs.py:849 guipopover.py:747
 msgid "File Properties"
 msgstr "Сведения о файле"
 
-#: dialogs.py:836
+#: dialogs.py:863
 msgid "Clip Properties"
 msgstr "Сведения о клипе"
 
-#: dialogs.py:857
+#: dialogs.py:884
 msgid "Loading project"
 msgstr "Загрузка проекта"
 
-#: dialogs.py:892
+#: dialogs.py:919
 msgid "Recreating icons"
 msgstr "Воссоздание миниатюр"
 
-#: dialogs.py:895
+#: dialogs.py:922
 msgid "Update media lengths data"
 msgstr "Обновление данных о длительности медиа"
 
-#: dialogs.py:898
+#: dialogs.py:925
 msgid "Comparing Audio Data..."
 msgstr "Сравнение звуковых данных..."
 
-#: dialogs.py:935
+#: dialogs.py:962
 msgid "Are you sure you want to delete these media files?"
 msgstr "Удалить эти медиафайлы?"
 
-#: dialogs.py:936
+#: dialogs.py:963
 msgid ""
 "One or more of the Media Files you are deleting from the project\n"
 "either <b>have proxy files or are proxy files.</b>\n"
@@ -1604,7 +1690,7 @@ msgstr ""
 "<b>либо имеют прокси-клипы, либо являются ими.</b>\n"
 "\n"
 
-#: dialogs.py:937
+#: dialogs.py:964
 msgid ""
 "Deleting these files could <b>prevent converting</b> between\n"
 "using proxy files and using original media.\n"
@@ -1614,15 +1700,15 @@ msgstr ""
 "прокси и исходными клипами.\n"
 "\n"
 
-#: dialogs.py:947
+#: dialogs.py:974
 msgid "Force Delete"
 msgstr "Удалить принудительно"
 
-#: dialogs.py:958
+#: dialogs.py:985
 msgid "Open last autosave?"
 msgstr "Открыть последний автосохранённый проект?"
 
-#: dialogs.py:959
+#: dialogs.py:986
 msgid ""
 "It seems that Flowblade exited abnormally last time.\n"
 "\n"
@@ -1630,7 +1716,7 @@ msgstr ""
 "Нештатное завершение Flowblade\n"
 "\n"
 
-#: dialogs.py:960
+#: dialogs.py:987
 msgid ""
 "If there is another instance of Flowblade running,\n"
 "this dialog has probably detected its autosave file.\n"
@@ -1640,23 +1726,23 @@ msgstr ""
 "экземпляра Flowblade.\n"
 "\n"
 
-#: dialogs.py:961
+#: dialogs.py:988
 msgid "It is NOT possible to open this autosaved version later."
 msgstr "В будущем вы не сможете открыть это автосохранение."
 
-#: dialogs.py:969 dialogs.py:1013
+#: dialogs.py:996 dialogs.py:1040
 msgid "Continue with default 'untitled' project"
 msgstr "Открыть «безымянный» проект"
 
-#: dialogs.py:970
+#: dialogs.py:997
 msgid "Open Autosaved Project"
 msgstr "Открыть автосохранённый проект"
 
-#: dialogs.py:980
+#: dialogs.py:1007
 msgid "Open a autosave file?"
 msgstr "Открыть автосохранённый файл?"
 
-#: dialogs.py:981
+#: dialogs.py:1008
 msgid ""
 "There are <b>multiple autosave files</b> from application crashes.\n"
 "\n"
@@ -1664,7 +1750,7 @@ msgstr ""
 "Имеется <b>несколько файлов автосохранения</b> после сбоев приложения.\n"
 "\n"
 
-#: dialogs.py:982
+#: dialogs.py:1009
 msgid ""
 "If you just <b>experienced a crash, select the last created autosave</b> "
 "file\n"
@@ -1675,7 +1761,7 @@ msgstr ""
 "автосохранения,</b> чтобы продолжить работу\n"
 "\n"
 
-#: dialogs.py:983
+#: dialogs.py:1010
 msgid ""
 "If you see this at application start without a recent crash,\n"
 "you should probably delete all autosave files to stop seeing this dialog."
@@ -1683,66 +1769,66 @@ msgstr ""
 "Если в приложении не было недавних сбоев, вероятно, следует удалить\n"
 "все файлы автосохранения."
 
-#: dialogs.py:991
+#: dialogs.py:1018
 msgid "Delete all autosaves"
 msgstr "Удалить все автосохранения"
 
-#: dialogs.py:993
+#: dialogs.py:1020
 msgid "Delete all but selected autosave"
 msgstr "Оставить только выбранное"
 
-#: dialogs.py:1014
+#: dialogs.py:1041
 msgid "Open Selected Autosave"
 msgstr "Открыть файл автосохранения"
 
-#: dialogs.py:1044
+#: dialogs.py:1071
 #, fuzzy
 msgid "Confirm Adding Video Track"
 msgstr "Максимизация видеодорожек"
 
-#: dialogs.py:1047
+#: dialogs.py:1074
 #, fuzzy
 msgid "Confirm Adding Audio Track"
 msgstr "Максимизация звуковых дорожек"
 
-#: dialogs.py:1051
+#: dialogs.py:1078
 #, fuzzy
 msgid "Confirm Deleting Video Track"
 msgstr "Максимизация видеодорожек"
 
-#: dialogs.py:1054
+#: dialogs.py:1081
 #, fuzzy
 msgid "Confirm Deleting Audio Track"
 msgstr "Максимизация звуковых дорожек"
 
-#: dialogs.py:1062 dialogs.py:1701
+#: dialogs.py:1089 dialogs.py:1728
 msgid "<b>Please note:</b>\n"
 msgstr "<b>Обратите внимание:</b>\n"
 
-#: dialogs.py:1063 dialogs.py:1093 dialogs.py:1703
+#: dialogs.py:1090 dialogs.py:1120 dialogs.py:1730
 msgid " There is no Undo for this operation\n"
 msgstr " Эту операцию нельзя отменить\n"
 
-#: dialogs.py:1064 dialogs.py:1094 dialogs.py:1704
+#: dialogs.py:1091 dialogs.py:1121 dialogs.py:1731
 msgid " Current Undo Stack will be destroyed\n"
 msgstr " Текущий стек отмены будет уничтожен\n"
 
-#: dialogs.py:1084
+#: dialogs.py:1111
 msgid "Change Sequence Tracks Count"
 msgstr "Изменение количества дорожек видеоряда"
 
-#: dialogs.py:1087
+#: dialogs.py:1114
 msgid "Change Tracks"
 msgstr "Изменить"
 
-#: dialogs.py:1091
+#: dialogs.py:1118
 #, fuzzy
 msgid "Please note:\n"
 msgstr ""
 "Обратите внимание:\n"
 "\n"
 
-#: dialogs.py:1092
+#: dialogs.py:1119
 msgid ""
 " When reducing the number of tracks the top Video track and/or bottom Audio "
 "track will be removed\n"
@@ -1750,17 +1836,17 @@ msgstr ""
 " При уменьшении количества дорожек верхние видеодорожки и/или нижние "
 "звуковые дорожки будут удалены\n"
 
-#: dialogs.py:1095
+#: dialogs.py:1122
 msgid ""
 " All Clips and Compositors on deleted Tracks will be permanently destroyed"
 msgstr " Все клипы и композиторы при удалении дорожки будут уничтожены"
 
-#: dialogs.py:1117
+#: dialogs.py:1144
 #, fuzzy
 msgid "Replace Media Item in Project"
 msgstr "Сохранить элемент сборки проекта, как"
 
-#: dialogs.py:1120
+#: dialogs.py:1147
 msgid ""
 "Please note:\n"
 "\n"
@@ -1768,119 +1854,119 @@ msgstr ""
 "Обратите внимание:\n"
 "\n"
 
-#: dialogs.py:1121
+#: dialogs.py:1148
 #, fuzzy
 msgid ""
 " It is recommended that you save Project before completing this operation.\n"
 msgstr " Рекомендуется сохранить проект до завершения этой операции\n"
 
-#: dialogs.py:1122
+#: dialogs.py:1149
 #, fuzzy
 msgid " There is no Undo for this operation.\n"
 msgstr " Эту операцию нельзя отменить\n"
 
-#: dialogs.py:1123
+#: dialogs.py:1150
 #, fuzzy
 msgid " Current Undo Stack will be destroyed.\n"
 msgstr " Текущий стек отмены будет уничтожен\n"
 
-#: dialogs.py:1124
+#: dialogs.py:1151
 msgid ""
-" Replacing current media with shorter or othervise unsuitable media may "
+" Replacing current media with shorter or otherwise unsuitable media may "
 "result in\n"
 "   crashes or corrupted project data."
 msgstr ""
 
-#: dialogs.py:1130
+#: dialogs.py:1157
 #, fuzzy
 msgid "Media File To Replace"
 msgstr "Новое расположение файла"
 
-#: dialogs.py:1134
+#: dialogs.py:1161
 #, fuzzy
 msgid "Select Replacement File"
 msgstr "Выберите файл проекта"
 
-#: dialogs.py:1139
+#: dialogs.py:1166
 msgid "Replacement Media"
 msgstr ""
 
-#: dialogs.py:1145
+#: dialogs.py:1172
 #, fuzzy
 msgid "Replace Media"
 msgstr "Выберите видеоклип"
 
-#: dialogs.py:1167
+#: dialogs.py:1194
 #, fuzzy
 msgid "Select Replament Media"
 msgstr "Выберите видеоклип"
 
-#: dialogs.py:1175
+#: dialogs.py:1202
 #, fuzzy
 msgid "Media Files"
 msgstr "Все медиафайлы"
 
-#: dialogs.py:1192
+#: dialogs.py:1219
 msgid "Change Clip Length"
 msgstr "Изменение длительности клипа"
 
-#: dialogs.py:1213
+#: dialogs.py:1240
 msgid "Create New Sequence"
 msgstr "Создание нового видеоряда"
 
-#: dialogs.py:1216
+#: dialogs.py:1243
 msgid "Create Sequence"
 msgstr "Создать видеоряд"
 
-#: dialogs.py:1223
+#: dialogs.py:1250
 msgid "Sequence Name:"
 msgstr "Имя видеоряда:"
 
-#: dialogs.py:1231
+#: dialogs.py:1258
 msgid "Open For Editing:"
 msgstr "Открыть для правки:"
 
-#: dialogs.py:1254
+#: dialogs.py:1281
 msgid "Rename New Media Object"
 msgstr "Переименование клипа"
 
-#: dialogs.py:1257 dialogs.py:1285 dialogs.py:1339 guipopover.py:583
+#: dialogs.py:1284 dialogs.py:1312 dialogs.py:1366 guipopover.py:642
 msgid "Rename"
 msgstr "Переименовать"
 
-#: dialogs.py:1264 dialogs.py:1292
+#: dialogs.py:1291 dialogs.py:1319
 msgid "New Name:"
 msgstr "Новое имя:"
 
-#: dialogs.py:1282 guipopoverclip.py:456
+#: dialogs.py:1309 guipopoverclip.py:481
 msgid "Rename Clip"
 msgstr "Переименовать клип"
 
-#: dialogs.py:1310
+#: dialogs.py:1337
 msgid "New Range Item Group"
 msgstr "Создание группы участков"
 
-#: dialogs.py:1317
+#: dialogs.py:1344
 msgid "User Group "
 msgstr "Группа пользователя "
 
-#: dialogs.py:1320 dialogs.py:1340
+#: dialogs.py:1347 dialogs.py:1367
 msgid "New Group Name:"
 msgstr "Имя новой группы:"
 
-#: dialogs.py:1338
+#: dialogs.py:1365
 msgid "Rename Range Log Item Group"
 msgstr "Переименование группы элементов"
 
-#: dialogs.py:1346
+#: dialogs.py:1373
 msgid "Can't open non-valid media"
 msgstr "Не удалось открыть медиа"
 
-#: dialogs.py:1347
+#: dialogs.py:1374
 msgid "File: "
 msgstr "Файл: "
 
-#: dialogs.py:1347
+#: dialogs.py:1374
 msgid ""
 "\n"
 "is not a valid media file."
@@ -1888,43 +1974,43 @@ msgstr ""
 "\n"
 "является некорректным медиафайлом."
 
-#: dialogs.py:1352 dialogs.py:1380
+#: dialogs.py:1379 dialogs.py:1407
 msgid "New Marker"
 msgstr "Новый маркер"
 
-#: dialogs.py:1353 dialogs.py:1382 guipopover.py:226
+#: dialogs.py:1380 dialogs.py:1409 guipopover.py:232
 msgid "Add Marker"
 msgstr "Добавить маркер"
 
-#: dialogs.py:1355 guipopover.py:229
+#: dialogs.py:1382 guipopover.py:235
 msgid "Rename Marker"
 msgstr "Переименовать маркер"
 
-#: dialogs.py:1356
+#: dialogs.py:1383
 msgid "Do Rename"
 msgstr "Переименовать"
 
-#: dialogs.py:1367
+#: dialogs.py:1394
 msgid "Name for marker at "
 msgstr "Имя маркера в "
 
-#: dialogs.py:1384
+#: dialogs.py:1411
 msgid "Timeline position: "
 msgstr "Позиция на монтажном столе: "
 
-#: dialogs.py:1391
+#: dialogs.py:1418
 msgid "Name for clip marker at "
 msgstr "Имя маркера клипа в "
 
-#: dialogs.py:1410
+#: dialogs.py:1437
 msgid "Alpha Filters Info"
 msgstr "Сведения о работе с эффектами альфа"
 
-#: dialogs.py:1414
+#: dialogs.py:1441
 msgid "You are adding <b>Alpha Filter '"
 msgstr "Вы добавляете <b>Эффект альфа '"
 
-#: dialogs.py:1414
+#: dialogs.py:1441
 msgid ""
 "'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on "
 "Flowblade:"
@@ -1933,7 +2019,7 @@ msgstr ""
 "альфа</b>\n"
 "работают в Flowblade:"
 
-#: dialogs.py:1419
+#: dialogs.py:1446
 msgid ""
 "This applies to all <b>Compositing Modes</b> other then <b>Standard Full "
 "Track</b>."
@@ -1941,12 +2027,12 @@ msgstr ""
 "Это относится ко всем <b>режимам композитинга</b>, кроме <b>Стандартного "
 "(без композиторов)</b>."
 
-#: dialogs.py:1425
+#: dialogs.py:1452
 msgid " <b>Alpha Filters</b> work by modifying image's alpha channel.\n"
 msgstr ""
 " <b>Эффекты альфа </b> работают путём модификации альфа-канала изображения.\n"
 
-#: dialogs.py:1426
+#: dialogs.py:1453
 msgid ""
 " To see the effect of <b>Alpha Filter</b> you need composite this clip on "
 "track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n"
@@ -1955,123 +2041,123 @@ msgstr ""
 "один клип и между ними добавьте <b>Композитор,\n"
 " например «Смешение»</b>.\n"
 
-#: dialogs.py:1427
+#: dialogs.py:1454
 msgid " <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect."
 msgstr ""
 " <b>Эффекты альфа</b> не работают на клипах размещённых на <b>Дорожке V1</b>."
 
-#: dialogs.py:1432
+#: dialogs.py:1459
 msgid "Don't show this message again."
 msgstr "Не показывать это сообщение снова."
 
-#: dialogs.py:1455
+#: dialogs.py:1482
 msgid "Add Image Sequence Clip"
 msgstr "Добавление клипа из серии изображений"
 
-#: dialogs.py:1461
+#: dialogs.py:1488
 msgid "Select First Frame"
 msgstr "Выберите первый кадр"
 
-#: dialogs.py:1471
+#: dialogs.py:1498
 msgid "First frame:"
 msgstr "Первый кадр:"
 
-#: dialogs.py:1475
+#: dialogs.py:1502
 msgid "Frames per Source Image:"
 msgstr "Количество кадров:"
 
-#: dialogs.py:1491
+#: dialogs.py:1518
 msgid "Export EDL"
 msgstr "Экспорт в EDL"
 
-#: dialogs.py:1505
+#: dialogs.py:1532
 msgid "Rerender Transition"
 msgstr "Пересобрать переход"
 
-#: dialogs.py:1508 guipopoverclip.py:376
+#: dialogs.py:1535 guipopoverclip.py:396
 msgid "Rerender"
 msgstr "Пересобрать"
 
-#: dialogs.py:1519
+#: dialogs.py:1546
 msgid "Rerender All Transitions and Fades"
 msgstr "Пересборка всех переходов"
 
-#: dialogs.py:1522
+#: dialogs.py:1549
 msgid "Rerender All"
 msgstr "Пересобрать всё"
 
-#: dialogs.py:1534
+#: dialogs.py:1561
 msgid "Sequence Watermark"
 msgstr "Водяной знак в видеоряде"
 
-#: dialogs.py:1536 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
+#: dialogs.py:1563 tools/titler.py:648 proxyediting.py:313 medialinker.py:162
 #: tools/gmic.py:848 tools/gmic.py:946 diskcachemanagement.py:157
 #: tools/scripttool.py:941 tools/scripttool.py:1105 projectdatavaultgui.py:278
-#: projectdatavaultgui.py:739 mediaplugin.py:378 projectaddmediafolder.py:111
+#: projectdatavaultgui.py:739 mediaplugin.py:430 projectaddmediafolder.py:111
 msgid "Close"
 msgstr "Закрыть"
 
-#: dialogs.py:1538
+#: dialogs.py:1565
 msgid "Sequence:"
 msgstr "Видеоряд:"
 
-#: dialogs.py:1542
+#: dialogs.py:1569
 msgid "Watermark:"
 msgstr "Водяной знак:"
 
-#: dialogs.py:1544
+#: dialogs.py:1571
 msgid "Set Watermark File"
 msgstr "Установить водяной знак"
 
-#: dialogs.py:1545
+#: dialogs.py:1572
 msgid "Remove Watermark"
 msgstr "Удалить водяной знак"
 
-#: dialogs.py:1547 menuactions.py:172 projectaddmediafolder.py:104
+#: dialogs.py:1574 menuactions.py:172 projectaddmediafolder.py:104
 msgid "Not Set"
 msgstr "Не установлено"
 
-#: dialogs.py:1579
+#: dialogs.py:1606
 msgid "Select Watermark File"
 msgstr "Выберите водяной знак"
 
-#: dialogs.py:1608
+#: dialogs.py:1635
 msgid "All files"
 msgstr "Все файлы"
 
-#: dialogs.py:1630
+#: dialogs.py:1657
 msgid "Saving project snapshot"
 msgstr "Сохранение резервной копии проекта"
 
-#: dialogs.py:1652
+#: dialogs.py:1679
 msgid "Loaded Media Profile Mismatch"
 msgstr "Файл содержит неподходящий профиль"
 
-#: dialogs.py:1654
+#: dialogs.py:1681
 msgid "Keep Current Profile"
 msgstr "Изменить профиль файла"
 
-#: dialogs.py:1655
+#: dialogs.py:1682
 msgid "Change To File Profile"
 msgstr "Изменить профиль проекта"
 
-#: dialogs.py:1657
+#: dialogs.py:1684
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr "Профиль загружаемого видеофайла не соответствует профилю проекта!"
 
-#: dialogs.py:1664 tools/batchrendering.py:705 tools/batchrendering.py:1433
+#: dialogs.py:1691 tools/batchrendering.py:705 tools/batchrendering.py:1433
 msgid "File:"
 msgstr "Файл:"
 
-#: dialogs.py:1665
+#: dialogs.py:1692
 msgid "File Profile:"
 msgstr "Профиль файла:"
 
-#: dialogs.py:1666
+#: dialogs.py:1693
 msgid "Project Profile:"
 msgstr "Профиль проекта:"
 
-#: dialogs.py:1667
+#: dialogs.py:1694
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2081,148 +2167,148 @@ msgstr ""
 "\n"
 "Это сообщение всплывает только при первой загрузке медиа в проект."
 
-#: dialogs.py:1691
+#: dialogs.py:1718
 msgid "Cannot import sequence!"
 msgstr "Невозможно импортировать!"
 
-#: dialogs.py:1692
+#: dialogs.py:1719
 msgid "There are no other sequences in the Project."
 msgstr "В проекте нет других видеорядов."
 
-#: dialogs.py:1696
+#: dialogs.py:1723
 msgid "Import Sequence"
 msgstr "Импортировать видеоряд"
 
-#: dialogs.py:1699
+#: dialogs.py:1726
 msgid "Import"
 msgstr "Импорт"
 
-#: dialogs.py:1702
+#: dialogs.py:1729
 msgid ""
 " It is recommended that you save Project before completing this operation\n"
 msgstr " Рекомендуется сохранить проект до завершения этой операции\n"
 
-#: dialogs.py:1710
+#: dialogs.py:1737
 msgid "Append Sequence"
 msgstr "Добавить видеоряд"
 
-#: dialogs.py:1711
+#: dialogs.py:1738
 msgid "Insert Sequence at Playhead position"
 msgstr "Вставить видеоряд по указателю воспроизведения"
 
-#: dialogs.py:1724
+#: dialogs.py:1751
 msgid "Action:"
 msgstr "Действие:"
 
-#: dialogs.py:1727
+#: dialogs.py:1754
 msgid "Import:"
 msgstr "Импорт:"
 
-#: dialogs.py:1743
+#: dialogs.py:1770
 msgid "Timeline Audio Sync"
 msgstr "Синхронизация звука на монтажном столе"
 
-#: dialogs.py:1746
+#: dialogs.py:1773
 msgid "Do Audio Sync Move Edit"
 msgstr "Сдвинуть клип для синхронизации"
 
-#: dialogs.py:1748
+#: dialogs.py:1775
 msgid "<b>Audio Sync Offset</b> between clips media is "
 msgstr "<b>Смещение синхронизации звука</b> между клипами на "
 
-#: dialogs.py:1748 dialogs.py:1751 dialogs.py:1755
+#: dialogs.py:1775 dialogs.py:1778 dialogs.py:1782
 msgid " frames."
 msgstr " кадров."
 
-#: dialogs.py:1751
+#: dialogs.py:1778
 msgid "<b>Timeline Media Offset</b> between clips is "
 msgstr "<b>Смещение медиа по монтажному столу</b> между клипами на "
 
-#: dialogs.py:1755
+#: dialogs.py:1782
 msgid "To audio sync clips you need move action origin clip by "
 msgstr "Для синхронизации со звуком нужно сдвинуть исходный клип на "
 
-#: dialogs.py:1775
+#: dialogs.py:1802
 msgid "Can't put an audio clip on a video track."
 msgstr "Нельзя размещать звуковые клипы на видеодорожках."
 
-#: dialogs.py:1776 movemodes.py:770 dialogutils.py:266
+#: dialogs.py:1803 movemodes.py:754 dialogutils.py:266
 msgid "Track "
 msgstr "Дорожка "
 
-#: dialogs.py:1776
+#: dialogs.py:1803
 msgid " is a video track and can't display audio only material."
 msgstr " является видеодорожкой, поэтому выводит не только звуковой сигнал."
 
-#: dialogs.py:1781
+#: dialogs.py:1808
 msgid "Confirm Compositing Mode Change"
 msgstr "Подтвердите изменение режима композитинга"
 
-#: dialogs.py:1784
+#: dialogs.py:1811
 msgid "Change Compositing Mode"
 msgstr "Изменить режим композитинга"
 
-#: dialogs.py:1786
+#: dialogs.py:1813
 msgid "Changing Compositing Mode destroys current Compositors and undo stack"
 msgstr ""
 "Изменение режима композитинга уничтожит текущие композиторы и стек отмены"
 
-#: dialogs.py:1787
+#: dialogs.py:1814
 msgid "This operation cannot be undone. Are you sure you wish to proceed?"
 msgstr "Эта операция не подлежит отмене. Продолжить?"
 
-#: dialogs.py:1799
+#: dialogs.py:1826
 msgid "Fades Default Lengths"
 msgstr "Длительность фейда по умолчанию"
 
-#: dialogs.py:1802 dialogs.py:1874
+#: dialogs.py:1829 dialogs.py:1901 dialogs.py:1920
 msgid "Set"
 msgstr "Установить"
 
-#: dialogs.py:1808
+#: dialogs.py:1835
 msgid "Fade Buttons Fades Default Length:"
 msgstr "Длительность по умолчанию:"
 
-#: dialogs.py:1824
+#: dialogs.py:1851
 msgid "No Monitor display available for Generators"
 msgstr "Генераторы недоступны для предпросмотра"
 
-#: dialogs.py:1825
+#: dialogs.py:1852
 msgid "Generators with user mutable media are best handled on Timeline."
 msgstr ""
 "Предпросмотр и правку генераторов лучше проводить на\n"
 "монтажном столе."
 
-#: dialogs.py:1829
+#: dialogs.py:1856
 msgid "Cannot do the panel move!"
 msgstr ""
 
-#: dialogs.py:1830
+#: dialogs.py:1857
 msgid ""
 "It is not possible to move the panel and make the top left notebook empty."
 msgstr ""
 
-#: dialogs.py:1834
+#: dialogs.py:1861
 #, fuzzy
-msgid "There are currenly "
+msgid "There are currently "
 msgstr "Имеется "
 
-#: dialogs.py:1834
+#: dialogs.py:1861
 #, fuzzy
 msgid " active job/s!"
 msgstr "активно"
 
-#: dialogs.py:1835
+#: dialogs.py:1862
 #, fuzzy
 msgid "Let active jobs complete or cancel them before closing the application."
 msgstr "Остановка сборки перед закрытием приложения."
 
-#: dialogs.py:1839
+#: dialogs.py:1866
 #, fuzzy
 msgid "Unable to load some Compositors!"
 msgstr "Удалить композитор/ы"
 
-#: dialogs.py:1840
+#: dialogs.py:1867
 msgid ""
 "MLT version 7 removed several services that were used to implement "
 "Compositors in Flowblade.\n"
@@ -2230,205 +2316,241 @@ msgid ""
 "Your Project had "
 msgstr ""
 
-#: dialogs.py:1841
+#: dialogs.py:1868
 msgid " Compositor/s in it that cannot be loaded."
 msgstr ""
 
-#: dialogs.py:1845
+#: dialogs.py:1872
 #, fuzzy
 msgid "Cannot log Ranges from Timelime!"
 msgstr "Вставить выбранные участки на монтажный стол"
 
-#: dialogs.py:1846
+#: dialogs.py:1873
 msgid ""
-"'Range Log' functionality is intented to log areas of interest\n"
+"'Range Log' functionality is intended to log areas of interest\n"
 "in Media Items.\n"
 "\n"
 "To save interesting positions or ranges on Timeline use\n"
 "the 'Timeline Markers' functionality."
 msgstr ""
 
-#: dialogs.py:1850
+#: dialogs.py:1877
 #, fuzzy
 msgid "Add Compositor To Clip"
 msgstr "Добавить композитор"
 
-#: dialogs.py:1853
+#: dialogs.py:1880
 msgid "Add Compositor"
 msgstr "Добавить композитор"
 
-#: dialogs.py:1873
+#: dialogs.py:1900
 #, fuzzy
 msgid "Set Bin Graphics Default Length"
 msgstr "Длительность изображений по умолчанию:"
 
-#: dialogs.py:1876
+#: dialogs.py:1903
 #, fuzzy
 msgid "Set graphics default length for {}:"
 msgstr "Длительность изображений по умолчанию:"
 
-#: guicomponents.py:761
+#: dialogs.py:1919
+msgid "Set Track Clips Sync"
+msgstr ""
+
+#: dialogs.py:1923
+msgid "Set Sync for all Clips on Track {} with Track:"
+msgstr ""
+
+#: dialogs.py:1952 guipopover.py:420
+#, fuzzy
+msgid "Create Sequence Link Container Clip"
+msgstr "Сохранение контейнерного клипа из видеоряда"
+
+#: dialogs.py:1953
+#, fuzzy
+msgid "Create Sequence Link Container"
+msgstr "Сохранение контейнерного клипа из видеоряда"
+
+#: dialogs.py:1955
+#, fuzzy
+msgid "Create Sequence Link Container for Sequence:"
+msgstr "Создать контейнерный клип из выбранного видеоряда"
+
+#: dialogs.py:1978
+msgid "Cyclic relation detected!"
+msgstr ""
+
+#: dialogs.py:1979
+msgid "Edit would create a cyclink linked sequence relation and was cancelled!"
+msgstr ""
+
+#: guicomponents.py:724
 msgid "default"
 msgstr "по умолчанию"
 
-#: guicomponents.py:776
+#: guicomponents.py:739
 msgid "Autosave created "
 msgstr "Автосохранение создано "
 
-#: guicomponents.py:776
+#: guicomponents.py:739
 msgid " ago."
 msgstr " назад."
 
-#: guicomponents.py:795
+#: guicomponents.py:758
 msgid "Clip:"
 msgstr "Клип:"
 
-#: guicomponents.py:806
+#: guicomponents.py:769
 msgid "Track:"
 msgstr "Дорожка:"
 
-#: guicomponents.py:827
+#: guicomponents.py:790
 msgid "<b>Clip: </b>"
 msgstr "<b>Клип: </b>"
 
-#: guicomponents.py:829
+#: guicomponents.py:792
 msgid "<b>Track: </b>"
 msgstr "<b>Дорожка: </b>"
 
-#: guicomponents.py:909
+#: guicomponents.py:872
 msgid "<b>Source:</b>"
 msgstr "<b>Источник:</b>"
 
-#: guicomponents.py:910
+#: guicomponents.py:873
 msgid "<b>Destination:</b>"
 msgstr "<b>Назначение:</b>"
 
-#: guicomponents.py:911 guicomponents.py:992
+#: guicomponents.py:874 guicomponents.py:955
 msgid "<b>Length:</b>"
 msgstr "<b>Длительность:</b>"
 
-#: guicomponents.py:991
+#: guicomponents.py:954
 msgid "<b>Generator Clip on Track:</b>"
 msgstr "<b>Генератор на дорожке:</b>"
 
-#: guicomponents.py:1055 guipopover.py:558 guipopover.py:568
+#: guicomponents.py:1018 guipopover.py:617 guipopover.py:627
 #, fuzzy
 msgid "Show All Ratings"
 msgstr "Показать полные пути"
 
-#: guicomponents.py:1057 guipopover.py:558 guipopover.py:568
+#: guicomponents.py:1020 guipopover.py:617 guipopover.py:627
 #, fuzzy
 msgid "Show Favorites"
 msgstr "Показать полные пути"
 
-#: guicomponents.py:1059 guipopover.py:559 guipopover.py:569
+#: guicomponents.py:1022 guipopover.py:618 guipopover.py:628
 msgid "Hide Bad"
 msgstr ""
 
-#: guicomponents.py:1078
+#: guicomponents.py:1041
 msgid "<b>Items:</b>"
 msgstr "<b>Элементов:</b>"
 
-#: guicomponents.py:1372
+#: guicomponents.py:1336
 msgid "Right Click to Add Media."
 msgstr ""
 "Щёлкните правой кнопкой мыши,\n"
 "для добавления Медиа."
 
-#: guicomponents.py:1795 propertyeditorbuilder.py:739
-#: propertyeditorbuilder.py:842 tools/toolsencoding.py:224
+#: guicomponents.py:1761 propertyeditorbuilder.py:736
+#: propertyeditorbuilder.py:839 tools/toolsencoding.py:254
 msgid "Progressive"
 msgstr "Прогрессив"
 
-#: guicomponents.py:1797 tools/toolsencoding.py:226
+#: guicomponents.py:1763 tools/toolsencoding.py:256
 msgid "Interlaced"
 msgstr "Интерлейс"
 
-#: guicomponents.py:1802 guicomponents.py:1812 tools/toolsencoding.py:229
+#: guicomponents.py:1768 guicomponents.py:1778 tools/toolsencoding.py:259
 msgid "Fps: "
 msgstr "Кадров/с: "
 
-#: guicomponents.py:1805 tools/toolsencoding.py:232
+#: guicomponents.py:1771 tools/toolsencoding.py:262
 msgid "Pixel Aspect: "
 msgstr "Пропорции в пикселях: "
 
-#: guicomponents.py:1826
+#: guicomponents.py:1792
 msgid "Description:"
 msgstr "Описание:"
 
-#: guicomponents.py:1828
+#: guicomponents.py:1794
 msgid "Dimensions:"
 msgstr "Пропорции:"
 
-#: guicomponents.py:1830
+#: guicomponents.py:1796
 msgid "Frames per second:"
 msgstr "Кадровая частота:"
 
-#: guicomponents.py:1832 tools/titler.py:408 tools/simpleeditors.py:594
+#: guicomponents.py:1798 tools/titler.py:408 tools/simpleeditors.py:594
 msgid "Size:"
 msgstr "Размер:"
 
-#: guicomponents.py:1834 guicomponents.py:1859
+#: guicomponents.py:1800 guicomponents.py:1825
 msgid "Pixel aspect ratio: "
 msgstr "Пропорции пикселя: "
 
-#: guicomponents.py:1836 profilesmanager.py:139
+#: guicomponents.py:1802 profilesmanager.py:139
 msgid "Progressive:"
 msgstr "Прогрессив:"
 
-#: guicomponents.py:1844
+#: guicomponents.py:1810
 msgid "Description: "
 msgstr "Описание: "
 
-#: guicomponents.py:1846
+#: guicomponents.py:1812
 msgid "Dimensions: "
 msgstr "Пропорции: "
 
-#: guicomponents.py:1853
+#: guicomponents.py:1819
 msgid "Frames per second: "
 msgstr "Кадровая частота: "
 
-#: guicomponents.py:1855
+#: guicomponents.py:1821
 msgid "Size: "
 msgstr "Размер: "
 
-#: guicomponents.py:1865
+#: guicomponents.py:1831
 msgid "Progressive: "
 msgstr "Прогрессив: "
 
-#: guicomponents.py:1867
+#: guicomponents.py:1833
 msgid "Color space: "
 msgstr "Цветовое отличие: "
 
-#: guicomponents.py:2345
+#: guicomponents.py:2279
 msgid "Sequence uses proxy media if available."
 msgstr "Видеоряд использует прокси, при его доступности."
 
-#: guicomponents.py:2366
+#: guicomponents.py:2300
 msgid "Video:"
 msgstr "Видео:"
 
-#: guicomponents.py:2371
+#: guicomponents.py:2305
 msgid "Audio:"
 msgstr "Звук:"
 
-#: guicomponents.py:2376
+#: guicomponents.py:2310
 msgid "Number of Tracks:"
 msgstr "Количество дорожек:"
 
-#: guicomponents.py:2419 tools/scripttool.py:632
+#: guicomponents.py:2353 tools/scripttool.py:632
 msgid "Frames:"
 msgstr "Кадры:"
 
-#: guicomponents.py:2806
+#: guicomponents.py:2740
 msgid "Display Timeline / Clip on Monitor"
 msgstr "Просмотр клипа с Монтажного стола / из Медиа"
 
-#: movemodes.py:769
+#: guicomponents.py:2815
+#, fuzzy
+msgid "Clip Media Type"
+msgstr "Тип вытеснения"
+
+#: movemodes.py:753
 msgid "Can't do edit on a locked track"
 msgstr "Нельзя редактировать на заблокированной дорожке"
 
-#: movemodes.py:770
+#: movemodes.py:754
 msgid " is locked. Unlock track to edit it.\n"
 msgstr " заблокирована. Разблокируйте дорожку для внесения в неё изменений\n"
 
@@ -2459,123 +2581,133 @@ msgid ""
 msgstr ""
 "<b>Видеоряд</b> — это всё содержимое монтажного стола, образующее фильм."
 
-#: panels.py:205
+#: panels.py:207
 msgid "Path:"
 msgstr "Путь:"
 
-#: panels.py:206 panels.py:239
+#: panels.py:208 panels.py:245
 msgid "Image Size:"
 msgstr "Размер кадра:"
 
-#: panels.py:207 tools/batchrendering.py:1107
+#: panels.py:209 tools/batchrendering.py:1107
 msgid "Frames Per Second:"
 msgstr "Кадровая частота:"
 
-#: panels.py:208
+#: panels.py:210
 msgid "Playtime:"
 msgstr "Время воспроизведения:"
 
-#: panels.py:209 panels.py:241
+#: panels.py:211 panels.py:247
 msgid "Video Codec:"
 msgstr "Видеокодек:"
 
-#: panels.py:210 panels.py:242
+#: panels.py:212 panels.py:248
 msgid "Audio Codec:"
 msgstr "Звуковой кодек:"
 
-#: panels.py:211
+#: panels.py:213
 msgid "Audio Channels:"
 msgstr "Каналы звука:"
 
-#: panels.py:212
+#: panels.py:214
 msgid "Audio Sample Rate:"
 msgstr "Звуковая частота:"
 
-#: panels.py:213
+#: panels.py:215
 msgid "Best Profile:"
 msgstr "Подходящий профиль:"
 
-#: panels.py:214
+#: panels.py:216
 msgid "Matches Project Profile:"
 msgstr "Подходит профилю проекта:"
 
-#: panels.py:236 tools/gmic.py:744 tools/scripttool.py:846
+#: panels.py:217
+#, fuzzy
+msgid "Colorspace:"
+msgstr "Цветовое отличие: "
+
+#: panels.py:218
+#, fuzzy
+msgid "Pixel Format:"
+msgstr "Пропорции пикселя: "
+
+#: panels.py:242 tools/gmic.py:744 tools/scripttool.py:846
 msgid "Mark In:"
 msgstr "Начало участка:"
 
-#: panels.py:237 tools/gmic.py:745 tools/scripttool.py:847
+#: panels.py:243 tools/gmic.py:745 tools/scripttool.py:847
 msgid "Mark Out:"
 msgstr "Конец участка:"
 
-#: panels.py:238
+#: panels.py:244
 msgid "Clip Length:"
 msgstr "Длительность:"
 
-#: panels.py:240
+#: panels.py:246
 msgid "Media Path:"
 msgstr "Путь к клипу:"
 
-#: panels.py:270
+#: panels.py:276
 msgid "Composite clip on:"
 msgstr "Композитный клип на:"
 
-#: panels.py:281 tools/toolsencoding.py:394
+#: panels.py:287 tools/toolsencoding.py:422
 msgid "Type:"
 msgstr "Тип:"
 
-#: panels.py:290
+#: panels.py:296
 msgid "Wipe Pattern:"
 msgstr "Шаблон вытеснения:"
 
-#: panels.py:307 panels.py:383 tools/gmic.py:746
+#: panels.py:313 panels.py:389 tools/gmic.py:746
 msgid "Length:"
 msgstr "Длительность:"
 
-#: panels.py:313
+#: panels.py:319
 msgid "First Clip Out Handle Available/Required:"
 msgstr "В первом клипе доступно/требуется:"
 
-#: panels.py:314 panels.py:317 panels.py:320
+#: panels.py:320 panels.py:323 panels.py:326
 msgid " frame(s)"
 msgstr " кадр(ов)"
 
-#: panels.py:316
+#: panels.py:322
 msgid "Second Clip In Handle Available/Required:"
 msgstr "Во втором клипе доступно/требуется :"
 
-#: panels.py:319
+#: panels.py:325
 msgid "Second Clip In Handle:"
 msgstr "Второй клип содержит:"
 
-#: panels.py:325
+#: panels.py:331
 msgid "Steal frames from clips if needed"
 msgstr "При необходимости извлекать кадры из клипов"
 
-#: panels.py:361
+#: panels.py:367
 msgid "Transition Options"
 msgstr "Параметры перехода"
 
-#: panels.py:362 panels.py:408 panels.py:448
+#: panels.py:368 panels.py:414 panels.py:454
 msgid "Encoding"
 msgstr "Кодировка"
 
-#: panels.py:363
+#: panels.py:369
 msgid "Media Overlap info"
 msgstr "Сведения о перекрытии медиа"
 
-#: panels.py:407
+#: panels.py:413
 msgid "Transition"
 msgstr "Переход"
 
-#: panels.py:416
+#: panels.py:422
 msgid "Transitions / Fades to be rerendered:"
 msgstr "Переходов будет пересобрано:"
 
-#: panels.py:421
+#: panels.py:427
 msgid "There are "
 msgstr "Имеется "
 
-#: panels.py:421
+#: panels.py:427
 msgid ""
 " Transitions / Fades that cannot be rerendered, either because they are\n"
 "created with Flowblade version <=1.14 or the source clips are no longer on "
@@ -2585,23 +2717,23 @@ msgstr ""
 "либо в версии Flowblade <= 1.14, либо их исходные клипы отсутствуют\n"
 "на монтажном столе."
 
-#: panels.py:447 projectdatavaultgui.py:736
+#: panels.py:453 projectdatavaultgui.py:736
 msgid "Info"
 msgstr "Сведения"
 
-#: persistance.py:471
+#: persistance.py:477
 msgid "Building sequence "
 msgstr "Построение видеоряда "
 
-#: persistance.py:494
+#: persistance.py:500
 msgid "Loading icons"
 msgstr "Загрузка миниатюр"
 
-#: persistance.py:605
+#: persistance.py:625
 msgid "Building track "
 msgstr "Построение дорожки "
 
-#: persistance.py:794 persistance.py:811
+#: persistance.py:814 persistance.py:831
 msgid "Relative file search for "
 msgstr "Относительный поиск файла "
 
@@ -2609,53 +2741,53 @@ msgstr "Относительный поиск файла "
 msgid "untitled"
 msgstr "безымянный"
 
-#: projectdata.py:160
+#: projectdata.py:161
 msgid "Video file gives value 0 for 'fps_den' property."
 msgstr ""
 
-#: projectdata.py:315
+#: projectdata.py:319
 msgid "bin_"
 msgstr "корзина_"
 
-#: projectdata.py:622
+#: projectdata.py:641
 msgid "MLT reports that file is not a valid media producer."
 msgstr ""
 
-#: projectdata.py:646
+#: projectdata.py:665
 msgid ""
 "Audio file not seekable, cannot be edited.\n"
 "\n"
 msgstr ""
 
-#: projectdata.py:665
+#: projectdata.py:684
 msgid "Created using dialog"
 msgstr "Создано с помощью диалога"
 
-#: projectdata.py:667
+#: projectdata.py:686
 msgid "Created using Save As... "
 msgstr "Создано с помощью «Сохранить как...» "
 
-#: projectdata.py:669
+#: projectdata.py:688
 msgid "Saved "
 msgstr "Сохранено "
 
-#: projectdata.py:672
+#: projectdata.py:691
 msgid "Saved as "
 msgstr "Сохранено в "
 
-#: projectdata.py:674
+#: projectdata.py:693
 msgid "Rendered "
 msgstr "Собрано "
 
-#: projectdata.py:676
+#: projectdata.py:695
 msgid "Saved backup snapshot"
 msgstr "Сохранённая резервная копия"
 
-#: projectdata.py:678
+#: projectdata.py:697
 msgid "Media load"
 msgstr "Загрузка медиа"
 
-#: projectdata.py:680
+#: projectdata.py:699
 msgid "Saved with changed profile"
 msgstr "Сохранено с изменением профиля"
 
@@ -2675,10 +2807,6 @@ msgstr "Выберите участок для сборки"
 msgid "Begin Rendering"
 msgstr "Сборка фильма в файл"
 
-#: render.py:340 render.py:649
-msgid "A File with given path exists!"
-msgstr "Файл по этому пути уже создан!"
-
 #: render.py:341 render.py:650
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
@@ -2690,23 +2818,6 @@ msgstr ""
 #: render.py:747
 msgid "Rendering Transition Clip"
 msgstr "Создание перехода между клипами"
-
-#: syncsplitevent.py:204
-msgid "Sync parent clips must be on track V1"
-msgstr "Синхронизация с родительскими клипами производится на дорожке V1"
-
-#: syncsplitevent.py:205
-msgid "Selected sync parent clip is on track "
-msgstr "Синхронизация с выбранным родительским клипом на дорожке "
-
-#: syncsplitevent.py:205
-msgid ""
-".\n"
-"You can only sync to clips that are on track V1."
-msgstr ""
-".\n"
-"Можно синхронизировать только клипы, расположенные на \n"
-"дорожке V1."
 
 #: translations.py:152 translations.py:468
 msgid "Color"
@@ -2729,8 +2840,8 @@ msgstr "Звуковые фильтры"
 msgid "Blur"
 msgstr "Размытие"
 
-#: translations.py:157 translations.py:589 propertyeditorbuilder.py:754
-#: propertyeditorbuilder.py:857
+#: translations.py:157 translations.py:589 propertyeditorbuilder.py:751
+#: propertyeditorbuilder.py:854
 msgid "Distort"
 msgstr "Искажение"
 
@@ -2742,7 +2853,7 @@ msgstr "Альфа"
 msgid "Movement"
 msgstr "Движение"
 
-#: translations.py:160 mlttransitions.py:143
+#: translations.py:160 mlttransitions.py:144
 msgid "Transform"
 msgstr "Трансформация"
 
@@ -2762,7 +2873,7 @@ msgstr "Имитация"
 msgid "Fade"
 msgstr "Фейд"
 
-#: translations.py:165 mlttransitions.py:142
+#: translations.py:165 mlttransitions.py:143
 msgid "Blend"
 msgstr "Смешение"
 
@@ -2786,7 +2897,7 @@ msgstr "MPEG"
 msgid "Lossless"
 msgstr "Без потерь"
 
-#: translations.py:174 mediaplugin.py:608
+#: translations.py:174 mediaplugin.py:673
 msgid "Image Sequence"
 msgstr "Серия изображений"
 
@@ -2806,7 +2917,7 @@ msgstr "Кадрирование"
 msgid "Alpha Shape"
 msgstr "Фигуры в альфа"
 
-#: translations.py:184 kftoolmode.py:494
+#: translations.py:184 kftoolmode.py:498
 msgid "Volume"
 msgstr "Громкость"
 
@@ -2963,7 +3074,7 @@ msgstr "Оттенки серого"
 msgid "Contrast"
 msgstr "Контраст"
 
-#: translations.py:224 translations.py:456 mlttransitions.py:162
+#: translations.py:224 translations.py:456 mlttransitions.py:163
 msgid "Saturation"
 msgstr "Насыщенность"
 
@@ -2972,11 +3083,11 @@ msgstr "Насыщенность"
 msgid "Invert"
 msgstr "Инвертировать"
 
-#: translations.py:226 translations.py:457 mlttransitions.py:158
+#: translations.py:226 translations.py:457 mlttransitions.py:159
 msgid "Hue"
 msgstr "Оттенок"
 
-#: translations.py:227 kftoolmode.py:495
+#: translations.py:227 kftoolmode.py:499
 msgid "Brightness"
 msgstr "Яркость"
 
@@ -3254,7 +3365,7 @@ msgstr "Позиция и масштаб"
 msgid "Position Scale Rotate"
 msgstr "Позиция и масштаб"
 
-#: translations.py:297 mlttransitions.py:186
+#: translations.py:297 mlttransitions.py:187
 msgid "Wipe"
 msgstr "Вытеснение"
 
@@ -4101,17 +4212,17 @@ msgstr "Уровень чёрного на выходе"
 msgid "White output"
 msgstr "Уровень белого на выходе"
 
-#: translations.py:547 translations.py:766 guipopoverclip.py:460
+#: translations.py:547 translations.py:766 guipopoverclip.py:485
 msgid "Red"
 msgstr "Красный"
 
 #: translations.py:548 translations.py:761 translations.py:767
-#: guipopoverclip.py:461
+#: guipopoverclip.py:486
 msgid "Green"
 msgstr "Зелёный"
 
 #: translations.py:549 translations.py:762 translations.py:768
-#: guipopoverclip.py:462
+#: guipopoverclip.py:487
 msgid "Blue"
 msgstr "Синий"
 
@@ -4291,7 +4402,8 @@ msgstr "Минимальное усиление"
 msgid "Select file"
 msgstr "Выберите файл"
 
-#: translations.py:606 keyframeeditor.py:986 guipopoverclip.py:760
+#: translations.py:606 keyframeeditor.py:1030 keyframeeditor.py:2134
+#: guipopoverclip.py:809
 msgid "Smooth"
 msgstr "Плавность"
 
@@ -4615,7 +4727,7 @@ msgstr ""
 msgid "Fade In Type"
 msgstr "Тип появления"
 
-#: translations.py:689 guipopover.py:416
+#: translations.py:689 guipopover.py:471
 msgid "Image"
 msgstr "Изображение"
 
@@ -4625,7 +4737,7 @@ msgstr ""
 
 #: translations.py:691
 #, fuzzy
-msgid "Relese(ms)"
+msgid "Release(ms)"
 msgstr "Базовая задержка (мс)"
 
 #: translations.py:692
@@ -4882,11 +4994,11 @@ msgid "Overwrite"
 msgstr "Перезапись"
 
 #: translations.py:759 translations.py:787 translations.py:808
-#: mlttransitions.py:148 tools/titler.py:283
+#: mlttransitions.py:149 tools/titler.py:283
 msgid "Add"
 msgstr "Добавить"
 
-#: translations.py:760 translations.py:809 mlttransitions.py:165
+#: translations.py:760 translations.py:809 mlttransitions.py:166
 msgid "Subtract"
 msgstr "Вычитание"
 
@@ -4910,7 +5022,7 @@ msgstr "Добавить константу"
 msgid "Change Gamma"
 msgstr "Сменить гамму"
 
-#: translations.py:771 translations.py:789 mlttransitions.py:160
+#: translations.py:771 translations.py:789 mlttransitions.py:161
 msgid "Multiply"
 msgstr "Умножение"
 
@@ -4966,19 +5078,19 @@ msgstr "Назад"
 msgid "Saturate"
 msgstr "Насыщенность"
 
-#: translations.py:790 mlttransitions.py:163
+#: translations.py:790 mlttransitions.py:164
 msgid "Screen"
 msgstr "Экранирование"
 
-#: translations.py:791 mlttransitions.py:161
+#: translations.py:791 mlttransitions.py:162
 msgid "Overlay"
 msgstr "Наложение"
 
-#: translations.py:792 mlttransitions.py:151
+#: translations.py:792 mlttransitions.py:152
 msgid "Darken"
 msgstr "Замена тёмным"
 
-#: translations.py:793 mlttransitions.py:159
+#: translations.py:793 mlttransitions.py:160
 msgid "Lighten"
 msgstr "Замена светлым"
 
@@ -4990,15 +5102,15 @@ msgstr "Осветление основы"
 msgid "Colorburn"
 msgstr "Затемнение основы"
 
-#: translations.py:796 mlttransitions.py:157
+#: translations.py:796 mlttransitions.py:158
 msgid "Hardlight"
 msgstr "Жёсткий свет"
 
-#: translations.py:797 mlttransitions.py:164
+#: translations.py:797 mlttransitions.py:165
 msgid "Softlight"
 msgstr "Мягкий свет"
 
-#: translations.py:798 mlttransitions.py:152
+#: translations.py:798 mlttransitions.py:153
 msgid "Difference"
 msgstr "Разница"
 
@@ -5026,7 +5138,8 @@ msgstr "HSL светлота"
 msgid "Cos"
 msgstr "Косинус"
 
-#: translations.py:805 keyframeeditor.py:986 guipopoverclip.py:760
+#: translations.py:805 keyframeeditor.py:1030 keyframeeditor.py:2133
+#: guipopoverclip.py:809
 msgid "Linear"
 msgstr "Линейно"
 
@@ -5222,15 +5335,16 @@ msgstr "По буквам"
 msgid "Words"
 msgstr "По словам"
 
-#: translations.py:860 preferenceswindow.py:135
+#: translations.py:860 preferenceswindow.py:135 guipopover.py:295
+#: guipopover.py:311
 msgid "Off"
 msgstr "Выкл"
 
-#: translations.py:862 keyframeeditor.py:1775 keyframeeditor.py:2111
+#: translations.py:862 keyframeeditor.py:1838 keyframeeditor.py:2410
 msgid "Center Horizontal"
 msgstr "Центрировать по горизонтали"
 
-#: translations.py:863 keyframeeditor.py:1776 keyframeeditor.py:2112
+#: translations.py:863 keyframeeditor.py:1839 keyframeeditor.py:2411
 msgid "Center Vertical"
 msgstr "Центрировать по вертикали"
 
@@ -5419,7 +5533,7 @@ msgstr "Перекрытие шестигранниками"
 msgid "Animation"
 msgstr "Тип анимации"
 
-#: translations.py:918 middlebar.py:521
+#: translations.py:918 middlebar.py:522
 msgid "Layout"
 msgstr "Макет"
 
@@ -5428,247 +5542,247 @@ msgstr "Макет"
 msgid "Fonts"
 msgstr "Шрифт"
 
-#: mlttransitions.py:87
+#: mlttransitions.py:88
 msgid "Burst"
 msgstr "Взрыв"
 
-#: mlttransitions.py:88
+#: mlttransitions.py:89
 msgid "Checkerboard"
 msgstr "Шахматная доска"
 
-#: mlttransitions.py:89
+#: mlttransitions.py:90
 msgid "Circle From In"
 msgstr "Круг наружу"
 
-#: mlttransitions.py:90
+#: mlttransitions.py:91
 msgid "Circle From Out"
 msgstr "Круг внутрь"
 
-#: mlttransitions.py:91
+#: mlttransitions.py:92
 msgid "Clock Left To Right"
 msgstr "Часы слева направо"
 
-#: mlttransitions.py:92
+#: mlttransitions.py:93
 msgid "Clock Right to Left"
 msgstr "Часы справа налево"
 
-#: mlttransitions.py:93
+#: mlttransitions.py:94
 msgid "Clock Symmetric"
 msgstr "Часы симметрично"
 
-#: mlttransitions.py:94
+#: mlttransitions.py:95
 msgid "Cloud"
 msgstr "Облако"
 
-#: mlttransitions.py:95
+#: mlttransitions.py:96
 msgid "Cross"
 msgstr "Крест"
 
-#: mlttransitions.py:96
+#: mlttransitions.py:97
 msgid "Diagonal 1"
 msgstr "По диагонали (слева сверху)"
 
-#: mlttransitions.py:97
+#: mlttransitions.py:98
 msgid "Diagonal 2"
 msgstr "По диагонали (слева снизу)"
 
-#: mlttransitions.py:98
+#: mlttransitions.py:99
 msgid "Diagonal 3"
 msgstr "По диагонали (справа сверху)"
 
-#: mlttransitions.py:99
+#: mlttransitions.py:100
 msgid "Diagonal 4"
 msgstr "По диагонали (справа снизу)"
 
-#: mlttransitions.py:100
+#: mlttransitions.py:101
 msgid "Flower"
 msgstr "Цветок"
 
-#: mlttransitions.py:101
+#: mlttransitions.py:102
 msgid "Fogg"
 msgstr "Туман"
 
-#: mlttransitions.py:102
+#: mlttransitions.py:103
 msgid "Free Curves"
 msgstr "Свободные дуги"
 
-#: mlttransitions.py:103
+#: mlttransitions.py:104
 msgid "Free Stripes"
 msgstr "Свободные полосы"
 
-#: mlttransitions.py:104
+#: mlttransitions.py:105
 msgid "Heart"
 msgstr "Сердце"
 
-#: mlttransitions.py:105
+#: mlttransitions.py:106
 msgid "Honeycomb"
 msgstr "Медовые соты"
 
-#: mlttransitions.py:106
+#: mlttransitions.py:107
 msgid "Horizontal From Center"
 msgstr "По горизонтали из центра"
 
-#: mlttransitions.py:107
+#: mlttransitions.py:108
 msgid "Horizontal Left to Right"
 msgstr "По горизонтали слева направо"
 
-#: mlttransitions.py:108
+#: mlttransitions.py:109
 msgid "Horizontal Right to Left"
 msgstr "По горизонтали справа налево"
 
-#: mlttransitions.py:109
+#: mlttransitions.py:110
 msgid "Paint"
 msgstr "Краска"
 
-#: mlttransitions.py:110
+#: mlttransitions.py:111
 msgid "Patches"
 msgstr "Пятна неправильной формы"
 
-#: mlttransitions.py:111
+#: mlttransitions.py:112
 msgid "Puzzle"
 msgstr "Пазл"
 
-#: mlttransitions.py:112
+#: mlttransitions.py:113
 msgid "Rays"
 msgstr "Лучи"
 
-#: mlttransitions.py:113
+#: mlttransitions.py:114
 msgid "Rectangle Bars"
 msgstr "Прямоугольники"
 
-#: mlttransitions.py:114
+#: mlttransitions.py:115
 msgid "Rectangle From In"
 msgstr "Прямоугольник наружу"
 
-#: mlttransitions.py:115
+#: mlttransitions.py:116
 msgid "Rectangle From Out"
 msgstr "Прямоугольник внутрь"
 
-#: mlttransitions.py:116
+#: mlttransitions.py:117
 msgid "Rectangles"
 msgstr "Прямоугольники"
 
-#: mlttransitions.py:117
+#: mlttransitions.py:118
 msgid "Rings"
 msgstr "Кольца"
 
-#: mlttransitions.py:118
+#: mlttransitions.py:119
 msgid "Sand"
 msgstr "Песок"
 
-#: mlttransitions.py:119
+#: mlttransitions.py:120
 msgid "Sphere"
 msgstr "Сфера"
 
-#: mlttransitions.py:120
+#: mlttransitions.py:121
 msgid "Spiral Abstract"
 msgstr "Спираль «Аннотация»"
 
-#: mlttransitions.py:121
+#: mlttransitions.py:122
 msgid "Spiral Big"
 msgstr "Спираль (большая)"
 
-#: mlttransitions.py:122
+#: mlttransitions.py:123
 msgid "Spiral Galaxy"
 msgstr "Спираль «Галактика»"
 
-#: mlttransitions.py:123
+#: mlttransitions.py:124
 msgid "Spiral Medium"
 msgstr "Спираль (средняя)"
 
-#: mlttransitions.py:124
+#: mlttransitions.py:125
 msgid "Spiral"
 msgstr "Спираль"
 
-#: mlttransitions.py:125
+#: mlttransitions.py:126
 msgid "Spots"
 msgstr "Пятна"
 
-#: mlttransitions.py:126 medialog.py:550
+#: mlttransitions.py:127 medialog.py:550
 msgid "Star"
 msgstr "Оценка"
 
-#: mlttransitions.py:127
+#: mlttransitions.py:128
 msgid "Stripes Horizontal Big"
 msgstr "Полосы (по горизонтали большие)"
 
-#: mlttransitions.py:128
+#: mlttransitions.py:129
 msgid "Stripes Horizontal"
 msgstr "Полосы (по горизонтали)"
 
-#: mlttransitions.py:129
+#: mlttransitions.py:130
 msgid "Stripes Horizontal Moving"
 msgstr "Полосы (по горизонтали со смещением)"
 
-#: mlttransitions.py:130
+#: mlttransitions.py:131
 msgid "Stripes Vertical Big"
 msgstr "Полосы (по вертикали большие)"
 
-#: mlttransitions.py:131
+#: mlttransitions.py:132
 msgid "Stripes Vertical"
 msgstr "Полосы (по вертикали)"
 
-#: mlttransitions.py:132
+#: mlttransitions.py:133
 msgid "Torn frame"
 msgstr "Рваная рамка"
 
-#: mlttransitions.py:133
+#: mlttransitions.py:134
 msgid "Vertical Bottom to Top"
 msgstr "По вертикали снизу вверх"
 
-#: mlttransitions.py:134
+#: mlttransitions.py:135
 msgid "Vertical From Center"
 msgstr "По вертикали из центра"
 
-#: mlttransitions.py:135
+#: mlttransitions.py:136
 msgid "Vertical Top to Bottom"
 msgstr "По вертикали сверху вниз"
 
-#: mlttransitions.py:136
+#: mlttransitions.py:137
 msgid "Wood"
 msgstr "Дерево"
 
-#: mlttransitions.py:139 mlttransitions.py:185
+#: mlttransitions.py:140 mlttransitions.py:186
 msgid "Dissolve"
 msgstr "Наплыв"
 
-#: mlttransitions.py:140
+#: mlttransitions.py:141
 msgid "Picture in Picture"
 msgstr "Картинка в картинке"
 
-#: mlttransitions.py:141
+#: mlttransitions.py:142
 msgid "Affine Blend"
 msgstr "Аффинное смешение"
 
-#: mlttransitions.py:149
+#: mlttransitions.py:150
 msgid "Burn"
 msgstr "Затемнение"
 
-#: mlttransitions.py:150
+#: mlttransitions.py:151
 msgid "Color only"
 msgstr "Только цвет"
 
-#: mlttransitions.py:153
+#: mlttransitions.py:154
 msgid "Divide"
 msgstr "Разделение"
 
-#: mlttransitions.py:154
+#: mlttransitions.py:155
 msgid "Dodge"
 msgstr "Осветление"
 
-#: mlttransitions.py:155
+#: mlttransitions.py:156
 msgid "Grain extract"
 msgstr "Вытяжка зерна"
 
-#: mlttransitions.py:156
+#: mlttransitions.py:157
 msgid "Grain merge"
 msgstr "Слияние зерна"
 
-#: mlttransitions.py:166
+#: mlttransitions.py:167
 msgid "Value"
 msgstr "Значение"
 
-#: mlttransitions.py:170
+#: mlttransitions.py:171
 msgid "Wipe Clip Length"
 msgstr "Вытеснение"
 
@@ -5676,170 +5790,291 @@ msgstr "Вытеснение"
 msgid "Click Monitor to Select Color"
 msgstr "Выберите цвет на мониторе"
 
-#: propertyeditorbuilder.py:694
+#: propertyeditorbuilder.py:691
 msgid "Select File"
 msgstr "Выберите Файл"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:842
+#: propertyeditorbuilder.py:736 propertyeditorbuilder.py:839
 msgid "Nothing"
 msgstr "Выключено"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:842
+#: propertyeditorbuilder.py:736 propertyeditorbuilder.py:839
 msgid "Deinterlace"
 msgstr "Деинтерлейс"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:842
+#: propertyeditorbuilder.py:736 propertyeditorbuilder.py:839
 msgid "Both"
 msgstr "Оба варианта"
 
-#: propertyeditorbuilder.py:748 propertyeditorbuilder.py:851
+#: propertyeditorbuilder.py:745 propertyeditorbuilder.py:848
 msgid "Force"
 msgstr "Форсировать"
 
-#: propertyeditorbuilder.py:753 propertyeditorbuilder.py:856
+#: propertyeditorbuilder.py:750 propertyeditorbuilder.py:853
 msgid "Align"
 msgstr "Выравнивание"
 
-#: propertyeditorbuilder.py:995
+#: propertyeditorbuilder.py:992
 msgid "Keyframes"
 msgstr "Ключевых кадров"
 
-#: propertyeditorbuilder.py:999
+#: propertyeditorbuilder.py:996
 msgid "Curve Points"
 msgstr "Точек"
 
-#: propertyeditorbuilder.py:1003
+#: propertyeditorbuilder.py:1000
 #, fuzzy
 msgid "Launch RotoMask editor"
 msgstr "Редактор блуждающей маски"
 
-#: propertyeditorbuilder.py:1007
+#: propertyeditorbuilder.py:1004
 msgid "RotoMask info"
 msgstr "Сведения о блуждающей маске"
 
-#: propertyeditorbuilder.py:1021
+#: propertyeditorbuilder.py:1018
 msgid "Info & tips available under heading '{}'"
 msgstr ""
 
-#: keyframeeditor.py:775
+#: keyframeeditor.py:819
 msgid "Add Keyframe"
 msgstr "Добавить ключ. кадр"
 
-#: keyframeeditor.py:776
+#: keyframeeditor.py:820
 msgid "Delete Keyframe"
 msgstr "Удалить ключ. кадр"
 
-#: keyframeeditor.py:777
+#: keyframeeditor.py:821
 msgid "Previous Keyframe"
 msgstr "К предыдущему ключ. кадру"
 
-#: keyframeeditor.py:778
+#: keyframeeditor.py:822
 msgid "Next Keyframe"
 msgstr "К следующему ключ. кадру"
 
-#: keyframeeditor.py:779
+#: keyframeeditor.py:823
 msgid "Previous Frame"
 msgstr "К предыдущему кадру"
 
-#: keyframeeditor.py:780 shortcuts.py:370
+#: keyframeeditor.py:824 shortcuts.py:370
 msgid "Next Frame"
 msgstr "К следующему кадру"
 
-#: keyframeeditor.py:781
+#: keyframeeditor.py:825
 msgid "Move Keyframe 1 Frame Back"
 msgstr "Перенести ключ. кадр назад на 1 кадр"
 
-#: keyframeeditor.py:782
+#: keyframeeditor.py:826
 msgid "Move Keyframe 1 Frame Forward"
 msgstr "Перенести ключ. кадр вперёд на 1 кадр"
 
-#: keyframeeditor.py:783
+#: keyframeeditor.py:827
 msgid "Add Fade In"
 msgstr "Добавить появление"
 
-#: keyframeeditor.py:784
+#: keyframeeditor.py:828
 msgid "Add Fade Out"
 msgstr "Добавить исчезание"
 
-#: keyframeeditor.py:986 guipopoverclip.py:760
+#: keyframeeditor.py:1030 guipopoverclip.py:809
 msgid "Discrete"
 msgstr "Дискретный"
 
-#: keyframeeditor.py:1161 keyframeeditor.py:1231 keyframeeditor.py:1608
-#: keyframeeditor.py:1741 keyframeeditor.py:2104 keyframeeditor.py:2131
+#: keyframeeditor.py:1209 keyframeeditor.py:1290 keyframeeditor.py:1671
+#: keyframeeditor.py:1804 keyframeeditor.py:2401 keyframeeditor.py:2434
 #, fuzzy
 msgid "Copy Keyframe Value (Control + C)"
 msgstr "Копировать значение ключ. кадра"
 
-#: keyframeeditor.py:1162 keyframeeditor.py:1232 keyframeeditor.py:1609
-#: keyframeeditor.py:1742 keyframeeditor.py:2105 keyframeeditor.py:2132
+#: keyframeeditor.py:1210 keyframeeditor.py:1291 keyframeeditor.py:1672
+#: keyframeeditor.py:1805 keyframeeditor.py:2402 keyframeeditor.py:2435
 #, fuzzy
 msgid "Paste Keyframe Value (Control + V)"
 msgstr "Вставить значение ключ. кадра"
 
-#: keyframeeditor.py:1163 keyframeeditor.py:1233 keyframeeditor.py:1610
-#: keyframeeditor.py:1743 keyframeeditor.py:2106 keyframeeditor.py:2133
-#: guipopoverclip.py:775
+#: keyframeeditor.py:1211 keyframeeditor.py:1292 keyframeeditor.py:1673
+#: keyframeeditor.py:1806 keyframeeditor.py:2403 keyframeeditor.py:2436
+#: guipopoverclip.py:824
 #, fuzzy
 msgid "Copy Keyframe Value From Next"
 msgstr "Копировать значение ключ. кадра"
 
-#: keyframeeditor.py:1164 keyframeeditor.py:1234 keyframeeditor.py:1611
-#: keyframeeditor.py:1744 keyframeeditor.py:2107 keyframeeditor.py:2134
-#: guipopoverclip.py:776
+#: keyframeeditor.py:1212 keyframeeditor.py:1293 keyframeeditor.py:1674
+#: keyframeeditor.py:1807 keyframeeditor.py:2404 keyframeeditor.py:2437
+#: guipopoverclip.py:825
 #, fuzzy
 msgid "Copy Keyframe Value From Previous"
 msgstr "Копировать значение ключ. кадра"
 
-#: keyframeeditor.py:1227 keyframeeditor.py:1737 keyframeeditor.py:2101
+#: keyframeeditor.py:1286 keyframeeditor.py:1800 keyframeeditor.py:2397
 msgid "Active Keyframe Type"
 msgstr "Тип активного ключ. кадра"
 
-#: keyframeeditor.py:1241 keyframeeditor.py:1752 guipopoverclip.py:711
+#: keyframeeditor.py:1300 keyframeeditor.py:1815 guipopoverclip.py:760
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "Приравнять нулевой кадр к значению следующего ключ. кадра"
 
-#: keyframeeditor.py:1247 keyframeeditor.py:1758 guipopoverclip.py:706
+#: keyframeeditor.py:1306 keyframeeditor.py:1821 guipopoverclip.py:755
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Удалить все ключ. кадры перед клипом, кроме последнего"
 
-#: keyframeeditor.py:1254 keyframeeditor.py:1765
+#: keyframeeditor.py:1313 keyframeeditor.py:1828
 msgid "Delete all Keyframes after Clip Range"
 msgstr "Удалить все ключевые кадры за клипом"
 
-#: keyframeeditor.py:1777 keyframeeditor.py:2113
+#: keyframeeditor.py:1323
+#, fuzzy
+msgid "Open in Keyframe Tool"
+msgstr "Ключевые кадры перед клипом"
+
+#: keyframeeditor.py:1840 keyframeeditor.py:2412
 msgid "Reset"
 msgstr "Сброс"
 
-#: keyframeeditor.py:1778 keyframeeditor.py:2114
+#: keyframeeditor.py:1841 keyframeeditor.py:2413
 msgid "Reset Geometry"
 msgstr "Сброс геометрии"
 
-#: keyframeeditor.py:2552 keyframeeditor.py:2597
+#: keyframeeditor.py:2117
+#, fuzzy
+msgid "Slide In Form Left"
+msgstr "Появление кадров"
+
+#: keyframeeditor.py:2117
+#, fuzzy
+msgid "Slide In From Right"
+msgstr "Справа"
+
+#: keyframeeditor.py:2117
+msgid "Slide In From Top"
+msgstr ""
+
+#: keyframeeditor.py:2117
+msgid "Slide In From Bottom"
+msgstr ""
+
+#: keyframeeditor.py:2118
+#, fuzzy
+msgid "Slide In"
+msgstr "Появление"
+
+#: keyframeeditor.py:2119
+#, fuzzy
+msgid "Slide Out To Left"
+msgstr "Справа налево"
+
+#: keyframeeditor.py:2119
+#, fuzzy
+msgid "Slide Out To Right"
+msgstr "Слева направо"
+
+#: keyframeeditor.py:2119
+#, fuzzy
+msgid "Slide Out To Top"
+msgstr "Тип исчезания"
+
+#: keyframeeditor.py:2120
+#, fuzzy
+msgid "Slide Out"
+msgstr "Удалить со вставкой"
+
+#: keyframeeditor.py:2121
+#, fuzzy
+msgid "Zoom In 5%"
+msgstr "Увеличить"
+
+#: keyframeeditor.py:2121
+#, fuzzy
+msgid "Zoom In 10%"
+msgstr "Увеличить"
+
+#: keyframeeditor.py:2121
+#, fuzzy
+msgid "Zoom In 20%"
+msgstr "Увеличить"
+
+#: keyframeeditor.py:2121
+#, fuzzy
+msgid "Zoom In 30%"
+msgstr "Увеличить"
+
+#: keyframeeditor.py:2123
+#, fuzzy
+msgid "Zoom Out 5%"
+msgstr "Уменьшить"
+
+#: keyframeeditor.py:2123
+#, fuzzy
+msgid "Zoom Out 10%"
+msgstr "Уменьшить"
+
+#: keyframeeditor.py:2123
+#, fuzzy
+msgid "Zoom Out 20%"
+msgstr "Уменьшить"
+
+#: keyframeeditor.py:2123
+#, fuzzy
+msgid "Zoom Out 30%"
+msgstr "Уменьшить"
+
+#: keyframeeditor.py:2138
+#, fuzzy
+msgid "Movement Type:"
+msgstr "Движение"
+
+#: keyframeeditor.py:2139
+#, fuzzy
+msgid "Movement Length:"
+msgstr "Движение вначале"
+
+#: keyframeeditor.py:2140
+#, fuzzy
+msgid "Keyframe Type:"
+msgstr "Тип активного ключ. кадра"
+
+#: keyframeeditor.py:2149
+msgid "Add Preset Movement"
+msgstr ""
+
+#: keyframeeditor.py:2149
+#, fuzzy
+msgid "Add Movement"
+msgstr "Движение"
+
+#: keyframeeditor.py:2406
+#, fuzzy
+msgid "Active Keyframe Action"
+msgstr "Тип активного ключ. кадра"
+
+#: keyframeeditor.py:2417
+msgid "Add Preset Keyframed Movement..."
+msgstr ""
+
+#: keyframeeditor.py:2892 keyframeeditor.py:2937
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:2553 keyframeeditor.py:2598
+#: keyframeeditor.py:2893 keyframeeditor.py:2938
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:2554
+#: keyframeeditor.py:2894
 msgid "W:"
 msgstr "Ш:"
 
-#: keyframeeditor.py:2555
+#: keyframeeditor.py:2895
 msgid "H:"
 msgstr "H:"
 
-#: keyframeeditor.py:2599
+#: keyframeeditor.py:2939
 msgid "\\u21D4:"
 msgstr "\\u21D4:"
 
-#: keyframeeditor.py:2600
+#: keyframeeditor.py:2940
 msgid "\\u21D5:"
 msgstr "\\u21D5:"
 
-#: keyframeeditor.py:2601
+#: keyframeeditor.py:2941
 msgid "\\u2941:"
 msgstr "\\u2941:"
 
@@ -5907,52 +6142,58 @@ msgstr "Удалить со сдвигом"
 msgid "Range Delete"
 msgstr "Удалить участок"
 
-#: middlebar.py:254 shortcuts.py:378 guipopoverclip.py:411
-#: guipopoverclip.py:429
+#: middlebar.py:255 shortcuts.py:378 guipopoverclip.py:432
+#: guipopoverclip.py:454
 msgid "Split Audio Synched"
 msgstr "Отделить звук для синхронизации"
 
-#: middlebar.py:254
+#: middlebar.py:255
+#, fuzzy
+msgid "Set Sync for All Clips on Track Containing Selected Clip/s"
+msgstr "Ресинхронизировать выбранные клипы на дорожке"
+
+#: middlebar.py:255
 msgid "Resync Track Containing Selected Clip/s"
 msgstr "Ресинхронизировать выбранные клипы на дорожке"
 
-#: middlebar.py:254
-msgid "Resync Selected Clip"
+#: middlebar.py:255
+#, fuzzy
+msgid "Resync Selected Clips"
 msgstr "Ресинхронизировать выбранный клип"
 
-#: middlebar.py:264 shortcuts.py:385
+#: middlebar.py:265 shortcuts.py:385
 msgid "Overwrite Range"
 msgstr "Перезаписать участок"
 
-#: middlebar.py:264
+#: middlebar.py:265
 msgid "Overwrite Clip - T"
 msgstr "Перезаписать клип (T)"
 
-#: middlebar.py:264
+#: middlebar.py:265
 msgid "Insert Clip - Y"
 msgstr "Вставить клип (Y)"
 
-#: middlebar.py:264
+#: middlebar.py:265
 msgid "Append Clip - U"
 msgstr "Склеить клип (U)"
 
-#: middlebar.py:272
+#: middlebar.py:273
 msgid "Undo - Ctrl + Z"
 msgstr "Отменить (Ctrl + Z)"
 
-#: middlebar.py:272
+#: middlebar.py:273
 msgid "Redo - Ctrl + Y"
 msgstr "Повторить (Ctrl + Y)"
 
-#: middlebar.py:283
+#: middlebar.py:284
 msgid "G'Mic Effects"
 msgstr "Эффекты G'Mic"
 
-#: middlebar.py:283
+#: middlebar.py:284
 msgid "Generator Plugin Script Editor"
 msgstr "Редактор сценариев модуля генератора"
 
-#: middlebar.py:290
+#: middlebar.py:291
 msgid ""
 "Audio Mixer(not available)\n"
 "Titler"
@@ -5960,43 +6201,43 @@ msgstr ""
 "Звуковой микшер (недоступен)\n"
 "Редактор титров"
 
-#: middlebar.py:471
+#: middlebar.py:472
 msgid "Middlebar Configuration"
 msgstr "Конфигурация средней панели"
 
-#: middlebar.py:512 rendergui.py:658 tools/toolsencoding.py:497
+#: middlebar.py:513 rendergui.py:658 tools/toolsencoding.py:529
 msgid "Select Render quality"
 msgstr "Выберите скорость потока"
 
-#: middlebar.py:513
+#: middlebar.py:514
 msgid "Timecode Left"
 msgstr "Тайм-код слева"
 
-#: middlebar.py:514
+#: middlebar.py:515
 msgid "Timecode Center"
 msgstr "Тайм-код в центре"
 
-#: middlebar.py:515
+#: middlebar.py:516
 msgid "Components Centered"
 msgstr "Компоненты по центру"
 
-#: middlebar.py:524
+#: middlebar.py:525
 msgid "Set button group active state and position."
 msgstr "Установите активность и положение компонентов."
 
-#: middlebar.py:530 guipopover.py:468
+#: middlebar.py:531 guipopover.py:523
 msgid "Up"
 msgstr "Выше"
 
-#: middlebar.py:533 guipopover.py:469
+#: middlebar.py:534 guipopover.py:524
 msgid "Down"
 msgstr "Ниже"
 
-#: middlebar.py:536
+#: middlebar.py:537
 msgid "Reset Positions"
 msgstr "Сбросить позиции"
 
-#: middlebar.py:547
+#: middlebar.py:548
 msgid "Buttons Groups"
 msgstr "Группы компонентов"
 
@@ -6008,11 +6249,11 @@ msgstr "Группа "
 msgid "Event"
 msgstr "Событие"
 
-#: medialog.py:554 guipopover.py:819 guipopover.py:843
+#: medialog.py:554 guipopover.py:915 guipopover.py:939
 msgid "Comment"
 msgstr "Комментарий"
 
-#: medialog.py:556 guipopover.py:819 guipopover.py:843
+#: medialog.py:556 guipopover.py:915 guipopover.py:939
 msgid "File Name"
 msgstr "Имя файла"
 
@@ -6085,10 +6326,12 @@ msgstr "Редактор титров уже открыт"
 msgid "Only single instance of Titler can be opened."
 msgstr "Открыть можно, только один экземпляр редактора титров."
 
-#: tools/titler.py:284 tools/batchrendering.py:1195 shortcuts.py:461
-#: guipopover.py:584 guipopover.py:949 guipopoverclip.py:302
-#: guipopoverclip.py:337 guipopoverclip.py:363 guipopoverclip.py:505
-#: guipopoverclip.py:622
+#: tools/titler.py:284 tools/batchrendering.py:1195 extraeditors.py:1388
+#: extraeditors.py:1467 extraeditors.py:1509 extraeditors.py:1577
+#: shortcuts.py:461 guipopover.py:415 guipopover.py:540 guipopover.py:643
+#: guipopover.py:715 guipopover.py:1058 guipopoverclip.py:310
+#: guipopoverclip.py:350 guipopoverclip.py:383 guipopoverclip.py:530
+#: guipopoverclip.py:669
 msgid "Delete"
 msgstr "Удалить"
 
@@ -6165,7 +6408,7 @@ msgstr ""
 
 #: tools/titler.py:770
 #, fuzzy
-msgid "Select Tile Name"
+msgid "Select Title Name"
 msgstr "Выберите файл"
 
 #: tools/titler.py:771
@@ -6219,17 +6462,9 @@ msgstr "Сохранить аргументы сборки как"
 msgid "Render Slow/Fast Motion Video File"
 msgstr "Сборка клипа с изменением скорости"
 
-#: rendergui.py:183 rendergui.py:515
-msgid "Source Media File: "
-msgstr "Исходный клип: "
-
 #: rendergui.py:190 rendergui.py:191 rendergui.py:522 rendergui.py:523
 msgid "<b>not set</b>"
 msgstr "<b>не выбран</b>"
-
-#: rendergui.py:211 rendergui.py:543
-msgid "Select Target Folder"
-msgstr "Выберите целевую папку"
 
 #: rendergui.py:215 rendergui.py:320 rendergui.py:547
 msgid "Speed %:"
@@ -6254,26 +6489,6 @@ msgstr "Начало участка: "
 #: rendergui.py:280 rendergui.py:613
 msgid "Source Mark Out: "
 msgstr "Конец участка: "
-
-#: rendergui.py:285 rendergui.py:618
-msgid "Target File:"
-msgstr "Целевой файл:"
-
-#: rendergui.py:286 rendergui.py:619
-msgid "Target Folder:"
-msgstr "Целевая папка:"
-
-#: rendergui.py:287 rendergui.py:620
-msgid "Target Profile:"
-msgstr "Целевой профиль:"
-
-#: rendergui.py:288 rendergui.py:621
-msgid "Target Encoding:"
-msgstr "Целевая кодировка:"
-
-#: rendergui.py:289 rendergui.py:622
-msgid "Target Quality:"
-msgstr "Целевое качество:"
 
 #: rendergui.py:291 rendergui.py:383 rendergui.py:477 rendergui.py:624
 msgid "Render Range:"
@@ -6328,11 +6543,11 @@ msgstr "Длительность клипа на выходе:"
 msgid "Select audio sample frequency"
 msgstr "Звуковая частота дискретизации"
 
-#: rendergui.py:698 tools/toolsencoding.py:554
+#: rendergui.py:698 tools/toolsencoding.py:586
 msgid "Select Render encoding"
 msgstr "Выберите кодировку сборки"
 
-#: rendergui.py:742 tools/toolsencoding.py:483
+#: rendergui.py:742 tools/toolsencoding.py:515
 msgid "Select render profile"
 msgstr "Выберите профиль сборки"
 
@@ -6344,15 +6559,15 @@ msgstr "Весь видеоряд"
 msgid "Marked Range"
 msgstr "Отмеченный участок"
 
-#: rendergui.py:771 tools/toolsencoding.py:159
+#: rendergui.py:771 tools/toolsencoding.py:171
 msgid "File"
 msgstr "Файл"
 
-#: rendergui.py:772 tools/toolsencoding.py:165
+#: rendergui.py:772 tools/toolsencoding.py:177
 msgid "Render Profile"
 msgstr "Профиль сборки"
 
-#: rendergui.py:773 tools/toolsencoding.py:166
+#: rendergui.py:773 tools/toolsencoding.py:178 tools/toolsencoding.py:226
 msgid "Encoding Format"
 msgstr "Формат кодирования"
 
@@ -6368,11 +6583,11 @@ msgstr "Аргументы сборки"
 msgid "Open File in Bin"
 msgstr "Добавить файл в корзину"
 
-#: rendergui.py:892 tools/toolsencoding.py:338
+#: rendergui.py:892 tools/toolsencoding.py:368
 msgid "Select folder to place rendered file in"
 msgstr "Выберите папку для выходного файла"
 
-#: rendergui.py:893 tools/toolsencoding.py:339
+#: rendergui.py:893 tools/toolsencoding.py:369
 msgid "Give name for rendered file"
 msgstr "Присвойте имя выходному файлу"
 
@@ -6424,11 +6639,11 @@ msgstr "Принять аргументы"
 msgid "Edit Args:"
 msgstr "Правка аргументов:"
 
-#: rendergui.py:1337 guipopover.py:1031
+#: rendergui.py:1337 guipopover.py:1140
 msgid "Save Render Args into a text file"
 msgstr "Сохранить аргументы сборки в файл"
 
-#: rendergui.py:1338 guipopover.py:1030
+#: rendergui.py:1338 guipopover.py:1139
 msgid "Load Render Args from a text file"
 msgstr "Загрузить аргументы сборки из файла"
 
@@ -6831,72 +7046,59 @@ msgstr ""
 msgid "2 x - 100px, 50px"
 msgstr "Двойная для HiDPI (100пикс, 50пикс)"
 
-#: preferenceswindow.py:371 guipopoverclip.py:459
-msgid "Default"
-msgstr "По умолчанию"
-
-#: preferenceswindow.py:372
-msgid "Double"
-msgstr ""
-
-#: preferenceswindow.py:380
+#: preferenceswindow.py:375
 msgid "Full Display area: "
 msgstr "Всего экрана: "
 
-#: preferenceswindow.py:384
+#: preferenceswindow.py:379
 msgid "Monitor "
 msgstr "Монитор "
 
-#: preferenceswindow.py:407
+#: preferenceswindow.py:402
 msgid "Application window mode:"
 msgstr "Оконный режим:"
 
-#: preferenceswindow.py:408
+#: preferenceswindow.py:403
 msgid "Force Language:"
 msgstr "Язык приложения:"
 
-#: preferenceswindow.py:409
+#: preferenceswindow.py:404
 msgid "Display splash screen"
 msgstr "Заставка при запуске"
 
-#: preferenceswindow.py:410
+#: preferenceswindow.py:405
 msgid "Show Full File names"
 msgstr "Показ полных имён файлов"
 
-#: preferenceswindow.py:411
+#: preferenceswindow.py:406
 msgid "Tracks Heights:"
 msgstr "Высота дорожек:"
 
-#: preferenceswindow.py:412
-#, fuzzy
-msgid "Icons Size:"
-msgstr "Размер кадра:"
-
-#: preferenceswindow.py:414
+#: preferenceswindow.py:408
 msgid "Do GUI layout based on:"
 msgstr "Графический макет на основе:"
 
-#: preferenceswindow.py:415
+#: preferenceswindow.py:409
 #, fuzzy
 msgid "Edit panel width:"
 msgstr "Панель «Выбор эффектов»"
 
-#: preferenceswindow.py:416
+#: preferenceswindow.py:410
 #, fuzzy
 msgid "Project panel width:"
 msgstr "Панель «Выбор эффектов»"
 
-#: preferenceswindow.py:417
+#: preferenceswindow.py:411
 #, fuzzy
 msgid "Filter Select panel width:"
 msgstr "Панель «Выбор эффектов»"
 
-#: preferenceswindow.py:418
+#: preferenceswindow.py:412
 #, fuzzy
 msgid "Media panel width:"
 msgstr "Панель «Медиа»"
 
-#: preferenceswindow.py:453
+#: preferenceswindow.py:446
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
@@ -6905,27 +7107,27 @@ msgstr ""
 "сборкой.\n"
 "Безопасные значения: потоки сборки: 1, пропуск кадров: нет."
 
-#: preferenceswindow.py:464
+#: preferenceswindow.py:457
 msgid "Between 1 and the number of CPU Cores"
 msgstr "Выберите количество ядер процессора"
 
-#: preferenceswindow.py:465
+#: preferenceswindow.py:458
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr "Если необходимо, пропускать кадры в сборке реального времени"
 
-#: preferenceswindow.py:469
+#: preferenceswindow.py:462
 msgid "Render Threads:"
 msgstr "Потоки сборки:"
 
-#: preferenceswindow.py:470
+#: preferenceswindow.py:463
 msgid "Allow Frame Dropping"
 msgstr "Разрешать пропуск кадров"
 
-#: preferenceswindow.py:515
+#: preferenceswindow.py:508
 msgid "USB Jog/Shuttle Enabled"
 msgstr ""
 
-#: preferenceswindow.py:516
+#: preferenceswindow.py:509
 msgid "Device"
 msgstr ""
 
@@ -7079,7 +7281,7 @@ msgstr "Состояние"
 msgid "Render File"
 msgstr "Файл сборки"
 
-#: tools/batchrendering.py:961 jobs.py:337
+#: tools/batchrendering.py:961 jobs.py:347
 msgid "Render Time"
 msgstr "Время сборки"
 
@@ -7309,11 +7511,11 @@ msgstr ""
 "\n"
 "Стек отмены будет уничтожен, а эту операцию нельзя будет отменить."
 
-#: tlineaction.py:419
+#: tlineaction.py:423
 msgid "Fade/Transition cover delete failed!"
 msgstr "Ошибка при удалении перехода!"
 
-#: tlineaction.py:420
+#: tlineaction.py:424
 msgid ""
 "There wasn't enough material available in adjacent clips.\n"
 "A normal Splice Out was done instead."
@@ -7321,11 +7523,11 @@ msgstr ""
 "В соседних клипах недостаточно извлечённых кадров.\n"
 "Было выполнено удаление со вставкой."
 
-#: tlineaction.py:547
+#: tlineaction.py:555
 msgid "Can't do Ripple Delete!"
 msgstr "Нельзя выполнить удаление со сдвигом!"
 
-#: tlineaction.py:548
+#: tlineaction.py:556
 #, fuzzy
 msgid ""
 "Selected Ripple Delete would cause an overwrite and that is not permitted "
@@ -7338,19 +7540,19 @@ msgstr ""
 "\n"
 "Перезапись произойдёт на дорожке <b>"
 
-#: tlineaction.py:603
+#: tlineaction.py:611
 msgid "No Clips are selected!"
 msgstr "Клипы не выбраны!"
 
-#: tlineaction.py:604
+#: tlineaction.py:612
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr "Для выполнения этой операции нужно выбрать клипы."
 
-#: tlineaction.py:725 tlineaction.py:937
+#: tlineaction.py:733 tlineaction.py:955
 msgid "3 point edit not defined!"
 msgstr "Перезапись по 3 точкам невозможна!"
 
-#: tlineaction.py:726 tlineaction.py:750
+#: tlineaction.py:734 tlineaction.py:758
 msgid ""
 "You need to set Timeline Range using Mark In and Mark Out buttons\n"
 "to perform this edit."
@@ -7358,15 +7560,15 @@ msgstr ""
 "Для выполнения изменений определите участок монтажного стола,\n"
 "установив точки в начале и в конце участка."
 
-#: tlineaction.py:749
+#: tlineaction.py:757
 msgid "Timeline Range not set!"
 msgstr "Не определён участок на монтажном столе!"
 
-#: tlineaction.py:843
+#: tlineaction.py:861
 msgid "Origin clip not found!"
 msgstr "Исходный клип не найден!"
 
-#: tlineaction.py:844
+#: tlineaction.py:862
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
@@ -7374,19 +7576,19 @@ msgstr ""
 "Клип использовавшийся для создания этого композитора\n"
 "был удалён или перемещён на другую дорожку."
 
-#: tlineaction.py:927
+#: tlineaction.py:945
 msgid "No Clip loaded into Monitor"
 msgstr "Нет загруженных клипов в мониторе"
 
-#: tlineaction.py:928
+#: tlineaction.py:946
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr "Невозможно выполнить операцию, так как в мониторе нет клипа."
 
-#: tlineaction.py:932
+#: tlineaction.py:950
 msgid "Defined range in Monitor Clip is too short"
 msgstr "Выбран недостаточный участок клипа в мониторе"
 
-#: tlineaction.py:933
+#: tlineaction.py:951
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -7394,7 +7596,7 @@ msgstr ""
 "Не удалось выполнить запрошенные изменения, из-за слишком короткого "
 "выбранного участка."
 
-#: tlineaction.py:938
+#: tlineaction.py:956
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -7402,59 +7604,72 @@ msgstr ""
 "Для выполнения данного действия, установите начало и конец участка\n"
 "на монтажном столе или в мониторе."
 
-#: tlineaction.py:1143
+#: tlineaction.py:1179
 msgid "Playback Marker"
 msgstr ""
 
-#: extraeditors.py:1188
+#: extraeditors.py:1189
 msgid "Analyze video"
 msgstr ""
 
-#: extraeditors.py:1190
+#: extraeditors.py:1191
 msgid "No stabilizing data"
 msgstr ""
 
-#: extraeditors.py:1191
+#: extraeditors.py:1192
 msgid "Stabilizing data loaded"
 msgstr ""
 
-#: extraeditors.py:1244
+#: extraeditors.py:1249
 msgid "Tracking Data Label:"
 msgstr ""
 
-#: extraeditors.py:1258
+#: extraeditors.py:1263
 msgid "Create Motion Tracking Data"
 msgstr ""
 
-#: extraeditors.py:1261
+#: extraeditors.py:1266
 #, fuzzy
 msgid "Clear Data"
 msgstr "Удалить участок"
 
-#: extraeditors.py:1301
+#: extraeditors.py:1306
 msgid "tracking"
 msgstr ""
 
-#: extraeditors.py:1340
+#: extraeditors.py:1345
 msgid "Motion Tracking Data created: "
 msgstr ""
 
-#: extraeditors.py:1377 extraeditors.py:1451
+#: extraeditors.py:1382 extraeditors.py:1503
 msgid "Select Motion Tracking Data:"
 msgstr ""
 
-#: extraeditors.py:1381 extraeditors.py:1455
+#: extraeditors.py:1386 extraeditors.py:1486 extraeditors.py:1507
+#: extraeditors.py:1596
 msgid "No Tracking Data Available"
 msgstr ""
 
-#: extraeditors.py:1395 extraeditors.py:1469
+#: extraeditors.py:1405 extraeditors.py:1526
 msgid "Apply Motion Tracking Data"
 msgstr ""
 
-#: extraeditors.py:1439 extraeditors.py:1503
+#: extraeditors.py:1450 extraeditors.py:1560
 #, fuzzy
 msgid "Last applied "
 msgstr "Вставить эффекты"
+
+#: extraeditors.py:1464 extraeditors.py:1574
+#, fuzzy
+msgid "Confirm Motion Tracking Data Delete"
+msgstr "Уничтожить все кэшированные данные?"
+
+#: extraeditors.py:1465 extraeditors.py:1575
+msgid ""
+"Current selected motion tracking data was applied somewhere in the project.\n"
+"\n"
+"Delete anyway?"
+msgstr ""
 
 #: medialinker.py:108
 msgid "Load Project For Relinking"
@@ -7476,15 +7691,15 @@ msgstr "Проект:"
 msgid "<not loaded>"
 msgstr "<Не загружен>"
 
-#: medialinker.py:138 guipopover.py:926
+#: medialinker.py:138 guipopover.py:1035
 msgid "Set File Relink Path"
 msgstr "Указать путь к файлу"
 
-#: medialinker.py:140 guipopover.py:928
+#: medialinker.py:140 guipopover.py:1037
 msgid "Create Placeholder File"
 msgstr "Создать файл-заполнитель"
 
-#: medialinker.py:142 guipopover.py:927
+#: medialinker.py:142 guipopover.py:1036
 msgid "Delete File Relink Path"
 msgstr "Удалить путь к файлу"
 
@@ -7664,7 +7879,7 @@ msgstr "Предоставление предпросмотра..."
 msgid "Video Encoding Settings"
 msgstr "Параметры кодирования видео"
 
-#: tools/gmic.py:545 containeractions.py:385 tools/scripttool.py:605
+#: tools/gmic.py:545 containeractions.py:418 tools/scripttool.py:605
 msgid "Set Encoding"
 msgstr "Установить кодировку"
 
@@ -7681,7 +7896,7 @@ msgid "no preview"
 msgstr "без предпросмотра"
 
 #: tools/gmic.py:675 tools/simpleeditors.py:969 tools/scripttool.py:817
-#: mediaplugin.py:314 mediaplugin.py:672
+#: mediaplugin.py:367 mediaplugin.py:737
 msgid "Preview"
 msgstr "Предпросмотр"
 
@@ -7785,55 +8000,55 @@ msgstr "Покадровая сборка: "
 msgid "Render error!"
 msgstr "Ошибка сборки!"
 
-#: tools/toolsencoding.py:161
+#: tools/toolsencoding.py:173
 msgid "Save Location"
 msgstr "Путь для сохранения"
 
-#: tools/toolsencoding.py:170
+#: tools/toolsencoding.py:182
 msgid "Video Clip"
 msgstr "Видеоклип"
 
-#: tools/toolsencoding.py:297
+#: tools/toolsencoding.py:327
 msgid "Save Rendered Container Media Internally"
 msgstr "Сохранить собранные контейнерные клипы внутри"
 
-#: tools/toolsencoding.py:298
+#: tools/toolsencoding.py:328
 msgid "Save Rendered Container Media Externally"
 msgstr "Сохранить собранные контейнерные клипы извне"
 
-#: tools/toolsencoding.py:324
+#: tools/toolsencoding.py:354
 msgid "Frame Name:"
 msgstr "Имя кадра:"
 
-#: tools/toolsencoding.py:363
+#: tools/toolsencoding.py:393
 msgid "Render Video Clip"
 msgstr "Собрать видеоклип"
 
-#: tools/toolsencoding.py:364
+#: tools/toolsencoding.py:394
 msgid "Frame Sequence Only"
 msgstr "Собрать серию изображений"
 
-#: tools/toolsencoding.py:395
+#: tools/toolsencoding.py:423
 msgid "Presets:"
 msgstr "Предустановки:"
 
-#: tools/toolsencoding.py:398
+#: tools/toolsencoding.py:426
 msgid "User Defined"
 msgstr "Пользовательский"
 
-#: tools/toolsencoding.py:399
+#: tools/toolsencoding.py:427
 msgid "Preset File type"
 msgstr "Предустановленный"
 
-#: tools/toolsencoding.py:417
+#: tools/toolsencoding.py:445
 msgid "Use Default Profile:"
 msgstr "Используйте профиль по умолчанию:"
 
-#: monitorevent.py:386
+#: monitorevent.py:356
 msgid "On some systems Trim View may update slowly"
 msgstr "В некоторых системах Просмотр обрезки обновляется медленно"
 
-#: monitorevent.py:387
+#: monitorevent.py:357
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -7842,7 +8057,7 @@ msgstr ""
 "мощными процессорами.\n"
 "\n"
 
-#: monitorevent.py:388
+#: monitorevent.py:358
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -8042,11 +8257,11 @@ msgstr "Миниатюры"
 msgid "Slow/Fast Motion"
 msgstr "Изменить скорость клипа"
 
-#: toolsintegration.py:128 guipopoverclip.py:534
+#: toolsintegration.py:128 guipopoverclip.py:561
 msgid "Reverse"
 msgstr "Изменить направление"
 
-#: projectmediaimport.py:160
+#: projectmediaimport.py:161
 msgid "Loading Media Import Project"
 msgstr "Загрузка импортированных файлов в проект"
 
@@ -8427,15 +8642,15 @@ msgstr "<control><alt><shift>"
 msgid "<control>"
 msgstr "<control>"
 
-#: clipmenuaction.py:553
+#: clipmenuaction.py:598
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "Недостаточно извлечённых кадров для заполнения пробела"
 
-#: clipmenuaction.py:554 clipmenuaction.py:583
+#: clipmenuaction.py:599 clipmenuaction.py:628
 msgid "Requested edit can't be done."
 msgstr "Нельзя выполнить запрошенную операцию."
 
-#: clipmenuaction.py:582
+#: clipmenuaction.py:627
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "В следующем клипе нет извлечённых кадров для заполнения пробела"
 
@@ -8577,7 +8792,8 @@ msgid ""
 "position.\n"
 "<b>CTRL + Left Mouse</b> to select a clip range.\n"
 "\n"
-"<b>Left Mouse</b> near clip's end to trim clip length.<b>\n"
+"<b>Left Mouse</b> near clip's end to trim clip length.n\n"
+"<b>ALT + Left Mouse</b> near clip's end to overwrite trim clip length.<b>\n"
 "\n"
 "Left Mouse Drag</b> to draw a box to select a group of clips. Multitrack "
 "selection disallows moving clips to another track."
@@ -8706,7 +8922,7 @@ msgstr ""
 msgid "Keyboard shortcut: "
 msgstr "Комбинация клавиш: "
 
-#: kftoolmode.py:390
+#: kftoolmode.py:394
 msgid ""
 "This Clip has a deprecated Volume filter and cannot be edited with Keyframe "
 "Tool!"
@@ -8714,7 +8930,7 @@ msgstr ""
 "Клип содержит устаревший эффект громкости, его нельзя изменить с помощью "
 "инструмента ключевых кадров!"
 
-#: kftoolmode.py:391
+#: kftoolmode.py:395
 msgid ""
 "Flowblade 2.8 changed to use Volume filtes with dB values.\n"
 "\n"
@@ -8727,7 +8943,7 @@ msgstr ""
 "Эффекты громкости старого типа все ещё будут работать, но для правки клипа\n"
 "с помощью инструмента ключевых кадров, их необходимо заменить на новые."
 
-#: kftoolmode.py:493
+#: kftoolmode.py:497
 msgid "Media Frame: "
 msgstr "Медиакадр: "
 
@@ -8759,114 +8975,130 @@ msgstr "Закрыть"
 msgid "No Editors for this script"
 msgstr ""
 
-#: tools/simpleeditors.py:960 mediaplugin.py:308
+#: tools/simpleeditors.py:960 mediaplugin.py:361
 msgid "Clip Frame"
 msgstr "Кадр клипа"
 
-#: jobs.py:171
+#: jobs.py:181
 msgid "Completed"
 msgstr "Завершено"
 
-#: jobs.py:197 jobs.py:265
+#: jobs.py:207 jobs.py:275
 msgid "Cancelled"
 msgstr "Отменено"
 
-#: jobs.py:336
+#: jobs.py:346
 #, fuzzy
 msgid "Job Info"
 msgstr "Сведения"
 
-#: jobs.py:338
+#: jobs.py:348
 msgid "Progress"
 msgstr "Прогресс"
 
-#: jobs.py:419 containeractions.py:252
+#: jobs.py:429 containeractions.py:281
 msgid "In Queue - "
 msgstr "В очереди — "
 
-#: jobs.py:460 jobs.py:549 jobs.py:630 jobs.py:713 containeractions.py:529
-#: containeractions.py:695 containeractions.py:902
+#: jobs.py:469 jobs.py:560 jobs.py:641 jobs.py:720 jobs.py:793 jobs.py:878
+#: containeractions.py:592 containeractions.py:761 containeractions.py:967
+#: containeractions.py:1075
 msgid "Render Starting..."
 msgstr "Запуск сборки..."
 
-#: jobs.py:507
+#: jobs.py:518
 #, fuzzy
 msgid "Motion Clip Render"
 msgstr "Клип движения"
 
-#: jobs.py:595
+#: jobs.py:606 jobs.py:686
 msgid "Stabilizing Analysis"
 msgstr ""
 
-#: jobs.py:680
+#: jobs.py:761
+#, fuzzy
+msgid "Stabilized Clip Render"
+msgstr "Клип движения"
+
+#: jobs.py:845
 msgid "Tracking Data Render"
 msgstr ""
 
-#: jobs.py:793 jobs.py:814
+#: jobs.py:960 jobs.py:981
 #, fuzzy
 msgid "Proxy Render"
 msgstr "Сведения о сборке прокси"
 
-#: containeractions.py:369
+#: containeractions.py:402
 #, fuzzy
 msgid "Render Full Media"
 msgstr "Сборка всего медиа..."
 
-#: containeractions.py:370
+#: containeractions.py:403
 #, fuzzy
 msgid "Render Clip Length"
 msgstr "Сборка клипа..."
 
-#: containeractions.py:381
+#: containeractions.py:414
 #, fuzzy
 msgid "Container/Generator Clip Render"
 msgstr "Действия по сборке контейнерного клипа"
 
-#: containeractions.py:384
+#: containeractions.py:417
 #, fuzzy
 msgid "Set Render Encoding Settings"
 msgstr "Параметры кодирования видео"
 
-#: containeractions.py:570
+#: containeractions.py:456
+#, fuzzy
+msgid "Set Container Default Encoding"
+msgstr "Выберите кодировку сборки"
+
+#: containeractions.py:460
+#, fuzzy
+msgid "Set Default Encoding"
+msgstr "Установить кодировку"
+
+#: containeractions.py:635
 #, fuzzy
 msgid "G'Mic Render Step "
 msgstr "Выполнение сборки:"
 
-#: containeractions.py:572 containeractions.py:750
+#: containeractions.py:637 containeractions.py:815
 msgid "Writing Clip Frames"
 msgstr "Раскадровка клипа"
 
-#: containeractions.py:574
+#: containeractions.py:639
 msgid "Rendering G'Mic Script"
 msgstr "Сборка сценария G'Mic"
 
-#: containeractions.py:576 containeractions.py:752
+#: containeractions.py:641 containeractions.py:817
 msgid "Encoding Video"
 msgstr "Кодирование видео"
 
-#: containeractions.py:748
+#: containeractions.py:813
 #, fuzzy
 msgid "Generator Render "
 msgstr "Действия по сборке генератора"
 
-#: containeractions.py:942
+#: containeractions.py:1009 containeractions.py:1117
 #, fuzzy
 msgid "Video for Selection Clip: "
 msgstr "Выбранный клип"
 
-#: containeractions.py:1005
+#: containeractions.py:1189
 msgid "<b>Rendering Placeholder Media For:</b> "
 msgstr "<b>Сборка заполнителей медиа для:</b> "
 
-#: containerclip.py:156
+#: containerclip.py:163
 msgid "Select A File"
 msgstr "Выберите файл"
 
-#: containerclip.py:197
+#: containerclip.py:204
 msgid "Not all required files were defined"
 msgstr "Не все необходимые файлы выбраны"
 
-#: containerclip.py:197
+#: containerclip.py:204
 #, fuzzy
 msgid ""
 "Select all files asked for in dialog for successful Container Clip creation."
@@ -8874,43 +9106,43 @@ msgstr ""
 "Для создания контейнера необходимо выбрать все файлы запрошенные в "
 "диалоговом окне."
 
-#: containerclip.py:204
+#: containerclip.py:211
 msgid "G'Mic Tool Script:"
 msgstr "Сценарий инструмента G'Mic:"
 
-#: containerclip.py:204
+#: containerclip.py:211
 msgid "Select G'Mic Tool Script"
 msgstr "Выберите сценарий инструмента G'Mic"
 
-#: containerclip.py:205
+#: containerclip.py:212
 msgid "Video Clip:"
 msgstr "Видеоклип:"
 
-#: containerclip.py:206
+#: containerclip.py:213
 msgid "Create G'Mic Script Container Clip"
 msgstr "Создание контейнерного клипа из сценария G'Mic"
 
-#: containerclip.py:255
+#: containerclip.py:262
 msgid "G'Mic Container Clip Validation Error"
 msgstr "Ошибка валидации контейнера G'Mic"
 
-#: containerclip.py:263
+#: containerclip.py:270
 msgid "Generator Plugin Script:"
 msgstr "Сценарий модуля генератора:"
 
-#: containerclip.py:263
+#: containerclip.py:270
 msgid "Generator Plugin Script"
 msgstr "Сценарий модуля генератора"
 
-#: containerclip.py:264
+#: containerclip.py:271
 msgid "Create Generator Plugin Script Media Item"
 msgstr "Создание элемента медиа с сценарием модуля генератора"
 
-#: containerclip.py:345
+#: containerclip.py:352
 msgid "Creating Container for Generator..."
 msgstr "Создание контейнера из генератора..."
 
-#: containerclip.py:349
+#: containerclip.py:356
 msgid "Generator Container Clip Validation Error"
 msgstr "Ошибка проверки генератора контейнерного клипа"
 
@@ -8946,7 +9178,8 @@ msgstr "В верхнем ряду по умолчанию"
 msgid "Media"
 msgstr "Медиа"
 
-#: editorlayout.py:228 guipopoverclip.py:157 guipopoverclip.py:259
+#: editorlayout.py:228 guipopover.py:414 guipopoverclip.py:161
+#: guipopoverclip.py:266
 msgid "Edit"
 msgstr "Правка"
 
@@ -9002,27 +9235,27 @@ msgstr "Панель «Выбор эффектов»"
 msgid "Tabs Positions"
 msgstr "Положение вкладок"
 
-#: editorlayout.py:539 guipopover.py:381
+#: editorlayout.py:539 guipopover.py:436
 msgid "Layout Monitor Left"
 msgstr "Макет \"Монитор слева\""
 
-#: editorlayout.py:542 guipopover.py:382
+#: editorlayout.py:542 guipopover.py:437
 msgid "Layout Monitor Center"
 msgstr "Макет \"Монитор по центру\""
 
-#: editorlayout.py:545 guipopover.py:384
+#: editorlayout.py:545 guipopover.py:439
 msgid "Layout Top Row 4 Panels"
 msgstr "Макет \"4 панели в верхнем ряду\""
 
-#: editorlayout.py:550 guipopover.py:385
+#: editorlayout.py:550 guipopover.py:440
 msgid "Layout Media Panel Left Column"
 msgstr "Макет \"Медиа слева столбцом\""
 
-#: editorlayout.py:555 guipopover.py:389
+#: editorlayout.py:555 guipopover.py:444
 msgid "Save Current Layout..."
 msgstr "Сохранить текущий макет..."
 
-#: editorlayout.py:558 guipopover.py:390
+#: editorlayout.py:558 guipopover.py:445
 msgid "Load Layout..."
 msgstr "Загрузить макет..."
 
@@ -9237,7 +9470,7 @@ msgstr "Пересборка элемента "
 msgid "Add Transition"
 msgstr "Добавить переход"
 
-#: singletracktransition.py:734 mediaplugin.py:674
+#: singletracktransition.py:734 mediaplugin.py:739
 msgid "Apply"
 msgstr "Применить"
 
@@ -9271,435 +9504,501 @@ msgstr ""
 msgid "This feature only works on video tracks."
 msgstr ""
 
-#: guipopover.py:227
+#: guipopover.py:233
 msgid "Delete Marker"
 msgstr "Удалить маркер"
 
-#: guipopover.py:228
+#: guipopover.py:234
 msgid "Delete All Markers"
 msgstr "Удалить все маркеры"
 
-#: guipopover.py:242
+#: guipopover.py:250
+msgid "Disable Clip Ends Drag When Selected"
+msgstr ""
+
+#: guipopover.py:251
+msgid "Wide Multitrim Slip Target Area"
+msgstr ""
+
+#: guipopover.py:255
 msgid "Display Clip Media Thumbnails"
 msgstr "Миниатюры клипа"
 
-#: guipopover.py:243
+#: guipopover.py:256
 msgid "Display Audio Levels"
 msgstr "Звуковые уровни"
 
-#: guipopover.py:247
+#: guipopover.py:260
 msgid "Mouse Zoom To Playhead"
 msgstr ""
 
-#: guipopover.py:247
+#: guipopover.py:260
 msgid "Mouse Zoom To Cursor"
 msgstr ""
 
-#: guipopover.py:257
+#: guipopover.py:270
 msgid "Snapping On"
 msgstr "Привязка"
 
-#: guipopover.py:261
-msgid "Audio scrubbing"
+#: guipopover.py:274
+#, fuzzy
+msgid "Audio Scrubbing"
 msgstr "Очистка звука"
 
-#: guipopover.py:281
+#: guipopover.py:290
+#, fuzzy
+msgid "Show Synch Relations"
+msgstr "Удалить связь синхронизации"
+
+#: guipopover.py:296 guipopover.py:312
+#, fuzzy
+msgid "On All Video Tracks"
+msgstr "Максимизация видеодорожек"
+
+#: guipopover.py:297 guipopover.py:313
+msgid "On Tracks V1 and V2"
+msgstr ""
+
+#: guipopover.py:298 guipopover.py:314
+#, fuzzy
+msgid "On Track V1"
+msgstr "Дорожка "
+
+#: guipopover.py:301
+msgid "Auto Sync Split Video Clips on Add"
+msgstr ""
+
+#: guipopover.py:302
+msgid "Audio Split To Mirrored Track"
+msgstr ""
+
+#: guipopover.py:302
+msgid "Audio Split To V1 Always"
+msgstr ""
+
+#: guipopover.py:335
 msgid "Maximize Tracks"
 msgstr "Максимизация дорожек"
 
-#: guipopover.py:282
+#: guipopover.py:336
 msgid "Maximize Video Tracks"
 msgstr "Максимизация видеодорожек"
 
-#: guipopover.py:283
+#: guipopover.py:337
 msgid "Maximize Audio Tracks"
 msgstr "Максимизация звуковых дорожек"
 
-#: guipopover.py:284
+#: guipopover.py:338
 msgid "Minimize Tracks"
 msgstr "Минимизация дорожек"
 
-#: guipopover.py:285
+#: guipopover.py:339
 #, fuzzy
 msgid "Reset Track Heights"
 msgstr "Высота дорожек:"
 
-#: guipopover.py:289
+#: guipopover.py:343
 msgid "Activate All Tracks"
 msgstr "Активация всех дорожек"
 
-#: guipopover.py:290
+#: guipopover.py:344
 msgid "Activate Only Current Top Active Track"
 msgstr "Активна только дорожка со стрелкой"
 
-#: guipopover.py:294
+#: guipopover.py:348
 msgid "Expand Track on First Item Drop"
 msgstr "Расширять дорожку при добавлении первого элемента"
 
-#: guipopover.py:295
+#: guipopover.py:349
 msgid "Vertical Shrink Timeline"
 msgstr "Вертикальное сжатие монтажного стола"
 
-#: guipopover.py:365
-msgid "Create Container Clip from Selected Sequence"
-msgstr "Создать контейнерный клип из выбранного видеоряда"
-
-#: guipopover.py:400
+#: guipopover.py:455
 msgid "Trim View On"
 msgstr "Включить просмотр обрезки"
 
-#: guipopover.py:400
+#: guipopover.py:455
 msgid "Trim View Single Side Edits Only"
 msgstr "Просмотр обрезки только со стороны правки"
 
-#: guipopover.py:401
+#: guipopover.py:456
 msgid "Trim View Off"
 msgstr "Выключить просмотр обрезки"
 
-#: guipopover.py:416
+#: guipopover.py:471
 msgid "Vectorscope"
 msgstr "Вектороскоп"
 
-#: guipopover.py:417
+#: guipopover.py:472
 msgid "RGB Parade"
 msgstr "Парад RGB"
 
-#: guipopover.py:426 guipopover.py:433
+#: guipopover.py:481 guipopover.py:488
 msgid "100%"
 msgstr "100%"
 
-#: guipopover.py:426 guipopover.py:433
+#: guipopover.py:481 guipopover.py:488
 msgid "80%"
 msgstr "80%"
 
-#: guipopover.py:426 guipopover.py:433
+#: guipopover.py:481 guipopover.py:488
 msgid "50%"
 msgstr "50%"
 
-#: guipopover.py:426 guipopover.py:433
+#: guipopover.py:481 guipopover.py:488
 msgid "20%"
 msgstr "20%"
 
-#: guipopover.py:429
+#: guipopover.py:484
 msgid "Overlay Opacity"
 msgstr "Непрозрачность накладок"
 
-#: guipopover.py:470
+#: guipopover.py:525
 msgid "First"
 msgstr "Вверх"
 
-#: guipopover.py:471
+#: guipopover.py:526
 msgid "Last"
 msgstr "Вниз"
 
-#: guipopover.py:473
+#: guipopover.py:528
 msgid "Move Bin"
 msgstr "Переместить корзину"
 
-#: guipopover.py:485
+#: guipopover.py:544
 msgid "Render Proxy Files For Selected Media"
 msgstr "Сборка прокси для выбранных клипов"
 
-#: guipopover.py:486
+#: guipopover.py:545
 msgid "Render Proxy Files For All Media"
 msgstr "Сборка прокси для всех клипов"
 
-#: guipopover.py:490
+#: guipopover.py:549
 #, fuzzy
 msgid "Move Selected Items To Clicked Position..."
 msgstr "Переместить выбранное в группу"
 
-#: guipopover.py:491
+#: guipopover.py:550
 #, fuzzy
 msgid "Reverse Items Order"
 msgstr "Время реверберации"
 
-#: guipopover.py:495
+#: guipopover.py:554
 #, fuzzy
 msgid "Set Current Bin Graphics Default Length"
 msgstr "Длительность изображений по умолчанию:"
 
-#: guipopover.py:499
+#: guipopover.py:558
 msgid "Select All"
 msgstr "Выбрать всё"
 
-#: guipopover.py:500
+#: guipopover.py:559
 msgid "Select None"
 msgstr "Снять выбор"
 
-#: guipopover.py:516
+#: guipopover.py:575
 msgid "Move Selected Media To Bin"
 msgstr "Переместить выбранные клипы в корзину"
 
-#: guipopover.py:520
+#: guipopover.py:579
 msgid "Append All Media to Timeline"
 msgstr "Добавить все клипы на монтажный стол"
 
-#: guipopover.py:521
+#: guipopover.py:580
 msgid "Append Selected Media to Timeline"
 msgstr "Добавить выбранные клипы на монтажный стол"
 
-#: guipopover.py:531
+#: guipopover.py:590
 msgid "2 Columns"
 msgstr "2 Столбца"
 
-#: guipopover.py:531
+#: guipopover.py:590
 msgid "3 Columns"
 msgstr "3 Столбца"
 
-#: guipopover.py:532
+#: guipopover.py:591
 msgid "4 Columns"
 msgstr "4 Столбца"
 
-#: guipopover.py:532
+#: guipopover.py:591
 msgid "5 Columns"
 msgstr "5 Столбцов"
 
-#: guipopover.py:532
+#: guipopover.py:591
 msgid "6 Columns"
 msgstr "6 Столбцов"
 
-#: guipopover.py:533
+#: guipopover.py:592
 msgid "7 Columns"
 msgstr "7 Столбцов"
 
-#: guipopover.py:549
+#: guipopover.py:608
 msgid "All Files"
 msgstr "Все файлы"
 
-#: guipopover.py:549 projectaddmediafolder.py:57
+#: guipopover.py:608 projectaddmediafolder.py:57
 msgid "Video Files"
 msgstr "Видеофайлы"
 
-#: guipopover.py:550 projectaddmediafolder.py:58
+#: guipopover.py:609 projectaddmediafolder.py:58
 msgid "Audio Files"
 msgstr "Звуковые файлы"
 
-#: guipopover.py:550
+#: guipopover.py:609
 msgid "Graphics Files"
 msgstr "Графические файлы"
 
-#: guipopover.py:550
+#: guipopover.py:609
 msgid "Image Sequences"
 msgstr "Серия изображений"
 
-#: guipopover.py:551
-msgid "Pattern Producers"
-msgstr "Генераторы"
+#: guipopover.py:610
+#, fuzzy
+msgid "Containers"
+msgstr "Контейнерные клипы"
 
-#: guipopover.py:551
+#: guipopover.py:610
 msgid "Unused Files"
 msgstr "Неиспользуемые файлы"
 
-#: guipopover.py:564
+#: guipopover.py:623
 msgid "Ratings Filtering"
 msgstr ""
 
-#: guipopover.py:591 guipopover.py:618
+#: guipopover.py:650 guipopover.py:681
 msgid "Unrated"
 msgstr ""
 
-#: guipopover.py:591 guipopover.py:618
+#: guipopover.py:650 guipopover.py:681
 msgid "Favorite"
 msgstr ""
 
-#: guipopover.py:592 guipopover.py:619
+#: guipopover.py:651 guipopover.py:682
 msgid "Bad"
 msgstr ""
 
-#: guipopover.py:598
+#: guipopover.py:657
 #, fuzzy
 msgid "Rating"
 msgstr "Вращение"
 
-#: guipopover.py:651 guipopoverclip.py:117 guipopoverclip.py:228
+#: guipopover.py:719
+#, fuzzy
+msgid "Move to Clicked Position..."
+msgstr "Переместить выбранное в группу"
+
+#: guipopover.py:720 guipopover.py:771
+msgid "Render Proxy File"
+msgstr "Собрать прокси"
+
+#: guipopover.py:724
+#, fuzzy
+msgid "Append to Timeline"
+msgstr "Добавить все клипы на монтажный стол"
+
+#: guipopover.py:740 guipopoverclip.py:119 guipopoverclip.py:235
 msgid "Open in Clip Monitor"
 msgstr "Открыть клип в мониторе"
 
-#: guipopover.py:666
+#: guipopover.py:755
 #, fuzzy
 msgid "Replace Media In Project"
 msgstr "Загрузка импортированных файлов в проект"
 
-#: guipopover.py:667
+#: guipopover.py:756
 msgid "Recreate Icon"
 msgstr "Обновить значок"
 
-#: guipopover.py:674 guipopover.py:947
+#: guipopover.py:763 guipopover.py:1056
 msgid "Render Slow/Fast Motion File"
 msgstr "Собрать клип с изменением скорости"
 
-#: guipopover.py:675
+#: guipopover.py:764
 msgid "Render Reverse Motion File"
 msgstr "Собрать клип в обратном направлении"
 
-#: guipopover.py:682
-msgid "Render Proxy File"
-msgstr "Собрать прокси"
+#: guipopover.py:778
+#, fuzzy
+msgid "Render Stabilized File"
+msgstr "Сборка файлов"
 
-#: guipopover.py:690
+#: guipopover.py:786
 msgid "Cancel Selected Render"
 msgstr "Отменить выбранную сборку"
 
-#: guipopover.py:691
+#: guipopover.py:787
 msgid "Cancel All Renders"
 msgstr "Отменить все сборки"
 
-#: guipopover.py:695
+#: guipopover.py:791
 msgid "Show Jobs Panel on Adding New Job"
 msgstr "Показ заданий при добавлении нового задания"
 
-#: guipopover.py:706
+#: guipopover.py:802
 msgid "Toggle All Effects On/Off"
 msgstr "Вкл/Выкл все эффекты"
 
-#: guipopover.py:710
+#: guipopover.py:806
 msgid "Expand All"
 msgstr "Развернуть всё"
 
-#: guipopover.py:711
+#: guipopover.py:807
 msgid "Unexpand All"
 msgstr "Cвернуть всё"
 
-#: guipopover.py:715
+#: guipopover.py:811
 msgid "Save Effect Stack"
 msgstr "Сохранить стек эффектов"
 
-#: guipopover.py:716
+#: guipopover.py:812
 msgid "Load Effect Stack"
 msgstr "Загрузить стек эффектов"
 
-#: guipopover.py:720 guipopover.py:762
+#: guipopover.py:816 guipopover.py:858
 msgid "Set Fade Buttons Default Fade Length..."
 msgstr "Длительность фейда по умолчанию..."
 
-#: guipopover.py:724 guipopover.py:740 guipopover.py:766
+#: guipopover.py:820 guipopover.py:836 guipopover.py:862
 msgid "Close Editor"
 msgstr "Закрыть редактор"
 
-#: guipopover.py:735
+#: guipopover.py:831
 msgid "Save and Apply Plugin Properties"
 msgstr "Сохранить и применить параметры модуля"
 
-#: guipopover.py:736
+#: guipopover.py:832
 msgid "Load and Apply Plugin Properties"
 msgstr "Загрузить и применить параметры модуля"
 
-#: guipopover.py:751
+#: guipopover.py:847
 msgid "Save Compositor Values"
 msgstr "Сохранить параметры композитора"
 
-#: guipopover.py:752
+#: guipopover.py:848
 msgid "Load Compositor Values"
 msgstr "Загрузить параметры композитора"
 
-#: guipopover.py:753
+#: guipopover.py:849
 msgid "Reset Compositor Values"
 msgstr "Сбросить параметры композитора"
 
-#: guipopover.py:758 guipopoverclip.py:587
+#: guipopover.py:854 guipopoverclip.py:620
 msgid "Delete Compositor"
 msgstr "Удалить композитор"
 
-#: guipopover.py:783
+#: guipopover.py:879
 msgid "New Group..."
 msgstr "Создать группу..."
 
-#: guipopover.py:784
+#: guipopover.py:880
 msgid "New Group From Selected..."
 msgstr "Новая группа из выбранных..."
 
-#: guipopover.py:788
+#: guipopover.py:884
 msgid "Rename Current Group..."
 msgstr "Переименовать группу..."
 
-#: guipopover.py:803 guipopover.py:840
+#: guipopover.py:899 guipopover.py:936
 msgid "No Groups"
 msgstr "Нет групп"
 
-#: guipopover.py:805
+#: guipopover.py:901
 msgid "Move Selected Items To Group"
 msgstr "Переместить выбранное в группу"
 
-#: guipopover.py:809
+#: guipopover.py:905
 msgid "Delete Current Group"
 msgstr "Удалить текущую группу"
 
-#: guipopover.py:813
+#: guipopover.py:909
 msgid "Use Comments as Clip Names"
 msgstr "Комментарии из имени клипа"
 
-#: guipopover.py:819 guipopover.py:843
+#: guipopover.py:915 guipopover.py:939
 msgid "Time"
 msgstr "Время"
 
-#: guipopover.py:827
+#: guipopover.py:923
 msgid "Sort by"
 msgstr "Сортировать по"
 
-#: guipopover.py:863 guipopover.py:866
+#: guipopover.py:959 guipopover.py:962
 msgid "Lock Track"
 msgstr "Заблокировать дорожку"
 
-#: guipopover.py:864 guipopover.py:867
+#: guipopover.py:960 guipopover.py:963
 msgid "Unlock Track"
 msgstr "Разблокировать дорожку"
 
-#: guipopover.py:871
+#: guipopover.py:967
 msgid "High Height"
 msgstr "Высота 75 пикселей"
 
-#: guipopover.py:871
+#: guipopover.py:967
 msgid "Large Height"
 msgstr "Высота 50 пикселей"
 
-#: guipopover.py:871
+#: guipopover.py:967
 msgid "Normal Height"
 msgstr "Высота 25 пикселей"
 
-#: guipopover.py:886 guipopover.py:889 guipopoverclip.py:443
-#: guipopoverclip.py:611
+#: guipopover.py:982 guipopover.py:985 guipopoverclip.py:468
+#: guipopoverclip.py:658
 msgid "Unmute"
 msgstr "Включить"
 
-#: guipopover.py:893
+#: guipopover.py:989
 msgid "Mute Video"
 msgstr "Выключить видео"
 
-#: guipopover.py:897 guipopover.py:900 guipopoverclip.py:416
-#: guipopoverclip.py:446 guipopoverclip.py:614
+#: guipopover.py:993 guipopover.py:996 guipopoverclip.py:436
+#: guipopoverclip.py:471 guipopoverclip.py:661
 msgid "Mute Audio"
 msgstr "Выключить звук"
 
-#: guipopover.py:904
+#: guipopover.py:1000
 msgid "Mute All"
 msgstr "Выключить всё"
 
-#: guipopover.py:932
+#: guipopover.py:1007
+#, fuzzy
+msgid "Sync All Clips to Track..."
+msgstr "Синхронизировать все композиторы"
+
+#: guipopover.py:1009
+msgid "Update Sync to Clips' Current Positions"
+msgstr ""
+
+#: guipopover.py:1010
+#, fuzzy
+msgid "Clear Sync"
+msgstr "Удалить связь синхронизации"
+
+#: guipopover.py:1041
 msgid "Show Full Paths"
 msgstr "Показать полные пути"
 
-#: guipopover.py:946
+#: guipopover.py:1055
 msgid "Display In Clip Monitor"
 msgstr "Показать клип в мониторе"
 
-#: guipopover.py:948
+#: guipopover.py:1057
 msgid "Toggle Star"
 msgstr "Поменять оценку"
 
-#: guipopover.py:976
+#: guipopover.py:1085
 msgid "Add Filter Mask on Selected Filter"
 msgstr "Замаскировать выбранный эффект"
 
-#: guipopover.py:980
+#: guipopover.py:1089
 msgid "Add Filter Mask on All Filters"
 msgstr "Замаскировать все эффекты"
 
-#: guipopover.py:1032
+#: guipopover.py:1141
 msgid "Load Render Args from Current Encoding"
 msgstr "Загрузить аргументы сборки из текущей кодировки"
 
-#: guipopover.py:1036
+#: guipopover.py:1145
 msgid "Reset all Render Options to Defaults"
 msgstr ""
 "Сбросить все параметры сборки \n"
@@ -9844,8 +10143,9 @@ msgid "Confirm Dropping Data Store:"
 msgstr "Уничтожить все кэшированные данные?"
 
 #: projectdatavaultgui.py:550
-msgid "Data inside folder will NOT be destroyd."
-msgstr ""
+#, fuzzy
+msgid "Data inside folder will NOT be destroyed."
+msgstr " Текущий стек отмены будет уничтожен\n"
 
 #: projectdatavaultgui.py:591
 msgid "Select Folder With existing Data Store data"
@@ -9962,254 +10262,309 @@ msgstr ""
 msgid "</b> currently uses "
 msgstr "Flowblade в настоящее время использует "
 
-#: guipopoverclip.py:123
+#: guipopoverclip.py:125
 #, fuzzy
 msgid "Audio Edit"
 msgstr "Звуковые фильтры"
 
-#: guipopoverclip.py:132 guipopoverclip.py:243
+#: guipopoverclip.py:136 guipopoverclip.py:250
 msgid "Properties"
 msgstr "Свойства"
 
-#: guipopoverclip.py:139 guipopoverclip.py:250
+#: guipopoverclip.py:143 guipopoverclip.py:257
 msgid "Markers"
 msgstr "Маркеры"
 
-#: guipopoverclip.py:140
+#: guipopoverclip.py:144
 msgid "Clip Info"
 msgstr "Сведения о клипе"
 
-#: guipopoverclip.py:154 guipopoverclip.py:256
+#: guipopoverclip.py:158 guipopoverclip.py:263
 msgid "Select"
 msgstr "Выбрать"
 
-#: guipopoverclip.py:160
+#: guipopoverclip.py:164
 msgid "Slow Motion"
 msgstr "Изменить скорость клипа"
 
-#: guipopoverclip.py:166 guipopoverclip.py:265 guipopoverclip.py:329
-#: guipopoverclip.py:389
+#: guipopoverclip.py:170 guipopoverclip.py:272 guipopoverclip.py:341
+#: guipopoverclip.py:409
 msgid "Add Filter"
 msgstr "Добавить эффект"
 
-#: guipopoverclip.py:173 guipopoverclip.py:268 guipopoverclip.py:332
-#: guipopoverclip.py:392
+#: guipopoverclip.py:177 guipopoverclip.py:275 guipopoverclip.py:344
+#: guipopoverclip.py:412
 msgid "Clone Filter"
 msgstr "Клонировать эффект"
 
-#: guipopoverclip.py:174
+#: guipopoverclip.py:178
 #, fuzzy
 msgid "Copy Filters"
 msgstr "Клонировать эффект"
 
-#: guipopoverclip.py:175
+#: guipopoverclip.py:179 guipopoverclip.py:277 guipopoverclip.py:346
+#: guipopoverclip.py:414
 #, fuzzy
 msgid "Paste Filters"
 msgstr "Изменить эффекты"
 
-#: guipopoverclip.py:183 guipopoverclip.py:273 guipopoverclip.py:377
+#: guipopoverclip.py:187 guipopoverclip.py:281 guipopoverclip.py:397
 msgid "Edit Filters"
 msgstr "Изменить эффекты"
 
-#: guipopoverclip.py:238 guipopoverclip.py:383
+#: guipopoverclip.py:245 guipopoverclip.py:403
 msgid "Mute"
 msgstr "Выключение"
 
-#: guipopoverclip.py:297
+#: guipopoverclip.py:305
 msgid "Stretch Prev Clip to Cover"
 msgstr "Растянуть предыдущий клип для заполнения"
 
-#: guipopoverclip.py:298
+#: guipopoverclip.py:306
 msgid "Stretch Next Clip to Cover"
 msgstr "Растянуть следующий клип для заполнения"
 
-#: guipopoverclip.py:323
+#: guipopoverclip.py:335
 msgid "Create Container Clip From Selected Clips"
 msgstr "Создать контейнерный клип из выбранных клипов"
 
-#: guipopoverclip.py:355
+#: guipopoverclip.py:352
+#, fuzzy
+msgid "Ripple Delete Selection Range"
+msgstr "Удалить выбранные участки"
+
+#: guipopoverclip.py:356
+#, fuzzy
+msgid "Mark Selection Range"
+msgstr "Отмеченный участок"
+
+#: guipopoverclip.py:375
 msgid "Open In Compositor Editor"
 msgstr "Открыть в редакторе композиторов"
 
-#: guipopoverclip.py:359
+#: guipopoverclip.py:379
 msgid "Sync with Origin Clip"
 msgstr "Синхронизировать с началом клипа"
 
-#: guipopoverclip.py:407 guipopoverclip.py:424
+#: guipopoverclip.py:428 guipopoverclip.py:449
 msgid "Split Audio"
 msgstr "Отделить звук"
 
-#: guipopoverclip.py:417
+#: guipopoverclip.py:437
 #, fuzzy
 msgid "Unmute Audio"
 msgstr "Выключить звук"
 
-#: guipopoverclip.py:440
-msgid "Select Clip to Audio Sync With..."
-msgstr "Выбрать звуковой клип для синхронизации..."
-
-#: guipopoverclip.py:463
-msgid "Orange"
-msgstr "Оранжевый"
-
-#: guipopoverclip.py:464
-msgid "Brown"
-msgstr "Коричневый"
-
-#: guipopoverclip.py:465
-msgid "Olive"
-msgstr "Оливковый"
-
-#: guipopoverclip.py:466
-msgid "Clip Color"
-msgstr "Цвет клипа"
-
-#: guipopoverclip.py:484
-msgid "No Clip Markers"
-msgstr "Нет маркеров клипа"
-
-#: guipopoverclip.py:486
-msgid "Add Clip Marker At Playhead Position"
-msgstr "Добавить маркер клипа в данную позицию"
-
-#: guipopoverclip.py:487
-msgid "Delete Clip Marker At Playhead Position"
-msgstr "Удалить маркер клипа из данной позиции"
-
-#: guipopoverclip.py:488
-msgid "Delete All Clip Markers"
-msgstr "Удалить все маркеры клипа"
-
-#: guipopoverclip.py:492 guipopoverclip.py:494
-msgid "Reload Media From Disk"
-msgstr "Обновить медиа с диска"
-
-#: guipopoverclip.py:499 guipopoverclip.py:618
-msgid "Volume Keyframes"
-msgstr "Громкость по ключ. кадрам"
-
-#: guipopoverclip.py:501
-msgid "Brightness Keyframes"
-msgstr "Яркость по ключ. кадрам"
-
-#: guipopoverclip.py:512 guipopoverclip.py:605
-msgid "Resync"
-msgstr "Ресинхронизировать"
-
-#: guipopoverclip.py:513 guipopoverclip.py:606
-msgid "Clear Sync Relation"
-msgstr "Удалить связь синхронизации"
-
-#: guipopoverclip.py:515 guipopoverclip.py:607
+#: guipopoverclip.py:440 guipopoverclip.py:542 guipopoverclip.py:654
 msgid "Select Sync Parent Clip..."
 msgstr "Выбрать родительский клип для синхронизации..."
 
-#: guipopoverclip.py:519 guipopoverclip.py:627
+#: guipopoverclip.py:441 guipopoverclip.py:538 guipopoverclip.py:652
+msgid "Resync"
+msgstr "Ресинхронизировать"
+
+#: guipopoverclip.py:442
+#, fuzzy
+msgid "Clear Sync Relations"
+msgstr "Удалить связь синхронизации"
+
+#: guipopoverclip.py:465
+msgid "Select Clip to Audio Sync With..."
+msgstr "Выбрать звуковой клип для синхронизации..."
+
+#: guipopoverclip.py:484
+msgid "Default"
+msgstr "По умолчанию"
+
+#: guipopoverclip.py:488
+msgid "Orange"
+msgstr "Оранжевый"
+
+#: guipopoverclip.py:489
+msgid "Brown"
+msgstr "Коричневый"
+
+#: guipopoverclip.py:490
+msgid "Olive"
+msgstr "Оливковый"
+
+#: guipopoverclip.py:491
+msgid "Clip Color"
+msgstr "Цвет клипа"
+
+#: guipopoverclip.py:509
+msgid "No Clip Markers"
+msgstr "Нет маркеров клипа"
+
+#: guipopoverclip.py:511
+msgid "Add Clip Marker At Playhead Position"
+msgstr "Добавить маркер клипа в данную позицию"
+
+#: guipopoverclip.py:512
+msgid "Delete Clip Marker At Playhead Position"
+msgstr "Удалить маркер клипа из данной позиции"
+
+#: guipopoverclip.py:513
+msgid "Delete All Clip Markers"
+msgstr "Удалить все маркеры клипа"
+
+#: guipopoverclip.py:517 guipopoverclip.py:519
+msgid "Reload Media From Disk"
+msgstr "Обновить медиа с диска"
+
+#: guipopoverclip.py:524 guipopoverclip.py:665
+msgid "Volume Keyframes"
+msgstr "Громкость по ключ. кадрам"
+
+#: guipopoverclip.py:526
+msgid "Brightness Keyframes"
+msgstr "Яркость по ключ. кадрам"
+
+#: guipopoverclip.py:532 guipopoverclip.py:671
+#, fuzzy
+msgid "Ripple Delete Clip Range"
+msgstr "Удалить со сдвигом"
+
+#: guipopoverclip.py:539 guipopoverclip.py:653
+msgid "Clear Sync Relation"
+msgstr "Удалить связь синхронизации"
+
+#: guipopoverclip.py:546 guipopoverclip.py:675
 msgid "Set Clip Length..."
 msgstr "Изменить длительность клипа..."
 
-#: guipopoverclip.py:520 guipopoverclip.py:628
+#: guipopoverclip.py:547 guipopoverclip.py:676
 msgid "Stretch Over Next Blank"
 msgstr "Протянуть вперёд"
 
-#: guipopoverclip.py:521 guipopoverclip.py:629
+#: guipopoverclip.py:548 guipopoverclip.py:677
 msgid "Stretch Over Prev Blank"
 msgstr "Протянуть назад"
 
-#: guipopoverclip.py:532
+#: guipopoverclip.py:559
 msgid "Slow/Fast"
 msgstr "Изменить скорость клипа"
 
-#: guipopoverclip.py:539
+#: guipopoverclip.py:566
 msgid "Revert To Original Media"
 msgstr "Использовать исходные клипы"
 
-#: guipopoverclip.py:547
+#: guipopoverclip.py:575
 msgid "All Clips After"
 msgstr "Все следующие клипы"
 
-#: guipopoverclip.py:548
+#: guipopoverclip.py:576
 msgid "All Clips Before"
 msgstr "Все предыдущие клипы"
 
-#: guipopoverclip.py:573
+#: guipopoverclip.py:580
+#, fuzzy
+msgid "Mark Clip Range"
+msgstr "Добавить отмеченный участок в журнал"
+
+#: guipopoverclip.py:606
 msgid "From Next Clip"
 msgstr "Из следующего клипа"
 
-#: guipopoverclip.py:574
+#: guipopoverclip.py:607
 msgid "From Previous Clip"
 msgstr "Из предыдущего клипа"
 
-#: guipopoverclip.py:581
+#: guipopoverclip.py:614
 msgid "Add Compositor..."
 msgstr "Добавить композитор"
 
-#: guipopoverclip.py:591
+#: guipopoverclip.py:624
 msgid "Edit Title"
 msgstr "Изменить эффекты"
 
-#: guipopoverclip.py:598
+#: guipopoverclip.py:636
 msgid "Edit Generator Properties..."
 msgstr "Изменить свойства генератора..."
 
-#: guipopoverclip.py:599
+#: guipopoverclip.py:637
 msgid "Create Cloned Generator..."
 msgstr "Клонировать генератор..."
 
-#: guipopoverclip.py:600
-msgid "Generator/Container Render Actions"
+#: guipopoverclip.py:638
+#, fuzzy
+msgid "Update Sequence Link Clip"
+msgstr "Сохранение контейнерного клипа из видеоряда"
+
+#: guipopoverclip.py:640
+#, fuzzy
+msgid "Generator and Container Rendering"
 msgstr "Действия по сборке генератора"
 
-#: guipopoverclip.py:601
+#: guipopoverclip.py:645
+#, fuzzy
+msgid "Render Clip..."
+msgstr "Клип Blender"
+
+#: guipopoverclip.py:646
+msgid "Render Settings..."
+msgstr "Параметры сборки..."
+
+#: guipopoverclip.py:647
 msgid "Switch to Unrendered Media"
 msgstr "Переключится на несобранное медиа"
 
-#: guipopoverclip.py:659
+#: guipopoverclip.py:648
+#, fuzzy
+msgid "Set Default Encoding..."
+msgstr "Установить кодировку"
+
+#: guipopoverclip.py:707
 #, fuzzy
 msgid "Select Edit Filter"
 msgstr "Выберите файл"
 
-#: guipopoverclip.py:665
+#: guipopoverclip.py:713
 msgid "Leading Keyframes"
 msgstr "Ключевые кадры перед клипом"
 
-#: guipopoverclip.py:668
+#: guipopoverclip.py:716
 msgid "Trailing Keyframes"
 msgstr "Ключевые кадры за клипом"
 
-#: guipopoverclip.py:674
+#: guipopoverclip.py:722
 msgid "Value Snapping"
 msgstr "Выравнивать по значению"
 
-#: guipopoverclip.py:678
+#: guipopoverclip.py:726
 msgid "Playhead Follows Dragged Keyframe"
 msgstr "Автосопровождение указателя ключевого кадра"
 
-#: guipopoverclip.py:682
+#: guipopoverclip.py:730
+#, fuzzy
+msgid "Open in Edit Panel Keyframe Editor"
+msgstr "Открыть в редакторе эффектов"
+
+#: guipopoverclip.py:731
 msgid "Exit Edit"
 msgstr "Выход из редактирования"
 
-#: guipopoverclip.py:718
+#: guipopoverclip.py:767
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr "Удалить все ключевые кадры за клипом, кроме последнего"
 
-#: guipopoverclip.py:723
+#: guipopoverclip.py:772
 msgid "Delete all Keyframe after Clip Range"
 msgstr "Удалить все ключевые кадры за клипом"
 
-#: guipopoverclip.py:736
+#: guipopoverclip.py:785
 msgid "No additional Keyframe Tool editable Params"
 msgstr ""
 
-#: guipopoverclip.py:773
+#: guipopoverclip.py:822
 msgid "Copy Keyframe Value"
 msgstr "Копировать значение ключ. кадра"
 
-#: guipopoverclip.py:774
+#: guipopoverclip.py:823
 msgid "Paste Keyframe Value"
 msgstr "Вставить значение ключ. кадра"
 
-#: tlinewidgets.py:2835
+#: tlinewidgets.py:2894
 msgid ""
 "Up - Page Up\n"
 "Down - Page Down"
@@ -10219,59 +10574,69 @@ msgstr ""
 msgid "Media MIME types"
 msgstr ""
 
-#: mediaplugin.py:284 mediaplugin.py:380
+#: mediaplugin.py:318
+#, fuzzy
+msgid "Generator Template load failed!"
+msgstr "При сборке не удалось скопировать элемент файла проекта!"
+
+#: mediaplugin.py:337 mediaplugin.py:432
 msgid "Add Generator"
 msgstr "Добавить генератор..."
 
-#: mediaplugin.py:292
+#: mediaplugin.py:345
 msgid "Generator:"
 msgstr "Сгенерированный клип"
 
-#: mediaplugin.py:346
+#: mediaplugin.py:398
 msgid "Add as Container Clip"
 msgstr "Контейнерные клипы"
 
-#: mediaplugin.py:347
+#: mediaplugin.py:399
 msgid "Add as Rendered Clip"
 msgstr "Добавление клипа из серии изображений"
 
-#: mediaplugin.py:350
+#: mediaplugin.py:402
 msgid "Import Action:"
 msgstr "Действие:"
 
-#: mediaplugin.py:356
+#: mediaplugin.py:408
 msgid "Generator Length:"
 msgstr "Длительность генератора:"
 
-#: mediaplugin.py:358
+#: mediaplugin.py:410
 msgid "Encode settings"
 msgstr "Параметры кодирования"
 
-#: mediaplugin.py:406
+#: mediaplugin.py:437
+#, fuzzy
+msgid "Load Generator Template"
+msgstr "Загрузить код генератора"
+
+#: mediaplugin.py:465
 msgid "<b>Author: </b> "
 msgstr "<b>Автосопровождение</b>"
 
-#: mediaplugin.py:408
+#: mediaplugin.py:467
 msgid "<b>Version: </b> "
 msgstr "<b>Назначение:</b>"
 
-#: mediaplugin.py:546
+#: mediaplugin.py:611
 msgid "Generator Render Error"
 msgstr "Действия по сборке генератора"
 
-#: mediaplugin.py:648
+#: mediaplugin.py:713
 msgid "No Generator"
 msgstr "Добавить генератор..."
 
-#: mediaplugin.py:780
+#: mediaplugin.py:845
 msgid "Error in Preview for frame: "
 msgstr "Предпросмотр кадра: "
 
-#: mediaplugin.py:798
+#: mediaplugin.py:863
 msgid "_media_plugin_properties"
 msgstr "Сведения о клипе"
 
-#: mediaplugin.py:824
+#: mediaplugin.py:889
 msgid "Generator properties load failed!"
 msgstr "При сборке не удалось скопировать элемент файла проекта!"
 
@@ -10350,6 +10715,51 @@ msgstr "Идёт поиск..."
 #: projectaddmediafolder.py:235
 msgid " of found files will not be loaded."
 msgstr " из найденных файлов загружены не будут."
+
+#~ msgid "Start - Home key"
+#~ msgstr "К началу (клавиша Home)"
+
+#~ msgid "End - End key"
+#~ msgstr "В конец (клавиша End)"
+
+#~ msgid "Play/Pause- Space"
+#~ msgstr "Воспроизведение/Пауза (Пробел)"
+
+#~ msgid "To Mark In"
+#~ msgstr "К началу участка"
+
+#~ msgid "To Mark Out"
+#~ msgstr "В конец участка"
+
+#~ msgid "Play - Space"
+#~ msgstr "Воспроизвести (Пробел)"
+
+#~ msgid "Stop - Space"
+#~ msgstr "Остановить (Пробел)"
+
+#~ msgid "Save Runtime Environment Data"
+#~ msgstr "Сохранение данных переменного окружения"
+
+#~ msgid "Sync parent clips must be on track V1"
+#~ msgstr "Синхронизация с родительскими клипами производится на дорожке V1"
+
+#~ msgid "Selected sync parent clip is on track "
+#~ msgstr "Синхронизация с выбранным родительским клипом на дорожке "
+
+#~ msgid ""
+#~ ".\n"
+#~ "You can only sync to clips that are on track V1."
+#~ msgstr ""
+#~ ".\n"
+#~ "Можно синхронизировать только клипы, расположенные на \n"
+#~ "дорожке V1."
+
+#, fuzzy
+#~ msgid "Icons Size:"
+#~ msgstr "Размер кадра:"
+
+#~ msgid "Pattern Producers"
+#~ msgstr "Генераторы"
 
 #~ msgid "View Project Events..."
 #~ msgstr "Просмотр изменения проекта..."
@@ -10691,9 +11101,6 @@ msgstr " из найденных файлов загружены не будут
 #~ msgid "Edit Container Program..."
 #~ msgstr "Править контейнерную программу..."
 
-#~ msgid "Render Settings..."
-#~ msgstr "Параметры сборки..."
-
 #~ msgid "Geometry to Original Aspect Ratio"
 #~ msgstr "Геометрия к исходному соотношению сторон"
 
@@ -10931,9 +11338,6 @@ msgstr " из найденных файлов загружены не будут
 
 #~ msgid "Int"
 #~ msgstr "Целое число"
-
-#~ msgid "Blender Clip"
-#~ msgstr "Клип Blender"
 
 #~ msgid "Wrong magic: "
 #~ msgstr "Неправильная магия: "
@@ -11334,9 +11738,6 @@ msgstr " из найденных файлов загружены не будут
 #~ msgid " files?"
 #~ msgstr " файлов?"
 
-#~ msgid "Open in Filters Editor"
-#~ msgstr "Открыть в редакторе эффектов"
-
 #~ msgid "Container Clip Actions"
 #~ msgstr "Действия с контейнерным клипом"
 
@@ -11345,9 +11746,6 @@ msgstr " из найденных файлов загружены не будут
 
 #~ msgid "Add new Sequence to Project"
 #~ msgstr "Добавить новую последовательность в проект"
-
-#~ msgid "Delete Sequence from Project"
-#~ msgstr "Удалить последовательность из проекта"
 
 #~ msgid "Start editing Sequence"
 #~ msgstr "Начало редактирования последовательности"
