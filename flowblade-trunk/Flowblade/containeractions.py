@@ -22,7 +22,6 @@ from gi.repository import GLib
 
 import cairo
 import copy
-import distutils
 import hashlib
 import json
 try:
@@ -186,8 +185,8 @@ class AbstractContainerActionObject:
             src_dir = orig_clip_action.get_session_dir()
             dst_dir = self.get_session_dir()
             
-            distutils.dir_util.copy_tree(src_dir, dst_dir)
-
+            shutil.copytree(src_dir, dst_dir)
+            
             # Fix 'rendered_media' path.
             rendered_path = None
             for f in os.listdir(orig_clip_action.get_session_dir()):
