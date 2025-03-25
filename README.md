@@ -2,7 +2,7 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**New release 2.18 available. See release notes [here,](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**New release 2.20 available. See release notes [here,](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
@@ -18,13 +18,13 @@
 
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
-**Start application from terminal with command:**
+**Fix is to update to the latest version 2.20.**
+
+**If not possible, start application from terminal with command:**
 
 ```
 SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
 ```
-**More info on Issue here: [Issue #1134](https://github.com/jliljebl/flowblade/issues/1134)**
-
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
 
 # Introduction
@@ -77,7 +77,7 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.16 was released in May 2024.
+**Latest release:** Flowblade Movie Editor 2.20 was released in March 2025.
 
 # Installing Flowblade
 
