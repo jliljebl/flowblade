@@ -1,5 +1,95 @@
 # Release Notes
 
+## FLOWBLADE 2.20
+Date: March 25, 2025
+
+We have now moved to SDL2 video playback for Flatpak and all systems with MLT 7.30 or higher. 
+
+Video playback for native Wayland without XWayland or for Gtk 4 (that does not support the per widget Xwindow paradigm) does not currently seem possible with SDL. Moving forward we will develop some alternative video display approach. 
+
+### Sync editing improvements
+
+A large number of changes were made to improve Flowblade sync editing worflow:
+
+* New track sync actions:
+  
+  * **Sync All Clips Action...** sets all clips in Track to be parented to closest clip on target Track. Target Track is remembered to enable single action update feature, see below.
+  * **Update Sync to Clips' Positions** updates parenting sync to current positions to relative to Track that was previous selected as parenting target Track.
+
+* Sync parent clips can now be on any track, not just V1. Track V1 can now also contain child clips.
+
+* Clips can now be automatically audio sync split when added to user defined set of Tracks.
+
+* Audio splits can be set to go on mirrored tracks instead of always going on track A1
+
+* Clip multiselection popup offers now *Resync*, *Clear Sync* or *Set Parent Clip* actions.
+
+* New delete edits:
+  
+  * Box selection delete and lift.
+  * Single and  multiselection Ripple Delete Range action.
+
+* Clip end trims can now be done in *overwrite* mode which help maintaining sync between tracks. 
+
+### Sequence Link Container Clips
+
+New **Sequence Link Container Clips** feature streamlines workflow where *Sequences* are used as parts of another *Sequence*. **Sequence Link Container Clips** can be updated to display changed contents of another *Sequence* without having to manually create a new clip and replace old clip on *Timeline*.
+
+### Preset keyframe animations
+
+Filters **Position Scale** and **Position Scale Rotate** have a new feature making it possible to add some frequently needed animations such as slide-ins and zooms in a single action.
+
+Feature is available in keyframe editor hamburger menu when selecting item **Add Preset Keyframed Movement...**.
+
+#### Monitor player buttons Row UX update
+
+Though perfectly functional, the monitor player buttons row was always visually a bit rough. We did a visual and functional update in this area, switched to a using single centered Play/Stop button, moved marks buttons to the side and made larger the visual difference between displaying Timeline and Clips in the monitor. 
+
+In a related update the timecode displays were made to display the active part of timecode in a brighter color to improve readability.   
+
+### New features
+
+* Rendered **Stabilized Media Item** creation is now possible.
+* **Duplicate Sequence** feature allows creating copies of *Sequences*.
+* **Generator Templates** feature makes possible to create **Generators** with user set properties to avoid having to set properties multiple times when creating **Generators**.
+
+### Double sized icons deprecated
+
+Double sized icons preference was removed. The results were always visually unsatisfactory. Tracks scaling preference remains, and when used in combination with scaling options provided by desktop environments it be possible to always achieve good results.
+
+### Contributions
+
+* **luzpaz** contributed a patch fixing large number of typos.
+
+### New small features and bug fixes
+
+* Zoom and shakiness parameters were activated for Stabilization filter.
+* Add multi-item popup menu to Media Panel.
+* Add 'Delete' item to Media Panel hamburger menu.
+* Add feature to open keyframe editor params parameter in Keyframe Tool.
+* Add Open in Edit Panel feature to Keyframe Tool.
+* Add disable clip end drags when selected feature to improve targeting small clips.
+* Add wide Slip trim activation area preference.
+* Feature to delete motion tracking data to make motion tracking more manageable.
+* Fix off by one issue with track syncs.
+* Make Media Items grab keyboard focus when selected with hamburger menu.
+* Add pixel format and colorspace info to file properties dialog.
+* Clone sync data for cut clip clones.
+* Fix Credit Scroll typo.
+* Drop cyan color from box selection display.
+* Updated create bindings documentation.
+* Make second window part of applica too to fix non-working menu actions.
+* Replace Pattern Producer file filering item with Container option.
+* Process shutdown fixes.
+* Show consumer type in env dialog.
+* Delete consumer start/stop hack.
+* Fix media item gmic icon bug.
+* Fix paste append off by one and multitrack bugs.
+* Add Filter Stack move arrows.
+* Fix Filter editing file select button replacement.
+* Add default container encoding options feature.
+* Fix Container Clips losing sync on render.
+
 ## FLOWBLADE 2.18.1
 Date: February 17, 2025
 
