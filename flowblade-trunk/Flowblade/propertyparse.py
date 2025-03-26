@@ -417,7 +417,7 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         y_scale = float(values[3]) / float(screen_height)
 
         # keyframecanvas.RotatingEditCanvas editor considers x anf y values position of
-        # anchor point around whicth image is rotated.
+        # anchor point around which image is rotated.
         #
         # MLT porprty "affine.transition.rect" considers x anf y values amount translation
         # and rotate image automatically around its tramslated center point.
@@ -430,7 +430,7 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         y = float(values[1]) + float(screen_height) / 2.0 + \
             ((y_scale * screen_height) - screen_height) / 2.0
 
-        rotation = float(values[4]) # degrees al arund
+        rotation = float(values[4]) # degrees all around
         opacity = 100 # not edited
 
         source_rect = [x,y,x_scale,y_scale,rotation]

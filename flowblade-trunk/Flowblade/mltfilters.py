@@ -114,7 +114,7 @@ def _translate_group_name(group_name):
 
 class FilterInfo:
     """
-    Info of a filter (mlt.Service) that is is available to the user.
+    Info of a filter (mlt.Service) that is available to the user.
     Constructor input is a dom node object.
     This is used to create FilterObject objects.
     """

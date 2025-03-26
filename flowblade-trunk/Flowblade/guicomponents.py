@@ -1939,7 +1939,7 @@ class BigTCDisplay:
             frame = PLAYER().tracktor_producer.frame()
             frame_str = utils.get_tc_zeros_overlay_fine_grained(frame)
         except:
-            print("execpt")
+            print("except")
             frame_str = "00:00:00:00"
             
         layout = PangoCairo.create_layout(cr)

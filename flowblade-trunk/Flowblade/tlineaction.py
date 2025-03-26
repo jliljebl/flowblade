@@ -181,7 +181,7 @@ def _can_do_cut():
 def sequence_split_pressed():
     """
     Intention of this method is to split a sequence at the current position,
-    reduce it to the the clips on the left side of the cut and move the remains
+    reduce it to the clips on the left side of the cut and move the remains
     on the right side of the cut to a newly created sequence that is then
     opened.
     """

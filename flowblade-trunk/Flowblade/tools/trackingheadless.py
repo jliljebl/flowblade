@@ -156,7 +156,7 @@ class TrackingHeadlessRunnerThread(threading.Thread):
         ccrutils.write_completed_message()
 
         _render_thread = None
-        os._exit(0) # We are having some issues with causing prosessor usage even after reaching here.
+        os._exit(0) # We are having some issues with causing processor usage even after reaching here.
         
     def check_abort_requested(self):
         self.abort = ccrutils.abort_requested()

@@ -299,7 +299,7 @@ def init_select_master_clip(popup_data):
 
         parent_selection_data = (CHILD_SELECTION_SINGLE, clip, child_index, track)
     except TypeError:
-        # This is from multi selection that does not porvide same data as single selection.
+        # This is from multi selection that does not provide same data as single selection.
         parent_selection_data = (CHILD_SELECTION_MULTIPLE, movemodes.selected_range_in, movemodes.selected_range_out, track)
         
     gdk_window = gui.tline_display.get_parent_window()
