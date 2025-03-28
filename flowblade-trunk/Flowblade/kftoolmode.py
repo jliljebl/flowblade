@@ -28,6 +28,7 @@ import cairo
 import copy
 import math
 
+import animatedvalue
 import appconsts
 import clipeffectseditor
 import dialogutils
