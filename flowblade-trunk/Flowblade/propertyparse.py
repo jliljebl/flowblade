@@ -26,6 +26,7 @@ Modules provides functions that:
 import json
 
 import appconsts
+import animatedvalue
 from editorstate import current_sequence
 from editorstate import PROJECT
 import respaths
@@ -247,17 +248,8 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
     kf_tokens = keyframes_str.split(";")
     for token in kf_tokens:
-        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_DISCRETE
-        else:
-            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-            if len(sides) == 2:
-                kf_type = appconsts.KEYFRAME_SMOOTH
-            else:
-                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-                kf_type = appconsts.KEYFRAME_LINEAR
-        
+        kf_type, sides = animatedvalue.parse_kf_token(token)
+
         # Find out saved keyframe type here.
         add_kf = (int(sides[0]), out_to_in_func(float(sides[1])), kf_type) # kf = (frame, value, type)
         new_keyframes.append(add_kf)
@@ -272,17 +264,8 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(";")
     for token in kf_tokens:
-        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_DISCRETE
-        else:
-            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-            if len(sides) == 2:
-                kf_type = appconsts.KEYFRAME_SMOOTH
-            else:
-                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-                kf_type = appconsts.KEYFRAME_LINEAR
-                
+        kf_type, sides = animatedvalue.parse_kf_token(token)
+        print(kf_type, sides)
         values = sides[1].split(':')
 
         add_kf = (int(sides[0]), out_to_in_func(float(values[2])), kf_type) # kf = (frame, opacity, type)
@@ -295,17 +278,9 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_DISCRETE
-        else:
-            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-            if len(sides) == 2:
-                kf_type = appconsts.KEYFRAME_SMOOTH
-            else:
-                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-                kf_type = appconsts.KEYFRAME_LINEAR
-                
+        kf_type, sides = animatedvalue.parse_kf_token(token)
+        print(kf_type, sides)
+            
         values = sides[1].split(':')
         pos = values[0].split('/')
         size = values[1].split('x')
@@ -322,17 +297,9 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_DISCRETE
-        else:
-            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-            if len(sides) == 2:
-                kf_type = appconsts.KEYFRAME_SMOOTH
-            else:
-                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-                kf_type = appconsts.KEYFRAME_LINEAR
-                
+        kf_type, sides = animatedvalue.parse_kf_token(token)
+        print(kf_type, sides)
+
         values = sides[1].split(' ')
         x = values[0]
         y = values[1]
@@ -372,17 +339,9 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_DISCRETE
-        else:
-            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-            if len(sides) == 2:
-                kf_type = appconsts.KEYFRAME_SMOOTH
-            else:
-                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-                kf_type = appconsts.KEYFRAME_LINEAR
-                
+        kf_type, sides = animatedvalue.parse_kf_token(token)
+        print(kf_type, sides)
+            
         values = sides[1].split(':')
         frame = int(sides[0])
         # Get values and convert "frei0r.cairoaffineblend" values to editor values
@@ -450,44 +409,21 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
 
 def get_token_frame_value_type(token):
-    sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-    if len(sides) == 2:
-        kf_type = appconsts.KEYFRAME_DISCRETE
-    else:
-        sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_SMOOTH
-        else:
-            sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-            kf_type = appconsts.KEYFRAME_LINEAR
-                
+    kf_type, sides = animatedvalue.parse_kf_token(token)
+    print(kf_type, sides)
+
     # returns (frame, value, kf_type)
     return(sides[0], sides[1], kf_type)
 
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def _get_roto_geom_frame_value(token):
-    sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
-    if len(sides) == 2:
-        kf_type = appconsts.KEYFRAME_DISCRETE
-    else:
-        sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
-        if len(sides) == 2:
-            kf_type = appconsts.KEYFRAME_SMOOTH
-        else:
-            sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
-            kf_type = appconsts.KEYFRAME_LINEAR
+    kf_type, sides = animatedvalue.parse_kf_token(token)
+    print(kf_type, sides)
     
     return(sides[0], sides[1], kf_type)
 
 def _get_eq_str(kf_type):
-    if kf_type == appconsts.KEYFRAME_DISCRETE:
-        eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
-    elif kf_type == appconsts.KEYFRAME_SMOOTH:
-        eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
-    else:
-        eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
-    
-    return eq_str
+    return animatedvalue.TYPE_TO_EQ_STRING[kf_type]
     
 def rotating_ge_write_out_keyframes(ep, keyframes):
     x_val = ""

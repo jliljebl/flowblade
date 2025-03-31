@@ -31,6 +31,7 @@ import json
 
 from gi.repository import Gtk
 
+import animatedvalue
 import appconsts
 from editorstate import current_sequence
 import mlttransitions
@@ -700,12 +701,7 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         for kf in keyframes:
             frame, rect, opac, kf_type = kf
             
-            if kf_type == appconsts.KEYFRAME_LINEAR:
-                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
-            elif kf_type == appconsts.KEYFRAME_SMOOTH:
-                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
-            else:
-                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+            eq_str = animatedvalue.TYPE_TO_EQ_STRING[kf_type]
                         
             val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + "/" + str(int(rect[1])) + ":" # pos
@@ -730,12 +726,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
         for kf in keyframes:
             frame, rect, opac, kf_type = kf
             
-            if kf_type == appconsts.KEYFRAME_LINEAR:
-                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
-            elif kf_type == appconsts.KEYFRAME_SMOOTH:
-                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
-            else:
-                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+            eq_str = animatedvalue.TYPE_TO_EQ_STRING[kf_type]
                         
             val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
@@ -880,13 +871,8 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         for kf in keyframes:
             frame, val, kf_type = kf
             
-            if kf_type == appconsts.KEYFRAME_LINEAR:
-                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
-            elif kf_type == appconsts.KEYFRAME_SMOOTH:
-                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
-            else:
-                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
-                
+            eq_str = animatedvalue.TYPE_TO_EQ_STRING[kf_type]
+            
             val_str += str(frame) + eq_str + str(self.get_out_value(val)) + ";"
         
         val_str = val_str.strip(";")

@@ -51,6 +51,7 @@ import os
 import sys
 import time
 
+import animatedvalue
 import appconsts
 import audiomonitoring
 import audiowaveformrenderer
@@ -231,7 +232,10 @@ class FlowbladeApplication(Gtk.Application):
         shortcuts.load_shortcut_files()
         shortcuts.load_shortcuts()
         shortcutsquickeffects.load_shortcuts()
-        
+
+        # We have translations in data structs and need some initing.
+        animatedvalue.init()
+
         # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
         # So when we add or remove a value, make sure we also change the len test
         # Only use positive numbers.
