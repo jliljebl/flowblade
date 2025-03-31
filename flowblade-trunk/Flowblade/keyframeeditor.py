@@ -1312,9 +1312,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         try:
             kf_type = int(data)
             self.clip_editor.set_active_kf_type(kf_type)
+            self.queue_draw()
+            self.update_property_value()
         except:
             current_kf_type = self.clip_editor.get_active_kf_type()
-            print(data)
             if data == "effectkfs":
                 animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
             else:
@@ -1322,9 +1323,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             return
 
     def extended_kf_type_set(self, selected_kf_type):
-        print("selected_kf_type", selected_kf_type)
         self.clip_editor.set_active_kf_type(selected_kf_type)
-
+        self.queue_draw()
+        self.update_property_value()
+        
     def _hamburger_pressed(self, launcher, widget, event, data):
 
         global _kf_popover, _kf_menu, _kf_type_submenu

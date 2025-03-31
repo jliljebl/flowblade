@@ -133,11 +133,6 @@ SMOOTH_EXTENDED_KEYFRAME_TYPES = [ \
     appconsts.KEYFRAME_CIRCULAR_OUT,
     appconsts.KEYFRAME_CIRCULAR_IN_OUT]
 
-
-
-
-
-
 # Keyframe type -> eq str 
 TYPE_TO_EQ_STRING = None # filled on init
 # Keyframe type -> eq str 
@@ -205,12 +200,12 @@ def create(keyframes, active_index=0):
 
 def parse_kf_token(token):
     for eq_str in reversed(KEYFRAME_EQ_STRS):
-        print(eq_str)
+        #print(eq_str)
         sides = token.split(eq_str)
-        print(sides)
+        #print(sides)
         if len(sides) == 2:
             kf_type = EQ_STRING_TO_TYPE[eq_str]
-            print(kf_type)
+            #print(kf_type)
             return (kf_type, sides)
     
     return (None, None) # we give bad data to crash
