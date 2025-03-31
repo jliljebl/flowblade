@@ -34,6 +34,7 @@ from gi.repository import Gtk, GObject, Gio, Gdk
 from gi.repository import Pango, PangoCairo
 
 import appconsts
+import animatedvalue
 import cairoarea
 import callbackbridge
 import compositorfades
@@ -96,9 +97,13 @@ KF_DRAG_MULTI = 3
 ACTIVE_KF_ICON = None
 ACTIVE_KF_ICON_SMOOTH = None
 ACTIVE_KF_ICON_DISCRETE = None
+ACTIVE_KF_ICON_EFFECT = None
+ACTIVE_KF_ICON_SMOOTH_EXTENDED = None
 NON_ACTIVE_KF_ICON = None
 NON_ACTIVE_KF_ICON_SMOOTH = None
 NON_ACTIVE_KF_ICON_DISCRETE = None
+NON_ACTIVE_KF_ICON_EFFECT = None
+NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED = None
 
 # Magic value to signify disconnected signal handler .
 DISCONNECTED_SIGNAL_HANDLER = -9999999
@@ -171,14 +176,21 @@ class ClipKeyFrameEditor:
         self.mouse_listener = None #This is special service for RotoMaskKeyFrameEditor, not used by other editors
 
         # init icons if needed
-        global ACTIVE_KF_ICON,  ACTIVE_KF_ICON_SMOOTH, ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE
+        global ACTIVE_KF_ICON,  ACTIVE_KF_ICON_SMOOTH, ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON, \
+        NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE, ACTIVE_KF_ICON_EFFECT, NON_ACTIVE_KF_ICON_EFFECT, \
+        ACTIVE_KF_ICON_SMOOTH_EXTENDED, NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED
+
         if ACTIVE_KF_ICON == None:
             ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
             ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth.png")
             ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_discrete.png")
+            ACTIVE_KF_ICON_EFFECT = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_effect.png") 
+            ACTIVE_KF_ICON_SMOOTH_EXTENDED = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth_extended.png") 
             NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
             NON_ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth.png") 
             NON_ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_discrete.png")
+            NON_ACTIVE_KF_ICON_EFFECT = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_effect.png")
+            NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth_extended.png")  
 
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
@@ -252,15 +264,25 @@ class ClipKeyFrameEditor:
                     icon = ACTIVE_KF_ICON
                 elif kf_type == appconsts.KEYFRAME_SMOOTH:
                     icon = ACTIVE_KF_ICON_SMOOTH
-                else:
+                elif kf_type == appconsts.KEYFRAME_DISCRETE:
                     icon = ACTIVE_KF_ICON_DISCRETE
+                else:
+                    if kf_type in animatedvalue.EFFECT_KEYFRAME_TYPES:
+                        icon = ACTIVE_KF_ICON_EFFECT
+                    else:
+                        icon = ACTIVE_KF_ICON_SMOOTH_EXTENDED 
             else:
                 if kf_type == appconsts.KEYFRAME_LINEAR:
                     icon = NON_ACTIVE_KF_ICON
                 elif kf_type == appconsts.KEYFRAME_SMOOTH:
                     icon = NON_ACTIVE_KF_ICON_SMOOTH
-                else:
+                elif kf_type == appconsts.KEYFRAME_DISCRETE:
                     icon = NON_ACTIVE_KF_ICON_DISCRETE
+                else:
+                    if kf_type in animatedvalue.EFFECT_KEYFRAME_TYPES:
+                        icon = NON_ACTIVE_KF_ICON_EFFECT
+                    else:
+                        icon = NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED 
             try:
                 kf_pos = self._get_panel_pos_for_frame(frame)
             except ZeroDivisionError: # math fails for 1 frame clip
@@ -651,6 +673,10 @@ class ClipKeyFrameEditor:
         frame, val, kf_type = self.keyframes[self.active_kf_index]
         return val
     
+    def get_active_kf_type(self):
+        frame, val, kf_type = self.keyframes[self.active_kf_index]
+        return kf_type
+        
     def set_active_kf_value(self, new_value):
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
@@ -1026,16 +1052,27 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         print(type(self), "get_copy_kf_value not implemented")
 
     def _create_keyframe_type_submenu(self, kf_type, menu, action_id, callback):
-
-        items_data = [( _("Linear"), "linear"), ( _("Smooth"), "smooth"), ( _("Discrete"), "discrete")]
+        text_smooth = ""
+        text_effect = ""
         if kf_type == appconsts.KEYFRAME_LINEAR:
             active_index = 0
-        elif  kf_type == appconsts.KEYFRAME_SMOOTH:
+        elif kf_type == appconsts.KEYFRAME_SMOOTH:
             active_index = 1
-        else:
+        elif kf_type == appconsts.KEYFRAME_SMOOTH:
             active_index = 2
-
-
+        elif kf_type in animatedvalue.SMOOTH_EXTENDED_KEYFRAME_TYPES:
+            active_index = 3
+            text_smooth = animatedvalue.TYPE_TO_NAME[kf_type] +  " - "
+        else:
+            active_index = 4
+            text_effect = animatedvalue.TYPE_TO_NAME[kf_type] +  " - "
+            
+        items_data = [( _("Linear"), str(appconsts.KEYFRAME_LINEAR)), 
+                      ( _("Smooth"), str(appconsts.KEYFRAME_SMOOTH)), 
+                      ( _("Discrete"), str(appconsts.KEYFRAME_DISCRETE)), 
+                      ( text_smooth + _("Smooth Extended") + "...", "smoothkfs"),
+                      ( text_effect + _("Effect") + "...", "effectkfs")]
+                      
         kftype_section = Gio.Menu.new()   
         guipopover.add_menu_action_all_items_radio(kftype_section, items_data, action_id, active_index, callback)
         menu.append_section(None, kftype_section)
@@ -1220,58 +1257,75 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_right_mouse_popover.show()
     
     def _menu_item_activated(self, action, variant, data):
+        print("halooo")
         try:
             msg, data2  = data
         except:
             msg = data
 
-        if msg == "linear":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-        elif msg == "smooth":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-        elif msg == "discrete":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-        elif msg == "copy_kf":
-            keyevents.copy_action()
-        elif msg == "paste_kf":
-            keyevents.paste_action()
-        elif msg  == "clonekfnext":
-            self.clip_editor.clone_value_from_next()
-        elif msg  == "clonekfprev":
-            self.clip_editor.clone_value_from_prev()
-        elif msg == "openinkftool":
-            track = self.editable_property.track
-            clip = self.editable_property.clip
-            displayname = self.editable_property.args["displayname"].replace("!", " ")
-            filter_index = self.editable_property.filter_index
-            filter = clip.filters[filter_index]
-            prop = filter.properties[self.editable_property.property_index]
-            param_name, val, type = prop
-            callbackbridge.modesetting_kftool_mode_from_kf_editor(clip, track, param_name, filter, filter_index, displayname)
+        try:
+            print("msg:", msg)
+            kf_type = int(msg)
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            elif kf_type == appconsts.KEYFRAME_DISCRETE:
+                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            else:
+                print("nothing")
+        except:
+            print("except")
+            if msg == "copy_kf":
+                keyevents.copy_action()
+            elif msg == "paste_kf":
+                keyevents.paste_action()
+            elif msg  == "clonekfnext":
+                self.clip_editor.clone_value_from_next()
+            elif msg  == "clonekfprev":
+                self.clip_editor.clone_value_from_prev()
+            elif msg == "openinkftool":
+                track = self.editable_property.track
+                clip = self.editable_property.clip
+                displayname = self.editable_property.args["displayname"].replace("!", " ")
+                filter_index = self.editable_property.filter_index
+                filter = clip.filters[filter_index]
+                prop = filter.properties[self.editable_property.property_index]
+                param_name, val, type = prop
+                callbackbridge.modesetting_kftool_mode_from_kf_editor(clip, track, param_name, filter, filter_index, displayname)
 
-            return
+                return
             
         self.queue_draw()
         self.update_property_value()
 
     def _kf_type_menu_item_activated(self, action, new_value_variant):
         data = new_value_variant.get_string()
-        
-        if data == "linear":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-        elif data == "smooth":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-        elif data == "discrete":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-        
-        action.set_state(new_value_variant)
-        
+
         try:
             _kf_popover.hide()
         except:
             # This called from the other one.
             _kf_right_mouse_popover.hide()
-        
+
+        action.set_state(new_value_variant)
+            
+        try:
+            kf_type = int(data)
+            self.clip_editor.set_active_kf_type(kf_type)
+        except:
+            current_kf_type = self.clip_editor.get_active_kf_type()
+            print(data)
+            if data == "effectkfs":
+                animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            else:
+                animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            return
+
+    def extended_kf_type_set(self, selected_kf_type):
+        print("selected_kf_type", selected_kf_type)
+        self.clip_editor.set_active_kf_type(selected_kf_type)
+
     def _hamburger_pressed(self, launcher, widget, event, data):
 
         global _kf_popover, _kf_menu, _kf_type_submenu
