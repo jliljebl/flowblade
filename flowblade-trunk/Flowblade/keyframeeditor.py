@@ -1058,7 +1058,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             active_index = 0
         elif kf_type == appconsts.KEYFRAME_SMOOTH:
             active_index = 1
-        elif kf_type == appconsts.KEYFRAME_SMOOTH:
+        elif kf_type == appconsts.KEYFRAME_DISCRETE:
             active_index = 2
         elif kf_type in animatedvalue.SMOOTH_EXTENDED_KEYFRAME_TYPES:
             active_index = 3
@@ -1266,14 +1266,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         try:
             print("msg:", msg)
             kf_type = int(msg)
-            if kf_type == appconsts.KEYFRAME_LINEAR:
-                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            elif kf_type == appconsts.KEYFRAME_SMOOTH:
-                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            elif kf_type == appconsts.KEYFRAME_DISCRETE:
-                self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            else:
-                print("nothing")
+            self.clip_editor.set_active_kf_type(kf_type)
         except:
             print("except")
             if msg == "copy_kf":
@@ -1295,7 +1288,13 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
                 callbackbridge.modesetting_kftool_mode_from_kf_editor(clip, track, param_name, filter, filter_index, displayname)
 
                 return
-            
+            elif data == "effectkfs":
+                animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
+                return
+            elif data == "effectkfs":
+                animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
+                return
+                        
         self.queue_draw()
         self.update_property_value()
 

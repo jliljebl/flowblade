@@ -140,18 +140,25 @@ SMOOTH_EXTENDED_KEYFRAME_TYPES = [ \
 
 # Keyframe type -> eq str 
 TYPE_TO_EQ_STRING = None # filled on init
+# Keyframe type -> eq str 
+EQ_STRING_TO_TYPE = None # filled on init
 # Keyframe type -> translated name
 TYPE_TO_NAME = None  # filled on init
 
 
 # ------------------------------------------------------- interface
 def init():
-    global TYPE_TO_EQ_STRING, TYPE_TO_NAME
+    global TYPE_TO_EQ_STRING, EQ_STRING_TO_TYPE, TYPE_TO_NAME
     
     TYPE_TO_EQ_STRING = {}
     for type_id, eq_str in zip(KEYFRAME_TYPES, KEYFRAME_EQ_STRS):
         TYPE_TO_EQ_STRING[type_id] = eq_str
      
+    EQ_STRING_TO_TYPE = {}
+    for type_id, eq_str in zip(KEYFRAME_TYPES, KEYFRAME_EQ_STRS):
+        EQ_STRING_TO_TYPE[eq_str] = type_id
+    
+    
     names = [ \
         _("Linear"),
         _("Smooth"),
@@ -195,6 +202,18 @@ def init():
 
 def create(keyframes, active_index=0):
     return AnimatedValue(keyframes, active_index=0)
+
+def parse_kf_token(token):
+    for eq_str in reversed(KEYFRAME_EQ_STRS):
+        print(eq_str)
+        sides = token.split(eq_str)
+        print(sides)
+        if len(sides) == 2:
+            kf_type = EQ_STRING_TO_TYPE[eq_str]
+            print(kf_type)
+            return (kf_type, sides)
+    
+    return (None, None) # we give bad data to crash
 
 
 # ------------------------------------------------------- AnimatedValue 
