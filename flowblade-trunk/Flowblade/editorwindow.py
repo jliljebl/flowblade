@@ -236,13 +236,7 @@ class EditorWindow:
 
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
         fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
-        if guiutils.double_icon_size() == False:
-            self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
-        else:
-            self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 40, 24)
-            self.fullscreen_press.surface_x = 12
-            self.fullscreen_press.surface_y = 13
-
+        self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
         self.fullscreen_press.widget.set_margin_top(1)
         self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen - F11"))
         # Used in menuactions.toggle_fullscreen to switch image
@@ -250,15 +244,10 @@ class EditorWindow:
         self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
 
         icon_2 = guiutils.get_cairo_image("layout")
-        if guiutils.double_icon_size() == False:
-            layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
-        else:
-            layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 48, 24)
-            layout_press.surface_y = 13
-            
+        layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
         layout_press.widget.set_margin_top(1)
         layout_press.widget.set_tooltip_text(_("Layouts"))
-        
+
         tline_info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             tline_info_box.pack_start(self.tools_buttons.widget, False, False, 0)
@@ -1352,12 +1341,7 @@ class EditorWindow:
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
-        # Aug-2019 - SvdB - BB
         offset = 2
-        if guiutils.double_icon_size():
-           offset = 4
-           buttons_row.set_margin_bottom(offset)
-
         buttons_row.set_margin_top(offset)
         buttons_row.set_margin_start(offset)
         buttons_row.set_margin_end(offset)

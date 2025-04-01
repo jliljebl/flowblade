@@ -688,11 +688,8 @@ class ScriptToolWindow(Gtk.Window):
         # ---------------------------------------------------------------------- TOP ROW
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
-        hamburger_launcher_surface = guiutils.get_double_scaled_cairo_image("hamburger.png")
-        if guiutils.double_icon_size():
-            psize = 22
-        else:
-            psize = 44
+        hamburger_launcher_surface = guiutils.get_cairo_image("hamburger")
+        psize = 22
         self.hamburger_launcher = toolguicomponents.PressLaunchSurface(self.hamburger_launch_pressed_popover, hamburger_launcher_surface, psize, psize)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 

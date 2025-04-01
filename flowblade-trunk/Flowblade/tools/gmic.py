@@ -581,11 +581,8 @@ class GmicWindow(Gtk.Window):
         
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
-        hamburger_launcher_surface = guiutils.get_double_scaled_cairo_image("hamburger.png")
-        if guiutils.double_icon_size() == False:
-            psize = 22
-        else:
-            psize = 44
+        hamburger_launcher_surface = guiutils.get_cairo_image("hamburger")
+        psize = 22
         self.hamburger_launcher = toolguicomponents.PressLaunchSurface(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
         #self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
@@ -652,13 +649,6 @@ class GmicWindow(Gtk.Window):
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_start(6)
         pos_bar_frame.set_margin_end(2)
-    
-        if guiutils.double_icon_size():
-            pos_bar_frame_temp = Gtk.VBox(False, 0)
-            pos_bar_frame_temp.pack_start(Gtk.Label(), True, True, 0)
-            pos_bar_frame_temp.pack_start(pos_bar_frame, False, False, 0)
-            pos_bar_frame_temp.pack_start(Gtk.Label(), True, True, 0)
-            pos_bar_frame = pos_bar_frame_temp
             
         self.control_buttons = glassbuttons.GmicButtons()
         pressed_callback_funcs = [prev_pressed,

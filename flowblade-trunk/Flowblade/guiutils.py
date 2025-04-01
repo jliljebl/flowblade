@@ -29,7 +29,6 @@ from gi.repository import Gtk, Gdk, GLib
 from gi.repository import GdkPixbuf
 
 import appconsts
-import editorpersistance
 import respaths
 import translations
 
@@ -159,7 +158,6 @@ def get_right_expand_box(widget1, widget2, center_pad=False):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
-# Aug-2019 - SvdB - BB
 def get_image_name(img_name, suffix = ".png", double_height = False):
     button_size_text = ""
     if double_height:
@@ -167,83 +165,23 @@ def get_image_name(img_name, suffix = ".png", double_height = False):
     img_name = img_name+button_size_text+suffix
     return img_name
 
-# Aug-2019 - SvdB - BB
 def get_image(img_name, suffix = ".png", force = None):
-    # Use parameter force as True or False to force the track height no matter what the preferences setting
-    if force == None:
-        force = (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE)
-    if force:
-        new_name = img_name + "@2"
-    else:
-        new_name = img_name
-    try:
-        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + new_name + suffix)
-    except:
-        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+    img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
     return img
-    
 
-# Aug-2019 - SvdB - BB
 def get_cairo_image(img_name, suffix = ".png", force = None):
-    # Apr-2020 - SvdB - Make it sturdier in case a @2 image is missing. Just display the original image.
-    # Use parameter force as True or False to force the track height no matter what the preferences setting
-    if force == None:
-        force = (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE)
-    if force:
-        new_name = img_name + "@2"
-    else:
-        new_name = img_name
-
-    try:
-        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
-    except:
-        # Colorized icons
-        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
-            try:
-                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
-            except:
-                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name[:-6] + suffix)
-        else:
-            img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
-        # End of Colorized icons
+    img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
     return img
 
-def get_double_scaled_cairo_image(icon_name):
-    img_path = respaths.IMAGE_PATH + icon_name
-    
-    icon = cairo.ImageSurface.create_from_png(img_path)
-    if (editorpersistance.prefs.icons_scale != appconsts.ICONS_SCALE_DOUBLE):
-        return icon
-    
-    surface_pattern = cairo.SurfacePattern(icon)
-    surface_pattern.set_filter(cairo.Filter.NEAREST)
-    
-    scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width() * 2, icon.get_height() * 2)
-    cr = cairo.Context(scaled_icon)
-    cr.scale(2.0, 2.0)
-    cr.set_source(surface_pattern)
-    cr.paint()
-
-    return scaled_icon
-        
-# Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
     icon = get_image(img_file_name)        
     size_adj = 1
-    if (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE):
-        size_adj = 2
     button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)
     button.add(button_box)
-    button.set_size_request(width*size_adj, height*size_adj)
+    button.set_size_request(width, height)
     return button
-
-def double_icon_size():
-    if (editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DOUBLE):
-        return True
-    else:
-        return False
 
 def get_pad_label(w, h):
     label = Gtk.Label()

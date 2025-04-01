@@ -305,9 +305,6 @@ class PlayerButtons(AbstractGlassButtons):
         size_adj = 1
         prefs = editorpersistance.prefs
 
-        if guiutils.double_icon_size():
-           size_ind = 1
-           size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
         # Force no decorations for player buttons, this cannot be made to work.
@@ -536,10 +533,6 @@ class GmicButtons(AbstractGlassButtons):
         size_adj = 1
         prefs = editorpersistance.prefs
 
-        # NOT IMPLEMENTED
-        if guiutils.double_icon_size():
-           size_ind = 1
-           size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
         next_icon = guiutils.get_cairo_image("next_frame_s")

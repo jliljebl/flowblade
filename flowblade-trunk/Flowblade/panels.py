@@ -47,17 +47,13 @@ MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
 def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
-    # Aug-2019 - SvdB - BB
-    size_adj = 1
-    prefs = editorpersistance.prefs
-    if guiutils.double_icon_size():
-        size_adj = 2
+
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
     columns_img = guiutils.get_cairo_image("columns")
-    columns_launcher = guicomponents.PressLaunchPopover(col_changed_cb, columns_img, w=22*size_adj, h=22*size_adj)
+    columns_launcher = guicomponents.PressLaunchPopover(col_changed_cb, columns_img, w=22, h=22)
     columns_launcher.surface_y = 6
     columns_launcher.widget.set_tooltip_text(_("Number of Media File columns."))
     
@@ -69,7 +65,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     pattern_pixbuf = guiutils.get_cairo_image("show_pattern_producers")
     unused_pixbuf = guiutils.get_cairo_image("show_unused_files")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunchPopover(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24*size_adj, 22*size_adj)
+    files_filter_launcher = guicomponents.ImageMenuLaunchPopover(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24, 22)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))

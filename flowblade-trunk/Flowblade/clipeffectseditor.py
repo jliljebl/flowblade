@@ -92,13 +92,8 @@ class FilterFooterRow:
         self.filter_object = filter_object
         self.filter_stack = filter_stack
 
-        if editorpersistance.prefs.icons_scale == appconsts.ICONS_SCALE_DEFAULT:
-            w=22
-            h=22
-        else:
-            w=44
-            h=44
-            
+        w=22
+        h=22
         surface = guiutils.get_cairo_image("filter_save")
         save_button = guicomponents.PressLaunch(self.save_pressed, surface, w, h)
         save_button.widget.set_tooltip_markup(_("Save effect values"))

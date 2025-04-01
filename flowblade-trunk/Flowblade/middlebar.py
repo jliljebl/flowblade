@@ -184,12 +184,6 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     _create_buttons(editor_window)
 
 def _create_buttons(editor_window):
-    
-    # Aug-2019 - SvdB - BB
-    prefs = editorpersistance.prefs
-    size_adj = 1
-    if guiutils.double_icon_size():
-       size_adj = 2
 
     editor_window.big_TC = Gtk.Stack()
     tc_disp = guicomponents.BigTCDisplay()
@@ -200,10 +194,6 @@ def _create_buttons(editor_window):
     editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
-
-    #surface = guiutils.get_cairo_image("workflow")
-    #editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
-    #editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window)
@@ -217,17 +207,17 @@ def _create_buttons(editor_window):
         no_decorations = False
 
     # Zoom buttons
-    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
+    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38, 23, 2, 8, 5)
     editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in"), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out, 8*size_adj)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length"), updater.zoom_project_length, 6*size_adj - 1)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out, 8)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length"), updater.zoom_project_length, 6 - 1)
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
     editor_window.zoom_buttons.show_prelight_icons()
     
     # Cut and dissolve
-    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
+    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), singletracktransition.add_transition_pressed)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
     tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
@@ -236,18 +226,18 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons.show_prelight_icons()
     
     # Delete buttons
-    editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out"), tlineaction.splice_out_button_pressed, 10*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed, 9*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed, 4*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed, 4*size_adj)
+    editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46, 23, 2, 3, 5)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out"), tlineaction.splice_out_button_pressed, 10)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed, 9)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed, 4)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed, 4)
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
     editor_window.edit_buttons_3.show_prelight_icons()
 
     # Resync and split audio
-    editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
+    editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio"), tlineaction.split_audio_synched_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("set_track_sync"), tlineaction.set_track_sync_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
@@ -257,7 +247,7 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
 
-    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
+    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range"), tlineaction.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
@@ -267,7 +257,7 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     editor_window.monitor_insert_buttons.show_prelight_icons()
     
-    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28*size_adj, 23*size_adj, 2*size_adj, 2*size_adj, 7*size_adj)
+    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
     tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
@@ -275,7 +265,7 @@ def _create_buttons(editor_window):
     editor_window.undo_redo.no_decorations = no_decorations
     editor_window.undo_redo.show_prelight_icons()
     
-    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30*size_adj, 23*size_adj, 2*size_adj, 14*size_adj, 7*size_adj)
+    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30, 23, 2, 14, 7)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler"), titler.show_titler)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic"), gmic.launch_gmic)
@@ -291,11 +281,7 @@ def _create_buttons(editor_window):
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
 def create_tool_selector(editor_window):
-    size_adj = 1
-    if guiutils.double_icon_size():
-       size_adj = 2
-      
-    tool_selector = guicomponents.ToolSelector(editor_window.tline_cursor_manager.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+    tool_selector = guicomponents.ToolSelector(editor_window.tline_cursor_manager.mode_selector_pressed, m_pixbufs, 40, 22)
     return tool_selector
 
 def re_create_tool_selector(editor_window):

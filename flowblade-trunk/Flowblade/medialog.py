@@ -669,8 +669,7 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_check = star_check
 
     star_label = Gtk.Image()
-    # Aug-2019 - SvdB - BB
-    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star", double_height=guiutils.double_icon_size()))
+    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star"))
 
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
@@ -679,16 +678,13 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_not_active_check = star_not_active_check
 
     star_not_active_label = Gtk.Image()
-    # Aug-2019 - SvdB - BB
-    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active", double_height=guiutils.double_icon_size()))
+    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active"))
 
     star_button = Gtk.Button()
-    # Aug-2019 - SvdB - BB
     star_button.set_image(guiutils.get_image("star"))
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
     no_star_button = Gtk.Button()
-    # Aug-2019 - SvdB - BB
     no_star_button.set_image(guiutils.get_image("star_not_active"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
@@ -711,11 +707,6 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(no_star_button, False, True, 0)
     row1.pack_start(Gtk.Label(), True, True, 0)
 
-    # Aug-2019 - SvdB - BB
-    prefs = editorpersistance.prefs
-    size_adj = 1
-    if guiutils.double_icon_size():
-        size_adj = 2
     widgets.log_range = Gtk.Button()
     widgets.log_range.set_image(guiutils.get_image("log_range"))
     widgets.log_range.set_size_request(80, 30)

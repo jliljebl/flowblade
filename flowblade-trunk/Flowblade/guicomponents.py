@@ -1658,32 +1658,18 @@ class EditorSeparator:
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_launcher(callback):
     prefs = editorpersistance.prefs
-    size_adj = 1
-    if guiutils.double_icon_size():
-       size_adj = 2
     surface = guiutils.get_cairo_image("program_view_2")
-    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=16*size_adj)
-    if guiutils.double_icon_size():
-        menu_launch.surface_y = 8*size_adj
-    else:
-        menu_launch.surface_y = 3
+    menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
+    menu_launch.surface_y = 3
     
     menu_launch.widget.set_margin_top(2)
     return menu_launch
 
 def get_trim_view_select_launcher(callback):
-    # not a combo
-    # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
-    size_adj = 1
-    if guiutils.double_icon_size():
-       size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
-    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=16*size_adj)
-    if guiutils.double_icon_size():
-        menu_launch.surface_y = 8*size_adj
-    else:
-        menu_launch.surface_y = 3
+    menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
+    menu_launch.surface_y = 3
 
     menu_launch.widget.set_margin_top(2)
     return menu_launch
@@ -1874,20 +1860,17 @@ class BigTCDisplay:
     def __init__(self):
         # Aug-2019 - SvdB -BB
         prefs = editorpersistance.prefs
-        size_adj = 1
-        if guiutils.double_icon_size():
-           size_adj = 2
 
-        self.widget = cairoarea.CairoDrawableArea2( 170*size_adj,
-                                                    22*size_adj,
+        self.widget = cairoarea.CairoDrawableArea2( 170,
+                                                    22,
                                                     self._draw)
-        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed "+str(15*size_adj))
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed "+ str(15))
         
         # Draw consts
         x = 2
         y = 2
-        width = 166*size_adj
-        height = 22*size_adj
+        width = 166
+        height = 22
         aspect = 1.0
         corner_radius = height / 3.5
         radius = corner_radius / aspect
@@ -2607,12 +2590,8 @@ class ToolSelector(ImageMenuLaunch):
     def _draw(self, event, cr, allocation):
         PressLaunch._draw(self, event, cr, allocation)
 
-        if guiutils.double_icon_size():
-            x_pos = [40,45,50]
-            y_pos = [10,20,10]
-        else:    
-            x_pos = [27,32,37]
-            y_pos = [13,18,13]
+        x_pos = [27,32,37]
+        y_pos = [13,18,13]
         cr.move_to(x_pos[0], y_pos[0])
         cr.line_to(x_pos[1], y_pos[1])
         cr.line_to(x_pos[2], y_pos[2])
@@ -2627,17 +2606,15 @@ class HamburgerPressLaunch:
         prefs = editorpersistance.prefs
         size_adj = 1
         y_adj = 0
-        if guiutils.double_icon_size():
-            size_adj = 2
-            y_adj = -2
+
         
         if width == -1:
             x_size = 18
         else:
             x_size = width
 
-        self.x_size_pref = x_size * size_adj
-        self.y_size_pref = 18 * size_adj
+        self.x_size_pref = x_size 
+        self.y_size_pref = 18
         self.widget = cairoarea.CairoDrawableArea2( self.x_size_pref,
                                                     self.y_size_pref,
                                                     self._draw)
@@ -2729,10 +2706,6 @@ class MonitorSwitch:
         
         # Aug-2019 - SvdB - BB - Set the appropriate values based on button size. Use guiutils functions
         prefs = editorpersistance.prefs
-        if guiutils.double_icon_size():
-            self.WIDTH = self.WIDTH * 2
-            self.HEIGHT = self.HEIGHT * 2
-            self.press_fix = 8 
 
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
                                                     self.HEIGHT,
@@ -2757,20 +2730,12 @@ class MonitorSwitch:
             tline_draw_surface = self.tline_surface 
             clip_draw_surface = self.clip_active_surface
             
-        # Aug-2019 - SvdB - BB - set default offset
-        prefs = editorpersistance.prefs
         def_off = 10
         y_off_tline = 3
         y_off_clip = 4
         mid_gap = 10
-        if guiutils.double_icon_size():
-           def_off = def_off * 2
-           y_off_tline = y_off_tline * 2
-           y_off_clip = y_off_clip * 2
-           mid_gap = mid_gap * 2
-        else:
-           y_off_tline = -1
-           y_off_clip = 0
+        y_off_tline = -1
+        y_off_clip = 0
 
         cr.set_source_surface(tline_draw_surface, def_off, y_off_tline)
         cr.paint()

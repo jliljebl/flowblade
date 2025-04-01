@@ -455,10 +455,7 @@ def set_dark_bg_color():
     BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
 
 def _load_pixbuf(icon_name, double_for_double_track_heights=False):
-    if double_for_double_track_heights == True:
-        return guiutils.get_double_scaled_cairo_image(icon_name)
-    else:
-        return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_name)
+    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_name)
 
 def set_ref_line_y(allocation):
     """
