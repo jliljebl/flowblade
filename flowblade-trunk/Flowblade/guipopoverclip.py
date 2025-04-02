@@ -21,6 +21,7 @@ from gi.repository import Gio, Gtk
 
 import copy
 
+import animatedvalue
 import appconsts
 import callbackbridge
 import guipopover
@@ -805,7 +806,7 @@ def kftype_select_popover_menu_show(widget, kf_type, x, y, callback):
     global _kf_select_popover, _kf_select_menu
     
     _kf_select_menu = guipopover.menu_clear_or_create(_kf_select_menu)
-    
+    """
     items_data = [( _("Linear"), "linear"), ( _("Smooth"), "smooth"), ( _("Discrete"), "discrete")]
     if kf_type == appconsts.KEYFRAME_LINEAR:
         active_index = 0
@@ -817,7 +818,33 @@ def kftype_select_popover_menu_show(widget, kf_type, x, y, callback):
     kftype_section = Gio.Menu.new()    
     guipopover.add_menu_action_all_items_radio(kftype_section, items_data, "kftoolkftypemenu.selecttype", active_index, callback)
     _kf_select_menu.append_section(None, kftype_section)
+    """
     
+    text_smooth = ""
+    text_effect = ""
+    if kf_type == appconsts.KEYFRAME_LINEAR:
+        active_index = 0
+    elif kf_type == appconsts.KEYFRAME_SMOOTH:
+        active_index = 1
+    elif kf_type == appconsts.KEYFRAME_DISCRETE:
+        active_index = 2
+    elif kf_type in animatedvalue.SMOOTH_EXTENDED_KEYFRAME_TYPES:
+        active_index = 3
+        text_smooth = animatedvalue.TYPE_TO_NAME[kf_type] +  " - "
+    else:
+        active_index = 4
+        text_effect = animatedvalue.TYPE_TO_NAME[kf_type] +  " - "
+
+    items_data = [( _("Linear"), str(appconsts.KEYFRAME_LINEAR)), 
+                  ( _("Smooth"), str(appconsts.KEYFRAME_SMOOTH)), 
+                  ( _("Discrete"), str(appconsts.KEYFRAME_DISCRETE)), 
+                  ( text_smooth + _("Smooth Extended") + "...", "smoothkfs"),
+                  ( text_effect + _("Effect") + "...", "effectkfs")]
+                  
+    kftype_section = Gio.Menu.new()   
+    guipopover.add_menu_action_all_items_radio(kftype_section, items_data, "kftoolkftypemenu.selecttype", active_index, callback)
+    _kf_select_menu.append_section(None, kftype_section)
+
     kfcopy_section = Gio.Menu.new()
     add_menu_action(kfcopy_section,_("Copy Keyframe Value"), "kftoolkftypemenu.copykf",  ("copykf", None), callback)
     add_menu_action(kfcopy_section,_("Paste Keyframe Value"), "kftoolkftypemenu.pastekf",  ("pastekf", None), callback)

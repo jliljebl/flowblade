@@ -107,7 +107,9 @@ _snapping = 1
 # -------------------------------------------------- init
 def load_icons():
     global HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON, ACTIVE_KF_ICON_SMOOTH, \
-    ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE
+    ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE, \
+    ACTIVE_KF_ICON_EFFECT, ACTIVE_KF_ICON_SMOOTH_EXTENDED, NON_ACTIVE_KF_ICON_EFFECT, \
+    NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED
 
     # Aug-2019 - SvdB - BB
     HAMBURGER_ICON = guiutils.get_cairo_image("hamburger")
@@ -115,9 +117,13 @@ def load_icons():
     ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
     ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth.png")
     ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_discrete.png")
+    ACTIVE_KF_ICON_EFFECT = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_effect.png") 
+    ACTIVE_KF_ICON_SMOOTH_EXTENDED = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth_extended.png") 
     NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
     NON_ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth.png") 
     NON_ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_discrete.png")
+    NON_ACTIVE_KF_ICON_EFFECT = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_effect.png")
+    NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth_extended.png")  
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     # These can produce data for same objects and we are not (currently) updating
@@ -684,20 +690,30 @@ class TLineKeyFrameEditor:
             if frame > self.clip_in + self.clip_length:
                 continue  
                 
-            if kf_index == self.active_kf_index:
+            if kf_index == self.active_kf_index:            
                 if kf_type == appconsts.KEYFRAME_LINEAR:
                     icon = ACTIVE_KF_ICON
                 elif kf_type == appconsts.KEYFRAME_SMOOTH:
                     icon = ACTIVE_KF_ICON_SMOOTH
-                else:
+                elif kf_type == appconsts.KEYFRAME_DISCRETE:
                     icon = ACTIVE_KF_ICON_DISCRETE
+                else:
+                    if kf_type in animatedvalue.EFFECT_KEYFRAME_TYPES:
+                        icon = ACTIVE_KF_ICON_EFFECT
+                    else:
+                        icon = ACTIVE_KF_ICON_SMOOTH_EXTENDED 
             else:
                 if kf_type == appconsts.KEYFRAME_LINEAR:
                     icon = NON_ACTIVE_KF_ICON
                 elif kf_type == appconsts.KEYFRAME_SMOOTH:
                     icon = NON_ACTIVE_KF_ICON_SMOOTH
-                else:
+                elif kf_type == appconsts.KEYFRAME_DISCRETE:
                     icon = NON_ACTIVE_KF_ICON_DISCRETE
+                else:
+                    if kf_type in animatedvalue.EFFECT_KEYFRAME_TYPES:
+                        icon = NON_ACTIVE_KF_ICON_EFFECT
+                    else:
+                        icon = NON_ACTIVE_KF_ICON_SMOOTH_EXTENDED 
                     
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
@@ -1630,24 +1646,34 @@ class TLineKeyFrameEditor:
     # ------------------------------------------------------------ menus
     def _show_kf_menu(self, event):
         guipopoverclip.kftype_select_popover_menu_show(gui.tline_canvas.widget, self.get_active_kf_type(), event.x, event.y, self._kf_popover_callback)
-
-    def _kf_popover_callback2(self, action, variant):
-        print(action, variant)
         
     def _kf_popover_callback(self, action, variant):
         data = variant.get_string()
-        
-        if data == "linear":
-            self.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-        elif data == "smooth":
-            self.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-        elif data == "discrete":
-            self.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
 
-        action.set_state(variant)
         guipopoverclip._kf_select_popover.hide()
-        updater.repaint_tline()
 
+        # NOTE: We are not setting 'action.set_state(new_value_variant)'
+        # because we are not using it as state, instead menu in always recreated
+        # on show to active keyframe type.
+
+        try:
+            kf_type = int(data)
+            self.set_active_kf_type(kf_type)
+            self.update_property_value()
+            updater.repaint_tline()
+        except:
+            current_kf_type = self.get_active_kf_type()
+            if data == "effectkfs":
+                animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            else:
+                animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            return
+
+    def extended_kf_type_set(self, selected_kf_type):
+        self.set_active_kf_type(selected_kf_type)
+        self.update_property_value()
+        updater.repaint_tline()
+        
     def _show_hamburger_popover(self, widget, event):
         guipopoverclip.kftool_popover_menu_show(widget, self, event.x, event.y, self._popover_callback, self._snapping_menu_item_item_activated)
 
