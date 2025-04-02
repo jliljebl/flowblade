@@ -1257,18 +1257,15 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         _kf_right_mouse_popover.show()
     
     def _menu_item_activated(self, action, variant, data):
-        print("halooo")
         try:
             msg, data2  = data
         except:
             msg = data
 
         try:
-            print("msg:", msg)
             kf_type = int(msg)
             self.clip_editor.set_active_kf_type(kf_type)
         except:
-            print("except")
             if msg == "copy_kf":
                 keyevents.copy_action()
             elif msg == "paste_kf":
@@ -1771,27 +1768,36 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def _kf_type_menu_item_activated(self, action, new_value_variant):
         data = new_value_variant.get_string()
         
-        if data == "linear":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
-        elif data == "smooth":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
-        elif data == "discrete":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
-        
-        action.set_state(new_value_variant)
-        
         try:
             _kf_popover.hide()
         except:
             # This called from the other one.
             _kf_right_mouse_popover.hide()
 
+        # NOTE: We are not setting 'action.set_state(new_value_variant)'
+        # because we are not using it as state, instead menu in always recreated
+        # on show to active keyframe type.
+
+        try:
+            kf_type = int(data)
+            self.clip_editor.set_active_kf_type(kf_type)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, kf_type)
+            self.queue_draw()
+            self.update_property_value()
+        except:
+            current_kf_type = self.clip_editor.get_active_kf_type()
+            if data == "effectkfs":
+                animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            else:
+                animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            return
+
+    def extended_kf_type_set(self, selected_kf_type):
+        self.clip_editor.set_active_kf_type(selected_kf_type)
+        self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, selected_kf_type)
         self.queue_draw()
         self.update_property_value()
-        
+
     def _oor_menu_item_activated(self, action, variant, data):
         self.clip_editor._oor_menu_item_activated(action, variant, data)
 
@@ -2543,22 +2549,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _kf_type_menu_item_activated(self, action, new_value_variant):
         data = new_value_variant.get_string()
         
-        """
-        if data == "linear":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
-        elif data == "smooth":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
-        elif data == "discrete":
-            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
-        
-        action.set_state(new_value_variant)
-        """
-        
-        print("HALOOO")
-        
         try:
             _kf_popover.hide()
         except:
@@ -2572,7 +2562,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         try:
             kf_type = int(data)
             self.clip_editor.set_active_kf_type(kf_type)
-            self.geom_kf_edit.set_active_kf_type(kf_type)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, kf_type)
             self.queue_draw()
             self.update_property_value()
         except:
@@ -2582,13 +2572,10 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             else:
                 animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
             return
-            
-        self.queue_draw()
-        self.update_property_value()
 
     def extended_kf_type_set(self, selected_kf_type):
         self.clip_editor.set_active_kf_type(selected_kf_type)
-        self.geom_kf_edit.set_active_kf_type(selected_kf_type)
+        self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, selected_kf_type)
         self.queue_draw()
         self.update_property_value()
 
