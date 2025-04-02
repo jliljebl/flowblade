@@ -1307,8 +1307,10 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             # This called from the other one.
             _kf_right_mouse_popover.hide()
 
-        action.set_state(new_value_variant)
-            
+        # NOTE: We are not setting 'action.set_state(new_value_variant)'
+        # because we are not using it as state, instead menu in always recreated
+        # on show to active keyframe type.
+
         try:
             kf_type = int(data)
             self.clip_editor.set_active_kf_type(kf_type)
@@ -2541,6 +2543,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _kf_type_menu_item_activated(self, action, new_value_variant):
         data = new_value_variant.get_string()
         
+        """
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
             self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
@@ -2552,6 +2555,9 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
         
         action.set_state(new_value_variant)
+        """
+        
+        print("HALOOO")
         
         try:
             _kf_popover.hide()
@@ -2559,8 +2565,33 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             # This called from the other one.
             _kf_right_mouse_popover.hide()
 
+        # NOTE: We are not setting 'action.set_state(new_value_variant)'
+        # because we are not using it as state, instead menu in always recreated
+        # on show to active keyframe type.
+
+        try:
+            kf_type = int(data)
+            self.clip_editor.set_active_kf_type(kf_type)
+            self.geom_kf_edit.set_active_kf_type(kf_type)
+            self.queue_draw()
+            self.update_property_value()
+        except:
+            current_kf_type = self.clip_editor.get_active_kf_type()
+            if data == "effectkfs":
+                animatedvalue.set_effect_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            else:
+                animatedvalue.set_smooth_extended_keyframe_type(current_kf_type, self.extended_kf_type_set)
+            return
+            
         self.queue_draw()
         self.update_property_value()
+
+    def extended_kf_type_set(self, selected_kf_type):
+        self.clip_editor.set_active_kf_type(selected_kf_type)
+        self.geom_kf_edit.set_active_kf_type(selected_kf_type)
+        self.queue_draw()
+        self.update_property_value()
+
 
 
 class GeometryNoKeyframes(Gtk.VBox):
