@@ -20,8 +20,19 @@
 
 from gi.repository import Gtk
 
+import math
+
 import appconsts
 import dialogutils
+
+
+M_PI = math.pi
+M_PI_2 = math.pi * 2.0
+
+ease_in = 0
+ease_out = 1
+ease_inout = 2
+
 
 KEYFRAME_TYPES = [ \
     appconsts.KEYFRAME_LINEAR,
@@ -265,18 +276,45 @@ class AnimatedValue:
 
         return -1
 
-    def get_value(self, frame):
-        pass
+    def get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, kf_type):
+        frame, val0, kf_type = self.keyframes[prev_prev]
+        frame, val1, kf_type = self.keyframes[prev]
+        frame, val2, kf_type = self.keyframes[next]
+        frame, val3, kf_type = self.keyframes[next_next]
+
+        if kf_type in CATMILL_ROM_ITERPOALTIONS:
+            return _catmull_rom_interpolate(val0, val1, val2, val3, fract)
+
+        intepolation_func, ease_type = RP_EASING_FUNCS[kf_type]
+
+        smooth_val = intepolation_func(val0, val1, val2, val3, fract, ease_type)
+        #smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
+        return smooth_val
+
+
 
 # ------------------------------------------------ value computation helper funcs
 # These all need to be doubles.
-def _catmull_rom_interpolate(self, y0, y1, y2, y3, t):
+def _catmull_rom_interpolate(y0, y1, y2, y3, t):
     t2 = t * t
     a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
     a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
     a2 = -0.5 * y0 + 0.5 * y2
     a3 = y1
     return a0 * t * t2 + a1 * t2 + a2 * t + a3
+
+def _sinusoidal_interpolate(y1, y2, t, ease):
+    factor = 0.0;
+    if ease == ease_in:
+        factor = math.sin((t - 1.0) * M_PI_2) + 1.0;
+    elif ease == ease_out:
+        factor = math.sin(t * M_PI_2);
+    else:
+        factor = 0.5 * (1.0 - math.cos(t * M_PI));
+
+    return y1 + (y2 - y1) * factor;
+
+
 
 # ------------------------------------------------ Utility funcs
 def set_effect_keyframe_type(current_kf_type, completed_callback):
@@ -339,3 +377,6 @@ def _set_keyframe_type_dialog_callback(dialog, response_id, data):
     
     if response_id == Gtk.ResponseType.ACCEPT:
         completed_callback(selected_kf_type)
+
+
+RP_EASING_FUNCS = {appconsts.KEYFRAME_SINUSOIDAL_OUT: (_sinusoidal_interpolate, ease_out)}

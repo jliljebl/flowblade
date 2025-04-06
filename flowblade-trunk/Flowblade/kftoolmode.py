@@ -666,7 +666,7 @@ class TLineKeyFrameEditor:
                     cr.line_to(kf_pos_x, kf_pos_y_prev)
                     cr.stroke()
                 elif kf_type_prev == appconsts.KEYFRAME_SMOOTH:
-                    self._draw_smooth_value_curve(cr, i - 1, self.keyframes)
+                    self._draw_smooth_value_curve(cr, i - 1, self.keyframes, kf_type_prev)
                 else: # LINEAR
                     cr.move_to(kf_pos_x_prev, kf_pos_y_prev)
                     cr.line_to(kf_pos_x, kf_pos_y)
@@ -1011,7 +1011,7 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(0.8, 0.8, 0.8)
         cr.show_text(text) 
 
-    def _draw_smooth_value_curve(self, cr, i, keyframes):
+    def _draw_smooth_value_curve(self, cr, i, keyframes, kf_type):
         # Get indexes of the four keyframes that affect the drawn curve. 
         prev = i
         if i == 0:
@@ -1057,6 +1057,7 @@ class TLineKeyFrameEditor:
         # Draw curve using 5 pixel line segments from
         # prev keyframe x position to next keyframe
         # x position.
+        anim_value = animatedvalue.AnimatedValue(self.keyframes)
         while(more_segments == True):
             end_x = start_x + SEG_LEN_IN_PIX
             if end_x >= kf_pos_next:
