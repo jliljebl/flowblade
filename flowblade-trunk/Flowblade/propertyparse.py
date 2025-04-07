@@ -364,7 +364,7 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
     
     new_keyframes = []
 
-    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
         frame, value, kf_type = get_token_frame_value_type(token)
@@ -378,8 +378,8 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         # keyframecanvas.RotatingEditCanvas editor considers x anf y values position of
         # anchor point around whicth image is rotated.
         #
-        # MLT porprty "affine.transition.rect" considers x anf y values amount translation
-        # and rotate image automatically around its tramslated center point.
+        # MLT porprty "affine.transition.rect" considers x and y values amount translation
+        # and rotate image automatically around its translated center point.
         #
         # So the we need to add half of width and height to mlt values AND 
         # additional linear correction based on applied scaling when creating
@@ -398,6 +398,29 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         
     return new_keyframes
 
+def gradient_tint_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
+
+    new_keyframes = []
+
+    keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+
+    for token in kf_tokens:
+        frame, value, kf_type = get_token_frame_value_type(token)
+        values = value.split(':')
+        values_floats = [float(x) for x in values]
+        start_x = values_floats[0] * screen_width
+        start_y = values_floats[1] * screen_height
+        end_x = values_floats[2] * screen_width
+        end_y =  values_floats[3] * screen_height
+        add_kf = (int(frame), (start_x, start_y, end_x, end_y), kf_type)
+        print("add_kf", add_kf)
+        new_keyframes.append(add_kf)
+    
+    return new_keyframes
+
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
@@ -410,7 +433,6 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
 
 def get_token_frame_value_type(token):
     kf_type, sides = animatedvalue.parse_kf_token(token)
-    print(kf_type, sides)
 
     # returns (frame, value, kf_type)
     return(sides[0], sides[1], kf_type)

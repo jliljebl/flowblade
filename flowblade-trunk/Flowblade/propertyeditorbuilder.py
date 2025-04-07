@@ -76,6 +76,7 @@ FADE_LENGTH = "fade_length"                                 # Autofade composito
 TEXT_ENTRY = "text_entry"                                   # Text editor
 ROTOMASK = "rotomask"                                       # Displays info and launches rotomask window
 NO_KF_RECT = "no_keyframes_rect"                            # keyframeeditor.GeometryNoKeyframes, no keyframes here, machinery for creating this type GUI editors just assumes keyframes
+GRADIENT_TINT = "gradient_tint_editor"                      # editor for Gradient Tint", frei0r.cairogradient MLT 
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -904,6 +905,25 @@ def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, trac
     vbox.kf_edit_geom_editor = kf_edit_geom_editor
     return vbox
 
+def _create_gradient_tint_editor(filt, editable_properties, editor_name, track, clip_index):
+    clip, filter_index, prop, property_index, args_str = editable_properties[0].used_create_params
+
+    kf_editable_property = propertyedit.GradientTintExtraEditorProperty(
+                                editable_properties[0].used_create_params, 
+                                editable_properties,
+                                track, 
+                                clip_index)
+
+    kf_edit_geom_editor = keyframeeditor.GradientTintGeometryEditor(kf_editable_property)
+
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(kf_edit_geom_editor, False, False, 0)
+    vbox.pack_start(Gtk.Label("jjjj"), True, True, 0)
+    vbox.no_separator = True
+    vbox.kf_edit_geom_editor = kf_edit_geom_editor
+    return vbox
+
+    
 def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_index):
     colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties)
     
@@ -1218,6 +1238,8 @@ EDITOR_ROW_CREATORS = { \
                                 _create_apply_filter_mask_motion_editor(filt, editable_properties, editor_name, track, clip_index),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     NO_KF_RECT: lambda ep : _get_no_kf_rect_geom_editor(ep),
-    FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
+    FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep),
+    GRADIENT_TINT:  lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_gradient_tint_editor(filt, editable_properties, editor_name, track, clip_index)
     }
 

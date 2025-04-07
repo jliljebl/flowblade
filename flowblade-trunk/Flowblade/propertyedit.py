@@ -846,7 +846,144 @@ class KeyFrameFilterRotatingGeometryProperty:
 
     def update_clip_index(self):
         self.clip_index = self.track.clips.index(self.clip)
+
+
+class GradientTintExtraEditorProperty:
+
+    def __init__(self, create_params, editable_properties, track, clip_index):
+
+        # Pick up the editable properties that actually have their values being written to on user edits
+        # and affect to filter output.
+        # Relevant filter definition in filters.xml
+        #        <property name="2" args="editor=slider range_in=0,100 displayname=Start!Opacity">0.5</property>
+        #        <property name="4" args="editor=slider range_in=0,100 displayname=End!Opacity">0.5</property>
+        #        <property name="5" args="editor=slider range_in=0,100 displayname=Start!X">0.5</property>
+        #        <property name="6" args="editor=slider range_in=0,100 displayname=Start!Y">0.8</property>
+        self.start_x = [ep for ep in editable_properties if ep.name == "5"][0]
+        self.start_y = [ep for ep in editable_properties if ep.name == "6"][0]
+        self.end_x = [ep for ep in editable_properties if ep.name == "7"][0]
+        self.end_y = [ep for ep in editable_properties if ep.name == "8"][0]
+
+          
+        # Get create data
+        clip, filter_index, p, i, args_str = create_params
+        p_name, p_value, p_type = p
+
+        # We need a lot stuff to ba able to edit this with keyframe editor as
+        # propertyedit.EditableProperty.
+        self.clip = clip
+        self.value = "this is set below"
+        self.is_compositor_filter = False
+        self.track = track
+        self.clip_index = clip_index
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+        self.get_display_name = lambda : "Opacity"
+
+        # We also need these to be able to edit this in keyframeeditcanvas.RotatingEditCanvas
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+
+        # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
+        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
+        # and is only used to the initialize the editor. The original design was that editor is given
+        # property value strings, and they then call keyframe_parser() method that is set when editor is 
+        # build for particular type of property string. Here we need to write out keyframes
+        # to _two_ different properties, so this "dummy" editable property is created to act as the 
+        # property being edited, and it converts editor output to property values of two different 
+        # properties in method write_out_keyframes() below.
+        self.value = self.get_value_keyframes_str()
+
+    def get_clip_length(self):
+        return self.clip.clip_out - self.clip.clip_in + 1
         
+    def get_clip_tline_pos(self):
+        return self.track.clip_start(self.clip_index)
+        
+    def get_value_keyframes_str(self):
+        # Create input string for keyframecanvas.RotatingEditCanvas editor.
+        start_x_tokens = self.start_x.value.split(";")
+        start_y_tokens = self.start_y.value.split(";")
+        end_x_tokens = self.end_x.value.split(";")
+        end_y_tokens = self.end_y.value.split(";")
+
+        value = ""
+        for i in range(0, len(start_x_tokens)): # these all have the asme amount of keyframes always
+            start_x_token = start_x_tokens[0]
+            start_y_token = start_y_tokens[0]
+            end_x_token = end_x_tokens[0]
+            end_y_token = end_y_tokens[0]
+
+            frame, start_x, kf_type = propertyparse.get_token_frame_value_type(start_x_token)
+            frame, start_y, kf_type = propertyparse.get_token_frame_value_type(start_y_token)
+            frame, end_x, kf_type = propertyparse.get_token_frame_value_type(end_x_token)
+            frame, end_y, kf_type = propertyparse.get_token_frame_value_type(end_y_token)
+
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            frame_str = str(frame) + eq_str + str(start_x) + ":" + str(start_y) + ":" + str(end_x) + ":" + str(end_y)
+            value += frame_str + ";"
+
+        # This value is parsed as keyframes in propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array()
+        value = value.strip(";")
+        print(value)
+        return value
+
+    def get_input_range_adjustment(self):
+        # Returns DUMMY noop Adjustment that needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # but this not the case for this editor/property pair.
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
+        
+    def write_out_keyframes(self, keyframes):
+        print("write_out_keyframes")
+        start_x_val = ""
+        start_y_val = ""
+        end_x_val = ""
+        end_y_val = "" 
+        
+        profile_width = float(current_sequence().profile.width())
+        profile_height = float(current_sequence().profile.height())
+    
+        for kf in keyframes:
+            print(kf)
+
+            frame, values, kf_type = kf
+            start_x, start_y, end_x, end_y = values
+            print(start_x, start_y, end_x, end_y)
+            
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            # Build kf value strings
+            start_x_val += str(frame) + eq_str + str(start_x) + ";"
+            start_y_val += str(frame) + eq_str + str(start_y) + ";"
+            end_x_val += str(frame) + eq_str + str(end_x) + ";"
+            end_y_val += str(frame) + eq_str +  str(end_y) + ";"
+
+        start_x_val.strip(";")
+        start_y_val.strip(";")
+        end_x_val.strip(";")
+        end_y_val.strip(";")
+        
+        print(start_x_val, start_y_val)
+        
+        self.start_x.write_value(start_x_val)
+        self.start_y.write_value(start_y_val)
+        self.end_x.write_value(end_x_val)
+        self.end_y.write_value(end_y_val)
+        
+    def write_value(self, str_value):
+        pass
+         
+    def write_mlt_property_str_value(self, str_value):
+        pass
+         
+    def write_filter_object_property(self, str_value):
+        pass
+
+    def update_clip_index(self):
+        self.clip_index = self.track.clips.index(self.clip)
+
+
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)

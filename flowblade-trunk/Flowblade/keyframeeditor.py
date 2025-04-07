@@ -2756,6 +2756,98 @@ class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
         self.clip_editor.add_keyframe_with_type(fr2, kf_type)
         
 
+class GradientTintGeometryEditor(FilterRectGeometryEditor):
+
+    def __init__(self, editable_property, use_clip_in=True):
+        FilterRectGeometryEditor.__init__(self, editable_property)
+
+    def init_geom_gui(self, editable_property):
+        # We need feed keyframed editor with one kind of property and 
+        # RotatingEditCanvas with another kind as that was originally written 
+        # different kind of property.
+        #geom_edit_poperty = editable_property.roto_geom_ep
+        self.geom_kf_edit = keyframeeditcanvas.GradientEditCanvas(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        self.geom_kf_edit.is_scale_locked = True
+        self.geom_kf_edit.create_edit_points_and_values()
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+        
+    def init_non_geom_gui(self):
+        # Create components
+        self.geom_buttons_row = GeometryEditorButtonsRow(self, True)
+        
+        g_frame = Gtk.Frame()
+        g_frame.add(self.geom_kf_edit.widget)
+             
+        self.buttons_row = ClipEditorButtonsRow(self, True, False)
+
+        #self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, self.geom_buttons_row)
+        
+        # Create clip editor keyframes from geom editor keyframes
+        # that contain the property values when opening editor.
+        # From now on clip editor opacity values are used until editor is discarded.
+        self.clip_editor.keyframes = self.get_clip_editor_keyframes()
+
+        # Build gui
+        self.pack_start(g_frame, False, False, 0)
+        #self.pack_start(self.pos_entries_row, False, False, 0)
+        self.pack_start(self.clip_editor.widget, False, False, 0)
+        self.pack_start(self.buttons_row, False, False, 0)
+
+        orig_tline_frame = PLAYER().current_frame()
+
+        self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
+        self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
+        
+        self.active_keyframe_changed() # to do update gui to current values
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
+
+        # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
+        self.display_tline_frame(orig_tline_frame)
+        PLAYER().seek_frame(orig_tline_frame)
+            
+        self.queue_draw()
+
+    def get_clip_editor_keyframes(self):
+        keyframes = []
+        for kf in self.geom_kf_edit.keyframes:
+            frame, values, kf_type = kf
+            clip_kf = (frame, 1.0, kf_type)
+            keyframes.append(clip_kf)
+        return keyframes
+
+    def active_keyframe_changed(self):
+        kf_frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(kf_frame)
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
+    def update_request_from_geom_editor(self): # callback from geom_kf_edit
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+
+    def update_property_value(self):
+        if self.initializing:
+            return
+
+        write_keyframes = []
+        for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
+            frame, opacity, kf_type = opa_kf
+            frame, values, kf_type_geom = geom_kf
+            write_keyframes.append((frame, values, kf_type))
+        
+        self.editable_property.write_out_keyframes(write_keyframes)
+        
+    def geometry_edit_finished(self): # callback from geom_kf_edit
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index)
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        #self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        
+        
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 

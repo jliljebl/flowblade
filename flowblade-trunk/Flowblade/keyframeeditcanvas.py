@@ -230,7 +230,14 @@ def _geom_kf_sort(kf):
     """
     frame, shape, opacity, type = kf
     return frame 
-        
+
+def _gradient_kf_sort(kf):
+    """
+    Function is used to sort keyframes by frame number.
+    """
+    frame, values, type = kf
+    return frame 
+    
 
 class AbstractEditCanvas:
     """
@@ -824,6 +831,215 @@ class BoxEditCanvas(AbstractEditCanvas):
             self.source_edit_rect.w += delta
         
         self.source_edit_rect.h = self.source_edit_rect.h * (self.source_edit_rect.w / old_w)
+
+
+
+class GradientEditCanvas(AbstractEditCanvas):
+    """
+    GUI component for editing position and scale values of keyframes 
+    of source image in compositors. 
+    
+    Component is used as a part of e.g GeometryEditor, which handles
+    also keyframe creation and deletion and opacity, and
+    writing out the keyframes with combined information.
+
+    Required parent_editor callback interface:
+        mouse_scroll_up()
+        mouse_scroll_down()
+        geometry_edit_started()
+        update_request_from_geom_editor()
+        queue_draw()
+        geometry_edit_finished()
+    """
+    def __init__(self, editable_property, parent_editor):
+        AbstractEditCanvas.__init__(self, editable_property, parent_editor)
+        self.edit_points = []
+
+    def create_edit_points_and_values(self):
+        # creates untransformed edit shape to init array, values will be overridden shortly
+        print(self.source_width,  self.source_height)
+        self.edit_points.append((self.source_width / 2, self.source_height / 2 + self.source_height / 4))  # center
+        self.edit_points.append((self.source_width / 2, self.source_height / 2 - self.source_height / 4)) # center
+
+        self.untrans_points = copy.deepcopy(self.edit_points)
+
+    def _frame_has_keyframe(self, frame):
+        for i in range(0, len(self.keyframes)):
+            kf = self.keyframes[i]
+            kf_frame, values, kf_type = kf
+            if frame == kf_frame:
+                return True
+
+        return False
+
+    def add_keyframe(self, frame):
+        if self._frame_has_keyframe(frame) == True:
+            return
+
+        # Get previous keyframe
+        prev_kf = None
+        for i in range(0, len(self.keyframes)):
+            p_frame, p_values, p_type = self.keyframes[i]
+            if p_frame < frame:
+                prev_kf = self.keyframes[i]                
+        if prev_kf == None:
+            prev_kf = self.keyframes[len(self.keyframes) - 1]
+        
+        # Add with values of previous
+        p_frame, p_values, p_type  = prev_kf
+        self.keyframes.append((frame, copy.deepcopy(p_values),  p_type))
+        
+        self.keyframes.sort(key=_gradient_kf_sort)
+        
+    # ------------------------------------------ hit testing
+
+    def reset_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
+        rect = [0, 0, self.source_width, self.source_height]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))     
+
+    def reset_active_keyframe_rect_shape(self, active_kf_index):
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
+        x, y, w, h = old_rect
+        new_h = int(float(w) * (float(self.source_height) / float(self.source_width)))
+        rect = [x, y, w, new_h]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))   
+
+    def center_h_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
+        ox, y, w, h = old_rect
+        x = self.source_width / 2 - w / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
+
+    def center_v_active_keyframe_shape(self, active_kf_index):
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
+        x, oy, w, h = old_rect
+        y = self.source_height / 2 - h / 2
+        rect = [x, y, w, h ]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
+
+    def clone_value_from_next(self, active_kf_index):
+        frame, rect, opacity, kf_type = self.keyframes.pop(active_kf_index)
+
+        try:
+            frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[active_kf_index]
+        except:
+            # No next keyframe
+            return
+    
+        self.keyframes.insert(active_kf_index, (frame, rect_n, opacity_n, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+
+    def clone_value_from_prev(self, active_kf_index):
+        if active_kf_index == 0:
+            return
+            
+        frame, rect, opacity, kf_type = self.keyframes.pop(active_kf_index)
+        frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[active_kf_index - 1]
+    
+        self.keyframes.insert(active_kf_index, (frame, rect_n, opacity_n, kf_type))
+        self.parent_editor.update_slider_value_display(self.current_clip_frame)
+        
+    def _clip_frame_changed(self):
+        print("_clip_frame_changed")
+        #if self.source_edit_rect != None:
+        #    self._update_source_rect()
+    
+    def _update_shape(self):
+        print("_update_shape")
+
+
+    def _draw_edit_shape(self, cr, allocation):
+        x1, y1 = self.get_panel_point(*self.edit_points[0])
+        x2, y2 = self.get_panel_point(*self.edit_points[1])
+        self._draw_edit_point(cr, x1, y1)
+        self._draw_edit_point(cr, x2, y2)
+
+        cr.move_to(x1, y1)
+        cr.line_to(x2, y2)
+        cr.stroke()
+
+    def _draw_edit_point(self, cr, px, py):
+        CROSS_HALF = 6
+        cr.move_to(px - CROSS_HALF, py)
+        cr.line_to(px + CROSS_HALF, py)
+        cr.stroke()
+
+        cr.move_to(px, py - CROSS_HALF,)
+        cr.line_to(px, py + CROSS_HALF)
+        cr.stroke()
+        
+    # ----------------------------------------- mouse press event
+    def _check_shape_hit(self, x, y):
+        edit_panel_points = []
+        for ep in self.edit_points:
+            edit_panel_points.append(self.get_panel_point(*ep))
+        
+        for i in range(0, 2):
+            if self._check_point_hit((x, y), edit_panel_points[i], 10):
+                return i #indexes correspond to edit_point_handle indexes
+        
+        return NO_HIT
+    
+    def _check_point_hit(self, p, ep, TARGET_HALF):
+        x, y = p
+        ex, ey = ep
+        if (x >= ex - TARGET_HALF and x <= ex + TARGET_HALF and y >= ey - TARGET_HALF and y <= ey + TARGET_HALF):
+            return True
+
+        return False
+
+    def _shape_press_event(self):
+        self.start_edit_points = copy.deepcopy(self.edit_points)
+
+    def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
+        self._save_edited_point(delta_x, delta_y, CTRL_DOWN)
+        
+    def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
+        self._save_edited_point(delta_x, delta_y, CTRL_DOWN)
+        
+    def _save_edited_point(self, delta_x, delta_y, CTRL_DOWN):
+        # Convert unedited point to panel coords, add mouse delta, 
+        # convert back to screen coords, update edited point value.
+        target_point = self.start_edit_points[self.current_mouse_hit] # current_mouse_hit was set to be index of pressed edit point
+        px, py = self.get_panel_point(*target_point)
+        new_px = px + delta_x
+        new_py = py + delta_y 
+        ep_x = self.get_screen_x(new_px)
+        ep_y = self.get_screen_y(new_py)
+        self.edit_points.pop(self.current_mouse_hit)
+        self.edit_points.insert(self.current_mouse_hit, (ep_x, ep_y))
+        
+    def set_keyframe_to_edit_shape(self, kf_index, value_shape=None):
+        if value_shape == None:
+            current_values = self._get_current_screen_shape()
+        
+        frame, values, kf_type = self.keyframes[kf_index]
+        self.keyframes.pop(kf_index)
+        
+        new_kf = (frame, current_values, kf_type)
+        self.keyframes.append(new_kf)
+        self.keyframes.sort(key=_gradient_kf_sort)
+        
+        self._update_shape()
+
+    def _get_current_screen_shape(self):
+        x1, y1 = self.edit_points[0]
+        x2, y2 = self.edit_points[1]
+        return [x1 / self.source_width, y1 / self.source_height, x2 / self.source_width, y2 / self.source_height]
+
+    def handle_arrow_edit(self, keyval, delta):
+        print("handle_arrow_edit")
+
+    def handle_arrow_scale_edit(self, keyval, delta):
+        print("handle_arrow_scale_edit")
+
+
 
 
 
