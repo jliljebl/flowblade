@@ -1076,6 +1076,7 @@ class TLineKeyFrameEditor:
  
         cr.stroke()
 
+    """
     def _get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, keyframes):
         frame, val0, kf_type = keyframes[prev_prev]
         frame, val1, kf_type = keyframes[prev]
@@ -1085,6 +1086,7 @@ class TLineKeyFrameEditor:
         smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
         return smooth_val
 
+    
     # These all need to be doubles.
     def _catmull_rom_interpolate(self, y0, y1, y2, y3, t):
         t2 = t * t
@@ -1093,7 +1095,8 @@ class TLineKeyFrameEditor:
         a2 = -0.5 * y0 + 0.5 * y2
         a3 = y1
         return a0 * t * t2 + a1 * t2 + a2 * t + a3
-        
+    """
+    
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = math.pi / 180.0
 

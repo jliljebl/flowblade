@@ -945,26 +945,32 @@ class GradientTintExtraEditorProperty:
         profile_height = float(current_sequence().profile.height())
     
         for kf in keyframes:
-            print(kf)
+            #print(kf)
 
             frame, values, kf_type = kf
             start_x, start_y, end_x, end_y = values
-            print(start_x, start_y, end_x, end_y)
+            #print(start_x, start_y, end_x, end_y)
             
             eq_str = propertyparse._get_eq_str(kf_type)
 
+            # Editor keyframes are in pixel coords, filter wants normalised coods.
+            start_x_tr = start_x / profile_width
+            start_y_tr = start_y / profile_height
+            end_x_tr = end_x / profile_width
+            end_y_tr = end_y / profile_height
+            
             # Build kf value strings
-            start_x_val += str(frame) + eq_str + str(start_x) + ";"
-            start_y_val += str(frame) + eq_str + str(start_y) + ";"
-            end_x_val += str(frame) + eq_str + str(end_x) + ";"
-            end_y_val += str(frame) + eq_str +  str(end_y) + ";"
+            start_x_val += str(frame) + eq_str + str(start_x_tr) + ";"
+            start_y_val += str(frame) + eq_str + str(start_y_tr) + ";"
+            end_x_val += str(frame) + eq_str + str(end_x_tr) + ";"
+            end_y_val += str(frame) + eq_str +  str(end_y_tr) + ";"
 
         start_x_val.strip(";")
         start_y_val.strip(";")
         end_x_val.strip(";")
         end_y_val.strip(";")
         
-        print(start_x_val, start_y_val)
+        #print(start_x_val, start_y_val)
         
         self.start_x.write_value(start_x_val)
         self.start_y.write_value(start_y_val)

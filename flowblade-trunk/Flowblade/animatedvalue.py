@@ -298,6 +298,34 @@ class AnimatedValue:
 
         return -1
 
+    def get_interpolated_value(self, i, fract, interpolated_kf_type):
+        # Get indexes of the four keyframes that affect the drawn curve. 
+        prev = i
+        if i == 0:
+            prev_prev = 0
+        else:
+            prev_prev = i - 1
+        
+        next = i + 1
+        if next >= len(self.keyframes):
+            next = len(self.keyframes) - 1
+        
+        next_next = next + 1
+        if next_next >= len(self.keyframes):
+            next_next = len(self.keyframes) - 1
+
+        if interpolated_kf_type == appconsts.KEYFRAME_DISCRETE:
+            frame, value, kf_type = self.keyframes[prev]
+            return value
+        elif interpolated_kf_type == appconsts.KEYFRAME_LINEAR:
+            frame, value, kf_type = self.keyframes[prev]
+            if prev == next:
+                return value
+            frame_next, value_next, kf_type_next = self.keyframes[next]
+            return value + (value_next - value) * fract
+        else:
+            return self.get_smooth_fract_value(prev_prev, prev, next, next_next, fract, interpolated_kf_type)
+ 
     def get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, interpolated_kf_type):
         frame, val0, kf_type = self.keyframes[prev_prev]
         frame, val1, kf_type = self.keyframes[prev]
