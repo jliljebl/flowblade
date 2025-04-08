@@ -117,14 +117,14 @@ EFFECT_KEYFRAME_TYPES = [ \
     appconsts.KEYFRAME_ELASTIC_IN_OUT,
     appconsts.KEYFRAME_BOUNCE_IN,
     appconsts.KEYFRAME_BOUNCE_OUT,
-    appconsts.KEYFRAME_BOUNCE_IN_OUT]
+    appconsts.KEYFRAME_BOUNCE_IN_OUT,
+    appconsts.KEYFRAME_SINUSOIDAL_IN,
+    appconsts.KEYFRAME_SINUSOIDAL_OUT,
+    appconsts.KEYFRAME_SINUSOIDAL_IN_OUT,]
 
 SMOOTH_EXTENDED_KEYFRAME_TYPES = [ \
     appconsts.KEYFRAME_SMOOTH_NATURAL,
     appconsts.KEYFRAME_SMOOTH_TIGHT,
-    appconsts.KEYFRAME_SINUSOIDAL_IN,
-    appconsts.KEYFRAME_SINUSOIDAL_OUT,
-    appconsts.KEYFRAME_SINUSOIDAL_IN_OUT,
     appconsts.KEYFRAME_QUADRATIC_IN,
     appconsts.KEYFRAME_QUADRATIC_OUT,
     appconsts.KEYFRAME_QUADRATIC_IN_OUT,
@@ -143,6 +143,26 @@ SMOOTH_EXTENDED_KEYFRAME_TYPES = [ \
     appconsts.KEYFRAME_CIRCULAR_IN,
     appconsts.KEYFRAME_CIRCULAR_OUT,
     appconsts.KEYFRAME_CIRCULAR_IN_OUT]
+
+CATMILL_ROM_TYPES = [ \
+    appconsts.KEYFRAME_SMOOTH,
+    appconsts.KEYFRAME_DISCRETE,
+    appconsts.KEYFRAME_SMOOTH_NATURAL,
+    appconsts.KEYFRAME_SMOOTH_TIGHT]
+
+POWER_TYPES = [ \
+    appconsts.KEYFRAME_QUADRATIC_IN,
+    appconsts.KEYFRAME_QUADRATIC_OUT,
+    appconsts.KEYFRAME_QUADRATIC_IN_OUT,
+    appconsts.KEYFRAME_CUBIC_IN,
+    appconsts.KEYFRAME_CUBIC_OUT,
+    appconsts.KEYFRAME_CUBIC_IN_OUT,
+    appconsts.KEYFRAME_QUARTIC_IN,
+    appconsts.KEYFRAME_QUARTIC_OUT,
+    appconsts.KEYFRAME_QUARTIC_IN_OUT,
+    appconsts.KEYFRAME_QUINTIC_IN,
+    appconsts.KEYFRAME_QUINTIC_OUT,
+    appconsts.KEYFRAME_QUINTIC_IN_OUT]
 
 # Keyframe type -> eq str 
 TYPE_TO_EQ_STRING = None # filled on init
@@ -205,6 +225,8 @@ def init():
     TYPE_TO_NAME = {}
     for type_id, name in zip(KEYFRAME_TYPES, names):
         TYPE_TO_NAME[type_id] = name
+
+    print(POWER_TYPES)
 
 def create(keyframes, active_index=0):
     return AnimatedValue(keyframes, active_index=0)
@@ -276,24 +298,23 @@ class AnimatedValue:
 
         return -1
 
-    def get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, kf_type):
+    def get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, interpolated_kf_type):
         frame, val0, kf_type = self.keyframes[prev_prev]
         frame, val1, kf_type = self.keyframes[prev]
         frame, val2, kf_type = self.keyframes[next]
         frame, val3, kf_type = self.keyframes[next_next]
 
-        if kf_type in CATMILL_ROM_ITERPOALTIONS:
+        if interpolated_kf_type in CATMILL_ROM_TYPES:
             return _catmull_rom_interpolate(val0, val1, val2, val3, fract)
+        elif interpolated_kf_type in POWER_TYPES:
+            intepolation_func, ease_type, order = RP_POWER_FUNCS[interpolated_kf_type]
+            return intepolation_func(val1, val2, fract, order, ease_type)
+        else:
+            intepolation_func, ease_type = RP_EASING_FUNCS[interpolated_kf_type]
+            return intepolation_func(val1, val2, fract, ease_type)
 
-        intepolation_func, ease_type = RP_EASING_FUNCS[kf_type]
 
-        smooth_val = intepolation_func(val0, val1, val2, val3, fract, ease_type)
-
-        return smooth_val
-
-
-
-# ------------------------------------------------ value computation helper funcs
+# ------------------------------------------------ interpolation funcs
 # These all need to be doubles.
 def _catmull_rom_interpolate(y0, y1, y2, y3, t):
     t2 = t * t
@@ -306,14 +327,111 @@ def _catmull_rom_interpolate(y0, y1, y2, y3, t):
 def _sinusoidal_interpolate(y1, y2, t, ease):
     factor = 0.0;
     if ease == ease_in:
-        factor = math.sin((t - 1.0) * M_PI_2) + 1.0;
+        factor = math.sin((t - 1.0) * M_PI_2) + 1.0
     elif ease == ease_out:
-        factor = math.sin(t * M_PI_2);
+        factor = math.sin(t * M_PI_2)
     else:
-        factor = 0.5 * (1.0 - math.cos(t * M_PI));
+        factor = 0.5 * (1.0 - math.cos(t * M_PI))
 
-    return y1 + (y2 - y1) * factor;
+    return y1 + (y2 - y1) * factor
 
+def _exponential_interpolate(y1, y2, t, ease):
+    factor = 0.0
+    if (t == 0.0):
+        factor = 0
+    elif (t == 1.0):
+        factor = 1.0
+    elif (ease == ease_in):
+        factor = math.pow(2.0, 10.0 * t - 10.0)
+    elif (ease == ease_out):
+        factor = 1.0 - math.pow(2.0, -10.0 * t)
+    else: # ease_inout
+        if (t < 0.5):
+            factor = math.pow(2.0, 20.0 * t - 10.0) / 2.0;
+        else:
+            factor = (2.0 - pow(2.0, -20.0 * t + 10.0)) / 2.0;
+
+    return y1 + (y2 - y1) * factor
+
+def _power_interpolate(y1, y2, t, order, ease):
+    factor = 0.0;
+    if (ease == ease_in):
+        factor = math.pow(t, order)
+    elif (ease == ease_out):
+        factor = 1.0 - math.pow(1.0 - t, order)
+    else: # ease_inout
+        if (t < 0.5):
+            factor = math.pow(2.0, order) * pow(t, order) / 2.0
+        else:
+            factor = 1.0 - math.pow(-2.0 * t + 2.0, order) / 2.0
+
+    return y1 + (y2 - y1) * factor
+
+def _bounce_interpolate(y1, y2, t, ease):
+    factor = 0.0
+    if (ease == ease_in):
+        factor = 1.0 - _bounce_interpolate(0.0, 1.0, 1.0 - t, ease_out)
+    elif (ease == ease_out):
+        if (t < 4.0 / 11.0):
+            factor = (121.0 * t * t) / 16.0
+        elif (t < 8.0 / 11.0):
+            factor = (363.0 / 40.0 * t * t) - (99.0 / 10.0 * t) + 17.0 / 5.0
+        elif (t < 9.0 / 10.0):
+            factor = (4356.0 / 361.0 * t * t) - (35442.0 / 1805.0 * t) + 16061.0 / 1805.0
+        else:
+            factor = (54.0 / 5.0 * t * t) - (513.0 / 25.0 * t) + 268.0 / 25.0
+    else: # { // ease_inout
+        if (t < 0.5):
+            factor = 0.5 * _bounce_interpolate(0.0, 1.0, t * 2.0, ease_in)
+        else:
+            factor = 0.5 * _bounce_interpolate(0.0, 1.0, 2.0 * t - 1.0, ease_out) + 0.5
+
+    return y1 + (y2 - y1) * factor
+
+def _elastic_interpolate(y1, y2, t, ease):
+    factor = 0.0
+    if (ease == ease_in):
+        factor = math.sin(13.0 * M_PI_2 * t) * math.pow(2.0, 10.0 * (t - 1.0))
+    elif (ease == ease_out):
+        factor = math.sin(-13.0 * M_PI_2 * (t + 1.0)) * math.pow(2.0, -10.0 * t) + 1.0
+    else: # ease_inout
+        if (t < 0.5):
+            factor = 0.5 * math.sin(13.0 * M_PI_2 * (2.0 * t)) * math.pow(2.0, 10.0 * ((2.0 * t) - 1.0))
+        else:
+            factor = 0.5 * (math.sin(-13.0 * M_PI_2 * ((2.0 * t - 1.0) + 1.0)) * math.pow(2.0, -10.0 * (2.0 * t - 1.0)) + 2.0)
+
+    return y1 + (y2 - y1) * factor
+
+def _back_interpolate(y1, y2, t, ease):
+    factor = 0.0
+    if (ease == ease_in):
+        factor = t * t * t - t * math.sin(t * M_PI)
+    elif (ease == ease_out):
+        f = (1.0 - t)
+        factor = 1.0 - (f * f * f - f * math.sin(f * M_PI))
+    else:
+        if (t < 0.5):
+            f = 2.0 * t
+            factor = 0.5 * (f * f * f - f * math.sin(f * M_PI))
+        else:
+            f = (1.0 - (2.0 * t - 1.0))
+            factor = 0.5 * (1.0 - (f * f * f - f * math.sin(f * M_PI))) + 0.5
+
+    return y1 + (y2 - y1) * factor
+
+def _circular_interpolate(y1, y2, t, ease):
+    factor = 0.0
+    if (ease == ease_in):
+        factor = 1.0 - math.sqrt(1.0 - math.pow(t, 2.0))
+    elif (ease == ease_out):
+        factor = math.sqrt(1.0 - math.pow(t - 1.0, 2.0))
+    else: 
+        if (t < 0.5):
+            factor = 0.5 * (1 - math.sqrt(1 - 4 * (t * t)))
+        else:
+            factor = 0.5 * (math.sqrt(-((2 * t) - 3) * ((2 * t) - 1)) + 1)
+
+    return y1 + (y2 - y1) * factor
 
 
 # ------------------------------------------------ Utility funcs
@@ -379,4 +497,36 @@ def _set_keyframe_type_dialog_callback(dialog, response_id, data):
         completed_callback(selected_kf_type)
 
 
-RP_EASING_FUNCS = {appconsts.KEYFRAME_SINUSOIDAL_OUT: (_sinusoidal_interpolate, ease_out)}
+RP_EASING_FUNCS = { \
+                    appconsts.KEYFRAME_SINUSOIDAL_IN: (_sinusoidal_interpolate, ease_in),
+                    appconsts.KEYFRAME_SINUSOIDAL_OUT: (_sinusoidal_interpolate, ease_out),
+                    appconsts.KEYFRAME_SINUSOIDAL_IN_OUT: (_sinusoidal_interpolate, ease_inout),
+                    appconsts.KEYFRAME_EXPONENTIAL_IN: (_exponential_interpolate, ease_in),
+                    appconsts.KEYFRAME_EXPONENTIAL_OUT: (_exponential_interpolate, ease_out),
+                    appconsts.KEYFRAME_EXPONENTIAL_IN_OUT: (_exponential_interpolate, ease_inout),
+                    appconsts.KEYFRAME_BOUNCE_IN: (_bounce_interpolate, ease_in),
+                    appconsts.KEYFRAME_BOUNCE_OUT: (_bounce_interpolate, ease_out),
+                    appconsts.KEYFRAME_BOUNCE_IN_OUT: (_bounce_interpolate, ease_inout),
+                    appconsts.KEYFRAME_ELASTIC_IN: (_elastic_interpolate, ease_in),
+                    appconsts.KEYFRAME_ELASTIC_OUT: (_elastic_interpolate, ease_out),
+                    appconsts.KEYFRAME_ELASTIC_IN_OUT: (_elastic_interpolate, ease_inout),
+                    appconsts.KEYFRAME_BACK_IN: (_back_interpolate, ease_in),
+                    appconsts.KEYFRAME_BACK_OUT: (_back_interpolate, ease_out),
+                    appconsts.KEYFRAME_BACK_IN_OUT: (_back_interpolate, ease_inout),
+                    appconsts.KEYFRAME_CIRCULAR_IN: (_back_interpolate, ease_in),
+                    appconsts.KEYFRAME_CIRCULAR_OUT: (_back_interpolate, ease_out),
+                    appconsts.KEYFRAME_CIRCULAR_IN_OUT: (_back_interpolate, ease_inout) } 
+
+RP_POWER_FUNCS = { \
+                    appconsts.KEYFRAME_QUADRATIC_IN: (_power_interpolate, ease_in, 2),
+                    appconsts.KEYFRAME_QUADRATIC_OUT: (_power_interpolate, ease_out, 2),
+                    appconsts.KEYFRAME_QUADRATIC_IN_OUT: (_power_interpolate, ease_inout, 2),
+                    appconsts.KEYFRAME_CUBIC_IN: (_power_interpolate, ease_in, 3),
+                    appconsts.KEYFRAME_CUBIC_OUT: (_power_interpolate, ease_out, 3),
+                    appconsts.KEYFRAME_CUBIC_IN_OUT: (_power_interpolate, ease_inout, 3),
+                    appconsts.KEYFRAME_QUARTIC_IN: (_power_interpolate, ease_in, 4),
+                    appconsts.KEYFRAME_QUARTIC_OUT: (_power_interpolate, ease_out, 4),
+                    appconsts.KEYFRAME_QUARTIC_IN_OUT: (_power_interpolate, ease_inout, 4),
+                    appconsts.KEYFRAME_QUINTIC_IN: (_power_interpolate, ease_in, 5),
+                    appconsts.KEYFRAME_QUINTIC_OUT: (_power_interpolate, ease_out, 5),
+                    appconsts.KEYFRAME_QUINTIC_IN_OUT: (_power_interpolate, ease_inout, 5)}

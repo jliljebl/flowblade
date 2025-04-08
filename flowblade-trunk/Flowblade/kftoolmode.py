@@ -665,13 +665,13 @@ class TLineKeyFrameEditor:
                     cr.move_to(kf_pos_x_prev, kf_pos_y_prev)
                     cr.line_to(kf_pos_x, kf_pos_y_prev)
                     cr.stroke()
-                elif kf_type_prev == appconsts.KEYFRAME_SMOOTH:
-                    self._draw_smooth_value_curve(cr, i - 1, self.keyframes, kf_type_prev)
-                else: # LINEAR
+                elif kf_type_prev == appconsts.KEYFRAME_LINEAR:
                     cr.move_to(kf_pos_x_prev, kf_pos_y_prev)
                     cr.line_to(kf_pos_x, kf_pos_y)
                     cr.stroke()
-
+                else: #kf_type_prev == appconsts.KEYFRAME_SMOOTH:
+                    self._draw_smooth_value_curve(cr, i - 1, self.keyframes, kf_type_prev)
+                    
         # If last kf before clip end, continue value curve to end.
         kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[-1]
         if kf_pos_x < ex + ew:
@@ -1011,7 +1011,10 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(0.8, 0.8, 0.8)
         cr.show_text(text) 
 
-    def _draw_smooth_value_curve(self, cr, i, keyframes, kf_type):
+    def _draw_smooth_value_curve(self, cr, i, keyframes, interpolated_kf_type):
+        print("interpolated_kf_type", interpolated_kf_type)
+        
+        
         # Get indexes of the four keyframes that affect the drawn curve. 
         prev = i
         if i == 0:
@@ -1057,7 +1060,7 @@ class TLineKeyFrameEditor:
         # Draw curve using 5 pixel line segments from
         # prev keyframe x position to next keyframe
         # x position.
-        anim_value = animatedvalue.AnimatedValue(self.keyframes)
+        anim_value = animatedvalue.AnimatedValue(keyframes)
         while(more_segments == True):
             end_x = start_x + SEG_LEN_IN_PIX
             if end_x >= kf_pos_next:
@@ -1065,7 +1068,7 @@ class TLineKeyFrameEditor:
                 end_x = kf_pos_next
             
             fract = (end_x - kf_pos_prev) / curve_length
-            end_y_val = self._get_smooth_fract_value(prev_prev, prev, next, next_next, fract, keyframes)
+            end_y_val = anim_value.get_smooth_fract_value(prev_prev, prev, next, next_next, fract, interpolated_kf_type)
             end_y = self._get_panel_y_for_value(end_y_val)
             cr.line_to(end_x, end_y)
 
