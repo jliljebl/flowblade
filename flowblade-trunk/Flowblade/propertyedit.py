@@ -925,7 +925,7 @@ class GradientTintExtraEditorProperty:
 
         # This value is parsed as keyframes in propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array()
         value = value.strip(";")
-        print(value)
+
         return value
 
     def get_input_range_adjustment(self):
@@ -935,7 +935,7 @@ class GradientTintExtraEditorProperty:
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):
-        print("write_out_keyframes")
+
         start_x_val = ""
         start_y_val = ""
         end_x_val = ""
@@ -945,11 +945,9 @@ class GradientTintExtraEditorProperty:
         profile_height = float(current_sequence().profile.height())
     
         for kf in keyframes:
-            #print(kf)
 
             frame, values, kf_type = kf
             start_x, start_y, end_x, end_y = values
-            #print(start_x, start_y, end_x, end_y)
             
             eq_str = propertyparse._get_eq_str(kf_type)
 
@@ -969,8 +967,6 @@ class GradientTintExtraEditorProperty:
         start_y_val.strip(";")
         end_x_val.strip(";")
         end_y_val.strip(";")
-        
-        #print(start_x_val, start_y_val)
         
         self.start_x.write_value(start_x_val)
         self.start_y.write_value(start_y_val)

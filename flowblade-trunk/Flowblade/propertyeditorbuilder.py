@@ -915,10 +915,10 @@ def _create_gradient_tint_editor(filt, editable_properties, editor_name, track, 
                                 clip_index)
 
     kf_edit_geom_editor = keyframeeditor.GradientTintGeometryEditor(kf_editable_property)
+    kf_edit_geom_editor.set_margin_bottom(4)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(kf_edit_geom_editor, False, False, 0)
-    vbox.pack_start(Gtk.Label("jjjj"), True, True, 0)
     vbox.no_separator = True
     vbox.kf_edit_geom_editor = kf_edit_geom_editor
     return vbox

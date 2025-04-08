@@ -929,8 +929,8 @@
         <property name="1" args="editor=color_select exptype=cairo_color displayname=Start!Color">#ff0000</property>
         <property name="3" args="editor=color_select exptype=cairo_color displayname=End!Color">#0000ff</property>
         <property name="10" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
-        <property name="2" args="editor=no_editor">0=0.5</property>
-        <property name="4" args="editor=no_editor">0=0.5</property>
+        <property name="2" args="editor=slider range_in=0,100 displayname=Start!Opacity">0.5</property>
+        <property name="4" args="editor=slider range_in=0,100 displayname=End!Opacity">0.5</property>
         <property name="5" args="editor=no_editor">0=0.5</property>
         <property name="6" args="editor=no_editor">0=0.8</property>
         <property name="7" args="editor=no_editor">0=0.5</property>

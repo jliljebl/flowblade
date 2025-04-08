@@ -334,7 +334,6 @@ class AbstractEditCanvas:
         print("_clip_frame_changed not impl")
 
     def set_keyframe_to_edit_shape(self, kf_index, value_shape=None):
-        #print("AbstractEditCanvas.set_keyframe_to_edit_shape")
         if value_shape == None:
             value_shape = self._get_current_screen_shape()
         
@@ -874,17 +873,9 @@ class GradientEditCanvas(AbstractEditCanvas):
     def __init__(self, editable_property, parent_editor):
         AbstractEditCanvas.__init__(self, editable_property, parent_editor)
         self.edit_points = []
-
-    def print_keyframes(self):
-        print("Edit points:")
-        print(self.edit_points)
-        print("Keyframes:")
-        for i in range(0, len(self.keyframes)):
-            print(self.keyframes[i])
             
     def create_edit_points_and_values(self):
         # creates untransformed edit shape to init array, values will be overridden shortly
-        #print(self.source_width,  self.source_height)
         self.edit_points.append((self.source_width / 2, self.source_height / 2 + self.source_height / 4))  # center
         self.edit_points.append((self.source_width / 2, self.source_height / 2 - self.source_height / 4)) # center
 
@@ -909,7 +900,6 @@ class GradientEditCanvas(AbstractEditCanvas):
         return None
 
     def add_keyframe(self, frame):
-        #print("gradient.add_keyframe")
         if self._frame_has_keyframe(frame) == True:
             return
 
@@ -927,38 +917,6 @@ class GradientEditCanvas(AbstractEditCanvas):
         self.keyframes.append((frame, copy.deepcopy(p_values),  p_type))
         
         self.keyframes.sort(key=_gradient_kf_sort)
-        
-    # ------------------------------------------ hit testing
-
-    def reset_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
-        rect = [0, 0, self.source_width, self.source_height]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))     
-
-    def reset_active_keyframe_rect_shape(self, active_kf_index):
-        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
-        x, y, w, h = old_rect
-        new_h = int(float(w) * (float(self.source_height) / float(self.source_width)))
-        rect = [x, y, w, new_h]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))   
-
-    def center_h_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
-        ox, y, w, h = old_rect
-        x = self.source_width / 2 - w / 2
-        rect = [x, y, w, h ]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
-
-    def center_v_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
-        x, oy, w, h = old_rect
-        y = self.source_height / 2 - h / 2
-        rect = [x, y, w, h ]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
 
     def clone_value_from_next(self, active_kf_index):
         frame, values, kf_type = self.keyframes.pop(active_kf_index)
