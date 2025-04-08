@@ -2846,6 +2846,29 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         #self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+    
+    def add_pressed(self):
+        self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
+        self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
+        
+        frame = self.clip_editor.get_active_kf_frame()
+        #self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
+    def next_pressed(self):
+        self.clip_editor.set_next_active()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        
+    def prev_pressed(self):
+        self.clip_editor.set_prev_active()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
         
         
 class RotoMaskKeyFrameEditor(Gtk.VBox):

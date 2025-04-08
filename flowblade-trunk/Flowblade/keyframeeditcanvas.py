@@ -408,15 +408,29 @@ class AbstractEditCanvas:
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
 
     def set_keyframe_frame(self, active_kf_index, frame):
-        old_frame, shape, opacity, kf_type = self.keyframes[active_kf_index]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, shape, opacity, kf_type))    
-
+        try:
+            # 4 values in kf tuple
+            old_frame, shape, opacity, kf_type = self.keyframes[active_kf_index]
+            self.keyframes.pop(active_kf_index)
+            self.keyframes.insert(active_kf_index, (frame, shape, opacity, kf_type))    
+        except:
+            # 3 values in kf tuple
+            old_frame, value, kf_type = self.keyframes[active_kf_index]
+            self.keyframes.pop(active_kf_index)
+            self.keyframes.insert(active_kf_index, (frame, value, kf_type))    
+            
     def set_active_kf_type(self, active_kf_index, kf_type):
-        old_frame, shape, opacity, old_kf_type = self.keyframes[active_kf_index]
-        self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (old_frame, shape, opacity, kf_type))    
-        
+        try:
+            # 4 values in kf tuple
+            old_frame, shape, opacity, old_kf_type = self.keyframes[active_kf_index]
+            self.keyframes.pop(active_kf_index)
+            self.keyframes.insert(active_kf_index, (old_frame, shape, opacity, kf_type))    
+        except:
+            # 3 values in kf tuple
+            old_frame, value, old_kf_type = self.keyframes[active_kf_index]
+            self.keyframes.pop(active_kf_index)
+            self.keyframes.insert(active_kf_index, (old_frame, value, kf_type))
+
     def get_keyframe(self, kf_index):
         return self.keyframes[kf_index]
 
@@ -872,6 +886,15 @@ class GradientEditCanvas(AbstractEditCanvas):
 
         return False
 
+    def _get_frame_keyframe_index(self, frame):
+        for i in range(0, len(self.keyframes)):
+            kf = self.keyframes[i]
+            kf_frame, value, kf_type = kf
+            if frame == kf_frame:
+                return i
+
+        return None
+
     def add_keyframe(self, frame):
         if self._frame_has_keyframe(frame) == True:
             return
@@ -947,12 +970,54 @@ class GradientEditCanvas(AbstractEditCanvas):
         
     def _clip_frame_changed(self):
         print("_clip_frame_changed")
-        #if self.source_edit_rect != None:
-        #    self._update_source_rect()
+        self._update_shape()
     
     def _update_shape(self):
-        print("_update_shape")
+        for i in range(0, len(self.keyframes)):
+            frame, values, kf_type = self.keyframes[i]
+            if frame == self.current_clip_frame:
+                self.set_geom(values)
+                return
+                
+                # Check if frame between these keyframe and interpolate and update shape if so.
+                if ((frame < self.current_clip_frame)
+                    and (self.current_clip_frame < frame_n)):
 
+                    if kf_type == appconsts.KEYFRAME_DISCRETE:
+                        self.set_geom(values)
+                        return
+                    else:
+                        interpolated_values = self.get_interpolated_values(time_fract, i)
+                        self.set_geom(interpolated_values)
+                        return
+                        
+        # past last frame, use its value
+        frame, values, kf_type = self.keyframes[-1]
+        self.set_geom(values)
+
+    def get_interpolated_values(self, time_fract, prev_index):
+        
+
+        elif kf_type == appconsts.KEYFRAME_SMOOTH:
+            time_fract = float((self.current_clip_frame - frame)) / \
+                         float((frame_n - frame))
+            frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
+            self.set_geom(*frame_rect)
+            return
+        else:
+            time_fract = float((self.current_clip_frame - frame)) / \
+                         float((frame_n - frame))
+            frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
+            self.set_geom(*frame_rect)
+            return
+                        
+    def set_geom(self,values):
+        # Set edit point to position defined by keyframe values.
+        # keyframe values 0 - 1, edipoint asre 0 - screen width/height
+        x1, y1, x2, y2 = values
+        p1 = (self.source_width * x1, self.source_height * y1)
+        p2 = (self.source_width * x2, self.source_height * y2)
+        self.edit_points = [p1, p2]
 
     def _draw_edit_shape(self, cr, allocation):
         x1, y1 = self.get_panel_point(*self.edit_points[0])

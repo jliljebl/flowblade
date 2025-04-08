@@ -288,7 +288,7 @@ class AnimatedValue:
         intepolation_func, ease_type = RP_EASING_FUNCS[kf_type]
 
         smooth_val = intepolation_func(val0, val1, val2, val3, fract, ease_type)
-        #smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
+
         return smooth_val
 
 
