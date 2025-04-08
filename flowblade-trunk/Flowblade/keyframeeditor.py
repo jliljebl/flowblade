@@ -1951,6 +1951,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         AbstractKeyFrameEditor.__init__(self, editable_property, use_clip_in)
         self.init_geom_gui(editable_property)
         self.init_non_geom_gui()
+        self.extended_hamburger_options = True
 
     def init_geom_gui(self, editable_property):
         self.geom_kf_edit = keyframeeditcanvas.BoxEditCanvas(editable_property, self)
@@ -2469,16 +2470,17 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         kf_ection_section.append_submenu(_("Active Keyframe Action"), kf_action_submenu)
         _kf_menu.append_section(None, kf_ection_section)
 
-        action_section = Gio.Menu.new()
-        guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
-        guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkffive", "vcenter", self._menu_item_activated)
-        guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkffive", "reset", self._menu_item_activated)
-        guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
-        _kf_menu.append_section(None, action_section)
-        
-        motion_section = Gio.Menu.new()
-        guipopover.add_menu_action(motion_section, _("Add Preset Keyframed Movement..."), "keyframes.addkfmovementfive", "add_movement", self._menu_item_activated)
-        _kf_menu.append_section(None, motion_section)
+        if self.extended_hamburger_options == True:
+            action_section = Gio.Menu.new()
+            guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
+            guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkffive", "vcenter", self._menu_item_activated)
+            guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkffive", "reset", self._menu_item_activated)
+            guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
+            _kf_menu.append_section(None, action_section)
+            
+            motion_section = Gio.Menu.new()
+            guipopover.add_menu_action(motion_section, _("Add Preset Keyframed Movement..."), "keyframes.addkfmovementfive", "add_movement", self._menu_item_activated)
+            _kf_menu.append_section(None, motion_section)
         
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
 
@@ -2527,13 +2529,21 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         elif msg  == "clonekfnext":
             self.geom_kf_edit.clone_value_from_next(self.clip_editor.active_kf_index)
             frame = self.clip_editor.get_active_kf_frame()
-            self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            try:
+                self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            except:
+                # GradientTintGeometryEditor extends this but does ont have 'pos_entries_row'
+                pass
             self.update_editor_view_with_frame(frame)
             self.update_property_value()
         elif msg  == "clonekfprev":
             self.geom_kf_edit.clone_value_from_prev(self.clip_editor.active_kf_index)
             frame = self.clip_editor.get_active_kf_frame()
-            self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            try:
+                self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+            except:
+                # GradientTintGeometryEditor extends this but does ont have 'pos_entries_row'
+                pass
             self.update_editor_view_with_frame(frame)
             self.update_property_value()
         elif msg == "copy_kf":
@@ -2760,7 +2770,8 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
 
     def __init__(self, editable_property, use_clip_in=True):
         FilterRectGeometryEditor.__init__(self, editable_property)
-
+        self.extended_hamburger_options = False
+        
     def init_geom_gui(self, editable_property):
         # We need feed keyframed editor with one kind of property and 
         # RotatingEditCanvas with another kind as that was originally written 
