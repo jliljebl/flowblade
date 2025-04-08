@@ -2857,6 +2857,18 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
+    def delete_pressed(self):
+        active_kf_index = self.clip_editor.active_kf_index
+        self.clip_editor.delete_active_keyframe()
+        self.geom_kf_edit.delete_active_keyframe(active_kf_index)
+
+        frame = self.clip_editor.get_active_kf_frame()
+        #self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.update_editor_view()
+        
     def next_pressed(self):
         self.clip_editor.set_next_active()
         frame = self.clip_editor.get_active_kf_frame()

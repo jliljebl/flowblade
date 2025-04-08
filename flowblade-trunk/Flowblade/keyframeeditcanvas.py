@@ -983,12 +983,9 @@ class GradientEditCanvas(AbstractEditCanvas):
         self.parent_editor.update_slider_value_display(self.current_clip_frame)
         
     def _clip_frame_changed(self):
-        print("_clip_frame_changed")
         self._update_shape()
-        #self.print_keyframes()
 
     def _update_shape(self):
-        print("_update_shape")
         for i in range(0, len(self.keyframes)):
             frame, values, kf_type = self.keyframes[i]
 
@@ -1039,33 +1036,13 @@ class GradientEditCanvas(AbstractEditCanvas):
         value_keyframes = []
     
         for kf in self.keyframes:
-            #print(kf)
-
             frame, values, kf_type = kf
             value = values[value_index] # start_x, start_y, end_x, end_y = values
             value_keyframes.append((frame, value, kf_type))
 
         return animatedvalue.AnimatedValue(value_keyframes)
-        
 
-        """
-        elif kf_type == appconsts.KEYFRAME_SMOOTH:
-            time_fract = float((self.current_clip_frame - frame)) / \
-                         float((frame_n - frame))
-            frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
-            self.set_geom(*frame_rect)
-            return
-        else:
-            time_fract = float((self.current_clip_frame - frame)) / \
-                         float((frame_n - frame))
-            frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
-            self.set_geom(*frame_rect)
-            return
-        """
-                    
     def set_geom(self,values):
-        print("set_geom")
-        self.print_keyframes()
         # Set edit point to position defined by keyframe values.
         # keyframe values 0 - 1, edipoint asre 0 - screen width/height
         x1, y1, x2, y2 = values
@@ -1117,17 +1094,12 @@ class GradientEditCanvas(AbstractEditCanvas):
         self.start_edit_points = copy.deepcopy(self.edit_points)
 
     def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
-        #print("_shape_motion_event")
         self._save_edited_point(delta_x, delta_y, CTRL_DOWN)
         
     def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
-        #print("_shape_release_event")
         self._save_edited_point(delta_x, delta_y, CTRL_DOWN)
         
     def _save_edited_point(self, delta_x, delta_y, CTRL_DOWN):
-        #print("_save_edited_point")
-        #self.print_keyframes()
-                
         # Convert unedited point to panel coords, add mouse delta, 
         # convert back to screen coords, update edited point value.
         target_point = self.start_edit_points[self.current_mouse_hit] # current_mouse_hit was set to be index of pressed edit point
@@ -1139,11 +1111,7 @@ class GradientEditCanvas(AbstractEditCanvas):
         self.edit_points.pop(self.current_mouse_hit)
         self.edit_points.insert(self.current_mouse_hit, (ep_x, ep_y))
         
-        #self.print_keyframes()
-        
     def set_keyframe_to_edit_shape(self, kf_index, value_shape=None):
-        print("set_keyframe_to_edit_shape")
-        #self.print_keyframes()
         if value_shape == None:
             current_values = self._get_current_screen_shape()
         
@@ -1154,12 +1122,9 @@ class GradientEditCanvas(AbstractEditCanvas):
         self.keyframes.append(new_kf)
         self.keyframes.sort(key=_gradient_kf_sort)
 
-        self.print_keyframes()
         self._update_shape()
 
     def _get_current_screen_shape(self):
-        print("_get_current_screen_shape")
-
         x1, y1 = self.edit_points[0]
         x2, y2 = self.edit_points[1]
         return (x1, y1, x2, y2)
