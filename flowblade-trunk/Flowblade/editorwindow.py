@@ -227,38 +227,16 @@ class EditorWindow:
 
         monitor_source_box = Gtk.HBox(False, 0)
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
-        monitor_source_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
-        monitor_source_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
         monitor_desc_panel = projectinfogui.get_top_level_project_info_panel()
         self.monitor_desc_label = projectinfogui.widgets.monitor_desc_label
         monitor_source_box.pack_start(monitor_desc_panel, False, False, 0)
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
 
-        fullscreen_icon = guiutils.get_cairo_image("fullscreen")
-        fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
-        self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
-        self.fullscreen_press.widget.set_margin_top(1)
-        self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen - F11"))
-        # Used in menuactions.toggle_fullscreen to switch image
-        self.fullscreen_press.fullscreen_icon = fullscreen_icon
-        self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
-
-        icon_2 = guiutils.get_cairo_image("layout")
-        layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
-        layout_press.widget.set_margin_top(1)
-        layout_press.widget.set_tooltip_text(_("Layouts"))
-
-        tline_info_box = Gtk.HBox(False, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            tline_info_box.pack_start(self.tools_buttons.widget, False, False, 0)
-            tline_info_box.pack_start(guiutils.pad_label(24,2), False, False, 0)
-            tline_info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
-            if editorstate.SCREEN_WIDTH > 1678:
-                tline_info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
-                tline_info_box.pack_start(layout_press.widget, False, False, 0)
-                tline_info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
-            
+        tline_info_box = Gtk.HBox(False, 0)            
         tline_info_box.pack_start(Gtk.Label(), True, True, 0)
+        tline_info_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
+        tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        tline_info_box.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         guiutils.set_margins(tline_info_box, 0, 0, 0, 10)
         
@@ -279,9 +257,7 @@ class EditorWindow:
             menu_vbox.pack_start(tline_info_box, True, True, 0)
             menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
         else:
-            menubar_box.pack_start(self.tools_buttons.widget, False, False, 0)
             menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
-            menubar_box.pack_start(self.fullscreen_press.widget, False, False, 0)
             
             self.top_row_window_2 = Gtk.HBox(False, 0)
             self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
@@ -363,10 +339,6 @@ class EditorWindow:
 
         # Effects select panel
         effect_select_panel, effect_select_list_view, effect_select_combo_box  = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
-        # example code for using widget css from deleted test dev branch
-        #gui.apply_widget_css_class(effect_select_list_view.treeview, "bold-text", "bold-text-class.css")
-        #effect_select_list_view.treeview.set_name("light-text")
-        #gui.apply_widget_css(effect_select_list_view.treeview, "light-text", "light-text-id.css")
         self.effect_select_panel = effect_select_panel
         self.effect_select_list_view = effect_select_list_view
         self.effect_select_combo_box = effect_select_combo_box
@@ -475,9 +447,7 @@ class EditorWindow:
         # Project panel
         if editorlayout.top_level_project_panel() == True:
             # Project info
-            #project_info_panel = projectinfogui.get_top_level_project_info_panel()
             top_project_vbox = Gtk.VBox()
-            #top_project_vbox.pack_start(project_info_panel, False, False, 0)
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
 
@@ -494,8 +464,32 @@ class EditorWindow:
             project_vbox.pack_start(seq_panel, True, True, 0)
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
             self.top_project_panel = None 
+
+        # Middlebar
+        # Fullscreen and layout buttons are created here but adda to middlebar in middlebar.py
+        fullscreen_icon = guiutils.get_cairo_image("fullscreen")
+        fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
+        self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
+        self.fullscreen_press.widget.set_margin_top(1)
+        self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen - F11"))
+        # Used in menuactions.toggle_fullscreen to switch image
+        self.fullscreen_press.fullscreen_icon = fullscreen_icon
+        self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
+
+        icon_2 = guiutils.get_cairo_image("layout")
+        self.layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
+        self.layout_press.widget.set_margin_top(1)
+        self.layout_press.widget.set_tooltip_text(_("Layouts"))
         
-        # Position bar and decorative frame  for it
+        self.edit_buttons_row = self._get_edit_buttons_row()
+
+        self.edit_buttons_frame = Gtk.Frame()
+        self.edit_buttons_frame.add(self.edit_buttons_row)
+        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
+
+        self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+        
+        # Position bar and decorative frame for it
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.HBox()
         pos_bar_frame.add(self.pos_bar.widget)
@@ -529,11 +523,8 @@ class EditorWindow:
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        #player_buttons_row.pack_start(self.monitor_clip_type.widget, False, False, 0)
-        #player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        #player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(markbuttons.widget, False, False, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
@@ -546,8 +537,12 @@ class EditorWindow:
         gui.apply_widget_css(player_buttons_row, "player-bar", "player-bar-id.css")
         
         self.player_buttons_row = player_buttons_row
+        
+        tc_player_row = Gtk.HBox(False, 0)
+        tc_player_row.pack_start(self.big_TC, False, False, 0)
+        tc_player_row.pack_start(player_buttons_row, True, True, 0)
 
-        # Switch / pos bar row
+        # pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         
@@ -561,25 +556,14 @@ class EditorWindow:
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
-        monitor_vbox.pack_start(player_buttons_row, False, True, 0)
+        monitor_vbox.pack_start(tc_player_row, False, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
         self.monitor_frame = Gtk.Frame()
         self.monitor_frame.add(monitor_align)
         self.monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        
-        # Middlebar
-        self.edit_buttons_row = self._get_edit_buttons_row()
 
-        self.edit_buttons_frame = Gtk.Frame()
-        self.edit_buttons_frame.add(self.edit_buttons_row)
-        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
-
-        self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
-        #self.edit_buttons_frame.set_name("middlebar")
-        #gui.apply_widget_css(player_buttons_row, "middlebar", "middlebar-id.css")
-                    
     def _init_tline(self):
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)

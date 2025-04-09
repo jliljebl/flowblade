@@ -1861,7 +1861,7 @@ class BigTCDisplay:
         # Aug-2019 - SvdB -BB
         prefs = editorpersistance.prefs
 
-        self.widget = cairoarea.CairoDrawableArea2( 170,
+        self.widget = cairoarea.CairoDrawableArea2( 140,
                                                     22,
                                                     self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed "+ str(15))
@@ -1869,7 +1869,7 @@ class BigTCDisplay:
         # Draw consts
         x = 2
         y = 2
-        width = 166
+        width = 140
         height = 22
         aspect = 1.0
         corner_radius = height / 3.5
@@ -1890,15 +1890,6 @@ class BigTCDisplay:
         We get cairo context and allocation.
         """
         x, y, w, h = allocation
-
-        # Draw round rect with gradient and stroke around for thin bezel
-        self._round_rect_path(cr)
-        cr.set_source_rgb(0.1, 0.1, 0.1)
-        cr.fill_preserve()
-
-        cr.set_source_rgb(0.0, 0.0, 0.0)
-        cr.set_line_width(1)
-        cr.stroke()
 
         # Get current TIMELINE frame str
         try:
@@ -2169,24 +2160,24 @@ class MonitorInfoDisplay:
         
         if mark_in != -1:
             mark_in_info = utils.get_tc_string(mark_in)
-            self.in_zeros_overlay = utils.get_tc_zeros_overlay(mark_in)
+            self.in_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_in)
         else:
-            mark_in_info = ""
+            mark_in_info = " - - : - - : - - : - - "
         self.in_str = mark_in_info
         
         if mark_out != -1:
             mark_out_info = utils.get_tc_string(mark_out)
-            self.out_zeros_overlay = utils.get_tc_zeros_overlay(mark_out)
+            self.out_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_out)
         else:
-            mark_out_info = ""
+            mark_out_info =  " - - : - - : - - : - - "
         self.out_str = mark_out_info
 
         range_len = mark_out - mark_in + 1 # +1, out incl.
         if mark_in != -1 and mark_out != -1:
             range_info = utils.get_tc_string(range_len)
-            self.len_zeros_overlay = utils.get_tc_zeros_overlay(range_len)
+            self.len_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(range_len)
         else:
-            range_info = "" 
+            range_info =  " - - : - - : - - : - - "
         self.len_str = range_info
 
     def _draw(self, event, cr, allocation):
@@ -2196,16 +2187,7 @@ class MonitorInfoDisplay:
         """
         x, y, w, h = allocation
 
-        # Draw round rect with gradient and stroke around for thin bezel
-        self._round_rect_path(cr)
-        cr.set_source_rgb(0.1, 0.1, 0.1)
-        cr.fill_preserve()
-        
-        cr.set_source_rgb(0.0, 0.0, 0.0)
-        
-        cr.set_line_width(1)
-        cr.stroke()
-        
+        # Draw round rect with gradient and stroke around for thin bezel        
         cr.set_source_surface(self.mark_in_img, 12, 5)
         cr.paint()
         cr.set_source_surface(self.mark_out_img, 110, 5)

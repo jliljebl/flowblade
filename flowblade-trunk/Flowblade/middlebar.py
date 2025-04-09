@@ -186,6 +186,7 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
 def _create_buttons(editor_window):
 
     editor_window.big_TC = Gtk.Stack()
+    editor_window.big_TC.set_margin_top(5)
     tc_disp = guicomponents.BigTCDisplay()
     tc_entry = guicomponents.BigTCEntry()
     tc_disp.widget.show()
@@ -275,7 +276,7 @@ def _create_buttons(editor_window):
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
     editor_window.tools_buttons.show_prelight_icons()
-    
+
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
@@ -292,14 +293,12 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
 
-    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
-    buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
         if editorstate.SCREEN_WIDTH > 1600:
-            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
+            buttons_row.pack_start(guiutils.get_pad_label(40, 10), False, True, 0)
         else:
             buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we can't afford additional 60px if w < 1600
             
@@ -307,7 +306,9 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         pad_w = 30
     else:
         pad_w = 5
-        
+
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    
     buttons_row.pack_start(get_buttons_group(0), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
         
@@ -325,6 +326,12 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     
     buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+
+    buttons_row.pack_start(window.tools_buttons.widget, False, False, 0)
+    buttons_row.pack_start(guiutils.pad_label(24,2), False, False, 0)
+    buttons_row.pack_start(window.fullscreen_press.widget, False, False, 0)
+    buttons_row.pack_start(guiutils.pad_label(6,2), False, False, 0)
+    buttons_row.pack_start(window.layout_press.widget, False, False, 0)
 
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     if editorstate.screen_size_small_width() == False:
@@ -419,8 +426,10 @@ def _get_edit_buttons_3_panel():
 def _get_monitor_insert_buttons():
     return w.monitor_insert_buttons.widget
 
+"""
 def _get_tools_buttons():
     return w.tools_buttons.widget
+"""
 
 def _b(button, icon, remove_relief=False):
     button.set_image(icon)

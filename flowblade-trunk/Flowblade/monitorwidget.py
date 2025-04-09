@@ -61,6 +61,7 @@ MONITOR_INDICATOR_COLOR = utils.get_cairo_color_tuple_255_rgb(71, 131, 169)
 MONITOR_INDICATOR_COLOR_MATCH = utils.get_cairo_color_tuple_255_rgb(21, 71, 105)
 
 FRAME_MATCH_VIEW_COLOR = (0.3, 0.3, 0.3)
+FILL_COLOR = (0.15, 0.15, 0.15)
 
 # Continuous match frame update
 CONTINUOS_UPDATE_PAUSE = 0.2
@@ -576,7 +577,7 @@ class MonitorWidget:
 
         if self.match_frame_surface == None:
             # Draw black
-            cr.set_source_rgb(0.0, 0.0, 0.0)
+            cr.set_source_rgb(*FILL_COLOR)
             cr.rectangle(0, 0, w, h)
             cr.fill()
         else:
@@ -592,7 +593,7 @@ class MonitorWidget:
 
         if self.match_frame_surface == None:
             # Draw black
-            cr.set_source_rgb(0.0, 0.0, 0.0)
+            cr.set_source_rgb(*FILL_COLOR)
             cr.rectangle(0, 0, w, h)
             cr.fill()
         else:
@@ -604,7 +605,7 @@ class MonitorWidget:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(*FILL_COLOR)
         if self.view == FRAME_MATCH_VIEW:
             cr.set_source_rgb(*FRAME_MATCH_VIEW_COLOR)
         cr.rectangle(0, 0, w, h)
@@ -642,7 +643,7 @@ class MonitorWidget:
         x, y, w, h = allocation
 
         # Draw bg
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(*FILL_COLOR)
         if self.view == FRAME_MATCH_VIEW:
             cr.set_source_rgb(*FRAME_MATCH_VIEW_COLOR)
         cr.rectangle(0, 0, w, h)
@@ -787,7 +788,7 @@ class MonitorWidget:
         x, y, w, h = allocation  
 
         # Draw bg
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(*FILL_COLOR)
         cr.rectangle(0, 0, w, h)
         cr.fill()
 

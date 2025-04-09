@@ -685,7 +685,7 @@ class MasterVolumeMeter:
 
         self.meter.set_height(h - self.H_CUT)
  
-        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.set_source_rgb(0.15, 0.15, 0.15)
         cr.fill_preserve()
         cr.rectangle(0, 0, w, h)
         cr.fill()
