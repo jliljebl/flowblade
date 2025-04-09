@@ -100,7 +100,7 @@ def get_bins_tree_panel(bin_list_view, callback):
     hamburger = guicomponents.HamburgerPressLaunch(callback)
     hamburger.do_popover_callback = True
     
-    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
+    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, 4, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     
 def get_sequences_panel(sequence_list_view, callback):
     panel = Gtk.VBox()
@@ -108,7 +108,7 @@ def get_sequences_panel(sequence_list_view, callback):
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
     
-    return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
+    return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, 4, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
@@ -139,7 +139,7 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     
     return frame
 
-def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=6, right_out_padding=4, tooltip_txt=None, hamburger_widget=None):
+def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=6, right_out_padding=4, name_bottom_badding=2, tooltip_txt=None, hamburger_widget=None):
     """
     Gnome style named panel
     """
@@ -147,6 +147,7 @@ def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=
         label = guiutils.bold_label(name)
         label.set_justify(Gtk.Justification.LEFT)
         label.set_margin_start(4)
+        label.set_margin_bottom(name_bottom_badding)
         label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
