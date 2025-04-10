@@ -1318,12 +1318,7 @@ class EditorWindow:
         middlebar.create_edit_buttons_row_buttons(self, tools_pixbufs)
 
         buttons_row = Gtk.HBox(False, 1)
-        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
-            middlebar.fill_with_COMPONENTS_CENTERED_pattern(buttons_row, self)
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
-            middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
-        else:
-            middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
+        middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
 
         offset = 2
         buttons_row.set_margin_top(offset)

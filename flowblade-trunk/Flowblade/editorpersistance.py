@@ -319,7 +319,7 @@ class EditorPreferences:
         # ------------------------------ timeline_start_end_button
         self.timeline_start_end = False
         # ------------------------------End of timeline_start_end_button.
-        self.midbar_layout = appconsts.MIDBAR_TC_LEFT
+        self.midbar_layout = 0 # DEPRECATED, TC widget no longer in middlebar.
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
         self.trim_view_message_shown = False

@@ -200,12 +200,6 @@ TRIM_VIEW_ON = 0
 TRIM_VIEW_SINGLE = 1
 TRIM_VIEW_OFF = 2
 
-# Midbar layout
-MIDBAR_TC_LEFT = 0
-MIDBAR_TC_CENTER = 1
-MIDBAR_COMPONENTS_CENTERED = 2
-MIDBAR_TC_FREE = 3 # DEPRECATED, all layouts now have configurable buttons.
-
 # Windows mode
 SINGLE_WINDOW = 1
 TWO_WINDOWS = 2

@@ -76,29 +76,18 @@ gui_object_names = None
 
 
 # Version 2.10 changed middlebar layout data and we need to create it for all first launches of that app version.
+# KILL in future should not be needed
 def _init_buttons_data():
     if editorpersistance.prefs.midbar_layout_buttons == None: # No data, first launch.
         print("Creating midbar data for 2.10...")
 
         editorpersistance.prefs.cbutton = [True, True, True, True, True, True]
+        editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_LEFT)
 
-        # appconsts.MIDBAR_TC_FREE is deprecated.appconsts.MIDBAR_COMPONENTS_CENTERED is  mostly same.
-        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
-            editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED
-
-        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
-            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_LEFT)
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_CENTER: 
-            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_CENTER)
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
-            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_COMPONENTS_CENTERED)
-        
-        editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT                
         editorpersistance.save()
 
 def _load_layout_data():
-    global current_layout, current_buttons_list, current_active_flags
-    current_layout = editorpersistance.prefs.midbar_layout
+    global current_buttons_list, current_active_flags
     current_buttons_list = editorpersistance.prefs.midbar_layout_buttons
     current_active_flags = editorpersistance.prefs.cbutton
 
@@ -111,12 +100,7 @@ def _save_layout_data():
     original_active_flags = current_active_flags
 
 def redo_layout(w):        
-    if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
-        _do_TC_LEFT_layout(w)
-    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_CENTER: 
-        _do_TC_MIDDLE_layout(w)
-    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
-        _do_COMPONENTS_CENTERED_layout(w)
+    _do_TC_LEFT_layout(w)
     
 def _show_buttons_TC_LEFT_layout(widget):
     global w
@@ -132,39 +116,6 @@ def _do_TC_LEFT_layout(w):
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
-    w.window.show_all()
-    
-def _show_buttons_TC_MIDDLE_layout(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return
-    if widget.get_active() == False:
-        return
-
-    _do_TC_MIDDLE_layout(w)
-    
-def _do_TC_MIDDLE_layout(w):
-    _clear_container(w.edit_buttons_row)
-    _create_buttons(w)
-    fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
-    w.window.show_all()
-
-def _show_buttons_COMPONENTS_CENTERED_layout(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return
-    if widget.get_active() == False:
-        return
-
-    _do_COMPONENTS_CENTERED_layout(w)
-    
-def _do_COMPONENTS_CENTERED_layout(w):
-    
-    _clear_container(w.edit_buttons_row)
-    _create_buttons(w)
-    fill_with_COMPONENTS_CENTERED_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
@@ -333,81 +284,6 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.pad_label(6,2), False, False, 0)
     buttons_row.pack_start(window.layout_press.widget, False, False, 0)
 
-def fill_with_TC_MIDDLE_pattern(buttons_row, window):
-    if editorstate.screen_size_small_width() == False:
-        buttons_row.set_homogeneous(True)
-    global w
-    w = window
-    left_panel = Gtk.HBox(False, 0)    
-    left_panel.pack_start(get_buttons_group(0), False, True, 0)
-    left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    left_panel.pack_start(get_buttons_group(1), False, True, 0)
-
-    left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    left_panel.pack_start(get_buttons_group(2), False, True, 0)
-    left_panel.pack_start(Gtk.Label(), True, True, 0)
-
-    middle_panel = Gtk.HBox(False, 0)
-    #middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
-    middle_panel.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
-    middle_panel.pack_start(w.big_TC, False, True, 0)
-    middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-        middle_panel.pack_start(w.tool_selector.widget, False, True, 0)
-    
-    right_panel = Gtk.HBox(False, 0) 
-    right_panel.pack_start(Gtk.Label(), True, True, 0)
-    right_panel.pack_start(get_buttons_group(3), False, True, 0)
-    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-
-    right_panel.pack_start(get_buttons_group(4),False, True, 0)
-    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    right_panel.pack_start(get_buttons_group(5), False, True, 0)
-
-    buttons_row.pack_start(left_panel, True, True, 0)
-    buttons_row.pack_start(middle_panel, False, False, 0)
-    buttons_row.pack_start(right_panel, True, True, 0)
-
-def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
-    buttons_row.set_homogeneous(False)
-    global w
-    w = window
-    
-    if editorstate.screen_size_small_width() == False:
-        pad_w = 20
-    else:
-        pad_w = 5
-            
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    #buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
-    buttons_row.pack_start(w.big_TC, False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-        buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        if editorstate.SCREEN_WIDTH > 1600:
-            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
-        else:
-            buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-
-    buttons_row.pack_start(get_buttons_group(0), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
-        
-    buttons_row.pack_start(get_buttons_group(1),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
-    
-    buttons_row.pack_start(get_buttons_group(2),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
-
-    buttons_row.pack_start(get_buttons_group(3),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
-
-    buttons_row.pack_start(get_buttons_group(4),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
-
-    buttons_row.pack_start(get_buttons_group(5), False, True, 0)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
-
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 
@@ -481,7 +357,6 @@ def show_middlebar_conf_dialog():
 
 def _conf_dialog_callback(dialog, response_id, data):
     if response_id == Gtk.ResponseType.ACCEPT:
-        editorpersistance.prefs.midbar_layout = current_layout
         editorpersistance.prefs.midbar_layout_buttons = current_buttons_list
         editorpersistance.prefs.cbutton = current_active_flags
         editorpersistance.save()
@@ -490,7 +365,6 @@ def _conf_dialog_callback(dialog, response_id, data):
         
     else:
         # Cancel conf edits
-        editorpersistance.prefs.midbar_layout = original_layout
         editorpersistance.prefs.midbar_layout_buttons = original_buttons_list
         editorpersistance.prefs.cbutton = original_active_flags
         editorpersistance.save()
@@ -504,18 +378,6 @@ def _get_conf_panel():
     global toolbar_list_box
 
     # Widgets
-    layout_select = Gtk.ComboBoxText()
-    layout_select.set_tooltip_text(_("Select Render quality"))
-    layout_select.append_text(_("Timecode Left"))
-    layout_select.append_text(_("Timecode Center"))
-    layout_select.append_text(_("Components Centered"))
-    layout_select.set_active(prefs.midbar_layout) # indexes correspond with appconsts values.
-    
-    layout_select.connect("changed", lambda w,e: _layout_conf_changed(w), None)
-        
-    layout_row = guiutils.get_left_justified_box([layout_select])
-    layout_frame = guiutils.get_named_frame(_("Layout"), layout_row)
-    
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label(label=_("Set button group active state and position."))
     
@@ -543,14 +405,10 @@ def _get_conf_panel():
     groups_frame = guiutils.get_named_frame(_("Buttons Groups"), vbox)
     
     pane = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    pane.pack_start(layout_frame, False, False, 0)
+    #pane.pack_start(layout_frame, False, False, 0)
     pane.pack_start(groups_frame, False, False, 0)
 
     return pane
-
-def _layout_conf_changed(layout_combo):
-    global current_layout
-    current_layout = layout_combo.get_active()
 
 def toggle_click(button, row_number):
     global current_active_flags
