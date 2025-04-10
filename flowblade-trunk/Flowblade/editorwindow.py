@@ -1286,9 +1286,6 @@ class EditorWindow:
         self.monitor_switch.widget.set_margin_top(2)
         self.monitor_switch.widget.set_margin_right(57)
 
-        self.monitor_clip_type = guicomponents.MonitorClipType()
-        #self.monitor_clip_type.widget.set_margin_right(17)
-
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
         guiutils.set_margins(self.monitor_tc_info.widget,5,0,0,0)
@@ -1305,7 +1302,6 @@ class EditorWindow:
         pressed_callback_funcs = [monitorevent.prev_pressed,
                                   monitorevent.play_stop_pressed,
                                   monitorevent.next_pressed]
-
 
         self.player_buttons.set_callbacks(pressed_callback_funcs)
 

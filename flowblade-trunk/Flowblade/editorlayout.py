@@ -172,7 +172,7 @@ def init_layout_data():
     if panel_positioning_available() == False or _panel_positions == None \
        or not (appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT in _panel_positions.values()):
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
-        if editorstate.SCREEN_WIDTH < 1439:
+        if editorstate.SCREEN_WIDTH < 1500:
             # App window may become invsible if all buttons shown in midbar and window too wide for screen.
             _panel_positions[appconsts.PANEL_FILTER_SELECT] = appconsts.PANEL_PLACEMENT_NOT_VISIBLE
         editorpersistance.prefs.panel_positions = _panel_positions
