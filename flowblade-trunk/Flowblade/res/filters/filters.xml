@@ -28,13 +28,14 @@
     </filter>
     <filter id="frei0r.mask0mate">
         <name>Crop</name>
-        <group>Alpha</group>  
-        <property name="Left" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
-        <property name="Right" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
-        <property name="Top" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
-        <property name="Bottom" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        <group>Alpha</group> 
+        <property name="Right" args="editor=no_editor">0=0</property>
+        <property name="Left" args="editor=no_editor">0=0</property>
+        <property name="Top" args="editor=no_editor">0=0</property>
+        <property name="Bottom" args="editor=no_editor">0=0</property>
         <property name="Blur" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         <property name="Invert" args="editor=booleancheckbox displayname=Invert">1</property>
+        <extraeditor name="crop_editor"></extraeditor>
     </filter>
     <filter id="frei0r.alphaspot">
         <name>Alpha Shape</name>

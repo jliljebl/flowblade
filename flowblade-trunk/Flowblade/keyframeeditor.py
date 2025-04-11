@@ -2892,8 +2892,27 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
-        
-        
+
+class CropGeometryEditor(FilterRectGeometryEditor):
+
+    def __init__(self, editable_property, use_clip_in=True):
+        FilterRectGeometryEditor.__init__(self, editable_property)
+        self.extended_hamburger_options = False
+
+    def init_geom_gui(self, editable_property):
+        # We need feed keyframed editor with one kind of property and 
+        # RotatingEditCanvas with another kind as that was originally written 
+        # different kind of property.
+        #geom_edit_poperty = editable_property.roto_geom_ep
+        self.geom_kf_edit = keyframeeditcanvas.BoxEditCanvas(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+
+
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 

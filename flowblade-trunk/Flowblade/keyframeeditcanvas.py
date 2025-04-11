@@ -265,7 +265,6 @@ class AbstractEditCanvas:
         self.widget.release_func = self._release_event
         self.widget.mouse_scroll_func = self._mouse_scroll_listener
 
-        #self.editable_property = editable_property
         self.clip_length = editable_property.get_clip_length()
         self.pixel_aspect_ratio = editable_property.get_pixel_aspect_ratio()
         self.current_clip_frame = 0

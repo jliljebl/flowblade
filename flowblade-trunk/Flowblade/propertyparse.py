@@ -416,7 +416,36 @@ def gradient_tint_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, ou
         end_x = values_floats[2] * screen_width
         end_y =  values_floats[3] * screen_height
         add_kf = (int(frame), (start_x, start_y, end_x, end_y), kf_type)
-        print("add_kf", add_kf)
+
+        new_keyframes.append(add_kf)
+    
+    return new_keyframes
+
+def crop_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
+
+    new_keyframes = []
+
+    keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+
+    for token in kf_tokens:
+        frame, value, kf_type = get_token_frame_value_type(token)
+        values = value.split(':')
+        values_floats = [float(x) for x in values]
+        left = values_floats[0] * screen_width
+        right = (1.0 - values_floats[1]) * screen_width
+        top = values_floats[2] * screen_height
+        bottom = (1.0 - values_floats[3]) * screen_height
+        x = left
+        y = top
+        w = right - left
+        h = bottom - top
+        dummy_opacity = 1.0 # historical artifat that has not been refactored out, used geom editor 
+                            # keyframeditcanvas.BoxEditCanvas assumes opacity to be there.
+        add_kf = (int(frame), [x, y, w, h], dummy_opacity,  kf_type)
+
         new_keyframes.append(add_kf)
     
     return new_keyframes

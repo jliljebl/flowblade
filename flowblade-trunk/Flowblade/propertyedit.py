@@ -183,6 +183,9 @@ def get_transition_editable_properties(compositor):
     return editable_properties
 
 def get_non_mlt_editable_properties(clip, filter_object, filter_index, track, clip_index):
+    # Creates editable properties that do not write their values to MLT properties.
+    # Sometimes these are just simply not used, sometiemes data is saved in these 
+    # encodes info that gets written into MLT properties.
     editable_properties = []
     for i in range(0, len(filter_object.non_mlt_properties)):
         prop = filter_object.non_mlt_properties[i]
@@ -202,7 +205,7 @@ def get_non_mlt_editable_properties(clip, filter_object, filter_index, track, cl
         editable_properties.append(ep)
     
     return editable_properties
-        
+
 # -------------------------------------------- property wrappers objs
 class AbstractProperty:
     """
@@ -847,7 +850,7 @@ class KeyFrameFilterRotatingGeometryProperty:
     def update_clip_index(self):
         self.clip_index = self.track.clips.index(self.clip)
 
-
+# dummytypes as a propertyedit.EditableProperty object.
 class GradientTintExtraEditorProperty:
 
     def __init__(self, create_params, editable_properties, track, clip_index):
@@ -883,14 +886,14 @@ class GradientTintExtraEditorProperty:
         self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
         self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
 
-        # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
-        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
+        # This value is parsed to keyframes by keyframecanvas.GradientEditCanvas
+        # using method propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array(),
         # and is only used to the initialize the editor. The original design was that editor is given
         # property value strings, and they then call keyframe_parser() method that is set when editor is 
         # build for particular type of property string. Here we need to write out keyframes
-        # to _two_ different properties, so this "dummy" editable property is created to act as the 
-        # property being edited, and it converts editor output to property values of two different 
-        # properties in method write_out_keyframes() below.
+        # to multiple different properties, so this "dummy" editable property is created to act as the 
+        # property being edited, and it converts editor output to property values of the properties
+        # in method write_out_keyframes() below.
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -973,6 +976,159 @@ class GradientTintExtraEditorProperty:
         self.end_x.write_value(end_x_val)
         self.end_y.write_value(end_y_val)
         
+    def write_value(self, str_value):
+        pass
+         
+    def write_mlt_property_str_value(self, str_value):
+        pass
+         
+    def write_filter_object_property(self, str_value):
+        pass
+
+    def update_clip_index(self):
+        self.clip_index = self.track.clips.index(self.clip)
+
+
+# dummytypes as a propertyedit.EditableProperty object.
+class CropEditorProperty:
+
+    def __init__(self, create_params, editable_properties, track, clip_index):
+
+        # Pick up the editable properties that actually have their values being written to on user edits
+        # and affect to filter output.
+        # Relevant filter definition in filters.xml
+        # <property name="Left" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        # <property name="Right" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        #<property name="Top" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        # <property name="Bottom" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        self.left = [ep for ep in editable_properties if ep.name == "Left"][0]
+        self.right = [ep for ep in editable_properties if ep.name == "Right"][0]
+        self.top = [ep for ep in editable_properties if ep.name == "Top"][0]
+        self.bottom = [ep for ep in editable_properties if ep.name == "Bottom"][0]
+
+        # Get create data
+        clip, filter_index, p, i, args_str = create_params # p is a NonMltEditableProperty created for the extara editor 
+                                                           # that uses this property but we don't use it anything, 
+                                                           # editor values are written to the four editable properties above.
+
+        # We need a lot stuff to ba able to edit this with keyframe editor as
+        # propertyedit.EditableProperty.
+        self.clip = clip
+        self.value = "this is set below"
+        self.is_compositor_filter = False
+        self.track = track
+        self.clip_index = clip_index
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+        self.get_display_name = lambda : "Opacity"
+
+        # We also need these to be able to edit this in keyframeeditcanvas.RotatingEditCanvas
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value 
+
+        # This value is parsed to keyframes by keyframecanvas.CropEditingCAnvas
+        # using method propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array(),
+        # and is only used to the initialize the editor. The original design was that editor is given
+        # property value strings, and they then call keyframe_parser() method that is set when editor is 
+        # build for particular type of property string. Here we need to write out keyframes
+        # to _two_ different properties, so this "dummy" editable property is created to act as the 
+        # property being edited, and it converts editor output to property values of two different 
+        # properties in method write_out_keyframes() below.
+        self.value = self.get_value_keyframes_str()
+
+    def get_clip_length(self):
+        return self.clip.clip_out - self.clip.clip_in + 1
+        
+    def get_clip_tline_pos(self):
+        return self.track.clip_start(self.clip_index)
+        
+    def get_value_keyframes_str(self):
+        # Create input string for keyframecanvas.BoxEditCanvas editor from
+        # values being edited.
+        # Parsed to keyframes used by keyframecanvas.BoxEditCanvas at
+        # propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array()
+        left_tokens = self.left.value.split(";")
+        right_tokens = self.right.value.split(";")
+        top_tokens = self.top.value.split(";")
+        bottom_tokens = self.bottom.value.split(";")
+
+        value = ""
+        for i in range(0, len(left_tokens)): # these all have the same amount of keyframes always
+            left_token = left_tokens[0]
+            right_token = right_tokens[0]
+            top_token = top_tokens[0]
+            bottom_token = bottom_tokens[0]
+
+            frame, left, kf_type = propertyparse.get_token_frame_value_type(left_token)
+            frame, right, kf_type = propertyparse.get_token_frame_value_type(right_token)
+            frame, top, kf_type = propertyparse.get_token_frame_value_type(top_token)
+            frame, bottom, kf_type = propertyparse.get_token_frame_value_type(bottom_token)
+
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            frame_str = str(frame) + eq_str + str(left) + ":" + str(right) + ":" + str(top) + ":" + str(bottom)
+            value += frame_str + ";"
+
+        # This value is parsed as keyframes in propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array()
+        value = value.strip(";")
+
+        return value
+
+    def get_input_range_adjustment(self):
+        # Returns DUMMY noop Adjustment that needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # but this not the case for this editor/property pair.
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
+        
+    def write_out_keyframes(self, keyframes):
+
+        left_val = ""
+        right_val = ""
+        top_val = ""
+        bottom_val = "" 
+        
+        profile_width = float(current_sequence().profile.width())
+        profile_height = float(current_sequence().profile.height())
+    
+        for kf in keyframes:
+
+            frame, rect, opacity, kf_type = kf
+            x = rect[0]
+            y = rect[1]
+            w = rect[2]
+            h = rect[3] 
+
+            eq_str = propertyparse._get_eq_str(kf_type) 
+
+            # Editor keyframes are in pixel coords, filter wants normalised coods.
+            left_tr = self._clamp_norm(x / profile_width)
+            right_tr = self._clamp_norm((profile_width - (x + w)) / profile_width)
+            top_tr = self._clamp_norm(y / profile_height)
+            bottom_tr = self._clamp_norm((profile_height - (y + h)) / profile_height)
+            
+            # Build kf value strings
+            left_val += str(frame) + eq_str + str(left_tr) + ";"
+            right_val += str(frame) + eq_str + str(right_tr) + ";"
+            top_val += str(frame) + eq_str + str(top_tr) + ";"
+            bottom_val += str(frame) + eq_str +  str(bottom_tr) + ";"
+
+        left_val.strip(";")
+        right_val.strip(";")
+        top_val.strip(";")
+        bottom_val.strip(";")
+        
+        self.left.write_value(left_val)
+        self.right.write_value(right_val)
+        self.top.write_value(top_val)
+        self.bottom.write_value(bottom_val)
+
+    def _clamp_norm(self, val):
+        if val < 0.0:
+            val = 0.0
+        elif val > 1.0:
+            val = 1.0
+        
+        return val
+
     def write_value(self, str_value):
         pass
          
