@@ -190,7 +190,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
     hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
 
-    auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
+    auto_center_check, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
@@ -211,8 +211,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.trans_cover_delete = cover_delete.get_active()
 
-    prefs.play_pause = play_pause_button.get_active()
-    prefs.timeline_start_end = timeline_start_end_button.get_active()
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
@@ -314,11 +312,8 @@ class EditorPreferences:
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead.
         self.trans_cover_delete = True
-        # Jul-2016 - SvdB - For play/pause button
-        self.play_pause = False
-        # ------------------------------ timeline_start_end_button
-        self.timeline_start_end = False
-        # ------------------------------End of timeline_start_end_button.
+        self.play_pause = False  # DEPRECATED
+        self.timeline_start_end = False  # DEPRECATED
         self.midbar_layout = 0 # DEPRECATED, TC widget no longer in middlebar.
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF

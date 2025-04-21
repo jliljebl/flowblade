@@ -250,23 +250,12 @@ def _playback_prefs_panel():
     auto_center_on_stop = Gtk.CheckButton()
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
 
-    # Jul-2016 - SvdB - For play_pause button
-    play_pause_button = Gtk.CheckButton()
-    # The following test is to make sure play_pause can be used for the initial value. If not found, then leave uninitialized
-    if hasattr(prefs, 'play_pause'):
-        play_pause_button.set_active(prefs.play_pause)
-
-    timeline_start_end_button = Gtk.CheckButton()
-    if hasattr(prefs, 'timeline_start_end'):
-        timeline_start_end_button.set_active(prefs.timeline_start_end)
-
     auto_center_on_updown = Gtk.CheckButton()
     auto_center_on_updown.set_active(prefs.center_on_arrow_move)
 
     follow_move_range = Gtk.CheckButton()
     follow_move_range.set_active(prefs.playback_follow_move_tline_range)
 
-    # Apr-2017 - SvdB - For FF/Rev speed options
     if hasattr(prefs, 'ffwd_rev_shift'):
         spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_increment=1)
     else:
@@ -288,8 +277,6 @@ def _playback_prefs_panel():
 
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
     row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
-    row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
-    row11 = _row(guiutils.get_checkbox_row_box(timeline_start_end_button, Gtk.Label(label=_("Enable To Start and To End buttons"))))
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
     row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \
         "Enabling multiple modifier keys will multiply the set values.\n" \
@@ -306,8 +293,6 @@ def _playback_prefs_panel():
     vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
-    vbox.pack_start(row10, False, False, 0)
-    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
 
@@ -315,9 +300,8 @@ def _playback_prefs_panel():
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (auto_center_on_stop,
-                  play_pause_button, timeline_start_end_button, auto_center_on_updown,
-                  ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
+    return vbox, (auto_center_on_stop, auto_center_on_updown, ffwd_rev_shift_spin,
+                  ffwd_rev_caps_spin, follow_move_range, loop_clips)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
