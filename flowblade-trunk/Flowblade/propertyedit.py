@@ -1046,17 +1046,17 @@ class CropEditorProperty:
         # values being edited.
         # Parsed to keyframes used by keyframecanvas.BoxEditCanvas at
         # propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array()
-        left_tokens = self.left.value.split(";")
-        right_tokens = self.right.value.split(";")
-        top_tokens = self.top.value.split(";")
-        bottom_tokens = self.bottom.value.split(";")
+        left_tokens = self.left.value.strip(";").split(";")
+        right_tokens = self.right.value.strip(";").split(";")
+        top_tokens = self.top.value.strip(";").split(";")
+        bottom_tokens = self.bottom.value.strip(";").split(";")
 
         value = ""
         for i in range(0, len(left_tokens)): # these all have the same amount of keyframes always
-            left_token = left_tokens[0]
-            right_token = right_tokens[0]
-            top_token = top_tokens[0]
-            bottom_token = bottom_tokens[0]
+            left_token = left_tokens[i]
+            right_token = right_tokens[i]
+            top_token = top_tokens[i]
+            bottom_token = bottom_tokens[i]
 
             frame, left, kf_type = propertyparse.get_token_frame_value_type(left_token)
             frame, right, kf_type = propertyparse.get_token_frame_value_type(right_token)

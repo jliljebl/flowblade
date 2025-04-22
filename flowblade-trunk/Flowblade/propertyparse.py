@@ -447,7 +447,7 @@ def crop_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_f
         add_kf = (int(frame), [x, y, w, h], dummy_opacity,  kf_type)
 
         new_keyframes.append(add_kf)
-    
+
     return new_keyframes
 
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
