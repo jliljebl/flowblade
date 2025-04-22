@@ -41,8 +41,8 @@
         <name>Alpha Shape</name>
         <group>Alpha</group>
         <property name="Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
-        <property name="Position X" args="editor=no_editor">0=0.0</property>
-        <property name="Position Y" args="editor=no_editor">0=0.0</property>
+        <property name="Position X" args="editor=no_editor">0=0.5</property>
+        <property name="Position Y" args="editor=no_editor">0=0.5</property>
         <property name="Size X" args="editor=no_editor">0=0.5</property>
         <property name="Size Y" args="editor=no_editor">0=0.5</property>
         <property name="Tilt" args="editor=no_editor">0=0.5</property>

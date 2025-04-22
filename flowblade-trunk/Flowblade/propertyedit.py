@@ -804,7 +804,6 @@ class KeyFrameFilterRotatingGeometryProperty:
 
         # This value is parsed as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
         value = value.strip(";")
-        print(value)
         return value
 
     def get_input_range_adjustment(self):
@@ -1202,7 +1201,7 @@ class AlphaShapeRotatingGeometryProperty:
         size_x_tokens = self.size_x.value.strip(";").split(";")
         size_y_tokens = self.size_y.value.strip(";").split(";")
         tilt_tokens = self.tilt.value.strip(";").split(";")
-        print(self.pos_x.value, pos_x_tokens)
+
         profile_width = float(current_sequence().profile.width())
         profile_height = float(current_sequence().profile.height())
         
@@ -1213,20 +1212,20 @@ class AlphaShapeRotatingGeometryProperty:
             size_x_token = size_x_tokens[i]
             size_y_token = size_y_tokens[i]
             tilt_token = tilt_tokens[i]
-            print(pos_x_token)
             frame, x, kf_type = propertyparse.get_token_frame_value_type(pos_x_token)
             frame, y, kf_type = propertyparse.get_token_frame_value_type(pos_y_token)
             frame, w, kf_type = propertyparse.get_token_frame_value_type(size_x_token)
             frame, h, kf_type = propertyparse.get_token_frame_value_type(size_y_token)
             frame, tilt, kf_type = propertyparse.get_token_frame_value_type(tilt_token)
 
-            print(x, type(x))
-            x_tr = (float(x) - 0.5) * profile_width
-            y_tr = (float(y) - 0.5) * profile_height
+            x_scale = (float(w) * 2.0)
+            y_scale = (float(h) * 2.0)
+            x_tr = (float(x) - 0.5 * x_scale) * profile_width 
+            y_tr = (float(y) - 0.5 * y_scale) * profile_height
             size_x_tr = float(w) * 2.0 * profile_width
             size_y_tr = float(h) * 2.0 * profile_height
             rotation = (float(tilt) - 0.5) * 360.0 
-
+            
             eq_str = propertyparse._get_eq_str(kf_type)
 
             frame_str = str(frame) + eq_str + str(x_tr) + ":" + str(y_tr) + ":" + str(size_x_tr) + ":" + str(size_y_tr) + ":" + str(rotation)
@@ -1234,7 +1233,7 @@ class AlphaShapeRotatingGeometryProperty:
 
         # This value is parsed as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
         value = value.strip(";")
-        print(value)
+
         return value
 
     def get_input_range_adjustment(self):
@@ -1260,7 +1259,6 @@ class AlphaShapeRotatingGeometryProperty:
             eq_str = propertyparse._get_eq_str(kf_type)
 
             # Editor keyframes are in pixel coords, filter wants 0 - 1, where 0.5 is non-transformed value. 
-            print(x, y, x_scale, y_scale, rotation) 
             pos_x_tr = (x - (profile_width / 2.0)) / profile_width + 0.5
             pos_y_tr = (y - (profile_height / 2.0)) / profile_height + 0.5
             size_x_tr = x_scale / 2.0
@@ -1281,8 +1279,6 @@ class AlphaShapeRotatingGeometryProperty:
         size_x_val = size_x_val.strip(";")
         size_y_val = size_y_val.strip(";")
         tilt_val = tilt_val.strip(";")
-
-        print(pos_x_val, pos_y_val, size_x_val, size_y_val, tilt_val)
 
         self.pos_x.write_value(pos_x_val)
         self.pos_y.write_value(pos_y_val)
