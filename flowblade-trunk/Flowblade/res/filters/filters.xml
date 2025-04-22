@@ -1256,7 +1256,7 @@
         <name>Position Scale Rotate</name>
         <group>Transform</group>
         <property name="transition.fill" args="editor=no_editor">1</property>
-        <property name="transition.distort" args="editor=no_editor">0</property>
+        <property name="transition.distort" args="editor=booleancheckbox displayname=Distort">1</property>
         <property name="transition.rect" args="editor=no_editor exptype=not_parsed">0=0 0 Screensize2 1</property>
         <property name="transition.valign" args="editor=no_editor exptype=not_parsed">middle</property>
         <property name="transition.halign" args="editor=no_editor exptype=not_parsed">center</property>
