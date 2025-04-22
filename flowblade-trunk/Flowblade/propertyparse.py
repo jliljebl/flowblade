@@ -265,7 +265,6 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
     kf_tokens =  keyframes_str.split(";")
     for token in kf_tokens:
         kf_type, sides = animatedvalue.parse_kf_token(token)
-        print(kf_type, sides)
         values = sides[1].split(':')
 
         add_kf = (int(sides[0]), out_to_in_func(float(values[2])), kf_type) # kf = (frame, opacity, type)
@@ -279,7 +278,6 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
         kf_type, sides = animatedvalue.parse_kf_token(token)
-        print(kf_type, sides)
             
         values = sides[1].split(':')
         pos = values[0].split('/')
@@ -298,7 +296,6 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
         kf_type, sides = animatedvalue.parse_kf_token(token)
-        print(kf_type, sides)
 
         values = sides[1].split(' ')
         x = values[0]
@@ -340,7 +337,6 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
         kf_type, sides = animatedvalue.parse_kf_token(token)
-        print(kf_type, sides)
             
         values = sides[1].split(':')
         frame = int(sides[0])
@@ -469,7 +465,6 @@ def get_token_frame_value_type(token):
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def _get_roto_geom_frame_value(token):
     kf_type, sides = animatedvalue.parse_kf_token(token)
-    print(kf_type, sides)
     
     return(sides[0], sides[1], kf_type)
 
