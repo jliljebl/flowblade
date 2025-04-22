@@ -804,6 +804,7 @@ class KeyFrameFilterRotatingGeometryProperty:
 
         # This value is parsed as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
         value = value.strip(";")
+        print(value)
         return value
 
     def get_input_range_adjustment(self):
@@ -1141,6 +1142,166 @@ class CropEditorProperty:
     def update_clip_index(self):
         self.clip_index = self.track.clips.index(self.clip)
 
+
+class AlphaShapeRotatingGeometryProperty:
+
+    def __init__(self, create_params, editable_properties, track, clip_index):
+
+        # Pick up the editable properties that actually have their values being written to on user edits
+        # and affect to filter output.
+        #<property name="Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
+        #<property name="Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
+        #<property name="Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.5</property>
+        #<property name="Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.5</property>
+        #<property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Tilt">0=0.5</property>
+        
+        self.pos_x = [ep for ep in editable_properties if ep.name == "Position X"][0]
+        self.pos_y = [ep for ep in editable_properties if ep.name == "Position Y"][0]
+        self.size_x = [ep for ep in editable_properties if ep.name == "Size X"][0]
+        self.size_y = [ep for ep in editable_properties if ep.name == "Size Y"][0]
+        self.tilt = [ep for ep in editable_properties if ep.name == "Tilt"][0]
+        
+        # Get create data
+        clip, filter_index, p, i, args_str = create_params
+        p_name, p_value, p_type = p
+
+        # We need a lot stuff to ba able to edit this with keyframe editor as
+        # propertyedit.EditableProperty.
+        self.clip = clip
+        self.value = "this is set below"
+        self.is_compositor_filter = False
+        self.track = track
+        self.clip_index = clip_index
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+        self.get_display_name = lambda : "Opacity"
+
+        # We also need these to be able to edit this in keyframeeditcanvas.RotatingEditCanvas
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+
+        # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
+        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
+        # and is only used to the initialize the editor. The original design was that editor is given
+        # property value strings, and they then call keyframe_parser() method that is set when editor is 
+        # build for particular type of property string. Here we need to write out keyframes
+        # to _two_ different properties, so this "dummy" editable property is created to act as the 
+        # property being edited, and it converts editor output to property values of two different 
+        # properties in method write_out_keyframes() below.
+        self.value = self.get_value_keyframes_str()
+
+    def get_clip_length(self):
+        return self.clip.clip_out - self.clip.clip_in + 1
+        
+    def get_clip_tline_pos(self):
+        return self.track.clip_start(self.clip_index)
+        
+    def get_value_keyframes_str(self):
+        # Create input string for keyframecanvas.RotatingEditCanvas editor.
+        pos_x_tokens = self.pos_x.value.strip(";").split(";")
+        pos_y_tokens = self.pos_y.value.strip(";").split(";")
+        size_x_tokens = self.size_x.value.strip(";").split(";")
+        size_y_tokens = self.size_y.value.strip(";").split(";")
+        tilt_tokens = self.tilt.value.strip(";").split(";")
+        print(self.pos_x.value, pos_x_tokens)
+        profile_width = float(current_sequence().profile.width())
+        profile_height = float(current_sequence().profile.height())
+        
+        value = ""
+        for i in range(0, len(pos_x_tokens)):
+            pos_x_token = pos_x_tokens[i]
+            pos_y_token = pos_y_tokens[i]
+            size_x_token = size_x_tokens[i]
+            size_y_token = size_y_tokens[i]
+            tilt_token = tilt_tokens[i]
+            print(pos_x_token)
+            frame, x, kf_type = propertyparse.get_token_frame_value_type(pos_x_token)
+            frame, y, kf_type = propertyparse.get_token_frame_value_type(pos_y_token)
+            frame, w, kf_type = propertyparse.get_token_frame_value_type(size_x_token)
+            frame, h, kf_type = propertyparse.get_token_frame_value_type(size_y_token)
+            frame, tilt, kf_type = propertyparse.get_token_frame_value_type(tilt_token)
+
+            print(x, type(x))
+            x_tr = (float(x) - 0.5) * profile_width
+            y_tr = (float(y) - 0.5) * profile_height
+            size_x_tr = float(w) * 2.0 * profile_width
+            size_y_tr = float(h) * 2.0 * profile_height
+            rotation = (float(tilt) - 0.5) * 360.0 
+
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            frame_str = str(frame) + eq_str + str(x_tr) + ":" + str(y_tr) + ":" + str(size_x_tr) + ":" + str(size_y_tr) + ":" + str(rotation)
+            value += frame_str + ";"
+
+        # This value is parsed as keyframes in propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array()
+        value = value.strip(";")
+        print(value)
+        return value
+
+    def get_input_range_adjustment(self):
+        # Returns DUMMY noop Adjustment that needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # but this not the case for this editor/property pair.
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
+        
+    def write_out_keyframes(self, keyframes):    
+        pos_x_val = ""
+        pos_y_val = ""
+        size_x_val = ""
+        size_y_val = ""
+        tilt_val = ""
+
+        profile_width = float(current_sequence().profile.width())
+        profile_height = float(current_sequence().profile.height())
+    
+        for kf in keyframes:
+            frame, transf, opacity, kf_type = kf
+            x, y, x_scale, y_scale, rotation = transf
+            
+            eq_str = propertyparse._get_eq_str(kf_type)
+
+            # Editor keyframes are in pixel coords, filter wants 0 - 1, where 0.5 is non-transformed value. 
+            print(x, y, x_scale, y_scale, rotation) 
+            pos_x_tr = (x - (profile_width / 2.0)) / profile_width + 0.5
+            pos_y_tr = (y - (profile_height / 2.0)) / profile_height + 0.5
+            size_x_tr = x_scale / 2.0
+            size_y_tr = y_scale / 2.0
+            tilt_tr = rotation / 360.0 + 0.5
+            
+            # Build kf value strings
+            pos_x_val += str(frame) + eq_str + str(pos_x_tr) + ";"
+            pos_y_val += str(frame) + eq_str + str(pos_y_tr) + ";"
+            size_x_val += str(frame) + eq_str + str(size_x_tr) + ";"
+            size_y_val += str(frame) + eq_str +  str(size_y_tr) + ";"
+            tilt_val += str(frame) + eq_str +  str(tilt_tr) + ";"
+
+
+
+        pos_x_val = pos_x_val.strip(";")
+        pos_y_val = pos_y_val.strip(";")
+        size_x_val = size_x_val.strip(";")
+        size_y_val = size_y_val.strip(";")
+        tilt_val = tilt_val.strip(";")
+
+        print(pos_x_val, pos_y_val, size_x_val, size_y_val, tilt_val)
+
+        self.pos_x.write_value(pos_x_val)
+        self.pos_y.write_value(pos_y_val)
+        self.size_x.write_value(size_x_val)
+        self.size_y.write_value(size_y_val)
+        self.tilt.write_value(tilt_val)
+ 
+    def write_value(self, str_value):
+        pass
+         
+    def write_mlt_property_str_value(self, str_value):
+        pass
+         
+    def write_filter_object_property(self, str_value):
+        pass
+
+    def update_clip_index(self):
+        self.clip_index = self.track.clips.index(self.clip)
+        
 
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):

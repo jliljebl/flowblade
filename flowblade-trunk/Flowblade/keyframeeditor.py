@@ -2767,6 +2767,11 @@ class FilterRotatingGeometryEditor(FilterRectGeometryEditor):
         self.clip_editor.add_keyframe_with_type(fr2, kf_type)
         
 
+class AlphaShapeGeometryEditor(FilterRotatingGeometryEditor):
+    def __init__(self, editable_property, use_clip_in=True):
+        FilterRotatingGeometryEditor.__init__(self, editable_property)
+
+
 class GradientTintGeometryEditor(FilterRectGeometryEditor):
 
     def __init__(self, editable_property, use_clip_in=True):

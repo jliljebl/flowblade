@@ -77,7 +77,8 @@ TEXT_ENTRY = "text_entry"                                   # Text editor
 ROTOMASK = "rotomask"                                       # Displays info and launches rotomask window
 NO_KF_RECT = "no_keyframes_rect"                            # keyframeeditor.GeometryNoKeyframes, no keyframes here, machinery for creating this type GUI editors just assumes keyframes
 GRADIENT_TINT = "gradient_tint_editor"                      # editor for Gradient Tint, "frei0r.cairogradient" MLT filter 
-CROP_EDITOR = "crop_editor"                                 # editor for Gradient Tint, "frei0r.cairogradient" MLT filter 
+CROP_EDITOR = "crop_editor"                                 # editor for Crop filter
+ALPHA_SHAPE_EDITOR = "alpha_shape_editor"                   # editor for Alpha Shape filter
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -941,8 +942,25 @@ def _create_crop_editor(filt, editable_properties, editor_name, track, clip_inde
     vbox.no_separator = True
     vbox.kf_edit_geom_editor = kf_edit_geom_editor
     return vbox
-    
-    
+
+def _create_alpha_shape_editor(filt, editable_properties, editor_name, track, clip_index):
+    clip, filter_index, prop, property_index, args_str = editable_properties[0].used_create_params
+
+    kf_editable_property = propertyedit.AlphaShapeRotatingGeometryProperty(
+                                editable_properties[0].used_create_params, 
+                                editable_properties,
+                                track, 
+                                clip_index)
+
+    kf_edit_geom_editor = keyframeeditor.AlphaShapeGeometryEditor(kf_editable_property)
+    kf_edit_geom_editor.set_margin_bottom(4)
+
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(kf_edit_geom_editor, False, False, 0)
+    vbox.no_separator = True
+    vbox.kf_edit_geom_editor = kf_edit_geom_editor
+    return vbox
+
 def _create_colorbox_editor(filt, editable_properties, editor_name, track, clip_index):
     colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties)
     
@@ -1261,6 +1279,8 @@ EDITOR_ROW_CREATORS = { \
     GRADIENT_TINT:  lambda filt, editable_properties, editor_name, track, clip_index: \
                                 _create_gradient_tint_editor(filt, editable_properties, editor_name, track, clip_index),
     CROP_EDITOR:  lambda filt, editable_properties, editor_name, track, clip_index: \
-                                _create_crop_editor(filt, editable_properties, editor_name, track, clip_index)
+                                _create_crop_editor(filt, editable_properties, editor_name, track, clip_index),
+    ALPHA_SHAPE_EDITOR:  lambda filt, editable_properties, editor_name, track, clip_index: \
+                                _create_alpha_shape_editor(filt, editable_properties, editor_name, track, clip_index) 
     }
 
