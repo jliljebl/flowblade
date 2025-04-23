@@ -107,8 +107,8 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
 }
 
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
-    appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
-    appconsts.PANEL_MULTI_EDIT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
+    appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
+    appconsts.PANEL_MULTI_EDIT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
     appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
@@ -143,7 +143,8 @@ DEFAULT_TABS_POSITIONS = { \
     appconsts.PANEL_PLACEMENT_LEFT_COLUMN: DOWN,
     appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: UP,
     appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: UP,
-    appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: DOWN
+    appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: DOWN,
+    appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: DOWN
 }
 
 # Saved data struct holding panel positions information.
@@ -221,6 +222,7 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: _("Bottom Row Right"),
         appconsts.PANEL_PLACEMENT_NOT_VISIBLE: _("Not Visible"),
         appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: _("Top Row Project Panel Default"),
+        appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: _("Right Column")
     }
     
     _panels_names = { \
@@ -242,7 +244,8 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_LEFT_COLUMN: None,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: None,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: None,
-        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: None
+        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: None,
+        appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: None
     }
 
 def show_panel(panel_id):
@@ -297,7 +300,8 @@ def _get_position_frames_dict():
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: editor_window.bottom_left_frame,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: editor_window.bottom_right_frame,
         appconsts.PANEL_PLACEMENT_LEFT_COLUMN: editor_window.left_column_frame,
-        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: editor_window.top_project_panel_frame
+        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: editor_window.top_project_panel_frame,
+        appconsts.PANEL_PLACEMENT_RIGHT_COLUMN:  editor_window.right_column_frame 
     }
 
     return position_frames

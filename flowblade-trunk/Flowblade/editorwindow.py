@@ -213,7 +213,8 @@ class EditorWindow:
         self.app_h_box = Gtk.HBox(False, 0)
         self.app_h_box.pack_start(self.left_column_frame, False, False, 0)
         self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
-
+        self.app_h_box.pack_start(self.right_column_frame, False, False, 0)
+        
         # Menu box
         self.menubar.set_margin_bottom(4)
         self.menubar.set_name("lighter-bg-widget")
@@ -748,7 +749,7 @@ class EditorWindow:
 
 
         # ---------------------------------------------------------------- LEFT  COLUMN
-        self.left_column_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_LEFT_COLUMN)
+        self.left_column_panel, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_LEFT_COLUMN)
         if self.left_column_panel != None:
             self.left_column_frame = guiutils.get_panel_etched_frame(self.left_column_panel)
             guiutils.set_margins(self.left_column_frame, 0, 0, 0, 1)
@@ -756,6 +757,15 @@ class EditorWindow:
         else:
             self.left_column_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
 
+        # ---------------------------------------------------------------- RIGHT COLUMN
+        self.right_column_panel, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN)
+        if self.right_column_panel != None:
+            self.right_column_frame = guiutils.get_panel_etched_frame(self.right_column_panel)
+            guiutils.set_margins(self.right_column_frame, 0, 0, 0, 1)
+
+        else:
+            self.right_column_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
+            
         # Top row paned
         self.top_paned = gtkbuilder.HPaned()
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
