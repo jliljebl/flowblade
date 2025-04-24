@@ -2198,6 +2198,24 @@ class TimeLineCanvas:
             cr.set_source_rgb(*BG_COLOR)  
             cr.fill()
 
+        # Draw track label.
+        if track.info_label != "":
+            layout = PangoCairo.create_layout(cr)
+            text = track.info_label
+            desc = Pango.FontDescription("Sans Bold 10")
+            layout.set_text(text, -1)
+            layout.set_font_description(desc)
+            w, h = layout.get_size()
+            width = w / Pango.SCALE
+            self.create_round_rect_path(cr, 6, y + 4, width + 8, 16, radius=4.0)
+            cr.set_source_rgba(0.9, 0.9, 0.9, 0.6)  
+            cr.fill()
+            cr.move_to(11, y + 2)
+            cr.set_source_rgba(0.2, 0.2, 0.2, 0.8)  
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+
+        
     def draw_compositors(self, cr):
         if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             return

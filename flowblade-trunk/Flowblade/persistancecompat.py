@@ -146,3 +146,6 @@ def FIX_MISSING_BIN_ATTRS(bin):
 def FIX_MISSING_TRACK_ATTRS(track):
     if(not hasattr(track, "parent_track")):
         track.parent_track = None
+
+    if(not hasattr(track, "info_label")):
+        track.info_label = ""

@@ -22,10 +22,11 @@
 This module handles track actions; mute, change active state, size change.
 """
 
-from gi.repository import GLib
+from gi.repository import GLib, Gtk
 
 import appconsts
 import audiomonitoring
+import dialogutils
 import gui
 import guipopover
 import editorstate
@@ -76,6 +77,22 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
+def edit_info_label(track_index):
+    track = get_track(track_index)
+    dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
+                                                _("Set Track Info Text"),
+                                                _("Set"),
+                                                _("Track Info Text:"),
+                                                track.info_label)
+    dialog.connect('response', _set_track_info_text_callback, entry, track)
+    dialog.show_all()
+
+def _set_track_info_text_callback(dialog, response_id, entry, track):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        track.info_label = entry.get_text()
+        updater.repaint_tline()
+
+    dialog.destroy()
 
 def set_track_sync(track_index):
     child_track = get_track(track_index)
@@ -425,10 +442,13 @@ def track_center_pressed(data):
                                             _track_menu_item_activated,
                                             _track_menu_height_activated)
 
+
+
 POPUP_HANDLERS = {"lock":lock_track,
                   "unlock":unlock_track,
                   "mute_track":mute_track,
                   "clearsync":clear_track_sync,
                   "resync":resync_track,
                   "setsync":set_track_sync,
-                  "ressetsync":reset_treack_sync}
+                  "ressetsync":reset_treack_sync, 
+                  "infolabel":edit_info_label}

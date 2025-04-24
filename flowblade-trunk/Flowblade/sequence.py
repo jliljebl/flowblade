@@ -292,6 +292,9 @@ class Sequence:
         # Tracks may be FREE or LOCKED
         track.edit_freedom = FREE
 
+        # User can define info labels that are shown as overlays on timeline.
+        track.info_label = ""
+
     def get_track_counts(self):
         """returns (video track count, audio track count)"""
         nv = len(self.tracks) - self.first_video_index - 1

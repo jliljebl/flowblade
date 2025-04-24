@@ -963,6 +963,10 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
         add_menu_action(lock_section, _("Unlock Track"), "trackcolumn.unlock", (track,"unlock", None), callback, False)
     _tracks_column_menu.append_section(None, lock_section)
 
+    info_label_section = Gio.Menu.new()
+    add_menu_action(info_label_section, _("Edit Track Info Label"), "trackcolumn.sync.infolabel", (track,"infolabel", None), callback)
+    _tracks_column_menu.append_section(None, info_label_section)
+
     height_section = Gio.Menu.new()
     items_data =[(_("High Height"), "highheight"), (_("Large Height"), "normalheight"), (_("Normal Height"), "smallheight")]
     if track_obj.height == appconsts.TRACK_HEIGHT_HIGH:
