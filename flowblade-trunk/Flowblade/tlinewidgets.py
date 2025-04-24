@@ -80,11 +80,10 @@ MARK_PAD = 6
 MARK_LINE_WIDTH = 5
 
 # tracks column consts
-COLUMN_WIDTH = 124 # column area width
+COLUMN_WIDTH = 150 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
 Y_SCROLL_WIDTH = 19
-COLUMN_LEFT_PAD = 0 # as mute switch no longer exists this is now essentially left pad width 
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
@@ -94,18 +93,18 @@ COMPOSITOR_TRACK_X_PAD = 4
 COMPOSITOR_TRACK_ARROW_WIDTH = 6
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH = 10
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT = 5
-ID_PAD_X = 48 # track id text pos
+ID_PAD_X = 66 # track id text pos
 ID_PAD_Y_HIGH = 30 # track id text pos for high track
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
 MUTE_ICON_POS_HIGH = (5, 30)
-LOCK_POS = (26, 5)
-INSRT_ICON_POS_HIGH = (108, 32)
-INSRT_ICON_POS = (108, 18)
-INSRT_ICON_POS_SMALL = (108, 6)
-SYNC_ICON_POS_HIGH = (88, 12)
+LOCK_POS = (34, 17)
+INSRT_ICON_POS_HIGH = (134, 32)
+INSRT_ICON_POS = (134, 18)
+INSRT_ICON_POS_SMALL = (134, 6)
+SYNC_ICON_POS_HIGH = (116, 12)
  
 # tracks column icons
 FULL_LOCK_ICON = None
@@ -2388,8 +2387,8 @@ class TimeLineColumn:
         self.switch_testers = []
 
         # Active area tester
-        center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
-        tester = ValueTester(COLUMN_LEFT_PAD + center_width, COLUMN_WIDTH, 
+        center_width = COLUMN_WIDTH -  ACTIVE_SWITCH_WIDTH
+        tester = ValueTester(center_width, COLUMN_WIDTH, 
                              self.active_listener)
         self.switch_testers.append(tester)
 
@@ -2397,7 +2396,7 @@ class TimeLineColumn:
         # NOTE: There was a left column of active areas similar to active switch
         # so this is still called 'center' even when it is the left side of two active 
         # areas.
-        tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
+        tester = ValueTester(0, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)
         self.switch_testers.append(tester)
 
@@ -2451,9 +2450,9 @@ class TimeLineColumn:
  
     def draw_track(self, cr, track, y, is_insert_track):
         # Draw track info area.
-        center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
-        rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
-        grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
+        center_width = COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH
+        rect = (1, y, center_width + 1, track.height)
+        grad = cairo.LinearGradient (0, y, 0, y + track.height)
         self._add_gradient_color_stops(grad, track)
         cr.rectangle(*rect)
         cr.set_source(grad)
@@ -2461,14 +2460,14 @@ class TimeLineColumn:
         self.draw_edge(cr, rect)
         
         # Draw active switch bg end edge.
-        rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
+        rect = (center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
             if track == current_sequence().get_first_active_track():
                 cr.set_source_rgb(*COLUMN_ACTIVE_COLOR)
             else:
-                grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
-                                            COLUMN_LEFT_PAD + center_width, y + track.height)
+                grad = cairo.LinearGradient(center_width, y,
+                                            center_width, y + track.height)
                 self._add_gradient_color_stops(grad, track)
                 cr.set_source(grad)
         else:
@@ -2490,7 +2489,7 @@ class TimeLineColumn:
             text_y = ID_PAD_Y
         elif track.height == appconsts.TRACK_HEIGHT_SMALL:
             text_y = ID_PAD_Y_SMALL
-        cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
+        cr.move_to(ID_PAD_X, y + text_y)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
@@ -2526,9 +2525,9 @@ class TimeLineColumn:
             if track.height == appconsts.TRACK_HEIGHT_HIGH: 
                 iy = ID_PAD_Y_HIGH + 4
             elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
-                iy = ID_PAD_Y + 4
+                iy = ID_PAD_Y + 2
             elif track.height == appconsts.TRACK_HEIGHT_SMALL:
-                iy = ID_PAD_Y_SMALL + 4
+                iy = ID_PAD_Y_SMALL + 5
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
@@ -2549,21 +2548,21 @@ class TimeLineColumn:
             pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
             # Draw track name
             layout = PangoCairo.create_layout(cr)
-            desc = Pango.FontDescription("Sans 6")
+            desc = Pango.FontDescription("Sans 8")
             layout.set_text(pcs_str, -1)
             layout.set_font_description(desc)
             cr.set_source_rgb(*TRACK_NAME_COLOR)
             if track.height == appconsts.TRACK_HEIGHT_HIGH:
-                text_y = ID_PAD_Y_HIGH + 4
+                text_y = ID_PAD_Y_HIGH + 2
             elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
-                text_y = ID_PAD_Y + 4
+                text_y = ID_PAD_Y + 2
             elif track.height == appconsts.TRACK_HEIGHT_SMALL:
-                text_y = ID_PAD_Y_SMALL + 4
-            if track.parent_track != None:
-                 xadd = 21
-            else:
-                 xadd = 31
-            cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X + xadd, y + text_y)
+                text_y = ID_PAD_Y_SMALL + 2
+            #if track.parent_track != None:
+            xadd = 24
+            #else:
+            #     xadd = 31
+            cr.move_to(ID_PAD_X + xadd, y + text_y)
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
 

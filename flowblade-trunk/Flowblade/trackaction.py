@@ -351,6 +351,7 @@ def track_double_click(track_id):
         set_track_normal_height(track_id)
     
 def track_center_pressed(data):
+
     if data.event.button == 1:
         # handle possible mute icon presses
         press_x = data.event.x
@@ -359,22 +360,25 @@ def track_center_pressed(data):
         if track == None:
             return
         y_off = press_y - tlinewidgets._get_track_y(track.id)
-        ICON_WIDTH = 14
-        ICON_HEIGHT = 10
+        AUDIO_ICON_WIDTH = 12
+        VIDEO_ICON_WIDTH = 14
+        AUDIO_ICON_X = 7
+        VIDEO_ICON_X = AUDIO_ICON_X + AUDIO_ICON_WIDTH
+        ICON_HEIGHT = 22
 
-        X_CORR_OFF = 4 # icon edge not on image left edge
-        if press_x > tlinewidgets.COLUMN_LEFT_PAD + X_CORR_OFF and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH + X_CORR_OFF:
-            # Mute icon x area hit
-            ix, iy = tlinewidgets.MUTE_ICON_POS
-            if track.height == appconsts.TRACK_HEIGHT_HIGH:
-                ix, iy = tlinewidgets.MUTE_ICON_POS_HIGH
-            elif track.height == appconsts.TRACK_HEIGHT_NORMAL: 
-                ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
+        ix, iy = tlinewidgets.MUTE_ICON_POS
+        if track.height == appconsts.TRACK_HEIGHT_HIGH:
+            ix, iy = tlinewidgets.MUTE_ICON_POS_HIGH
+        elif track.height == appconsts.TRACK_HEIGHT_NORMAL: 
+            ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
 
-            if track.id >= current_sequence().first_video_index:
-                # Video tracks
-                # Test mute switches
-                if y_off > iy and y_off < iy + ICON_HEIGHT:
+        new_mute_state = track.mute_state
+        
+        if track.id >= current_sequence().first_video_index:
+            # Video tracks
+            # Test mute switches
+            if y_off > iy and y_off < iy + ICON_HEIGHT:
+                if press_x > VIDEO_ICON_X and press_x < VIDEO_ICON_X + VIDEO_ICON_WIDTH:
                     # Video mute icon hit
                     if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
                         new_mute_state = appconsts.TRACK_MUTE_VIDEO
@@ -384,7 +388,7 @@ def track_center_pressed(data):
                         new_mute_state = appconsts.TRACK_MUTE_ALL
                     elif track.mute_state == appconsts.TRACK_MUTE_ALL:
                         new_mute_state = appconsts.TRACK_MUTE_AUDIO
-                elif y_off > iy + ICON_HEIGHT and y_off < iy + ICON_HEIGHT * 2:
+                elif press_x > AUDIO_ICON_X and press_x < AUDIO_ICON_X + AUDIO_ICON_WIDTH:
                     # Audio mute icon hit
                     if track.mute_state == appconsts.TRACK_MUTE_NOTHING:
                         new_mute_state = appconsts.TRACK_MUTE_AUDIO
@@ -394,24 +398,24 @@ def track_center_pressed(data):
                         new_mute_state = appconsts.TRACK_MUTE_NOTHING
                     elif track.mute_state == appconsts.TRACK_MUTE_ALL:
                         new_mute_state = appconsts.TRACK_MUTE_VIDEO
+        else:
+            # Audio tracks
+            # Test mute switches
+            if y_off > iy and y_off < iy + ICON_HEIGHT \
+                and press_x > AUDIO_ICON_X and press_x < AUDIO_ICON_X + AUDIO_ICON_WIDTH:
+                if track.mute_state == appconsts.TRACK_MUTE_VIDEO:
+                    new_mute_state = appconsts.TRACK_MUTE_ALL
                 else:
-                    return
-            else:
-                # Audio tracks
-                # Test mute switches
-                iy = iy + 6 # Mute icon is lower on audio tracks
-                if y_off > iy and y_off < iy + ICON_HEIGHT:
-                    if track.mute_state == appconsts.TRACK_MUTE_VIDEO:
-                        new_mute_state = appconsts.TRACK_MUTE_ALL
-                    else:
-                        new_mute_state = appconsts.TRACK_MUTE_VIDEO
-                else:
-                    return 
-            # Update track mute state
-            current_sequence().set_track_mute_state(track.id, new_mute_state)
-            
-            audiomonitoring.update_mute_states()
-            gui.tline_column.widget.queue_draw()
+                    new_mute_state = appconsts.TRACK_MUTE_VIDEO
+
+        if new_mute_state == track.mute_state:
+            return # Don't update if nothing hit.
+        
+        # Update track mute state
+        current_sequence().set_track_mute_state(track.id, new_mute_state)
+        
+        audiomonitoring.update_mute_states()
+        gui.tline_column.widget.queue_draw()
     
     if data.event.button == 3:
         global _menu_track_index # popover + gio.actions just wont allow easily packing track to go, so we're going global
