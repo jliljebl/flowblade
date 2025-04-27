@@ -100,12 +100,16 @@ ID_PAD_Y_SMALL = 4 # track id text pos for small track
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
 MUTE_ICON_POS_HIGH = (5, 30)
-LOCK_POS = (34, 17)
+LOCK_POS = (34, 19)
+LOCK_POS_HIGH = (34, 35)
+LOCK_POS_SMALL = (34, 9)
 INSRT_ICON_POS_HIGH = (134, 32)
 INSRT_ICON_POS = (134, 18)
 INSRT_ICON_POS_SMALL = (134, 6)
-SYNC_ICON_POS_HIGH = (116, 12)
- 
+SYNC_ICON_POS_HIGH = (116, 34)
+SYNC_ICON_POS = (116, 21)
+SYNC_ICON_POS_SMALL = (116, 8)
+
 # tracks column icons
 FULL_LOCK_ICON = None
 TRACK_BG_ICON = None
@@ -414,23 +418,28 @@ def update_clip_thumbnail(media_file):
 
 def set_tracks_height_consts():
     global ID_PAD_Y_HIGH, ID_PAD_Y, ID_PAD_Y_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, \
-    MUTE_ICON_POS_HIGH, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, INSRT_ICON_POS_HIGH, \
-    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT, WAVEFORM_PAD_HIGH
+    MUTE_ICON_POS_HIGH, LOCK_POS, LOCK_POS_HIGH, LOCK_POS_SMALL, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, INSRT_ICON_POS_HIGH, \
+    WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT, WAVEFORM_PAD_HIGH, SYNC_ICON_POS_HIGH, SYNC_ICON_POS, SYNC_ICON_POS_SMALL
 
     if editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_DOUBLE:
         HEIGHT = appconsts.TLINE_HEIGHT
         ID_PAD_Y_HIGH = 66
         ID_PAD_Y = 41
         ID_PAD_Y_SMALL = 16
-        MUTE_ICON_POS = (5, 7)
-        MUTE_ICON_POS_NORMAL = (5, 31)
-        MUTE_ICON_POS_HIGH = (5, 55)
-        LOCK_POS = (25, 2)
-        INSRT_ICON_POS_HIGH = (108, 66) 
-        INSRT_ICON_POS = (108, 43)
-        INSRT_ICON_POS_SMALL =  (108, 18)
+        MUTE_ICON_POS = (5, 16)
+        MUTE_ICON_POS_NORMAL = (5, 40)
+        MUTE_ICON_POS_HIGH = (5, 64)
+        LOCK_POS = (34, 45)
+        LOCK_POS_HIGH = (34, 69)
+        LOCK_POS_SMALL = (34, 21)
+        INSRT_ICON_POS_HIGH = (134, 66) 
+        INSRT_ICON_POS = (134, 43)
+        INSRT_ICON_POS_SMALL =  (134, 18)
         WAVEFORM_PAD_LARGE = 77
         WAVEFORM_PAD_SMALL = 33
+        SYNC_ICON_POS_HIGH = (116, 70)
+        SYNC_ICON_POS = (116, 45)
+        SYNC_ICON_POS_SMALL = (116, 20)
     elif editorpersistance.prefs.tracks_scale == appconsts.TRACKS_SCALE_ONE_AND_HALF:
         HEIGHT = appconsts.TLINE_HEIGHT
         ID_PAD_Y_HIGH = 48
@@ -439,13 +448,18 @@ def set_tracks_height_consts():
         MUTE_ICON_POS = (5, 10)
         MUTE_ICON_POS_NORMAL = (5, 30)
         MUTE_ICON_POS_HIGH = (5, 49)
-        LOCK_POS = (25, 2)
-        INSRT_ICON_POS_HIGH = (108, 51) 
-        INSRT_ICON_POS = (108, 32)
-        INSRT_ICON_POS_SMALL =  (108, 12)
+        LOCK_POS = (34, 35)
+        LOCK_POS_HIGH = (34, 54)
+        LOCK_POS_SMALL = (34, 15)
+        INSRT_ICON_POS_HIGH = (134, 51) 
+        INSRT_ICON_POS = (134, 32)
+        INSRT_ICON_POS_SMALL =  (134, 12)
         WAVEFORM_PAD_LARGE = 47
         WAVEFORM_PAD_SMALL = 20
         WAVEFORM_PAD_HIGH = 77
+        SYNC_ICON_POS_HIGH = (116, 53)
+        SYNC_ICON_POS = (116, 34)
+        SYNC_ICON_POS_SMALL = (116, 14)
 
 def set_dark_bg_color():
     global BG_COLOR
@@ -2539,13 +2553,12 @@ class TimeLineColumn:
 
         # Draw locked icon.
         if track.edit_freedom == appconsts.LOCKED:
-            ix, iy = LOCK_POS
             if track.height == appconsts.TRACK_HEIGHT_HIGH: 
-                iy = ID_PAD_Y_HIGH + 4
+                ix, iy = LOCK_POS_HIGH
             elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
-                iy = ID_PAD_Y + 2
+                ix, iy = LOCK_POS
             elif track.height == appconsts.TRACK_HEIGHT_SMALL:
-                iy = ID_PAD_Y_SMALL + 5
+                ix, iy = LOCK_POS_SMALL
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
@@ -2585,13 +2598,12 @@ class TimeLineColumn:
             PangoCairo.show_layout(cr, layout)
 
         if track.parent_track != None:
-            ix, iy = SYNC_ICON_POS_HIGH
             if track.height == appconsts.TRACK_HEIGHT_HIGH:
-                iy += 22
+                ix, iy = SYNC_ICON_POS_HIGH
             elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
-                iy += 9
+                ix, iy = SYNC_ICON_POS
             elif track.height == appconsts.TRACK_HEIGHT_SMALL:
-                iy += -4
+                ix, iy = SYNC_ICON_POS_SMALL
                 
             cr.set_source_surface(SYNC_ICON, ix, y + iy)
             cr.paint()
