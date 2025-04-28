@@ -3184,8 +3184,8 @@ class PositionNumericalEntries(Gtk.HBox):
         
         self.prepare_entry(self.x_entry)
         self.prepare_entry(self.y_entry)
-        self.prepare_entry(self.x_scale_entry)
-        self.prepare_entry(self.y_scale_entry)
+        self.prepare_entry(self.x_scale_entry, 3)
+        self.prepare_entry(self.y_scale_entry, 3)
         self.prepare_entry(self.rotation_entry)
         
         self.set_homogeneous(False)

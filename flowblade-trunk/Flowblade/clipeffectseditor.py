@@ -197,17 +197,35 @@ class FilterFooterRow:
 
 class FilterHeaderRow:
     
-    def __init__(self, filter_object):
+    def __init__(self, filter_object, stack_item):
         name = translations.get_filter_name(filter_object.info.name)
         self.filter_name_label = Gtk.Label(label= "<b>" + name + "</b>")
         self.filter_name_label.set_use_markup(True)
         self.icon = Gtk.Image.new_from_pixbuf(filter_object.info.get_icon())
 
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trash.png")
+        trash_button = guicomponents.PressLaunch(stack_item.trash_pressed, surface, w=22, h=22)
+        
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_up_arrow.png")
+        up_button = guicomponents.PressLaunch(stack_item.up_pressed, surface, w=10, h=22)
+        up_button.surface_x = 0
+        up_button.widget.set_margin_right(2)
+
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_down_arrow.png")
+        down_button = guicomponents.PressLaunch(stack_item.down_pressed, surface, w=10, h=22)
+        down_button.surface_x = 0
+        down_button.surface_y = 10
+        
+        
         hbox = Gtk.HBox(False, 0)
+        hbox.pack_start(stack_item.active_check, False, False, 0)
         hbox.pack_start(guiutils.pad_label(4,5), False, False, 0)
         hbox.pack_start(self.icon, False, False, 0)
         hbox.pack_start(self.filter_name_label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
+        hbox.pack_start(up_button.widget, False, False, 0)
+        hbox.pack_start(down_button.widget, False, False, 0)
+        hbox.pack_start(trash_button.widget, False, False, 0)
         self.widget = hbox
 
 
@@ -215,61 +233,29 @@ class FilterStackItem:
 
     def __init__(self, filter_object, edit_panel, filter_stack):
         self.filter_object = filter_object
-        self.filter_header_row = FilterHeaderRow(filter_object)
+
+        self.active_check = Gtk.CheckButton()
+        self.active_check.set_active(self.filter_object.active)
+        self.active_check.connect("toggled", self.toggle_filter_active)
+
+        self.active_check.set_margin_left(2)
+        self.filter_header_row = FilterHeaderRow(filter_object, self)
 
         self.edit_panel = edit_panel
         self.edit_panel_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
         self.edit_panel_frame.add(edit_panel)
         
         self.filter_stack = filter_stack
-        self.expander = Gtk.Expander()
+        self.expander = Expander()
         self.expander.set_label_widget(self.filter_header_row.widget)
         self.expander.add(self.edit_panel_frame)
-        self.expander.set_label_fill(True)
 
         self.expander_frame = Gtk.Box.new(Gtk.Orientation.VERTICAL, 0)
-        self.expander_frame.add(self.expander)
+        self.expander_frame.add(self.expander.widget)
         guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
         
-        self.active_check = Gtk.CheckButton()
-        self.active_check.set_active(self.filter_object.active)
-        self.active_check.connect("toggled", self.toggle_filter_active)
-        guiutils.set_margins(self.active_check, 4, 0, 0, 0)
-
-        self.active_check_vbox = Gtk.VBox(False, 0)
-        self.active_check_vbox.pack_start(self.active_check, False, False, 0)
-        self.active_check_vbox.pack_start(Gtk.Label(), True, True, 0)
-
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trash.png")
-        trash_button = guicomponents.PressLaunch(self.trash_pressed, surface, w=22, h=22)
-        
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_up_arrow.png")
-        up_button = guicomponents.PressLaunch(self.up_pressed, surface, w=10, h=22)
-        up_button.surface_x = 0
-
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filters_down_arrow.png")
-        down_button = guicomponents.PressLaunch(self.down_pressed, surface, w=10, h=22)
-        down_button.surface_x = 0
-        down_button.surface_y = 10
-        
-        self.trash_vbox = Gtk.VBox(False, 0)
-        self.trash_vbox.pack_start(trash_button.widget, False, False, 0)
-        self.trash_vbox.pack_start(Gtk.Label(), True, True, 0)
-
-        self.up_vbox = Gtk.VBox(False, 0)
-        self.up_vbox.pack_start(up_button.widget, False, False, 0)
-        self.up_vbox.pack_start(Gtk.Label(), True, True, 0)
-
-        self.down_vbox = Gtk.VBox(False, 0)
-        self.down_vbox.pack_start(down_button.widget, False, False, 0)
-        self.down_vbox.pack_start(Gtk.Label(), True, True, 0)
-        
         self.widget = Gtk.HBox(False, 0)
-        self.widget.pack_start(self.active_check_vbox, False, False, 0)
         self.widget.pack_start(self.expander_frame, True, True, 0)
-        self.widget.pack_start(self.trash_vbox, False, False, 0)
-        self.widget.pack_start(self.up_vbox, False, False, 0)
-        self.widget.pack_start(self.down_vbox, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(10,2), False, False, 0)
 
         self.widget.show_all()
@@ -430,6 +416,74 @@ class ClipFilterStack:
         
         stack_item = self.filter_stack[expanded_index]
         stack_item.expander.set_expanded(True)
+
+class Expander:
+    
+    def __init__(self):
+        self.widget = Gtk.VBox(False, 0) 
+        self.label = None
+        self.child = None
+        self.expanded = True
+        
+        self.label_box = Gtk.HBox(False, 0) 
+        self.child_box = Gtk.VBox(False, 0) 
+
+        self.arrow_box = Gtk.EventBox() 
+        self.arrow_box.connect('button-release-event', self._toggle_expand)
+        
+        self.img_unexpanded = Gtk.Image.new_from_icon_name("pan-end-symbolic", Gtk.IconSize.BUTTON)
+        self.img_expanded = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
+        self.arrow_box.add(self.img_expanded)
+        
+        self.widget.pack_start(self.label_box, False, False, 0)
+        self.widget.pack_start(self.child_box, True, True, 0)
+        
+    def set_label_widget(self, label_widget):
+        self.label = label_widget
+        self._update_label_row()
+        self.widget.queue_draw()
+
+    def _update_label_row(self):
+        # Remove panels from box
+        children = self.label_box.get_children()
+        for child in children:
+            self.label_box.remove(child)
+        self.arrow_box.remove(self.arrow_box.get_child())
+        if self.expanded == True:
+            self.arrow_box.add(self.img_expanded)
+        else:
+            self.arrow_box.add(self.img_unexpanded)
+        self.arrow_box.show_all()
+
+        self.label_box.pack_start(self.arrow_box, False, False, 0)
+        self.label_box.pack_start(self.label, True, True, 0)
+
+    def add(self, child_widget):
+        self.child = child_widget
+        self._update_child_row()
+        self.widget.queue_draw()
+
+    def _update_child_row(self):
+        children = self.child_box.get_children()
+        for child in children:
+            self.child_box.remove(child)
+        
+        if self.expanded == True:
+            self.child_box.pack_start(self.child, False, False, 0)
+
+    def set_expanded(self, expanded):
+        self.expanded = expanded
+        self._update_label_row()
+        self._update_child_row()
+
+    def get_expanded(self):
+        return self.expanded
+
+    def _toggle_expand(self, widget, event):
+        self.expanded = not self.expanded
+        self._update_label_row()
+        self._update_child_row()
+        
 
 # -------------------------------------------------------------- GUI INIT
 def get_clip_effects_editor_info_row():
