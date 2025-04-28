@@ -1347,7 +1347,7 @@ class RotoJSONProperty(EditableProperty):
 
 class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     """
-    Coverts array of keyframe tuples to string of type "0=0.2;123=0.143"
+    Converts array of keyframe tuples to string of type "0=0.2;123=0.143"
     """
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
