@@ -460,16 +460,7 @@ def _re_render_transition_or_fade(data):
         
 def _mute_clip(data):
     clip, track, item_id, item_data = data
-    set_clip_muted = item_data
-
-    if set_clip_muted == True:
-        data = {"clip":clip}
-        action = edit.mute_clip(data)
-        action.do_edit()
-    else:# then we're sitting clip unmuted
-        data = {"clip":clip}
-        action = edit.unmute_clip(data)
-        action.do_edit()
+    tlineaction.do_mute_clip(clip, item_data)
 
 def _delete_clip(data):
     tlineaction.splice_out_button_pressed()

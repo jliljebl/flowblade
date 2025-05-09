@@ -935,7 +935,25 @@ def _change_clip_length_dialog_callback(dialog, response_id, clip, track, length
             
     action = edit.set_clip_length_action(data)
     action.do_edit()
-    
+
+def mute_clip_from_keyevent():
+    if movemodes.selected_track != -1:
+        track = current_sequence().tracks[movemodes.selected_track]
+        clip = track.clips[movemodes.selected_range_in]
+        audio_on = (clip.mute_filter==None)
+        do_mute_clip(clip, audio_on)
+
+def do_mute_clip(clip, audio_on):
+    if audio_on == True:
+        data = {"clip":clip}
+        action = edit.mute_clip(data)
+        action.do_edit()
+    else:# then we're sitting clip unmuted
+        data = {"clip":clip}
+        action = edit.unmute_clip(data)
+        action.do_edit()
+
+
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, widget, event):
     guipopover.monitor_view_popupmenu_show(launcher, widget, _view_mode_menu_item_item_activated, _opacity_menu_item_item_activated)
