@@ -46,6 +46,7 @@ import monitorevent
 import movemodes
 import shortcuts
 import shortcutsquickeffects
+import syncsplitevent
 import render
 import targetactions
 import tlineaction
@@ -317,6 +318,8 @@ def _handle_tline_key_event(event):
         return True
     if action == 'set_length':
         tlineaction.set_length_from_keyevent()
+    if action == 'clear_sync_relation':
+        syncsplitevent.clear_sync_relation_from_keyevent()
 
     # Key bindings for keyboard trimming
     if action == 'toggle_track_output':

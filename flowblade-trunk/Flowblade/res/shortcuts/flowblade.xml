@@ -107,5 +107,6 @@
     <event code='monitor_show_scope' name='Monitor Show Vectorscope' modifiers='ALT'>2</event>
     <event code='monitor_show_rgb' name='Monitor Show RGB Parade' modifiers='ALT'>3</event>
     <event code='set_length' name='Set Clip Length' modifiers='ALT'>l</event>
+    <event code='clear_sync_relation' name='Clear Clip Sync Relation' modifiers='CTRL+ALT'>c</event>
   </shortcuts>
 </flowblade>

@@ -157,6 +157,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_filters"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "split_selected"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "resync"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_sync_relation"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "sync_all"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "insert"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append"), False, False, 0)

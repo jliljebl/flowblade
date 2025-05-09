@@ -472,7 +472,15 @@ def resync_selected_track(selected_track):
 
 def clear_sync_relation(popup_data):
     clip, track, item_id, x = popup_data
+    do_clear_sync_relation(clip, track)
 
+def clear_sync_relation_from_keyevent():
+    if movemodes.selected_track != -1:
+        track = current_sequence().tracks[movemodes.selected_track]
+        clip = track.clips[movemodes.selected_range_in]
+        do_clear_sync_relation(clip, track)
+
+def do_clear_sync_relation(clip, track):
     data = {"child_clip":clip,
             "child_track":track}
     action = edit.clear_sync_action(data)
