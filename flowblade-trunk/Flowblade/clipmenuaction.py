@@ -520,26 +520,8 @@ def _ripple_delete_selection(data):
 
 def _set_length(data):
     clip, track, item_id, item_data = data
-    dialogs.clip_length_change_dialog(_change_clip_length_dialog_callback, clip, track)
+    tlineaction.set_length(clip, track)
 
-def _change_clip_length_dialog_callback(dialog, response_id, clip, track, length_changer):
-    if response_id != Gtk.ResponseType.ACCEPT:
-        dialog.destroy()
-        return
-
-    length = length_changer.get_length()
-    index = track.clips.index(clip)
-    
-    dialog.destroy()
-    
-    data = {"track":track,
-            "clip":clip,
-            "index":index,
-            "length":length}
-            
-    action = edit.set_clip_length_action(data)
-    action.do_edit()
-                
 def _stretch_next(data):
     clip, track, item_id, item_data = data
     try:

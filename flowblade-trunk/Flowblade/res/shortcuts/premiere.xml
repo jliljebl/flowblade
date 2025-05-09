@@ -107,5 +107,6 @@
     <event code='monitor_show_video' name='Monitor Show Video' modifiers='ALT'>1</event>
     <event code='monitor_show_scope' name='Monitor Show Vectorscope' modifiers='ALT'>2</event>
     <event code='monitor_show_rgb' name='Monitor Show RGB Parade' modifiers='ALT'>3</event>
+    <event code='set_length' name='Log Range' modifiers='ALT'>l</event>
   </shortcuts>
 </flowblade>

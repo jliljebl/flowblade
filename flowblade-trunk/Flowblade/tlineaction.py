@@ -909,7 +909,33 @@ def sync_all_compositors():
         action = edit.move_compositor_action(data)
         action.do_edit()
 
+def set_length_from_keyevent():
+    if movemodes.selected_track != -1:
+        track = current_sequence().tracks[movemodes.selected_track]
+        clip = track.clips[movemodes.selected_range_in]
+        set_length(clip, track)
 
+def set_length(clip, track):
+    dialogs.clip_length_change_dialog(_change_clip_length_dialog_callback, clip, track)
+
+def _change_clip_length_dialog_callback(dialog, response_id, clip, track, length_changer):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    length = length_changer.get_length()
+    index = track.clips.index(clip)
+    
+    dialog.destroy()
+    
+    data = {"track":track,
+            "clip":clip,
+            "index":index,
+            "length":length}
+            
+    action = edit.set_clip_length_action(data)
+    action.do_edit()
+    
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, widget, event):
     guipopover.monitor_view_popupmenu_show(launcher, widget, _view_mode_menu_item_item_activated, _opacity_menu_item_item_activated)

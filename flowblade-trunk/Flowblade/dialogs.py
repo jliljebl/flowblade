@@ -470,8 +470,6 @@ def get_media_plugin_length(callback, data):
     dialog.connect('response', callback, data, length_spin, name_entry)
     dialog.show_all()
 
-
-
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 

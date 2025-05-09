@@ -315,6 +315,8 @@ def _handle_tline_key_event(event):
     if action == 'monitor_show_rgb':
         tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
         return True
+    if action == 'set_length':
+        tlineaction.set_length_from_keyevent()
 
     # Key bindings for keyboard trimming
     if action == 'toggle_track_output':
@@ -332,7 +334,7 @@ def _handle_tline_key_event(event):
             trimmodes.enter_pressed()
             return True
 
-    if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+    if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE: # is this what want, only in OVERWRITE_MOVE mode?
         if action == 'nudge_back':
             movemodes.nudge_selection(-1)
             return True
