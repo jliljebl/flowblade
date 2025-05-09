@@ -322,6 +322,8 @@ def _handle_tline_key_event(event):
         syncsplitevent.clear_sync_relation_from_keyevent()
     if action == 'toggle_audio_mute':
         tlineaction.mute_clip_from_keyevent()
+    if action == 'set_sync_relation':
+        syncsplitevent.init_select_master_clip_from_keyevent()
 
     # Key bindings for keyboard trimming
     if action == 'toggle_track_output':

@@ -306,6 +306,19 @@ def init_select_master_clip(popup_data):
     gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP
 
+def init_select_master_clip_from_keyevent():
+    global parent_selection_data
+    if movemodes.selected_track != -1:
+        child_index = movemodes.selected_range_in
+        track = current_sequence().tracks[movemodes.selected_track]
+        clip = track.clips[child_index]
+
+        parent_selection_data = (CHILD_SELECTION_MULTIPLE, movemodes.selected_range_in, movemodes.selected_range_out, track)
+        gdk_window = gui.tline_display.get_parent_window()
+        gdk_window.set_cursor(Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.TCROSS))
+        editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP
+        gui.editor_window.tline_cursor_manager.tline_cursor_enter(None)
+
 def select_sync_parent_mouse_pressed(event, frame):
    
     global parent_selection_data

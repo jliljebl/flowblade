@@ -110,5 +110,6 @@
     <event code='set_length' name='Set Clip Length' modifiers='ALT'>l</event>
     <event code='clear_sync_relation' name='Clear Clip Sync Relation' modifiers='CTRL+ALT'>c</event>
     <event code='toggle_audio_mute' name='Toggle Clip Audio Mute' modifiers='ALT'>t</event>
+    <event code='set_sync_relation' name='Set Clip Sync Relation' modifiers='CTRL+ALT'>r</event>
   </shortcuts>
 </flowblade>
