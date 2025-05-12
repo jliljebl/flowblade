@@ -194,7 +194,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     sync_box.pack_start(_get_dynamic_kb_row(root_node, "clear_sync_relation"), False, False, 0)
     sync_box.pack_start(_get_dynamic_kb_row(root_node, "sync_all"), False, False, 0)
     sync = guiutils.get_named_frame(_("Sync"), sync_box)
-    
+
     marks_box = Gtk.VBox()
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "mark_in"), False, False, 0)
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "mark_out"), False, False, 0)

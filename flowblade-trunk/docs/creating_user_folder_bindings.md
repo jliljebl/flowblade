@@ -31,7 +31,7 @@ Since 2023, MLT only builds with CMAKE.
 #### Configure and build
 With terminal still open in **\<ROOT_DIR\>**.
 ```bash
-cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=OFF -DMOD_OPENCV=ON -S ./mlt -B ./build
+cmake -DCMAKE_BUILD_TYPE=Release -DSWIG_PYTHON=ON -DMOD_GLAXNIMATE_QT6=OFF -DMOD_GLAXNIMATE=OFF -DMOD_QT=OFF -DMOD_QT6=OFF -DMOD_MOVIT=ON -DMOD_OPENCV=ON -S ./mlt -B ./build
 
 cmake --build ./build --config Release
 ```
