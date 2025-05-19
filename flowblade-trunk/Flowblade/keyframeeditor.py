@@ -2308,7 +2308,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             fr2 = out_frame
 
         self._remove_keyframes_in_range(fr1, fr2)
-        # Extending FilterRotatingGeometryEditor needs differnt actual keyframes then this. 
+        # Extending FilterRotatingGeometryEditor needs different actual keyframes then this. 
         self._do_write_preset_slide_keyframes_for_filter(x1, x2, y1, y2, fr1, fr2, kf_type) 
 
         return fr1
