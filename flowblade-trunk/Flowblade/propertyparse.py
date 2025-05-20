@@ -374,7 +374,7 @@ def filter_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, 
         # keyframecanvas.RotatingEditCanvas editor considers x anf y values position of
         # anchor point around which image is rotated.
         #
-        # MLT porprty "affine.transition.rect" considers x and y values amount translation
+        # MLT property "affine.transition.rect" considers x and y values amount translation
         # and rotate image automatically around its translated center point.
         #
         # So the we need to add half of width and height to mlt values AND 

@@ -1542,8 +1542,8 @@ class FluxityPluginRenderer(threading.Thread):
         _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
         self.set_render_stopped_gui_state()
 
-    def show_progress(self, persentage, fraction, set_stopped):
-        _window.render_percentage.set_markup(persentage)
+    def show_progress(self, percentage, fraction, set_stopped):
+        _window.render_percentage.set_markup(percentage)
         _window.render_progress_bar.set_fraction(fraction)
         if set_stopped:
             self.set_render_stopped_gui_state()
