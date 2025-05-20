@@ -283,13 +283,53 @@ class BoxMoveData:
                 
         return False
 
-
     def get_possible_locked_track(self):
         for selection in self.track_selections:
             if current_sequence().tracks[selection.track_id].edit_freedom == appconsts.LOCKED:
                 return current_sequence().tracks[selection.track_id]
         
         return None
+
+    def get_center_most_sync_track(self):
+        center_most = -1
+        old_center_most = -1
+        center_track_selection = None
+        for track_selection in self.track_selections:
+            center_most = self.get_more_sync_center_most_track(center_most, track_selection.track_id)
+            if center_most != old_center_most:
+                center_track_selection = track_selection
+            old_center_most = center_most
+        return (current_sequence().tracks[center_most], center_track_selection)
+
+    def get_more_sync_center_most_track(self, current_track, test_track):
+        """
+        Video tracks ore considered more center then audio, 
+        and otherwise we pick the track closest to V1 in GUI.
+        """
+        if current_track == -1:
+            return test_track
+        
+        current_track_object = current_sequence().tracks[current_track]
+        test_track_object = current_sequence().tracks[test_track]
+        
+        if test_track_object.type == appconsts.VIDEO:
+            if current_track_object.type == appconsts.AUDIO:
+                return test_track
+            
+            if test_track < current_track:
+                return test_track
+            else:
+                return current_track
+        else:
+            if current_track_object.type == appconsts.VIDEO:
+                return current_track
+
+            if test_track > current_track:
+                return test_track
+            else:
+                return current_track
+                
+        
 
 class BoxTrackSelection:
     """
@@ -370,6 +410,13 @@ class BoxTrackSelection:
         if len(self.clip_lengths) == 0:
             return True
 
+        return False
+
+    def clip_in_selection(self, clip):
+        clip_index =  current_sequence().tracks[self.track_id].clips.index(clip)
+        if clip_index >= self.selected_range_in and clip_index <= self.selected_range_out:
+            return True
+        
         return False
 
 def box_selection_splice_out():

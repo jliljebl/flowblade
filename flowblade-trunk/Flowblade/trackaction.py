@@ -98,6 +98,11 @@ def set_track_sync(track_index):
     child_track = get_track(track_index)
     syncsplitevent.set_track_clips_sync(child_track)
 
+def set_track_sync_from_popover(track_index):
+
+    child_track = get_track(track_index)
+    syncsplitevent.set_track_clips_sync(child_track)
+
 def reset_track_sync(track_index):
     child_track = get_track(track_index)
     parent_track = child_track.parent_track
@@ -450,5 +455,6 @@ POPUP_HANDLERS = {"lock":lock_track,
                   "clearsync":clear_track_sync,
                   "resync":resync_track,
                   "setsync":set_track_sync,
+                  "setsyncfrompopover":set_track_sync_from_popover,
                   "resetsync":reset_track_sync, 
                   "infolabel":edit_info_label}

@@ -1008,7 +1008,7 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
     active = True
 
     sync_set_section = Gio.Menu.new()
-    add_menu_action(sync_set_section, _("Sync All Clips to Track..."), "trackcolumn.sync.setsync",  (track,"setsync", None), callback, active)
+    add_menu_action(sync_set_section, _("Sync All Clips to Track..."), "trackcolumn.sync.setsync",  (track,"setsyncfrompopover", None), callback, active)
     reset_active = track_obj.parent_track != None
     add_menu_action(sync_set_section, _("Update Sync to Clips' Current Positions"), "trackcolumn.sync.resetsync",  (track,"resetsync", None), callback, reset_active)
     add_menu_action(sync_set_section, _("Clear Sync"), "trackcolumn.sync.clearsync", (track,"clearsync", None), callback, active)

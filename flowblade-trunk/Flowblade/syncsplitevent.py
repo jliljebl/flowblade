@@ -278,10 +278,30 @@ def clear_track_clips_sync(child_track):
 
     data = {"child_track":child_track,
             "orig_sync_data":orig_sync_data}
-    
+
     action = edit.clear_track_sync_action(data)
     action.do_edit()
 
+def set_box_clips_sync(box_selection):
+    parent_track, parent_track_selection = box_selection.get_center_most_sync_track()
+    
+    # Get parent clip. No edit actions for missing parent clip on parent track on blank clips.
+    # TODO: Add info window.
+    try:
+        parent_clip = parent_track.clips[parent_track_selection.selected_range_in]
+    except:
+        return
+    if parent_clip.is_blanck_clip == True:
+        return
+
+    parent_clip = parent_track.clips[parent_track_selection.selected_range_in]
+    tracks_orig_sync_data, tracks_new_sync_data = resync.get_box_selection_resync_action_data(box_selection, parent_track, parent_clip)
+    
+    data = {"orig_sync_data":tracks_orig_sync_data,
+            "new_sync_data":tracks_new_sync_data}
+    
+    action = edit.set_box_selection_sync_action(data)
+    action.do_edit()
 
 # ---------------------------------------------- sync parent clips
 def init_select_master_clip(popup_data):

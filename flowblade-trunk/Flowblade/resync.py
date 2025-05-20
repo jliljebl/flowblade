@@ -121,6 +121,51 @@ def get_track_resync_clips_data_list(track):
     
     return clips_data
 
+def get_box_selection_resync_action_data(box_selection, parent_track, parent_clip):
+    tracks_orig_sync_data = []
+    tracks_new_sync_data = []
+    for track_selection in box_selection.track_selections:
+
+        if track_selection.track_id == parent_track.id:
+            continue
+            
+        orig_sync_data, new_sync_data = _get_box_resync_action_data_for_track(track_selection, parent_track, parent_clip)
+
+        tracks_orig_sync_data.append((track_selection, orig_sync_data))
+        tracks_new_sync_data.append((track_selection, new_sync_data))
+
+    return (tracks_orig_sync_data, tracks_new_sync_data)
+
+def _get_box_resync_action_data_for_track(track_selection, parent_track, parent_clip):
+
+    child_track = current_sequence().tracks[track_selection.track_id]
+    
+    orig_sync_data = {}
+    for i in range(track_selection.selected_range_in, track_selection.selected_range_out + 1):
+        clip = child_track.clips[i]
+        if clip.is_blanck_clip == True:
+            continue
+        orig_sync_data[clip] = clip.sync_data
+
+    new_sync_data = {}
+    for i in range(track_selection.selected_range_in, track_selection.selected_range_out + 1):
+        clip = child_track.clips[i]
+        if clip.is_blanck_clip == True:
+            continue
+        clip_start_frame = child_track.clip_start(i)
+
+        parent_index = parent_track.clips.index(parent_clip)
+
+        # Get offset
+        child_clip_start = clip_start_frame - clip.clip_in
+        parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
+        pos_offset = child_clip_start - parent_clip_start
+        sync_data = (pos_offset, parent_clip, parent_track)
+
+        new_sync_data[clip] = sync_data
+    
+    return (orig_sync_data, new_sync_data)
+    
 def get_track_all_resync_action_data(child_track, parent_track):
     orig_sync_data = {}
     for clip in child_track.clips:

@@ -1276,7 +1276,7 @@ def _box_overwrite_move_undo(self):
         comp.move(-self.delta)
 
 
-# This exists to avoid hitting object being mappingproxy when doing __dict__.update
+# This exists to avoid hitting object being mapping proxy when doing __dict__.update
 class DummyOverWriteMove:
     def __init__(self, move_data):
         # Grabs data as object members.
@@ -2729,6 +2729,48 @@ def _set_track_sync_redo(self):
             
         resync.clip_added_to_timeline(child_clip, self.child_track)
 
+# -------------------------------------------- SET BOX SELECTION SYNC
+"orig_sync_data", "new_sync_data"
+def set_box_selection_sync_action(data):
+    return EditAction(_set_box_selection_sync_undo, _set_box_selection_sync_redo, data)
+
+def _set_box_selection_sync_undo(self):
+    for track_orig_sync_data in self.orig_sync_data:
+        track_selection, track_sync_data = track_orig_sync_data
+        child_track = current_sequence().tracks[track_selection.track_id]
+
+        for clip in track_sync_data.keys():
+            resync.clip_removed_from_timeline(clip)
+            try:
+                # "orig_sync_data" created in resync.get_track_all_resync_action_data()
+                sync_data = track_sync_data[clip]
+                clip.sync_data = sync_data
+            except:
+                pass
+                
+            resync.clip_added_to_timeline(clip, child_track)
+
+def _set_box_selection_sync_redo(self):
+    for track_new_sync_data in self.new_sync_data:
+        track_selection, sync_data = track_new_sync_data
+        child_track = current_sequence().tracks[track_selection.track_id]
+
+        for clip in sync_data.keys():
+            resync.clip_removed_from_timeline(clip)
+            try:
+                # "new_sync_data" created in resync.get_track_all_resync_action_data()
+                pos_offset, parent_clip, parent_track = sync_data[clip]
+                
+                clip.sync_data = SyncData()
+                clip.sync_data.pos_offset = pos_offset
+                clip.sync_data.master_clip = parent_clip
+                clip.sync_data.master_clip_track = parent_track
+                clip.sync_data.sync_state = appconsts.SYNC_CORRECT
+            except:
+                pass
+                
+            resync.clip_added_to_timeline(clip, child_track)
+        
 # -------------------------------------------- CLEAR TRACK SYNC
 "child_track", "orig_sync_data"
 def clear_track_sync_action(data):

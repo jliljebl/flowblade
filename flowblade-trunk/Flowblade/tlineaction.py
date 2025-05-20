@@ -840,7 +840,11 @@ def resync_track_button_pressed():
     syncsplitevent.resync_track()
 
 def set_track_sync_button_pressed():
-    if movemodes.selected_track != -1:
+    if boxmove.box_selection_data != None:
+        print("haloo")
+        syncsplitevent.set_box_clips_sync(boxmove.box_selection_data)
+        boxmove._exit_to_overwrite()
+    elif movemodes.selected_track != -1:
         child_track = current_sequence().tracks[movemodes.selected_track]
         syncsplitevent.set_track_clips_sync(child_track)
 
