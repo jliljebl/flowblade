@@ -1219,19 +1219,13 @@ class RotatingEditCanvas(AbstractEditCanvas):
                     if kf_type == appconsts.KEYFRAME_DISCRETE:
                         self.set_geom(*rect)
                         return
-                    elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    else: # interpolated values
                         time_fract = float((self.current_clip_frame - frame)) / \
                                      float((frame_n - frame))
-                        frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
+                        frame_rect = self._get_interpolated_rect(time_fract, i)
                         self.set_geom(*frame_rect)
                         return
-                    else:
-                        time_fract = float((self.current_clip_frame - frame)) / \
-                                     float((frame_n - frame))
-                        frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
-                        self.set_geom(*frame_rect)
-                        return
-            except: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
+            except Exception as e: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
                 self.set_geom(*rect)
                 return
 
@@ -1243,50 +1237,30 @@ class RotatingEditCanvas(AbstractEditCanvas):
         self.rotation = rotation
         self._update_edit_points()
 
-    def _get_interpolated_rect(self, rect_1, rect_2, fract):
-        x1, y1, xs1, ys1, r1 = rect_1
-        x2, y2, xs2, ys2, r2 = rect_2
-        x = x1 + (x2 - x1) * fract
-        y = y1 + (y2 - y1) * fract
-        xs = xs1 + (xs2 - xs1) * fract
-        ys = ys1 + (ys2 - ys1) * fract
-        r = r1 + (r2 - r1) * fract
+    def _get_interpolated_rect(self, fract, i):
+        anim_value_x = self._create_anim_value(0)
+        x = anim_value_x.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_y = self._create_anim_value(1)
+        y = anim_value_y.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_x_scale = self._create_anim_value(2)
+        xs = anim_value_x_scale.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_y_scale = self._create_anim_value(3)
+        ys = anim_value_y_scale.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_rotation = self._create_anim_value(4)
+        r = anim_value_rotation.get_interpolated_value_internal_kf_type(i, fract)
+        
         return (x, y, xs, ys, r)
 
-    def _get_interpolated_rect_smooth(self, fract, i, keyframes):
-        prev = i
-        if i == 0:
-            prev_prev = 0
-        else:
-            prev_prev = i - 1
+    def _create_anim_value(self, value_index):
         
-        next = i + 1
-        if next >= len(keyframes):
-            next = len(keyframes) - 1
-        
-        next_next = next + 1
-        if next_next >= len(keyframes):
-            next_next = len(keyframes) - 1
+        value_keyframes = []
+    
+        for kf in self.keyframes:
+            frame, rect, opacity, kf_type = kf
+            value = rect[value_index] # x, y, x scale, y scale, rotation
+            value_keyframes.append((frame, value, kf_type))
 
-        frame, rect, opacity, kf_type = self.keyframes[prev_prev]
-        x0, y0, xs0, ys0, r0 = rect
-
-        frame, rect, opacity, kf_type = self.keyframes[prev]
-        x1, y1, xs1, ys1, r1 = rect
-
-        frame, rect, opacity, kf_type = self.keyframes[next]
-        x2, y2, xs2, ys2, r2 = rect
-
-        frame, rect, opacity, kf_type = self.keyframes[next_next]
-        x3, y3, xs3, ys3, r3 = rect
-
-        x = self.catmull_rom_interpolate(x0, x1, x2, x3, fract)
-        y = self.catmull_rom_interpolate(y0, y1, y2, y3, fract)
-        xs = self.catmull_rom_interpolate(xs0, xs1, xs2, xs3, fract)
-        ys = self.catmull_rom_interpolate(ys0, ys1, ys2, ys3, fract)
-        r = self.catmull_rom_interpolate(r0, r1, r2, r3, fract)
-
-        return (x, y, xs, ys, r)
+        return animatedvalue.AnimatedValue(value_keyframes)
 
     def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
