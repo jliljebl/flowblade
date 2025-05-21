@@ -297,7 +297,11 @@ class AnimatedValue:
                 return i
 
         return -1
-
+    
+    def get_interpolated_value_internal_kf_type(self, i, fract):
+        frame, val, interpolated_kf_type = self.keyframes[i]
+        return self.get_interpolated_value(i, fract, interpolated_kf_type)
+    
     def get_interpolated_value(self, i, fract, interpolated_kf_type):
         # Get indexes of the four keyframes that affect the drawn curve. 
         prev = i

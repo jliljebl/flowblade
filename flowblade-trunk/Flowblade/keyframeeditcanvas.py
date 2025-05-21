@@ -715,12 +715,8 @@ class BoxEditCanvas(AbstractEditCanvas):
                     if kf_type == appconsts.KEYFRAME_DISCRETE:
                         self.set_geom(*rect)
                         return
-                    elif kf_type == appconsts.KEYFRAME_SMOOTH:
-                        frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
-                        self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
-                        return
-                    else: # LINEAR
-                        frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
+                    else: # interpolated values
+                        frame_rect = self._get_interpolated_rect(time_fract, i)
                         self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
                         return
             except: # past last frame, use its value
@@ -728,49 +724,29 @@ class BoxEditCanvas(AbstractEditCanvas):
                 return
                 
         print("reached end of _update_source_rect, this should be unreachable")
-        
-    def _get_interpolated_rect(self, rect_1, rect_2, fract):
-        x1, y1, w1, h1 = rect_1
-        x2, y2, w2, h2 = rect_2
-        x = x1 + (x2 - x1) * fract
-        y = y1 + (y2 - y1) * fract
-        w = w1 + (w2 - w1) * fract
-        h = h1 + (h2 - h1) * fract
-        return (x, y, w, h)
-
-    def _get_interpolated_rect_smooth(self, fract, i, keyframes):
-        prev = i
-        if i == 0:
-            prev_prev = 0
-        else:
-            prev_prev = i - 1
-        
-        next = i + 1
-        if next >= len(keyframes):
-            next = len(keyframes) - 1
-        
-        next_next = next + 1
-        if next_next >= len(keyframes):
-            next_next = len(keyframes) - 1
-
-        frame, rect, opacity, kf_type = keyframes[prev_prev]
-        x0, y0, w0, h0 = rect
-
-        frame, rect, opacity, kf_type = keyframes[prev]
-        x1, y1, w1, h1 = rect
-
-        frame, rect, opacity, kf_type = keyframes[next]
-        x2, y2, w2, h2 = rect
-
-        frame, rect, opacity, kf_type = keyframes[next_next]
-        x3, y3, w3, h3 = rect
-
-        x = self.catmull_rom_interpolate(x0, x1, x2, x3, fract)
-        y = self.catmull_rom_interpolate(y0, y1, y2, y3, fract)
-        w = self.catmull_rom_interpolate(w0, w1, w2, w3, fract)
-        h = self.catmull_rom_interpolate(h0, h1, h2, h3, fract)
+    
+    def _get_interpolated_rect(self, fract, i):
+        anim_value_x = self._create_anim_value(0)
+        x = anim_value_x.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_y = self._create_anim_value(1)
+        y = anim_value_y.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_w = self._create_anim_value(2)
+        w = anim_value_w.get_interpolated_value_internal_kf_type(i, fract)
+        anim_value_h = self._create_anim_value(3)
+        h = anim_value_h.get_interpolated_value_internal_kf_type(i, fract)
 
         return (x, y, w, h)
+
+    def _create_anim_value(self, value_index):
+        
+        value_keyframes = []
+    
+        for kf in self.keyframes:
+            frame, rect, opacity, kf_type = kf
+            value = rect[value_index] # x, y, w, h
+            value_keyframes.append((frame, value, kf_type))
+
+        return animatedvalue.AnimatedValue(value_keyframes)
         
     def _get_screen_to_panel_rect(self, rect):
         x, y, w, h = rect
