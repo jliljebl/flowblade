@@ -665,17 +665,19 @@ def get_top_row_minimum_width():
     player_buttons_w, h = gui.editor_window.player_buttons_row.get_preferred_width()
     top_default_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT].get_preferred_width()
     top_right_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT].get_preferred_width()
-    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
+    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width()
+    right_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_RIGHT_COLUMN].get_preferred_width()
     top_left_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT].get_preferred_width() 
-    combined = top_default_w + top_right_w + left_column_w + top_left_w + player_buttons_w
+    combined = top_default_w + top_right_w + left_column_w + top_left_w + player_buttons_w + right_column_w
     return combined
 
 def get_bottom_row_minimum_width():
     middle_bar_w, h = gui.editor_window.edit_buttons_row.get_preferred_width()
     bottom_left_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
     bottom_right_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
-    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
-    combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
+    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width()
+    right_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_RIGHT_COLUMN].get_preferred_width()
+    combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w + right_column_w
     return combined
     
 def _remove_panel(panel_id):
