@@ -193,7 +193,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    force_language_combo, disp_splash, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
+    force_language_combo, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
     edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin = view_prefs_widgets
 
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -221,7 +221,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     prefs.use_english_always = False # DEPRECATED, "force_language" used instead
     prefs.force_language = force_language_combo.lang_codes[force_language_combo.get_active()]
-    prefs.display_splash_screen = disp_splash.get_active()
 
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
@@ -281,7 +280,7 @@ class EditorPreferences:
         self.auto_center_on_play_stop = True
         self.thumbnail_folder = None # DEPRECATED, this is set by XDG variables now.
         self.hidden_profile_names = []
-        self.display_splash_screen = True
+        self.display_splash_screen = True # DEPRECATED
         self.auto_move_after_edit = False # DEPRECATED
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
@@ -378,7 +377,7 @@ class EditorPreferences:
         self.zoom_to_playhead = True
         self.filter_select_width = 220
         self.tracks_scale = appconsts.TRACKS_SCALE_DEFAULT
-        self.icons_scale = appconsts.ICONS_SCALE_DEFAULT  # DEPRECATED, we are not ever getting useful results with this.
+        self.icons_scale = appconsts.ICONS_SCALE_DEFAULT # DEPRECATED, we are not ever getting useful results with this.
         self.project_panel_width = PROJECT_PANEL_WIDTH_MIN
         self.editor_panel_width = EDIT_PANEL_WIDTH_MIN 
         self.media_panel_width = MEDIA_PANEL_WIDTH_MIN

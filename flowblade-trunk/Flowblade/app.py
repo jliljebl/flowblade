@@ -145,8 +145,6 @@ disk_cache_timeout_id = -1
 loaded_autosave_file = None
 recovery_in_progress = False
 
-splash_screen = None
-splash_timeout_id = -1
 exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
@@ -157,6 +155,7 @@ _log_file = None
 
 assoc_file_path = None
 assoc_timeout_id = None
+
 
 def main(root_path):
     """
@@ -306,10 +305,6 @@ class FlowbladeApplication(Gtk.Application):
         # We need to test which GPU render options work after profiles are inited because
         # we do the test by doing test renders.
         rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
-
-        # Splash screen
-        if editorpersistance.prefs.display_splash_screen == True: 
-            show_splash_screen()
             
         # Save assoc file path if found in arguments.
         global assoc_file_path
@@ -392,12 +387,6 @@ class FlowbladeApplication(Gtk.Application):
 
         # Get existing autosave files
         autosave_files = get_autosave_files()
-
-        # Show splash
-        if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
-            global splash_timeout_id
-            splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
-            splash_screen.show_all()
 
         appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
 
@@ -909,27 +898,6 @@ def do_autosave():
     autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
     return True
-
-# ------------------------------------------------- splash screen
-def show_splash_screen():
-    global splash_screen
-    splash_screen = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-    splash_screen.set_border_width(0)
-    splash_screen.set_decorated(False)
-    splash_screen.set_position(Gtk.WindowPosition.CENTER)
-    img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowblade_splash_black_small.png")
-
-    splash_screen.add(img)
-    splash_screen.set_size_request(598, 258) # Smaller then img.
-
-    splash_screen.set_resizable(False)
-
-    while(GLib.MainContext.default ().pending()):
-        GLib.MainContext.default().iteration(False) # GLib.MainContext to replace this
-
-def destroy_splash_screen():
-    splash_screen.destroy()
-    GLib.source_remove(splash_timeout_id)
 
 # ------------------------------------------------------- disk cache size check
 def check_disk_cache_size():

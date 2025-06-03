@@ -330,10 +330,6 @@ def _view_prefs_panel():
     force_language_combo.set_active(active_index)
     force_language_combo.lang_codes = lang_list
 
-    display_splash_check = Gtk.CheckButton()
-    display_splash_check.set_active(prefs.display_splash_screen)
-
-    # Feb-2017 - SvdB - For full file names
     show_full_file_names = Gtk.CheckButton()
     show_full_file_names.set_active(prefs.show_full_file_names)
 
@@ -385,7 +381,6 @@ def _view_prefs_panel():
     
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
-    row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
 
@@ -399,7 +394,6 @@ def _view_prefs_panel():
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
-    vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
@@ -410,7 +404,7 @@ def _view_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
+    return vbox, (force_language_combo, window_mode_combo, show_full_file_names,
                   tracks_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
                   layout_monitor, filter_select_width_spin)
 
