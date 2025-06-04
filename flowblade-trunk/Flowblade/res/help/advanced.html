@@ -70,7 +70,7 @@ Split a video clip into two clips: a muted video clip as <b>Sync Parent Clip</b>
 <ul>
 <li> Click <b>Right Mouse</b> on clip and select <b>Audio Edit->Split Audio Synched</b>.
 <li> When multiple Clips are selected click <b>Right Mouse</b> on clip and select <b>Split Audio Synched</b>.
-<li>A new synched Audio Clip/s is placed on audio Track, either on V1 or mirrored track based on current preference.</li>
+<li>A new synched Audio Clip/s is placed on audio track, either on V1 or mirrored track based on current preference.</li>
 <li> If you select from <b>Sync Properties</b> menu property <b>Auto Sync Split Video Clips on Add</b> video clips will be split automatically when added to certain tracks. 
 </li>
 </ul>
@@ -80,16 +80,27 @@ Split a video clip into two clips: a muted video clip as <b>Sync Parent Clip</b>
 Set all clips on track as <b>Sync Child Clips</b> to closest clips on the selected Track as <b>Sync Parent Clips</b>. 
 </p>
 <ul>
-<li> Click <b>Right Mouse</b> on a Track in the left side Tracks Column area and select <b>Sync All Clips To Track... </b>.</li>
+<li> Click <b>Right Mouse</b> on a track in the left side tracks Column area and select <b>Sync All Clips To Track... </b>.</li>
 <ul>
-<li>Select sync parenting target Track using the dialog window.</li>
+<li>Select sync parenting target track using the dialog window.</li>
 <li>A sync relation is created for all Clips on Track.</li>
 <li>An icon appears on Track Head in in the Tracks Column to indicate that updating sync is now possible.</li>
 </ul>
-<li>Once a Track has been auto parented it remembers the target Track and parenting can be updated by clicking <b>Right Mouse</b> on a Track Head and selecting <b>Update Sync to Clips' Current Positions</b>.</li>
+<li>Once a Track has been auto parented it remembers the target track and parenting can be updated by clicking <b>Right Mouse</b> on a Track Head and selecting <b>Update Sync to Clips' Current Positions</b>.</li>
 <li> Click <b>Right Mouse</b> on a Track Head and select <b>Clear Sync</b> to clear all sync relations on a Track and info on parenting target Track.</li>
 </ul>
 
+<h4>Box Selection Parenting</h4>
+
+<p>
+Parent selected clips to the first clip on track closest to Track V1.
+</p>
+
+<ul>
+<li> Drag <b>Left Mouse</b> to selected clips on multiple tracks.</li>
+<li> Press button <b>Set Sync for All Clips on Track or Box Selection.</b> in Middlebar.</li>
+<li> All selected Clips on other Tracks are parented to first clip in selection on track closest to Track V1. Clips on track closest to Track V1 are not parented.
+</ul>
 
 <h3>Resyncing</h3>
 
@@ -134,7 +145,7 @@ Many edit actions necessarily change the positions of clips differently on diffe
 <li> If there exists many clips of similar type that require syncing, dedicate a track to that type of clips and use track syncing features to keep that track in sync.</li>
 <li> If program features multiple clearly defined complex scenes one approach is to:
     <ul>
-    <li> Parent first clip of the scene on each track to the first clip of scene on track <b>V1</b>.</li>
+    <li> Parent first clip of the scene on each track to the first clip of scene on track <b>V1</b>.  <i>Box Selection Parenting</i> can be a useful action to get this done quikly.</li>
     <li> Use <b>Spacer</b> tool with <b>Control</b> modifier to sync tracks manually at scene start when needed.</li>
     <li> Or use track syncing.</li>
     </ul>
@@ -183,7 +194,7 @@ There are 4 buttons in the <b>Middlebar</b>, from left to right:
 </p>
     <ul>
      <li><b>Split Audio Synched</b></li>
-     <li><b>Set Sync for All Clips on Track Containing Selected Clip/s</b></li>
+     <li><b>Set Sync for All Clips on Track or Box Selection.</b> If a box selection is active then <i>Box Selection Parenting</i> is done, othrewise a <i>Track Auto Parenting</i> action is performed</li>
      <li><b>Resync Track Containing Selected Clip/s</b></li>
      <li><b>Resync Selected Clips</b></li>
      </ul>
@@ -193,7 +204,7 @@ There are 4 menus available at various places to provide sync editing functional
 </p>
 <ul>
  <li><b>Sync Properties Menu</b> above <b>Tracks Column</b> allows for setting sync editing properties.</li>
- <li><b>Track Menu</b> available in <b>Tracks Column</b> provides Track sync actions.</li>
+ <li><b>Track Menu</b> available in <b>Tracks Column</b> provides track sync actions.</li>
  <li><b>Clip Menu</b> provides sync actions applied to single clips.</li>
  <li><b>Multi Clip Selection Menu</b> provides sync actions applied to multiple clips.</li>
  </ul>
