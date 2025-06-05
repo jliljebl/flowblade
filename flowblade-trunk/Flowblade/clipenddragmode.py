@@ -166,7 +166,13 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         bound_end = from_clip_end
     else:
         bound_end = to_clip_end
-            
+    
+    if editing_clip_end == True and bound_end > to_clip_end:
+        bound_end = to_clip_end
+        
+    if editing_clip_end == False and bound_start < from_clip_start:
+        bound_start = from_clip_start
+        
     global _enter_mode, _enter_draw_func, _edit_data
 
     _enter_mode = editorstate.edit_mode
@@ -329,7 +335,7 @@ def _do_overwrite_trim(x, y, frame, state):
     clip_index = _edit_data["clip_index"]
     editing_clip_end = _edit_data["editing_clip_end"] 
     
-    from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end,  track, clip_index)
+    from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end, track, clip_index)
 
     non_edit_side_blank = False
     if (_edit_data["editing_clip_end"] == False) and (track.clips[clip_index - 1].is_blanck_clip == True):
@@ -337,11 +343,37 @@ def _do_overwrite_trim(x, y, frame, state):
     elif (_edit_data["editing_clip_end"] == True) and (track.clips[clip_index + 1].is_blanck_clip == True):
         non_edit_side_blank = True
 
+    # If drag covers adjacent clip fully we need to use different edit actions.
+    if editing_clip_end == True and frame == _edit_data["bound_end"]:
+        data = {"track":track,
+                "clip":to_clip,
+                "index":clip_index + 1}
+                
+        action = edit.cover_delete_fade_out(data)
+        action.do_edit()
+        
+        _exit_clip_end_drag()
+        updater.repaint_tline()
+        return
+    elif editing_clip_end == False and frame == _edit_data["bound_start"]:
+        data = {"track":track,
+                "clip":from_clip,
+                "index":clip_index - 1}
+                
+        action = edit.cover_delete_fade_in(data)
+        action.do_edit()
+        
+        _exit_clip_end_drag()
+        updater.repaint_tline()
+        return
+        
     # Code here thinks "clip_index" is always index of trimmed clip,
     # but we are using existing edit.tworoll_trim_action() code to do the edit, and 
     # that assumes index to be between clips.
     if editing_clip_end == True:
         clip_index += 1
+
+
 
     # Get edit data
     delta = frame - _edit_data["edit_frame"]
