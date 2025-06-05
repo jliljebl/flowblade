@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:34+0300\n"
+"POT-Creation-Date: 2025-06-05 15:49+0300\n"
 "PO-Revision-Date: 2021-01-15 21:19+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -528,10 +528,14 @@ msgid "Duplicate Sequence created"
 msgstr "Вилучити послідовність"
 
 #: projectaction.py:2200
-#, python-format
+#, fuzzy
+msgid "Duplicate sequence <b>"
+msgstr "Створити послідовність"
+
+#: projectaction.py:2200
 msgid ""
-"Duplicate sequence <b>%s</b> was created\n"
-"from sequence <b>%s</b> ."
+"</b> was created\n"
+"from sequence <b>"
 msgstr ""
 
 #: projectaction.py:2498

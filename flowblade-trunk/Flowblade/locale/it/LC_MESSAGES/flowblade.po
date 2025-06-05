@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:34+0300\n"
+"POT-Creation-Date: 2025-06-05 15:49+0300\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -535,10 +535,14 @@ msgid "Duplicate Sequence created"
 msgstr "Elimina sequenza dal progetto"
 
 #: projectaction.py:2200
-#, python-format
+#, fuzzy
+msgid "Duplicate sequence <b>"
+msgstr "Crea una Sequenza"
+
+#: projectaction.py:2200
 msgid ""
-"Duplicate sequence <b>%s</b> was created\n"
-"from sequence <b>%s</b> ."
+"</b> was created\n"
+"from sequence <b>"
 msgstr ""
 
 #: projectaction.py:2498

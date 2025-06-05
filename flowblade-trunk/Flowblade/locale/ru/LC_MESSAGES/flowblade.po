@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:34+0300\n"
+"POT-Creation-Date: 2025-06-05 15:49+0300\n"
 "PO-Revision-Date: 2023-06-20 15:06+0300\n"
 "Last-Translator: Смольянинов Николай <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: ru\n"
@@ -538,10 +538,14 @@ msgid "Duplicate Sequence created"
 msgstr "Удалить последовательность из проекта"
 
 #: projectaction.py:2200
-#, python-format
+#, fuzzy
+msgid "Duplicate sequence <b>"
+msgstr "Создать видеоряд"
+
+#: projectaction.py:2200
 msgid ""
-"Duplicate sequence <b>%s</b> was created\n"
-"from sequence <b>%s</b> ."
+"</b> was created\n"
+"from sequence <b>"
 msgstr ""
 
 #: projectaction.py:2498

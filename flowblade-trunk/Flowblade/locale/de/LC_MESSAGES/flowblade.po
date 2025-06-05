@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:34+0300\n"
+"POT-Creation-Date: 2025-06-05 15:49+0300\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Martin Wielebinski <blueray.mw@gmail.com>\n"
 "Language-Team: German\n"
@@ -532,10 +532,14 @@ msgid "Duplicate Sequence created"
 msgstr "Sequenz aus Projekt entfernen"
 
 #: projectaction.py:2200
-#, python-format
+#, fuzzy
+msgid "Duplicate sequence <b>"
+msgstr "Sequenz erzeugen"
+
+#: projectaction.py:2200
 msgid ""
-"Duplicate sequence <b>%s</b> was created\n"
-"from sequence <b>%s</b> ."
+"</b> was created\n"
+"from sequence <b>"
 msgstr ""
 
 #: projectaction.py:2498

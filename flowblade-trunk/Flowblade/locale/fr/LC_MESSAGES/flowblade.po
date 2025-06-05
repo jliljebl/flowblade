@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:34+0300\n"
+"POT-Creation-Date: 2025-06-05 15:49+0300\n"
 "PO-Revision-Date: 2020-12-14 14:52+0100\n"
 "Last-Translator: Jean-Paul Favier <favijep@laposte.net>\n"
 "Language-Team: French\n"
@@ -527,10 +527,14 @@ msgid "Duplicate Sequence created"
 msgstr "Supprimer une séquence du projet"
 
 #: projectaction.py:2200
-#, python-format
+#, fuzzy
+msgid "Duplicate sequence <b>"
+msgstr "Créer une séquence"
+
+#: projectaction.py:2200
 msgid ""
-"Duplicate sequence <b>%s</b> was created\n"
-"from sequence <b>%s</b> ."
+"</b> was created\n"
+"from sequence <b>"
 msgstr ""
 
 #: projectaction.py:2498

@@ -2197,7 +2197,7 @@ def duplicate_sequence():
     undo.clear_undos()
 
     primary_txt = _("Duplicate Sequence created")
-    secondary_txt = _("Duplicate sequence <b>%s(duplicatesequence)</b> was created\nfrom sequence <b>%s(sourcesequence)</b> .")%({"duplicatesequence":name,"sourcesequence":import_seq.name})
+    secondary_txt = _("Duplicate sequence <b>") + name + _("</b> was created\nfrom sequence <b>") + import_seq.name + ("</b>.") #%(name,import_seq.name)
 
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     
