@@ -349,7 +349,7 @@ def _do_overwrite_trim(x, y, frame, state):
                 "clip":to_clip,
                 "index":clip_index + 1}
                 
-        action = edit.cover_delete_fade_out(data)
+        action = edit.cover_delete_fade_out(data) # action was created for another edit but works here too.
         action.do_edit()
         
         _exit_clip_end_drag()
@@ -360,7 +360,7 @@ def _do_overwrite_trim(x, y, frame, state):
                 "clip":from_clip,
                 "index":clip_index - 1}
                 
-        action = edit.cover_delete_fade_in(data)
+        action = edit.cover_delete_fade_in(data) # action was created for another edit but works here too.
         action.do_edit()
         
         _exit_clip_end_drag()
