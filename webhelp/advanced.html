@@ -21,7 +21,207 @@
 
 <div id="toc"></div>
 
-<h2>1. Advanced Project Actions </h2>
+
+
+<h2>1. Sync Editing</h2>
+<p>
+In Flowblade Movie Editor sync editing workflow is to <b>set clip's positions to follow another clip's positions</b> on request.
+</p>
+<ul>
+<li> Sync relation between two clips is set by either setting relation individually, doing audio splits or setting sync relation for all clips on a track or a box selection in single action </li>
+<li> Clips that have lost sync with their parent clips can be resynced one or more at a time or by resyncing a whole track in single action.</li>
+</ul>
+
+<p>
+Below we give suggested workflows for three typical use cases for utilizing Flowblade's sync editing features.
+</p>
+<ul>
+<li> Generic work preserving sync editing. </li>
+<li> Editing to audio, such as when creating music videos or voice over driven programs. </li>
+<li> Dialogue editing. </li>
+</ul>
+
+
+
+<h3>Setting up Sync Relations</h3>
+
+<p>
+There are three ways to set up a sync relation between clips: 
+</p>
+
+<h4>Clip Parenting</h4>
+
+<p>
+Explicitly set Sync relation between two clips set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.
+</p>
+
+<ul>
+<li> Click <b>Right Mouse</b> on clip and select <b>Edit->Select Sync Parent Clip...</b>.</li>
+<li> Or Click <b>Right Mouse</b> on clip that is part of a multiclip selection and select <b>Select Sync Parent Clip...</b>.</li>
+<li> Cursor turns into a Target Cross. Click on a clip to select it as <b>Sync Parent Clip</b>.</li>
+</ul>
+
+<h4>Audio Splitting</h4>
+
+<p>
+Split a video clip into two clips: a muted video clip as <b>Sync Parent Clip</b> and an audio clip as <b>Sync Child Clip</b>.
+</p>
+
+<ul>
+<li> Click <b>Right Mouse</b> on clip and select <b>Audio Edit->Split Audio Synched</b>.
+<li> When multiple Clips are selected click <b>Right Mouse</b> on clip and select <b>Split Audio Synched</b>.
+<li>A new synched Audio Clip/s is placed on audio track, either on V1 or mirrored track based on current preference.</li>
+<li> If you select from <b>Sync Properties</b> menu property <b>Auto Sync Split Video Clips on Add</b> video clips will be split automatically when added to certain tracks. 
+</li>
+</ul>
+
+<h4>Track Auto Parenting</h4>
+<p>
+Set all clips on track as <b>Sync Child Clips</b> to closest clips on the selected Track as <b>Sync Parent Clips</b>. 
+</p>
+<ul>
+<li> Click <b>Right Mouse</b> on a track in the left side tracks Column area and select <b>Sync All Clips To Track... </b>.</li>
+<ul>
+<li>Select sync parenting target track using the dialog window.</li>
+<li>A sync relation is created for all Clips on Track.</li>
+<li>An icon appears on Track Head in in the Tracks Column to indicate that updating sync is now possible.</li>
+</ul>
+<li>Once a Track has been auto parented it remembers the target track and parenting can be updated by clicking <b>Right Mouse</b> on a Track Head and selecting <b>Update Sync to Clips' Current Positions</b>.</li>
+<li> Click <b>Right Mouse</b> on a Track Head and select <b>Clear Sync</b> to clear all sync relations on a Track and info on parenting target Track.</li>
+</ul>
+
+<h4>Box Selection Parenting</h4>
+
+<p>
+Parent selected clips to the first clip on track closest to track <b>V1</b>.
+</p>
+
+<ul>
+<li> Drag <b>Left Mouse</b> to select clips on multiple tracks.</li>
+<li> Press button <b>Set Sync for All Clips on Track or Box Selection.</b></li>
+<li> All selected clips on other tracks are parented to the first clip in selection on track closest to track <b>V1</b>. Clips on track closest to track <b>V1</b> are not parented.
+</ul>
+
+<h3>Resyncing</h3>
+
+<h4>Single Clip</h4>
+<ul>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
+<li> Press <b>Resync Selected Clips</b> Button to resync single clip.</li>
+</li>
+</ul>
+
+<h4>Multiple Clips</h4>
+<ul>
+<li> Press <b>Resync Selected Clips</b> Button to resync selected clips clip.</li>
+<li> Click <b>Right Mouse</b> on <b>Sync Child Clip</b> that is part of a multiclip selection and select <b>Resync</b> from popup menu to resync single clip.</li>
+</li>
+</ul>
+
+<h4>All Clips on a Track</h4>
+<ul>
+<li> Select from application menu <b>Edit->Resync Track</b> to resync all clips in the track containing currently selected clip.</li>
+<li> Press <b>Resync Track Containing Selected Clip</b> Button to resync all clips in the track containing currently selected clip.</li>
+</ul>
+
+<h3>Clearing Sync Parent Relations </h3>
+<ul>
+<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Clear Sync Relation</b>.</li>
+<li> Or Click <b>Right Mouse</b> on clip that is part of a multiclip selection and select <b>>Clear Sync Relations</b>.</li>
+</ul>
+
+<h3>Workflows</h3>
+
+<h4> Generic work preserving sync editing</h4>
+<p>
+Most edits require clips on different tracks to maintain positions relative to each other, such as a title placed on top of a video clip.
+</p>
+<p>
+Many edit actions necessarily change the positions of clips differently on different tracks. Sync editing tools provide quick workflow to regain sync between clips.
+</p>
+<ul>
+<li> It is often useful to treat track <b>V1</b> as a master track, and have all other tracks relate positions to track <b>V1</b>.</li>
+<li> Set sync relations for individual or multiple selected clips.</li>
+<li> If there exists many clips of similar type that require syncing, dedicate a track to that type of clips and use track syncing features to keep that track in sync.</li>
+<li> If program features multiple clearly defined complex scenes one approach is to:
+    <ul>
+    <li> Parent first clip of the scene on each track to the first clip of scene on track <b>V1</b>.  <i>Box Selection Parenting</i> can be a useful action to get this done quikly.</li>
+    <li> Use <b>Spacer</b> tool with <b>Control</b> modifier to sync tracks manually at scene start when needed.</li>
+    <li> Or use track syncing.</li>
+    </ul>
+</li>
+</ul>
+
+
+<h4>Editing to audio</h4>
+<p>
+When creating music videos or voice over driven programs it is useful to use a single audio track as sync target track for most are all other elements in the sequence.</li>
+</p>
+
+<ul>
+<li> Place the program defining audio of track <b>A1</b> and treat that as a master track.</li>
+<li> Have all other tracks and clips relate their positions to track <b>A1</b>.</li>
+<li> With music videos it is useful to use a large number of track dedicated to individual types of visual elements, and use exclusively track syncing features instead of setting sync to individual clips.</li>
+</ul>
+
+<h4> Dialogue editing</h4>
+<p>
+Editing dialogue scenes frequently require actor's voice to start before or end after the image of the character speaking. These types of edit are knowns as J- and L-cuts.
+</p>
+<ul>
+<li> Dedicate tracks <b>V1</b>, <b>V2</b>, <b>A1</b> and <b>A2</b> to dialogue video and audio.</li>
+<li> Select from <b>Sync Properties</b> menu on the left behaviour that suits your preferences.
+    <ul>
+    <li> <b>Auto Sync Split Video Clips on Add</b> has multiple options to select which tracks do this.</li>
+    <li> <b>Audio Split To Mirrored Track</b> behaviour can be turned on and off.</li>
+    </ul>
+</li>
+<li> When creating J- or L-cuts use methods that maintain sync to minimize the need to resync:
+    <ul>
+    <li> When using <b>Trim</b> tool, use <i>Two Roll Trim</i> instead of <i>One Roll Trim</i>.</li>
+    <li> When dragging clip ends use <b>Alt</b> modifier to do <b>Clip End Overwrite Drag</b> actions.</li>
+    </ul>
+</li>
+<li> Use exclusively track resyncing actions to keep audio on tracks <b>A1</b> and <b>A2</b> synced.</li>
+</ul>
+
+
+<h3>Sync UX</h3>
+<h4>Buttons</h4>
+
+<p>
+There are 4 buttons in the <b>Middlebar</b>, from left to right:
+</p>
+    <ul>
+     <li><b>Split Audio Synched</b></li>
+     <li><b>Set Sync for All Clips on Track or Box Selection.</b> If a box selection is active then <i>Box Selection Parenting</i> is done, othrewise a <i>Track Auto Parenting</i> action is performed</li>
+     <li><b>Resync Track Containing Selected Clip/s</b></li>
+     <li><b>Resync Selected Clips</b></li>
+     </ul>
+<h4>Menus</h4>
+<p>
+There are 4 menus available at various places to provide sync editing functionality:
+</p>
+<ul>
+ <li><b>Sync Properties Menu</b> above <b>Tracks Column</b> allows for setting sync editing properties.</li>
+ <li><b>Track Menu</b> available in <b>Tracks Column</b> provides track sync actions.</li>
+ <li><b>Clip Menu</b> provides sync actions applied to single clips.</li>
+ <li><b>Multi Clip Selection Menu</b> provides sync actions applied to multiple clips.</li>
+ </ul>
+ 
+<h4>Timeline</h4>
+<p>
+Visually clip's sync state is displayed as follows:
+</p>
+<ul>
+<li> Red box with a number means that clip is not in sync with parent.</li>
+<li> Displayed number gives info on how many frames a clip's position is away from being synched.</li>
+<li> Optionally a line is drawn between parent and child clip.</li>
+</ul>
+
+
+<h2>2. Advanced Project Actions </h2>
+
 
 
 <h3>Combining Sequences</h3>
@@ -64,7 +264,7 @@ You can import Media Items from another Project.
 
 
 
-<h2>2. Timeline Audio Syncing</h2>
+<h2>3. Timeline Audio Syncing</h2>
 
 <p>
 You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
@@ -88,7 +288,7 @@ Audio syncing looks for best mathematical match between two audio waveforms, so 
 </div>
 
 
-<h2>3. Slow / Fast Motion and Reverse</h2>
+<h2>4. Slow / Fast Motion and Reverse</h2>
 
 <p>
 In Flowblade there are two ways to do motion effects:
@@ -166,75 +366,6 @@ In Flowblade there are two ways to do motion effects:
 </ul>
 <li> Click <b>Render</b> button to create a new reverse Media Item</li>
 </ol>
-
-
-<h2>4. Synched Audio Splits and Clip Parenting</h2>
-
-<p>
-In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
-</p>
-
-<h3>Main points</h3>
-<ul>
-<li>Sync relations are between two clips set up by selecting a <b>Sync Parent Clip</b> for a <b>Sync Child Clip</b>.</li>
-<li>Splitting audio with <b>Audio Split Synched </b> creates sync relation between original clip and split audio clip.</li>
-<li><b>Only clips on track V1 can be Sync Parent Clips</b>. This is done to encourage edit style in which the main body of the Sequence is on track V1 and composites and audio split edits are done relative to the clip sequence on track V1.</li>
-<li><b>Sync feature helps preserve earlier work</b> an multitrack composites and audio split edits when clips are no longer in correct positions relative to each other, because of edits elsewhere on the Sequence.</li>
-<li><b>Resyncs are only done on request</b> to avoid jumping of clips on the timeline while editing. Explicit resyncs are also better from the point of view of avoiding side effects when doing edits.
-</li>
-</ul>
-
-<h3>4.1 Audio Split Syncing</h3>
-<ul>
-<li> Click <b>Right Mouse</b> on clip in track V1 and select  <b>Audio Edit->Select Sync Parent Clip...</b>.</li>
-<li> Now you e.g. can use <b>Multitrim</b> tool to create J or L audio edits.</li>
-<li> Sync State Box appears on the Sync Child Clip.</li>
-<ul>
-<li> Green means that clip is in sync with parent.</li>
-<li> Red means that clip is NOT in sync with parent.</li>
-<li> Displayed number gives info on how many frames clip positions are away from being synched.</li>
-</ul>
-</ul>
-<h4>Resyncing Sync Child Clips</h4>
-<ul>
-<li> Select from application menu <b>Edit->Resync Track</b> to resync all clips in the track containing currently selected clip.</li>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
-<li> Press <b>Resync Track Containing Selected Clip</b> Button to resync all clips in the track containing currently selected clip.</li>
-<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
-</ul>
-
-<h3>4.2 Clip Parenting</h3>
-<h4>Setting Sync Parent</h4>
-<ol>
-<li> Click <b>Right Mouse</b> on clip and select <b>Audio Edit->Select Sync Parent Clip...</b> on any cideo clip with audio NOT on track V1.</li>
-<li> Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.</li>
-<li> Sync Relation is established between the two clips. Cursor turns back into a default pointer.</li>
-<li> Sync State Box appears on the Sync Child Clip.</li>
-<ul>
-<li> Green means that clip is in sync with parent.</li>
-<li> Red means that clip is NOT in sync with parent.</li>
-<li> Displayed number gives info on how many frames clip positions are away from being synched.</li>
-</ul>
-</ol>
-
-<h4>Resyncing Sync Child Clips</h4>
-<ul>
-<li> Select from application menu <b>Edit->Resync Track</b> to resync all clips in the track containing currently selected clip.</li>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Resync</b> from popup menu to resync single clip.</li>
-<li> Press <b>Resync Track Containing Selected Clip</b> Button to resync all clips in the track containing currently selected clip.</li>
-<li> Press <b>Resync Selected Clip</b> Button to resync single clip.</li>
-</ul>
-
-<h4> Clearing Sync Parent Relations </h4>
-<ul>
-<li> Click <b>Right Mouse</b> on Sync Child Clip and select <b>Edit->Clear Sync Relation</b>.</li>
-</ul>
-
-<h4>Syncing Composited Clips</h4 >
-<ul>
-<li> If appropriate set all clips that are part of a multitrack composite synched to the same clip.</li>
-</ul>
-
 
 <a name="filtermasking"></a>
 <h2>5. Filter Masking</h2>
@@ -329,7 +460,7 @@ Excellent tracking failure reporting. Works very well when the motion is predict
 
 <h3>Filter: Motion Tracking Apply</h3>
 <p>
-    Add this filter to the clip that contains the image that you wish to make follow the tracked image elemnet.
+    Add this filter to the clip that contains the image that you wish to make follow the tracked image element.
 </p>
 <p>
     Place the clip with tracking image on top of the clip with tracked image and apply cropping if necessary.
@@ -419,7 +550,7 @@ A typical use would be to e.g. blur a person's face to make them unrecognizable.
 
 <h2>8. Stabilizing</h2>
 <p>
-    In Flowblade stabilizing a video clip is implemented using filter <b>Stabilize</b> available in filter category <b>Movement</b>. 
+    In Flowblade stabilizing a video clip is implemented using filter <b>Stabilize</b> available in filter category <b>Movement or by creating a new, stabilized Media Item.</b>. 
 </p>
 <p>
     This filter requires two passes. The first pass performs analysis and stores the result internally in a file. After completed analysis stabilizing can be applied using the created data.
@@ -440,8 +571,18 @@ A typical use would be to e.g. blur a person's face to make them unrecognizable.
     <b>Zoom</b> Used during application. Additional zoom amount.
 </P>
 <p>
-    <b>Analyze Video</b> Pressing this button analyzis video and saves the created data internally. Upon completion stabilizing is applied and can be controlled using <b>Smoothing</b> and <b>Zoom</b> parameters.
+    <b>Analyze Video</b> Pressing this button analyzes video and saves the created data internally. Upon completion stabilizing is applied and can be controlled using <b>Smoothing</b> and <b>Zoom</b> parameters.
 </p>
+
+
+
+<h4>Creating Stabilized Media Item</h4>
+
+<ul>
+<li>
+Select <b>Render Stabilized File</b> item from <i>Media Item</i> <b>Right mouse</b> context menu.
+</li>
+</ul>
 
 
 <h2>9. Credits Scroll Generator</h2>
