@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:49+0300\n"
+"POT-Creation-Date: 2025-06-06 10:43+0300\n"
 "PO-Revision-Date: 2020-12-14 14:52+0100\n"
 "Last-Translator: Jean-Paul Favier <favijep@laposte.net>\n"
 "Language-Team: French\n"
@@ -11178,27 +11178,27 @@ msgstr "Supprimer et raccorder"
 msgid "Bounce In Out"
 msgstr "Point de sortie de la source : "
 
-#: animatedvalue.py:472
+#: animatedvalue.py:467
 #, fuzzy
 msgid "Effect Keyframe Type:"
 msgstr "Coller la valeur d'un point de courbe"
 
-#: animatedvalue.py:492
+#: animatedvalue.py:487
 #, fuzzy
 msgid "Set Effect Keyframe Type"
 msgstr "Coller la valeur d'un point de courbe"
 
-#: animatedvalue.py:492 animatedvalue.py:517
+#: animatedvalue.py:487 animatedvalue.py:512
 #, fuzzy
 msgid "Set Keyframe Type"
 msgstr "Coller la valeur d'un point de courbe"
 
-#: animatedvalue.py:497
+#: animatedvalue.py:492
 #, fuzzy
 msgid "Smooth Extended Keyframe Type:"
 msgstr "Coller la valeur d'un point de courbe"
 
-#: animatedvalue.py:517
+#: animatedvalue.py:512
 #, fuzzy
 msgid "Set Smooth Extended Keyframe Type"
 msgstr "Coller la valeur d'un point de courbe"

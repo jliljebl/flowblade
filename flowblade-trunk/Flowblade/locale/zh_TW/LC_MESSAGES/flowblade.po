@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:49+0300\n"
+"POT-Creation-Date: 2025-06-06 10:43+0300\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -11142,27 +11142,27 @@ msgstr "剪接出來"
 msgid "Bounce In Out"
 msgstr "背景"
 
-#: animatedvalue.py:472
+#: animatedvalue.py:467
 #, fuzzy
 msgid "Effect Keyframe Type:"
 msgstr "聲道平衡關鍵影格"
 
-#: animatedvalue.py:492
+#: animatedvalue.py:487
 #, fuzzy
 msgid "Set Effect Keyframe Type"
 msgstr "聲道平衡關鍵影格"
 
-#: animatedvalue.py:492 animatedvalue.py:517
+#: animatedvalue.py:487 animatedvalue.py:512
 #, fuzzy
 msgid "Set Keyframe Type"
 msgstr "聲道平衡關鍵影格"
 
-#: animatedvalue.py:497
+#: animatedvalue.py:492
 #, fuzzy
 msgid "Smooth Extended Keyframe Type:"
 msgstr "聲道平衡關鍵影格"
 
-#: animatedvalue.py:517
+#: animatedvalue.py:512
 #, fuzzy
 msgid "Set Smooth Extended Keyframe Type"
 msgstr "聲道平衡關鍵影格"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:49+0300\n"
+"POT-Creation-Date: 2025-06-06 10:43+0300\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -11251,27 +11251,27 @@ msgstr "Kidobás"
 msgid "Bounce In Out"
 msgstr "Visszafelé gyorsabban"
 
-#: animatedvalue.py:472
+#: animatedvalue.py:467
 #, fuzzy
 msgid "Effect Keyframe Type:"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: animatedvalue.py:492
+#: animatedvalue.py:487
 #, fuzzy
 msgid "Set Effect Keyframe Type"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: animatedvalue.py:492 animatedvalue.py:517
+#: animatedvalue.py:487 animatedvalue.py:512
 #, fuzzy
 msgid "Set Keyframe Type"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: animatedvalue.py:497
+#: animatedvalue.py:492
 #, fuzzy
 msgid "Smooth Extended Keyframe Type:"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: animatedvalue.py:517
+#: animatedvalue.py:512
 #, fuzzy
 msgid "Set Smooth Extended Keyframe Type"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"

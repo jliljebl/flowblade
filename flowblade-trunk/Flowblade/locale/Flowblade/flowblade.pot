@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:49+0300\n"
+"POT-Creation-Date: 2025-06-06 10:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10335,23 +10335,23 @@ msgstr ""
 msgid "Bounce In Out"
 msgstr ""
 
-#: animatedvalue.py:472
+#: animatedvalue.py:467
 msgid "Effect Keyframe Type:"
 msgstr ""
 
-#: animatedvalue.py:492
+#: animatedvalue.py:487
 msgid "Set Effect Keyframe Type"
 msgstr ""
 
-#: animatedvalue.py:492 animatedvalue.py:517
+#: animatedvalue.py:487 animatedvalue.py:512
 msgid "Set Keyframe Type"
 msgstr ""
 
-#: animatedvalue.py:497
+#: animatedvalue.py:492
 msgid "Smooth Extended Keyframe Type:"
 msgstr ""
 
-#: animatedvalue.py:517
+#: animatedvalue.py:512
 msgid "Set Smooth Extended Keyframe Type"
 msgstr ""
 

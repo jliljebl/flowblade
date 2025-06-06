@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-05 15:49+0300\n"
+"POT-Creation-Date: 2025-06-06 10:43+0300\n"
 "PO-Revision-Date: 2021-04-04 15:07+0300\n"
 "Last-Translator: \n"
 "Language-Team: Türkçe\n"
@@ -11072,27 +11072,27 @@ msgstr "Çıkarmak"
 msgid "Bounce In Out"
 msgstr "Ayırma Kaynağı: "
 
-#: animatedvalue.py:472
+#: animatedvalue.py:467
 #, fuzzy
 msgid "Effect Keyframe Type:"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: animatedvalue.py:492
+#: animatedvalue.py:487
 #, fuzzy
 msgid "Set Effect Keyframe Type"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: animatedvalue.py:492 animatedvalue.py:517
+#: animatedvalue.py:487 animatedvalue.py:512
 #, fuzzy
 msgid "Set Keyframe Type"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: animatedvalue.py:497
+#: animatedvalue.py:492
 #, fuzzy
 msgid "Smooth Extended Keyframe Type:"
 msgstr "Anahtar Kare Değerini Yapıştı"
 
-#: animatedvalue.py:517
+#: animatedvalue.py:512
 #, fuzzy
 msgid "Set Smooth Extended Keyframe Type"
 msgstr "Anahtar Kare Değerini Yapıştı"
