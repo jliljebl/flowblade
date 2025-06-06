@@ -1,5 +1,69 @@
 # Release Notes
 
+
+
+## FLOWBLADE 2.22
+Date: June 6, 2025
+
+### New Keyframe Interpolation Types
+
+We added 32 new keyframes types to give users more options and control over animated images and filter values. New keyframe types are presented in two categories:
+
+**Smooth Extented:** *Smooth Natural, Smooth Tight, Quadratic In, Quadratic Out, Quadratic In Out, Cubic In, Cubic Out, Cubic In Out, Quatic In, Quatic Out, Quatic In Out, Quintic In, Quintic Out, Quintic In Out, Exponenetial In, Exponenetial Out, Exponenetial In Out, Circular In, Circular Out, Circular In Out*
+
+**Effect:** *Sinusoidal In, Sinusoidal Out, Sinusoidal In Out, Back In, Back Out, Back In Out, Elastic In, Elastic Out, Elastic In Out, Bounce In, Bounce Out, Bounce In Out*
+
+### New GUI editors for Filters
+
+Previously some filters only provided sliders to edit properties that were clearly geometric in nature. For this release we added mouse operated GUI editors for filters **Alpha Shape, Crop** and **Gradient Tint** to improve editing of these geometric properties.
+
+### Top level UX updates
+
+- Timecode Display was moved from Middlebar to below video monitor to improve locality of displayed image its position on Timeline or Clip. Timecode position in Middlebar is no longer configurable because Timecode is not in Middlebar anymore.
+  
+- Video source information locality was additionally improved by moving monitor source label to the left side in the topbar, next to *In/Out/Source Length* displays.
+  
+- *Tool* launcher icons were moved to Middlebar.
+  
+- Tracks can now be labeled with text that is displayed as a semitransparent overlay next to Track Head Column.
+  
+- Tracks Head Column mute icons were redsigned to be bigger and easier to hit.
+  
+- Custom expander widget was created for filter editing panel to regain vertical space lost to Trash and Up/Down icons.
+  
+- Splash screen was droppped. This was never really needed because Flowblade starts up quite quickly and the current implementation does not work with Wayland or Gtk4.
+  
+
+### Edit workflow
+
+- Added *Box Selection* multitrack sync setting feature.
+  
+- New keyboard shortcuts for actions **Set Clip Sync Relation, Clear Clip Sync Relation, Toggle Clip Audio Mute, Set Clip Length.**
+  
+- Made *Distort* property editable for **Position Scale** and **Position Scale Rotate** filter.
+  
+
+### Contributions
+
+Typo fixes from user *luzpaz* were contributed.
+
+### Small updates and bug fixes
+
+- Move Edit submenu first in Clip menu edit section.
+  Add Sync section to keyboard shortcuts list.
+  
+- Fix keyframe editors menu copy/paste issues.
+  
+- Removed deprecated playback preferences.
+  
+- GUI tweak for Bins and Sequences panels.
+  
+- Delete unused resource images.
+  
+- Code reafactor to use AnimatedValue class to get intepolated values for properties.
+  
+- Clip end drag overwrite bug fix.
+
 ## FLOWBLADE 2.20
 Date: March 25, 2025
 
