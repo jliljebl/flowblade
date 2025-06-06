@@ -226,19 +226,14 @@ def init():
     for type_id, name in zip(KEYFRAME_TYPES, names):
         TYPE_TO_NAME[type_id] = name
 
-    print(POWER_TYPES)
-
 def create(keyframes, active_index=0):
     return AnimatedValue(keyframes, active_index=0)
 
 def parse_kf_token(token):
     for eq_str in reversed(KEYFRAME_EQ_STRS):
-        #print(eq_str)
         sides = token.split(eq_str)
-        #print(sides)
         if len(sides) == 2:
             kf_type = EQ_STRING_TO_TYPE[eq_str]
-            #print(kf_type)
             return (kf_type, sides)
     
     return (None, None) # we give bad data to crash

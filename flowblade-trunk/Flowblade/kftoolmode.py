@@ -1012,9 +1012,7 @@ class TLineKeyFrameEditor:
         cr.show_text(text) 
 
     def _draw_smooth_value_curve(self, cr, i, keyframes, interpolated_kf_type):
-        print("interpolated_kf_type", interpolated_kf_type)
-        
-        
+
         # Get indexes of the four keyframes that affect the drawn curve. 
         prev = i
         if i == 0:

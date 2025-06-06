@@ -797,9 +797,6 @@ class Titler(Gtk.Window):
             title_data_shallow = copy.copy(_titler_data)
             title_data_shallow.destroy_pango_layouts()
             title_data = copy.deepcopy(title_data_shallow)
-
-            print("show_info 1")
-            #self.show_info(_("Saved Title") + " '" + name + "'.")
  
             open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
             open_title_item_thread.start()
@@ -817,7 +814,6 @@ class Titler(Gtk.Window):
                 global _titler_lastdir
                 _titler_lastdir = dirname
 
-                print("show_info 2")
                 #self.show_info(_("Saved Graphic."))
             
                 open_file_thread = OpenFileThread(save_path, self.view_editor)
