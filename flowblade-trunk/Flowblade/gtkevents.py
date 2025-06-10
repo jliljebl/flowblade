@@ -19,18 +19,6 @@
 """
 
 from gi.repository import Gtk, Gdk
-
-def connect(connect_widget, event_type, callback_func, data=None):
-    connect_widget.gesture = Gtk.GestureMultiPress(widget=connect_widget)
-    #connect_widget.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
-
-    connect_widget.gesture.connect("pressed", on_gesture_pressed, None)
-    #connect_widget.gesture.set_propagation_phase(Gtk.PropagationPhase.BUBBLE)
-    #connect_widget.gesture.set_button(0)
-
-
-def on_gesture_pressed(gesture, n_press, x, y, user_data):
-    print("fff", x, y)
                         
 
 class SimpleStateEvent:
@@ -46,9 +34,9 @@ class SimpleStateEvent:
 class ScrollEvent:
     
     def __init__(self, dx, dy):
-        if dy == 1.0:
+        if dy == -1.0:
             self.direction = Gdk.ScrollDirection.UP
-        elif dy == -1.0:
+        elif dy == 1.0:
             self.direction = Gdk.ScrollDirection.DOWN
         elif dx == 1.0:
             self.direction = Gdk.ScrollDirection.RIGHT
