@@ -41,7 +41,7 @@ class SimpleStateEvent:
         
     def get_state(self):
         return self.state
-        
+
 
 class ScrollEvent:
     

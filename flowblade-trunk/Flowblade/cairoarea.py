@@ -54,7 +54,10 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         self.connect('button-press-event', self._button_press_event)
         self.connect('button-release-event', self._button_release_event)
-        self.connect('motion-notify-event', self._motion_notify_event)
+        #self.connect('motion-notify-event', self._motion_notify_event)
+        self.motion_controller = Gtk.EventControllerMotion(widget=self)
+        self.motion_controller.connect("motion", self._motion_notify_event)
+
         #self.connect('enter-notify-event', self._enter_notify_event)
         self.enter_controller = Gtk.EventControllerMotion(widget=self)
         self.enter_controller.connect("enter", self._enter_notify_event)
@@ -110,14 +113,9 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         return False
 
-    def _motion_notify_event(self, widget, event):
-        if event.is_hint:
-            window, x, y, state = event.window.get_pointer()
-        else:
-            x = event.x
-            y = event.y
-            state = event.get_state()
-
+    def _motion_notify_event(self, event, x, y):
+        gdk_event = gtkevents.SimpleStateEvent()
+        state = gdk_event.get_state()
         self.motion_notify_func(x, y, state)
 
     def _enter_notify_event(self, event, a, b):
