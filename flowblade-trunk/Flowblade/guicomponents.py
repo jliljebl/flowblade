@@ -499,7 +499,7 @@ class SequenceListView(ImageTextImageListView):
                                  (self.storemodel, 1))
 
         self.scroll.connect('button-press-event', self._button_press_event)
-        
+
     def fill_data_model(self):
         """
         Creates displayed data.
