@@ -52,8 +52,15 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self._draw_func = func_draw
         self.connect('draw', self._draw_event)
 
-        self.connect('button-press-event', self._button_press_event)
-        self.connect('button-release-event', self._button_release_event)
+        #self.connect('button-press-event', self._button_press_event)
+        self.press_controller = Gtk.GestureMultiPress(widget=self)
+        self.press_controller.set_button(0)
+        self.press_controller.connect("pressed", self._button_press_event)
+        
+        #self.connect('button-release-event', self._button_release_event)
+        self.release_controller = Gtk.GestureMultiPress(widget=self)
+        self.release_controller.connect("released", self._button_release_event)
+
         #self.connect('motion-notify-event', self._motion_notify_event)
         self.motion_controller = Gtk.EventControllerMotion(widget=self)
         self.motion_controller.connect("motion", self._motion_notify_event)
@@ -67,7 +74,6 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.leave_controller.connect("leave", self._leave_notify_event)
          
         #self.connect("scroll-event", self._mouse_scroll_event)
-
         self.scroll_controller = Gtk.EventControllerScroll(widget=self)
         self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
         self.scroll_controller.connect("scroll", self._mouse_scroll_event)
@@ -101,15 +107,18 @@ class CairoDrawableArea2(Gtk.DrawingArea):
     # These pass on events to handler functions that 
     # are by default the noop functions here, but are monkeypatched 
     # at creation sites as needed. 
-    def _button_press_event(self, widget, event):
+    def _button_press_event(self, event, n_press, x, y):    
+        gdk_event = gtkevents.ButtonEvent(n_press, x, y)
+        
         if self.grab_focus_on_press:
             self.grab_focus()
-        self.press_func(event)
-
+        self.press_func(gdk_event)
+        
         return False
 
-    def _button_release_event(self, widget, event):
-        self.release_func(event)
+    def _button_release_event(self, event, n_press, x, y):
+        gdk_event = gtkevents.ButtonEvent(n_press, x, y)
+        self.release_func(gdk_event)
 
         return False
 

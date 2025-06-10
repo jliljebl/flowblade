@@ -60,3 +60,22 @@ class ScrollEvent:
         
     def get_state(self):
         return self.state
+
+
+class ButtonEvent:
+    
+    def __init__(self, n_press, x, y):
+    
+        self.x = x
+        self.y = y 
+        self.n_press = n_press
+
+        event = Gtk.get_current_event()
+        unknown_val, self.state = event.get_state()
+    
+        self.type = event.type
+        self.button = event.button.button
+
+    def get_state(self):
+        return self.state
+        
