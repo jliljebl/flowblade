@@ -32,7 +32,16 @@ def connect(connect_widget, event_type, callback_func, data=None):
 def on_gesture_pressed(gesture, n_press, x, y, user_data):
     print("fff", x, y)
                         
-                        
+
+class SimpleStateEvent:
+    
+    def __init__(self):
+        event = Gtk.get_current_event()
+        unknow_val, self.state = event.get_state()
+        
+    def get_state(self):
+        return self.state
+        
 
 class ScrollEvent:
     
@@ -47,8 +56,6 @@ class ScrollEvent:
             self.direction = Gdk.ScrollDirection.LEFT
 
         event = Gtk.get_current_event()
-        #print("event", event, event.get_state())
-        
         unknow_val, self.state = event.get_state()
         
     def get_state(self):

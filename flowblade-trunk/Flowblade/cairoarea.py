@@ -55,8 +55,14 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.connect('button-press-event', self._button_press_event)
         self.connect('button-release-event', self._button_release_event)
         self.connect('motion-notify-event', self._motion_notify_event)
-        self.connect('enter-notify-event', self._enter_notify_event)
-        self.connect('leave-notify-event', self._leave_notify_event)
+        #self.connect('enter-notify-event', self._enter_notify_event)
+        self.enter_controller = Gtk.EventControllerMotion(widget=self)
+        self.enter_controller.connect("enter", self._enter_notify_event)
+        
+        #self.connect('leave-notify-event', self._leave_notify_event)
+        self.leave_controller = Gtk.EventControllerMotion(widget=self)
+        self.leave_controller.connect("leave", self._leave_notify_event)
+         
         #self.connect("scroll-event", self._mouse_scroll_event)
 
         self.scroll_controller = Gtk.EventControllerScroll(widget=self)
@@ -114,11 +120,13 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         self.motion_notify_func(x, y, state)
 
-    def _enter_notify_event(self, widget, event):
-        self.enter_notify_func(event)
+    def _enter_notify_event(self, event, a, b):
+        gdk_event = gtkevents.SimpleStateEvent()
+        self.enter_notify_func(gdk_event)
         
-    def _leave_notify_event(self, widget, event):
-        self.leave_notify_func(event)
+    def _leave_notify_event(self, event):
+        gdk_event = gtkevents.SimpleStateEvent()
+        self.leave_notify_func(gdk_event)
         
     def _mouse_scroll_event(self, scroll_event, dx, dy):
         if self.mouse_scroll_func == None:
