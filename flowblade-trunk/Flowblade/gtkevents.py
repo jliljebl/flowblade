@@ -32,3 +32,24 @@ def connect(connect_widget, event_type, callback_func, data=None):
 def on_gesture_pressed(gesture, n_press, x, y, user_data):
     print("fff", x, y)
                         
+                        
+
+class ScrollEvent:
+    
+    def __init__(self, dx, dy):
+        if dy == 1.0:
+            self.direction = Gdk.ScrollDirection.UP
+        elif dy == -1.0:
+            self.direction = Gdk.ScrollDirection.DOWN
+        elif dx == 1.0:
+            self.direction = Gdk.ScrollDirection.RIGHT
+        else:
+            self.direction = Gdk.ScrollDirection.LEFT
+
+        event = Gtk.get_current_event()
+        #print("event", event, event.get_state())
+        
+        unknow_val, self.state = event.get_state()
+        
+    def get_state(self):
+        return self.state

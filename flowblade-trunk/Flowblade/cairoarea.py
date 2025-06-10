@@ -26,6 +26,8 @@ Cairo by setting the draw function on creation, and listen to its mouse and keyb
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import gtkevents
+
 bg_color = None
 
 
@@ -55,8 +57,12 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.connect('motion-notify-event', self._motion_notify_event)
         self.connect('enter-notify-event', self._enter_notify_event)
         self.connect('leave-notify-event', self._leave_notify_event)
-        self.connect("scroll-event", self._mouse_scroll_event)
+        #self.connect("scroll-event", self._mouse_scroll_event)
 
+        self.scroll_controller = Gtk.EventControllerScroll(widget=self)
+        self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
+        self.scroll_controller.connect("scroll", self._mouse_scroll_event)
+ 
         # Signal handler funcs. These are monkeypatched as needed on codes sites
         # that create the objects.
         self.press_func = self._press
@@ -93,7 +99,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
         return False
 
-    def _button_release_event(self,  widget, event):
+    def _button_release_event(self, widget, event):
         self.release_func(event)
 
         return False
@@ -114,10 +120,13 @@ class CairoDrawableArea2(Gtk.DrawingArea):
     def _leave_notify_event(self, widget, event):
         self.leave_notify_func(event)
         
-    def _mouse_scroll_event(self, widget, event):
+    def _mouse_scroll_event(self, scroll_event, dx, dy):
         if self.mouse_scroll_func == None:
             return
-        self.mouse_scroll_func(event)
+
+        gdk_event = gtkevents.ScrollEvent(dx, dy) # This wont be needed as such for Gtk4 which has get_current_event_state()
+
+        self.mouse_scroll_func(gdk_event)
 
     # ------------------------------------------------------- Noop funcs for unhandled events
     def _press(self, event):
