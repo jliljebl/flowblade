@@ -51,6 +51,7 @@ import gui
 import guiutils
 import glassbuttons
 import gtkbuilder
+import gtkevents
 import gmicplayer
 import mediaplugin
 import mltinit
@@ -1005,8 +1006,9 @@ class ScriptToolWindow(Gtk.Window):
 
         self.update_encode_sensitive()
 
-        self.connect("key-press-event", _global_key_down_listener)
-
+        # Connect global key listener
+        self.global_key_controller = gtkevents.KeyPressEventAdapter(self, _global_key_down_listener, user_data=None, capture=True)
+        
         # Set pane and show window
         self.add(align)
         self.tool_name = _("Generator Script Editor")
@@ -1196,6 +1198,7 @@ class ScriptToolWindow(Gtk.Window):
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):
+
     # CTRL + S saving
     if event.keyval == Gdk.KEY_s:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -1203,7 +1206,13 @@ def _global_key_down_listener(widget, event):
                 save_script_dialog(_save_script_dialog_callback)
             else:
                 _save_script(_last_save_path)
-            
+
+    if event.keyval == Gdk.KEY_R or event.keyval == Gdk.KEY_r:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            if _last_save_path != None:
+                _load_script(_last_save_path)
+                return
+
     # Script view and frame name entry need their own key presses
     # and we can't e.g. use up LEFT ARROW here.
     if _window.frame_name.has_focus() or _window.script_view.has_focus():
@@ -1231,10 +1240,7 @@ def _global_key_down_listener(widget, event):
     if event.keyval == Gdk.KEY_Up:
         end_pressed()
 
-    if event.keyval == Gdk.KEY_r:
-        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            if _last_save_path != None:
-                _load_script(_last_save_path)
+
         
     # I
     if event.keyval == Gdk.KEY_i:
