@@ -860,8 +860,8 @@ class GmicWindow(Gtk.Window):
         self.update_encode_sensitive()
 
         # Connect global key listener
-        self.connect("key-press-event", _global_key_down_listener)
-
+        self.global_key_controller = gtkevents.KeyPressEventAdapter(self, _global_key_down_listener, user_data=None, capture=True)
+        
         # Set pane and show window
         self.add(align)
         self.set_title(_("G'MIC Effects"))

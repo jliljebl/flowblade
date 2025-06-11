@@ -75,20 +75,24 @@ class KeyPressEvent:
         self.keycode = keycode
         self.state = state
  
+    def get_state(self):
+        return self.state
 
 class KeyPressEventAdapter:
     
-    def __init__(self, widget, callback, user_data=None):
+    def __init__(self, widget, callback, user_data=None, capture=False):
         self.controller = Gtk.EventControllerKey.new(widget)
+        if capture != False:
+            self.controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.controller.connect("key-pressed", self.pressed_event)
         self.widget = widget
         self.callback = callback
         self.user_data = user_data 
     
     def pressed_event(self, event, keyval, keycode, state):
-        print("pressed event")
         gdk_event = KeyPressEvent(event, keyval, keycode, state)
         if self.user_data == None:
             self.callback(self.widget, gdk_event)
         else:
             self.callback(self.widget, gdk_event, *user_data)
+
