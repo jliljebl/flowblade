@@ -24,6 +24,7 @@ from gi.repository import Gtk, Gdk
 import editorpersistance
 import editorstate
 import dialogutils
+import gtkevents
 import guicomponents
 import guiutils
 import shortcuts
@@ -387,8 +388,9 @@ class KBShortcutEditor:
         item_vbox.pack_start(input_label, True, True, 0)
            
         self.kb_input = Gtk.EventBox()
-        self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
-        self.kb_input.connect("key-press-event", lambda w,e: self.kb_input_listener(e))
+        self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)    
+        self.global_key_controller = gtkevents.KeyPressEventAdapter(self.kb_input, self.kb_input_listener)
+        
         self.kb_input.set_can_focus(True)
         self.kb_input.add(item_vbox)
 
@@ -415,7 +417,7 @@ class KBShortcutEditor:
         self.kb_input.grab_focus()
         KBShortcutEditor.input_listener = self
 
-    def kb_input_listener(self, event):
+    def kb_input_listener(self, widget, event):
 
         
         # Gdk.KEY_Return ? Are using this as clear and make "exit trim edit" not settable?
