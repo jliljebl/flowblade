@@ -39,6 +39,7 @@ import editorstate
 import gui
 import guicomponents
 import guiutils
+import gtkevents
 import dialogutils
 import projectaction
 import respaths
@@ -346,7 +347,7 @@ class Titler(Gtk.Window):
         self.size_spin = Gtk.SpinButton()
         self.size_spin.set_adjustment(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
-        self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
+        self.spin_adapter = gtkevents.KeyPressEventAdapter(self.size_spin, self._key_pressed_on_widget)
 
         font_main_row = Gtk.HBox()
         font_main_row.pack_start(self.font_select, True, True, 0)
@@ -414,8 +415,8 @@ class Titler(Gtk.Window):
         self.out_line_size_spin = Gtk.SpinButton()
         self.out_line_size_spin.set_adjustment(adj2)
         self.out_line_size_spin.connect("changed", self._edit_value_changed)
-        self.out_line_size_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.out_line_size_adapter = gtkevents.KeyPressEventAdapter(self.out_line_size_spin, self._key_pressed_on_widget)
+        
         self.outline_on = Gtk.CheckButton()
         self.outline_on.set_active(False)
         self.outline_on.connect("toggled", self._edit_value_changed)
@@ -441,22 +442,22 @@ class Titler(Gtk.Window):
         adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_opa_spin.set_adjustment(adj3)
         self.shadow_opa_spin.connect("changed", self._edit_value_changed)
-        self.shadow_opa_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.shadow_opa_spin_adapter = gtkevents.KeyPressEventAdapter(self.shadow_opa_spin, self._key_pressed_on_widget)
+        
         self.shadow_xoff_spin = Gtk.SpinButton()
 
         adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_xoff_spin.set_adjustment(adj4)
         self.shadow_xoff_spin.connect("changed", self._edit_value_changed)
-        self.shadow_xoff_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.shadow_xoff_spin_adapter = gtkevents.KeyPressEventAdapter(self.shadow_xoff_spin, self._key_pressed_on_widget)
+        
         self.shadow_yoff_spin = Gtk.SpinButton()
 
         adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.shadow_yoff_spin.set_adjustment(adj5)
         self.shadow_yoff_spin.connect("changed", self._edit_value_changed)
-        self.shadow_yoff_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.shadow_yoff_spin_adapter = gtkevents.KeyPressEventAdapter(self.shadow_yoff_spin, self._key_pressed_on_widget)
+        
         self.shadow_on = Gtk.CheckButton()
         self.shadow_on.set_active(False)
         self.shadow_on.connect("toggled", self._edit_value_changed)
@@ -541,19 +542,19 @@ class Titler(Gtk.Window):
         self.x_pos_spin = Gtk.SpinButton()
         self.x_pos_spin.set_adjustment(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
-        self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.xpos_adapter = gtkevents.KeyPressEventAdapter(self.x_pos_spin, self._key_pressed_on_widget)
+        
         adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.y_pos_spin = Gtk.SpinButton()
         self.y_pos_spin.set_adjustment(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
-        self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-
+        self.y_pos_spin_adapter = gtkevents.KeyPressEventAdapter(self.y_pos_spin, self._key_pressed_on_widget)
+        
         adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_increment=float(1))
         self.rotation_spin = Gtk.SpinButton()
         self.rotation_spin.set_adjustment(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)
-        self.rotation_spin.connect("key-press-event", self._key_pressed_on_widget)
+        self.rotation_spin_adapter = gtkevents.KeyPressEventAdapter(self.rotation_spin, self._key_pressed_on_widget)
         
         undo_pos = Gtk.Button()
         undo_icon = Gtk.Image.new_from_icon_name("edit-undo", 
@@ -605,7 +606,6 @@ class Titler(Gtk.Window):
         controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
         controls_panel_1.pack_start(self.layer_list, True, True, 0)
-        #controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
         controls_panel_2.pack_start(font_main_row, False, False, 0)

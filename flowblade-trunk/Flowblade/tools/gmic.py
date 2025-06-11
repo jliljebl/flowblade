@@ -684,7 +684,6 @@ class GmicWindow(Gtk.Window):
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
         self.present_event_box.connect("button-press-event", self.script_menu_lauched)
-        #gtkevents.connect(self.present_event_box, "ds", self.script_menu_lauched)
 
         self.script_menu = toolguicomponents.PressLaunch(self.script_menu_lauched)
         
