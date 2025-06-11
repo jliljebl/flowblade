@@ -382,7 +382,8 @@ class FlowbladeApplication(Gtk.Application):
         # Connect listener for this now that the tline panel size allocation is sure to be available.
         global window_resize_id, window_state_id, monitor_resize_id
         window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
-        window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # Delete when everyone is on mlt 7.30 or moving to Gtk4.
+            window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
         monitor_resize_id = gui.tline_display.connect("size-allocate", lambda w, e:tline_display_resized())
 
         # Get existing autosave files

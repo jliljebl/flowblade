@@ -225,7 +225,6 @@ class RotoMaskEditor(Gtk.Window):
         self.kf_editor.active_keyframe_changed()
 
         self.connect("size-allocate", lambda w, e:self.window_resized())
-        self.connect("window-state-event", lambda w, e:self.window_resized())
         self.connect("key-press-event", self.key_down)
         self.window_resized()
 

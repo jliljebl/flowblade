@@ -688,7 +688,6 @@ class Titler(Gtk.Window):
 
         # -------------------------------------------------- window state listeners
         self.connect("size-allocate", lambda w, e:self.window_resized())
-        self.connect("window-state-event", lambda w, e:self.window_resized())
     
     def show_info(self, info_text):
         self.info_text.set_markup("<small>" + info_text + "</small>")

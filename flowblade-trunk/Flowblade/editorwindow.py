@@ -55,6 +55,7 @@ import medialog
 import mediaplugin
 import menuactions
 import middlebar
+import mltplayer
 import modesetting
 import monitorevent
 import monitorwidget
@@ -128,7 +129,8 @@ class EditorWindow:
         self.window.connect("delete-event", lambda w, e:callbackbridge.app_shutdown())
 
         # Player consumer has to be stopped and started when window resized
-        self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
+        if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # Delete when everyone is on mlt 7.30 or moving to Gtk4.
+            self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
         # Init application main menu.
         self.ui = Gtk.UIManager()

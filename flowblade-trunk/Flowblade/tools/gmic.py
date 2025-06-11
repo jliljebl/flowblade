@@ -585,7 +585,6 @@ class GmicWindow(Gtk.Window):
         hamburger_launcher_surface = guiutils.get_cairo_image("hamburger")
         psize = 22
         self.hamburger_launcher = toolguicomponents.PressLaunchSurface(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
-        #self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
         self.load_button = Gtk.Button(label=_("Load Clip"))
