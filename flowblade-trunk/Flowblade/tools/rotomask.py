@@ -24,6 +24,7 @@ from gi.repository import GLib, GObject
 import editorstate
 from editorstate import PLAYER
 from editorstate import PROJECT
+import gtkevents
 import gui
 import guicomponents
 import guiutils
@@ -225,7 +226,10 @@ class RotoMaskEditor(Gtk.Window):
         self.kf_editor.active_keyframe_changed()
 
         self.connect("size-allocate", lambda w, e:self.window_resized())
-        self.connect("key-press-event", self.key_down)
+
+        # Connect global key listener
+        self.global_key_controller = gtkevents.KeyPressEventAdapter(self, self.key_down, user_data=None, capture=True)
+        
         self.window_resized()
 
         self.kf_editor.clip_editor.maybe_set_first_kf_in_clip_area_active()
