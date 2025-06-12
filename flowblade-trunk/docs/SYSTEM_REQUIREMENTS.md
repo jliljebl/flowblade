@@ -15,4 +15,4 @@
 
 #### SOFTWARE LIBRARIES
 
-* MLT 6.18
+* MLT 7.30
