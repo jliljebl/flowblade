@@ -1032,9 +1032,7 @@ class RenderQueueView(Gtk.VBox):
         elif msg == "delete":
             batch_window.remove_item(render_item)
         elif msg == "saveas":
-            file_name = run_save_project_as_dialog(render_item.project_name)
-            if file_name != None:
-                copy_project(render_item, file_name)
+            run_save_project_as_dialog(render_item)
         elif msg == "changepath":
             show_change_render_item_path_dialog(_change_render_item_path_callback, render_item)
 
@@ -1050,8 +1048,8 @@ class RenderQueueView(Gtk.VBox):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
-
-def run_save_project_as_dialog(project_name):
+def run_save_project_as_dialog(render_item):
+    project_name = render_item.project_name
     dialog = Gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
                                    (_("Cancel"), Gtk.ResponseType.REJECT,
@@ -1060,13 +1058,16 @@ def run_save_project_as_dialog(project_name):
     project_name = project_name.rstrip(".flb")
     dialog.set_current_name(project_name + "_FROM_BATCH.flb")
     dialog.set_do_overwrite_confirmation(True)
-    response_id = dialog.run()
-    if response_id == Gtk.ResponseType.NONE:
+    dialog.connect('response', _save_render_callback, render_item)
+    dialog.show()
+
+def _save_render_callback(dialog, response_id, render_item):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        file_name = dialog.get_filename()
+        copy_project(render_item, file_name)
         dialog.destroy()
-        return None
-    file_name = dialog.get_filename()
-    dialog.destroy()
-    return file_name
+    else:
+        dialog.destroy()
 
 def show_render_properties_panel(render_item):
     if render_item.render_data.user_args == False:

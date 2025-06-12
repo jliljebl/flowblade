@@ -147,7 +147,7 @@ recovery_in_progress = False
 
 exit_timeout_id = -1
 window_resize_id = -1
-window_state_id = -1
+window_state_id = -1 # TODO: get rid of this
 resize_timeout_id = -1
 monitor_resize_id = -1
 
@@ -704,7 +704,8 @@ def new_project(profile_index, v_tracks, a_tracks):
 def open_project(new_project):
     stop_autosave()
     gui.editor_window.window.handler_block(window_resize_id)
-    gui.editor_window.window.handler_block(window_state_id)
+    if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # TODO: get rid of this
+        gui.editor_window.window.handler_block(window_state_id)
 
     audiomonitoring.close_audio_monitor()
     audiowaveformrenderer.clear_cache()
@@ -751,7 +752,8 @@ def open_project(new_project):
     updater.set_timeline_height()
 
     gui.editor_window.window.handler_unblock(window_resize_id)
-    gui.editor_window.window.handler_unblock(window_state_id)
+    if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # TODO: get rid of this
+        gui.editor_window.window.handler_unblock(window_state_id)
 
     global resize_timeout_id
     resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
