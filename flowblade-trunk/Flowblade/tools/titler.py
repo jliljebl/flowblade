@@ -356,27 +356,17 @@ class Titler(Gtk.Window):
         
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
-        bold_icon = Gtk.Image.new_from_icon_name("format-text-bold", 
-                                       Gtk.IconSize.BUTTON)
-        italic_icon = Gtk.Image.new_from_icon_name("format-text-italic", 
-                                       Gtk.IconSize.BUTTON)
-        self.bold_font.set_image(bold_icon)
-        self.italic_font.set_image(italic_icon)
+        gtkbuilder.button_set_image_icon_name(self.bold_font, "format-text-bold")
+        gtkbuilder.button_set_image_icon_name(self.italic_font, "format-text-italic")
         self.bold_font.connect("clicked", self._edit_value_changed)
         self.italic_font.connect("clicked", self._edit_value_changed)
         
         self.left_align = Gtk.RadioButton(None)
         self.center_align = Gtk.RadioButton.new_from_widget(self.left_align)
         self.right_align = Gtk.RadioButton.new_from_widget(self.left_align)
-        left_icon = Gtk.Image.new_from_icon_name("format-justify-left", 
-                                       Gtk.IconSize.BUTTON)
-        center_icon = Gtk.Image.new_from_icon_name("format-justify-center", 
-                                       Gtk.IconSize.BUTTON)
-        right_icon = Gtk.Image.new_from_icon_name("format-justify-right", 
-                                       Gtk.IconSize.BUTTON)
-        self.left_align.set_image(left_icon)
-        self.center_align.set_image(center_icon)
-        self.right_align.set_image(right_icon)
+        gtkbuilder.button_set_image_icon_name(self.left_align, "format-justify-left")
+        gtkbuilder.button_set_image_icon_name(self.center_align, "format-justify-center")
+        gtkbuilder.button_set_image_icon_name(self.right_align, "format-justify-right")
         self.left_align.set_mode(False)
         self.center_align.set_mode(False)
         self.right_align.set_mode(False)
@@ -556,18 +546,14 @@ class Titler(Gtk.Window):
         self.rotation_spin_adapter = gtkevents.KeyPressEventAdapter(self.rotation_spin, self._key_pressed_on_widget)
         
         undo_pos = Gtk.Button()
-        undo_icon = Gtk.Image.new_from_icon_name("edit-undo", 
-                                       Gtk.IconSize.BUTTON)
-        undo_pos.set_image(undo_icon)
-
+        gtkbuilder.button_set_image_icon_name(undo_pos, "edit-undo")
+        
         # ------------------------------------------------- Timeline controls
-        next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
-        prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
         prev_frame = Gtk.Button()
-        prev_frame.set_image(prev_icon)
+        gtkbuilder.button_set_image(prev_frame, "prev_frame_s")
         prev_frame.connect("clicked", lambda w:self._prev_frame_pressed())
         next_frame = Gtk.Button()
-        next_frame.set_image(next_icon)
+        gtkbuilder.button_set_image(next_frame, "next_frame_s")
         next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
         self.scale_selector = vieweditor.ScaleSelector(self)
