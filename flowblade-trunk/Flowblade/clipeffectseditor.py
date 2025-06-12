@@ -39,6 +39,7 @@ from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import current_sequence
 import extraeditors
+import gtkbuilder
 import gui
 import guicomponents
 import guipopover
@@ -427,13 +428,11 @@ class Expander:
         
         self.label_box = Gtk.HBox(False, 0) 
         self.child_box = Gtk.VBox(False, 0) 
-
-        self.arrow_box = Gtk.EventBox() 
-        self.arrow_box.connect('button-release-event', self._toggle_expand)
         
         self.img_unexpanded = Gtk.Image.new_from_icon_name("pan-end-symbolic", Gtk.IconSize.BUTTON)
         self.img_expanded = Gtk.Image.new_from_icon_name("pan-down-symbolic", Gtk.IconSize.BUTTON)
-        self.arrow_box.add(self.img_expanded)
+
+        self.arrow_box = gtkbuilder.EventBox(self.img_expanded, 'button-release-event', self._toggle_expand)
         
         self.widget.pack_start(self.label_box, False, False, 0)
         self.widget.pack_start(self.child_box, True, True, 0)
@@ -888,18 +887,18 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
 def show_text_in_edit_area(text):
     vbox = Gtk.VBox(False, 0)
 
-    filler = Gtk.EventBox()
-    filler.add(Gtk.Label())
+    filler = Gtk.Stack()  
+    filler.add_named(Gtk.Label(), "filler")
     vbox.pack_start(filler, True, True, 0)
     
     info = Gtk.Label(label=text)
     info.set_sensitive(False)
-    filler = Gtk.EventBox()
-    filler.add(info)
+    filler = Gtk.Stack()  
+    filler.add_named(info, "filler")
     vbox.pack_start(filler, False, False, 0)
     
-    filler = Gtk.EventBox()
-    filler.add(Gtk.Label())
+    filler = Gtk.Stack()  
+    filler.add_named(Gtk.Label(), "filler")
     vbox.pack_start(filler, True, True, 0)
 
     vbox.show_all()

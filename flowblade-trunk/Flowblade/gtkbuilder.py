@@ -52,6 +52,17 @@ def VPaned():
     """
     return paned
 
+def EventBox(widget, signal, callback, user_data=None):
+    event_box = Gtk.EventBox()
+    event_box.add(widget)
+    
+    if signal == "button-press-event":
+        event_box.connect("button-press-event", callback)
+    elif signal == "button-release-event":
+        event_box.connect("button-release-event", callback)
+            
+    return event_box
+
 def button_set_image(button, image_resource):
     button.set_image(guiutils.get_image(image_resource)) # for Gtk4 we're gonna use set_child() with GtkImage widget
 

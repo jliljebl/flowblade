@@ -164,8 +164,8 @@ def _display_compositor_edit_box():
     # Case: Empty edit frame
     global compositor
     if compositor == None:
-        filler = Gtk.EventBox()
-        filler.add(Gtk.Label())
+        filler = Gtk.Stack() 
+        filler.add_named(Gtk.Label(), "filler")
         vbox.pack_start(filler, True, True, 0)
 
         if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -176,12 +176,12 @@ def _display_compositor_edit_box():
             info.set_justify(Gtk.Justification.CENTER)
             info.set_sensitive(False)
         
-        filler = Gtk.EventBox()
-        filler.add(info)
+        filler = Gtk.Stack()
+        filler.add_named(info, "filler")
         vbox.pack_start(filler, False, False, 0)
         
-        filler = Gtk.EventBox()
-        filler.add(Gtk.Label())
+        filler = Gtk.Stack()
+        filler.add_named(Gtk.Label(), "filler")
         vbox.pack_start(filler, True, True, 0)
         vbox.show_all()
 

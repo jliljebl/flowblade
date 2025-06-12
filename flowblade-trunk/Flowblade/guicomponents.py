@@ -46,6 +46,7 @@ from editorstate import current_sequence
 from editorstate import current_bin
 from editorstate import PROJECT
 from editorstate import PLAYER
+import gtkbuilder
 import gui
 import guiutils
 import mltprofiles
@@ -1419,12 +1420,10 @@ class MediaPanel():
         self.widget.show_all()
 
     def _get_empty_filler(self, widget=None):
-        filler = Gtk.EventBox()
-        filler.connect("button-press-event", lambda w,e: self.empty_pressed(w,e))
         if widget == None:
-            filler.add(Gtk.Label())
+            filler = gtkbuilder.EventBox(Gtk.Label(), "button-press-event", self.empty_pressed)
         else:
-            filler.add(widget)
+            filler = gtkbuilder.EventBox(widget, "button-press-event", self.empty_pressed)
         return filler
 
 

@@ -680,9 +680,7 @@ class GmicWindow(Gtk.Window):
         # Script area 
         # Script selector menu launcher
         self.preset_label = Gtk.Label()
-        self.present_event_box = Gtk.EventBox()
-        self.present_event_box.add(self.preset_label)
-        self.present_event_box.connect("button-press-event", self.script_menu_lauched)
+        self.present_event_box = gtkbuilder.EventBox(self.preset_label, "button-press-event", self.script_menu_lauched)
 
         self.script_menu = toolguicomponents.PressLaunch(self.script_menu_lauched)
         
