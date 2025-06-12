@@ -42,6 +42,7 @@ from gi.repository import PangoCairo
 
 import appconsts
 import cairoarea
+import gtkbuilder
 import editorstate
 import mltrefhold
 import guiutils
@@ -588,8 +589,7 @@ class GainControl(Gtk.Frame):
         self.pan_slider.connect("value-changed", self.pan_changed)
 
         self.pan_button = Gtk.ToggleButton()
-        surface = guiutils.get_cairo_image("pan_track")
-        self.pan_button.set_image(Gtk.Image.new_from_surface (surface))
+        gtkbuilder.button_set_image(self.pan_button, "pan_track")
         self.pan_button.connect("toggled", self.pan_active_toggled)
 
         label = guiutils.bold_label(name)

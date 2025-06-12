@@ -25,6 +25,7 @@ import editorstate
 from editorstate import PLAYER
 from editorstate import PROJECT
 import gtkevents
+import gtkbuilder
 import gui
 import guicomponents
 import guiutils
@@ -131,14 +132,12 @@ class RotoMaskEditor(Gtk.Window):
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
 
-        kf_mode_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "roto_kf_edit_mode.png")
-        move_mode_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "roto_move_mode.png")
         self.kf_mode_button = Gtk.ToggleButton()
-        self.kf_mode_button.set_image(kf_mode_img)
+        gtkbuilder.button_set_image(self.kf_mode_button, "roto_kf_edit_mode")
         self.kf_mode_button.set_active(True) # we start with vieweditorlayer.ROTO_POINT_MODE edit mode
         self.kf_mode_button.connect("clicked", self._kf_mode_clicked)
         self.move_mode_button = Gtk.ToggleButton()
-        self.move_mode_button.set_image(move_mode_img)
+        gtkbuilder.button_set_image(self.move_mode_button, "roto_move_mode")
         self.move_mode_button.connect("clicked", self._move_mode_clicked)
         
         self.scale_selector = vieweditor.ScaleSelector(self)
