@@ -27,7 +27,7 @@ from gi.repository import Gtk
 import os
 
 import gui
-
+import guiutils
 
 GTK_3 = 3
 GTK_3 = 4
@@ -52,6 +52,13 @@ def VPaned():
     """
     return paned
 
+def button_set_image(button, image_resource):
+    button.set_image(guiutils.get_image(image_resource)) # for Gtk4 we're gonna use set_child() with GtkImage widget
+
+def button_set_image_icon_name(button, icon_name):
+    icon = Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
+    button.set_image(icon)
+        
 def get_file_chooser_button(title, action=Gtk.FileChooserAction.OPEN, parent=None):
     if action == Gtk.FileChooserAction.OPEN:
         b_title = _("(None)")

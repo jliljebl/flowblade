@@ -298,17 +298,6 @@ def _get_edit_buttons_3_panel():
 def _get_monitor_insert_buttons():
     return w.monitor_insert_buttons.widget
 
-"""
-def _get_tools_buttons():
-    return w.tools_buttons.widget
-"""
-
-def _b(button, icon, remove_relief=False):
-    button.set_image(icon)
-    button.set_property("can-focus",  False)
-    if remove_relief:
-        button.set_relief(Gtk.ReliefStyle.NONE)
-
 def _clear_container(cont):
     children = cont.get_children()
     for child in children:

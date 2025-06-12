@@ -25,6 +25,7 @@ from gi.repository import Gtk, GObject
 
 import cairoarea
 import cairo
+import gtkbuilder
 import respaths
 
 MIN_PAD = 20
@@ -370,8 +371,7 @@ class GuidesViewToggle(Gtk.ToggleButton):
     
     def __init__(self, view_editor):
         GObject.GObject.__init__(self)
-        icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "guides_view_switch.png")
-        self.set_image(icon)
+        gtkbuilder.button_set_image(self, "guides_view_switch")
         self.view_editor = view_editor
         
         self.set_active(True)

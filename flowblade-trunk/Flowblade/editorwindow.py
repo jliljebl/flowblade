@@ -93,20 +93,6 @@ MONITOR_AREA_WIDTH = appconsts.MONITOR_AREA_WIDTH
 DARK_BG_COLOR = (0.223, 0.247, 0.247, 1.0)
 
 
-def _b(button, icon, remove_relief=False):
-    button.set_image(icon)
-    button.set_property("can-focus",  False)
-    if remove_relief:
-        button.set_relief(Gtk.ReliefStyle.NONE)
-
-def _toggle_image_switch(widget, icons):
-    not_pressed, pressed = icons
-    if widget.get_active() == True:
-        widget.set_image(pressed)
-    else:
-        widget.set_image(not_pressed)
-
-
 class EditorWindow:
 
     def __init__(self):

@@ -1295,14 +1295,12 @@ class RenderArgsPanelSmall():
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
         self.opts_save_button = Gtk.Button()
-        icon = Gtk.Image.new_from_icon_name("document-save", Gtk.IconSize.MENU)
-        self.opts_save_button.set_image(icon)
+        gtkbuilder.button_set_image_icon_name(self.opts_save_button, "document-save")
         self.opts_save_button.connect("clicked", lambda w: save_args_callback())
         self.opts_save_button.set_sensitive(False)
     
         self.opts_load_button = Gtk.Button()
-        icon = Gtk.Image.new_from_icon_name("document-open", Gtk.IconSize.MENU)
-        self.opts_load_button.set_image(icon)
+        gtkbuilder.button_set_image_icon_name(self.opts_load_button, "document-open")
         self.opts_load_button.connect("clicked", lambda w: load_args_callback())
 
         self.open_in_bin = Gtk.CheckButton()

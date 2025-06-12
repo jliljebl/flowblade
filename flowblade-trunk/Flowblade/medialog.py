@@ -36,6 +36,7 @@ import guicomponents
 import guipopover
 import guiutils
 import gtkevents
+import gtkbuilder
 import editorpersistance # Aug-2019 - SvdB - BB
 import editorstate
 from editorstate import PROJECT
@@ -683,11 +684,11 @@ def get_media_log_events_panel(events_list_view):
     star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active"))
 
     star_button = Gtk.Button()
-    star_button.set_image(guiutils.get_image("star"))
+    gtkbuilder.button_set_image(star_button, "star")
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
     no_star_button = Gtk.Button()
-    no_star_button.set_image(guiutils.get_image("star_not_active"))
+    gtkbuilder.button_set_image(no_star_button, "star_not_active")
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
     widgets.group_box = Gtk.HBox()
@@ -710,22 +711,22 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(Gtk.Label(), True, True, 0)
 
     widgets.log_range = Gtk.Button()
-    widgets.log_range.set_image(guiutils.get_image("log_range"))
+    gtkbuilder.button_set_image(widgets.log_range, "log_range")
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
     delete_button = Gtk.Button()
-    delete_button.set_image(guiutils.get_image("delete_log_range"))
+    gtkbuilder.button_set_image(delete_button, "delete_log_range")
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
     insert_displayed = Gtk.Button()
-    insert_displayed.set_image(guiutils.get_image("insert_media_log"))
+    gtkbuilder.button_set_image(insert_displayed, "insert_media_log")
     insert_displayed.set_size_request(80, 22)
     insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
 
     append_displayed = Gtk.Button()
-    append_displayed.set_image(guiutils.get_image("append_media_log"))
+    gtkbuilder.button_set_image(append_displayed, "append_media_log")
     append_displayed.set_size_request(80, 22)
     append_displayed.connect("clicked", lambda w:append_log_events())
 
