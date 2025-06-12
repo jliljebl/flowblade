@@ -603,15 +603,14 @@ class GmicWindow(Gtk.Window):
         load_row.set_margin_bottom(8)
 
         # Clip monitor
-        black_box = Gtk.EventBox()
-        black_box.add(Gtk.Label())
-        self.monitor = black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
-                                  # is used to position and scale SDL overlay that actually displays video.
+        self.monitor = Gtk.Label()
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
-
+        self.monitors_holder = Gtk.Stack()    
+        self.monitors_holder.add_named(self.monitor, "monitor") # we need to put Gtk.Label inside something with a XWindow to work with SDL.
+                
         left_vbox = Gtk.VBox(False, 0)
         left_vbox.pack_start(load_row, False, False, 0)
-        left_vbox.pack_start(self.monitor, True, True, 0)
+        left_vbox.pack_start(self.monitors_holder, True, True, 0)
 
         self.preview_info = Gtk.Label()
         self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )

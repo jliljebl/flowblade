@@ -731,9 +731,7 @@ class ScriptToolWindow(Gtk.Window):
         # -------------------------------------------------------------------- RIGHT SIDE: MONITOR, CONTROLS, ENCODING
         # -------------------------------------------------------------------- RIGHT SIDE: MONITOR, CONTROLS, ENCODING 
         # -------------------------------------------------------------------- RIGHT SIDE: MONITOR, CONTROLS, ENCODING 
-        black_box = Gtk.EventBox()
-        black_box.add(Gtk.Label())
-        self.monitor = black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
+        self.monitor = Gtk.Label() #black_box  # This could be any GTK+ widget (that is not "windowless"), only its XWindow draw rect 
                                   # is used to position and scale SDL overlay that actually displays video.
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
