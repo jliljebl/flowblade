@@ -39,6 +39,7 @@ import editorstate
 import gui
 import guicomponents
 import guiutils
+import gtkbuilder
 import gtkevents
 import dialogutils
 import projectaction
@@ -290,13 +291,11 @@ class Titler(Gtk.Window):
         add_del_box.pack_start(add_b, True, True, 0)
         add_del_box.pack_start(del_b, True, True, 0)
 
-        center_h_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
-        center_v_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
         center_h = Gtk.Button()
-        center_h.set_image(center_h_icon)
+        gtkbuilder.button_set_image(center_h, "center_horizontal")
         center_h.connect("clicked", lambda w:self._center_h_pressed())
         center_v = Gtk.Button()
-        center_v.set_image(center_v_icon)
+        gtkbuilder.button_set_image(center_v, "center_vertical")
         center_v.connect("clicked", lambda w:self._center_v_pressed())
 
         self.layer_list = TextLayerListView(self._layer_selection_changed, self._layer_visibility_toggled)
