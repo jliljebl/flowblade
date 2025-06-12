@@ -109,7 +109,7 @@ def fill_vaults_combo(vaults_combo, active_vault_index):
 def show_create_data_dialog(callback, data=None):
     label = Gtk.Label(label=_("Select Empty Folder to be added as Data Store"))
     
-    data_folder_button = Gtk.FileChooserButton(_("Select Folder"))
+    data_folder_button = gtkbuilder.get_file_chooser_button(_("Select Folder"))
     data_folder_button.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     data_folder_button.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -134,7 +134,7 @@ def show_create_data_dialog(callback, data=None):
         widgets = (data_folder_button, name_entry)
     else:
         widgets = (data_folder_button, name_entry, data)
-    dialogutils.panel_ok_cancel_dialog(_("Create Data Store"), vbox, _("Create Data Store"), callback, widgets)
+    dialogutils.panel_ok_cancel_dialog_non_modal(_("Create Data Store"), vbox, _("Create Data Store"), callback, widgets)
 
 def get_current_vault_name():
     if PROJECT().vault_folder == projectdatavault.get_default_vault_folder():
@@ -590,7 +590,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
     def connect_button_clicked(self):
         label = Gtk.Label(label=_("Select Folder With existing Data Store data"))
         
-        self.connect_data_folder_button = Gtk.FileChooserButton(_("Select Folder"))
+        self.connect_data_folder_button = gtkbuilder.get_file_chooser_button(_("Select Folder"))
         self.connect_data_folder_button.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.connect_data_folder_button.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -611,7 +611,7 @@ class ProjectDataManagerWindow(AbstractDataStoreWindow):
         vbox.pack_start(out_folder_row, False, False, 0)
         vbox.pack_start(name_row, False, False, 0)
 
-        dialogutils.panel_ok_cancel_dialog(_("Connect Data Store"), vbox, _("Connect Data Store"), self.connect_dialog_callback)
+        dialogutils.panel_ok_cancel_dialog_non_modal(_("Connect Data Store"), vbox, _("Connect Data Store"), self.connect_dialog_callback)
 
     def connect_dialog_callback(self, dialog, response):
         if response != Gtk.ResponseType.ACCEPT:

@@ -69,7 +69,26 @@ def panel_ok_cancel_dialog(title, panel, accept_text, callback, data=None):
         dialog.connect('response', callback, data)
 
     dialog.show_all()
+
+def panel_ok_cancel_dialog_non_modal(title, panel, accept_text, callback, data=None):
+    dialog = Gtk.Dialog(title, None,
+                        None,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         accept_text, Gtk.ResponseType.ACCEPT))
+
+    alignment = get_default_alignment(panel)
     
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+    default_behaviour(dialog)
+
+    if data == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, data)
+
+    dialog.show_all()
+
 def no_button_dialog(title, panel):
     dialog = Gtk.Dialog(title, None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
