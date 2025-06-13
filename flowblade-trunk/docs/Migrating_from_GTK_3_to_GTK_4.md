@@ -60,7 +60,7 @@
 
 ### Conversion test commits
 
-Can't get xid for widgets in Gtk4 anymore
+Can't get xid for widgets in Gtk4 anymore GdkSurface, GtkSearchEntry
 step - comment out more uimanger and initing compositing mode menu
 step - get_children()[0] -> get_first_child()
 step - comment out uimanager via gui
