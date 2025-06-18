@@ -20,7 +20,7 @@
 
 **Fix is to update to the latest version 2.22.**
 
-**If not possible, or start application from terminal with command below:**
+**If not possible, start application from terminal with command below:**
 
 ```
 SDL12COMPAT_NO_QUIT_VIDEO=1 GDK_BACKEND=x11 SDL_VIDEODRIVER=x11  /usr/bin/flowblade 
