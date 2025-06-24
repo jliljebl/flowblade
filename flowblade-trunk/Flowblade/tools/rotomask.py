@@ -140,6 +140,10 @@ class RotoMaskEditor(Gtk.Window):
         gtkbuilder.button_set_image(self.move_mode_button, "roto_move_mode")
         self.move_mode_button.connect("clicked", self._move_mode_clicked)
         
+        red, green, blue, alpha = vieweditorshape.ROTO_CURVE_COLOR
+        self.color_select = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red, green, blue, alpha))
+        self.color_select.connect("color-set", self.line_color_set)
+    
         self.scale_selector = vieweditor.ScaleSelector(self)
         self.view_editor.scale_select = self.scale_selector
 
@@ -149,6 +153,7 @@ class RotoMaskEditor(Gtk.Window):
         timeline_box.pack_start(self.kf_mode_button, False, False, 0)
         timeline_box.pack_start(self.move_mode_button, False, False, 0)
         timeline_box.pack_start(Gtk.Label(), True, True, 0)
+        timeline_box.pack_start(self.color_select, False, False, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
         timeline_box.set_margin_top(6)
         timeline_box.set_margin_bottom(6)
@@ -264,7 +269,12 @@ class RotoMaskEditor(Gtk.Window):
         if self.get_mask_type() != -1: # for older project types, this param was added later and we need to handle case that is does not exist.
             rotomask_filter.non_mlt_properties.pop(0)
         rotomask_filter.non_mlt_properties.append(("mask_type", mask_type, 0))
-        
+
+    def line_color_set(self, color_button):
+        color = color_button.get_rgba()
+        vieweditorshape.ROTO_CURVE_COLOR = (color.red, color.green, color.blue, color.alpha)
+        self.update_view()
+    
     def update_view(self):
         # Callback from kf_editor
         self.show_current_frame()
