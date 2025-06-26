@@ -139,6 +139,9 @@ class RotoMaskEditor(Gtk.Window):
         self.move_mode_button = Gtk.ToggleButton()
         gtkbuilder.button_set_image(self.move_mode_button, "roto_move_mode")
         self.move_mode_button.connect("clicked", self._move_mode_clicked)
+        self.box_mode_button = Gtk.ToggleButton()
+        gtkbuilder.button_set_image(self.box_mode_button, "roto_box_mode")
+        self.box_mode_button.connect("clicked", self._box_mode_clicked)
         
         red, green, blue, alpha = vieweditorshape.ROTO_CURVE_COLOR
         self.color_select = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red, green, blue, alpha))
@@ -152,6 +155,7 @@ class RotoMaskEditor(Gtk.Window):
         timeline_box.pack_start(Gtk.Label(), True, True, 0)
         timeline_box.pack_start(self.kf_mode_button, False, False, 0)
         timeline_box.pack_start(self.move_mode_button, False, False, 0)
+        timeline_box.pack_start(self.box_mode_button, False, False, 0)
         timeline_box.pack_start(Gtk.Label(), True, True, 0)
         timeline_box.pack_start(self.color_select, False, False, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
@@ -312,7 +316,8 @@ class RotoMaskEditor(Gtk.Window):
         elif self.roto_mask_layer.edit_mode != vieweditorlayer.ROTO_POINT_MODE:
             self.roto_mask_layer.edit_mode = vieweditorlayer.ROTO_POINT_MODE
             self.move_mode_button.set_active(False)
-    
+            self.box_mode_button.set_active(False)
+            
     def _move_mode_clicked(self, move_button):
         if self.roto_mask_layer.edit_mode == vieweditorlayer.ROTO_MOVE_MODE and move_button.get_active() == False:
             move_button.set_active(True)  # we untoggled by clicking which is not allowed, untoggle happens whenthe other mode is selected. We set the untoggled button back to being active. 
@@ -321,7 +326,18 @@ class RotoMaskEditor(Gtk.Window):
         elif self.roto_mask_layer.edit_mode != vieweditorlayer.ROTO_MOVE_MODE:
             self.roto_mask_layer.edit_mode = vieweditorlayer.ROTO_MOVE_MODE
             self.kf_mode_button.set_active(False)
-
+            self.box_mode_button.set_active(False)
+            
+    def _box_mode_clicked(self, box_button):
+        if self.roto_mask_layer.edit_mode == vieweditorlayer.ROTO_BOX_MODE and box_button.get_active() == False:
+            box_button.set_active(True)  # we untoggled by clicking which is not allowed, untoggle happens whenthe other mode is selected. We set the untoggled button back to being active. 
+        elif box_button.get_active() == False:
+            pass # this event is redundant, we always get two events when changing modes
+        elif self.roto_mask_layer.edit_mode != vieweditorlayer.ROTO_BOX_MODE:
+            self.roto_mask_layer.edit_mode = vieweditorlayer.ROTO_BOX_MODE
+            self.kf_mode_button.set_active(False)
+            self.move_mode_button.set_active(False)
+            
     def position_listener(self, normalized_pos, length):
         frame = normalized_pos * length
         self.tc_display.set_frame(int(frame))

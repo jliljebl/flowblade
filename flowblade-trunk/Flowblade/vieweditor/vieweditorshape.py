@@ -18,7 +18,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import copy
 import math
+
 import viewgeom
 
 # Edit point display types
@@ -95,6 +97,40 @@ class EditPoint:
 
         return False
 
+    def inside_box(self, box_points):
+        p1, p2 = box_points
+        x1, y1 = p1
+        x2, y2 = p2
+    
+        if x1 > x2:
+            x1, x2 = x2, x1
+        if y1 > y2:
+            y1, y2 = y2, y1
+
+        if self.x >= x1 and self.x <= x2:
+            if self.y >= y1 and self.y <= y2:
+                return True
+        
+        return False 
+
+    def update_bounding_box(self, bounding_box):
+        if bounding_box == None:
+            return ((self.x, self.y), (self.x, self.y))
+
+        p1, p2 = bounding_box
+        x1, y1 = p1
+        x2, y2 = p2
+        if self.x < x1:
+            x1 = self.x  
+        if self.x > x2:
+            x2 = self.x  
+        if self.y < y1:
+            y1 = self.y  
+        if self.y > y2:
+            y2 = self.y  
+    
+        return((x1, y1), (x2, y2))
+    
     def draw(self, cr, view_editor):
         if self.display_type == INVISIBLE_POINT:
             return
@@ -365,7 +401,12 @@ class RotoMaskEditShape(EditPointShape):
         
         self.block_shape_updates = False # We're getting a difficult to kill "size-allocate"., "window-resized" events and have to manage manually when updates to shape are allowed.
                                         # and this is used to block it from recreating edit shape in middle of mouse edit, bit hacky but works fine.
-
+        
+        # Used to implement box selection mode
+        self.box_selection = None
+        self.box_selection_drag_box = None
+        self.box_drag_data = None
+    
         self.update_shape()
 
     def add_point(self, index, p):
@@ -415,6 +456,8 @@ class RotoMaskEditShape(EditPointShape):
         if self.block_shape_updates == True:
             return
 
+        # THIS GETS CALLED ON ALL FRAME CHANGES BY RotoMaskEditLayer AS IT PROBABLY WAS DEEMED EASIER TO JUST
+        # RE-CREATE POINTS THEN TRANSFORM THEIR POSITIONS. 
 
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
@@ -583,7 +626,7 @@ class RotoMaskEditShape(EditPointShape):
         return (back.end_point, forward.end_point)
 
     def save_selected_point_data(self, selected_point):
-        # These points get re-created all the time and we need to save data on which point was selects
+        # These points get re-created all the time and we need to save data on which point was selected.
         if selected_point in self.curve_points:
             self.selected_point_array = self.curve_points
             self.selected_point_index = self.curve_points.index(selected_point)
@@ -610,6 +653,50 @@ class RotoMaskEditShape(EditPointShape):
             self.selected_point_array = None
             self.selected_point_index = -1
 
+    def create_box_selection(self):
+        selected_curve_points = []
+        selected_handle1_points = []
+        selected_handle2_points = []
+        
+        bounding_box = None
+        for p in self.curve_points:
+            if p.inside_box(self.box_drag_data):
+                selected_curve_points.append(self.curve_points.index(p))
+                bounding_box = p.update_bounding_box(bounding_box)
+    
+        for p in self.handles1:
+            if p.inside_box(self.box_drag_data):
+                selected_handle1_points.append(self.handles1.index(p))
+                bounding_box = p.update_bounding_box(bounding_box)
+                
+        for p in self.handles2:
+            if p.inside_box(self.box_drag_data):
+                selected_handle2_points.append(self.handles2.index(p))
+                bounding_box = p.update_bounding_box(bounding_box)
+                        
+        self.box_selection = (bounding_box, selected_curve_points, selected_handle1_points, selected_handle2_points)
+
+    def translate_box_selection(self, delta):
+        box_drag_data, selected_curve_points, selected_handle1_points, selected_handle2_points = self.box_selection
+
+        for i in range (0, len(self.curve_points)):
+            if i in selected_curve_points:
+                self.curve_points[i].translate_from_move_start(delta)
+
+        for i in range (0, len(self.handles1)):
+            if i in selected_handle1_points:
+                self.handles1[i].translate_from_move_start(delta)
+
+        for i in range (0, len(self.handles2)):
+            if i in selected_handle2_points:
+                self.handles2[i].translate_from_move_start(delta)
+        
+        p1, p2 = box_drag_data
+        x1, y1 = p1
+        x2, y2 = p2
+        dx, dy = delta
+        self.box_selection_drag_box = ((x1 + dx, y1 + dy), (x2 + dx, y2 + dy))
+        
     def get_selected_point(self):
         if self.selected_point_array != None:
             return self.selected_point_array[self.selected_point_index]
@@ -712,6 +799,27 @@ class RotoMaskEditShape(EditPointShape):
     def draw_curve_points(self, cr, view_editor):
         for ep in self.curve_points:
             ep.draw(cr, view_editor)
+
+    def draw_box_selection(self, cr, view_editor):
+        if self.box_drag_data != None:
+            p1, p2 = self.box_drag_data
+            rgb = (0.3, 0.3, 0.3)
+            
+        if self.box_selection_drag_box != None:
+            p1, p2 = self.box_selection_drag_box
+            rgb = (0.8, 0.5, 0.5)
+            
+        if  self.box_selection_drag_box != None or self.box_drag_data != None:
+            x1, y1 = p1
+            x2, y2 = p2
+            cr.set_line_width(2.0)
+            cr.set_source_rgb(*rgb)
+            cr.move_to(x1, y1)
+            cr.line_to(x1, y2)
+            cr.line_to(x2, y2)
+            cr.line_to(x2, y1)
+            cr.close_path()
+            cr.stroke()
 
     # ------------------------------------------------------------- saving edits
     def convert_shape_coords_and_update_clip_editor_keyframes(self):

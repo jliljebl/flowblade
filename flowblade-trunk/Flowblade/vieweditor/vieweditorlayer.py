@@ -22,12 +22,14 @@ import sys
 import vieweditorshape
 import viewgeom
 
+
 # Edit modes
 MOVE_MODE = 0
 ROTATE_MODE = 1
 
 ROTO_POINT_MODE = 0
 ROTO_MOVE_MODE = 1
+ROTO_BOX_MODE = 2
 
 ROTO_NO_EDIT = 0
 ROTO_POINT_MOVE_EDIT = 1
@@ -305,12 +307,12 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             # We want to get "mouse_pressed()" below always called from vieweditor so we always return True for hit.
             # self.last_pressed_edit_point is now None if we didn't hit anything and we use info to determine what ediy to do.
             return True
-
         elif self.edit_mode == ROTO_MOVE_MODE:
             # This mode has whole edit area active.
             return True
+        else:
+            return True
 
-        #there are no other modes
 
     def mouse_pressed(self):
         self.view_editor.edit_area_update_blocked = True
@@ -384,7 +386,12 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
 
                     self.rotomask_editor.update_mask_create_freeze_gui()
+        elif self.edit_mode == ROTO_BOX_MODE:
+            if self.edit_point_shape.box_selection == None:
+                self.edit_point_shape.box_drag_data = ( self.view_editor.movie_coord_to_panel_coord(self.mouse_start_point), 
+                                                        self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point))
 
+                
         self.clip_editor.widget.queue_draw()
 
     def mouse_dragged(self):
@@ -406,7 +413,13 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.last_pressed_edit_point.translate_from_move_start(delta)
                     hp1.translate_from_move_start(delta)
                     hp2.translate_from_move_start(delta)
-
+        elif self.edit_mode == ROTO_BOX_MODE:
+            if self.edit_point_shape.box_selection == None:
+                self.edit_point_shape.box_drag_data = ( self.view_editor.movie_coord_to_panel_coord(self.mouse_start_point), 
+                                                        self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point))
+            else:
+                self.edit_point_shape.translate_box_selection(delta)
+                
         self.edit_point_shape.maybe_force_line_mask()
 
     def mouse_released(self):
@@ -430,7 +443,18 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     hp2.translate_from_move_start(delta)
             else:
                 return # no edit point moved, no update needed
-
+        elif self.edit_mode == ROTO_BOX_MODE:
+            if self.edit_point_shape.box_selection == None:
+                self.edit_point_shape.box_drag_data = ( self.view_editor.movie_coord_to_panel_coord(self.mouse_start_point), 
+                                                        self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point))
+                self.edit_point_shape.create_box_selection()
+                self.edit_point_shape.box_drag_data = None
+                self.edit_point_shape.translate_box_selection((0.0, 0.0)) # Creates edit_point_shape.box_selection_drag_box object
+            else:
+                self.edit_point_shape.translate_box_selection(delta)
+                self.edit_point_shape.box_selection = None
+                self.edit_point_shape.box_selection_drag_box = None
+                
         self.last_pressed_edit_point = None
 
         self.edit_point_shape.maybe_force_line_mask()
@@ -479,3 +503,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             self.edit_point_shape.draw_points(cr, self.view_editor)
         else:
             self.edit_point_shape.draw_curve_points(cr, self.view_editor)
+
+        if self.edit_mode == ROTO_BOX_MODE:
+            self.edit_point_shape.draw_box_selection(cr, self.view_editor)
+            
+            
