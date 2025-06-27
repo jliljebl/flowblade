@@ -772,7 +772,7 @@ def clips_drag_out_started(event):
     clips = []
     for i in range(selected_range_in, selected_range_out + 1):
         clips.append(track.clips[i])
-    dnd.start_tline_clips_out_drag(event, clips, gui.tline_canvas.widget)
+    dnd.start_tline_clips_out_drag(event.get_gdk_event(), clips, gui.tline_canvas.widget)
 
     # Update tlione gui
     updater.repaint_tline()

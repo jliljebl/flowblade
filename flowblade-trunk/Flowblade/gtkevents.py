@@ -24,12 +24,14 @@ from gi.repository import Gtk, Gdk
 class SimpleStateEvent:
     
     def __init__(self):
-        event = Gtk.get_current_event()
-        unknow_val, self.state = event.get_state()
+        self.event = Gtk.get_current_event()
+        unknow_val, self.state = self.event.get_state()
         
     def get_state(self):
         return self.state
 
+    def get_gdk_event(self):
+        return self.event
 
 class ScrollEvent:
     
