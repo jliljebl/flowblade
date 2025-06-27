@@ -567,9 +567,11 @@ def create_gui():
     gui.pos_bar.set_dark_bg_color()
     
     # Connect window global key listener.
-    gui.global_key_controller_1 = gtkevents.KeyPressEventAdapter(gui.editor_window.window, keyevents.key_down, user_data=None, capture=True)
+    #gui.global_key_controller_1 = gtkevents.KeyPressEventAdapter(gui.editor_window.window, keyevents.key_down, user_data=None, capture=True)
+    gui.editor_window.window.connect("key-press-event", keyevents.key_down)
     if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-        gui.global_key_controller_2 = gtkevents.KeyPressEventAdapter(gui.editor_window.window2, keyevents.key_down, user_data=None, capture=True)
+        gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
+        #gui.global_key_controller_2 = gtkevents.KeyPressEventAdapter(gui.editor_window.window2, keyevents.key_down, user_data=None, capture=True)
     
     # Give undo a reference to uimanager for menuitem state changes.
     undo.set_menu_items(gui.editor_window.uimanager)
