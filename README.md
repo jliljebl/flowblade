@@ -1,5 +1,6 @@
 
 
+
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
 **New release 2.22 available. See release notes [here,](./flowblade-trunk/docs/RELEASE_NOTES.md)**
@@ -14,6 +15,7 @@
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 
+**Project on summer break, activity will resume mid-August.**
 ---
 
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
