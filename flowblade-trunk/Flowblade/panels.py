@@ -100,7 +100,7 @@ def get_bins_tree_panel(bin_list_view, callback):
     hamburger = guicomponents.HamburgerPressLaunch(callback)
     hamburger.do_popover_callback = True
     
-    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, 4, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
+    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     
 def get_sequences_panel(sequence_list_view, callback):
     panel = Gtk.VBox()
@@ -108,7 +108,7 @@ def get_sequences_panel(sequence_list_view, callback):
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
     
-    return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, 4, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
+    return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 
 def _set_sensive_widgets(sensitive, list):
     for widget in list:

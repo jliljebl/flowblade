@@ -440,7 +440,7 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
 
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 4, 4, 0, 4)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 0)
             self.project_panel = None
         else:
             # Notebook project panel for smallest screens
