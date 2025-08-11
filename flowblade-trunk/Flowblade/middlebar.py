@@ -244,8 +244,8 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
 
-    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
-    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    buttons_row.pack_start(guiutils.get_pad_label(0, MIDDLE_ROW_HEIGHT), False, True, 0) 
+    buttons_row.pack_start(guiutils.get_pad_label(0, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
             

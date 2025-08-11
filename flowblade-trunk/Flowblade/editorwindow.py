@@ -102,7 +102,7 @@ class EditorWindow:
         # Create window(s)
         self.window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
-        self.window.set_border_width(5)
+        self.window.set_border_width(0)
 
         self.window2 = None
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
@@ -227,7 +227,7 @@ class EditorWindow:
         tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
         tline_info_box.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        guiutils.set_margins(tline_info_box, 0, 0, 0, 10)
+        guiutils.set_margins(tline_info_box, 0, 0, 0, 2)
         
         if editorstate.SCREEN_WIDTH > 1550:
             menu_vbox = Gtk.HBox(True, 0)
