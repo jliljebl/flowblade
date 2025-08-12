@@ -2412,6 +2412,7 @@ frame > border.flat,
 }
 
 scrolledwindow {
+        
   viewport.frame { // avoid double borders when viewport inside scrolled window
     border-style: none;
   }

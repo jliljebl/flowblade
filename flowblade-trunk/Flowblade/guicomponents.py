@@ -2891,7 +2891,7 @@ class CategoriesModelComboBoxWithData:
 
 class EditMultiStack:
     def __init__(self):
-        self.widget = Gtk.Frame()
+        self.widget = Gtk.Alignment.new(0.5, 0, 1, 1)
         self.panels = {}
         self.visible_name = None
 
