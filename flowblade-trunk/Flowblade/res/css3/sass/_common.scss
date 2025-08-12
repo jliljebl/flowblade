@@ -1735,9 +1735,10 @@ cursor-handle {
 notebook {
   padding: 0;
 
-  &.frame {
+    &.frame {
     border: 0px solid transparent;
 
+    
     > header {
       // ugly hack to hide the borders around the header
       margin: -1px;
@@ -1749,22 +1750,22 @@ notebook {
       &.top, &.bottom { padding-left: 0; padding-right: 0; }
       &.left, &.right { padding-top: 0; padding-bottom: 0; }
     }
-  }
+    }
 
-  > stack:not(:only-child) { // the :not(:only-child) is for "hidden" notebooks
+    > stack:not(:only-child) { // the :not(:only-child) is for "hidden" notebooks
     background-color: $base_color;
-  }
+    }
 
-  > header {
+    > header {
     padding: 2px;
     background-color: $base_color;
 
-    &.top {    box-shadow: inset  0  -1px $borders_color; }
-    &.bottom { box-shadow: inset  0   1px $borders_color; }
-    &.right {  box-shadow: inset  1px 0   $borders_color; }
-    &.left {   box-shadow: inset -1px 0   $borders_color; }
+    &.top {    box-shadow: inset  0   0px $borders_color; }
+    &.bottom { box-shadow: inset  0   0px $borders_color; }
+    &.right {  box-shadow: inset  0   0px $borders_color; }
+    &.left {   box-shadow: inset  0   0px $borders_color; }
 
-  @each $_pos, $_bpos in (top, bottom), (bottom, top), (right, left), (left, right) {
+    @each $_pos, $_bpos in (top, bottom), (bottom, top), (right, left), (left, right) {
       // sizing and borders
       &.#{$_pos} {
         padding-#{$_bpos}: 0;
@@ -1865,6 +1866,7 @@ notebook {
     }
   }
 }
+
 
 //
 // Scrollbars

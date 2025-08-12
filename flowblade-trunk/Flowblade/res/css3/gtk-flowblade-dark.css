@@ -1570,13 +1570,13 @@ notebook {
     padding: 2px;
     background-color: #212121; }
     notebook > header.top {
-      box-shadow: inset 0 -1px #1a1a1a; }
+      box-shadow: inset 0 0px #1a1a1a; }
     notebook > header.bottom {
-      box-shadow: inset 0 1px #1a1a1a; }
+      box-shadow: inset 0 0px #1a1a1a; }
     notebook > header.right {
-      box-shadow: inset 1px 0 #1a1a1a; }
+      box-shadow: inset 0 0px #1a1a1a; }
     notebook > header.left {
-      box-shadow: inset -1px 0 #1a1a1a; }
+      box-shadow: inset 0 0px #1a1a1a; }
     notebook > header.top {
       padding-bottom: 0; }
       notebook > header.top > tabs > tab {
