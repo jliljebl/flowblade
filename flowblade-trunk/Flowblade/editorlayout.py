@@ -379,6 +379,7 @@ def create_position_widget(editor_window, position):
 
 def _create_notebook(position, editor_window):
     notebook = Gtk.Notebook()
+    gui.apply_widget_css_class(notebook, "notebook-side-borders", "notebook-side-borders-class.css")
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
     for panel_id in panels:
