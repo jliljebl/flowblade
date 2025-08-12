@@ -686,7 +686,6 @@ def update_stack(clip, track, clip_index):
     global widgets
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     widgets.value_edit_frame.add(scroll_window)
-
     widgets.value_edit_box = scroll_window
 
 def _alpha_filter_add_maybe_info(filter_info):
