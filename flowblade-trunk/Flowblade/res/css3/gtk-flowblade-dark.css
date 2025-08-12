@@ -1547,7 +1547,7 @@ cursor-handle {
 notebook {
   padding: 0; }
   notebook.frame {
-    border: 1px solid #1a1a1a; }
+    border: 0px solid transparent; }
     notebook.frame > header {
       margin: -1px; }
       notebook.frame > header.top {

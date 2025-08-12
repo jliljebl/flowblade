@@ -1736,7 +1736,7 @@ notebook {
   padding: 0;
 
   &.frame {
-    border: 1px solid $borders_color;
+    border: 0px solid transparent;
 
     > header {
       // ugly hack to hide the borders around the header
