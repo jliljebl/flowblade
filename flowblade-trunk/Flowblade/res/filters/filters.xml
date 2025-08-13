@@ -6,7 +6,7 @@
     <!-- NOTE: If range_out arg is not set, values will converted to be in normalized range 0-1 -->
 
     <!-- ALPHA -->
-    <filter id="frei0r.alphagrad">
+    <filter id="frei0r.alpha0ps_alphagrad">
         <name>Alpha Gradient</name>
         <group>Alpha</group>  
         <property name="Position" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0.5</property>
@@ -27,7 +27,7 @@
         <property name="Invert" args="editor=booleancheckbox displayname=Invert">1</property>
         <extraeditor name="crop_editor"></extraeditor>
     </filter>
-    <filter id="frei0r.alphaspot">
+    <filter id="frei0r.alpha0ps_alphaspot">
         <name>Alpha Shape</name>
         <group>Alpha</group>
         <property name="Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
