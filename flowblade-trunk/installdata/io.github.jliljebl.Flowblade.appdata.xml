@@ -21,6 +21,15 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+     <release version="2.22.1" date="2025-13-8">
+      <description>
+      <p>Features:</p>
+        <ul>
+          <li>New Keyframe types</li>
+          <li>New GUI editors for filters</li>
+        </ul>
+      </description>
+    </release>
      <release version="2.22" date="2025-6-6">
       <description>
       <p>Features:</p>
