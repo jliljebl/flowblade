@@ -15,7 +15,6 @@
 8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 
-**Project on summer break, activity will resume mid-August.**
 ---
 
 **--- FIX FOR NON_WORKING VIDEO PREVIEW ISSUE ---**
