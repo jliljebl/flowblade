@@ -504,7 +504,8 @@ def _create_widgets():
     widgets.clip_info = guicomponents.ClipInfoPanel()
     
     widgets.value_edit_box = Gtk.VBox()
-    widgets.value_edit_frame = Gtk.Alignment.new(0.5, 0, 1, 1)    
+    widgets.value_edit_frame = Gtk.Alignment.new(0.5, 0, 1, 1)
+    widgets.value_edit_frame.add(widgets.value_edit_box)
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     widgets.hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
