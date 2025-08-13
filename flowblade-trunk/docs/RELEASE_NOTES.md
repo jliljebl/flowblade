@@ -1,6 +1,9 @@
 # Release Notes
 
+## FLOWBLADE 2.22.1
+Date: August 13, 2025
 
+Fixes duplicate alpha filters issue.
 
 ## FLOWBLADE 2.22
 Date: June 6, 2025
