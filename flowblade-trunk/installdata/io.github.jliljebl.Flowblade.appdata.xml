@@ -16,11 +16,21 @@
   </description>
   <screenshots>
     <screenshot type="default">
+      <caption>Screenshot 2.10</caption>
       <image>https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-2-10.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+     <release version="2.22.1" date="2025-8-13">
+      <description>
+      <p>Features:</p>
+        <ul>
+          <li>New Keyframe types</li>
+          <li>New GUI editors for filters</li>
+        </ul>
+      </description>
+    </release>
      <release version="2.22" date="2025-6-6">
       <description>
       <p>Features:</p>
