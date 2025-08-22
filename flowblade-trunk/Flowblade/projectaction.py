@@ -49,6 +49,7 @@ from gi.repository import GLib
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import boxmove
 import callbackbridge
 import clipeffectseditor
 import compositeeditor
@@ -1545,6 +1546,33 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
+def create_box_compound_clip():
+    print("lll")
+    if boxove.box_selection_data == None:
+        # info window no box selection?
+        return
+
+    # lets's just set something unique-ish 
+    default_name = _("selection_") + _get_compound_clip_default_name_date_str()
+    dialogs.compound_clip_name_dialog(_do_create_box_compound_clip, default_name, _("Save Selection Container Clip"))
+
+def _do_create_box_compound_clip(dialog, response_id, name_entry):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    media_name = name_entry.get_text()
+    
+    print("media_name", media_name)
+    
+    # Create unique file path in hidden render folder
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    write_file = folder + uuid_str + ".xml"
+
+    dialog.destroy()
+    
+    
 def _xml_compound_render_done_callback(filename, media_name):
     # We do GUI updates so we need GLib thread.
     GLib.idle_add(_do_xml_media_item_add, filename, media_name)
