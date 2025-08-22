@@ -334,9 +334,13 @@ class BoxMoveData:
 
 class BoxTrackSelection:
     """
-    This class collects data on track's Box selected clips.
+    This class collects data on track's box selection clips.
     """
     def __init__(self, i, start_frame, end_frame):
+        # These two are used when creating box selection compound clips but not when doing box selection move edits. 
+        self.start_frame = start_frame
+        self.end_frame = end_frame
+        
         self.track_id = i
         self.selected_range_in  = -1
         self.selected_range_out = -1 # inclusive
@@ -386,7 +390,7 @@ class BoxTrackSelection:
                 break
         self.selected_range_in = blanks_stripped_start
         if self.selected_range_in > self.selected_range_out:
-            return # the 1 cli in selection range is blank
+            return # the only clip in selection range is blank
 
         # Drop blanks from end
         blanks_stripped_end = self.selected_range_out

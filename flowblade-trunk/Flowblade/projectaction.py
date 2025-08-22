@@ -1547,8 +1547,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     render_player.start()
 
 def create_box_compound_clip():
-    print("lll")
-    if boxove.box_selection_data == None:
+    if boxmove.box_selection_data == None:
         # info window no box selection?
         return
 
@@ -1563,14 +1562,43 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
 
     media_name = name_entry.get_text()
     
-    print("media_name", media_name)
-    
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
     uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     write_file = folder + uuid_str + ".xml"
 
     dialog.destroy()
+
+    box_data = boxmove.box_selection_data 
+ 
+    # Create tractor
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+        
+    trackindex = 0
+    for track_selection in box_data.track_selections:
+        track = mlt.Playlist(PROJECT().profile)
+        current_track = current_sequence().tracks[track_selection.track_id]
+        multitrack.connect(track, trackindex)
+        if track_selection.range_frame_in == -1:
+            trackindex += 1
+            continue
+                
+        # Put one blank in if needed
+        if track_selection.start_frame < current_track.clip_start(track_selection.selected_range_in):
+            blank_len = current_track.clip_start(track_selection.selected_range_in) - track_selection.start_frame 
+            track.insert_blank(0, blank_len - 1) # end inclusive
+
+        # Create clone clips and fill track
+        for i in range(track_selection.selected_range_in, track_selection.selected_range_out + 1): # + 1 == selected_range_out inclusive
+            clip = current_sequence().create_clone_clip(current_track.clips[i])
+            track.append(clip, clip.clip_in, clip.clip_out)
+        
+        trackindex += 1
+                    
+    # Render compound clip as MLT XML file
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
+    render_player.start()
     
     
 def _xml_compound_render_done_callback(filename, media_name):
