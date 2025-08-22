@@ -735,7 +735,7 @@ def draw_overwrite_box_overlay(cr, data):
                 
             _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
     
-            cr.set_source_rgb(*BOX_BOUND_COLOR)
+            cr.set_source_rgba(*BOX_BOUND_COLOR)
             cr.stroke()
                     
         # Draw bounding box

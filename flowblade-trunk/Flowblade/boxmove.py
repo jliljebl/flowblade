@@ -219,7 +219,8 @@ class BoxMoveData:
             track_compositors = current_sequence().get_track_compositors(i)
             for comp in track_compositors:
                 if comp.clip_in >= start_frame and comp.clip_out < end_frame:
-                    self.selected_compositors.append(comp)
+                    if not(comp.clip_in == 0 and comp.clip_out == 0):
+                        self.selected_compositors.append(comp)
         
         # Get BoxTrackSelection objects
         for i in range(track_bottom_index + 1, track_top_index):
