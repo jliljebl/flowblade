@@ -849,6 +849,7 @@ class EditorWindow:
             ('LoadMediaPluginScript', None, _('Load Generator Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateBoxCompound', None, _('From Box Selection'), None, None, lambda a:projectaction.create_box_compound_clip()),
+            ('CreateRangeCompound', None, _('From Timeline Range'), None, None, lambda a:projectaction.create_range_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
             ('CreateSequenceLinkContainerItem', None, _("Add Sequence Link Container Clip..."), None, None, lambda a:projectaction.create_sequence_link_container()),
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
@@ -960,6 +961,7 @@ class EditorWindow:
                     <menu action='ContainerClipsMenu'>
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateBoxCompound'/>
+                        <menuitem action='CreateRangeCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
                         <separator/>

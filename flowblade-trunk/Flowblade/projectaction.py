@@ -1605,8 +1605,82 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
     # Render compound clip as MLT XML file
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
+
+def create_range_compound_clip():
+    # exit if no range available
+    if current_sequence().tractor.mark_in == -1 or current_sequence().tractor.mark_out == -1:
+        return
+
+    # lets's just set something unique-ish 
+    default_name = _("selection_") + _get_compound_clip_default_name_date_str()
+    dialogs.compound_clip_name_dialog(_do_create_range_compound_clip, default_name, _("Save Range Container Clip"))
+
+def _do_create_range_compound_clip(dialog, response_id, name_entry):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    media_name = name_entry.get_text()
     
-    
+    # Create unique file path in hidden render folder
+    folder = userfolders.get_render_dir()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    write_file = folder + uuid_str + ".xml"
+
+    dialog.destroy()
+ 
+    # Get timeline frame range.
+    range_frame_in = current_sequence().tractor.mark_in  
+    range_frame_out = current_sequence().tractor.mark_out
+ 
+    # Create tractor
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+        
+    trackindex = 0
+    for i in range(1, len(current_sequence().tracks) - 1):
+        track = mlt.Playlist(PROJECT().profile)
+        orig_track = current_sequence().tracks[i]
+        multitrack.connect(track, trackindex)
+        if len(orig_track.clips) > 0:
+            _track_range_copy(range_frame_in, range_frame_out, track, orig_track)
+        trackindex += 1
+
+    # Render compound clip as MLT XML file
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
+    render_player.start()
+
+def _track_range_copy(over_in, over_out, track, orig_track):
+    range_in = orig_track.get_clip_index_at(over_in)
+    range_out = orig_track.get_clip_index_at(over_out)
+    print(range_in, range_out)
+    for i in range(range_in, range_out + 1):
+        clip_start_in_tline = track.clip_start(i)
+        orig_clip = orig_track.clips[i]
+        if clip_start_in_tline < over_in:
+            # Cut in clip
+            cut_clip_in = orig_clip.clip_in + over_in - clip_start_in_tline
+            if orig_clip.is_blanck_clip == False:
+                clip = current_sequence().create_clone_clip(orig_clip)
+                track.append(clip, cut_clip_in, clip.clip_out)
+            else:
+                track.insert_blank(i - range_in, orig_clip.clip_out - cut_clip_in + 1) # +1 end inclusive
+        elif clip_start_in_tline + orig_clip.clip_out -  orig_clip.clip_in + 1 > over_out: # +1 ??????
+            # Cut out clip
+            cut_clip_out = orig_clip.clip_out - (clip_start_in_tline + orig_clip.clip_out - orig_clip.clip_in + 1) - over_out
+            if orig_clip.is_blanck_clip == False:
+                clip = current_sequence().create_clone_clip(orig_clip)
+                track.append(clip, clip.clip_in, cut_clip_out)
+            else:
+                track.insert_blank(i - range_in, cut_clip_out - orig_clip.clip_in + 1) # +1 end inclusive
+        else:
+            # Non-cut clips
+            if orig_clip.is_blanck_clip == False:
+                clip = current_sequence().create_clone_clip(orig_clip)
+                track.append(clip, clip.clip_in, clip.clip_out)
+            else:
+                track.insert_blank(i - range_in, orig_clip.clip_out - orig_clip.clip_in  + 1) # +1 end inclusive
+
 def _xml_compound_render_done_callback(filename, media_name):
     # We do GUI updates so we need GLib thread.
     GLib.idle_add(_do_xml_media_item_add, filename, media_name)
