@@ -1585,14 +1585,20 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
             continue
                 
         # Put one blank in if needed
+        add_blank = 0 # We need this for insert blank index calculation below. 
         if track_selection.start_frame < current_track.clip_start(track_selection.selected_range_in):
             blank_len = current_track.clip_start(track_selection.selected_range_in) - track_selection.start_frame 
             track.insert_blank(0, blank_len - 1) # end inclusive
+            add_blank = 1
 
         # Create clone clips and fill track
         for i in range(track_selection.selected_range_in, track_selection.selected_range_out + 1): # + 1 == selected_range_out inclusive
-            clip = current_sequence().create_clone_clip(current_track.clips[i])
-            track.append(clip, clip.clip_in, clip.clip_out)
+            orig_clip = current_track.clips[i]
+            if orig_clip.is_blanck_clip == False:
+                clip = current_sequence().create_clone_clip(orig_clip)
+                track.append(clip, clip.clip_in, clip.clip_out)
+            else:
+                track.insert_blank(i - track_selection.selected_range_in + add_blank, orig_clip.clip_out - orig_clip.clip_in  + 1) # +1 end inclusive
         
         trackindex += 1
                     
