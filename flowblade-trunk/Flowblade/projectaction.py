@@ -1653,33 +1653,42 @@ def _do_create_range_compound_clip(dialog, response_id, name_entry):
 def _track_range_copy(over_in, over_out, track, orig_track):
     range_in = orig_track.get_clip_index_at(over_in)
     range_out = orig_track.get_clip_index_at(over_out)
-    print(range_in, range_out)
+    print("track:", orig_track.id, range_in, range_out)
     for i in range(range_in, range_out + 1):
-        clip_start_in_tline = track.clip_start(i)
+        if i > len(orig_track.clips) - 1:
+            return # This track has clips but ends before range end.
+
         orig_clip = orig_track.clips[i]
-        if clip_start_in_tline < over_in:
-            # Cut in clip
+        clip_start_in_tline = track.clip_start(i)
+
+        clip_len = orig_clip.clip_out - orig_clip.clip_in + 1
+        print("clip", i,  orig_clip.clip_in,  orig_clip.clip_out, clip_len) 
+        cut_in_len = 0       
+        if clip_start_in_tline < over_in and clip_start_in_tline + clip_len > over_out :
+            print("cut in out")
             cut_clip_in = orig_clip.clip_in + over_in - clip_start_in_tline
-            if orig_clip.is_blanck_clip == False:
-                clip = current_sequence().create_clone_clip(orig_clip)
-                track.append(clip, cut_clip_in, clip.clip_out)
-            else:
-                track.insert_blank(i - range_in, orig_clip.clip_out - cut_clip_in + 1) # +1 end inclusive
-        elif clip_start_in_tline + orig_clip.clip_out -  orig_clip.clip_in + 1 > over_out: # +1 ??????
-            # Cut out clip
-            cut_clip_out = orig_clip.clip_out - (clip_start_in_tline + orig_clip.clip_out - orig_clip.clip_in + 1) - over_out
-            if orig_clip.is_blanck_clip == False:
-                clip = current_sequence().create_clone_clip(orig_clip)
-                track.append(clip, clip.clip_in, cut_clip_out)
-            else:
-                track.insert_blank(i - range_in, cut_clip_out - orig_clip.clip_in + 1) # +1 end inclusive
+            cut_clip_out = orig_clip.clip_in + over_out - clip_start_in_tline - over_in
+        elif clip_start_in_tline < over_in:
+            print("cut in")
+            cut_clip_in = orig_clip.clip_in + over_in - clip_start_in_tline
+            cut_clip_out = orig_clip.clip_out
+        elif clip_start_in_tline + clip_len > over_out:
+            print("cut out")
+            cut_clip_in = orig_clip.clip_in
+            print( orig_clip.clip_in, over_out, clip_start_in_tline)
+            cut_clip_out = orig_clip.clip_in + over_out - clip_start_in_tline - over_in
         else:
-            # Non-cut clips
-            if orig_clip.is_blanck_clip == False:
-                clip = current_sequence().create_clone_clip(orig_clip)
-                track.append(clip, clip.clip_in, clip.clip_out)
-            else:
-                track.insert_blank(i - range_in, orig_clip.clip_out - orig_clip.clip_in  + 1) # +1 end inclusive
+            print("no cut")
+            cut_clip_in = orig_clip.clip_in 
+            cut_clip_out = orig_clip.clip_out
+
+        if orig_clip.is_blanck_clip == False:
+            clip = current_sequence().create_clone_clip(orig_clip)
+            print("add:", cut_clip_in, cut_clip_out, "len:", (cut_clip_out - cut_clip_in + 1))
+            track.append(clip, cut_clip_in, cut_clip_out)
+        else:
+            print("add blank:", "len:", cut_clip_out - cut_clip_in + 1)
+            track.insert_blank(i - range_in, cut_clip_out - cut_clip_in + 1) # +1 end inclusive
 
 def _xml_compound_render_done_callback(filename, media_name):
     # We do GUI updates so we need GLib thread.
