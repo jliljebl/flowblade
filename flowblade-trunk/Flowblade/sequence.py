@@ -719,7 +719,6 @@ class Sequence:
         self.compositors = []
 
     def add_full_track_compositors(self):
-        #print("Adding full track compositors")
         
         for i in range(self.first_video_index, len(self.tracks) - 1):
             track = self.tracks[i]
@@ -736,7 +735,6 @@ class Sequence:
             self.add_compositor(compositor)
         
         self.restack_compositors()
-        #print("Adding full track compositors DONE")
     
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
