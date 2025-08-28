@@ -45,6 +45,7 @@ import atomicfile
 import callbackbridge
 import editorpersistance
 import editorstate
+import gui
 import mltinit
 import mltprofiles
 import projectdatavault
@@ -162,6 +163,11 @@ class AudioRenderLaunchThread(threading.Thread):
 
 def _repaint():
     callbackbridge.updater_repaint_tline()
+    try:
+        gui.monitor_waveform_display.widget.queue_draw()
+    except:
+        pass # We might not have a producer set in monitor to draw.
+    print("_repaint")
     return False
     
 # --------------------------------------------------------- rendering

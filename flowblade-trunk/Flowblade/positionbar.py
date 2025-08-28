@@ -28,6 +28,8 @@ import math
 
 from gi.repository import Gdk
 
+import appconsts
+import audiowaveformrenderer
 from cairoarea import CairoDrawableArea2
 import callbackbridge
 import editorstate
@@ -63,6 +65,12 @@ DARK_MARK_COLOR = (0.75, 0.75, 0.75)
 PREVIEW_FRAME_COLOR = (0.8, 0.8, 0.9)
 PREVIEW_RANGE_COLOR = (0.4, 0.8, 0.4)
 
+WAVEFORM_AREA_WIDTH = 200 # Just used as an initial value > 0, no effect on window layout.
+WAVEFORM_AREA_HEIGHT = 30
+WAVEFORM_AREA_END_PAD = 0
+
+WAVEFORM_AREA_BG_COLOR = (0.4, 0.4, 0.4)
+WAVEFORM_AREA_DRAW_COLOR = (0.1, 0.1, 0.1)
 class PositionBar:
     """
     GUI component used to set/display position in clip/timeline
@@ -185,9 +193,6 @@ class PositionBar:
             draw_color = DISABLED_BG_COLOR
         cr.set_source_rgb(*draw_color)
         self._round_rect_path(cr)
-        #cr.set_source_rgb(0,0,0)
-        #cr.stroke()
-        #cr.rectangle(0,0,w,h)
         cr.fill()
         
         # Draw selected area if marks set
@@ -396,3 +401,134 @@ class PositionBar:
         return float(self._pos - END_PAD) / \
                 (self.widget.get_allocation().width - END_PAD * 2)
 
+
+class ClipWaveformArea:
+    """
+    GUI component used to set/display position in clip/timeline
+    """
+
+    def __init__(self):
+
+        self.widget = CairoDrawableArea2(   WAVEFORM_AREA_WIDTH, 
+                                            WAVEFORM_AREA_HEIGHT, 
+                                            self._draw)
+
+        self._pos = WAVEFORM_AREA_END_PAD # in display pixels
+        
+        self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
+        
+    def set_listener(self, listener):
+        self.position_listener = listener
+
+    def set_normalized_pos(self, norm_pos):
+        """
+        Sets position in range 0 - 1
+        """
+        self._pos = self._get_panel_pos(norm_pos)
+        self.widget.queue_draw()
+
+    def update_display_from_producer(self, producer):
+        self.producer = producer
+        length = producer.get_length() # Get from MLT
+        self.length = length 
+        try:
+            frame_pos = producer.frame()
+            norm_pos = float(frame_pos) / length
+            self._pos = self._get_panel_pos(norm_pos)
+        except ZeroDivisionError:
+            self._pos = self._get_panel_pos(0)
+
+        self.widget.queue_draw()
+
+    def clear(self):
+        self.preview_frame = -1
+        self.preview_range = None
+
+        self.widget.queue_draw()
+
+    def _get_panel_pos(self, norm_pos):
+        return WAVEFORM_AREA_END_PAD + int(norm_pos * 
+               (self.widget.get_allocation().width - 2 * WAVEFORM_AREA_END_PAD))
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo context and allocation.
+        """
+        x, y, w, h = allocation
+        cr.set_source_rgb(*WAVEFORM_AREA_BG_COLOR)
+        cr.stroke()
+        cr.rectangle(0,0,w,h)
+        cr.fill()
+
+        clip = self.producer
+
+        if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
+            and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
+            clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
+        
+        if  clip.waveform_data != None: 
+            r, g, b = WAVEFORM_AREA_BG_COLOR
+            cr.set_source_rgb(r * 1.9, g * 1.9, b * 1.9)
+
+            y_pad = 0
+            bar_height = h
+            
+            # Draw all frames only if pixels per frame > 2, otherwise.
+            # draw only every other or fewer frames.
+            draw_pix_per_frame = self.length / w 
+            pix_per_frame = draw_pix_per_frame
+                
+            if draw_pix_per_frame < 2:
+                draw_pix_per_frame = 2
+                step = int(2 // pix_per_frame)
+                if step < 1:
+                    step = 1
+            else:
+                step = 1
+
+            # Draw all frames
+            draw_first = 0
+            draw_last = self.length - 1
+            media_start_pos_pix = 0
+            
+            # Draw level bar for each frame in draw range.
+            for f in range(draw_first, draw_last, step):
+
+                try:
+                    x = media_start_pos_pix + f * pix_per_frame
+                    
+                    wh = bar_height * clip.waveform_data[f]
+                    if wh < 1:
+                        wh = 1
+                    cr.rectangle(x, y_pad + (bar_height - wh), draw_pix_per_frame, wh)
+                except:
+                    # This is just dirty fix a when 23.98 fps does not work.
+                    break
+
+            cr.fill()
+        else:
+            pass 
+ 
+        # Draw position pointer
+        cr.move_to(self._pos, 0)
+        cr.line_to(self._pos, h)
+        cr.set_source_rgb(0,0,0)
+        cr.stroke()
+
+    def _legalize_x(self, x):
+        """
+        Get x in pixel range corresponding normalized position 0.0 - 1.0.
+        This is needed because of end pads.
+        """
+        w = self.widget.get_allocation().width
+        if x < WAVEFORM_AREA_END_PAD:
+            return WAVEFORM_AREA_END_PAD
+        elif x > w - WAVEFORM_AREA_END_PAD:
+            return w - WAVEFORM_AREA_END_PAD
+        else:
+            return x
+    
+    def normalized_pos(self):
+        return float(self._pos - WAVEFORM_AREA_END_PAD) / \
+                (self.widget.get_allocation().width - WAVEFORM_AREA_END_PAD * 2)

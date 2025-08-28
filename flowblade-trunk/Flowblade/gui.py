@@ -65,6 +65,8 @@ big_tc = None
 comp_mode_launcher = None
 monitor_widget = None
 monitor_switch = None
+monitor_waveform_display = None
+
 # indexes match editmode values in editorstate.py
 notebook_buttons = None
 
@@ -93,7 +95,7 @@ def capture_references(new_editor_window):
     tline_column, play_b, effect_select_list_view, effect_select_combo_box, \
     project_info_vbox, big_tc, editmenu, notebook_buttons, tline_left_corner, \
     monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip, \
-    tline_cursor_manager
+    tline_cursor_manager, monitor_waveform_display
 
     editor_window = new_editor_window
 
@@ -109,7 +111,8 @@ def capture_references(new_editor_window):
 
     monitor_widget = editor_window.monitor_widget
     monitor_switch = editor_window.monitor_switch
-    
+    monitor_waveform_display = monitor_widget.waveform_display
+     
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas

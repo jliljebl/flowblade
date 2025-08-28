@@ -34,6 +34,7 @@ import cairoarea
 import editorstate
 from editorstate import PLAYER
 from editorstate import PROJECT
+import positionbar
 import respaths
 import utils
 import userfolders
@@ -112,6 +113,8 @@ class MonitorWidget:
         black_box.add(Gtk.Label())
         self.monitor = black_box
 
+        self.waveform_display = positionbar.ClipWaveformArea()
+
         self.right_display = cairoarea.CairoDrawableArea2(1, 1, self._draw_match_frame_right, use_widget_bg=False)
         
         self.mid_row.pack_start(self.left_display, False, False,0)
@@ -127,6 +130,7 @@ class MonitorWidget:
         self.widget.pack_start(self.top_row, False, False,0)
         self.widget.pack_start(self.mid_row , True, True,0)
         self.widget.pack_start(self.bottom_row, False, False,0)
+        self.widget.pack_start(self.waveform_display.widget, False, False, 0)
 
         self.CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
         self.PATTERN_PRODUCER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_trim_view.png")

@@ -449,6 +449,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 
     # Display frame, marks and pos
     gui.pos_bar.update_display_from_producer(clip_producer)
+    gui.monitor_waveform_display.update_display_from_producer(clip_producer)
     
     display_monitor_clip_name()
 
@@ -469,6 +470,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.pos_bar.widget.grab_focus()
     gui.media_list_view.widget.queue_draw()    
     gui.monitor_switch.widget.queue_draw()
+    gui.monitor_waveform_display.widget.show()
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also
@@ -524,6 +526,7 @@ def display_sequence_in_monitor():
     css_str = "#player-bar { background-color: #363636; border-radius: 10px;}"
     gui.apply_widget_css_class_style_from_string(gui.editor_window.player_buttons_row, css_str)
 
+    gui.monitor_waveform_display.widget.hide()
     gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
@@ -596,6 +599,7 @@ def update_frame_displayers(frame):
 
     norm_pos = frame / float(producer_length) 
     gui.pos_bar.set_normalized_pos(norm_pos)
+    gui.monitor_waveform_display.set_normalized_pos(norm_pos)
 
     kftoolmode.update_clip_frame(frame)
     
