@@ -259,7 +259,6 @@ def _menu_action_pressed(launcher, widget, event, data):
     guipopover.jobs_menu_popover_show(launcher, widget, _hamburger_item_activated)
     
 def _hamburger_item_activated(action, variant, msg=None):
-    print(msg)
     if msg == "cancel_all":
         _cancel_all_jobs()
 

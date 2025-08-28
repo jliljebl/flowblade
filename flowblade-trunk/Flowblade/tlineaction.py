@@ -960,16 +960,22 @@ def do_mute_clip(clip, audio_on):
 
 # --------------------------------------------------------- view move setting
 def view_mode_menu_lauched(launcher, widget, event):
-    guipopover.monitor_view_popupmenu_show(launcher, widget, _view_mode_menu_item_item_activated, _opacity_menu_item_item_activated)
+    guipopover.monitor_view_popupmenu_show(launcher, widget, _view_mode_menu_item_item_activated, _opacity_menu_item_item_activated, _waveform_callback)
     
 def _view_mode_menu_item_item_activated(action, new_value_variant):
     msg = int(new_value_variant.get_string())
-    
     editorstate.current_sequence().set_output_mode(msg)
     editorstate.tline_view_mode = msg
     action.set_state(new_value_variant)
     guipopover._monitorview_popover.hide()
 
+def _waveform_callback(action, variant, msg):
+    new_state = not(action.get_state().get_boolean())
+    editorpersistance.prefs.show_waveform_in_monitor = new_state
+    editorpersistance.save()
+    action.set_state(GLib.Variant.new_boolean(new_state))
+    gui.monitor_waveform_display.update_visibility()
+    
 def set_monitor_display_mode(display_mode):
     editorstate.current_sequence().set_output_mode(display_mode)
     editorstate.tline_view_mode = display_mode
@@ -987,6 +993,7 @@ def _opacity_menu_item_item_activated(action, new_value_variant):
     editorstate.current_sequence().set_scope_overlay_mix(mix_value_index)
     action.set_state(new_value_variant)
     guipopover._monitorview_popover.hide()
+
 
 # ------------------------------------------------------- dialogs    
 def no_monitor_clip_info(parent_window):

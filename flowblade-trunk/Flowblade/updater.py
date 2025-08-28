@@ -470,7 +470,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.pos_bar.widget.grab_focus()
     gui.media_list_view.widget.queue_draw()    
     gui.monitor_switch.widget.queue_draw()
-    gui.monitor_waveform_display.widget.show()
+    gui.monitor_waveform_display.update_visibility()
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also

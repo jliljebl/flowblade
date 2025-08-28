@@ -387,3 +387,4 @@ class EditorPreferences:
         self.show_sync = True
         self.wide_multitrim_slip = False
         self.disable_drag_when_selected = True
+        self.show_waveform_in_monitor = True

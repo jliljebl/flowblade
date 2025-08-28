@@ -32,6 +32,7 @@ import appconsts
 import audiowaveformrenderer
 from cairoarea import CairoDrawableArea2
 import callbackbridge
+import editorpersistance
 import editorstate
 import respaths
 
@@ -70,7 +71,8 @@ WAVEFORM_AREA_HEIGHT = 30
 WAVEFORM_AREA_END_PAD = 0
 
 WAVEFORM_AREA_BG_COLOR = (0.4, 0.4, 0.4)
-WAVEFORM_AREA_DRAW_COLOR = (0.1, 0.1, 0.1)
+
+
 class PositionBar:
     """
     GUI component used to set/display position in clip/timeline
@@ -455,13 +457,17 @@ class ClipWaveformArea:
         Callback for repaint from CairoDrawableArea.
         We get cairo context and allocation.
         """
+        try:
+            clip = self.producer
+        except:
+            return
+        
         x, y, w, h = allocation
         cr.set_source_rgb(*WAVEFORM_AREA_BG_COLOR)
         cr.stroke()
         cr.rectangle(0,0,w,h)
         cr.fill()
 
-        clip = self.producer
 
         if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
             and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -532,3 +538,10 @@ class ClipWaveformArea:
     def normalized_pos(self):
         return float(self._pos - WAVEFORM_AREA_END_PAD) / \
                 (self.widget.get_allocation().width - WAVEFORM_AREA_END_PAD * 2)
+    
+    def update_visibility(self):
+        if editorpersistance.prefs.show_waveform_in_monitor == True:
+            self.widget.show()
+        else:
+            self.widget.hide()
+    
