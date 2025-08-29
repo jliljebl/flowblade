@@ -659,9 +659,9 @@ class Titler(Gtk.Window):
         self.info_text = Gtk.Label()
         
         editor_buttons_row = Gtk.HBox()
-        editor_buttons_row.pack_start(self.info_text, True, True, 0)
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(self.info_text, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
@@ -693,7 +693,6 @@ class Titler(Gtk.Window):
     
     def show_info(self, info_text):
         self.info_text.set_markup("<small>" + info_text + "</small>")
-        #GLib.timeout_add(2500, self.clear_info)
 
     def clear_info(self):
         self.info_text.set_markup("")
@@ -808,13 +807,11 @@ class Titler(Gtk.Window):
                 global _titler_lastdir
                 _titler_lastdir = dirname
 
-                #self.show_info(_("Saved Graphic."))
+                self.show_info(_("Saved Graphic Media Item."))
             
                 open_file_thread = OpenFileThread(save_path, self.view_editor)
                 open_file_thread.start()
-                # INFOWINDOW
             except:
-                # INFOWINDOW
                 dialog.destroy()
                 return
         else:
@@ -1501,6 +1498,7 @@ class OpenTitlerItemThread(threading.Thread):
         open_in_bin_thread.start()
 
     def _completed_callback(self):
+        _titler.show_info(_("Saved Title Media Item."))
         GLib.idle_add(self._recreate_pango_layers)
     
     def _recreate_pango_layers(self):
