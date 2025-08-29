@@ -78,7 +78,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
         self.scroll_controller.connect("scroll", self._mouse_scroll_event)
  
-        # Signal handler funcs. These are monkeypatched as needed on codes sites
+        # Signal handler funcs. These are monkeypatched as needed on use sites
         # that create the objects.
         self.press_func = self._press
         self.release_func = self._release

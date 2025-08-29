@@ -1488,7 +1488,7 @@ class TimeLineCanvas:
         """
         Mouse button callback
         """
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
+        if event.n_press == 2:
             self.double_click_listener(get_frame(event.x), event.x, event.y)
             return
          
@@ -2436,7 +2436,7 @@ class TimeLineColumn:
         """
         Mouse button callback
         """
-        if event.type == Gdk.EventType._2BUTTON_PRESS:
+        if event.n_press == 2:
             for tester in self.track_testers:
                 if tester.is_hit(event.y):
                     self.double_click_listener(tester.data.track)
