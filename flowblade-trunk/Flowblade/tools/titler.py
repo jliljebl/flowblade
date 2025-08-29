@@ -281,6 +281,8 @@ class Titler(Gtk.Window):
         self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
+
+        self.title_name = "TITLE"
         
         add_b = Gtk.Button(label=_("Add"))
         del_b = Gtk.Button(label=_("Delete"))
@@ -626,9 +628,23 @@ class Titler(Gtk.Window):
 
         # ------------------------------------------------------- Editor buttons
         self.save_action_combo = Gtk.ComboBoxText()
-        self.save_action_combo.append_text(_("Save As Title"))
-        self.save_action_combo.append_text(_("Save As Graphic"))
+        self.save_action_combo.append_text(_("Save As Title Media Object"))
+        self.save_action_combo.append_text(_("Save As Graphic Media Object"))
         self.save_action_combo.set_active(0)
+
+        self.title_name_entry = Gtk.Entry()
+        self.title_name_entry.set_text(self.title_name)
+        self.title_name_entry.set_width_chars(20)
+        self.title_name_entry.set_margin_right(12)
+
+        self.title_name_label = Gtk.Label(_("Title Name:"))
+        self.title_name_label.set_margin_right(4)
+
+        title_name_row = Gtk.HBox()
+        title_name_row.pack_start(Gtk.Label(), True, True, 0)
+        title_name_row.pack_start(self.title_name_label, False, False, 0)
+        title_name_row.pack_start(self.title_name_entry, False, False, 0)
+        title_name_row.pack_start(self.save_action_combo, False, False, 0)
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:close_titler())
@@ -645,8 +661,6 @@ class Titler(Gtk.Window):
         editor_buttons_row = Gtk.HBox()
         editor_buttons_row.pack_start(self.info_text, True, True, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
-        if _clip_data == None:
-            editor_buttons_row.pack_start(self.save_action_combo, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
@@ -657,6 +671,9 @@ class Titler(Gtk.Window):
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
+        if _clip_data == None:
+            editor_panel.pack_start(title_name_row, False, False, 0)
+            editor_panel.pack_start(guiutils.pad_label(2, 12), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()
@@ -747,45 +764,38 @@ class Titler(Gtk.Window):
             self.view_editor.write_callback = self.title_write_done
             self.view_editor.write_layers_to_png(new_title_path)
         else:
-            if self.save_action_combo.get_active() == 1:
-                toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, "title.png", _titler_lastdir)
-            else:
-                dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
-                                                            _("Select Title Name"),
-                                                            _("Set Name"),
-                                                            _("Title Name:"),
-                                                            _("Title"))
-                dialog.connect('response', self._titler_item_name_dialog_callback, entry)
-                dialog.show_all()
+            self._do_title_save()
 
     def title_write_done(self, new_title_path):
         GLib.idle_add(_edit_title_exit, new_title_path)
             
-    def  _titler_item_name_dialog_callback(self, dialog, response_id, entry):
-        if response_id == Gtk.ResponseType.ACCEPT:
-            name = entry.get_text()
-            dialog.destroy()
-            
-            if name == "":
-                name = _("Title")
-            
-            md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
-            save_path = userfolders.get_render_dir() + md_str
+    def _do_title_save(self):
+        name = self.title_name_entry.get_text()
 
-            self.view_editor.write_layers_to_png(save_path)
-            
-            # Destroy pango layouts as they cannot be pickled and thus cannot be part of savefile where 
-            # this data ends up as a clip.titler_data and mediafile.titler_data properties.
-            # We need deep copy from picledable shallow copy so when pango layers get recreated
-            # for titler they don't end up in save data.
-            title_data_shallow = copy.copy(_titler_data)
-            title_data_shallow.destroy_pango_layouts()
-            title_data = copy.deepcopy(title_data_shallow)
- 
-            open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
-            open_title_item_thread.start()
+        if name == "":
+            name = _("Title")
         else:
-            dialog.destroy()
+            self.title_name = name
+
+        if self.save_action_combo.get_active() == 1:
+            toolsdialogs.save_titler_graphic_as_dialog(self._save_title_dialog_callback, name + ".png", _titler_lastdir)
+            return
+
+        md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() + ".png"
+        save_path = userfolders.get_render_dir() + md_str
+
+        self.view_editor.write_layers_to_png(save_path)
+        
+        # Destroy pango layouts as they cannot be pickled and thus cannot be part of savefile where 
+        # this data ends up as a clip.titler_data and mediafile.titler_data properties.
+        # We need deep copy from picledable shallow copy so when pango layers get recreated
+        # for titler they don't end up in save data.
+        title_data_shallow = copy.copy(_titler_data)
+        title_data_shallow.destroy_pango_layouts()
+        title_data = copy.deepcopy(title_data_shallow)
+
+        open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
+        open_title_item_thread.start()
 
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
