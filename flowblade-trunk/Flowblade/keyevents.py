@@ -155,7 +155,7 @@ def key_down(widget, event):
         return True
 
     # Events that are available when monitor displays clip.
-    if gui.monitor_switch.widget.has_focus() and (not timeline_visible()):
+    if (gui.monitor_switch.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()) and (not timeline_visible()):
         _handle_clip_key_event(event)
         return True
     # Events that are available when monitor displays clip
@@ -492,7 +492,7 @@ def _handle_extended_monitor_focus_events(event):
     # We're dropping monitor window in 2 window mode as part of timeline focus
     #    TODO:        gui.sequence_editor_b.has_focus() or
     #        gui.clip_editor_b.has_focus()):
-    if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus()):
+    if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()):
         return False
 
     if action == '3_point_overwrite':

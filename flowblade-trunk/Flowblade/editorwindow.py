@@ -1309,7 +1309,8 @@ class EditorWindow:
 
         # Monitor position bar
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
-
+        gui.monitor_waveform_display.set_listener(mltplayer.seek_position_normalized)
+        
     def _get_edit_buttons_row(self):
         tools_pixbufs = tlinecursors.get_tools_pixbuffs()
 

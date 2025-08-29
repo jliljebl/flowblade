@@ -88,7 +88,7 @@ class PositionBar:
         self._pos = END_PAD # in display pixels
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0
-        self.disabled = False
+        self.disabled = False # Does not seem to be used, look to remove
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
         self.mouse_press_listener = None # when used by scripttool.py this is used to stop playback
 
@@ -417,8 +417,10 @@ class ClipWaveformArea:
 
         self._pos = WAVEFORM_AREA_END_PAD # in display pixels
         
-        self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
-        
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+
     def set_listener(self, listener):
         self.position_listener = listener
 
@@ -467,7 +469,6 @@ class ClipWaveformArea:
         cr.stroke()
         cr.rectangle(0,0,w,h)
         cr.fill()
-
 
         if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
             and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -544,4 +545,37 @@ class ClipWaveformArea:
             self.widget.show()
         else:
             self.widget.hide()
-    
+
+    def _press_event(self, event):
+        """
+        Mouse button callback
+        """
+
+        if((event.button == 1)
+            or(event.button == 3)):
+            # Set pos to in active range to get normalized pos
+            self._pos = self._legalize_x(event.x)
+            # Listener calls self.set_normalized_pos()
+            # _pos gets actually set twice
+            # Listener also updates other frame displayers
+            self.position_listener(self.normalized_pos(), self.producer.get_length())
+
+    def _motion_notify_event(self, x, y, state):
+        """
+        Mouse move callback
+        """
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+            or (state & Gdk.ModifierType.BUTTON3_MASK)):
+            self._pos = self._legalize_x(x)
+            # Listener calls self.set_normalized_pos()
+            self.position_listener(self.normalized_pos(), self.producer.get_length())
+
+    def _release_event(self, event):
+        """
+        Mouse release callback.
+        """
+
+        self._pos = self._legalize_x(event.x)
+
+        # Listener calls self.set_normalized_pos()
+        self.position_listener(self.normalized_pos(), self.producer.get_length())
