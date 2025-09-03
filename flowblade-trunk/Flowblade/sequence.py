@@ -1303,7 +1303,7 @@ class Sequence:
 
         return None
 
-    # ----------------------------------- info pronts
+    # ----------------------------------- info prints
     def print_all(self):
         print("------------------------######")
         for i in range(0, len(self.tracks)):
