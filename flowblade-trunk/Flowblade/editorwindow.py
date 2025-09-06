@@ -244,7 +244,7 @@ class EditorWindow:
                 menu_vbox.pack_start(monitor_source_box, False, False, 0)
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(tline_info_box, True, True, 0)
-            menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+            #menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
         else:
             menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
             
@@ -476,7 +476,7 @@ class EditorWindow:
         self.edit_buttons_frame.add(self.edit_buttons_row)
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
-        self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+        #self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
         
         # Position bar and decorative frame for it
         self.pos_bar = PositionBar()
@@ -1048,7 +1048,7 @@ class EditorWindow:
 
         # Get menu bar
         self.menubar = self.ui.get_widget('/MenuBar')
-        self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
+        #self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
 
         # Set reference to UI manager and acclegroup
         self.uimanager = ui
