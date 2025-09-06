@@ -396,7 +396,8 @@ def load_icons_and_set_colors():
     INSERT_ARROW_ICON_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_inactive_fb.png")
     INSERT_ARROW_ICON_UP_INACTIVE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_up_inactive_fb.png")
 
-    r = g = b = 0.215
+    # Tracks column track color
+    r = g = b = 0.190
         
     BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
     BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
