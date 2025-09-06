@@ -50,7 +50,7 @@ BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.5, 0.5, 0.5)
-DARK_BG_COLOR = (0.24, 0.24, 0.24)
+DARK_BG_COLOR = (0.195, 0.195, 0.195)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
@@ -161,8 +161,8 @@ class PositionBar:
         self.preview_range = None
 
         self.widget.queue_draw()
-        
-    def set_dark_bg_color(self):
+         
+    def set_dark_bg_color(self): # remove, were boing always with dark theme.
         global BG_COLOR
         BG_COLOR = DARK_BG_COLOR
 
