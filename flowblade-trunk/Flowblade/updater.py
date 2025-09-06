@@ -523,7 +523,7 @@ def display_sequence_in_monitor():
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
     display_marks_tc()
 
-    css_str = "#player-bar { background-color: #363636; border-radius: 10px;}"
+    css_str = "#player-bar { background-color: #333333; border-radius: 10px;}"
     gui.apply_widget_css_class_style_from_string(gui.editor_window.player_buttons_row, css_str)
 
     gui.monitor_waveform_display.widget.hide()

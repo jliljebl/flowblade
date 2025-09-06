@@ -522,9 +522,9 @@ class EditorWindow:
         player_buttons_row.set_margin_left(12)
         player_buttons_row.set_margin_right(12)
 
+        # This is used in uodater.py
         player_buttons_row.set_name("player-bar")
-        gui.apply_widget_css(player_buttons_row, "player-bar", "player-bar-id.css")
-        
+
         self.player_buttons_row = player_buttons_row
         
         tc_player_row = Gtk.HBox(False, 0)
