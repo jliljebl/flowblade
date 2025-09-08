@@ -710,7 +710,6 @@ def _add_panel(panel_id, position):
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)
     panel_widget = panel_widgets[panel_id]
     notebook = _position_notebooks[position]
-    
     if notebook != None:
         # Determine position in notebook.
         insert_index = _get_insert_index(panel_widget, notebook)
