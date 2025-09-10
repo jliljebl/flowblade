@@ -477,7 +477,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     edit_data["to_side_being_edited"] = to_side_being_edited
 
     # Set sync clip if exists and user preference set.
-    dualsynctrim.set_sync_clip(edit_data)
+    dualsynctrim.set_child_clip_trim_data(edit_data, appconsts.TLINE_TOOL_TRIM)
     
     # Set start frame bound for ripple mode edits
     if editorstate.trim_mode_ripple == True:
@@ -506,7 +506,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         edit_data = None
         gui.tline_canvas.drag_on = False
         primary_txt = _("Can't use Trim tool on blank clips.")
-        secondary_txt = _("You can use <b>Move</b> or <b>Roll</b> tools instead.")
+        secondary_txt = _("You can use <b>Move</b> tool instead.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
 
@@ -660,7 +660,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True}
             action = edit.trim_last_clip_end_action(data)
             last_from_trimmed = False
-            action.do_edit()
+            #action.do_edit()
         else:
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"],
@@ -670,7 +670,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_last_clip_end_action(data)
-            action.do_edit()
+            #action.do_edit()
         # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
@@ -682,7 +682,7 @@ def _do_one_roll_trim_edit(frame):
                     "undo_done_callback":one_roll_trim_undo_done,
                     "first_do":True}
             action = edit.trim_start_action(data)
-            action.do_edit()
+            #action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
             data = {"track":edit_data["track_object"],
@@ -693,7 +693,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_start_action(data)
-            action.do_edit()
+            #action.do_edit()
     # case: editing from-side of cut
     else:
         if editorstate.trim_mode_ripple == False:
@@ -704,7 +704,7 @@ def _do_one_roll_trim_edit(frame):
                     "undo_done_callback":one_roll_trim_undo_done,
                     "first_do":True}
             action = edit.trim_end_action(data)
-            action.do_edit()
+            #action.do_edit()
             # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
         else:
             data = {"track":edit_data["track_object"],
@@ -715,8 +715,33 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_end_action(data)
+            #action.do_edit()
+
+    if edit_data["child_clip_trim_data"] == None:
+        action.do_edit()
+    else:
+        child_clip, child_track = edit_data["child_clip_trim_data"]
+        if child_clip.clip_length() <= delta:
             action.do_edit()
-            
+            # Show info, we can't do chil trim beacuse it is too short
+        else:
+            index = child_track.clips.index(child_clip)
+            data = {"track":child_track,
+                    "index":index,
+                    "clip":child_clip,
+                    "delta":delta,
+                    "undo_done_callback":None,
+                    "first_do":False}
+
+            if edit_data["to_side_being_edited"] == True:
+                sync_trim_action = edit.trim_start_action(data)
+            else:
+                sync_trim_action = edit.trim_end_action(data)
+
+            actions = [action, sync_trim_action]
+            consolidated_action = edit.ConsolidatedEditAction(actions)
+            consolidated_action.do_consolidated_edit()
+
 def oneroll_play_pressed():
     # Start trim preview playback loop
     current_sequence().hide_hidden_clips()

@@ -19,9 +19,29 @@
 """
 
 import appconsts
+import resync
 
-def get_trim_sync_clip_data(edit_data, edit_mode):
+def set_child_clip_trim_data(edit_data, edit_tool):
     if edit_data["to_side_being_edited"] == True:
         edit_clip = edit_data["to_clip"]
     else:
         edit_clip = edit_data["from_clip"]
+
+    child_clip_sync_items = resync.get_child_clips(edit_clip)
+    
+    if child_clip_sync_items == None:
+        edit_data["child_clip_trim_data"] = None
+        return
+    
+    if len(child_clip_sync_items) > 1:
+        edit_data["child_clip_trim_data"] = None
+        # TODO: We dont dual trim when clip has multiple children. Set flag for info window.
+        return
+
+    #clip, track = child_clip_sync_items[0]
+
+    edit_data["child_clip_trim_data"] = child_clip_sync_items[0]
+
+
+    
+    

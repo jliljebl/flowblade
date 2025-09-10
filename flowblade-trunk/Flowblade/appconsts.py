@@ -233,7 +233,7 @@ POINTER_CONTEXT_MULTI_SLIP = 10
 # NOTE: A tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
 TLINE_TOOL_INSERT = 1
 TLINE_TOOL_OVERWRITE = 2
-TLINE_TOOL_TRIM = 3 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
+TLINE_TOOL_TRIM = 3 # Tool not available, used only as info to commicate trim types. 
 TLINE_TOOL_ROLL = 4 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
 TLINE_TOOL_SLIP = 5 # DEPRECATED; NOT AVAILABLE TO USERS ANYMORE.
 TLINE_TOOL_SPACER = 6

@@ -43,9 +43,9 @@ def clip_added_to_timeline(clip, track):
     if clip.sync_data != None:
         sync_children[clip] = track
         if clip.sync_data.master_clip in sync_parents:
-            sync_parents[clip.sync_data.master_clip].append(clip)
+            sync_parents[clip.sync_data.master_clip].append((clip, track))
         else:
-            sync_parents[clip.sync_data.master_clip] = [clip]
+            sync_parents[clip.sync_data.master_clip] = [(clip, track)]
 
 def clip_removed_from_timeline(clip):
     try:
@@ -57,6 +57,12 @@ def clip_removed_from_timeline(clip):
         sync_parents.pop(clip)
     except KeyError:
         pass
+
+def get_child_clips(clip):
+    try:
+        return sync_parents[clip]
+    except KeyError:
+        return None
 
 def clip_sync_cleared(clip):
     # This and the method above are called for different purposes, so we'll 
