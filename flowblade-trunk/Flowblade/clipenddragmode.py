@@ -25,6 +25,7 @@ Module handles clip end dragging edits.
 from gi.repository import Gdk
 
 import appconsts
+import dualsynctrim
 import gui
 import edit
 from editorstate import current_sequence
@@ -113,6 +114,8 @@ def _init_insert_drag(clip, clip_index, track, frame, cut_frame):
     _edit_data["orig_in"] = cut_frame - 1
     _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
     _edit_data["submode"] = _submode
+
+    dualsynctrim.set_child_clip_end_drag_data(_edit_data, clip)
 
     _enter_mouse_drag_edit(editing_clip_end)
 
@@ -237,7 +240,6 @@ def mouse_release(x, y, frame, state):
     else:
         _do_overwrite_trim(x, y, frame, state)
 
-
 def _do_insert_trim(x, y, frame, state):
     frame = _legalize_frame(frame)
     _edit_data["frame"] = frame
@@ -249,6 +251,8 @@ def _do_insert_trim(x, y, frame, state):
     orig_in = _edit_data["orig_in"]
     orig_out = _edit_data["orig_out"]
     
+    sync_edit_data = dualsynctrim.get_clip_end_dual_sync_edit_data(_edit_data)
+        
     # do edit
     # Dragging clip end
     if _edit_data["editing_clip_end"] == True:
@@ -281,7 +285,16 @@ def _do_insert_trim(x, y, frame, state):
                     "clip":clip,
                     "delta":delta}
             action = edit.trim_last_clip_end_action(data)
-            action.do_edit()
+            
+            if sync_edit_data == None:
+                action.do_edit()
+            else:
+                sync_edit_data["delta"] = delta
+                sync_trim_action = edit.trim_last_clip_end_action(sync_edit_data)
+                actions = [action, sync_trim_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
+            
         else: # next clip is blank
             blank_clip = track.clips[clip_index + 1]
             blank_clip_length = blank_clip.clip_length()
@@ -306,7 +319,14 @@ def _do_insert_trim(x, y, frame, state):
                     "clip":clip,
                     "delta":delta}
             action = edit.trim_start_action(data)
-            action.do_edit()
+            if sync_edit_data == None:
+                action.do_edit()
+            else:
+                sync_edit_data["delta"] = delta
+                sync_trim_action = edit.trim_start_action(sync_edit_data)
+                actions = [action, sync_trim_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
         else: # prev clip is blank
             blank_clip = track.clips[clip_index - 1]
             blank_clip_length = blank_clip.clip_length()

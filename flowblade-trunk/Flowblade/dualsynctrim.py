@@ -23,11 +23,17 @@ import resync
 
 def set_child_clip_trim_data(edit_data, edit_tool):
     if edit_data["to_side_being_edited"] == True:
-        edit_clip = edit_data["to_clip"]
+        parent_clip = edit_data["to_clip"]
     else:
-        edit_clip = edit_data["from_clip"]
+        parent_clip = edit_data["from_clip"]
+    
+    _set_child_clip_data(edit_data, parent_clip)
 
-    child_clip_sync_items = resync.get_child_clips(edit_clip)
+def set_child_clip_end_drag_data(edit_data, parent_clip):
+    _set_child_clip_data(edit_data, parent_clip)
+    
+def _set_child_clip_data(edit_data, parent_clip):
+    child_clip_sync_items = resync.get_child_clips(parent_clip)
     
     if child_clip_sync_items == None:
         edit_data["child_clip_trim_data"] = None
@@ -38,10 +44,17 @@ def set_child_clip_trim_data(edit_data, edit_tool):
         # TODO: We dont dual trim when clip has multiple children. Set flag for info window.
         return
 
-    #clip, track = child_clip_sync_items[0]
-
     edit_data["child_clip_trim_data"] = child_clip_sync_items[0]
 
-
+def get_clip_end_dual_sync_edit_data(edit_data):
+    if edit_data["child_clip_trim_data"] == None:
+        return None 
     
+    child_clip, child_track = edit_data["child_clip_trim_data"] 
+    
+    data = {"track":child_track,
+            "clip":child_clip,
+            "index":child_track.clips.index(child_clip)}
+    
+    return data
     
