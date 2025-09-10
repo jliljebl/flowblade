@@ -24,6 +24,7 @@ Module handles user edit events for trim, roll and slip trim modes.
 
 import appconsts
 import dialogutils
+import dualsynctrim
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -208,7 +209,7 @@ def _set_edit_data(track, edit_frame, is_one_roll_trim):
                  "trim_limits":trim_limits,
                  "from_clip":from_clip,
                  "to_clip":to_clip}
-
+    
 def _pressed_on_edited_track(y):
     pressed_track = tlinewidgets.get_track(y)
     if ((pressed_track == None) 
@@ -451,7 +452,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         return False
 
     # hack fix for last clip out trim. If frame pointer not at very end of clip
-    # the other functions for getting trim frame given +1 too much 
+    # the other functions for getting trim frame give +1 too much 
     if edit_frame > track.get_length():
         edit_frame = track.get_length()
 
@@ -475,6 +476,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
 
+    # Set sync clip if exists and user preference set.
+    dualsynctrim.set_sync_clip(edit_data)
+    
     # Set start frame bound for ripple mode edits
     if editorstate.trim_mode_ripple == True:
         ripple_start_bound = edit_frame - ripple_data.max_backwards

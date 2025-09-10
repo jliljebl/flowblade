@@ -35,14 +35,26 @@ from editorstate import current_sequence
 # Maps clip -> track
 sync_children = {}
 
+# Maps parent -> child. Used to implement dual sync trim feature.
+sync_parents = {}
+
 # ----------------------------------------- sync display updating
 def clip_added_to_timeline(clip, track):
     if clip.sync_data != None:
         sync_children[clip] = track
+        if clip.sync_data.master_clip in sync_parents:
+            sync_parents[clip.sync_data.master_clip].append(clip)
+        else:
+            sync_parents[clip.sync_data.master_clip] = [clip]
 
 def clip_removed_from_timeline(clip):
     try:
         sync_children.pop(clip)
+    except KeyError:
+        pass
+
+    try:
+        sync_parents.pop(clip)
     except KeyError:
         pass
 

@@ -106,23 +106,6 @@ def overwrite_move_mode_pressed():
 
     _set_move_mode()
 
-"""
-def box_mode_pressed():
-
-    stop_looping()
-    current_sequence().clear_hidden_track()
-    
-    # Box tool is implemented as sub mode of OVERWRITE_MOVE
-    editorstate.edit_mode = editorstate.OVERWRITE_MOVE
-    editorstate.overwrite_mode_box = True
-    boxmove.clear_data()
-    boxmove.entered_from_overwrite = False
-            
-    tlinewidgets.set_edit_mode(None, None) # these get set later for box move
-        
-    _set_move_mode()
-"""
-
 def multi_mode_pressed():
     """
     User selects Spacer tool.
