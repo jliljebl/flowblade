@@ -157,12 +157,12 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         to_clip_end = track.clip_start(clip_index) + to_clip.clip_length()
         from_clip_start = track.clip_start(clip_index - 1)
         from_clip_end = track.clip_start(clip_index - 1) - from_clip.clip_in + from_clip.get_length() 
-        
-    if to_clip_start > from_clip_start and to_clip.is_blank == False:
+    
+    if to_clip_start > from_clip_start and to_clip.is_blanck_clip == False:
         bound_start = to_clip_start
     else:        
         bound_start = from_clip_start
-    
+
     if from_clip_end < to_clip_end:
         bound_end = from_clip_end
     else:
@@ -173,7 +173,10 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         
     if editing_clip_end == False and bound_start < from_clip_start:
         bound_start = from_clip_start
-    
+
+    if to_clip_start > from_clip_start and from_clip.is_blanck_clip == True:
+        bound_start = to_clip_start
+        
     global _enter_mode, _enter_draw_func, _edit_data
 
     _enter_mode = editorstate.edit_mode
@@ -237,7 +240,6 @@ def mouse_release(x, y, frame, state):
         _do_insert_trim(x, y, frame, state)
     else:
         _do_overwrite_trim(x, y, frame, state)
-
 
 def _do_insert_trim(x, y, frame, state):
     frame = _legalize_frame(frame)
@@ -343,7 +345,9 @@ def _do_overwrite_trim(x, y, frame, state):
         non_edit_side_blank = True
 
     # If drag covers adjacent clip fully we need to use different edit actions.
+    from_clip_start = track.clip_start(track.clips.index(from_clip)) - from_clip.clip_in
     to_clip_end = track.clip_start(track.clips.index(to_clip)) + to_clip.clip_length()
+
     if editing_clip_end == True and frame == _edit_data["bound_end"] and frame == to_clip_end:
         
         data = {"track":track,
@@ -356,7 +360,7 @@ def _do_overwrite_trim(x, y, frame, state):
         _exit_clip_end_drag()
         updater.repaint_tline()
         return
-    elif editing_clip_end == False and frame == _edit_data["bound_start"]:
+    elif editing_clip_end == False and frame == _edit_data["bound_start"] and frame == from_clip_start:
         data = {"track":track,
                 "clip":from_clip,
                 "index":clip_index - 1}
