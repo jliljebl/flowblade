@@ -305,11 +305,20 @@ def _do_insert_trim(x, y, frame, state):
                     "delta":delta}
             if delta < blank_clip_length: # partial blank overwrite
                 action = edit.clip_end_drag_on_blank_action(data)
-                action.do_edit()
             else: # full blank replace
                 action = edit.clip_end_drag_replace_blank_action(data)
+
+            if sync_edit_data == None:
                 action.do_edit()
+            else:
+                sync_edit_data["delta"] = delta
+                sync_trim_action = edit.trim_last_clip_end_action(sync_edit_data)
+                actions = [action, sync_trim_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
+                
     else:# Dragging clip start
+        print("clip start", sync_edit_data)
         delta = frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
         # prev clip is not blank or first clip
         if ((clip_index == 0) or
@@ -337,11 +346,18 @@ def _do_insert_trim(x, y, frame, state):
                     "delta":delta}
             if -delta < blank_clip_length: # partial blank overwrite
                 action = edit.clip_start_drag_on_blank_action(data)
-                action.do_edit()
             else: # full blank replace
                 action = edit.clip_start_drag_replace_blank_action(data)
-                action.do_edit()
 
+            if sync_edit_data == None:
+                action.do_edit()
+            else:
+                sync_edit_data["delta"] = delta
+                sync_trim_action = edit.trim_start_action(sync_edit_data)
+                actions = [action, sync_trim_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
+                
     _exit_clip_end_drag()
 
     updater.repaint_tline()
@@ -389,11 +405,9 @@ def _do_overwrite_trim(x, y, frame, state):
         
     # Code here thinks "clip_index" is always index of trimmed clip,
     # but we are using existing edit.tworoll_trim_action() code to do the edit, and 
-    # that assumes index to be between clips.
+    # that assumes index to be latter of the to clips.
     if editing_clip_end == True:
         clip_index += 1
-
-
 
     # Get edit data
     delta = frame - _edit_data["edit_frame"]
@@ -409,9 +423,33 @@ def _do_overwrite_trim(x, y, frame, state):
             "first_do":True}
                 
     action = edit.tworoll_trim_action(data)
-    edit.do_gui_update = True
-    action.do_edit()
+    action_list = [action]
 
+    sync_actions_list = dualsynctrim.get_two_roll_sync_edits(data)
+    if sync_actions_list != None:
+        action_list = action_list + sync_actions_list
+    """
+    # Dual sync edits 
+    from_clip_edit_data, to_clip_edit_data = dualsynctrim.get_two_roll_sync_edit_data(data)
+    if from_clip_edit_data != None:
+        from_clip_action = edit.trim_last_clip_end_action(from_clip_edit_data)
+        action_list.append(from_clip_action)
+    
+    if to_clip_edit_data != None:
+        to_clip_action = edit.trim_start_action(to_clip_edit_data)
+        action_list.append(to_clip_action)
+    """
+    
+    edit.do_gui_update = True
+
+    if len(action_list) == 1:
+        action.do_edit() # No dual sync edits
+    else:
+        print("hhhhhh")
+        print(len(action_list))
+        consolidated_action = edit.ConsolidatedEditAction(action_list)
+        consolidated_action.do_consolidated_edit()
+            
     _exit_clip_end_drag()
 
     updater.repaint_tline()

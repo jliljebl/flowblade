@@ -43,6 +43,10 @@ def clip_added_to_timeline(clip, track):
     if clip.sync_data != None:
         sync_children[clip] = track
         if clip.sync_data.master_clip in sync_parents:
+            for sync_item in sync_parents[clip.sync_data.master_clip]:
+                stored_clip, stored_track = sync_item
+                if stored_clip == clip:
+                    return # Don't save asame clip twice
             sync_parents[clip.sync_data.master_clip].append((clip, track))
         else:
             sync_parents[clip.sync_data.master_clip] = [(clip, track)]
