@@ -46,7 +46,7 @@ def clip_added_to_timeline(clip, track):
             for sync_item in sync_parents[clip.sync_data.master_clip]:
                 stored_clip, stored_track = sync_item
                 if stored_clip == clip:
-                    return # Don't save asame clip twice
+                    return # Don't save same clip twice, we are using length of list to test if dual sync trim edit can be done.
             sync_parents[clip.sync_data.master_clip].append((clip, track))
         else:
             sync_parents[clip.sync_data.master_clip] = [(clip, track)]

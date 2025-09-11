@@ -452,8 +452,6 @@ def _do_overwrite_trim(x, y, frame, state):
     if len(action_list) == 1:
         action.do_edit() # No dual sync edits
     else:
-        print("hhhhhh")
-        print(len(action_list))
         consolidated_action = edit.ConsolidatedEditAction(action_list)
         consolidated_action.do_consolidated_edit()
             

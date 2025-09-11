@@ -1213,6 +1213,24 @@ def _do_two_roll_edit(new_cut_frame):
                 
         action = edit.tworoll_trim_action(data)
         edit.do_gui_update = True
+
+        action_list = [action]
+
+        sync_actions_list = dualsynctrim.get_two_roll_sync_edits(data)
+        if sync_actions_list != None:
+            action_list = action_list + sync_actions_list
+
+        edit.do_gui_update = True
+
+        if len(action_list) == 1:
+            action.do_edit() # No dual sync edits
+        else:
+            consolidated_action = edit.ConsolidatedEditAction(action_list)
+            consolidated_action.do_consolidated_edit()
+            
+
+def oneroll_play_pressed():
+    
         action.do_edit()
 
 def two_rolledit_done(was_redo, cut_frame, delta, track, to_side_being_edited):
