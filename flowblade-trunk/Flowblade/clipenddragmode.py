@@ -120,6 +120,7 @@ def _init_insert_drag(clip, clip_index, track, frame, cut_frame):
     _enter_mouse_drag_edit(editing_clip_end)
 
 def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
+
     global _submode
     _submode = OVERWRITE_DRAG
     
@@ -159,12 +160,12 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         to_clip_end = track.clip_start(clip_index) + to_clip.clip_length()
         from_clip_start = track.clip_start(clip_index - 1)
         from_clip_end = track.clip_start(clip_index - 1) - from_clip.clip_in + from_clip.get_length() 
-        
-    if to_clip_start > from_clip_start:
-        bound_start = to_clip_start
-    else:
-        bound_start = from_clip_start
     
+    if to_clip_start > from_clip_start and to_clip.is_blanck_clip == False:
+        bound_start = to_clip_start
+    else:        
+        bound_start = from_clip_start
+
     if from_clip_end < to_clip_end:
         bound_end = from_clip_end
     else:
@@ -175,6 +176,9 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
         
     if editing_clip_end == False and bound_start < from_clip_start:
         bound_start = from_clip_start
+
+    if to_clip_start > from_clip_start and from_clip.is_blanck_clip == True:
+        bound_start = to_clip_start
         
     global _enter_mode, _enter_draw_func, _edit_data
 
@@ -182,7 +186,7 @@ def _init_overwrite_drag(clip, clip_index, track, frame, cut_frame):
     editorstate.edit_mode = editorstate.CLIP_END_DRAG
 
     _enter_draw_func = tlinewidgets.canvas_widget.edit_mode_overlay_draw_func
-
+    
     _edit_data = {}
     _edit_data["track"] = track
     _edit_data["clip_index"] = clip_index
@@ -364,7 +368,6 @@ def _do_insert_trim(x, y, frame, state):
 
 def _do_overwrite_trim(x, y, frame, state):
     frame = _legalize_frame(frame)
-
     updater.repaint_tline()
 
     track = _edit_data["track"]
@@ -372,7 +375,6 @@ def _do_overwrite_trim(x, y, frame, state):
     editing_clip_end = _edit_data["editing_clip_end"] 
     
     from_clip, to_clip = _get_from_clip_and_to_clip(editing_clip_end, track, clip_index)
-
     non_edit_side_blank = False
     if (_edit_data["editing_clip_end"] == False) and (track.clips[clip_index - 1].is_blanck_clip == True):
         non_edit_side_blank = True
@@ -380,7 +382,11 @@ def _do_overwrite_trim(x, y, frame, state):
         non_edit_side_blank = True
 
     # If drag covers adjacent clip fully we need to use different edit actions.
-    if editing_clip_end == True and frame == _edit_data["bound_end"]:
+    from_clip_start = track.clip_start(track.clips.index(from_clip)) - from_clip.clip_in
+    to_clip_end = track.clip_start(track.clips.index(to_clip)) + to_clip.clip_length()
+
+    if editing_clip_end == True and frame == _edit_data["bound_end"] and frame == to_clip_end:
+        
         data = {"track":track,
                 "clip":to_clip,
                 "index":clip_index + 1}
@@ -391,7 +397,7 @@ def _do_overwrite_trim(x, y, frame, state):
         _exit_clip_end_drag()
         updater.repaint_tline()
         return
-    elif editing_clip_end == False and frame == _edit_data["bound_start"]:
+    elif editing_clip_end == False and frame == _edit_data["bound_start"] and frame == from_clip_start:
         data = {"track":track,
                 "clip":from_clip,
                 "index":clip_index - 1}
@@ -409,6 +415,7 @@ def _do_overwrite_trim(x, y, frame, state):
     if editing_clip_end == True:
         clip_index += 1
 
+
     # Get edit data
     delta = frame - _edit_data["edit_frame"]
     data = {"track":track,
@@ -421,7 +428,7 @@ def _do_overwrite_trim(x, y, frame, state):
             "to_side_being_edited":not editing_clip_end,
             "non_edit_side_blank":non_edit_side_blank,
             "first_do":True}
-                
+
     action = edit.tworoll_trim_action(data)
     action_list = [action]
 
