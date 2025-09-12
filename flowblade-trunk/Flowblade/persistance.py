@@ -693,7 +693,7 @@ def fill_track_mlt(mlt_track, py_track):
             mlt_clip = sequence.create_and_insert_blank(mlt_track, i, length)
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
-        else: # This is just for info, if this ever happens crash will happen.
+        else: # This is just for info, if this ever happens crash will follow.
             print("Could not recognize clip, dict:")
             print(clip.__dict__)
 

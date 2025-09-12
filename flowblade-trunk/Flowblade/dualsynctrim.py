@@ -35,7 +35,7 @@ def set_child_clip_end_drag_data(edit_data, parent_clip):
     
 def _set_child_clip_data(edit_data, parent_clip):
     child_clip_sync_items = resync.get_child_clips(parent_clip)
-    print("child_clip_sync_items", len(child_clip_sync_items))
+
     if child_clip_sync_items == None:
         edit_data["child_clip_trim_data"] = None
         return
@@ -58,36 +58,10 @@ def get_clip_end_dual_sync_edit_data(edit_data):
             "index":child_track.clips.index(child_clip)}
     
     return data
-    
-def get_two_roll_sync_edit_data(edit_data):
-    from_clip_sync_items = resync.get_child_clips(edit_data["from_clip"])
-    if from_clip_sync_items == None or len(from_clip_sync_items) > 1:
-        from_clip_edit_data = None
-    else:
-        clip, track = from_clip_sync_items[0]
-        from_clip_edit_data = { "track":track,
-                                "index":track.clips.index(clip),
-                                "clip":clip,
-                                "delta":edit_data["delta"],
-                                "undo_done_callback":None,
-                                "first_do":False}
-            
-    to_clip_sync_items = resync.get_child_clips(edit_data["to_clip"])
-    if to_clip_sync_items == None or len(to_clip_sync_items) > 1:
-        to_clip_edit_data = None
-    else:
-        clip, track = to_clip_sync_items[0]
-        to_clip_edit_data = {   "track":track,
-                                "index":track.clips.index(clip),
-                                "clip":clip,
-                                "delta":edit_data["delta"],
-                                "undo_done_callback":None,
-                                "first_do":False}
-
-    return (from_clip_edit_data, to_clip_edit_data)
 
 def get_two_roll_sync_edits(edit_data):
     from_clip_sync_items = resync.get_child_clips(edit_data["from_clip"])
+
     if from_clip_sync_items == None or len(from_clip_sync_items) > 1:
         from_clip = from_track = None
     else:
@@ -95,6 +69,7 @@ def get_two_roll_sync_edits(edit_data):
         from_index = from_track.clips.index(from_clip) 
 
     to_clip_sync_items = resync.get_child_clips(edit_data["to_clip"])
+
     if to_clip_sync_items == None or len(to_clip_sync_items) > 1:
         to_clip = to_track = None
     else:
@@ -110,10 +85,15 @@ def get_two_roll_sync_edits(edit_data):
                 "to_clip":to_clip,
                 "delta":edit_data["delta"],
                 "edit_done_callback": None, # we don't do callback needing this
-                "cut_frame": None, # we don't do callback needing this
+                "cut_frame": edit_data["cut_frame"],
                 "to_side_being_edited":None, # we don't do callback needing this
                 "non_edit_side_blank":False,
                 "first_do":False}  # no callback
+
+        sync_trim_legal = check_two_roll_trim_lagality(data)
+        if sync_trim_legal == False:
+            return None
+
         action = edit.tworoll_trim_action(data)
         return [action]
     
@@ -121,7 +101,6 @@ def get_two_roll_sync_edits(edit_data):
     
     if from_clip != None:
         if from_index < len(from_track.clips):
-            print("yahoo")
             to_clip = from_track.clips[from_index + 1]
             non_edit_side_blank = (to_clip.is_blank == True)
             data = {"track":from_track,
@@ -130,10 +109,11 @@ def get_two_roll_sync_edits(edit_data):
                     "to_clip":to_clip,
                     "delta":edit_data["delta"],
                     "edit_done_callback": None, # we don't do the callback needing this
-                    "cut_frame": None, # we don't do the callback needing this
+                    "cut_frame": edit_data["cut_frame"],
                     "to_side_being_edited":None, # we don't do the callback needing this
                     "non_edit_side_blank":non_edit_side_blank,
                     "first_do":False}  # no callback
+                    
             action = edit.tworoll_trim_action(data)
             actions.append(action)
 
@@ -142,6 +122,47 @@ def get_two_roll_sync_edits(edit_data):
     else:
         return actions
 
+def check_two_roll_trim_lagality(edit_data):
+    cut_frame = edit_data["cut_frame"]
+    from_clip = edit_data["from_clip"]
+    to_clip = edit_data["to_clip"]
+    delta = edit_data["delta"]
+    
+    # Trim_limits frames here are TIMELINE frames, not CLIP frames
+    trim_limits = {}
+
+    trim_limits["from_start"] = cut_frame - (from_clip.clip_out - from_clip.clip_in)
+    from_length = from_clip.get_length()
+    trim_limits["from_end"] = cut_frame - from_clip.clip_out + from_length - 2 # -1 incl, -1 leave one frame, == -2
+
+    if from_clip.is_blanck_clip:
+        trim_limits["from_end"]  = 10000000
+
+    trim_limits["to_start"] = cut_frame - to_clip.clip_in
+    to_length = to_clip.get_length()
+    trim_limits["to_end"] = cut_frame + (to_clip.clip_out - to_clip.clip_in) #- to_clip.clip_in + to_length - 1 # - 1, leave one frame
+    if to_clip.is_blanck_clip:
+        trim_limits["to_start"] = 0
+
+    if trim_limits["from_start"] > trim_limits["to_start"]:
+        trim_limits["both_start"] = trim_limits["from_start"]
+    else:
+        trim_limits["both_start"] = trim_limits["to_start"]
+        
+    if trim_limits["to_end"] < trim_limits["from_end"]:
+        trim_limits["both_end"] = trim_limits["to_end"]
+    else:
+        trim_limits["both_end"] = trim_limits["from_end"]
+
+    start_available_range_length = abs(cut_frame - trim_limits["both_start"])
+    end_available_range_length = abs(cut_frame - trim_limits["both_end"])
+
+    if start_available_range_length < abs(delta):
+        return False
+    if end_available_range_length < abs(delta):
+        return False
+
+    return True
 """
 
         from_clip_edit_data = { "track":track,

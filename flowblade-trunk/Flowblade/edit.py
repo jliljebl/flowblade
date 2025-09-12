@@ -366,6 +366,8 @@ class EditAction:
         undo.force_revert_if_cyclic_seq_links(PROJECT())
         
     def undo(self):
+        resync.start_edit()
+        
         PLAYER().stop_playback()
 
         movemodes.clear_selected_clips()  # selection not valid after change in sequence
@@ -382,6 +384,8 @@ class EditAction:
             self._update_gui()
             
     def redo(self):
+        resync.start_edit()
+        
         PLAYER().stop_playback()
 
         movemodes.clear_selected_clips() # selection is not valid after a change in sequence

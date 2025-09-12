@@ -34,6 +34,7 @@ import gui
 import tlinewidgets
 import updater
 
+
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
 
@@ -1227,8 +1228,7 @@ def _do_two_roll_edit(new_cut_frame):
         else:
             consolidated_action = edit.ConsolidatedEditAction(action_list)
             consolidated_action.do_consolidated_edit()
-            
-
+ 
 def oneroll_play_pressed():
     
         action.do_edit()

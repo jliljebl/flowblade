@@ -322,7 +322,6 @@ def _do_insert_trim(x, y, frame, state):
                 consolidated_action.do_consolidated_edit()
                 
     else:# Dragging clip start
-        print("clip start", sync_edit_data)
         delta = frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
         # prev clip is not blank or first clip
         if ((clip_index == 0) or

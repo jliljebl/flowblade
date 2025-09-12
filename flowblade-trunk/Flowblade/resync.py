@@ -32,39 +32,88 @@ from editorstate import current_sequence
 # After every edit sync states of all child clips is calculated, and it 
 # gets displayed to the user in the next timeline redraw using red, green and gray colors
 
-# Maps clip -> track
+# Maps child clip -> track
 sync_children = {}
 
-# Maps parent -> child. Used to implement dual sync trim feature.
+# Maps parent -> children list. Used to implement dual sync trim feature.
 sync_parents = {}
 
+# This is used to maintain sync_parents dict when edit is implemented
+# by removing and adding clip to timeline.
+edit_removed_parents = {}
+
 # ----------------------------------------- sync display updating
+
+def start_edit():
+    # Called ar beginning of every edit to clear list of parent to be restored to sync_parents
+    # list durinf edit.
+    global edit_removed_parents
+    edit_removed_parents = {}
+
 def clip_added_to_timeline(clip, track):
     if clip.sync_data != None:
         sync_children[clip] = track
+
+        if isinstance(clip.sync_data.master_clip, int): # loading at persistance.py calls this twice for sync clips.
+            return
         if clip.sync_data.master_clip in sync_parents:
-            for sync_item in sync_parents[clip.sync_data.master_clip]:
-                stored_clip, stored_track = sync_item
-                if stored_clip == clip:
+            for child_clip in sync_parents[clip.sync_data.master_clip]:
+                if child_clip == clip:
                     return # Don't save same clip twice, we are using length of list to test if dual sync trim edit can be done.
-            sync_parents[clip.sync_data.master_clip].append((clip, track))
+            sync_parents[clip.sync_data.master_clip].append(clip)
         else:
-            sync_parents[clip.sync_data.master_clip] = [(clip, track)]
+            sync_parents[clip.sync_data.master_clip] = [clip]
+    
+    # Restore clip to sync_parents list if it was removed during edit.
+    try:
+        children = edit_removed_parents[clip]
+        sync_parents[clip] = children
+    except:
+        pass
 
 def clip_removed_from_timeline(clip):
+    # Maybe remove from sync children.
     try:
         sync_children.pop(clip)
     except KeyError:
         pass
 
+    # Maybe remove from sync parents but save data for the duration of redo or undo.
     try:
+
+        if clip in sync_parents.keys():
+            edit_removed_parents[clip] = sync_parents[clip]
+        # Remove from parents dict.
         sync_parents.pop(clip)
     except KeyError:
         pass
 
+    # Remove from parents child list and clear parent from parent list if
+    # no children remaining.
+    remove_list = []
+    for parent, child_list in sync_parents.items():
+        if clip in child_list:
+            child_list.remove(clip)
+            if len(child_list) == 0:
+                remove_list.append(parent)
+    for parent in remove_list:
+        sync_parents.pop(parent)
+
+def print_sync_parents():
+    print("---sync parents:")
+    for key, value in sync_parents.items():
+        print("parent", id(key))
+        for clip in value:
+            print("----", id(clip))
+
 def get_child_clips(clip):
     try:
-        return sync_parents[clip]
+        child_clip_list = sync_parents[clip]
+        clips_with_tracks = []
+        for child_clip in child_clip_list:
+            child_clip_track = sync_children[child_clip]
+            clips_with_tracks.append((child_clip, child_clip_track))
+            return clips_with_tracks
     except KeyError:
         return None
 
