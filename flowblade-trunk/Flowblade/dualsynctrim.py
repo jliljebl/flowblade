@@ -22,6 +22,11 @@ import appconsts
 import edit
 import resync
 
+
+ONE_ROLL_TRIM_LAST_END = 0
+ONE_ROLL_TRIM_START = 1
+ONE_ROLL_TRIM_END = 2
+
 def set_child_clip_trim_data(edit_data, edit_tool):
     if edit_data["to_side_being_edited"] == True:
         parent_clip = edit_data["to_clip"]
@@ -46,6 +51,62 @@ def _set_child_clip_data(edit_data, parent_clip):
         return
 
     edit_data["child_clip_trim_data"] = child_clip_sync_items[0]
+
+def get_one_roll_sync_edit(edit_data, delta, trim_type):
+    if edit_data["child_clip_trim_data"] == None:
+        return None
+
+    child_clip, child_track = edit_data["child_clip_trim_data"]
+
+    if trim_type == ONE_ROLL_TRIM_LAST_END:
+        if delta > 0 and child_clip.get_length() - child_clip.clip_out < delta:
+            return None
+        if delta < 0 and child_clip.clip_out - child_clip.clip_in < abs(delta):
+            return None
+        if delta == 0:
+            return None
+
+        data = {"track":child_track,
+                "index":child_track.clips.index(child_clip),
+                "clip":child_clip,
+                "delta":delta,
+                "undo_done_callback":None,
+                "first_do":False}
+        action = edit.trim_last_clip_end_action(data)
+        return action
+
+    elif trim_type == ONE_ROLL_TRIM_START:
+        if delta > 0 and child_clip.clip_out - child_clip.clip_in < delta:
+            return None
+        if delta < 0 and child_clip.clip_in < abs(delta):
+            return None
+        if delta == 0:
+            return None
+        data = {"track":child_track,
+                "index":child_track.clips.index(child_clip),
+                "clip":child_clip,
+                "delta":delta,
+                "undo_done_callback":None,
+                "first_do":False}
+        action = edit.trim_start_action(data)
+        return action
+
+    elif trim_type == ONE_ROLL_TRIM_END:
+        if delta > 0 and child_clip.get_length() - child_clip.clip_out < delta:
+            return None
+        if delta < 0 and child_clip.clip_out - child_clip.clip_in < abs(delta):
+            return None
+        if delta == 0:
+            return None
+        data = {"track":child_track,
+                "index":child_track.clips.index(child_clip),
+                "clip":child_clip,
+                "delta":delta,
+                "undo_done_callback":None,
+                "first_do":False}
+        action = edit.trim_end_action(data)
+        return action
+    return None
 
 def get_clip_end_dual_sync_edit_data(edit_data):
     if edit_data["child_clip_trim_data"] == None:

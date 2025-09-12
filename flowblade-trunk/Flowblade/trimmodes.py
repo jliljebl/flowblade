@@ -661,7 +661,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True}
             action = edit.trim_last_clip_end_action(data)
             last_from_trimmed = False
-            #action.do_edit()
+            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_LAST_END)
         else:
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"],
@@ -671,8 +671,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_last_clip_end_action(data)
-            #action.do_edit()
-        # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
         if editorstate.trim_mode_ripple == False:
@@ -683,8 +682,7 @@ def _do_one_roll_trim_edit(frame):
                     "undo_done_callback":one_roll_trim_undo_done,
                     "first_do":True}
             action = edit.trim_start_action(data)
-            #action.do_edit()
-            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_START)
         else:
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"],
@@ -694,7 +692,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_start_action(data)
-            #action.do_edit()
+
     # case: editing from-side of cut
     else:
         if editorstate.trim_mode_ripple == False:
@@ -705,8 +703,7 @@ def _do_one_roll_trim_edit(frame):
                     "undo_done_callback":one_roll_trim_undo_done,
                     "first_do":True}
             action = edit.trim_end_action(data)
-            #action.do_edit()
-            # Edit is reinitialized in callback from edit action one_roll_trim_undo_done
+            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_END)
         else:
             data = {"track":edit_data["track_object"],
                     "index":edit_data["index"] - 1,
@@ -716,29 +713,13 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_end_action(data)
-            #action.do_edit()
 
     if edit_data["child_clip_trim_data"] == None:
         action.do_edit()
     else:
-        child_clip, child_track = edit_data["child_clip_trim_data"]
-        if child_clip.clip_length() <= delta:
+        if sync_trim_action == None:
             action.do_edit()
-            # Show info, we can't do chil trim beacuse it is too short
         else:
-            index = child_track.clips.index(child_clip)
-            data = {"track":child_track,
-                    "index":index,
-                    "clip":child_clip,
-                    "delta":delta,
-                    "undo_done_callback":None,
-                    "first_do":False}
-
-            if edit_data["to_side_being_edited"] == True:
-                sync_trim_action = edit.trim_start_action(data)
-            else:
-                sync_trim_action = edit.trim_end_action(data)
-
             actions = [action, sync_trim_action]
             consolidated_action = edit.ConsolidatedEditAction(actions)
             consolidated_action.do_consolidated_edit()
