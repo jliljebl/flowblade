@@ -121,6 +121,7 @@ def get_clip_end_dual_sync_edit_data(edit_data):
     return data
 
 def get_two_roll_sync_edits(edit_data):
+    delta = edit_data["delta"]
     from_clip_sync_items = resync.get_child_clips(edit_data["from_clip"])
 
     if from_clip_sync_items == None or len(from_clip_sync_items) > 1:
@@ -161,23 +162,60 @@ def get_two_roll_sync_edits(edit_data):
     actions = []
     
     if from_clip != None:
-        if from_index < len(from_track.clips):
-            to_clip = from_track.clips[from_index + 1]
-            non_edit_side_blank = (to_clip.is_blank == True)
+        if from_index + 1 < len(from_track.clips):
+            to_clip_one = from_track.clips[from_index + 1]
+            non_edit_side_blank = (to_clip_one.is_blank == True)
             data = {"track":from_track,
                     "index":from_index + 1,
                     "from_clip":from_clip,
-                    "to_clip":to_clip,
+                    "to_clip":to_clip_one,
                     "delta":edit_data["delta"],
                     "edit_done_callback": None, # we don't do the callback needing this
                     "cut_frame": edit_data["cut_frame"],
                     "to_side_being_edited":None, # we don't do the callback needing this
                     "non_edit_side_blank":non_edit_side_blank,
                     "first_do":False}  # no callback
-                    
+            
+            if check_two_roll_trim_lagality(data) == True:
+                action = edit.tworoll_trim_action(data)
+                actions.append(action)
+        else:
+            do_edit = True
+            if delta > 0 and from_clip.get_length() - from_clip.clip_out < delta:
+                do_edit = False
+            if delta < 0 and from_clip.clip_out - from_clip.clip_in < abs(delta):
+                do_edit = False
+            if delta == 0:
+                do_edit = False
+            
+            if do_edit == True:
+                data = {"track":from_track,
+                        "index":from_index,
+                        "clip":from_clip,
+                        "delta":delta,
+                        "undo_done_callback":None,
+                        "first_do":False}
+                action = edit.trim_last_clip_end_action(data)
+                actions.append(action)
+                
+    if to_clip != None and to_index > 0:
+        from_clip_here = to_track.clips[to_index - 1]
+        non_edit_side_blank = (from_clip_here.is_blank == True)
+        data = {"track":to_track,
+                "index":to_index,
+                "from_clip":from_clip_here,
+                "to_clip":to_clip,
+                "delta":edit_data["delta"],
+                "edit_done_callback": None, # we don't do the callback needing this
+                "cut_frame": edit_data["cut_frame"],
+                "to_side_being_edited":None, # we don't do the callback needing this
+                "non_edit_side_blank":non_edit_side_blank,
+                "first_do":False}  # no callback
+        
+        if check_two_roll_trim_lagality(data) == True:
             action = edit.tworoll_trim_action(data)
             actions.append(action)
-
+            
     if len(actions) == 0:
         return None
     else:
