@@ -108,6 +108,7 @@ def get_one_roll_sync_edit(edit_data, delta, trim_type):
         return action
     return None
 
+"""
 def get_clip_end_dual_sync_edit_data(edit_data):
     if edit_data["child_clip_trim_data"] == None:
         return None 
@@ -119,6 +120,7 @@ def get_clip_end_dual_sync_edit_data(edit_data):
             "index":child_track.clips.index(child_clip)}
     
     return data
+"""
 
 def get_two_roll_sync_edits(edit_data):
     delta = edit_data["delta"]

@@ -114,6 +114,7 @@ def _init_insert_drag(clip, clip_index, track, frame, cut_frame):
     _edit_data["orig_in"] = cut_frame - 1
     _edit_data["orig_out"] = cut_frame + (clip.clip_out - clip.clip_in)
     _edit_data["submode"] = _submode
+    _edit_data["cut_frame"] = cut_frame
 
     dualsynctrim.set_child_clip_end_drag_data(_edit_data, clip)
 
@@ -255,8 +256,6 @@ def _do_insert_trim(x, y, frame, state):
     orig_in = _edit_data["orig_in"]
     orig_out = _edit_data["orig_out"]
     
-    sync_edit_data = dualsynctrim.get_clip_end_dual_sync_edit_data(_edit_data)
-        
     # do edit
     # Dragging clip end
     if _edit_data["editing_clip_end"] == True:
@@ -281,7 +280,7 @@ def _do_insert_trim(x, y, frame, state):
                 updater.repaint_tline()
                 return
 
-        # next clip is not blank or last clip
+        # clip end trim if next clip is not blank or next xlip is last clip
         if ((clip_index == len(track.clips) - 1) or 
             (track.clips[clip_index + 1].is_blanck_clip == False)):
             data = {"track":track,
@@ -290,16 +289,18 @@ def _do_insert_trim(x, y, frame, state):
                     "delta":delta}
             action = edit.trim_last_clip_end_action(data)
             
-            if sync_edit_data == None:
+            if _edit_data["child_clip_trim_data"] == None:
                 action.do_edit()
             else:
-                sync_edit_data["delta"] = delta
-                sync_trim_action = edit.trim_last_clip_end_action(sync_edit_data)
-                actions = [action, sync_trim_action]
-                consolidated_action = edit.ConsolidatedEditAction(actions)
-                consolidated_action.do_consolidated_edit()
-            
-        else: # next clip is blank
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(_edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_END)
+                if sync_trim_action != None:
+                    actions = [action, sync_trim_action]
+                    consolidated_action = edit.ConsolidatedEditAction(actions)
+                    consolidated_action.do_consolidated_edit()
+                else:
+                    action.do_edit()
+    
+        else: # clip end trim next clip is blank
             blank_clip = track.clips[clip_index + 1]
             blank_clip_length = blank_clip.clip_length()
             data = {"track":track,
@@ -312,14 +313,16 @@ def _do_insert_trim(x, y, frame, state):
             else: # full blank replace
                 action = edit.clip_end_drag_replace_blank_action(data)
 
-            if sync_edit_data == None:
+            if _edit_data["child_clip_trim_data"] == None:
                 action.do_edit()
             else:
-                sync_edit_data["delta"] = delta
-                sync_trim_action = edit.trim_last_clip_end_action(sync_edit_data)
-                actions = [action, sync_trim_action]
-                consolidated_action = edit.ConsolidatedEditAction(actions)
-                consolidated_action.do_consolidated_edit()
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(_edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_END)
+                if sync_trim_action != None:
+                    actions = [action, sync_trim_action]
+                    consolidated_action = edit.ConsolidatedEditAction(actions)
+                    consolidated_action.do_consolidated_edit()
+                else:
+                    action.do_edit()
                 
     else:# Dragging clip start
         delta = frame - orig_in  - 1 # -1 because..uhh..inclusive exclusive something something
@@ -331,14 +334,16 @@ def _do_insert_trim(x, y, frame, state):
                     "clip":clip,
                     "delta":delta}
             action = edit.trim_start_action(data)
-            if sync_edit_data == None:
+            if _edit_data["child_clip_trim_data"] == None:
                 action.do_edit()
             else:
-                sync_edit_data["delta"] = delta
-                sync_trim_action = edit.trim_start_action(sync_edit_data)
-                actions = [action, sync_trim_action]
-                consolidated_action = edit.ConsolidatedEditAction(actions)
-                consolidated_action.do_consolidated_edit()
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(_edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_START)
+                if sync_trim_action != None:
+                    actions = [action, sync_trim_action]
+                    consolidated_action = edit.ConsolidatedEditAction(actions)
+                    consolidated_action.do_consolidated_edit()
+                else:
+                    action.do_edit()
         else: # prev clip is blank
             blank_clip = track.clips[clip_index - 1]
             blank_clip_length = blank_clip.clip_length()
@@ -352,15 +357,28 @@ def _do_insert_trim(x, y, frame, state):
             else: # full blank replace
                 action = edit.clip_start_drag_replace_blank_action(data)
 
-            if sync_edit_data == None:
+            if _edit_data["child_clip_trim_data"] == None:
                 action.do_edit()
             else:
-                sync_edit_data["delta"] = delta
-                sync_trim_action = edit.trim_start_action(sync_edit_data)
-                actions = [action, sync_trim_action]
-                consolidated_action = edit.ConsolidatedEditAction(actions)
-                consolidated_action.do_consolidated_edit()
-                
+                data = {"track":track,
+                        "index":clip_index,
+                        "from_clip":blank_clip,
+                        "to_clip":clip,
+                        "delta":delta,
+                        "edit_done_callback": None, # we don't do callback needing this
+                        "cut_frame": _edit_data["cut_frame"],
+                        "to_side_being_edited":None, # we don't do callback needing this
+                        "non_edit_side_blank":True,
+                        "first_do":False}  # no callback
+                                
+                sync_trim_action = dualsynctrim.get_two_roll_sync_edits(data)
+                if sync_trim_action != None:
+                    actions = [action, sync_trim_action[0]]
+                    consolidated_action = edit.ConsolidatedEditAction(actions)
+                    consolidated_action.do_consolidated_edit()
+                else:
+                    action.do_edit()
+
     _exit_clip_end_drag()
 
     updater.repaint_tline()
@@ -434,18 +452,7 @@ def _do_overwrite_trim(x, y, frame, state):
     sync_actions_list = dualsynctrim.get_two_roll_sync_edits(data)
     if sync_actions_list != None:
         action_list = action_list + sync_actions_list
-    """
-    # Dual sync edits 
-    from_clip_edit_data, to_clip_edit_data = dualsynctrim.get_two_roll_sync_edit_data(data)
-    if from_clip_edit_data != None:
-        from_clip_action = edit.trim_last_clip_end_action(from_clip_edit_data)
-        action_list.append(from_clip_action)
-    
-    if to_clip_edit_data != None:
-        to_clip_action = edit.trim_start_action(to_clip_edit_data)
-        action_list.append(to_clip_action)
-    """
-    
+
     edit.do_gui_update = True
 
     if len(action_list) == 1:
