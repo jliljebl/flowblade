@@ -112,7 +112,9 @@ def _sync_property_item_activated(action, event, msg):
         editorpersistance.prefs.sync_dualtrim = new_state
     elif msg == "showsync":
         editorpersistance.prefs.show_sync = new_state
-        
+    elif msg == "autotrimsingle":
+        editorpersistance.prefs.auto_sync_single_childs_on_trim = new_state
+
     action.set_state(GLib.Variant.new_boolean(new_state))
 
 def _sync_split_property_activated(action, variant):

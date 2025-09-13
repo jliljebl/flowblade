@@ -370,7 +370,7 @@ def _do_insert_trim(x, y, frame, state):
                         "to_side_being_edited":None, # we don't do callback needing this
                         "non_edit_side_blank":True,
                         "first_do":False}  # no callback
-                                
+
                 sync_trim_action = dualsynctrim.get_two_roll_sync_edits(data)
                 if sync_trim_action != None:
                     actions = [action, sync_trim_action[0]]

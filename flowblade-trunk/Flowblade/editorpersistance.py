@@ -388,3 +388,4 @@ class EditorPreferences:
         self.wide_multitrim_slip = False
         self.disable_drag_when_selected = True
         self.show_waveform_in_monitor = True
+        self.auto_sync_single_childs_on_trim = True

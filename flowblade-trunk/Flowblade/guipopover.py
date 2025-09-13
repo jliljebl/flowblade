@@ -286,8 +286,8 @@ def sync_menu_show(launcher, widget, properties_set_callback, split_mirror_callb
             
         properties_section = Gio.Menu.new()
 
-        
-        add_menu_action_check(properties_section, _("Show Synch Relations"), "midbar.sync.showsync", editorpersistance.prefs.show_sync, "showsync", properties_set_callback)
+        add_menu_action_check(properties_section, _("Auto Sync Trim Single Childs"), "midbar.sync.autotrimsingle", editorpersistance.prefs.auto_sync_single_childs_on_trim, "autotrimsingle", properties_set_callback)
+        add_menu_action_check(properties_section, _("Show Sync Relations"), "midbar.sync.showsync", editorpersistance.prefs.show_sync, "showsync", properties_set_callback)
         _sync_menu.append_section(None, properties_section)
 
         mirror_section = Gio.Menu.new()

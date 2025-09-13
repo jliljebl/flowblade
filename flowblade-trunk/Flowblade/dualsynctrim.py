@@ -21,11 +21,13 @@
 import appconsts
 import edit
 import resync
+import editorpersistance
 
 
 ONE_ROLL_TRIM_LAST_END = 0
 ONE_ROLL_TRIM_START = 1
 ONE_ROLL_TRIM_END = 2
+
 
 def set_child_clip_trim_data(edit_data, edit_tool):
     if edit_data["to_side_being_edited"] == True:
@@ -40,6 +42,10 @@ def set_child_clip_end_drag_data(edit_data, parent_clip):
     
 def _set_child_clip_data(edit_data, parent_clip):
     child_clip_sync_items = resync.get_child_clips(parent_clip)
+
+    if editorpersistance.prefs.auto_sync_single_childs_on_trim == False:
+        edit_data["child_clip_trim_data"] = None
+        return
 
     if child_clip_sync_items == None:
         edit_data["child_clip_trim_data"] = None
@@ -56,6 +62,9 @@ def get_one_roll_sync_edit(edit_data, delta, trim_type):
     if edit_data["child_clip_trim_data"] == None:
         return None
 
+    if editorpersistance.prefs.auto_sync_single_childs_on_trim == False:
+        return None
+        
     child_clip, child_track = edit_data["child_clip_trim_data"]
 
     if trim_type == ONE_ROLL_TRIM_LAST_END:
@@ -108,21 +117,10 @@ def get_one_roll_sync_edit(edit_data, delta, trim_type):
         return action
     return None
 
-"""
-def get_clip_end_dual_sync_edit_data(edit_data):
-    if edit_data["child_clip_trim_data"] == None:
-        return None 
-    
-    child_clip, child_track = edit_data["child_clip_trim_data"] 
-    
-    data = {"track":child_track,
-            "clip":child_clip,
-            "index":child_track.clips.index(child_clip)}
-    
-    return data
-"""
-
 def get_two_roll_sync_edits(edit_data):
+    if editorpersistance.prefs.auto_sync_single_childs_on_trim == False:
+        return None
+        
     delta = edit_data["delta"]
     from_clip_sync_items = resync.get_child_clips(edit_data["from_clip"])
 
@@ -264,27 +262,3 @@ def check_two_roll_trim_lagality(edit_data):
         return False
 
     return True
-"""
-
-        from_clip_edit_data = { "track":track,
-                                "index":track.clips.index(clip),
-                                "clip":clip,
-                                "delta":edit_data["delta"],
-                                "undo_done_callback":None,
-                                "first_do":False}
-            
-    to_clip_sync_items = resync.get_child_clips(edit_data["to_clip"])
-    if to_clip_sync_items == None or len(to_clip_sync_items) > 1:
-        to_clip_edit_data = None
-    else:
-        clip, track = to_clip_sync_items[0]
-        to_clip_edit_data = {   "track":track,
-                                "index":track.clips.index(clip),
-                                "clip":clip,
-                                "delta":edit_data["delta"],
-                                "undo_done_callback":None,
-                                "first_do":False}
-
-    return (from_clip_edit_data, to_clip_edit_data)
-
-"""
