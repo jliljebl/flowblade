@@ -76,7 +76,6 @@ def _enter_trim_mode_edit(x, y, frame, event):
         
     if _mouse_edit_context == appconsts.POINTER_CONTEXT_TRIM_LEFT or _mouse_edit_context == appconsts.POINTER_CONTEXT_TRIM_RIGHT:
         if event != None and (event.get_state() & Gdk.ModifierType.MOD1_MASK):
-            print("_enter_trim_mode_edit ripple")
             editorstate.trim_mode_ripple = True
         success = modesetting.oneroll_trim_mode_init(x, y)
 

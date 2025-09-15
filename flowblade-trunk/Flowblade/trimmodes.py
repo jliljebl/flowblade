@@ -654,83 +654,87 @@ def _do_one_roll_trim_edit(frame):
     global edit_data, ripple_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     delta = frame - edit_data["edit_frame"]
-
+    
+    # Get edit actions
+    action = sync_trim_action = None
     # case: editing from-side of last clip
     global last_from_trimmed
     if last_from_trimmed:
         last_from_trimmed = False
-        if editorstate.trim_mode_ripple == False:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"],
-                    "clip":edit_data["from_clip"],
-                    "delta":delta,
-                    "undo_done_callback":clip_end_first_do_done,
-                    "first_do":True}
-            action = edit.trim_last_clip_end_action(data)
-            last_from_trimmed = False
-            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_LAST_END)
-        else:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"],
-                    "clip":edit_data["from_clip"],
-                    "edit_delta":delta,
-                    "undo_done_callback":clip_end_first_do_done,
-                    "first_do":True,
-                    "multi_data":ripple_data}
-            action = edit.ripple_trim_last_clip_end_action(data)
-            sync_trim_action = None
+        if delta != 0:
+            if editorstate.trim_mode_ripple == False:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"],
+                        "clip":edit_data["from_clip"],
+                        "delta":delta,
+                        "undo_done_callback":clip_end_first_do_done,
+                        "first_do":True}
+                action = edit.trim_last_clip_end_action(data)
+                last_from_trimmed = False
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_LAST_END)
+            else:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"],
+                        "clip":edit_data["from_clip"],
+                        "edit_delta":delta,
+                        "undo_done_callback":clip_end_first_do_done,
+                        "first_do":True,
+                        "multi_data":ripple_data}
+                action = edit.ripple_trim_last_clip_end_action(data)
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
-        if editorstate.trim_mode_ripple == False:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"],
-                    "clip":edit_data["to_clip"],
-                    "delta":delta,
-                    "undo_done_callback":one_roll_trim_undo_done,
-                    "first_do":True}
-            action = edit.trim_start_action(data)
-            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_START)
-        else:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"],
-                    "clip":edit_data["to_clip"],
-                    "edit_delta":delta,
-                    "undo_done_callback":one_roll_trim_undo_done,
-                    "first_do":True,
-                    "multi_data":ripple_data}
-            action = edit.ripple_trim_start_action(data)
-            sync_trim_action = None
+        if delta != 0:
+            if editorstate.trim_mode_ripple == False:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"],
+                        "clip":edit_data["to_clip"],
+                        "delta":delta,
+                        "undo_done_callback":one_roll_trim_undo_done,
+                        "first_do":True}
+                action = edit.trim_start_action(data)
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_START)
+            else:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"],
+                        "clip":edit_data["to_clip"],
+                        "edit_delta":delta,
+                        "undo_done_callback":one_roll_trim_undo_done,
+                        "first_do":True,
+                        "multi_data":ripple_data}
+                action = edit.ripple_trim_start_action(data)
     # case: editing from-side of cut
     else:
-        if editorstate.trim_mode_ripple == False:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"] - 1,
-                    "clip":edit_data["from_clip"],
-                    "delta":delta,
-                    "undo_done_callback":one_roll_trim_undo_done,
-                    "first_do":True}
-            action = edit.trim_end_action(data)
-            sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_END)
-        else:
-            data = {"track":edit_data["track_object"],
-                    "index":edit_data["index"] - 1,
-                    "clip":edit_data["from_clip"],
-                    "edit_delta":delta,
-                    "undo_done_callback":one_roll_trim_undo_done,
-                    "first_do":True,
-                    "multi_data":ripple_data}
-            action = edit.ripple_trim_end_action(data)
-            sync_trim_action = None
+        if delta != 0:
+            if editorstate.trim_mode_ripple == False:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"] - 1,
+                        "clip":edit_data["from_clip"],
+                        "delta":delta,
+                        "undo_done_callback":one_roll_trim_undo_done,
+                        "first_do":True}
+                action = edit.trim_end_action(data)
+                sync_trim_action = dualsynctrim.get_one_roll_sync_edit(edit_data, delta, dualsynctrim.ONE_ROLL_TRIM_END)
+            else:
+                data = {"track":edit_data["track_object"],
+                        "index":edit_data["index"] - 1,
+                        "clip":edit_data["from_clip"],
+                        "edit_delta":delta,
+                        "undo_done_callback":one_roll_trim_undo_done,
+                        "first_do":True,
+                        "multi_data":ripple_data}
+                action = edit.ripple_trim_end_action(data)
 
-    if edit_data["child_clip_trim_data"] == None:
-        action.do_edit()
-    else:
-        if sync_trim_action == None:
+    # Execute
+    if action != None:
+        if edit_data["child_clip_trim_data"] == None:
             action.do_edit()
         else:
-            actions = [action, sync_trim_action]
-            consolidated_action = edit.ConsolidatedEditAction(actions)
-            consolidated_action.do_consolidated_edit()
+            if sync_trim_action == None:
+                action.do_edit()
+            else:
+                actions = [action, sync_trim_action]
+                consolidated_action = edit.ConsolidatedEditAction(actions)
+                consolidated_action.do_consolidated_edit()
 
     # Always exit ripple mode, ripple is inited at edit start if ALT pressed.
     ripple_data = None
