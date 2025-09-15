@@ -180,7 +180,7 @@ def insert_move_press(event, frame):
     if edit_data == None:
         # We now enter box mode.
         # NOTE: this was originally made to work only with OVERWRITE mode (MOVE tool), but we piggyback existing functionality
-        # to create different box selection functionality for INSERT tool.
+        # to create box selection for INSERT tool.
         editorstate.overwrite_mode_box = True
         boxmove.entered_from_overwrite = True
         boxmove.clear_data()

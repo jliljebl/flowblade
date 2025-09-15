@@ -180,35 +180,10 @@ class TLineCursorManager:
         modesetting.overwrite_move_mode_pressed()
         self.set_cursor_to_mode()
 
-    """
-    def handle_box_mode_button_press(self):
-        modesetting.box_mode_pressed()
-        self.set_cursor_to_mode()
-    """
-    
     def handle_insert_move_mode_button_press(self):
         modesetting.insert_move_mode_pressed()
         self.set_cursor_to_mode()
 
-    """
-    def handle_one_roll_mode_button_press(self):
-        editorstate.trim_mode_ripple = False
-        modesetting.oneroll_trim_no_edit_init()
-        self.set_cursor_to_mode()
-
-    def handle_one_roll_ripple_mode_button_press(self):
-        editorstate.trim_mode_ripple = True
-        modesetting.oneroll_trim_no_edit_init()
-        self.set_cursor_to_mode()
-
-    def handle_two_roll_mode_button_press(self):
-        modesetting.tworoll_trim_no_edit_init()
-        self.set_cursor_to_mode()
-
-    def handle_slide_mode_button_press(self):
-        modesetting.slide_trim_no_edit_init()
-        self.set_cursor_to_mode()
-    """
     def handle_multi_mode_button_press(self):
         modesetting.multi_mode_pressed()
         self.set_cursor_to_mode()
@@ -244,18 +219,8 @@ class TLineCursorManager:
             self.handle_insert_move_mode_button_press()
         if tool == appconsts.TLINE_TOOL_OVERWRITE:
             self.handle_over_move_mode_button_press()
-        #if tool == appconsts.TLINE_TOOL_TRIM:
-        #    self.handle_one_roll_mode_button_press()
-        #if tool == appconsts.TLINE_TOOL_RIPPLE_TRIM:
-        #    self.handle_one_roll_ripple_mode_button_press()
-        #if tool == appconsts.TLINE_TOOL_ROLL:
-        #    self.handle_two_roll_mode_button_press()
-        #if tool == appconsts.TLINE_TOOL_SLIP:
-        #    self.handle_slide_mode_button_press()
         if tool == appconsts.TLINE_TOOL_SPACER:
             self.handle_multi_mode_button_press()
-        #if tool == appconsts.TLINE_TOOL_BOX:
-        #    self.handle_box_mode_button_press()
         if tool == appconsts.TLINE_TOOL_CUT:
             self.handle_cut_mode_button_press()
         if tool == appconsts.TLINE_TOOL_KFTOOL:

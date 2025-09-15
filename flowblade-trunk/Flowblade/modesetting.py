@@ -51,24 +51,11 @@ def set_clip_monitor_edit_mode():
     """
     Going to clip monitor exits active trimodes into non active trimmodes.
     """
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        oneroll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
-        pass
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        tworoll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
-        pass
-    else:
-        gui.editor_window.tline_cursor_manager.set_default_edit_tool()
-        
-    gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
 
 def set_post_undo_redo_edit_mode():
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        oneroll_trim_no_edit_init()
-    if EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        tworoll_trim_no_edit_init()
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
+        modesetting.set_default_edit_mode()
 
 def stop_looping():
     # Stop trim mode looping using trimmodes.py methods for it
@@ -125,41 +112,6 @@ def _set_move_mode():
     updater.repaint_tline()
 
 # -------------------------------------------------------------- one roll trim
-def oneroll_trim_no_edit_init():
-    """
-    This mode is entered and this method is called when:
-    - user first selects trim tool
-    - user does cut(X) action while in trim mode
-    - user clicks empty and preference is to keep using trim tool (to not exit to INSERT_MOVE)
-    """
-    stop_looping()
-    editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
-    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def oneroll_trim_no_edit_press(event, frame):
-    """
-    Mouse press while in ONE_ROLL_TRIM_NO_EDIT attempts to init edit and 
-    move to ONE_ROLL_TRIM mode.
-    """
-    success = oneroll_trim_mode_init(event.x, event.y)
-    if success:
-        trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
-        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
-        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
-    else:
-        set_default_edit_mode(True)
-
-def oneroll_trim_no_edit_move(x, y, frame, state):
-    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
-    pass
-
-def oneroll_trim_no_edit_release(x, y, frame, state):
-    # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
-    pass
-
 def oneroll_trim_mode_init(x, y):
     """
     User enters ONE_ROLL_TRIM mode from ONE_ROLL_TRIM_NO_EDIT 
@@ -177,34 +129,11 @@ def oneroll_trim_mode_init(x, y):
     # init mode
     press_frame = tlinewidgets.get_frame(x)
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = oneroll_trim_no_edit_init
+    trimmodes.set_no_edit_mode_func = set_default_edit_mode
     success = trimmodes.set_oneroll_mode(track, press_frame)
     return success
 
 # --------------------------------------------------------- two roll trim
-def tworoll_trim_no_edit_init():
-    stop_looping()
-    editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def tworoll_trim_no_edit_press(event, frame):
-    success = tworoll_trim_mode_init(event.x, event.y)
-    if success:
-        trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
-        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
-        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
-    else:
-        set_default_edit_mode(True)
-
-def tworoll_trim_no_edit_move(x, y, frame, state):
-    pass
-
-def tworoll_trim_no_edit_release(x, y, frame, state):
-    pass
-    
 def tworoll_trim_mode_init(x, y):
     """
     User selects two roll mode
@@ -221,34 +150,11 @@ def tworoll_trim_mode_init(x, y):
 
     press_frame = tlinewidgets.get_frame(x)
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = tworoll_trim_no_edit_init
+    trimmodes.set_no_edit_mode_func = set_default_edit_mode
     success = trimmodes.set_tworoll_mode(track, press_frame)
     return success
 
 # ----------------------------------------------------- slide trim
-def slide_trim_no_edit_init():
-    stop_looping()
-    editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
-    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
-    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    updater.set_trim_mode_gui()
-
-def slide_trim_no_edit_press(event, frame):
-    success = slide_trim_mode_init(event.x, event.y)
-    if success:
-        trimmodes.edit_data["press_start"] = frame
-        trimmodes.slide_trim_move(event.x, event.y, frame, None)
-        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
-    else:
-        set_default_edit_mode(True)
-    
-def slide_trim_no_edit_move(x, y, frame, state):
-    pass
-    
-def slide_trim_no_edit_release(x, y, frame, state):
-    pass
-
 def slide_trim_mode_init(x, y):
     """
     User selects two roll mode
@@ -265,7 +171,7 @@ def slide_trim_mode_init(x, y):
 
     press_frame = tlinewidgets.get_frame(x)
     trimmodes.set_exit_mode_func = set_default_edit_mode
-    trimmodes.set_no_edit_mode_func = slide_trim_no_edit_init
+    trimmodes.set_no_edit_mode_func = set_default_edit_mode
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 

@@ -34,6 +34,7 @@ import gui
 import tlinewidgets
 import updater
 
+import utils 
 
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
@@ -116,6 +117,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     # This is too complex now that roll is handled separately, could be reworked.
     # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
     # needed taken into account when calculating legal trim range.
+    
     trim_limits = {}
 
     if from_clip == None:
@@ -245,6 +247,8 @@ def update_cursor_to_mode():
     gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
 def set_no_edit_trim_mode():
+    # Exits active trim mods if user in middle of mouse action. 
+    # TODO: We should look if we should exit all active edits, not just trims. 
     if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or \
     editorstate.edit_mode == editorstate.TWO_ROLL_TRIM or \
     editorstate.edit_mode == editorstate.SLIDE_TRIM:
@@ -464,41 +468,23 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 
     _set_edit_data(track, edit_frame, True)
     
-    # Init ripple data if needed
-    global ripple_data
-    ripple_data = None
-    if editorstate.trim_mode_ripple == True:
-        ripple_data = RippleData(track, edit_frame)
-
     global edit_data
-    # Add ripple data 
-    edit_data["ripple_data"] = ripple_data
-    
+    # Add ripple data
+
     # Set side being edited to default to-side
     edit_data["to_side_being_edited"] = to_side_being_edited
-
-    # Set sync clip if exists and user preference set.
-    dualsynctrim.set_child_clip_trim_data(edit_data, appconsts.TLINE_TOOL_TRIM)
     
-    # Set start frame bound for ripple mode edits
+    # Get ripple data and trim limits if we're in ripple sub mode
     if editorstate.trim_mode_ripple == True:
-        ripple_start_bound = edit_frame - ripple_data.max_backwards
-
-        # Case: editing to-clip
-        if edit_data["to_side_being_edited"]:
-            ripple_end_bound = edit_frame + ripple_data.max_backwards
-            edit_data["trim_limits"]["ripple_display_end"] = edit_data["trim_limits"]["both_end"] 
-            if edit_data["trim_limits"]["both_end"] > ripple_end_bound:
-                edit_data["trim_limits"]["both_end"] = ripple_end_bound
-        # Case: editing from-clip
-        else:
-            ripple_start_bound = edit_frame - ripple_data.max_backwards
-            edit_data["trim_limits"]["ripple_display_start"] = edit_data["trim_limits"]["both_start"] 
-            if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for both "trim and "roll" edits
-                edit_data["trim_limits"]["both_start"] = ripple_start_bound
+        set_ripple_mode()
     else:
+        edit_data["ripple_data"] = None
+        # Set start frame bound for ripple mode edits
         edit_data["trim_limits"]["ripple_display_end"] = -1
         edit_data["trim_limits"]["ripple_display_start"] = -1
+    
+    # Set sync clip if exists and user preference set.
+    dualsynctrim.set_child_clip_trim_data(edit_data, appconsts.TLINE_TOOL_TRIM)
 
     # Can't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
@@ -514,12 +500,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     current_sequence().clear_hidden_track()
     
     # Give timeline widget needed data
-    if editorstate.trim_mode_ripple == False:
-        tlinewidgets.set_edit_mode(edit_data,
-                                   tlinewidgets.draw_one_roll_overlay)
-    else:
-        tlinewidgets.set_edit_mode(edit_data,
-                                   tlinewidgets.draw_one_roll_overlay_ripple)
+    tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_one_roll_overlay)
 
     # Set clip as special producer on hidden track and display current frame 
     # from it.
@@ -555,6 +536,32 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     PLAYER().seek_frame(edit_frame + fix_delta)
     return True
 
+def set_ripple_mode():
+    # Init ripple data if needed
+    global edit_data, ripple_data
+    edit_frame = edit_data["edit_frame"]
+    track = edit_data["track_object"]
+    ripple_data = RippleData(track, edit_frame)
+    edit_data["ripple_data"] = ripple_data
+    
+    # Case: editing to-clip
+    if edit_data["to_side_being_edited"]:
+        
+        ripple_end_bound = edit_frame + ripple_data.max_backwards
+        edit_data["trim_limits"]["ripple_display_end"] = edit_data["trim_limits"]["both_end"] 
+        if edit_data["trim_limits"]["both_end"] > ripple_end_bound:
+            edit_data["trim_limits"]["both_end"] = ripple_end_bound
+        
+    # Case: editing from-clip
+    else:
+        ripple_start_bound = edit_frame - ripple_data.max_backwards
+        edit_data["trim_limits"]["ripple_display_start"] = edit_data["trim_limits"]["both_start"] 
+        if edit_data["trim_limits"]["both_start"] < ripple_start_bound: # name "both_start"] is artifact fromearlier when trimlimits were used for both "trim and "roll" edits
+            edit_data["trim_limits"]["both_start"] = ripple_start_bound
+
+    tlinewidgets.set_edit_mode(edit_data, tlinewidgets.draw_one_roll_overlay_ripple)
+                                   
+        
 def oneroll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in one roll mode.
@@ -644,7 +651,7 @@ def oneroll_trim_release(x, y, frame, state):
 
 def _do_one_roll_trim_edit(frame):
     # Get legal edit delta and set to edit mode data for overlay draw
-    global edit_data
+    global edit_data, ripple_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     delta = frame - edit_data["edit_frame"]
 
@@ -671,7 +678,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_last_clip_end_action(data)
-
+            sync_trim_action = None
     # case: editing to-side of cut
     elif edit_data["to_side_being_edited"]:
         if editorstate.trim_mode_ripple == False:
@@ -692,7 +699,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_start_action(data)
-
+            sync_trim_action = None
     # case: editing from-side of cut
     else:
         if editorstate.trim_mode_ripple == False:
@@ -713,6 +720,7 @@ def _do_one_roll_trim_edit(frame):
                     "first_do":True,
                     "multi_data":ripple_data}
             action = edit.ripple_trim_end_action(data)
+            sync_trim_action = None
 
     if edit_data["child_clip_trim_data"] == None:
         action.do_edit()
@@ -723,6 +731,10 @@ def _do_one_roll_trim_edit(frame):
             actions = [action, sync_trim_action]
             consolidated_action = edit.ConsolidatedEditAction(actions)
             consolidated_action.do_consolidated_edit()
+
+    # Always exit ripple mode, ripple is inited at edit start if ALT pressed.
+    ripple_data = None
+    editorstate.trim_mode_ripple = False
 
 def oneroll_play_pressed():
     # Start trim preview playback loop
@@ -766,7 +778,7 @@ def _legalize_one_roll_trim(frame, trim_limits):
     else:
         first = trim_limits["both_start"]
         last = trim_limits["from_end"] 
-        
+  
     if frame <= first:
         frame = first
         tlinewidgets.trim_status = appconsts.ON_FIRST_FRAME
@@ -776,6 +788,7 @@ def _legalize_one_roll_trim(frame, trim_limits):
     else:
         tlinewidgets.trim_status = appconsts.ON_BETWEEN_FRAME
 
+    
     return frame
 
 def _pressed_on_one_roll_active_area(frame):
@@ -910,6 +923,7 @@ class RippleData:
             d = track_max_deltas[i - 1]
             if d < smallest_max_delta:
                 smallest_max_delta = d
+                
         self.max_backwards = smallest_max_delta
 
         # Track have different ways the edit will need to be applied
@@ -936,6 +950,7 @@ class RippleData:
             self.track_affected.append(True)
         self.track_affected[self.pressed_track_id - 1] = True
 
+        """
         # Make list compositors that are moved with ripple edit
         tracks_compositors = self.get_tracks_compositors_list()
         affected_compositors_destroy_ids = []
@@ -954,7 +969,7 @@ class RippleData:
                     affected_compositors_destroy_ids.append(comp.destroy_id)
         
         self.moved_compositors_destroy_ids = affected_compositors_destroy_ids
-        
+        """
 
     def get_track_blank_end_offset(self, track, blank_index):
         blank_end_frame = track.clip_start(blank_index + 1)

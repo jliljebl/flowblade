@@ -390,7 +390,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     global save_monitor_frame
     save_monitor_frame = True
 
-    # Opening clip exits trim modes
+    # Opening clip goes to default edit mode for non-move modes.
     if not editorstate.current_is_move_mode():
         set_clip_edit_mode_callback()
 

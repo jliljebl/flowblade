@@ -899,12 +899,9 @@ def do_rendering():
             return
 
     # We need to exit active trim modes or the hidden trim clip gets rendered.
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
-        modesetting.oneroll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
-        modesetting.tworoll_trim_no_edit_init()
-    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
-        modesetting.slide_trim_no_edit_init()
+    # Should only happend if mouse pressed down on trin and render started with kb shortcut.
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
+        modesetting.set_default_edit_mode()
     
     force_overwrite = False
     force_proxy = False

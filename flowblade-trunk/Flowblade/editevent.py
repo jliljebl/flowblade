@@ -369,27 +369,6 @@ def tline_canvas_mouse_pressed(event, frame):
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
-    # LEFT BUTTON: Select new trimmed clip in active one roll trim mode	with sensitive cursor.
-    elif (event.button == 1 and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):	
-        track = tlinewidgets.get_track(event.y)	
-        if track == None:	
-            modesetting.set_default_edit_mode(True)	
-            return	
-        success = trimmodes.set_oneroll_mode(track, frame)	
-        if not success:
-            modesetting.set_default_edit_mode(True)	
-            return	
-
-        if trimmodes.edit_data["to_side_being_edited"] == True:	
-            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
-        else:	
-            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT	
-        gui.editor_window.tline_cursor_manager.set_tline_cursor_to_context(pointer_context)	
-        gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()	
-        if not editorpersistance.prefs.quick_enter_trims:	
-            editorstate.timeline_mouse_disabled = True	
-        else:	
-            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     elif event.button == 2:
         updater.zoom_project_length()
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode
@@ -691,24 +670,15 @@ OVERWRITE_MOVE_FUNCS = [movemodes.overwrite_move_press,
 ONE_ROLL_TRIM_FUNCS = [trimmodes.oneroll_trim_press, 
                        trimmodes.oneroll_trim_move,
                        trimmodes.oneroll_trim_release]
-ONE_ROLL_TRIM_NO_EDIT_FUNCS = [modesetting.oneroll_trim_no_edit_press, 
-                               modesetting.oneroll_trim_no_edit_move,
-                               modesetting.oneroll_trim_no_edit_release]
 TWO_ROLL_TRIM_FUNCS = [trimmodes.tworoll_trim_press,
                        trimmodes.tworoll_trim_move,
                        trimmodes.tworoll_trim_release]
-TWO_ROLL_TRIM_NO_EDIT_FUNCS = [modesetting.tworoll_trim_no_edit_press,
-                               modesetting.tworoll_trim_no_edit_move,
-                               modesetting.tworoll_trim_no_edit_release]
 COMPOSITOR_EDIT_FUNCS = [compositormodes.mouse_press,
                          compositormodes.mouse_move,
                          compositormodes.mouse_release]
 SLIDE_TRIM_FUNCS = [trimmodes.slide_trim_press,
                     trimmodes.slide_trim_move,
                     trimmodes.slide_trim_release]
-SLIDE_TRIM_NO_EDIT_FUNCS = [modesetting.slide_trim_no_edit_press,
-                            modesetting.slide_trim_no_edit_move,
-                            modesetting.slide_trim_no_edit_release]
 MULTI_MOVE_FUNCS = [multimovemode.mouse_press,
                     multimovemode.mouse_move,
                     multimovemode.mouse_release]
@@ -732,10 +702,7 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.ONE_ROLL_TRIM:ONE_ROLL_TRIM_FUNCS,
                    editorstate.TWO_ROLL_TRIM:TWO_ROLL_TRIM_FUNCS,
                    editorstate.COMPOSITOR_EDIT:COMPOSITOR_EDIT_FUNCS,
-                   editorstate.ONE_ROLL_TRIM_NO_EDIT:ONE_ROLL_TRIM_NO_EDIT_FUNCS,
-                   editorstate.TWO_ROLL_TRIM_NO_EDIT:TWO_ROLL_TRIM_NO_EDIT_FUNCS,
                    editorstate.SLIDE_TRIM:SLIDE_TRIM_FUNCS,
-                   editorstate.SLIDE_TRIM_NO_EDIT:SLIDE_TRIM_NO_EDIT_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
                    editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
                    editorstate.CUT:CUT_FUNCS,
