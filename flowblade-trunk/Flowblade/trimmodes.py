@@ -724,6 +724,11 @@ def _do_one_roll_trim_edit(frame):
                         "multi_data":ripple_data}
                 action = edit.ripple_trim_end_action(data)
 
+
+    # Always exit ripple mode, ripple is inited at edit start if ALT pressed.
+    ripple_data = None
+    editorstate.trim_mode_ripple = False
+    
     # Execute
     if action != None:
         if edit_data["child_clip_trim_data"] == None:
@@ -735,10 +740,6 @@ def _do_one_roll_trim_edit(frame):
                 actions = [action, sync_trim_action]
                 consolidated_action = edit.ConsolidatedEditAction(actions)
                 consolidated_action.do_consolidated_edit()
-
-    # Always exit ripple mode, ripple is inited at edit start if ALT pressed.
-    ripple_data = None
-    editorstate.trim_mode_ripple = False
 
 def oneroll_play_pressed():
     # Start trim preview playback loop
@@ -916,8 +917,10 @@ class RippleData:
 
         self.trim_blank_indexes = trim_blank_indexes
 
+
         # Pressed track does not ripple, pressed track trim edit defines ripple direction and amount
         track_max_deltas[self.pressed_track_id - 1] = MAX_DELTA
+        self.track_max_deltas = track_max_deltas
         self.trim_blank_indexes[self.pressed_track_id - 1] = -1
     
         # Smallest track delta is the max number of frames 
@@ -949,12 +952,13 @@ class RippleData:
                 track_edit_ops.append(appconsts.MULTI_TRIM)
         self.track_edit_ops = track_edit_ops
 
+        #self.print_data()
+        
         # Make list of boolean values of tracks affected by the edit
         for i in range(1, len(tracks) - 1):
             self.track_affected.append(True)
         self.track_affected[self.pressed_track_id - 1] = True
 
-        """
         # Make list compositors that are moved with ripple edit
         tracks_compositors = self.get_tracks_compositors_list()
         affected_compositors_destroy_ids = []
@@ -973,7 +977,6 @@ class RippleData:
                     affected_compositors_destroy_ids.append(comp.destroy_id)
         
         self.moved_compositors_destroy_ids = affected_compositors_destroy_ids
-        """
 
     def get_track_blank_end_offset(self, track, blank_index):
         blank_end_frame = track.clip_start(blank_index + 1)
@@ -986,6 +989,12 @@ class RippleData:
         
         return tracks_compositors_list
     
+    def print_data(self):
+        tracks = current_sequence().tracks
+        for i in range(1, len(tracks) - 1):
+            name = utils.get_track_name(tracks[i], current_sequence())
+            print(name + ": blank_index, max_delta, edit_op", self.trim_blank_indexes[i-1], self.track_max_deltas[i-1], self.track_edit_ops[i-1])
+
 #---------------------------------------- TWO ROLL TRIM EVENTS
 def set_tworoll_mode(track, current_frame = -1):
     """

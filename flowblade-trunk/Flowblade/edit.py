@@ -1669,6 +1669,8 @@ def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
     tracks = current_sequence().tracks
 
     applied_delta = self.edit_delta
+    if reverse_comp_delta:
+        applied_delta = -applied_delta
         
     for i in range(1, len(tracks) - 1):
         if not track_moved[i - 1]:
@@ -1676,19 +1678,26 @@ def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
         if self.track.id == i:
             continue
 
+        
         track = tracks[i]
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
+
+        #print("track", track.id)
         
         if edit_op == appconsts.MULTI_NOOP:
+            #print("noop")
             continue
         elif edit_op == appconsts.MULTI_TRIM:
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length - applied_delta)
+            #print("trim")
         elif edit_op == appconsts.MULTI_ADD_TRIM:
             _remove_clip(track, trim_blank_index) 
+            #print("add trim")
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
+            #print("trim remove")
             if reverse_comp_delta:
                 if -self.edit_delta != -self.multi_data.max_backwards:
                     _remove_clip(track, trim_blank_index) 
@@ -1720,15 +1729,20 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
         
+        #print("track", track.id)
         if edit_op == appconsts.MULTI_NOOP: # no blank clip on this track is not changed
+            #print("noop")
             continue
         elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, length is changed
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
+            #print("trim")
             _insert_blank(track, trim_blank_index, blank_length + applied_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:# no blank to trim available, only possibnle edit is to add blank
             _insert_blank(track, trim_blank_index, applied_delta)
+            #print("add trim")
         elif edit_op == appconsts.MULTI_TRIM_REMOVE: # blank is trimmed if not max length triom, if so, blank is removed
+            #print("trim remove")
             self.orig_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index)
             if applied_delta != -self.multi_data.max_backwards:
