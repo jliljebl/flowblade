@@ -44,6 +44,7 @@ import menuactions
 import modesetting
 import monitorevent
 import movemodes
+import multitrimmode
 import shortcuts
 import shortcutsquickeffects
 import syncsplitevent
@@ -339,6 +340,11 @@ def _handle_tline_key_event(event):
             return True
         elif action == 'enter_edit':
             trimmodes.enter_pressed()
+            return True
+            
+    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
+        if action == 'enter_edit':
+            multitrimmode.enter_pressed()
             return True
 
     if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE: # is this what want, only in OVERWRITE_MOVE mode?
