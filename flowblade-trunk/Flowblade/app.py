@@ -771,7 +771,7 @@ def _do_window_resized_update():
     updater.window_resized()
     
 def change_current_sequence(index):
-    edit.do_gui_update = False  # This should not be necessary but we are doing this signal intention that GUI updates are disabled
+    edit.do_gui_update = False  # This should not be necessary but we are doing this signal intention that GUI updates are disabled.
     
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]

@@ -682,6 +682,17 @@ class Sequence:
                 new_compositors.append(clone_compositor)
         self.compositors = new_compositors
 
+    def get_clone_compositors(self, track_delta, pos_delta=0):
+        # Used when cloning compositors to change track count by cloning sequence
+        clone_compositors = []
+        for compositor in self.compositors:
+            clone_compositor = self.create_compositor(compositor.type_id)
+            clone_compositor.clone_properties(compositor)
+            clone_compositor.set_in_and_out(compositor.clip_in + pos_delta, compositor.clip_out + pos_delta)
+            clone_compositor.transition.set_tracks(compositor.transition.a_track + track_delta, compositor.transition.b_track + track_delta)
+            clone_compositors.append(clone_compositor)
+        return clone_compositors
+
     def _create_and_plant_clone_compositor_for_sequnce_clone(self, old_compositor, track_delta):      
         # Create and plant new compositor
         compositor = self.create_compositor(old_compositor.type_id)
@@ -764,6 +775,11 @@ class Sequence:
             if comp.transition.b_track == track_index:
                 track_compositors.append(comp)
         return track_compositors
+
+    def print_compositors(self):
+        for comp in self.compositors:
+            print(comp.__dict__)
+            print(comp.transition.a_track, comp.transition.b_track)
             
     # -------------------------- monitor clip, trimming display, output mode and hidden track
     def display_monitor_clip(self, path, pattern_producer_data=None, ttl=None):

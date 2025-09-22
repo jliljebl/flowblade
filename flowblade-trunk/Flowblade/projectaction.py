@@ -1630,23 +1630,47 @@ def _do_create_range_compound_clip(dialog, response_id, name_entry):
     range_frame_in = current_sequence().tractor.mark_in  
     range_frame_out = current_sequence().tractor.mark_out
  
-    # Create tractor
+    # Create tractor and clones of all edit tracks + bg track. 
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
+
+    bg_track = mlt.Playlist(PROJECT().profile)
+    multitrack.connect(bg_track, 0)
         
-    trackindex = 0
     for i in range(1, len(current_sequence().tracks) - 1):
         track = mlt.Playlist(PROJECT().profile)
         orig_track = current_sequence().tracks[i]
-        multitrack.connect(track, trackindex)
+        multitrack.connect(track, int(i))
         if len(orig_track.clips) > 0:
             _track_range_copy(range_frame_in, range_frame_out, track, orig_track)
-        trackindex += 1
+        
+        # Audio mixing
+        transition = mlt.Transition(PROJECT().profile, "mix")
+        transition.set("a_track", int(0))
+        transition.set("b_track", int(i))
+        transition.set("always_active", 1)
+        transition.set("combine", 1)
+        tractor.field().plant_transition(transition, int(0), int(i))
+
+    # Create and add clone compositors
+    clone_compositors = current_sequence().get_clone_compositors(0)
+    clone_compositors.sort(key=_sort_compositors_comparator)
+    for compositor in clone_compositors:
+        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            compositor.set_in_and_out(-1, -1)
+            compositor.transition.mlt_transition.set("always_active", str(1))
+
+        tractor.field().plant_transition(   compositor.transition.mlt_transition, 
+                                            int(compositor.transition.a_track), 
+                                            int(compositor.transition.b_track))
 
     # Render compound clip as MLT XML file
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
+def _sort_compositors_comparator(a_comp):
+    return int(a_comp.transition.b_track)
+    
 def _track_range_copy(over_in, over_out, track, orig_track):
     range_in = orig_track.get_clip_index_at(over_in)
     range_out = orig_track.get_clip_index_at(over_out)
@@ -1670,7 +1694,6 @@ def _track_range_copy(over_in, over_out, track, orig_track):
             cut_clip_in = orig_clip.clip_in
             cut_clip_out = orig_clip.clip_in + over_out - clip_start_in_tline
         else:
-            print("no cut")
             cut_clip_in = orig_clip.clip_in 
             cut_clip_out = orig_clip.clip_out
 
