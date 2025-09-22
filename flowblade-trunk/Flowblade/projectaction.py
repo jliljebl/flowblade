@@ -1568,11 +1568,20 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
 
     box_data = boxmove.box_selection_data 
  
+    # Get audio tracks count.
+    audio_tracks = 0
+    for track_selection in box_data.track_selections:
+        if current_sequence().first_video_index > track_selection.track_id:
+            audio_tracks += 1
+
     # Create tractor
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-        
-    trackindex = 0
+
+    bg_track = mlt.Playlist(PROJECT().profile)
+    multitrack.connect(bg_track, 0)
+
+    trackindex = 1
     for track_selection in box_data.track_selections:
         track = mlt.Playlist(PROJECT().profile)
         current_track = current_sequence().tracks[track_selection.track_id]
@@ -1580,7 +1589,7 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
         if track_selection.range_frame_in == -1:
             trackindex += 1
             continue
-                
+
         # Put one blank in if needed
         add_blank = 0 # We need this for insert blank index calculation below. 
         if track_selection.start_frame < current_track.clip_start(track_selection.selected_range_in):
@@ -1596,9 +1605,31 @@ def _do_create_box_compound_clip(dialog, response_id, name_entry):
                 track.append(clip, clip.clip_in, clip.clip_out)
             else:
                 track.insert_blank(i - track_selection.selected_range_in + add_blank, orig_clip.clip_out - orig_clip.clip_in  + 1) # +1 end inclusive
-        
+
+        # Audio mixing
+        transition = mlt.Transition(PROJECT().profile, "mix")
+        transition.set("a_track", int(0))
+        transition.set("b_track", int(trackindex))
+        transition.set("always_active", 1)
+        transition.set("combine", 1)
+        tractor.field().plant_transition(transition, int(0), int(i))
+
+        # Add full track compositors.
+        if current_sequence().first_video_index <= track_selection.track_id:
+            compositor = current_sequence().create_compositor("##blend")
+            a_track = audio_tracks + 1 # +1 for bg track
+            b_track = a_track + track_selection.track_id - current_sequence().first_video_index
+            compositor.transition.set_tracks(a_track, b_track)
+            compositor.set_in_and_out(-1, -1)
+            compositor.transition.mlt_transition.set("always_active", str(1))
+            compositor.origin_clip_id = -1
+
+            tractor.field().plant_transition(   compositor.transition.mlt_transition, 
+                                                int(a_track), 
+                                                int(b_track))
+
         trackindex += 1
-                    
+
     # Render compound clip as MLT XML file
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
