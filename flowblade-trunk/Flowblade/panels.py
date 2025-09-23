@@ -517,9 +517,6 @@ def get_effect_selection_panel(double_click_cb):
                             lambda w,e: _group_selection_changed(w, effects_list_view), 
                             None)
     group_combo_box.set_margin_top(1)
-
-    #combo_row = Gtk.HBox(False, 2)
-    #combo_row.pack_start(group_combo_box, True, True, 0)
     
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)

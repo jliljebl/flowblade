@@ -29,6 +29,7 @@ from gi.repository import Gtk, Gdk, GLib
 from gi.repository import GdkPixbuf
 
 import appconsts
+import gui
 import respaths
 import translations
 
@@ -325,13 +326,14 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     return out_align
 
 def get_panel_etched_frame(panel):
-    frame = Gtk.Frame()
+    frame = Gtk.Alignment.new(0.5, 0, 1, 1) #Gtk.Frame()
     frame.add(panel)
     set_margins(frame, 0, 0, 1, 0)
+    gui.apply_widget_css_class(frame, "empty-panel-frame", "empty-panel-frame-class.css")
     return frame
 
 def get_empty_panel_etched_frame():
-    frame = Gtk.Frame()
+    frame =  Gtk.Alignment.new(0.5, 0, 1, 1) #Gtk.Frame()
     set_margins(frame, 0, 0, 1, 0)
     return frame
     
