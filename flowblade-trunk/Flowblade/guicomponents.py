@@ -2125,6 +2125,10 @@ class MonitorInfoDisplay:
         self.in_zeros_overlay = ""
         self.out_zeros_overlay = ""
         self.len_zeros_overlay = ""
+
+        self.mark_in_empty = True
+        self.mark_out_empty = True
+        self.len_empty = True
         
         # Draw consts
         x = 2
@@ -2160,23 +2164,29 @@ class MonitorInfoDisplay:
         if mark_in != -1:
             mark_in_info = utils.get_tc_string(mark_in)
             self.in_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_in)
+            self.mark_in_empty = False
         else:
-            mark_in_info = " - - : - - : - - : - - "
+            mark_in_info = " - - : - - : - - : - -"
+            self.mark_in_empty = True
         self.in_str = mark_in_info
         
         if mark_out != -1:
             mark_out_info = utils.get_tc_string(mark_out)
             self.out_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_out)
+            self.mark_out_empty = False
         else:
             mark_out_info =  " - - : - - : - - : - - "
+            self.mark_out_empty = True
         self.out_str = mark_out_info
 
         range_len = mark_out - mark_in + 1 # +1, out incl.
         if mark_in != -1 and mark_out != -1:
             range_info = utils.get_tc_string(range_len)
             self.len_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(range_len)
+            self.len_empty = False
         else:
             range_info =  " - - : - - : - - : - - "
+            self.len_empty = True
         self.len_str = range_info
 
     def _draw(self, event, cr, allocation):
@@ -2194,12 +2204,13 @@ class MonitorInfoDisplay:
         cr.set_source_surface(self.marks_length_img, 205, 5)
         cr.paint()
         
+        is_tc = True
         # Tc Texts
-        self.draw_tc(cr, self.in_str, 21, 2, True)
+        self.draw_tc(cr, self.in_str, 21, 2, not self.mark_in_empty)
         self.draw_tc(cr, self.in_zeros_overlay, 21, 2, False)
-        self.draw_tc(cr, self.out_str, 118, 2, True)
+        self.draw_tc(cr, self.out_str, 118, 2, not self.mark_out_empty)
         self.draw_tc(cr, self.out_zeros_overlay, 118, 2, False)
-        self.draw_tc(cr, self.len_str, 218, 2, True)
+        self.draw_tc(cr, self.len_str, 218, 2, not self.len_empty)
         self.draw_tc(cr, self.len_zeros_overlay, 218, 2, False)
 
     def draw_tc(self, cr, tc_text, x, y, is_tc):
