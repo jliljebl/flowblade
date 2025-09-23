@@ -78,7 +78,7 @@ OVER_FRAMES = 30
 # Colors
 METER_BG_COLOR = (0.15, 0.15, 0.15)
 OVERLAY_COLOR = (0.70, 0.70, 0.70)
-CHANNEL_ID_COLOR = (0.06, 0.34, 0.66)
+CHANNEL_ID_COLOR = (0.66, 0.66, 0.66)
 
 # Color gradient used to draw "LED" colors
 rr, rg, rb = utils.get_cairo_color_tuple_255_rgb(219, 69, 69)
