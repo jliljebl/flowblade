@@ -516,20 +516,21 @@ def get_effect_selection_panel(double_click_cb):
     group_combo_box.connect("changed", 
                             lambda w,e: _group_selection_changed(w, effects_list_view), 
                             None)
+    group_combo_box.set_margin_top(1)
 
-    combo_row = Gtk.HBox(False, 2)
-    combo_row.pack_start(group_combo_box, True, True, 0)
+    #combo_row = Gtk.HBox(False, 2)
+    #combo_row.pack_start(group_combo_box, True, True, 0)
     
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
     effects_list_view.treeview.connect("row-activated", double_click_cb, group_combo_box)
       
-    effects_vbox = Gtk.VBox(False, 2)
-    effects_vbox.pack_start(combo_row, False, False, 0)
+    effects_vbox = Gtk.VBox(False, 0)
+    effects_vbox.pack_start(group_combo_box, False, False, 0)
     effects_vbox.pack_start(effects_list_view, True, True, 0)
     
-    return (guiutils.set_margins(effects_vbox, 4, 4, 4, 4), effects_list_view, group_combo_box)
+    return (guiutils.set_margins(effects_vbox, 0, 1, 1, 1), effects_list_view, group_combo_box)
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
