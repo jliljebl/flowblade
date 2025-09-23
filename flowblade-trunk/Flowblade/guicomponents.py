@@ -2902,21 +2902,16 @@ class CategoriesModelComboBoxWithData:
 
 class EditMultiStack:
     def __init__(self):
-        self.widget = Gtk.Alignment.new(0.5, 0, 1, 1)
+        self.widget = Gtk.Stack()
         self.panels = {}
-        self.visible_name = None
 
     def add_named(self, panel, name):
         self.panels[name] = panel
+        self.widget.add_named(panel, name)
 
     def set_visible_child_name(self, name):
-        try:
-            self.widget.remove(self.widget.get_child())
-        except:
-            pass
-        self.visible_name = name
-        self.widget.add(self.panels[name])
+        self.widget.set_visible_child_name(name)
         self.panels[name].show_all()
 
     def get_visible_child_name(self):
-        return self.visible_name
+        return self.get_visible_child_name()

@@ -316,15 +316,17 @@ class EditorWindow:
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
         effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 0)
-
         effects_vbox = Gtk.VBox()
         effects_vbox.pack_start(effects_editor_panel, True, True, 0)
         effects_vbox.pack_start(info_row, False, False, 0)
+
 
         if not(editorstate.SCREEN_HEIGHT < 1023):
             self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         else:
             self.effects_panel = effects_vbox
+
+        gui.apply_widget_css_class(self.effects_panel, "dark-bg", "dark-bg-class.css")
 
         # Effects select panel
         effect_select_panel, effect_select_list_view, effect_select_combo_box = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
@@ -364,11 +366,12 @@ class EditorWindow:
         # Multi empty panel
         multi_empty_vbox = Gtk.VBox(False, 0)
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
-        no_target = Gtk.Label(label=_("No Edit Target."))
+        no_target = Gtk.Label(label=_("No Edit Target."))         
         no_target.set_sensitive(False)
         multi_empty_vbox.pack_start(no_target, False, False, 0)
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
-    
+        gui.apply_widget_css_class(multi_empty_vbox, "dark-bg", "dark-bg-class.css")
+        
         # Multi edit panel
         self.edit_multi = guicomponents.EditMultiStack()
         self.edit_multi.add_named(multi_empty_vbox, appconsts.EDIT_MULTI_EMPTY)
@@ -376,7 +379,7 @@ class EditorWindow:
         self.edit_multi.add_named(compositors_panel, appconsts.EDIT_MULTI_COMPOSITORS)
         self.edit_multi.add_named(mediaplugins_panel, appconsts.EDIT_MULTI_PLUGINS)
         self.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
-        
+        gui.apply_widget_css_class(self.edit_multi.widget, "dark-bg", "dark-bg-class.css")
         # Render panel
         try:
             render.create_widgets()

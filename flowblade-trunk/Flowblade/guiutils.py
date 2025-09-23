@@ -329,7 +329,7 @@ def get_panel_etched_frame(panel):
     frame = Gtk.Alignment.new(0.5, 0, 1, 1) #Gtk.Frame()
     frame.add(panel)
     set_margins(frame, 0, 0, 1, 0)
-    gui.apply_widget_css_class(frame, "empty-panel-frame", "empty-panel-frame-class.css")
+    gui.apply_widget_css_class(frame, "dark-bg", "dark-bg-class.css")
     return frame
 
 def get_empty_panel_etched_frame():
