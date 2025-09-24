@@ -83,7 +83,7 @@ MARK_LINE_WIDTH = 5
 COLUMN_WIDTH = 150 # column area width
 SCALE_HEIGHT = 25
 SCROLL_HEIGHT = 20
-Y_SCROLL_WIDTH = 19
+Y_SCROLL_WIDTH = 17
 ACTIVE_SWITCH_WIDTH = 18
 COMPOSITOR_HEIGHT_OFF = 10
 COMPOSITOR_HEIGHT = 20
@@ -2984,14 +2984,14 @@ class TimeLineYPage:
             icon = INSERT_ARROW_ICON_UP
         else:
             icon = INSERT_ARROW_ICON_UP_INACTIVE 
-        cr.set_source_surface(icon, 3, h_half // 2 - 2)
+        cr.set_source_surface(icon, 2, h_half // 2 - 2)
         cr.paint()
         
         if self.down_active == True:
             icon = INSERT_ARROW_ICON
         else:
             icon = INSERT_ARROW_ICON_INACTIVE 
-        cr.set_source_surface(icon, 3, h_half + h_half // 2 - 2)
+        cr.set_source_surface(icon, 2, h_half + h_half // 2 - 2)
         cr.paint()
 
         if self.mouse_prelight == True and self.mouse_pos != None:
