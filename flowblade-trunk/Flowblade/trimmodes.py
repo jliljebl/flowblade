@@ -724,7 +724,6 @@ def _do_one_roll_trim_edit(frame):
                         "multi_data":ripple_data}
                 action = edit.ripple_trim_end_action(data)
 
-
     # Always exit ripple mode, ripple is inited at edit start if ALT pressed.
     ripple_data = None
     editorstate.trim_mode_ripple = False
@@ -1555,6 +1554,8 @@ def _do_slide_edit():
     """
     Called from drag-release and next, prev button presses.
     """
+    edit.do_gui_update = True
+
     # "track","clip","delta","index","first_do","first_do_callback"
     data = {"track":edit_data["track_object"],
             "index":edit_data["index"],
@@ -1563,10 +1564,18 @@ def _do_slide_edit():
             "first_do_callback":_slide_trim_first_do_callback,
             "start_frame_being_viewed":edit_data["start_frame_being_viewed"],
             "first_do":True}
-
     action = edit.slide_trim_action(data)
-    edit.do_gui_update = True
-    action.do_edit()
+    action_list = [action]
+    
+    sync_action = dualsynctrim.get_slide_trim_sync_edit(data)
+    if sync_action != None:
+        action_list = action_list + [sync_action]
+
+    if len(action_list) == 1:
+        action.do_edit() # No dual sync edits
+    else:
+        consolidated_action = edit.ConsolidatedEditAction(action_list)
+        consolidated_action.do_consolidated_edit()
 
 def _slide_trim_first_do_callback(track, clip, index, start_frame_being_viewed):
     # If in one roll mode, reinit edit mode to correct side

@@ -262,3 +262,33 @@ def check_two_roll_trim_lagality(edit_data):
         return False
 
     return True
+
+def get_slide_trim_sync_edit(edit_data):
+    if editorpersistance.prefs.auto_sync_single_childs_on_trim == False:
+        return None
+
+    clip_sync_items = resync.get_child_clips(edit_data["clip"])
+
+    if clip_sync_items == None or len(clip_sync_items) > 1:
+        return None
+    else:
+        sync_clip, sync_track = clip_sync_items[0]
+        sync_index = sync_track.clips.index(sync_clip) 
+
+    delta = edit_data["delta"]
+
+    if sync_clip.clip_in + delta < 0:
+        return None
+    if sync_clip.clip_out + delta >= edit_data["clip"].get_length():
+        return None
+
+    data = {"track":sync_track,
+            "index":sync_index,
+            "clip":sync_clip,
+            "delta":delta,
+            "first_do_callback":None, # not used because first_do == False
+            "start_frame_being_viewed":None, # not used because first_do == False
+            "first_do":False} 
+    action = edit.slide_trim_action(data)
+
+    return action
