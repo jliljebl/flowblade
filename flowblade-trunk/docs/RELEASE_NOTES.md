@@ -3,7 +3,7 @@
 ## FLOWBLADE 2.22.1.1
 Date: August 14, 2025
 
-Fixes metadata isues.
+Fixes metadata issues.
 
 ## FLOWBLADE 2.22.1
 Date: August 13, 2025
