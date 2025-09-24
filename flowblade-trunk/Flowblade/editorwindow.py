@@ -479,8 +479,6 @@ class EditorWindow:
         self.edit_buttons_frame.add(self.edit_buttons_row)
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
-        #self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
-        
         # Position bar and decorative frame for it
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.HBox()
@@ -662,7 +660,6 @@ class EditorWindow:
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
-        #tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
         tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
