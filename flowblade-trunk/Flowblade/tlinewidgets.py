@@ -2969,12 +2969,15 @@ class TimeLineYPage:
         cr.fill()
 
         h_half = (h - 2) // 2
+        radius = 4.0
         
         rect = (0, 1, w, h_half)
+        self.create_round_rect_path(cr, 0, 1, w, h_half, radius)
         self.draw_edge(cr, rect)
 
         h_half = (h - 2) // 2
         rect = (0, 1 + h_half, w, h_half)
+        self.create_round_rect_path(cr, 0, 1 + h_half, w, h_half + 1, radius)
         self.draw_edge(cr, rect)
 
         if self.up_active == True:
@@ -2999,14 +3002,24 @@ class TimeLineYPage:
                 ly =  h / 2
 
             cr.set_source_rgba(0.5, 0.5, 0.5, 0.2)
+            self.create_round_rect_path(cr, 1, ly + 2, w - 2, h / 2 - 2, radius)
             cr.rectangle(0 + 1, ly + 2, w - 2, h / 2 - 2)
             cr.fill()
 
     def draw_edge(self, cr, rect):
         cr.set_line_width(1.0)
         cr.set_source_rgb(0.105, 0.105, 0.105)
-        cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
         cr.stroke()
+
+    def create_round_rect_path(self, cr, x, y, width, height, radius=2.0):
+        degrees = M_PI / 180.0
+        cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
+
 
 
 class KFToolFrameScale:
