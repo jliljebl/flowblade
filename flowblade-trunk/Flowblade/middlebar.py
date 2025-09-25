@@ -137,7 +137,8 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
 def _create_buttons(editor_window):
 
     editor_window.big_TC = Gtk.Stack()
-    editor_window.big_TC.set_margin_top(5)
+    editor_window.big_TC.set_margin_top(4)
+    editor_window.big_TC.set_margin_bottom(1)
     tc_disp = guicomponents.BigTCDisplay()
     tc_entry = guicomponents.BigTCEntry()
     tc_disp.widget.show()

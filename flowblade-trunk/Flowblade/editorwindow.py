@@ -518,7 +518,7 @@ class EditorWindow:
         player_buttons_row.pack_start(markbuttons.widget, False, False, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
-        player_buttons_row.set_margin_top(8)
+        player_buttons_row.set_margin_top(7)
         player_buttons_row.set_margin_bottom(6)
         player_buttons_row.set_margin_left(12)
         player_buttons_row.set_margin_right(12)
@@ -660,6 +660,7 @@ class EditorWindow:
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
+
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
         tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
