@@ -118,6 +118,8 @@ class EditorWindow:
         if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # Delete when everyone is on mlt 7.30 or moving to Gtk4.
             self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
+        self.audio_master_meter = None
+
         # Init application main menu.
         self.ui = Gtk.UIManager()
         self._init_app_menu(self.ui)
@@ -244,7 +246,6 @@ class EditorWindow:
                 menu_vbox.pack_start(monitor_source_box, False, False, 0)
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(tline_info_box, True, True, 0)
-            #menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
         else:
             menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
             
@@ -725,7 +726,9 @@ class EditorWindow:
             
         # Put timeline between left and right bottom row panels.
         self.tline_pane.pack_start(self.tline_vpane, True, True, 0)
-        
+        if editorpersistance.prefs.audio_master_postion_is_top_row == False:
+            self.tline_pane.pack_end(self._get_audio_master_meter(), False, False, 0)
+
         # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel.
         self.bottom_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
         if self.bottom_right_panel != None:
@@ -769,7 +772,8 @@ class EditorWindow:
         self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
-        self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
+        if editorpersistance.prefs.audio_master_postion_is_top_row == True:
+            self.top_row_hbox.pack_end(self._get_audio_master_meter(), False, False, 0)
 
         editorlayout.apply_tabs_positions()
         
@@ -1131,6 +1135,26 @@ class EditorWindow:
         tool_selector_menu_item.set_submenu(tool_selector_menu)
         menu.append(tool_selector_menu_item)
         
+        # Audio master meter
+        # Tool Selection Widget
+        audiomaster_menu_item = Gtk.MenuItem(_("Audoi Master Level Meter"))
+        audiomaster_menu = Gtk.Menu()
+        audiomaster_top = Gtk.RadioMenuItem()
+        audiomaster_top.set_label( _("Top Row"))
+        audiomaster_menu.append(audiomaster_top)
+        audiomaster_bottom = Gtk.RadioMenuItem.new_with_label([audiomaster_top], _("Bottom Row"))
+
+        if editorpersistance.prefs.audio_master_postion_is_top_row == True:
+            audiomaster_top.set_active(True)
+        else:
+            audiomaster_bottom.set_active(True)
+        audiomaster_top.connect("activate", lambda w: self._set_audiomaster_position(True))
+        audiomaster_bottom.connect("activate", lambda w: self._set_audiomaster_position(False))
+
+        audiomaster_menu.append(audiomaster_bottom)
+        audiomaster_menu_item.set_submenu(audiomaster_menu)
+        menu.append(audiomaster_menu_item)
+        
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
@@ -1254,7 +1278,28 @@ class EditorWindow:
         middlebar.re_create_tool_selector(self)
         middlebar.redo_layout(self)
         workflow.select_default_tool()
+
+    def _set_audiomaster_position(self, value):
+        # We get 2 events from radio menu items, only handle one.
+        if editorpersistance.prefs.audio_master_postion_is_top_row == value:
+            return 
+            
+        editorpersistance.prefs.audio_master_postion_is_top_row = value
+        editorpersistance.save()
+
+        if value == True:
+            self.tline_pane.remove(self._get_audio_master_meter())
+            self.top_row_hbox.pack_end(self._get_audio_master_meter(), False, False, 0)
+        else:
+            self.top_row_hbox.remove(self._get_audio_master_meter())
+            self.tline_pane.pack_end(self._get_audio_master_meter(), False, False, 0)
+
+    def _get_audio_master_meter(self):
+        if self.audio_master_meter == None:
+            self. audio_master_meter = audiomonitoring.get_master_meter()
         
+        return self.audio_master_meter
+
     def _show_tools_dock(self, widget):
         if widget.get_active() == False:
             return

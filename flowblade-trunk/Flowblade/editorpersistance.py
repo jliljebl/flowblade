@@ -389,3 +389,4 @@ class EditorPreferences:
         self.disable_drag_when_selected = True
         self.show_waveform_in_monitor = True
         self.auto_sync_single_childs_on_trim = True
+        self.audio_master_postion_is_top_row = True

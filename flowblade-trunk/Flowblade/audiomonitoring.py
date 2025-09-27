@@ -661,7 +661,7 @@ class MasterVolumeMeter:
         self.GRAD_CUT = 37
         self.top_pad = 14
         
-        self.meter = AudioMeter(METER_HEIGHT + 40)
+        self.meter = AudioMeter(100)
         self.meter.x_pad_l = 6
         self.meter.x_pad_r = 14
         self.meter.right_channel.draw_dB = True
@@ -674,7 +674,7 @@ class MasterVolumeMeter:
         w = SLOT_W - 40
         h = METER_SLOT_H + 2 + 40
         self.canvas = cairoarea.CairoDrawableArea2( w,
-                                                    h, 
+                                                    100, 
                                                     self._draw)
 
         self.widget = Gtk.VBox(False, 0)
