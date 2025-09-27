@@ -445,12 +445,10 @@ class AudioMeter:
         
     def display_value(self, cr, x, value_left, value_right, grad):
         cr.set_source(grad)
-        cr.set_dash(DASHES, 0) 
         cr.set_line_width(self.meter_width)
         self.left_channel.display_value(cr, x + self.x_pad_l, value_left)
 
         cr.set_source(grad)
-        cr.set_dash(DASHES, 0) 
         cr.set_line_width(self.meter_width)
         self.right_channel.display_value(cr, x + self.x_pad_r, value_right)
 
