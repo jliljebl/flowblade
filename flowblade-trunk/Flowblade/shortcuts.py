@@ -18,6 +18,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+
+from gi.repository import Gdk, Gtk
+
 # Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
 import collections
 import os
@@ -48,6 +51,52 @@ _key_names = {}
 _mod_names = {}
 _gtk_mod_names = {}
 _editable = False
+
+
+
+# Copied from keyevents.py so that we are using same code to 
+def get_shortcut_action(event):
+    # Get the name of the key pressed.
+    key_name = Gdk.keyval_name(event.keyval).lower()
+
+    # Check if this key is in the dictionary.
+    state = event.get_state()
+    # Now we have a key and a key state we need to check if it is a shortcut.
+    # If it IS a shortcut we need to determine what action to take.
+    if key_name in _keyboard_actions:
+        # Now get the associated dictionary
+        _secondary_dict = _keyboard_actions[key_name]
+        # In order to check for all available combinations of Ctrl+Alt etc (CTRL+ALT should be the same as ALT_CTRL)
+        # we do a SORT on the string. So both CTRL+ALT and ALT+CTRL will become +ACLLRTT and can be easily compared.
+        modifier = ""
+        if state & Gdk.ModifierType.CONTROL_MASK:
+            modifier = "CTRL"
+        if state & Gdk.ModifierType.MOD1_MASK:
+            if modifier != "":
+                modifier = modifier + "+"
+            modifier = modifier + "ALT"
+        if state & Gdk.ModifierType.SHIFT_MASK:
+            if modifier != "":
+                modifier = modifier + "+"
+            modifier = modifier + "SHIFT"
+        # CapsLock is used as an equivalent to SHIFT, here
+        if state & Gdk.ModifierType.LOCK_MASK:
+            if modifier != "":
+                modifier = modifier + "+"
+            modifier = modifier + "SHIFT"
+        # Set to None if no modifier found
+        if modifier == "":
+            modifier = 'None'
+        try:
+            action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','',modifier.lower())))]
+        except:
+            try:
+                action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','','Any'.lower())))]
+            except:
+                action = 'None'
+        return action
+    # We didn't find an action, so return nothing.
+    return 'None'
 
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
@@ -98,6 +147,9 @@ def load_shortcuts():
     _set_keyboard_action_names()
     _set_key_names()
     set_keyboard_shortcuts()
+    #set_keyboard_shortcut_actions()
+    print("_keyboard_actions", _keyboard_actions)
+    #print("_keyboard_action_names", _keyboard_action_names)
 
 def set_keyboard_shortcuts():
     global _keyboard_actions, _editable
@@ -149,8 +201,20 @@ def set_keyboard_shortcuts():
     except:
         print("Error opening shortcuts file:" + prefs.shortcuts)
 
-    #_print_shortcuts()
 
+"""
+def set_keyboard_shortcut_actions():
+    print("s")
+    global _keyboard_shortcut_actions
+    _keyboard_shortcut_actions = {}
+    for key, shortcut_data in _keyboard_actions.items():
+        for modifier, action_name in shortcut_data.items():
+            _keyboard_shortcut_actions[action_name] = (key, modifier)
+    print("e")
+    
+def get_keyboard_shortcut_actions():
+    return _keyboard_shortcut_actions
+"""
 
 def update_custom_shortcuts():
     # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update custom shortcuts.

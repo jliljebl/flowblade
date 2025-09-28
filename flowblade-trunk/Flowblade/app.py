@@ -83,6 +83,7 @@ import jobs
 import keyevents
 import keyframeeditor
 import keyframeeditcanvas
+import keygtkactions
 import kftoolmode
 import medialinker
 import medialog
@@ -352,6 +353,9 @@ class FlowbladeApplication(Gtk.Application):
 
         # Create main window and make widgeta available from gui.py.
         create_gui()
+
+        # These need widget objects to exist to build ata structures
+        keygtkactions.init()
 
         # Inits widgets with project data.
         init_project_gui()

@@ -226,12 +226,12 @@ def _handle_tline_key_event(event):
     prefs = editorpersistance.prefs
 
 
-    if action == 'mark_in':
-        monitorevent.mark_in_pressed()
-        return True
-    if action == 'to_mark_in':
-        monitorevent.to_mark_in_pressed()
-        return True
+    #if action == 'mark_in':
+    #    monitorevent.mark_in_pressed()
+    #    return True
+    #if action == 'to_mark_in':
+    #    monitorevent.to_mark_in_pressed()
+    #    return True
     if action == 'zoom_out':
         updater.zoom_out()
     if action == 'zoom_in':
@@ -546,47 +546,7 @@ def _handle_extended_monitor_focus_events(event):
         
 # Apr-2017 - SvdB
 def _get_shortcut_action(event):
-    # Get the name of the key pressed.
-    key_name = Gdk.keyval_name(event.keyval).lower()
-
-    # Check if this key is in the dictionary.
-    state = event.get_state()
-    # Now we have a key and a key state we need to check if it is a shortcut.
-    # If it IS a shortcut we need to determine what action to take.
-    if key_name in shortcuts._keyboard_actions:
-        # Now get the associated dictionary
-        _secondary_dict = shortcuts._keyboard_actions[key_name]
-        # In order to check for all available combinations of Ctrl+Alt etc (CTRL+ALT should be the same as ALT_CTRL)
-        # we do a SORT on the string. So both CTRL+ALT and ALT+CTRL will become +ACLLRTT and can be easily compared.
-        modifier = ""
-        if state & Gdk.ModifierType.CONTROL_MASK:
-            modifier = "CTRL"
-        if state & Gdk.ModifierType.MOD1_MASK:
-            if modifier != "":
-                modifier = modifier + "+"
-            modifier = modifier + "ALT"
-        if state & Gdk.ModifierType.SHIFT_MASK:
-            if modifier != "":
-                modifier = modifier + "+"
-            modifier = modifier + "SHIFT"
-        # CapsLock is used as an equivalent to SHIFT, here
-        if state & Gdk.ModifierType.LOCK_MASK:
-            if modifier != "":
-                modifier = modifier + "+"
-            modifier = modifier + "SHIFT"
-        # Set to None if no modifier found
-        if modifier == "":
-            modifier = 'None'
-        try:
-            action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','',modifier.lower())))]
-        except:
-            try:
-                action = _secondary_dict[''.join(sorted(re.sub(r'[\s]','','Any'.lower())))]
-            except:
-                action = 'None'
-        return action
-    # We didn't find an action, so return nothing.
-    return 'None'
+    return shortcuts.get_shortcut_action(event)
 
 def _handle_configurable_global_events(event):
     action = _get_shortcut_action(event)
@@ -689,12 +649,12 @@ def _handle_clip_key_event(event):
             else:
                 monitorevent.start_marks_looping()
             return True
-        if action == 'mark_in':
-            monitorevent.mark_in_pressed()
-            return True
-        if action == 'to_mark_in':
-            monitorevent.to_mark_in_pressed()
-            return True
+        #if action == 'mark_in':
+        #    monitorevent.mark_in_pressed()
+        #    return True
+        #if action == 'to_mark_in':
+        #    monitorevent.to_mark_in_pressed()
+        #    return True
         if action == 'mark_out':
             monitorevent.mark_out_pressed()
             return True
