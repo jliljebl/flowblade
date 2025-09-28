@@ -236,12 +236,12 @@ def _handle_tline_key_event(event):
         updater.zoom_out()
     if action == 'zoom_in':
         updater.zoom_in()
-    if action == 'mark_out':
-        monitorevent.mark_out_pressed()
-        return True
-    if action == 'to_mark_out':
-        monitorevent.to_mark_out_pressed()
-        return True
+    #if action == 'mark_out':
+    #    monitorevent.mark_out_pressed()
+    #    return True
+    #if action == 'to_mark_out':
+    #    monitorevent.to_mark_out_pressed()
+    #    return True
     if action == 'clear_mark_in':
         targetactions.clear_mark_in()
         return True
@@ -655,12 +655,12 @@ def _handle_clip_key_event(event):
         #if action == 'to_mark_in':
         #    monitorevent.to_mark_in_pressed()
         #    return True
-        if action == 'mark_out':
-            monitorevent.mark_out_pressed()
-            return True
-        if action == 'to_mark_out':
-            monitorevent.to_mark_out_pressed()
-            return True
+        #if action == 'mark_out':
+        #    monitorevent.mark_out_pressed()
+        #    return True
+        #if action == 'to_mark_out':
+        #    monitorevent.to_mark_out_pressed()
+        #    return True
         if action == 'clear_mark_in':
             targetactions.clear_mark_in()
             return True

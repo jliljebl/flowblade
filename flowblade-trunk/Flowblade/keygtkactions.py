@@ -25,12 +25,18 @@ import shortcuts
 # Widget names
 TLINE_CANVAS = "tlinecanvas"
 TLINE_TRACK_COLUMN = "tlinetrackcolumn"
-TLINE_ALL = [TLINE_CANVAS, TLINE_TRACK_COLUMN]
+TLINE_SCALE = "tlinescale"
+POS_BAR = "posbar"
+TLINE_LEFT_CORNER = "tlineleftcorner"
+TLINE_SCROLL = "tlinescroll"
+TLINE_MONITOR_DISPLAY = "tlinemonitordisplay"
+TLINE_ALL = [TLINE_CANVAS, TLINE_TRACK_COLUMN, TLINE_SCALE, TLINE_LEFT_CORNER, TLINE_SCROLL, TLINE_MONITOR_DISPLAY]
+MONITOR_SWITCH = "monitorswitch"
+MONITOR_WAVEFORM_DISPLAY = "monitorwaveformdisplay"
+MONITOR_ALL = [MONITOR_SWITCH, MONITOR_WAVEFORM_DISPLAY, POS_BAR]
+TLINE_MONITOR_ALL = TLINE_ALL +  MONITOR_ALL
 
-# action name -> widget list
-_actions_to_widgets = { "mark_in": TLINE_ALL,
-                        "to_mark_in":TLINE_ALL}
-# widget objects
+# widget name -> widget object
 _widgets = {}
 # widget -> ShortCutController object
 _controllers = {}
@@ -41,15 +47,24 @@ def init():
     global _widgets
     _widgets = {TLINE_CANVAS: gui.tline_canvas.widget,
                 TLINE_TRACK_COLUMN: gui.tline_column.widget,
+                TLINE_SCALE: gui.tline_scale.widget,
+                POS_BAR: gui.pos_bar.widget,
+                TLINE_LEFT_CORNER: gui.tline_left_corner.widget,
+                TLINE_SCROLL: gui.tline_scroll,
+                TLINE_MONITOR_DISPLAY: gui.tline_display,
+                MONITOR_SWITCH: gui.monitor_switch.widget,
+                MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget
                 }
 
+    #TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
+
     # Create actions
-    _create_action("mark_in", monitorevent.mark_in_pressed)
-    _create_action("to_mark_in", monitorevent.to_mark_in_pressed)
+    _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL)
+    _create_action("to_mark_in", monitorevent.to_mark_in_pressed, TLINE_MONITOR_ALL)
+    _create_action("mark_out", monitorevent.mark_out_pressed, TLINE_MONITOR_ALL)
+    _create_action("to_mark_out", monitorevent.to_mark_out_pressed, TLINE_MONITOR_ALL)
     
-def _create_action(action, press_func):
-    #key, modifier = _actions[action]
-    widget_list = _actions_to_widgets[action]
+def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
         if widget in _controllers:
@@ -73,8 +88,9 @@ class ShortCutController:
         try:
             press_func = self.shortcuts[action]
             press_func()
+            return True
         except KeyError:
-            pass
+            return False
             
 
 
