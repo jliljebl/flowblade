@@ -19,8 +19,11 @@
 """
 
 import gui
+import medialog
 import monitorevent
 import shortcuts
+import tlineaction
+import updater
 
 # Widget names
 TLINE_CANVAS = "tlinecanvas"
@@ -63,7 +66,16 @@ def init():
     _create_action("to_mark_in", monitorevent.to_mark_in_pressed, TLINE_MONITOR_ALL)
     _create_action("mark_out", monitorevent.mark_out_pressed, TLINE_MONITOR_ALL)
     _create_action("to_mark_out", monitorevent.to_mark_out_pressed, TLINE_MONITOR_ALL)
-    
+    _create_action("clear_io_marks", monitorevent.marks_clear_pressed, TLINE_MONITOR_ALL)
+    _create_action("zoom_out", updater.zoom_out, TLINE_MONITOR_ALL)
+    _create_action("zoom_in", updater.zoom_in, TLINE_MONITOR_ALL)
+    _create_action("switch_monitor", updater.switch_monitor_display, TLINE_MONITOR_ALL) # does not work monitor -> tline
+    _create_action("add_marker", tlineaction.add_marker, TLINE_MONITOR_ALL)
+    _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)
+    _create_action("cut_all", tlineaction.cut_pressed, TLINE_ALL)
+    _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
+
+
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
         widget = _widgets[widget_id]

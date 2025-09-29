@@ -225,32 +225,6 @@ def _handle_tline_key_event(event):
     action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
 
-
-    #if action == 'mark_in':
-    #    monitorevent.mark_in_pressed()
-    #    return True
-    #if action == 'to_mark_in':
-    #    monitorevent.to_mark_in_pressed()
-    #    return True
-    if action == 'zoom_out':
-        updater.zoom_out()
-    if action == 'zoom_in':
-        updater.zoom_in()
-    #if action == 'mark_out':
-    #    monitorevent.mark_out_pressed()
-    #    return True
-    #if action == 'to_mark_out':
-    #    monitorevent.to_mark_out_pressed()
-    #    return True
-    if action == 'clear_mark_in':
-        targetactions.clear_mark_in()
-        return True
-    if action == 'clear_mark_out':
-        targetactions.clear_mark_out()
-        return True
-    if action == 'clear_io_marks':
-        monitorevent.marks_clear_pressed()
-        return True
     if action == 'play':
         targetactions.play()
         return True
@@ -269,30 +243,24 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.start_marks_looping()
         return True
-    if action == 'display_clip_in_monitor':
-        targetactions.display_clip_in_monitor()
-        return True
-    if action == 'display_sequence_in_monitor':
-        targetactions.display_sequence_in_monitor()
-        return True
-    if action == 'switch_monitor':
-        updater.switch_monitor_display()
-        return True
-    if action == 'add_marker':
-        tlineaction.add_marker()
-        return True    
-    if action == 'cut':
-        tlineaction.cut_pressed()
-        return True
-    if action == 'cut_all':
-        tlineaction.cut_all_pressed()
-        return True
-    if action == 'sequence_split':
-        tlineaction.sequence_split_pressed()
-        return True
-    if action == 'log_range':
-        medialog.log_range_clicked()
-        return True
+    #if action == 'switch_monitor':
+    #    updater.switch_monitor_display()
+    #    return True
+    #if action == 'add_marker':
+    #    tlineaction.add_marker()
+    #    return True    
+    #if action == 'cut':
+    #    tlineaction.cut_pressed()
+    #    return True
+    #if action == 'cut_all':
+    #    tlineaction.cut_all_pressed()
+    #    return True
+    #if action == 'sequence_split':
+    #    tlineaction.sequence_split_pressed()
+    #    return True
+    #if action == 'log_range':
+    #    medialog.log_range_clicked()
+    #    return True
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
@@ -325,12 +293,11 @@ def _handle_tline_key_event(event):
         tlineaction.mute_clip_from_keyevent()
     if action == 'set_sync_relation':
         syncsplitevent.init_select_master_clip_from_keyevent()
-
-    # Key bindings for keyboard trimming
     if action == 'toggle_track_output':
         trackaction.toggle_track_output()
         return True
 
+    # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
             trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
@@ -440,9 +407,9 @@ def _handle_tline_key_event(event):
         if action == 'faster':
             monitorevent.l_pressed()
             return True
-        if action == 'log_range':
-            medialog.log_range_clicked()
-            return True
+        #if action == 'log_range':
+        #    medialog.log_range_clicked()
+        #    return True
         if action == 'resync':
             tlineaction.resync_track_button_pressed()
             return True
@@ -522,18 +489,12 @@ def _handle_extended_monitor_focus_events(event):
     if action == 'faster':
         monitorevent.l_pressed()
         return True
-    if action == 'log_range':
-        medialog.log_range_clicked()
-        return True
-    if action == 'display_clip_in_monitor':
-        targetactions.display_clip_in_monitor()
-        return True
-    if action == 'display_sequence_in_monitor':
-        targetactions.display_sequence_in_monitor()
-        return True
-    if action == 'switch_monitor':
-        updater.switch_monitor_display()
-        return True
+    #if action == 'log_range':
+    #    medialog.log_range_clicked()
+    #    return True
+    #if action == 'switch_monitor':
+    #    updater.switch_monitor_display()
+    #    return True
     if action == 'append_from_bin':
         projectaction.append_selected_media_clips_into_timeline()
         return True
@@ -648,27 +609,6 @@ def _handle_clip_key_event(event):
                 monitorevent.stop_pressed()
             else:
                 monitorevent.start_marks_looping()
-            return True
-        #if action == 'mark_in':
-        #    monitorevent.mark_in_pressed()
-        #    return True
-        #if action == 'to_mark_in':
-        #    monitorevent.to_mark_in_pressed()
-        #    return True
-        #if action == 'mark_out':
-        #    monitorevent.mark_out_pressed()
-        #    return True
-        #if action == 'to_mark_out':
-        #    monitorevent.to_mark_out_pressed()
-        #    return True
-        if action == 'clear_mark_in':
-            targetactions.clear_mark_in()
-            return True
-        if action == 'clear_mark_out':
-            targetactions.clear_mark_out()
-            return True
-        if action == 'clear_io_marks':
-            monitorevent.marks_clear_pressed()
             return True
 
 def _handle_delete():

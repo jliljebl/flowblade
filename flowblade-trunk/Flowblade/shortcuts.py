@@ -462,7 +462,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
     _keyboard_action_names['display_clip_in_monitor'] = _("Display Clip In Monitor")
     _keyboard_action_names['display_sequence_in_monitor'] = _("Display Sequence In Monitor")
-    _keyboard_action_names['add_marker'] = _("Add Mark")
+    _keyboard_action_names['add_marker'] = _("Add Marker")
     _keyboard_action_names['enter_edit'] =  _("Complete Keyboard Trim Edit")
     _keyboard_action_names['nudge_back'] =  _("Nudge Move Selection Back 1 Frame")
     _keyboard_action_names['nudge_forward'] =  _("Nudge Move Selection Forward 1 Frame")
