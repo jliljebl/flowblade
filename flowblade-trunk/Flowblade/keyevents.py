@@ -261,9 +261,9 @@ def _handle_tline_key_event(event):
     #if action == 'log_range':
     #    medialog.log_range_clicked()
     #    return True
-    if action == 'toggle_ripple':
-        gui.editor_window.toggle_trim_ripple_mode()
-        return True
+    #if action == 'toggle_ripple':
+    #    gui.editor_window.toggle_trim_ripple_mode()
+    #    return True
     if action == 'select_next':
         monitorevent.select_next_clip_for_filter_edit()
         return True
@@ -285,8 +285,8 @@ def _handle_tline_key_event(event):
     if action == 'monitor_show_rgb':
         tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
         return True
-    if action == 'set_length':
-        tlineaction.set_length_from_keyevent()
+    #if action == 'set_length':
+    #    tlineaction.set_length_from_keyevent()
     if action == 'clear_sync_relation':
         syncsplitevent.clear_sync_relation_from_keyevent()
     if action == 'toggle_audio_mute':

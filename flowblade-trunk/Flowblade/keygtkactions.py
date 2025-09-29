@@ -62,7 +62,7 @@ def init():
     #TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
 
     # Create actions
-    _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL)
+    _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL) # TODO: no worky when clip in monitor
     _create_action("to_mark_in", monitorevent.to_mark_in_pressed, TLINE_MONITOR_ALL)
     _create_action("mark_out", monitorevent.mark_out_pressed, TLINE_MONITOR_ALL)
     _create_action("to_mark_out", monitorevent.to_mark_out_pressed, TLINE_MONITOR_ALL)
@@ -74,7 +74,8 @@ def init():
     _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)
     _create_action("cut_all", tlineaction.cut_pressed, TLINE_ALL)
     _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
-
+    _create_action("set_length", tlineaction.set_length_from_keyevent, TLINE_ALL)
+        
 
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
