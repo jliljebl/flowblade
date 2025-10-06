@@ -101,7 +101,6 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
-
     # Handle ESCAPE.
     if event.keyval == Gdk.KEY_Escape:
         if editorstate.current_is_move_mode() == False:
@@ -152,18 +151,18 @@ def key_down(widget, event):
     # Pressing timeline button obviously leaves user expecting
     # to have focus in timeline.
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
-        _handle_tline_key_event(event)
-        return True
+        was_handled = _handle_tline_key_event(event)
+        return was_handled
 
     # Events that are available when monitor displays clip.
     if (gui.monitor_switch.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()) and (not timeline_visible()):
-        _handle_clip_key_event(event)
-        return True
+        was_handled = _handle_clip_key_event(event)
+        return was_handled
     # Events that are available when monitor displays clip
     if gui.pos_bar.widget.is_focus() and (not timeline_visible()):
-        _handle_clip_key_event(event)
-        return True
-        
+        was_handled = _handle_clip_key_event(event)
+        return was_handled
+
     #  Handle non-timeline delete.
     if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
@@ -610,6 +609,8 @@ def _handle_clip_key_event(event):
             else:
                 monitorevent.start_marks_looping()
             return True
+
+    return False
 
 def _handle_delete():
     # Delete media file
