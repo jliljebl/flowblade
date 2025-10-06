@@ -1303,6 +1303,7 @@ class SingleRenderThread(threading.Thread):
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
             render_item = utils.unpickle(data_file_path)
             self.error_status = None
+            single_render_window.render_path = render_item.render_path
         except Exception as e:
             if self.error_status == None:
                 self.error_status = []
@@ -1389,6 +1390,7 @@ class SingleRenderThread(threading.Thread):
         single_render_window.update_render_progress(fraction, display_name, current_render_time)
 
     def _update_progress_bar(self, fraction):
+
         single_render_window.render_progress_bar.set_fraction(fraction)
                 
     def is_frame_sequence_render(self, vcodec):
@@ -1427,21 +1429,33 @@ class SingleRenderWindow:
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladesinglerendericon.png")
         self.window.set_icon(app_icon)
 
+        self.render_path = None # Set from thread.
+        self.free_disk = None # Needs to have path available.
+        self.file_size = None # Needs to have path available.
+        
         self.est_time_left = Gtk.Label()
         self.current_render = Gtk.Label()
         self.current_render_time = Gtk.Label()
+        self.file_est = Gtk.Label()
+        self.size_warning = Gtk.Label()
         est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
         current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("File:"))])
         current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
+        file_size_est = guiutils.get_right_justified_box([guiutils.bold_label(_("File Size Est. / Free Disk:"))]) 
+        
         est_r.set_size_request(250, 20)
         current_r.set_size_request(250, 20)
         current_r_t.set_size_request(250, 20)
+        file_size_est.set_size_request(250, 20)
+        self.size_warning.set_size_request(250, 20)
 
         info_vbox = Gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
-
+        info_vbox.pack_start(guiutils.get_left_justified_box([file_size_est, self.file_est]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_centered_box([self.size_warning]), False, False, 0)
+        
         self.stop_render_button = Gtk.Button(label=_("Stop Render"))
         self.stop_render_button.connect("clicked", 
                                    lambda w, e: _start_single_render_shutdown(), 
@@ -1472,6 +1486,16 @@ class SingleRenderWindow:
         self.window.show_all()
 
     def update_render_progress(self, fraction, current_name, current_render_time_passed):
+        if self.render_path != None:
+            try:
+                self.file_size = os.path.getsize(self.render_path)
+                if self.free_disk == None:
+                    total, used, free = shutil.disk_usage(os.path.dirname(self.render_path))
+                    self.free_disk = free 
+                
+            except FileNotFoundError:
+                pass # this can get called once before file hits disk
+
         self.render_progress_bar.set_fraction(fraction)
 
         progress_str = str(int(fraction * 100)) + " %"
@@ -1484,6 +1508,26 @@ class SingleRenderWindow:
         else:
             est_str = ""
         self.est_time_left.set_text(est_str)
+
+        est_free_mb = round(self.free_disk / 1048576)
+        if fraction > 0.25:
+
+            # We did some testing and pulled this algorithm right out of our...stetson hat.
+            # At least with short simple renders we get too small values all the way through.
+            est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
+            est_size_mb = est_file_size / 1048576
+            
+            if est_size_mb > 0.99999:
+                est_size_mb = round(est_size_mb)
+            else:
+                est_size_mb = round(est_size_mb, 1)
+
+            self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
+            
+            if est_file_size > 0.6 * self.free_disk:
+                self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
+        else:
+            self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
 
         if current_render_time_passed != 0:
             current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
