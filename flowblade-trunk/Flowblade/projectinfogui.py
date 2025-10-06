@@ -71,16 +71,10 @@ def get_top_level_project_info_panel():
     else:
         font_desc = "sans bold 9"
     desc_label.modify_font(Pango.FontDescription(font_desc))
-    desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
     desc_row.set_margin_start(4)
 
     project_info_vbox = Gtk.HBox()
-    #dash_label = Gtk.Label()
-    #dash_label.set_text("-")
-    #dash_label.modify_font(Pango.FontDescription(font_desc))
-    #dash_label.set_sensitive(False)
-    #project_info_vbox.pack_start(dash_label, False, False, 0)
     project_info_vbox.pack_start(desc_row, False, False, 0)
     guiutils.set_margins(project_info_vbox, 2,0,4,0)
 
