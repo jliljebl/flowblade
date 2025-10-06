@@ -242,27 +242,6 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.start_marks_looping()
         return True
-    #if action == 'switch_monitor':
-    #    updater.switch_monitor_display()
-    #    return True
-    #if action == 'add_marker':
-    #    tlineaction.add_marker()
-    #    return True    
-    #if action == 'cut':
-    #    tlineaction.cut_pressed()
-    #    return True
-    #if action == 'cut_all':
-    #    tlineaction.cut_all_pressed()
-    #    return True
-    #if action == 'sequence_split':
-    #    tlineaction.sequence_split_pressed()
-    #    return True
-    #if action == 'log_range':
-    #    medialog.log_range_clicked()
-    #    return True
-    #if action == 'toggle_ripple':
-    #    gui.editor_window.toggle_trim_ripple_mode()
-    #    return True
     if action == 'select_next':
         monitorevent.select_next_clip_for_filter_edit()
         return True
@@ -284,8 +263,6 @@ def _handle_tline_key_event(event):
     if action == 'monitor_show_rgb':
         tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
         return True
-    #if action == 'set_length':
-    #    tlineaction.set_length_from_keyevent()
     if action == 'clear_sync_relation':
         syncsplitevent.clear_sync_relation_from_keyevent()
     if action == 'toggle_audio_mute':
@@ -406,9 +383,6 @@ def _handle_tline_key_event(event):
         if action == 'faster':
             monitorevent.l_pressed()
             return True
-        #if action == 'log_range':
-        #    medialog.log_range_clicked()
-        #    return True
         if action == 'resync':
             tlineaction.resync_track_button_pressed()
             return True
@@ -488,12 +462,6 @@ def _handle_extended_monitor_focus_events(event):
     if action == 'faster':
         monitorevent.l_pressed()
         return True
-    #if action == 'log_range':
-    #    medialog.log_range_clicked()
-    #    return True
-    #if action == 'switch_monitor':
-    #    updater.switch_monitor_display()
-    #    return True
     if action == 'append_from_bin':
         projectaction.append_selected_media_clips_into_timeline()
         return True
