@@ -118,6 +118,7 @@ class QueueRunnerThread(threading.Thread):
                 continue
             
             current_render_time = 0
+            batch_window.render_path = render_item.render_path
 
             # Create render objects
             identifier = render_item.generate_identifier()
@@ -695,25 +696,38 @@ class BatchRenderWindow:
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
         self.window.set_icon(app_icon)
 
+        self.render_path = None # Set from thread.
+        self.free_disk = None # Needs to have path available.
+        self.file_size = None # Needs to have path available.
+        
         self.est_time_left = Gtk.Label()
         self.current_render = Gtk.Label()
         self.current_render_time = Gtk.Label()
         self.current_file = Gtk.Label()
+        self.size_warning = Gtk.Label()
+        self.file_est = Gtk.Label()
+    
         est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
         current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
         current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
         current_file = guiutils.get_right_justified_box([guiutils.bold_label(_("File:"))])
+        file_size_est = guiutils.get_right_justified_box([guiutils.bold_label(_("File Size Est. / Free Disk:"))]) 
+        
         est_r.set_size_request(250, 20)
         current_r.set_size_request(250, 20)
         current_r_t.set_size_request(250, 20)
         current_file.set_size_request(250, 20)
+        file_size_est.set_size_request(250, 20)
+        self.size_warning.set_size_request(250, 20)
         
         info_vbox = Gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_file, self.current_file]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
-        
+        info_vbox.pack_start(guiutils.get_left_justified_box([file_size_est, self.file_est]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_centered_box([self.size_warning]), False, False, 0)
+
         self.items_rendered = Gtk.Label()
         items_r = Gtk.Label(label=_("Items Rendered:"))
         self.render_started_label = Gtk.Label()
@@ -877,6 +891,17 @@ class BatchRenderWindow:
         queue_runner_thread.start()
 
     def update_render_progress(self, fraction, items, current_name, current_render_time_passed):
+
+        if self.render_path != None:
+            try:
+                self.file_size = os.path.getsize(self.render_path)
+                if self.free_disk == None:
+                    total, used, free = shutil.disk_usage(os.path.dirname(self.render_path))
+                    self.free_disk = free 
+                
+            except FileNotFoundError:
+                pass # this can get called once before file hits disk
+                
         self.render_progress_bar.set_fraction(fraction)
 
         progress_str = str(int(fraction * 100)) + " %"
@@ -898,6 +923,26 @@ class BatchRenderWindow:
         
         self.items_rendered.set_text("  " + str(items))
 
+        est_free_mb = round(self.free_disk / 1048576)
+        if fraction > 0.25:
+
+            # We did some testing and pulled this algorithm right out of our...stetson hat.
+            # At least with short simple renders we get too small values all the way through.
+            est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
+            est_size_mb = est_file_size / 1048576
+            
+            if est_size_mb > 0.99999:
+                est_size_mb = round(est_size_mb)
+            else:
+                est_size_mb = round(est_size_mb, 1)
+
+            self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
+            
+            if est_file_size > 0.6 * self.free_disk:
+                self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
+        else:
+            self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
+            
     def abort_render(self):
         global queue_runner_thread
         queue_runner_thread.abort()
