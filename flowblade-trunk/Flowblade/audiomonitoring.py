@@ -320,17 +320,22 @@ def _audio_monitor_update(data):
     if _monitor_window == None and _master_volume_meter == None:
         return
 
+    try:
+        seq = editorstate.current_sequence()
+        frame = editorstate.PLAYER().current_frame()
+    except:
+        return  #this can get attempted before all data available
+        
     global _audio_levels
     _audio_levels = []
-    seq = editorstate.current_sequence()
-    frame = editorstate.PLAYER().current_frame()
+        
     for i in range(0, len(_level_filters)):
         audio_level_filter = _level_filters[i]
         l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
         track_len = seq.tracks[i].get_length() # is this O(n) for clips in MLT?
-        if track_len < frame:
-            l_Val = r_val = 0.0
+        if i > 1 and track_len < frame:
+            l_val = r_val = 0.0
         _audio_levels.append((l_val, r_val))
 
     if _monitor_window != None:
