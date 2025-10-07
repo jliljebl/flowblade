@@ -143,7 +143,6 @@ def _get_set_sync_action(child_clip_track, child_clip, parent_clip, parent_track
             "parent_track":parent_track}
     action = edit.set_sync_action(data)
     return action
-    #action.do_edit()
     
 def split_audio(popup_data):
     clip, track, item_id, x = popup_data
