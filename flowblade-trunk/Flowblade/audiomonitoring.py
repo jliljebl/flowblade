@@ -316,17 +316,21 @@ def _add_audio_level_filter(producer, profile):
     return audio_level_filter
 
 def _audio_monitor_update(data):
-    # 'data' is not used here. 
-    # This is called holding Gdk lock so we can do Gtk updates.
+    # 'data' is not used here, we get that from GLib.timeout_add used to implement ticker.
     if _monitor_window == None and _master_volume_meter == None:
         return
 
     global _audio_levels
     _audio_levels = []
+    seq = editorstate.current_sequence()
+    frame = editorstate.PLAYER().current_frame()
     for i in range(0, len(_level_filters)):
         audio_level_filter = _level_filters[i]
         l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
+        track_len = seq.tracks[i].get_length() # is this O(n) for clips in MLT?
+        if track_len < frame:
+            l_Val = r_val = 0.0
         _audio_levels.append((l_val, r_val))
 
     if _monitor_window != None:
