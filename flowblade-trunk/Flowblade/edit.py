@@ -450,7 +450,12 @@ class ConsolidatedEditAction:
         #    .exit_active_trimmode_on_edit
         #    .turn_on_stop_for_edit
         # same for all the consolidated edits for this to work reliably.
-        if self.edit_actions[0].exit_active_trimmode_on_edit:
+        try:
+            if self.edit_actions[0].exit_active_trimmode_on_edit:
+                trimmodes.set_no_edit_trim_mode()
+        except:
+            # If ALL actions are callables then they don't have 
+            # edit action property and we assume that 'exit_active_trimmode_on_edit' is True.
             trimmodes.set_no_edit_trim_mode()
 
         # We only do one gui update.
@@ -471,6 +476,7 @@ class ConsolidatedEditAction:
                 old_index = self.edit_actions.index(edit_action)
                 self.edit_actions[old_index] = new_edit_action
                 edit_action = new_edit_action
+                edit_action.is_part_of_consolidated_group = True
 
             # Enable GUI update for last action.
             if edit_action is self.edit_actions[len(self.edit_actions) - 1]:
@@ -1682,22 +1688,16 @@ def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
         track = tracks[i]
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
-
-        #print("track", track.id)
         
         if edit_op == appconsts.MULTI_NOOP:
-            #print("noop")
             continue
         elif edit_op == appconsts.MULTI_TRIM:
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length - applied_delta)
-            #print("trim")
         elif edit_op == appconsts.MULTI_ADD_TRIM:
             _remove_clip(track, trim_blank_index) 
-            #print("add trim")
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
-            #print("trim remove")
             if reverse_comp_delta:
                 if -self.edit_delta != -self.multi_data.max_backwards:
                     _remove_clip(track, trim_blank_index) 
@@ -1729,20 +1729,15 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         edit_op = self.multi_data.track_edit_ops[i - 1]        
         trim_blank_index = self.multi_data.trim_blank_indexes[i - 1]
         
-        #print("track", track.id)
         if edit_op == appconsts.MULTI_NOOP: # no blank clip on this track is not changed
-            #print("noop")
             continue
         elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, length is changed
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
-            #print("trim")
             _insert_blank(track, trim_blank_index, blank_length + applied_delta)
         elif edit_op == appconsts.MULTI_ADD_TRIM:# no blank to trim available, only possibnle edit is to add blank
             _insert_blank(track, trim_blank_index, applied_delta)
-            #print("add trim")
         elif edit_op == appconsts.MULTI_TRIM_REMOVE: # blank is trimmed if not max length triom, if so, blank is removed
-            #print("trim remove")
             self.orig_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index)
             if applied_delta != -self.multi_data.max_backwards:
@@ -2448,23 +2443,26 @@ def _audio_splice_redo(self):
     _do_clip_mute(self.parent_clip, filter)
     
 #----------------- AUDIO SPLICE SYNCHED
-# "parent_clip", "audio_clip", "track", "to_track"
+# "parent_clip", "audio_clip",  "over_in", "over_out", "track", "to_track"
 def audio_synched_splice_action(data):
     action = EditAction(_audio_synched_splice_undo, _audio_synched_splice_redo, data)
     return action
 
 def _audio_synched_splice_undo(self):
     to_track = self.to_track
-
-    # Remove add audio clip
+    
+    # Remove added audio clip
     in_index = to_track.get_clip_index_at(self.over_in)
     _remove_clip(to_track, in_index)
         
     # Fix in clip and remove cut created clip if in was cut
     if self.in_clip_out != -1:
         in_clip = _remove_clip(to_track, in_index - 1)
-        _insert_clip(to_track, in_clip, in_index - 1,
-                     in_clip.clip_in, self.in_clip_out)
+        if in_clip.is_blanck_clip != True:
+            _insert_clip(to_track, in_clip, in_index - 1,
+                        in_clip.clip_in, self.in_clip_out)
+        else: # blanks can't be resized, so must put in new blank
+            _insert_blank(to_track, in_index - 1, self.in_clip_out - in_clip.clip_in + 1)
         self.removed_clips.pop(0)
 
     # Fix out clip and remove cut created clip if out was cut
@@ -2475,8 +2473,11 @@ def _audio_synched_splice_undo(self):
         try:
             out_clip = _remove_clip(to_track, in_index)
             if len(self.removed_clips) > 0: # If overwrite was done inside single clip everything is already in order
-                _insert_clip(to_track, out_clip, in_index,
-                         self.out_clip_in, out_clip.clip_out)
+                if out_clip.is_blanck_clip != True:
+                    _insert_clip(to_track, out_clip, in_index,
+                             self.out_clip_in, out_clip.clip_out)
+                else:
+                    _insert_blank(to_track, in_index, out_clip.clip_out - self.out_clip_in + 1)
                 self.removed_clips.pop(-1) 
         except:
             pass
@@ -2484,8 +2485,11 @@ def _audio_synched_splice_undo(self):
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
         clip = self.removed_clips[i]
-        _insert_clip(to_track, clip, in_index + i, clip.clip_in,
+        if clip.is_blanck_clip != True:
+            _insert_clip(to_track, clip, in_index + i, clip.clip_in,
                      clip.clip_out)
+        else:
+            _insert_blank(to_track, in_index + i,  clip.clip_out - clip.clip_in + 1)
 
     _do_clip_unmute(self.parent_clip)
     
@@ -2496,7 +2500,7 @@ def _audio_synched_splice_undo(self):
 
     # Clear resync data
     resync.clip_sync_cleared(child_clip)
-
+    
 def _audio_synched_splice_redo(self):
     # Get shorter name for readability
     to_track = self.to_track
@@ -2509,11 +2513,11 @@ def _audio_synched_splice_redo(self):
     else:
         self.starts_after_end = False
 
-    # Cut at in frame of overwrite range. 
+    # Cut at in frame of overwrite range.
     clip_in, clip_out = _overwrite_cut_track(to_track, self.over_in)
     self.in_clip_out = clip_out
 
-    # Cut at out frame of overwrite range 
+    # Cut at out frame of overwrite range
     if to_track.get_length() > self.over_out:
         clip_in, clip_out = _overwrite_cut_track(to_track, self.over_out)
         self.out_clip_in = clip_in
@@ -2555,7 +2559,7 @@ def _audio_synched_splice_redo(self):
     child_clip.sync_data.sync_state = appconsts.SYNC_CORRECT
 
     resync.clip_added_to_timeline(child_clip, child_track)
-
+    
 # ------------------------------------------------- RESYNC CLIP
 # "clips"
 def resync_clip_action(data):
@@ -3011,24 +3015,6 @@ def _dnd_on_blank_replace_redo(self):
     _insert_clip(self.track, self.clip, self.index, 
                  self.clip_in,  self.clip_in + self.blank_length - 1)
 
-# ---------------------------------------- CONSOLIDATE SELECTED BLANKS
-# "track","index"
-def consolidate_selected_blanks(data):
-    action = EditAction(_consolidate_selected_blanks_undo,_consolidate_selected_blanks_redo, data)
-    return action 
-
-def _consolidate_selected_blanks_undo(self):
-    _remove_clip(self.track, self.index)
-    for i in range(0, len(self.removed_lengths)):
-        length = self.removed_lengths[i]
-        _insert_blank(self.track, self.index + i, length)
-
-def _consolidate_selected_blanks_redo(self):
-    self.removed_lengths = _remove_consecutive_blanks(self.track, self.index)
-    total_length = 0
-    for length in self.removed_lengths:
-        total_length = total_length + length
-    _insert_blank(self.track, self.index, total_length)
 
 #----------------------------------- CONSOLIDATE ALL BLANKS
 def consolidate_all_blanks(data):

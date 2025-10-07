@@ -70,35 +70,26 @@ def split_audio_synched_from_clips_list(clips, track):
     item_id = "not actually used"
     split_actions_data = []
     split_actions = []
+
     for clip in clips:
         # We're using the existing function to do this need x for clip frame to use it
         index = track.clips.index(clip)
         frame = track.clip_start(index)
         x = tlinewidgets._get_frame_x(frame)
 
-        popup_data = (clip, track, item_id, x)
-
         # We can only split audio from unmuted clips because splitting mutes audio
         # and we want to avoid splitting audio twice.
         if clip.mute_filter == None:
-            split_action, parent_clip, child_clip, child_clip_track = _get_split_audio_edit_action(popup_data)
+            split_action = _create_sync_split_action_lambda(clip, track) #:lambda : get_synched_split_action_for_clip_and_track(clip, track)
             split_actions.append(split_action)
-            split_actions_data.append((parent_clip, child_clip, child_clip_track))
-    
-    # We need to do split action before creating set sync actio0ns because we need a clip on timeline 
+
+    # We need to do split action before creating set sync actions because we need a clip on timeline 
     # to actually sync with.
     split_consolidated_action = edit.ConsolidatedEditAction(split_actions)
     split_consolidated_action.do_consolidated_edit()
 
-    set_sync_actions = []
-    for split_data in split_actions_data:
-        parent_clip, child_clip, child_clip_track = split_data
-        
-        sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip, track)
-        set_sync_actions.append(sync_action)
-
-    sync_consolidated_action = edit.ConsolidatedEditAction(set_sync_actions)
-    sync_consolidated_action.do_consolidated_edit()
+def _create_sync_split_action_lambda(clip, track):
+    return lambda : get_synched_split_action_for_clip_and_track(clip, track)
 
 def sync_menu_launch_pressed(launcher, widget, event):
     guipopover.sync_menu_show(launcher, widget, _sync_property_item_activated, _sync_split_property_activated, _auto_sync_split_menu_item_item_activated)
@@ -172,7 +163,7 @@ def split_audio_from_clips_list(clips, track):
         if clip.mute_filter == None:
             action, clip, audio_clip, to_track = _get_split_audio_edit_action(popup_data)
             actions_list.append(action)
-    
+
     consolidated_action = edit.ConsolidatedEditAction(actions_list)
     consolidated_action.do_consolidated_edit()
 
@@ -189,7 +180,7 @@ def _get_split_audio_edit_action(popup_data):
         if to_track_id < 1:
             to_track_id = 1
         to_track = current_sequence().tracks[to_track_id]
-        
+
     press_frame = tlinewidgets.get_frame(x)
     index = current_sequence().get_clip_index(track, press_frame)
     frame = track.clip_start(index)
@@ -215,7 +206,7 @@ def get_synched_split_action_for_clip_and_track(clip, track):
         if to_track_id < 1:
             to_track_id = 1
         to_track = current_sequence().tracks[to_track_id]
-        
+    
     index = track.clips.index(clip)
     frame = track.clip_start(index)
 
@@ -397,8 +388,8 @@ def _set_sync_parent_clip_multi(event, frame):
     sel_type,  selected_range_in, selected_range_out, child_clip_track = parent_selection_data
     parent_track = tlinewidgets.get_track(event.y)
     if parent_track == None:
-        return 
-    
+        return
+
     child_clips = []
     for i in range(selected_range_in, selected_range_out + 1):
         child_clips.append(child_clip_track.clips[i])

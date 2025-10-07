@@ -1344,7 +1344,10 @@ class Sequence:
         for i in range(0, track.count()):
             clip = track.get_clip(i)
             print(i, " in:", clip.get_in()," out:", clip.get_out())
-
+        
+        print("print_track done")
+            
+            
     def print_compositors(self):
         for compositor in self.compositors:
             print("---")
