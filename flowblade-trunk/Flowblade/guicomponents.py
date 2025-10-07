@@ -2914,4 +2914,4 @@ class EditMultiStack:
         self.panels[name].show_all()
 
     def get_visible_child_name(self):
-        return self.get_visible_child_name()
+        return self.widget.get_visible_child_name()
