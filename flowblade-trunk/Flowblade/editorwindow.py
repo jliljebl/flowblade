@@ -840,6 +840,7 @@ class EditorWindow:
             ('AddMediaClip', None, _('Add Video, Audio or Image...'), None, None, lambda a: projectaction.add_media_files()),
             ('AddMediaFolder', None, _('Add Media From Folder...'), None, None, lambda a: projectaddmediafolder.show_add_media_folder_dialog()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
+            ('AddTitle', None, _('Add Title...'), None, None, lambda a: titler.show_titler()),
             ('CreateColorClip', None, _('Add Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('BinMenu', None, _('Bins')),
             ('AddBin', None, _('Add Bin'), None, None, lambda a:projectaction.add_new_bin()),
@@ -961,6 +962,7 @@ class EditorWindow:
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
                     <menuitem action='AddMediaPlugin'/>
+                    <menuitem action='AddTitle'/>
                     <menuitem action='CreateColorClip'/>
                     <separator/>
                     <menu action='ContainerClipsMenu'>
