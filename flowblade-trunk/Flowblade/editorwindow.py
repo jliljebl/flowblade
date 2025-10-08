@@ -961,6 +961,7 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <separator/>
                     <menuitem action='AddMediaPlugin'/>
                     <menuitem action='AddTitle'/>
                     <menuitem action='CreateColorClip'/>
