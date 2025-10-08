@@ -143,7 +143,7 @@ TC_POINTER_HEAD = None
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 3 # TC text pos in scale.
+TC_Y = 13 # TC text pos in scale.
 # Timeline scale is rendered with hardcoded steps for hardcoded 
 # pix_per_frame ranges.
 DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs.
@@ -2757,7 +2757,7 @@ class TimeLineFrameScale:
             tc_draw_step = int(view_length / NUMBER_OF_LINES)
 
         # Draw tc
-        cr.select_font_face ("sans-serif",
+        cr.select_font_face ("monospace",
                               cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
 
@@ -2777,11 +2777,11 @@ class TimeLineFrameScale:
             #cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.stroke()
             if tc_draw_step == small_tick_step:
-                #cr.move_to(x, TC_Y)
+                cr.move_to(x, TC_Y)
                 text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
-                #cr.set_source_rgb(*FRAME_SCALE_TEXT)
-                #cr.show_text(text)
-                self.draw_text(cr, text, x, TC_Y)
+                cr.set_source_rgb(*FRAME_SCALE_TEXT)
+                cr.show_text(text)
+                #self.draw_text(cr, text, x, TC_Y)
 
         #cr.set_source_rgb(*FRAME_SCALE_LINES)
         # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
@@ -2811,11 +2811,11 @@ class TimeLineFrameScale:
             for i in range(start, end):
                 x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5
-                #cr.move_to(x, TC_Y)
+                cr.move_to(x, TC_Y)
                 text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
-                #cr.set_source_rgb(*FRAME_SCALE_TEXT)
-                #cr.show_text(text)
-                self.draw_text(cr, text, x, TC_Y)
+                cr.set_source_rgb(*FRAME_SCALE_TEXT)
+                cr.show_text(text)
+                #self.draw_text(cr, text, x, TC_Y)
                 
         #cr.set_source_rgb(*FRAME_SCALE_LINES)
         
