@@ -394,6 +394,7 @@ def media_panel_popover_show(widget, x, y, callback):
 
     section2 = Gio.Menu.new()
     add_menu_action(section2, _("Add Generator..."), "mediapanel.addgenerator", "add generator", callback)
+    add_menu_action(section2, _("Add Title..."), "mediapanel.addtitle", "add title", callback)
     add_menu_action(section2, _("Add Color Clip..."), "mediapanel.addcolorclip", "add color clip", callback)
     _media_panel_menu.append_section(None, section2)
     

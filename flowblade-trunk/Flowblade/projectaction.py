@@ -92,6 +92,7 @@ import render
 import renderconsumer
 import rendergui
 import sequence
+import titler
 import tlinewidgets
 import undo
 import updater
@@ -1058,7 +1059,9 @@ def _media_panel_menu_item_selected(action, variant, msg):
         mediaplugin.show_add_media_plugin_window()
     elif msg == "add color clip":
         patternproducer.create_color_clip()
-
+    elif msg == "add title":
+        titler.show_titler()
+    
 def media_panel_double_click(media_file):
     global _media_panel_double_click_counter
     _media_panel_double_click_counter += 1
