@@ -143,7 +143,7 @@ TC_POINTER_HEAD = None
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 12 # TC text pos in scale.
+TC_Y = 3 # TC text pos in scale.
 # Timeline scale is rendered with hardcoded steps for hardcoded 
 # pix_per_frame ranges.
 DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs.
@@ -252,6 +252,7 @@ BOX_DASH_SKIP = 3.0
 BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
 
 FRAME_SCALE_LINES = (0, 0, 0)
+FRAME_SCALE_TEXT = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)
 FRAME_SCALE_NEUTRAL_BG_COLOR = ((35.0/255.0) + 0.02, (35.0/255.0) + 0.02, (35.0/255.0) + 0.02)
@@ -375,14 +376,14 @@ def load_icons_and_set_colors():
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
-    global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
+    global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, FRAME_SCALE_TEXT, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
             TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR
 
+    FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+    FRAME_SCALE_TEXT = (0.65, 0.65, 0.65)
     FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
     FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
     BG_COLOR = (0.44, 0.44, 0.46)
-
-    FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
 
     TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
@@ -410,8 +411,8 @@ def load_icons_and_set_colors():
 
     COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
 
-    FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
 
+    
 def update_clip_thumbnail(media_file):
     global clip_thumbnails
 
@@ -2624,6 +2625,7 @@ class TimeLineColumn:
         cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
         cr.stroke()
 
+
 class TimeLineFrameScale:
     """
     GUI component for displaying frame tme value scale.
@@ -2640,6 +2642,8 @@ class TimeLineFrameScale:
         self.drag_on = False
         self.set_default_callback = set_default_callback
 
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed " + str(8))
+        
         global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
         FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
         FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
@@ -2759,7 +2763,7 @@ class TimeLineFrameScale:
 
         cr.set_font_size(11)
         
-        # Draw small tick lines
+        # Draw small tick lines and tc texts.
         # Get draw range in steps from 0
         start = int(view_start_frame / small_tick_step)
         if start * small_tick_step == pos:
@@ -2768,15 +2772,18 @@ class TimeLineFrameScale:
         end = int(view_end_frame / small_tick_step) + 1 
         for i in range(start, end):
             x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
-            # Aug-2019 - SvdB - BB - Added size_adj
             cr.move_to(x, SCALE_HEIGHT*size_adj)
             cr.line_to(x, SMALL_TICK_Y)
+            #cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.stroke()
             if tc_draw_step == small_tick_step:
-                cr.move_to(x, TC_Y)
+                #cr.move_to(x, TC_Y)
                 text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
-                cr.show_text(text)
-        cr.stroke()
-        
+                #cr.set_source_rgb(*FRAME_SCALE_TEXT)
+                #cr.show_text(text)
+                self.draw_text(cr, text, x, TC_Y)
+
+        #cr.set_source_rgb(*FRAME_SCALE_LINES)
         # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
         if round(fps) != fps:
             to_seconds_fix_add = 1.0
@@ -2804,9 +2811,13 @@ class TimeLineFrameScale:
             for i in range(start, end):
                 x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5
-                cr.move_to(x, TC_Y)
+                #cr.move_to(x, TC_Y)
                 text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
-                cr.show_text(text)
+                #cr.set_source_rgb(*FRAME_SCALE_TEXT)
+                #cr.show_text(text)
+                self.draw_text(cr, text, x, TC_Y)
+                
+        #cr.set_source_rgb(*FRAME_SCALE_LINES)
         
         # Draw marks
         self.draw_mark_in(cr, h)
@@ -2894,7 +2905,20 @@ class TimeLineFrameScale:
         cr.fill_preserve()
         cr.set_source_rgb(0,0,0)
         cr.stroke()
+
+    def draw_text(self, cr, frame_str, x, y):
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(frame_str, -1)
+        layout.set_font_description(self.font_desc)
+
+        cr.set_source_rgb(*FRAME_SCALE_TEXT)
+        cr.move_to(x - 1, y) # fine-tuning x positioning here to just do it once
+
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
         
+        cr.set_source_rgb(*FRAME_SCALE_LINES)
+                
     def _get_dark_theme_grad(self, h):
         r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
         grad = cairo.LinearGradient (0, 0, 0, h)

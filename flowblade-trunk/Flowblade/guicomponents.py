@@ -1863,7 +1863,7 @@ class BigTCDisplay:
         self.widget = cairoarea.CairoDrawableArea2( 140,
                                                     22,
                                                     self._draw)
-        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed "+ str(15))
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed " + str(15))
         
         # Draw consts
         x = 2
