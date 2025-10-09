@@ -1262,11 +1262,11 @@ def _do_add_marker(name, current_frame):
 # ---------------------------------------- timeline edits
 def all_filters_off():
     current_sequence().set_all_filters_active_state(False)
-    clipeffectseditor.update_stack_view()
+    clipeffectseditor.reinit_stack_if_needed(True)
 
 def all_filters_on():
     current_sequence().set_all_filters_active_state(True)
-    clipeffectseditor.update_stack_view()
+    clipeffectseditor.reinit_stack_if_needed(True)
 
 def set_track_small_height(track_index):
     track = get_track(track_index)
