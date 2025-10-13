@@ -75,7 +75,10 @@ def init():
     _create_action("cut_all", tlineaction.cut_pressed, TLINE_ALL)
     _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
     _create_action("set_length", tlineaction.set_length_from_keyevent, TLINE_ALL)
-        
+    _create_action("insert", tlineaction.insert_button_pressed, TLINE_MONITOR_ALL)
+    _create_action("append", tlineaction.append_button_pressed, TLINE_MONITOR_ALL)
+    _create_action("3_point_overwrite", tlineaction.three_point_overwrite_pressed, TLINE_MONITOR_ALL)
+    _create_action("overwrite_range", tlineaction.range_overwrite_pressed, TLINE_MONITOR_ALL)
 
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
@@ -98,6 +101,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
+        #print("ShortCutController: ", action)
         try:
             press_func = self.shortcuts[action]
             press_func()
@@ -107,7 +111,10 @@ class ShortCutController:
             
 
 
-    
+
+            if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                tlineaction.insert_button_pressed()
+                return True
         
 
 

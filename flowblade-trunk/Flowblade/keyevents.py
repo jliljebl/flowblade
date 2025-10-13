@@ -98,6 +98,9 @@ import workflow
 
 # ------------------------------------- keyboard events
 def key_down(widget, event):
+    
+    #print (_get_shortcut_action(event))
+    
     """
     Global key press listener.
     """
@@ -195,6 +198,7 @@ def key_down(widget, event):
         return True
 
     # Key event was not handled here.
+    #print(_get_shortcut_action(event), " not handled")
     return False
     
 def _timeline_has_focus():
@@ -358,19 +362,6 @@ def _handle_tline_key_event(event):
                 seek_amount = seek_amount * prefs.ffwd_rev_caps
             PLAYER().seek_delta(seek_amount)
             return True
-        if action == '3_point_overwrite':
-            tlineaction.three_point_overwrite_pressed()
-            return True
-        if action == 'overwrite_range':
-            tlineaction.range_overwrite_pressed()
-            return True
-        if action == 'insert':
-            if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                tlineaction.insert_button_pressed()
-                return True
-        if action == 'append':
-            tlineaction.append_button_pressed()
-            return True
         if action == 'append_from_bin':
             projectaction.append_selected_media_clips_into_timeline()
             return True
@@ -440,19 +431,6 @@ def _handle_extended_monitor_focus_events(event):
     #        gui.clip_editor_b.has_focus()):
     if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()):
         return False
-
-    if action == '3_point_overwrite':
-        tlineaction.three_point_overwrite_pressed()
-        return True
-    if action == 'overwrite_range':
-        tlineaction.range_overwrite_pressed()
-        return True
-    if action == 'insert':
-        tlineaction.insert_button_pressed()
-        return True
-    if action == 'append':
-        tlineaction.append_button_pressed()
-        return True
     if action == 'slower':
         monitorevent.j_pressed()
         return True
