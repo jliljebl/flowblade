@@ -255,10 +255,6 @@ def _handle_tline_key_event(event):
     if action == 'monitor_show_rgb':
         tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
         return True
-    if action == 'clear_sync_relation':
-        syncsplitevent.clear_sync_relation_from_keyevent()
-    if action == 'set_sync_relation':
-        syncsplitevent.init_select_master_clip_from_keyevent()
 
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
@@ -334,15 +330,7 @@ def _handle_tline_key_event(event):
         if action == 'append_from_bin':
             projectaction.append_selected_media_clips_into_timeline()
             return True
-        if action == 'slower':
-            monitorevent.j_pressed()
-            return True
-        if action == 'stop':
-            monitorevent.k_pressed()
-            return True
-        if action == 'faster':
-            monitorevent.l_pressed()
-            return True
+
         if action == 'resync':
             tlineaction.resync_track_button_pressed()
             return True
@@ -397,15 +385,6 @@ def _handle_extended_monitor_focus_events(event):
     #        gui.clip_editor_b.has_focus()):
     if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()):
         return False
-    if action == 'slower':
-        monitorevent.j_pressed()
-        return True
-    if action == 'stop':
-        monitorevent.k_pressed()
-        return True
-    if action == 'faster':
-        monitorevent.l_pressed()
-        return True
     if action == 'append_from_bin':
         projectaction.append_selected_media_clips_into_timeline()
         return True

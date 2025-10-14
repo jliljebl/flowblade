@@ -23,6 +23,7 @@ import medialog
 import monitorevent
 import movemodes
 import shortcuts
+import syncsplitevent
 import tlineaction
 import trackaction
 import updater
@@ -92,6 +93,11 @@ def init():
     _create_action("select_prev", monitorevent.select_prev_clip_for_filter_edit, TLINE_MONITOR_ALL)
     _create_action("toggle_track_output", trackaction.toggle_track_output, TLINE_ALL)
     _create_action("split_selected", tlineaction.split_audio_synched_button_pressed, TLINE_ALL)
+    _create_action("set_sync_relation", syncsplitevent.init_select_master_clip_from_keyevent, TLINE_ALL)
+    _create_action("clear_sync_relation", syncsplitevent.clear_sync_relation_from_keyevent, TLINE_ALL)
+    _create_action("slower", monitorevent.j_pressed, TLINE_MONITOR_ALL)
+    _create_action("stop", monitorevent.k_pressed, TLINE_MONITOR_ALL)
+    _create_action("faster", monitorevent.l_pressed, TLINE_MONITOR_ALL)
 
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
@@ -114,7 +120,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        print("ShortCutController: ", action)
+        #print("ShortCutController: ", action)
         try:
             press_func = self.shortcuts[action]
             press_func()
