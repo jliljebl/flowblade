@@ -79,6 +79,8 @@ def init():
     _create_action("append", tlineaction.append_button_pressed, TLINE_MONITOR_ALL)
     _create_action("3_point_overwrite", tlineaction.three_point_overwrite_pressed, TLINE_MONITOR_ALL)
     _create_action("overwrite_range", tlineaction.range_overwrite_pressed, TLINE_MONITOR_ALL)
+    _create_action("trim_start", tlineaction.trim_start_pressed, TLINE_ALL)
+    _create_action("trim_end", tlineaction.trim_end_pressed, TLINE_ALL)
 
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:

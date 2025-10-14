@@ -252,12 +252,6 @@ def _handle_tline_key_event(event):
     if action == 'select_prev':
         monitorevent.select_prev_clip_for_filter_edit()
         return True
-    if action == 'trim_start':
-        tlineaction.trim_start_pressed()
-        return True
-    if action == 'trim_end':
-        tlineaction.trim_end_pressed()
-        return True
     if action == 'monitor_show_video':
         tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
         return True

@@ -614,7 +614,7 @@ def clear_filters():
 
     track = get_track(movemodes.selected_track)
     clips = []
-    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out):
         if track.clips[i].is_blanck_clip == False:
             clips.append(track.clips[i])
 
