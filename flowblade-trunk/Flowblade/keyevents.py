@@ -246,12 +246,6 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.start_marks_looping()
         return True
-    if action == 'select_next':
-        monitorevent.select_next_clip_for_filter_edit()
-        return True
-    if action == 'select_prev':
-        monitorevent.select_prev_clip_for_filter_edit()
-        return True
     if action == 'monitor_show_video':
         tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
         return True
@@ -265,9 +259,6 @@ def _handle_tline_key_event(event):
         syncsplitevent.clear_sync_relation_from_keyevent()
     if action == 'set_sync_relation':
         syncsplitevent.init_select_master_clip_from_keyevent()
-    if action == 'toggle_track_output':
-        trackaction.toggle_track_output()
-        return True
 
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
@@ -354,9 +345,6 @@ def _handle_tline_key_event(event):
             return True
         if action == 'resync':
             tlineaction.resync_track_button_pressed()
-            return True
-        if action == 'split_selected':
-            tlineaction.split_audio_synched_button_pressed()
             return True
         if action == 'delete':
             if editorstate.EDIT_MODE() == editorstate.KF_TOOL:

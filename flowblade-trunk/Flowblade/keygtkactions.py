@@ -24,6 +24,7 @@ import monitorevent
 import movemodes
 import shortcuts
 import tlineaction
+import trackaction
 import updater
 
 # Widget names
@@ -87,7 +88,11 @@ def init():
     _create_action("nudge_forward", lambda: movemodes.nudge_selection(1), TLINE_ALL)
     _create_action("nudge_back_10", lambda: movemodes.nudge_selection(-10), TLINE_ALL)
     _create_action("nudge_forward_10", lambda: movemodes.nudge_selection(10), TLINE_ALL)
-                
+    _create_action("select_next", monitorevent.select_next_clip_for_filter_edit, TLINE_MONITOR_ALL)
+    _create_action("select_prev", monitorevent.select_prev_clip_for_filter_edit, TLINE_MONITOR_ALL)
+    _create_action("toggle_track_output", trackaction.toggle_track_output, TLINE_ALL)
+    _create_action("split_selected", tlineaction.split_audio_synched_button_pressed, TLINE_ALL)
+
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
@@ -109,7 +114,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        #print("ShortCutController: ", action)
+        print("ShortCutController: ", action)
         try:
             press_func = self.shortcuts[action]
             press_func()
