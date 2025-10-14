@@ -21,6 +21,7 @@
 import gui
 import medialog
 import monitorevent
+import movemodes
 import shortcuts
 import tlineaction
 import updater
@@ -81,7 +82,12 @@ def init():
     _create_action("overwrite_range", tlineaction.range_overwrite_pressed, TLINE_MONITOR_ALL)
     _create_action("trim_start", tlineaction.trim_start_pressed, TLINE_ALL)
     _create_action("trim_end", tlineaction.trim_end_pressed, TLINE_ALL)
-
+    _create_action("toggle_audio_mute", tlineaction.mute_clip_from_keyevent, TLINE_ALL)
+    _create_action("nudge_back", lambda: movemodes.nudge_selection(-1), TLINE_ALL)
+    _create_action("nudge_forward", lambda: movemodes.nudge_selection(1), TLINE_ALL)
+    _create_action("nudge_back_10", lambda: movemodes.nudge_selection(-10), TLINE_ALL)
+    _create_action("nudge_forward_10", lambda: movemodes.nudge_selection(10), TLINE_ALL)
+                
 def _create_action(action, press_func, widget_list):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
@@ -110,13 +116,3 @@ class ShortCutController:
             return True
         except KeyError:
             return False
-            
-
-
-
-            if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                tlineaction.insert_button_pressed()
-                return True
-        
-
-

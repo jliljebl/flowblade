@@ -484,6 +484,8 @@ def nudge_selection(delta):
     if selected_track == -1:
         return
 
+    # TODO: check and exit all on going edits. 
+
     # Collect edit data
     track = current_sequence().tracks[selected_track]
     selection_in_frame = track.clip_start(selected_range_in)

@@ -263,8 +263,6 @@ def _handle_tline_key_event(event):
         return True
     if action == 'clear_sync_relation':
         syncsplitevent.clear_sync_relation_from_keyevent()
-    if action == 'toggle_audio_mute':
-        tlineaction.mute_clip_from_keyevent()
     if action == 'set_sync_relation':
         syncsplitevent.init_select_master_clip_from_keyevent()
     if action == 'toggle_track_output':
@@ -288,20 +286,6 @@ def _handle_tline_key_event(event):
             multitrimmode.enter_pressed()
             return True
 
-    if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE: # is this what want, only in OVERWRITE_MOVE mode?
-        if action == 'nudge_back':
-            movemodes.nudge_selection(-1)
-            return True
-        elif action == 'nudge_forward':
-            movemodes.nudge_selection(1)
-            return True
-        elif action == 'nudge_back_10':
-            movemodes.nudge_selection(-10)
-            return True
-        elif action == 'nudge_forward_10':
-            movemodes.nudge_selection(10)
-            return True
-    
     if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
         modesetting.multitrim_mode_pressed()
         return True
