@@ -22,6 +22,7 @@ from gi.repository import Gdk
 import editorpersistance
 import editorstate
 from editorstate import PLAYER
+from editorstate import current_sequence
 import gui
 import medialog
 import monitorevent
@@ -67,7 +68,7 @@ def init():
                 MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget
                 }
 
-    #TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
+    # TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
 
     # Create actions
     _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL)
@@ -106,7 +107,9 @@ def init():
     _create_action("play_pause", _play_pause_action, TLINE_MONITOR_ALL)
     _create_action("prev_frame", _prev_frame_action, TLINE_MONITOR_ALL, True)
     _create_action("next_frame", _next_frame_action, TLINE_MONITOR_ALL, True)
-
+    _create_action("next_cut", _next_cut_action, TLINE_MONITOR_ALL)
+    _create_action("prev_cut", _prev_cut_action, TLINE_MONITOR_ALL)
+    
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
@@ -128,7 +131,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        print("ShortCutController: ", action)
+        #print("ShortCutController: ", action)
         try:
             press_func, pass_event = self.shortcuts[action]
             if pass_event == False:
@@ -171,3 +174,32 @@ def _do_arrow_frame_action(seek_amount, event):
     if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
         seek_amount = seek_amount * prefs.ffwd_rev_caps
     PLAYER().seek_delta(seek_amount)
+
+def _next_cut_action():
+    if editorstate.current_is_active_trim_mode() == True:
+        return
+
+    if editorstate.timeline_visible():
+        tline_frame = PLAYER().tracktor_producer.frame()
+        frame = current_sequence().find_next_cut_frame(tline_frame)
+        if frame != -1:
+            PLAYER().seek_frame(frame)
+            if editorpersistance.prefs.center_on_arrow_move == True:
+                updater.center_tline_to_current_frame()
+    else:
+         monitorevent.up_arrow_seek_on_monitor_clip()
+     
+def _prev_cut_action():
+    if editorstate.current_is_active_trim_mode() == True:
+        return
+     
+    if editorstate.timeline_visible():
+        tline_frame = PLAYER().tracktor_producer.frame()
+        frame = current_sequence().find_prev_cut_frame(tline_frame)
+        if frame != -1:
+            PLAYER().seek_frame(frame)
+            if editorpersistance.prefs.center_on_arrow_move == True:
+                updater.center_tline_to_current_frame()  
+    else:
+         monitorevent.down_arrow_seek_on_monitor_clip()
+

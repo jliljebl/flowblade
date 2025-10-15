@@ -265,30 +265,6 @@ def _handle_tline_key_event(event):
 
     # Key bindings for MOVE MODES and _NO_EDIT modes.
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
-        if action == 'next_cut':
-            if editorstate.timeline_visible():
-                tline_frame = PLAYER().tracktor_producer.frame()
-                frame = current_sequence().find_next_cut_frame(tline_frame)
-                if frame != -1:
-                    PLAYER().seek_frame(frame)
-                    if editorpersistance.prefs.center_on_arrow_move == True:
-                        updater.center_tline_to_current_frame()
-                    return True
-            else:
-                monitorevent.up_arrow_seek_on_monitor_clip()
-        if action == 'prev_cut':
-            if editorstate.timeline_visible():
-                tline_frame = PLAYER().tracktor_producer.frame()
-                frame = current_sequence().find_prev_cut_frame(tline_frame)
-                if frame != -1:
-                    PLAYER().seek_frame(frame)
-                    if editorpersistance.prefs.center_on_arrow_move == True:
-                        updater.center_tline_to_current_frame()
-                    return True
-            else:
-                 monitorevent.down_arrow_seek_on_monitor_clip()
-                 return True
-
         if action == 'append_from_bin':
             projectaction.append_selected_media_clips_into_timeline()
             return True
@@ -404,31 +380,6 @@ def _handle_clip_key_event(event):
         
         prefs = editorpersistance.prefs
 
-        
-        if action == 'next_cut':
-            if editorstate.timeline_visible():
-                tline_frame = PLAYER().tracktor_producer.frame()
-                frame = current_sequence().find_next_cut_frame(tline_frame)
-                if frame != -1:
-                    PLAYER().seek_frame(frame)
-                    if editorpersistance.prefs.center_on_arrow_move == True:
-                        updater.center_tline_to_current_frame()
-                    return True
-            else:
-                 monitorevent.up_arrow_seek_on_monitor_clip()
-                 return True
-        if action == 'prev_cut':
-            if editorstate.timeline_visible():
-                tline_frame = PLAYER().tracktor_producer.frame()
-                frame = current_sequence().find_prev_cut_frame(tline_frame)
-                if frame != -1:
-                    PLAYER().seek_frame(frame)
-                    if editorpersistance.prefs.center_on_arrow_move == True:
-                        updater.center_tline_to_current_frame()  
-                    return True
-            else:
-                 monitorevent.down_arrow_seek_on_monitor_clip()
-                 return True
         if action == 'play_pause_loop_marks':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
