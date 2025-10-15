@@ -228,18 +228,6 @@ def _handle_tline_key_event(event):
     action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
 
-    if action == 'play':
-        targetactions.play()
-        return True
-    if action == 'stop':
-        targetactions.stop()
-        return True
-    if action == 'play_pause':
-        if PLAYER().is_playing():
-            monitorevent.stop_pressed()
-        else:
-            monitorevent.play_pressed()
-        return True
     if action == 'play_pause_loop_marks':
         if PLAYER().is_playing():
             monitorevent.stop_pressed()
@@ -258,13 +246,7 @@ def _handle_tline_key_event(event):
 
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
-        if action == 'prev_frame':
-            trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
-            return True
-        elif action == 'next_frame':
-            trimmodes.right_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
-            return True
-        elif action == 'enter_edit':
+        if action == 'enter_edit':
             trimmodes.enter_pressed()
             return True
             
@@ -306,27 +288,7 @@ def _handle_tline_key_event(event):
             else:
                  monitorevent.down_arrow_seek_on_monitor_clip()
                  return True
-        # Apr-2017 - SvdB - Add different speeds for different modifiers
-        # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
-        # will MULTIPLY all speeds.
-        # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK
-        if action == 'prev_frame' or action == 'next_frame':
-            if action == 'prev_frame':
-                seek_amount = -1
-            else:
-                seek_amount = 1
 
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                PLAYER().slowmo_seek_delta(seek_amount)
-                return True
-                
-            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_shift
-
-            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_caps
-            PLAYER().seek_delta(seek_amount)
-            return True
         if action == 'append_from_bin':
             projectaction.append_selected_media_clips_into_timeline()
             return True
@@ -441,23 +403,8 @@ def _handle_clip_key_event(event):
         # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK.
         
         prefs = editorpersistance.prefs
-        if action == 'prev_frame' or action == 'next_frame':
-            if action == 'prev_frame':
-                seek_amount = -1
-            else:
-                seek_amount = 1
-            
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                PLAYER().slowmo_seek_delta(seek_amount)
-                return True
-                
-            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_shift
-            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_caps
-            PLAYER().seek_delta(seek_amount)
-            return True
 
+        
         if action == 'next_cut':
             if editorstate.timeline_visible():
                 tline_frame = PLAYER().tracktor_producer.frame()
@@ -482,18 +429,6 @@ def _handle_clip_key_event(event):
             else:
                  monitorevent.down_arrow_seek_on_monitor_clip()
                  return True
-        if action == 'play':
-            targetactions.play()
-            return True
-        if action == 'stop':
-            targetactions.stop()
-            return True
-        if action == 'play_pause':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            else:
-                monitorevent.play_pressed()
-            return True
         if action == 'play_pause_loop_marks':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
@@ -557,12 +492,6 @@ def _handle_geometry_editor_keys(event):
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl
-                    if action == 'play':
-                        targetactions.play()
-                        return True
-                    if action == 'stop':
-                        targetactions.stop()
-                        return True
                     if action == 'play_pause':
                         if PLAYER().is_playing():
                             monitorevent.stop_pressed()
@@ -593,12 +522,6 @@ def _handle_effects_editor_keys(event):
                     or (event.keyval == Gdk.KEY_Down)):
                     focus_editor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
                     return True
-        if action == 'play':
-            targetactions.play()
-            return True
-        if action == 'stop':
-            targetactions.stop()
-            return True
         if action == 'play_pause':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()

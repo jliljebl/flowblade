@@ -17,7 +17,11 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from gi.repository import Gdk
 
+import editorpersistance
+import editorstate
+from editorstate import PLAYER
 import gui
 import medialog
 import monitorevent
@@ -26,6 +30,7 @@ import shortcuts
 import syncsplitevent
 import tlineaction
 import trackaction
+import trimmodes
 import updater
 
 # Widget names
@@ -98,15 +103,18 @@ def init():
     _create_action("slower", monitorevent.j_pressed, TLINE_MONITOR_ALL)
     _create_action("stop", monitorevent.k_pressed, TLINE_MONITOR_ALL)
     _create_action("faster", monitorevent.l_pressed, TLINE_MONITOR_ALL)
+    _create_action("play_pause", _play_pause_action, TLINE_MONITOR_ALL)
+    _create_action("prev_frame", _prev_frame_action, TLINE_MONITOR_ALL, True)
+    _create_action("next_frame", _next_frame_action, TLINE_MONITOR_ALL, True)
 
-def _create_action(action, press_func, widget_list):
+def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
         if widget in _controllers:
-            _controllers[widget].add_shortcut(action, press_func)
+            _controllers[widget].add_shortcut(action, press_func, pass_event)
         else:
             _controllers[widget] = ShortCutController(widget)
-            _controllers[widget].add_shortcut(action, press_func)
+            _controllers[widget].add_shortcut(action, press_func, pass_event)
 
 
 class ShortCutController:
@@ -115,15 +123,51 @@ class ShortCutController:
         self.widget = widget
         self.widget.connect("key-press-event", lambda w, e: self._short_cut_handler(e))
     
-    def add_shortcut(self, action, press_func):
-        self.shortcuts[action] = press_func
+    def add_shortcut(self, action, press_func, pass_event):
+        self.shortcuts[action] = (press_func, pass_event)
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        #print("ShortCutController: ", action)
+        print("ShortCutController: ", action)
         try:
-            press_func = self.shortcuts[action]
-            press_func()
+            press_func, pass_event = self.shortcuts[action]
+            if pass_event == False:
+                press_func()
+            else:
+                press_func(event)
             return True
         except KeyError:
             return False
+
+
+# --------------------------------------------------------- local handler funcs
+def _play_pause_action():
+    if PLAYER().is_playing():
+        monitorevent.stop_pressed()
+    else:
+        monitorevent.play_pressed()
+
+def _prev_frame_action(event):
+    if editorstate.current_is_active_trim_mode() == True:
+        trimmodes.left_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
+    else:    
+        _do_arrow_frame_action(-1, event)
+
+def _next_frame_action(event):
+    if editorstate.current_is_active_trim_mode() == True:
+        trimmodes.right_arrow_pressed((event.get_state() & Gdk.ModifierType.CONTROL_MASK))
+    else:    
+        _do_arrow_frame_action(1, event)
+        
+def _do_arrow_frame_action(seek_amount, event):
+    prefs = editorpersistance.prefs
+    
+    if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        PLAYER().slowmo_seek_delta(seek_amount)
+        return 
+
+    if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+        seek_amount = seek_amount * prefs.ffwd_rev_shift
+    if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
+        seek_amount = seek_amount * prefs.ffwd_rev_caps
+    PLAYER().seek_delta(seek_amount)
