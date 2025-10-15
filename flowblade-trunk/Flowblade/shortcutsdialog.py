@@ -185,7 +185,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     trimming_box.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame Trim Edit")), False, False, 0)
     trimming_box.pack_start(_get_kb_row(_("Shift + Left Arrow "), _("Back 10 Frames Trim Edit")), False, False, 0)
     trimming_box.pack_start(_get_kb_row(_("Shift + Right Arrow"), _("Forward 10 Frames Trim Edit")), False, False, 0)
-    trimming_box.pack_start(_get_kb_row(_("ENTER"),  _("Complete Keyboard Trim Edit")), False, False, 0) #  _get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
+    trimming_box.pack_start(_get_kb_row(_("ENTER"),  _("Init / Complete Keyboard Trim Edit")), False, False, 0) #  _get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
     trimming = guiutils.get_named_frame(_("Trimming"), trimming_box)
 
     sync_box = Gtk.VBox()
