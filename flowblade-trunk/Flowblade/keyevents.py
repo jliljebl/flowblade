@@ -157,34 +157,9 @@ def key_down(widget, event):
         was_handled = _handle_tline_key_event(event)
         return was_handled
 
-    # Events that are available when monitor displays clip.
-    if (gui.monitor_switch.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()) and (not timeline_visible()):
-        was_handled = _handle_clip_key_event(event)
-        return was_handled
-    # Events that are available when monitor displays clip
-    if gui.pos_bar.widget.is_focus() and (not timeline_visible()):
-        was_handled = _handle_clip_key_event(event)
-        return was_handled
-
     #  Handle non-timeline delete.
     if event.keyval == Gdk.KEY_Delete:
         return _handle_delete()
-
-    # Home
-    if event.keyval == Gdk.KEY_Home:
-        if PLAYER().is_playing():
-            monitorevent.stop_pressed()
-        PLAYER().seek_frame(0)
-        _move_to_beginning()
-        return True
-
-    # End
-    if event.keyval == Gdk.KEY_End:
-        if PLAYER().is_playing():
-            monitorevent.stop_pressed()
-        PLAYER().seek_end()
-        _move_to_end()
-        return True
 
     # Select all with CTRL + A in media panel.
     if event.keyval == Gdk.KEY_a:
@@ -228,12 +203,6 @@ def _handle_tline_key_event(event):
     action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
 
-    if action == 'play_pause_loop_marks':
-        if PLAYER().is_playing():
-            monitorevent.stop_pressed()
-        else:
-            monitorevent.start_marks_looping()
-        return True
     if action == 'monitor_show_video':
         tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
         return True
@@ -242,21 +211,6 @@ def _handle_tline_key_event(event):
         return True
     if action == 'monitor_show_rgb':
         tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
-        return True
-
-    # Key bindings for keyboard trimming
-    if editorstate.current_is_active_trim_mode() == True:
-        if action == 'enter_edit':
-            trimmodes.enter_pressed()
-            return True
-            
-    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
-        if action == 'enter_edit':
-            multitrimmode.enter_pressed()
-            return True
-
-    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
-        modesetting.multitrim_mode_pressed()
         return True
 
     was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)
@@ -271,44 +225,6 @@ def _handle_tline_key_event(event):
 
         if action == 'resync':
             tlineaction.resync_track_button_pressed()
-            return True
-        if action == 'delete':
-            if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
-                kftoolmode.delete_active_keyframe()
-            else:
-                # Clip selection and compositor selection are mutually exclusive, 
-                # so max one one these will actually delete something.
-                tlineaction.splice_out_button_pressed()
-                compositormodes.delete_current_selection()
-        if action == 'lift':
-            tlineaction.lift_button_pressed()
-            return True
-        if action == 'to_start':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            PLAYER().seek_frame(0)
-            _move_to_beginning()
-            return True
-        if action == 'to_end':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            PLAYER().seek_end()
-            _move_to_end()
-            return True
-    else:
-        if action == 'to_start':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
-            PLAYER().seek_frame(0)
-            _move_to_beginning()
-            return True
-        if action == 'to_end':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
-            PLAYER().seek_end()
-            _move_to_end()
             return True
 
     return False
@@ -368,50 +284,11 @@ def _handle_configurable_global_events(event):
         return True
 
     return False
-    
-def _handle_clip_key_event(event):
-    # Key bindings for MOVE MODES
-    if editorstate.current_is_move_mode():
-        action = _get_shortcut_action(event)
-        # Apr-2017 - SvdB - Add different speeds for different modifiers
-        # Allow user to select what speed belongs to what modifier, knowing that a combo of mods
-        # will MULTIPLY all speeds.
-        # Available: SHIFT_MASK LOCK_MASK CONTROL_MASK.
-        
-        prefs = editorpersistance.prefs
-
-        if action == 'play_pause_loop_marks':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            else:
-                monitorevent.start_marks_looping()
-            return True
-
-    return False
 
 def _handle_delete():
     # Delete media file
     if gui.media_list_view.widget.get_focus_child() != None:
         projectaction.delete_media_files()
-        return True
-
-    # Delete bin
-    if gui.bin_list_view.get_focus_child() != None:
-        if gui.bin_list_view.text_rend_1.get_property("editing") == True:
-            return False
-        projectaction.delete_selected_bin()
-        return True
-
-    # Delete sequence
-    if gui.sequence_list_view.get_focus_child() != None:
-        if gui.sequence_list_view.text_rend_1.get_property("editing") == True:
-            return False
-        projectaction.delete_selected_sequence()
-        return True
-
-    # Delete media log event
-    if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
-        medialog.delete_selected()
         return True
     
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
@@ -512,15 +389,6 @@ def _get_focus_keyframe_editor(keyframe_editor_widgets):
         if kfeditor.get_focus_child() != None:
            return kfeditor
     return None
-
-def _move_to_beginning():
-    tlinewidgets.pos = 0
-    updater.repaint_tline()
-    updater.update_tline_scrollbar()
-    
-def _move_to_end():
-    updater.repaint_tline()
-    updater.update_tline_scrollbar()
 
 # ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
 def cut_action():

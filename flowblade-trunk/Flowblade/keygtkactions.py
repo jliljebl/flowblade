@@ -19,14 +19,18 @@
 """
 from gi.repository import Gdk
 
+import compositormodes
 import editorpersistance
 import editorstate
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
+import kftoolmode
 import medialog
 import monitorevent
 import movemodes
+import multitrimmode
+import projectaction
 import shortcuts
 import syncsplitevent
 import tlineaction
@@ -34,7 +38,10 @@ import trackaction
 import trimmodes
 import updater
 
-# Widget names
+# Widget names for action target setting and look up.
+SEQUENCE_LIST_VIEW = "sequencelistview"
+BIN_LIST_VIEW = "binlistview"
+LOG_LIST_VIEW = "loglistview"
 TLINE_CANVAS = "tlinecanvas"
 TLINE_TRACK_COLUMN = "tlinetrackcolumn"
 TLINE_SCALE = "tlinescale"
@@ -65,7 +72,10 @@ def init():
                 TLINE_SCROLL: gui.tline_scroll,
                 TLINE_MONITOR_DISPLAY: gui.tline_display,
                 MONITOR_SWITCH: gui.monitor_switch.widget,
-                MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget
+                MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget,
+                SEQUENCE_LIST_VIEW: gui.sequence_list_view,
+                BIN_LIST_VIEW: gui.bin_list_view, 
+                LOG_LIST_VIEW: gui.editor_window.media_log_events_list_view
                 }
 
     # TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
@@ -109,7 +119,18 @@ def init():
     _create_action("next_frame", _next_frame_action, TLINE_MONITOR_ALL, True)
     _create_action("next_cut", _next_cut_action, TLINE_MONITOR_ALL)
     _create_action("prev_cut", _prev_cut_action, TLINE_MONITOR_ALL)
+    _create_action("enter_edit", _enter_edit_action, TLINE_ALL)
+    _create_action("delete", _tline_delete_action, TLINE_ALL)
+    _create_action("lift", tlineaction.lift_button_pressed, TLINE_ALL) 
+    _create_action("play_pause_loop_marks", _play_pause_loop_marks_action, TLINE_MONITOR_ALL)
+    _create_action("to_start", _to_start_action, TLINE_MONITOR_ALL)
+    _create_action("to_end", _to_end_action, TLINE_MONITOR_ALL)
+    _create_action("delete", _delete_sequence_action, [SEQUENCE_LIST_VIEW])
+    _create_action("delete", _delete_bin_action, [BIN_LIST_VIEW])
+    _create_action("delete", _delete_log_action, [LOG_LIST_VIEW])
     
+
+            
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
@@ -131,7 +152,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        #print("ShortCutController: ", action)
+        print("ShortCutController: ", action)
         try:
             press_func, pass_event = self.shortcuts[action]
             if pass_event == False:
@@ -203,3 +224,62 @@ def _prev_cut_action():
     else:
          monitorevent.down_arrow_seek_on_monitor_clip()
 
+def _enter_edit_action():
+    # We are currently always calling both of these.
+    # Check exit of this, e.g. we go from two roll to one roll.
+    if editorstate.current_is_active_trim_mode() == True:
+        trimmodes.enter_pressed()
+            
+    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
+        multitrimmode.enter_pressed()
+
+def _tline_delete_action():
+    if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
+        kftoolmode.delete_active_keyframe()
+    else:
+        # Clip selection and compositor selection are mutually exclusive, 
+        # so max one one these will actually delete something.
+        tlineaction.splice_out_button_pressed()
+        compositormodes.delete_current_selection()
+
+def _play_pause_loop_marks_action():
+    if editorstate.current_is_move_mode():
+        if PLAYER().is_playing():
+            monitorevent.stop_pressed()
+        else:
+            monitorevent.start_marks_looping()
+
+def _to_start_action():
+    if PLAYER().is_playing():
+        monitorevent.stop_pressed()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
+    PLAYER().seek_frame(0)
+
+    #tlinewidgets.pos = 0
+    updater.repaint_tline()
+    updater.update_tline_scrollbar()
+
+def _to_end_action():
+    if PLAYER().is_playing():
+        monitorevent.stop_pressed()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
+    PLAYER().seek_end()
+
+    updater.repaint_tline()
+    updater.update_tline_scrollbar()
+
+def _delete_sequence_action():
+    if gui.sequence_list_view.text_rend_1.get_property("editing") == True:
+        return
+    projectaction.delete_selected_sequence()
+
+def _delete_bin_action():
+    if gui.bin_list_view.text_rend_1.get_property("editing") == True:
+        return
+    projectaction.delete_selected_bin()
+    
+    
+def _delete_log_action():
+    # Delete media log event
+    if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
+        medialog.delete_selected()
