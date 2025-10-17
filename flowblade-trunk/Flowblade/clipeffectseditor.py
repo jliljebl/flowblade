@@ -44,6 +44,7 @@ import gui
 import guicomponents
 import guipopover
 import guiutils
+import keygtkactions
 import mltfilters
 import propertyedit
 import propertyeditorbuilder
@@ -836,11 +837,13 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE_FILTER)):
                     keyframe_editor_widgets.append(editor_row)
                     filter_keyframe_editor_widgets.append(editor_row)
-
+                    keygtkactions.connect_filter_widget(editor_row)
+                
             # if slider property is being edited as keyrame property
             if hasattr(editor_row, "is_kf_editor"):
                 keyframe_editor_widgets.append(editor_row)
                 filter_keyframe_editor_widgets.append(editor_row)
+                keygtkactions.connect_filter_widget(editor_row)
 
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
@@ -876,6 +879,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
                 # editor_row is just Gtk.VBox.
                 keyframe_editor_widgets.append(editor_row.kf_edit_geom_editor)
                 filter_keyframe_editor_widgets.append(editor_row.kf_edit_geom_editor)
+                keygtkactions.connect_filter_widget(editor_row.kf_edit_geom_editor)
     else:
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()

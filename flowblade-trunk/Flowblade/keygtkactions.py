@@ -19,12 +19,14 @@
 """
 from gi.repository import Gdk
 
+import clipeffectseditor
 import compositormodes
 import editorpersistance
 import editorstate
 from editorstate import PLAYER
 from editorstate import current_sequence
 import gui
+import keyframeeditor
 import kftoolmode
 import medialog
 import monitorevent
@@ -163,7 +165,52 @@ class ShortCutController:
         except KeyError:
             return False
 
+        
+# --------------------------------------------------------- effect editor
+def connect_filter_widget(widget):
+    widget.connect("key-press-event", _filter_widget_keypress_handler)
+    children = widget.get_children()
+    for child in children:
+        child.connect("key-press-event", _filter_widget_keypress_handler)
+            
+def _filter_widget_keypress_handler(widget, event):
+    action = shortcuts.get_shortcut_action(event)
+    focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
 
+    if focus_editor != None:
+        if focus_editor.get_focus_child() != None:
+            if focus_editor.__class__ == keyframeeditor.FilterRectGeometryEditor or \
+                focus_editor.__class__ == keyframeeditor.FilterRotatingGeometryEditor or \
+                focus_editor.__class__ == keyframeeditor.GeometryNoKeyframes:
+                if ((event.keyval == Gdk.KEY_Left) 
+                    or (event.keyval == Gdk.KEY_Right)
+                    or (event.keyval == Gdk.KEY_Up)
+                    or (event.keyval == Gdk.KEY_Down)):
+                    focus_editor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
+                    return True
+        if action == 'play_pause':
+            _play_pause_action()
+            return True
+        if action == 'play_pause_loop_marks':
+            _play_pause_loop_marks_action
+            return True
+        if action == 'prev_frame' or action == 'next_frame':
+            if action == 'prev_frame':
+                _prev_frame_action(event)
+            else:
+                _next_frame_action(event)
+            return True
+        
+    return False
+
+def _get_focus_keyframe_editor(keyframe_editor_widgets):
+    if keyframe_editor_widgets == None:
+        return None
+    for kfeditor in keyframe_editor_widgets:
+        if kfeditor.get_focus_child() != None:
+           return kfeditor
+    return None
+    
 # --------------------------------------------------------- local handler funcs
 def _play_pause_action():
     if PLAYER().is_playing():

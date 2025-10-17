@@ -119,6 +119,7 @@ def key_down(widget, event):
         return False
 
     # Compositor editors keyevents
+    """
     was_handled = _handle_geometry_editor_keys(event)
     if was_handled:
         # Stop widget focus from travelling if arrow key pressed.
@@ -130,7 +131,8 @@ def key_down(widget, event):
         # Stop widget focus from travelling if arrow key pressed
         gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
-
+    """
+    
     # If timeline widgets are in focus timeline keyevents are available.
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
