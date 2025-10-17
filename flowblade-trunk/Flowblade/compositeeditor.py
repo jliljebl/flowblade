@@ -40,6 +40,7 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 import keyframeeditor
+import keygtkactions
 import mlttransitions
 import propertyeditorbuilder
 import propertyedit
@@ -253,7 +254,7 @@ def _display_compositor_edit_box():
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)
             or (editor_type == propertyeditorbuilder.ROTATION_GEOMETRY_EDITOR_BUILDER)):
                 keyframe_editor_widgets.append(editor_row)
-    
+                keygtkactions.connect_compositor_widget(editor_row)
     # Add pad label after possibly adding blend mode editor.
     if blend_added == False:
         target_row.pack_start(Gtk.Label(), True, True, 0)
@@ -266,6 +267,7 @@ def _display_compositor_edit_box():
         # because one editor sets values for multiple EditableProperty objects
         if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
             keyframe_editor_widgets.append(editor_row)
+            keygtkactions.connect_compositor_widget(editor_row)
         vbox.pack_start(editor_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 

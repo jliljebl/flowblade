@@ -118,21 +118,6 @@ def key_down(widget, event):
     if render.widgets.file_panel.movie_name.has_focus():
         return False
 
-    # Compositor editors keyevents
-    """
-    was_handled = _handle_geometry_editor_keys(event)
-    if was_handled:
-        # Stop widget focus from travelling if arrow key pressed.
-        gui.editor_window.window.emit_stop_by_name("key_press_event")
-        return True
-
-    was_handled = _handle_effects_editor_keys(event)
-    if was_handled:
-        # Stop widget focus from travelling if arrow key pressed
-        gui.editor_window.window.emit_stop_by_name("key_press_event")
-        return True
-    """
-    
     # If timeline widgets are in focus timeline keyevents are available.
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
@@ -304,93 +289,6 @@ def _handle_delete():
         return True
 
     return False
-
-def _handle_geometry_editor_keys(event):
-    if compositeeditor.keyframe_editor_widgets != None:
-        for kfeditor in compositeeditor.keyframe_editor_widgets:
-            if kfeditor.get_focus_child() != None:
-                if kfeditor.__class__ == keyframeeditor.GeometryEditor or \
-                kfeditor.__class__ == keyframeeditor.RotatingGeometryEditor:
-                    # Apr-2017 - SvdB - For keyboard shortcuts. I have NOT changed the arrow keys for
-                    # the kfeditor action. That didn't seem appropriate
-                    action = _get_shortcut_action(event)
-                    if ((event.keyval == Gdk.KEY_Left) 
-                        or (event.keyval == Gdk.KEY_Right)
-                        or (event.keyval == Gdk.KEY_Up)
-                        or (event.keyval == Gdk.KEY_Down)):
-                        kfeditor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
-                        return True
-                    if event.keyval == Gdk.KEY_plus:
-                        pass # not impl
-                    if action == 'play_pause':
-                        if PLAYER().is_playing():
-                            monitorevent.stop_pressed()
-                        else:
-                            monitorevent.play_pressed()
-                        return True
-                    if action == 'play_pause_loop_marks':
-                        if PLAYER().is_playing():
-                            monitorevent.stop_pressed()
-                        else:
-                            monitorevent.start_marks_looping()
-                        return True
-    return False
-
-def _handle_effects_editor_keys(event):
-    action = _get_shortcut_action(event)
-    focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
-
-                        
-    if focus_editor != None:
-        if focus_editor.get_focus_child() != None:
-            if focus_editor.__class__ == keyframeeditor.FilterRectGeometryEditor or \
-                focus_editor.__class__ == keyframeeditor.FilterRotatingGeometryEditor or \
-                focus_editor.__class__ == keyframeeditor.GeometryNoKeyframes:
-                if ((event.keyval == Gdk.KEY_Left) 
-                    or (event.keyval == Gdk.KEY_Right)
-                    or (event.keyval == Gdk.KEY_Up)
-                    or (event.keyval == Gdk.KEY_Down)):
-                    focus_editor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
-                    return True
-        if action == 'play_pause':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            else:
-                monitorevent.play_pressed()
-            return True
-        if action == 'play_pause_loop_marks':
-            if PLAYER().is_playing():
-                monitorevent.stop_pressed()
-            else:
-                monitorevent.start_marks_looping()
-            return True
-        if action == 'prev_frame' or action == 'next_frame':
-            prefs = editorpersistance.prefs
-            if action == 'prev_frame':
-                seek_amount = -1
-            else:
-                seek_amount = 1
-            
-            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                PLAYER().slowmo_seek_delta(seek_amount)
-                return True
-                
-            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_shift
-            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
-                seek_amount = seek_amount * prefs.ffwd_rev_caps
-            PLAYER().seek_delta(seek_amount)
-            return True
-        
-    return False
-
-def _get_focus_keyframe_editor(keyframe_editor_widgets):
-    if keyframe_editor_widgets == None:
-        return None
-    for kfeditor in keyframe_editor_widgets:
-        if kfeditor.get_focus_child() != None:
-           return kfeditor
-    return None
 
 # ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
 def cut_action():

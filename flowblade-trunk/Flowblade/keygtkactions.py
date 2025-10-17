@@ -20,6 +20,7 @@
 from gi.repository import Gdk
 
 import clipeffectseditor
+import compositeeditor
 import compositormodes
 import editorpersistance
 import editorstate
@@ -154,7 +155,7 @@ class ShortCutController:
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        print("ShortCutController: ", action)
+        #print("ShortCutController: ", action)
         try:
             press_func, pass_event = self.shortcuts[action]
             if pass_event == False:
@@ -166,7 +167,7 @@ class ShortCutController:
             return False
 
         
-# --------------------------------------------------------- effect editor
+# --------------------------------------------------------- effect editors
 def connect_filter_widget(widget):
     widget.connect("key-press-event", _filter_widget_keypress_handler)
     children = widget.get_children()
@@ -192,7 +193,7 @@ def _filter_widget_keypress_handler(widget, event):
             _play_pause_action()
             return True
         if action == 'play_pause_loop_marks':
-            _play_pause_loop_marks_action
+            _play_pause_loop_marks_action()
             return True
         if action == 'prev_frame' or action == 'next_frame':
             if action == 'prev_frame':
@@ -203,6 +204,7 @@ def _filter_widget_keypress_handler(widget, event):
         
     return False
 
+
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
     if keyframe_editor_widgets == None:
         return None
@@ -210,7 +212,35 @@ def _get_focus_keyframe_editor(keyframe_editor_widgets):
         if kfeditor.get_focus_child() != None:
            return kfeditor
     return None
-    
+
+# --------------------------------------------------------- compositor editors
+def connect_compositor_widget(widget):
+    widget.connect("key-press-event", _compositor_widget_keypress_handler)
+    children = widget.get_children()
+    for child in children:
+        child.connect("key-press-event", _compositor_widget_keypress_handler)
+        
+def _compositor_widget_keypress_handler(widget, event):
+    if compositeeditor.keyframe_editor_widgets != None:
+        for kfeditor in compositeeditor.keyframe_editor_widgets:
+            if kfeditor.get_focus_child() != None:
+                if kfeditor.__class__ == keyframeeditor.GeometryEditor or \
+                kfeditor.__class__ == keyframeeditor.RotatingGeometryEditor:
+                    action = shortcuts.get_shortcut_action(event)
+                    if ((event.keyval == Gdk.KEY_Left) 
+                        or (event.keyval == Gdk.KEY_Right)
+                        or (event.keyval == Gdk.KEY_Up)
+                        or (event.keyval == Gdk.KEY_Down)):
+                        kfeditor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
+                        return True
+                    if action == 'play_pause':
+                        _play_pause_action()
+                        return True
+                    if action == 'play_pause_loop_marks':
+                        _play_pause_loop_marks_action()
+                        return True
+    return False
+
 # --------------------------------------------------------- local handler funcs
 def _play_pause_action():
     if PLAYER().is_playing():
