@@ -19,6 +19,7 @@
 """
 from gi.repository import Gdk
 
+import appconsts
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -131,9 +132,12 @@ def init():
     _create_action("delete", _delete_sequence_action, [SEQUENCE_LIST_VIEW])
     _create_action("delete", _delete_bin_action, [BIN_LIST_VIEW])
     _create_action("delete", _delete_log_action, [LOG_LIST_VIEW])
-    
+    _create_action("append_from_bin", projectaction.append_selected_media_clips_into_timeline, TLINE_MONITOR_ALL)
+    _create_action("resync", tlineaction.resync_track_button_pressed, TLINE_MONITOR_ALL) # Currently menu global gets to this firsts.
+    _create_action("monitor_show_video", lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), TLINE_MONITOR_ALL)
+    _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), TLINE_MONITOR_ALL)
+    _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), TLINE_MONITOR_ALL)
 
-            
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]

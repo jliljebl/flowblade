@@ -185,51 +185,14 @@ def _handle_tline_key_event(event):
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True
-    
-
-    action = _get_shortcut_action(event)
-    prefs = editorpersistance.prefs
-
-    if action == 'monitor_show_video':
-        tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE)
-        return True
-    if action == 'monitor_show_scope':
-        tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE)
-        return True
-    if action == 'monitor_show_rgb':
-        tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE)
-        return True
 
     was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)
     if was_handled == True:
         return True
 
-    # Key bindings for MOVE MODES and _NO_EDIT modes.
-    if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
-        if action == 'append_from_bin':
-            projectaction.append_selected_media_clips_into_timeline()
-            return True
-
-        if action == 'resync':
-            tlineaction.resync_track_button_pressed()
-            return True
-
     return False
 
 def _handle_extended_monitor_focus_events(event):
-    # This function was added to get a subset of events only to work when monitor has focus
-    # Apr-2017 - SvdB - For keyboard shortcuts.
-    action = _get_shortcut_action(event)
-
-    # We're dropping monitor window in 2 window mode as part of timeline focus
-    #    TODO:        gui.sequence_editor_b.has_focus() or
-    #        gui.clip_editor_b.has_focus()):
-    if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus() or gui.monitor_waveform_display.widget.has_focus()):
-        return False
-    if action == 'append_from_bin':
-        projectaction.append_selected_media_clips_into_timeline()
-        return True
-
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True
