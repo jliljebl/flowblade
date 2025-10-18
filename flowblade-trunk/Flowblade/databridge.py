@@ -28,3 +28,5 @@ tlinewidgets_get_frame_x = None
 trimmodes_submode_is_keyb_edit_on = None
 
 usbhid_get_usb_hid_device_config_metadata_list = None
+
+glass_buttons_default_focus_group_has_focus = None

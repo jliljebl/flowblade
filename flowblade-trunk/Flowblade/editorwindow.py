@@ -34,6 +34,7 @@ import clipeffectseditor
 import clipmenuaction
 import compositeeditor
 import containerclip
+import copypaste
 import dialogs
 import dialogutils
 import dnd
@@ -804,9 +805,9 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
-            ('Cut', None, _('Cut'), '<control>X', None, lambda a:keyevents.cut_action()),
-            ('Copy', None, _('Copy'), '<control>C', None, lambda a:keyevents.copy_action()),
-            ('Paste', None, _('Paste'), '<control>V', None, lambda a:keyevents.paste_action()),
+            ('Cut', None, _('Cut'), '<control>X', None, lambda a:copypaste.cut_action()),
+            ('Copy', None, _('Copy'), '<control>C', None, lambda a:copypaste.copy_action()),
+            ('Paste', None, _('Paste'), '<control>V', None, lambda a:copypaste.paste_action()),
             ('PasteFilters', None, _('Paste Filters / Properties'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
             ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),

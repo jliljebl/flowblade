@@ -38,6 +38,7 @@ import animatedvalue
 import cairoarea
 import callbackbridge
 import compositorfades
+import copypaste
 import dialogutils
 from editorstate import PLAYER
 from editorstate import current_sequence
@@ -1267,9 +1268,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(kf_type)
         except:
             if msg == "copykf":
-                keyevents.copy_action()
+                copypaste.copy_action()
             elif msg == "pastekf":
-                keyevents.paste_action()
+                copypaste.paste_action()
             elif msg  == "clonekfnext":
                 self.clip_editor.clone_value_from_next()
             elif msg  == "clonekfprev":
@@ -1754,9 +1755,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
             self._center_horizontal()
             self._center_vertical()
         elif msg == "copykf":
-            keyevents.copy_action()
+            copypaste.copy_action()
         elif msg == "pastekf":
-            keyevents.paste_action()
+            copypaste.paste_action()
         elif msg == "clonekfnext":
             self._clone_value_from_next()
         elif msg == "clonekfprev":
@@ -2548,9 +2549,9 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             self.update_editor_view_with_frame(frame)
             self.update_property_value()
         elif msg == "copykf":
-            keyevents.copy_action()
+            copypaste.copy_action()
         elif msg == "pastekf":
-            keyevents.paste_action()
+            copypaste.paste_action()
         elif msg == "add_movement":
             self._show_add_movement_dialog()
 

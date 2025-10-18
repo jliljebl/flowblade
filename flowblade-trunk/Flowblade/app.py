@@ -74,6 +74,7 @@ import editorlayout
 import editorpersistance
 import editorstate
 import editorwindow
+import glassbuttons
 import gmic
 import gtkevents
 import gui
@@ -507,6 +508,7 @@ def monkeypatch_callbacks():
     databridge.trimmodes_submode_is_keyb_edit_on = trimmodes.submode_is_keyb_edit_on
     databridge.snapping_get_snapping_on = snapping.get_snapping_on
     databridge.usbhid_get_usb_hid_device_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list
+    databridge.glass_buttons_default_focus_group_has_focus = glassbuttons.default_focus_group_has_focus
 
     # Set callbacks for undo/redo ops.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)

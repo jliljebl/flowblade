@@ -740,6 +740,8 @@ class TooltipRunner:
         tooltip.set_markup(self.tooltips[hit_code])
         return True
 
+def default_focus_group_has_focus():
+    return focus_group_has_focus(DEFAULT_FOCUS_GROUP)
 
 def focus_group_has_focus(focus_group):
     group = focus_groups[focus_group]

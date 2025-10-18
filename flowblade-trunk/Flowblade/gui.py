@@ -24,6 +24,7 @@ Module holds references to GUI widgets and offers some helper functions used in 
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
+import databridge
 import respaths
 
 
@@ -232,3 +233,14 @@ def get_filter_group_icons(default_icon):
     group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
 
     return group_icons
+
+def timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
+    if(tline_canvas.widget.is_focus()
+       or tline_column.widget.is_focus()
+       or editor_window.tool_selector.widget.is_focus()
+       or (pos_bar.widget.is_focus() and timeline_visible())
+       or tline_scale.widget.is_focus()
+       or databridge.glass_buttons_default_focus_group_has_focus()):
+        return True
+
+    return False
