@@ -201,21 +201,6 @@ def set_keyboard_shortcuts():
     except:
         print("Error opening shortcuts file:" + prefs.shortcuts)
 
-
-"""
-def set_keyboard_shortcut_actions():
-    print("s")
-    global _keyboard_shortcut_actions
-    _keyboard_shortcut_actions = {}
-    for key, shortcut_data in _keyboard_actions.items():
-        for modifier, action_name in shortcut_data.items():
-            _keyboard_shortcut_actions[action_name] = (key, modifier)
-    print("e")
-    
-def get_keyboard_shortcut_actions():
-    return _keyboard_shortcut_actions
-"""
-
 def update_custom_shortcuts():
     # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update custom shortcuts.
     custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
@@ -246,6 +231,32 @@ def _update_custom_xml_file_nodes_to_default(custom_xml_file_path):
         print("Writing ", custom_xml_file_path)
         pref_shortcuts.write(custom_xml_file_path)
 
+def change_single_shortcut(code, event, shortcut_label):
+    key_val_name = Gdk.keyval_name(event.keyval).lower()
+    
+    mods_list = []
+    state = event.get_state()
+    if state & Gdk.ModifierType.CONTROL_MASK:
+        mods_list.append("CTRL")
+    if state & Gdk.ModifierType.MOD1_MASK:
+        mods_list.append("ALT")
+        
+    if state & Gdk.ModifierType.SHIFT_MASK:
+        mods_list.append("SHIFT")
+    elif state & Gdk.ModifierType.LOCK_MASK:     # CapsLock is used as an equivalent to SHIFT.
+        mods_list.append("SHIFT")
+
+    shortcut_info_str = get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
+    if is_blocked_shortcut(key_val_name, mods_list):
+        return shortcut_info_str
+
+    shortcut_label.set_text(shortcut_info_str)
+
+    change_custom_shortcut(code, key_val_name, mods_list)
+    set_keyboard_shortcuts()
+
+    return None
+    
 # code -> xml.etree.ElementTree.Element
 def _get_events_dict(xml_root):
     events_dict = {}
