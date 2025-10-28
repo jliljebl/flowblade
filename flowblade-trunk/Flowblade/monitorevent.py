@@ -23,6 +23,7 @@ Module handles button presses from monitor control buttons row.
 """
 
 import appconsts
+import boxmove
 import clipeffectseditor
 import dialogutils
 import editorpersistance
@@ -189,6 +190,21 @@ def mark_out_pressed():
 
     _do_marks_update()
     updater.display_marks_tc()
+
+def mark_selection_range_pressed():
+    if movemodes.selected_track != -1:
+        mark_in = current_sequence().tracks[movemodes.selected_track].clip_start(movemodes.selected_range_in)
+        PLAYER().producer.mark_in = mark_in
+        out_clip = current_sequence().tracks[movemodes.selected_track].clips[movemodes.selected_range_out]
+        mark_out = current_sequence().tracks[movemodes.selected_track].clip_start(movemodes.selected_range_out) + out_clip.clip_length() - 1 
+        PLAYER().producer.mark_out = mark_out
+        _do_marks_update()
+        updater.display_marks_tc()    
+    elif boxmove.box_selection_data != None:
+        PLAYER().producer.mark_in = boxmove.box_selection_data.topleft_frame
+        PLAYER().producer.mark_out = boxmove.box_selection_data.topleft_frame + boxmove.box_selection_data.width_frames - 1
+        _do_marks_update()
+        updater.display_marks_tc()  
 
 def mark_in_clear_pressed():
     if timeline_visible():

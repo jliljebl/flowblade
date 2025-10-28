@@ -95,7 +95,7 @@ def init():
     _create_action("switch_monitor", updater.switch_monitor_display, TLINE_MONITOR_ALL)
     _create_action("add_marker", tlineaction.add_marker, TLINE_MONITOR_ALL)
     _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)
-    _create_action("cut_all", tlineaction.cut_pressed, TLINE_ALL)
+    _create_action("cut_all", tlineaction.cut_all_pressed, TLINE_ALL)
     _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
     _create_action("set_length", tlineaction.set_length_from_keyevent, TLINE_ALL)
     _create_action("insert", tlineaction.insert_button_pressed, TLINE_MONITOR_ALL)
@@ -137,6 +137,7 @@ def init():
     _create_action("monitor_show_video", lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), TLINE_MONITOR_ALL)
+    _create_action("mark_selection_range", monitorevent.mark_selection_range_pressed, TLINE_MONITOR_ALL)
 
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:

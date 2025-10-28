@@ -501,6 +501,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['clear_sync_relation'] = _('Clear Clip Sync Relation')
     _keyboard_action_names['toggle_audio_mute'] = _('Toggle Clip Audio Mute')
     _keyboard_action_names['set_sync_relation'] = _('Set Clip Sync Relation')
+    _keyboard_action_names['mark_selection_range'] = _('Mark Selection Range')
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names

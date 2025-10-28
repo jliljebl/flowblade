@@ -199,6 +199,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     marks_box = Gtk.VBox()
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "mark_in"), False, False, 0)
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "mark_out"), False, False, 0)
+    marks_box.pack_start(_get_dynamic_kb_row(root_node, "mark_selection_range"), False, False, 0)
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "to_mark_in"), False, False, 0)
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "to_mark_out"), False, False, 0)
     marks_box.pack_start(_get_dynamic_kb_row(root_node, "clear_io_marks"), False, False, 0)
