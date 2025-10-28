@@ -392,7 +392,8 @@ def get_shortcut_info(root, code):
                 if mod_name != "":
                     mod_name = mod_name + " + "
                 return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
-    except:
+    except Exception as e:
+        print("Exception: ", e)
         print("error in get_shortcut_info, event.text:", event.text)
         pass
 
