@@ -238,7 +238,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     kfs_vbox = Gtk.VBox()
     kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)
     kfs_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Keyframe Value")), False, False, 0)
-    kfs_vbox.pack_start(_get_kb_row(_("Control + Mouse Drag"), _("Move all keyframes after selected")), False, False, 0)
+    kfs_vbox.pack_start(_get_kb_row(_("Shift + Mouse Drag"), _("Move all keyframes after selected")), False, False, 0)
     kfs = guiutils.get_named_frame(_("Keyframe and Geometry Editor"), kfs_vbox)
     
     geom_vbox = Gtk.VBox()
