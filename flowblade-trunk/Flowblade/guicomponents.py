@@ -2691,7 +2691,7 @@ class HamburgerPressLaunch:
 
 class MonitorSwitch:
     def __init__(self, callback):
-        self.WIDTH = 76
+        self.WIDTH = 94
         self.HEIGHT = 10
         
         self.press_fix = 6 # we don't get want to divide press exactly half, timeline gets more
@@ -2722,12 +2722,16 @@ class MonitorSwitch:
             tline_draw_surface = self.tline_surface 
             clip_draw_surface = self.clip_active_surface
             
-        def_off = 10
+        def_off = 14
         y_off_tline = 3
         y_off_clip = 4
         mid_gap = 10
         y_off_tline = -1
         y_off_clip = 0
+
+        cr.set_source_rgb(0.063, 0.341, 0.659)
+        self.create_round_rect_path(cr, 0, 0, 84, 20, 10.0)
+        cr.fill()
 
         cr.set_source_surface(tline_draw_surface, def_off, y_off_tline)
         cr.paint()
@@ -2737,6 +2741,15 @@ class MonitorSwitch:
 
         cr.set_source_surface(clip_draw_surface, def_off + base_off + mid_gap, y_off_clip)
         cr.paint()
+
+    def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
+        degrees = M_PI / 180.0
+        #cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
         
     def _press_event(self, event):
         if event.x < (self.WIDTH / 2 + self.press_fix) and editorstate.timeline_visible() == False:

@@ -525,7 +525,7 @@ class EditorWindow:
         player_buttons_row.set_margin_left(12)
         player_buttons_row.set_margin_right(12)
 
-        # This is used in uodater.py
+        # This is used in updater.py
         player_buttons_row.set_name("player-bar")
 
         self.player_buttons_row = player_buttons_row
