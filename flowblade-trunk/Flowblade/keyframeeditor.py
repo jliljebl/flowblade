@@ -856,19 +856,22 @@ class ClipEditorButtonsRow(Gtk.HBox):
         
         # Position entry
         self.kf_pos_label = Gtk.Label()
-        self.modify_font(Pango.FontDescription("light 8"))
+        self.modify_font(Pango.FontDescription("normal 9"))
         self.kf_pos_label.set_text("0")
         self.kf_pos_label.set_size_request(70, 10)
         self.kf_info_label = Gtk.Label()
-        self.kf_info_label.set_text("1/1")
-        
+        self.kf_info_label.set_markup("<b>1</b> / 1")
+        self.kf_info_label.set_size_request(40, 10)
+    
         # Build row
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
 
         if show_hamburger:
             self.pack_start(self.hamburger_menu.widget, False, False, 0)
-        self.pack_start(guiutils.pad_label(8,4), False, False, 0)
+        self.pack_start(guiutils.pad_label(6,4), False, False, 0)
+        self.pack_start(self.kf_info_label, False, False, 0)
+        self.pack_start(guiutils.pad_label(6,4), False, False, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
@@ -885,9 +888,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             pass
-            
-        self.pack_start(self.kf_info_label, False, False, 0)
-        
+
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
@@ -899,7 +900,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
 
     def set_kf_info(self, info):
         active_index, total = info
-        self.kf_info_label.set_text(str(active_index + 1) + "/" + str(total))
+        self.kf_info_label.set_markup("<b>" + str(active_index + 1) + "</b> / " + str(total))
 
     def set_buttons_sensitive(self, sensitive):
         self.add_button.set_sensitive(sensitive)
