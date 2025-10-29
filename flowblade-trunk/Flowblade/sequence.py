@@ -1044,6 +1044,46 @@ class Sequence:
                 
         return cut_frame
 
+    def find_next_mark_or_marker(self, tline_frame):
+        result_frame = -1
+        
+        if self.tractor.mark_in > tline_frame:
+            result_frame = self.tractor.mark_in
+        if self.tractor.mark_out > tline_frame:
+            if result_frame == -1:
+                result_frame = self.tractor.mark_out
+            elif self.tractor.mark_out < result_frame:
+                result_frame = self.tractor.mark_out 
+        
+        for name, frame in self.markers:
+            if frame > tline_frame:
+                if result_frame == -1:
+                    result_frame = frame
+                elif frame < result_frame:
+                    result_frame = frame
+        
+        return result_frame
+
+    def find_prev_mark_or_marker(self, tline_frame):
+        result_frame = -1
+        
+        if self.tractor.mark_in < tline_frame:
+            result_frame = self.tractor.mark_in
+        if self.tractor.mark_out < tline_frame:
+            if result_frame == -1:
+                result_frame = self.tractor.mark_out
+            elif self.tractor.mark_out > result_frame:
+                result_frame = self.tractor.mark_out 
+        
+        for name, frame in self.markers:
+            if frame < tline_frame:
+                if result_frame == -1:
+                    result_frame = frame
+                elif frame > result_frame:
+                    result_frame = frame
+        
+        return result_frame
+
     def find_parent_clip_for_clip_start(self, parent_track, clip_start_frame):
         parent_clip = None
         last_pos_diff = None

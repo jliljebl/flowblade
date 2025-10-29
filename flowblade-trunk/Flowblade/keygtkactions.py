@@ -284,7 +284,13 @@ def _next_cut_action():
 
     if editorstate.timeline_visible():
         tline_frame = PLAYER().tracktor_producer.frame()
-        frame = current_sequence().find_next_cut_frame(tline_frame)
+        cut_frame = current_sequence().find_next_cut_frame(tline_frame) # returns-1 if nor found
+        mark_frame = current_sequence().find_next_mark_or_marker(tline_frame) # returns-1 if nor found
+
+        frame = cut_frame
+        if mark_frame != -1 and mark_frame < frame:
+            frame = mark_frame
+
         if frame != -1:
             PLAYER().seek_frame(frame)
             if editorpersistance.prefs.center_on_arrow_move == True:
@@ -298,7 +304,13 @@ def _prev_cut_action():
      
     if editorstate.timeline_visible():
         tline_frame = PLAYER().tracktor_producer.frame()
-        frame = current_sequence().find_prev_cut_frame(tline_frame)
+        cut_frame = current_sequence().find_prev_cut_frame(tline_frame)
+        mark_frame = current_sequence().find_prev_mark_or_marker(tline_frame) # returns-1 if nor found
+        
+        frame = cut_frame
+        if mark_frame != -1 and mark_frame > frame:
+            frame = mark_frame
+
         if frame != -1:
             PLAYER().seek_frame(frame)
             if editorpersistance.prefs.center_on_arrow_move == True:
