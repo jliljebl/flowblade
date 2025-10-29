@@ -577,16 +577,20 @@ class EditorWindow:
         # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height
         marker_surface =  guiutils.get_cairo_image("marker")
         markers_launcher =  guicomponents.PressLaunchPopover(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
-        
+        markers_launcher.widget.set_tooltip_markup(_("Timeline Markers"))
+
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
         tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
-
+        tracks_launcher.widget.set_tooltip_markup(_("Tracks"))
+        
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
-
+        levels_launcher.widget.set_tooltip_markup(_("Timeline Properties"))
+        
         sync_launcher_surface = guiutils.get_cairo_image("sync_menu_launch")
         sync_launcher = guicomponents.PressLaunchPopover(syncsplitevent.sync_menu_launch_pressed, sync_launcher_surface, 22*size_adj, 22*size_adj)
-
+        sync_launcher.widget.set_tooltip_markup(_("Syncing"))
+        
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
         tline_hbox_1.pack_start(info_h, False, False, 0)
