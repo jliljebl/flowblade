@@ -625,12 +625,29 @@ def three_point_overwrite_pressed():
     range_end_frame = out_start + out_clip.clip_out - out_clip.clip_in
     range_length = range_end_frame - range_start_frame + 1 # calculated end is incl.
 
-    over_clip = _get_new_clip_from_clip_monitor()
+    over_clip = _get_new_clip_from_clip_monitor(False)
     if over_clip == None:
         no_monitor_clip_info(gui.editor_window.window)
         return
-    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl ?????????? what if over_clip.mark_out == -1  ?????????? 
-    
+
+    if over_clip.mark_in == -1 and over_clip.mark_out == -1:
+        over_clip.mark_in = 0
+        over_clip.mark_out = over_clip.get_length() - 1 #-1 == out inclusive
+    elif over_clip.mark_out == -1:
+        if range_length > over_clip.get_length() - over_clip.mark_in:
+            monitor_clip_too_short(gui.editor_window.window)
+            return
+        else:
+            over_clip.mark_out = over_clip.mark_in + over_clip.get_length() - 1
+    elif over_clip.mark_in == -1:
+        if range_length <= over_clip.mark_out:
+            # Use mark out for monitor clip
+            over_clip.mark_in = over_clip.mark_out - range_length + 1
+        else:
+            monitor_clip_too_short(gui.editor_window.window)
+            return
+
+    over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
     if over_length < range_length:
         monitor_clip_too_short(gui.editor_window.window)
         return
