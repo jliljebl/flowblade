@@ -245,7 +245,6 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     global w
     w = window
 
-    buttons_row.pack_start(guiutils.get_pad_label(0, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(guiutils.get_pad_label(0, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
@@ -281,6 +280,51 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.pad_label(6,2), False, False, 0)
     buttons_row.pack_start(window.layout_press.widget, False, False, 0)
 
+def get_required_width():
+
+    w_tot = 0
+    wid, h = w.tool_selector.widget.get_preferred_width()
+    w_tot += int(wid)
+
+    if editorstate.screen_size_small_width() == False:
+        pad_w = 24
+    else:
+        pad_w = 5
+
+    wid, h = get_buttons_group(0).get_preferred_width()
+    w_tot += int(wid)
+    w_tot += pad_w
+
+    wid, h = get_buttons_group(1).get_preferred_width()
+    w_tot += int(wid)
+    w_tot += pad_w
+
+    wid, h = get_buttons_group(2).get_preferred_width()
+    w_tot += int(wid)
+    w_tot += pad_w
+
+    wid, h = get_buttons_group(3).get_preferred_width()
+    w_tot += int(wid)
+    w_tot += pad_w
+
+    wid, h = get_buttons_group(4).get_preferred_width()
+    w_tot += int(wid)
+    w_tot += pad_w
+
+    wid, h = get_buttons_group(5).get_preferred_width()
+    w_tot += int(wid)
+
+    wid, h = w.tools_buttons.widget.get_preferred_width()
+    w_tot += int(wid)
+    wid, h = w.fullscreen_press.widget.get_preferred_width()
+    w_tot += int(wid)
+    wid, h = w.layout_press.widget.get_preferred_width()
+    w_tot += int(wid)
+    w_tot += 24   
+    w_tot += 6
+
+    return w_tot
+    
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 

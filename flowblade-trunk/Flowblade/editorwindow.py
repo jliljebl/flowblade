@@ -1391,6 +1391,9 @@ class EditorWindow:
     def top_paned_resized(self, w, req):
         pass
 
+    def get_middlebar_required_width(self):
+        return middlebar.get_required_width()
+
 # testing
 def _apply_test_dimensions(window, test_index, scale):
     dims = [(1920, 1200), (2048, 1152), (2048, 1536), (2560, 1440), (2560, 1600), (3440, 1440), (3840, 2160)]

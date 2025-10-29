@@ -893,7 +893,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             self.pack_start(guiutils.get_pad_label(1, 10), False, False, 0)
-            
+
     def set_frame(self, frame):
         frame_str = utils.get_tc_string(frame)
         self.kf_pos_label.set_text(frame_str)

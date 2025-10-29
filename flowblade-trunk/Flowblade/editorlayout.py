@@ -647,6 +647,9 @@ def _check_dimensions():
     top_row_min_width = get_top_row_minimum_width()
     bottom_row_min_width = get_bottom_row_minimum_width()
 
+    middle_bar_required = gui.editor_window.get_middlebar_required_width()
+    middle_bar_w, h = gui.editor_window.edit_buttons_row.get_preferred_width()
+
     if top_row_min_width > editorstate.SCREEN_WIDTH or bottom_row_min_width > editorstate.SCREEN_WIDTH:
         primary_txt = _("Custom layout does not fit on screen!") 
         
