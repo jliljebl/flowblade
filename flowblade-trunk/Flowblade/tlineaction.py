@@ -68,7 +68,7 @@ COPY_PASTE_DATA_COMPOSITOR_PROPERTIES = appconsts.COPY_PASTE_DATA_COMPOSITOR_PRO
 
 
 # --------------------------- module funcs
-def _get_new_clip_from_clip_monitor():
+def _get_new_clip_from_clip_monitor(force_range=True):
     """
     Creates and returns new clip from current clip monitor clip
     with user set in and out points.
@@ -91,10 +91,11 @@ def _get_new_clip_from_clip_monitor():
     new_clip.mark_out = MONITOR_MEDIA_FILE().mark_out
     new_clip.name = MONITOR_MEDIA_FILE().name
 
-    if new_clip.mark_in == -1:
-         new_clip.mark_in = 0
-    if new_clip.mark_out == -1:
-        new_clip.mark_out = new_clip.get_length() - 1 #-1 == out inclusive
+    if force_range == True:
+        if new_clip.mark_in == -1:
+             new_clip.mark_in = 0
+        if new_clip.mark_out == -1:
+            new_clip.mark_out = new_clip.get_length() - 1 #-1 == out inclusive
 
     return new_clip
 
@@ -666,22 +667,37 @@ def range_overwrite_pressed():
         return
 
     # Get over clip and check it overwrite range area
-    over_clip = _get_new_clip_from_clip_monitor()
+    over_clip = _get_new_clip_from_clip_monitor(False)
     if over_clip == None:
         no_monitor_clip_info(gui.editor_window.window)
         return
 
-    # tractor is has mark in and mark
+    # Tractor has mark in and mark out.
     mark_in_frame = current_sequence().tractor.mark_in
     mark_out_frame = current_sequence().tractor.mark_out
-    
+
     # Case timeline marked
-    if mark_in_frame != -1 and mark_out_frame != -1:
+    if mark_in_frame != -1 and mark_out_frame != -1:    
         range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
         if over_clip.mark_in == -1:
-            # This actually should never be hit because mark in and mark out seem to first and last frame if nothing set
-            show_three_point_edit_not_defined()
-            return
+            if over_clip.mark_out == -1:
+                # not enough data
+                show_three_point_edit_not_defined()
+                return
+            else:
+                if range_length <= over_clip.mark_out:
+                    # Use mark out for monitor clip
+                    over_clip.mark_in = over_clip.mark_out - range_length + 1
+                else:
+                    monitor_clip_too_short(gui.editor_window.window)
+                    return
+        elif over_clip.mark_out == -1:
+            if range_length >= over_clip.get_length() - over_clip.mark_in:
+                monitor_clip_too_short(gui.editor_window.window)
+                return
+            else:
+                # Use mark in for monitor clip
+                over_clip.mark_out = over_clip.mark_in + range_length - 1
 
         over_length = over_clip.mark_out - over_clip.mark_in + 1 # + 1 out incl
         if over_length < range_length:
@@ -719,9 +735,8 @@ def range_overwrite_pressed():
             "clip_in":over_clip.mark_in,
             "clip_out":over_clip_out,
             "mark_in_frame":mark_in_frame,
-            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
-                                                 # confirms to user expectation of
-                                                 # of how this should work
+            "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed at end of frame end because this 
+                                                 # is how user expects this to work.
     action = edit.range_overwrite_action(data)
     action.do_edit()
 
