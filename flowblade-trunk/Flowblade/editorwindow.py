@@ -506,12 +506,14 @@ class EditorWindow:
 
         callbacks = [monitorevent.mark_in_pressed,
                      monitorevent.mark_out_pressed,
-                     monitorevent.marks_clear_pressed]
+                     monitorevent.marks_clear_pressed,
+                     monitorevent.to_mark_in_pressed,
+                     monitorevent.to_mark_out_pressed]
         markbuttons = glassbuttons.MarkButtons(callbacks)
         markbuttons.widget.set_margin_right(12)
-        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"), _("Clear Marks - Alt + K")]
+        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"),  _("To Mark In - Alt + I"),  _("To Mark Out - Alt + K"), _("Clear Marks - Alt + K")]
         tooltip_runner = glassbuttons.TooltipRunner(markbuttons, mbtooltips)
-        
+
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)

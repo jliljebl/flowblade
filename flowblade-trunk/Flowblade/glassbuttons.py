@@ -708,6 +708,8 @@ class MarkButtons(GlassButtonsGroup):
             
         self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_in_xs.png"), callbacks[0])
         self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_out_xs.png"), callbacks[1])
+        self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_in_to_xs.png"), callbacks[3])
+        self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_out_to_xs.png"), callbacks[4])
         self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_clear_xs.png"), callbacks[2])
         self.no_decorations = True 
         
