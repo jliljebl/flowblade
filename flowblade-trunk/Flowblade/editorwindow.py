@@ -127,7 +127,7 @@ class EditorWindow:
 
         # Create all panels and gui components.
         self._init_gui_components()
-        
+
         # Create timeline comnponents and panels.
         self._init_tline()
 
@@ -226,6 +226,7 @@ class EditorWindow:
 
         layout_widgets = [self.tools_buttons.widget, guiutils.pad_label(24,2), self.fullscreen_press.widget, guiutils.pad_label(6,2), self.layout_press.widget]
         layout_controls_box = guiutils.get_right_justified_box(layout_widgets)
+        layout_controls_box.set_margin_right(6)
 
         if editorstate.SCREEN_WIDTH > 1550:
             menu_vbox = Gtk.HBox(True, 0)
@@ -237,22 +238,16 @@ class EditorWindow:
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             if editorstate.screen_size_small_width() == False:
                 menu_vbox.pack_start(project_info_box, True, True, 0)
-                pass
             else:
                 menu_vbox.pack_start(guiutils.pad_label(24, 2), False, False, 0)
                 menu_vbox.pack_start(project_info_box, False, False, 0)
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(layout_controls_box, True, True, 0)
         else:
+            menu_vbox.pack_start(project_info_box, True, True, 0)
+            menu_vbox.pack_start(layout_controls_box, True, True, 0)
             tline_info_box = self._get_monitor_info_box()
-            menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
-            
-            self.top_row_window_2 = Gtk.HBox(False, 0)
-            self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
-            self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            self.top_row_window_2.pack_start(tline_info_box, False, False, 0)
-            monitor_source_box.set_margin_bottom(4)
-            tline_info_box.set_margin_bottom(9)
+            self.top_row_window_2 = tline_info_box #Gtk.HBox(False, 0)
             
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -545,14 +540,16 @@ class EditorWindow:
         dnd.connect_video_monitor(self.tline_display)
 
         # Top info row
-        monitor_info_box = self._get_monitor_info_box()
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            monitor_info_box = self._get_monitor_info_box()
         #monitor_top_info_row = Gtk.HBox(False, 0)
         #monitor_top_info_row.pack_start(Gtk.Label(), True, True, 0)
         #monitor_top_info_row.pack_start(tline_info_box, False, False, 0)
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
-        monitor_vbox.pack_start(monitor_info_box, False, True, 0)
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            monitor_vbox.pack_start(monitor_info_box, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(tc_player_row, False, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
@@ -1387,18 +1384,12 @@ class EditorWindow:
         return buttons_row
 
     def _get_monitor_info_box(self):
-        #sub_box = Gtk.HBox(False, 0)
-        #sub_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
-        #sub_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
-        
         tline_info_box = Gtk.HBox(False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
-        #tline_info_box.pack_start(sub_box, False, False, 0)
         tline_info_box.pack_start(Gtk.Label(), True, True, 0)
-        #tline_info_box.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        guiutils.set_margins(tline_info_box, 0, 0, 0, 2)
+        guiutils.set_margins(tline_info_box, 0, 0, 4, 2)
     
         return tline_info_box
         

@@ -577,7 +577,6 @@ def create_gui():
     gui.editor_window.window.connect("key-press-event", keyevents.key_down)
     if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
         gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
-        #gui.global_key_controller_2 = gtkevents.KeyPressEventAdapter(gui.editor_window.window2, keyevents.key_down, user_data=None, capture=True)
     
     # Give undo a reference to uimanager for menuitem state changes.
     undo.set_menu_items(gui.editor_window.uimanager)
