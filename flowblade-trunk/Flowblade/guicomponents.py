@@ -2092,8 +2092,8 @@ class MonitorMarksTCInfo:
 
         self.marks_tc_display = MonitorInfoDisplay()
 
-        self.widget = Gtk.HBox()
-        self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
+        self.widget = self.marks_tc_display.widget # Gtk.HBox()
+        #self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
 
     def set_source_name(self, source_name):
         self.monitor_source.set_text(source_name)

@@ -224,14 +224,8 @@ class EditorWindow:
         project_info_box.pack_start(monitor_desc_panel, False, False, 0)
         project_info_box.pack_start(Gtk.Label(), True, True, 0)
 
-        layout_widgets = [self.fullscreen_press.widget, guiutils.pad_label(6,2), self.layout_press.widget]
+        layout_widgets = [self.tools_buttons.widget, guiutils.pad_label(24,2), self.fullscreen_press.widget, guiutils.pad_label(6,2), self.layout_press.widget]
         layout_controls_box = guiutils.get_right_justified_box(layout_widgets)
-
-        #buttons_row.pack_start(guiutils.pad_label(24,2), False, False, 0)
-        #buttons_row.pack_start(window.fullscreen_press.widget, False, False, 0)
-        #buttons_row.pack_start(guiutils.pad_label(6,2), False, False, 0)
-        #buttons_row.pack_start(window.layout_press.widget, False, False, 0)
-
 
         if editorstate.SCREEN_WIDTH > 1550:
             menu_vbox = Gtk.HBox(True, 0)
@@ -551,14 +545,14 @@ class EditorWindow:
         dnd.connect_video_monitor(self.tline_display)
 
         # Top info row
-        tline_info_box = self._get_monitor_info_box()
-        monitor_top_info_row = Gtk.HBox(False, 0)
-        monitor_top_info_row.pack_start(Gtk.Label(), True, True, 0)
-        monitor_top_info_row.pack_start(tline_info_box, False, False, 0)
+        monitor_info_box = self._get_monitor_info_box()
+        #monitor_top_info_row = Gtk.HBox(False, 0)
+        #monitor_top_info_row.pack_start(Gtk.Label(), True, True, 0)
+        #monitor_top_info_row.pack_start(tline_info_box, False, False, 0)
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
-        monitor_vbox.pack_start(monitor_top_info_row, False, False, 0)
+        monitor_vbox.pack_start(monitor_info_box, False, True, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(tc_player_row, False, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
@@ -1393,11 +1387,16 @@ class EditorWindow:
         return buttons_row
 
     def _get_monitor_info_box(self):
+        #sub_box = Gtk.HBox(False, 0)
+        #sub_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
+        #sub_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        
         tline_info_box = Gtk.HBox(False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        #tline_info_box.pack_start(sub_box, False, False, 0)
         tline_info_box.pack_start(Gtk.Label(), True, True, 0)
-        tline_info_box.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        #tline_info_box.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         guiutils.set_margins(tline_info_box, 0, 0, 0, 2)
     
