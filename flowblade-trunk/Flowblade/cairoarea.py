@@ -132,9 +132,14 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.enter_notify_func(gdk_event)
         
     def _leave_notify_event(self, event):
-        gdk_event = gtkevents.SimpleStateEvent()
-        self.leave_notify_func(gdk_event)
-        
+        try:
+            gdk_event = gtkevents.SimpleStateEvent()
+            self.leave_notify_func(gdk_event)
+        except:
+            # On start-up this one some times fails once for un-known reason.
+            # We keep printing info on it but won't attemp any fixes for now. 
+            print("Failed to create gtkevents.SimpleStateEvent for a leave notify event.")
+
     def _mouse_scroll_event(self, scroll_event, dx, dy):
         if self.mouse_scroll_func == None:
             return
