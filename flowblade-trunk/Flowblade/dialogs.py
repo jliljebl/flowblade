@@ -1808,7 +1808,7 @@ def confirm_compositing_mode_change(callback, new_compositing_mode):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Change Compositing Mode"), Gtk.ResponseType.ACCEPT))
     
-    primary_txt = _("Changing Compositing Mode destroys current Compositors and undo stack")
+    primary_txt = _("Changing Compositing Mode destroys current Compositors and undo stack!")
     secondary_txt = _("This operation cannot be undone. Are you sure you wish to proceed?")
     warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None)
 
