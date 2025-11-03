@@ -1902,8 +1902,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         action_section = Gio.Menu.new()
         guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkftwo", "hcenter", self._menu_item_activated)
         guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkftwo", "vcenter", self._menu_item_activated)
-        guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkftwo", "reset", self._menu_item_activated)
-        guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokftwo", "ratio", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.resetkftwo", "reset", self._menu_item_activated)
+        guipopover.add_menu_action(action_section, _("Reset Aspect Ratio"), "keyframes.ratiokftwo", "ratio", self._menu_item_activated)
         _kf_menu.append_section(None, action_section)
         
         _kf_popover = guipopover.new_popover(widget, _kf_menu, launcher)
@@ -2476,8 +2476,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             action_section = Gio.Menu.new()
             guipopover.add_menu_action(action_section, _("Center Horizontal"), "keyframes.hcenterkffive", "hcenter", self._menu_item_activated)
             guipopover.add_menu_action(action_section, _("Center Vertical"), "keyframes.vcenterkffive", "vcenter", self._menu_item_activated)
-            guipopover.add_menu_action(action_section, _("Reset"), "keyframes.resetkffive", "reset", self._menu_item_activated)
-            guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
+            guipopover.add_menu_action(action_section, _("Reset Geometry"), "keyframes.resetkffive", "reset", self._menu_item_activated)
+            guipopover.add_menu_action(action_section, _("Reset Aspect Ratio"), "keyframes.ratiokffive", "ratio", self._menu_item_activated)
             _kf_menu.append_section(None, action_section)
             
             motion_section = Gio.Menu.new()
