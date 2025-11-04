@@ -33,7 +33,7 @@ from gi.repository import Pango
 from gi.repository import PangoCairo
 
 import atomicfile
-import toolsdialogs
+import editorpersistance
 from editorstate import PLAYER
 import editorstate
 import gui
@@ -42,13 +42,14 @@ import guiutils
 import gtkbuilder
 import gtkevents
 import dialogutils
+import positionbar
 import projectaction
 import respaths
-import positionbar
-import utils
+import toolsdialogs
 import vieweditor
 import vieweditorlayer
 import userfolders
+import utils
 
 _titler = None
 _titler_data = None
@@ -662,6 +663,17 @@ class Titler(Gtk.Window):
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         editor_buttons_row.pack_start(self.info_text, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
+        if _clip_data == None:
+            close_on_save_checkbox = Gtk.CheckButton()
+            close_on_save_checkbox.set_active(editorpersistance.prefs.close_titler_on_save)
+            close_on_save_checkbox.connect("toggled", self._close_on_save_toggled)
+            close_save_label = Gtk.Label(label=_("Close on Save"))
+            close_save_label.set_margin_right(12)
+            close_save_label.set_margin_left(4)
+            editor_buttons_row.pack_start(close_on_save_checkbox, False, False, 0)
+            editor_buttons_row.pack_start(close_save_label, False, False, 0)
+
+        editor_buttons_row.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
@@ -753,6 +765,10 @@ class Titler(Gtk.Window):
         PLAYER().seek_frame(frame)
         self.show_current_frame()
 
+    def _close_on_save_toggled(self, w):
+        editorpersistance.prefs.close_titler_on_save = w.get_active()
+        editorpersistance.save()
+
     def _save_title_pressed(self):
         global _titler_data, _clip_data
 
@@ -795,7 +811,7 @@ class Titler(Gtk.Window):
 
         open_title_item_thread = OpenTitlerItemThread(name, save_path, title_data, self.view_editor)
         open_title_item_thread.start()
-
+        
     def _save_title_dialog_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             try:
@@ -1478,7 +1494,9 @@ class OpenFileThread(threading.Thread):
         open_in_bin_thread = projectaction.AddMediaFilesThread([self.filename])
         open_in_bin_thread.start()
 
-
+        if editorpersistance.prefs.close_titler_on_save == True:
+            close_titler()
+            
 
 class OpenTitlerItemThread(threading.Thread):
     
@@ -1498,9 +1516,12 @@ class OpenTitlerItemThread(threading.Thread):
         open_in_bin_thread.start()
 
     def _completed_callback(self):
-        _titler.show_info(_("Saved Title Media Item."))
-        GLib.idle_add(self._recreate_pango_layers)
-    
+        if editorpersistance.prefs.close_titler_on_save == False:
+            _titler.show_info(_("Saved Title Media Item."))
+            GLib.idle_add(self._recreate_pango_layers)
+        else:
+            close_titler()
+        
     def _recreate_pango_layers(self):
         global _titler, _titler_data
         _titler_data.create_pango_layouts()
