@@ -2352,52 +2352,83 @@ def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_s
         _insert_sequence(seq)
 
 def duplicate_sequence():
-    # Get dialog data 
-    name = current_sequence().name + _("_duplicate_") + str(PROJECT().next_seq_number)
+    dialog = dialogs.get_duplicate_sequence_dialog()
+    duplicate_thread = DuplicateThread(dialog)
+    duplicate_thread.start()
 
-    v_tracks, a_tracks = current_sequence().get_track_counts()
 
-    # Get index for selected sequence
-    selection = gui.sequence_list_view.treeview.get_selection()
-    (model, rows) = selection.get_selected_rows()
-    row = max(rows[0])
+class DuplicateThread(threading.Thread):
     
-    # Set default track counts as module global values, this is not a good design.
-    sequence.AUDIO_TRACKS_COUNT = a_tracks
-    sequence.VIDEO_TRACKS_COUNT = v_tracks
+    def __init__(self, dialog):
+        self.dialog = dialog
+        threading.Thread.__init__(self)
 
-    # Current sequence will be appended on newly created empty sequence to create a
-    # duplicate sequence.
-    import_seq = current_sequence()
+    def run(self):
+        ticker = utils.Ticker(self._pulse_bar, 0.15)
+        ticker.start_ticker()
 
-    # Add new sequence.
-    PROJECT().add_named_sequence(name)
-    gui.sequence_list_view.fill_data_model()
+        time.sleep(1.0)
 
-    # Change to new sequence
-    callbackbridge.app_change_current_sequence(len(PROJECT().sequences) - 1)
-    gui.editor_window.init_compositing_mode_menu()
-    
-    # Add duplicated sequence content.
-    _append_sequence(import_seq)
+        name = current_sequence().name + _("_duplicate_") + str(PROJECT().next_seq_number)
 
-    # We get single empty frame in beginning from using _append_sequence method originally
-    # created for different usage, delete it.
-    data = {
-        "tracks":current_sequence().tracks,
-        "mark_in_frame":0,
-        "mark_out_frame":1
-    }
-    action = edit.range_delete_action(data)
-    action.do_edit()
+        v_tracks, a_tracks = current_sequence().get_track_counts()
 
-    undo.clear_undos()
+        # Get index for selected sequence
+        selection = gui.sequence_list_view.treeview.get_selection()
+        (model, rows) = selection.get_selected_rows()
+        row = max(rows[0])
+        
+        # Set default track counts as module global values, this is not a good design.
+        sequence.AUDIO_TRACKS_COUNT = a_tracks
+        sequence.VIDEO_TRACKS_COUNT = v_tracks
 
-    primary_txt = _("Duplicate Sequence created")
-    secondary_txt = _("Duplicate sequence <b>") + name + _("</b> was created\nfrom sequence <b>") + import_seq.name + ("</b>.") #%(name,import_seq.name)
+        # Current sequence will be appended on newly created empty sequence to create a
+        # duplicate sequence.
+        import_seq = current_sequence()
 
-    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-    
+        # Open project
+        self.seq_build_done = False
+        GLib.idle_add(self._do_seq_build, name, import_seq)
+
+        while self.seq_build_done == False:
+            time.sleep(0.1)
+            
+
+    def _do_seq_build(self, name, import_seq):
+        # Add new sequence.
+        PROJECT().add_named_sequence(name)
+        gui.sequence_list_view.fill_data_model()
+
+        # Change to new sequence
+        callbackbridge.app_change_current_sequence(len(PROJECT().sequences) - 1)
+        gui.editor_window.init_compositing_mode_menu()
+        
+        # Add duplicated sequence content.
+        _append_sequence(import_seq)
+
+        # We get single empty frame in beginning from using _append_sequence method originally
+        # created for different usage, delete it.
+        data = {
+            "tracks":current_sequence().tracks,
+            "mark_in_frame":0,
+            "mark_out_frame":1
+        }
+        action = edit.range_delete_action(data)
+        action.do_edit()
+
+        undo.clear_undos()
+
+        primary_txt = _("Duplicate Sequence created")
+        secondary_txt = _("Duplicate sequence <b>") + name + _("</b> was created\nfrom sequence <b>") + import_seq.name + ("</b>.") #%(name,import_seq.name)
+
+        self.dialog.destroy()
+        self.seq_build_done = True
+
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+    def _pulse_bar(self):
+        GLib.idle_add(persistance.load_dialog.progress_bar.pulse)
+
 
 def _append_sequence(import_seq):
     start_track_range, end_track_range = _get_sequence_import_range(import_seq)

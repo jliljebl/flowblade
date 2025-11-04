@@ -1971,8 +1971,32 @@ def select_link_sequence_for_container(callback):
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (sequences_combo, selection_data))
     
-
 def show_cyclic_error():
     primary_txt = _("Cyclic relation detected!")
     secondary_txt = _("Edit would create a cyclink linked sequence relation and was cancelled!")
     dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def get_duplicate_sequence_dialog():
+    dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+    dialog.set_title(_("Duplicating Sequence"))
+
+    progress_bar = Gtk.ProgressBar()
+    progress_bar.set_fraction(0.2)
+    progress_bar.set_pulse_step(0.1)
+    progress_bar.set_margin_bottom(24)
+    progress_bar.set_margin_top(24)
+    
+    progress_vbox = Gtk.VBox(False, 2)
+    progress_vbox.pack_start(progress_bar, False, False, 0)
+
+    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
+
+    dialog.add(alignment)
+    dialog.set_default_size(500, 70)
+    dialog.set_position(Gtk.WindowPosition.CENTER)
+    dialog.show_all()
+
+    pulse_runner = guiutils.PulseEvent(progress_bar)
+    dialog.pulse_runner = pulse_runner
+        
+    return dialog
