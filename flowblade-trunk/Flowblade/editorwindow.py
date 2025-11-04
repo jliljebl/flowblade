@@ -264,7 +264,8 @@ class EditorWindow:
         self.bin_list_view = guicomponents.BinTreeView(
                                         projectaction.bin_selection_changed,
                                         projectaction.bin_name_edited,
-                                        projectaction.bins_panel_popup_requested)
+                                        projectaction.bins_panel_popup_requested,
+                                        projectaction.media_panel_to_front)
         dnd.connect_bin_tree_view(self.bin_list_view.treeview, projectaction.move_files_to_bin)
         self.bin_list_view.set_property("can-focus",  True)
 
@@ -542,9 +543,6 @@ class EditorWindow:
         # Top info row
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             monitor_info_box = self._get_monitor_info_box()
-        #monitor_top_info_row = Gtk.HBox(False, 0)
-        #monitor_top_info_row.pack_start(Gtk.Label(), True, True, 0)
-        #monitor_top_info_row.pack_start(tline_info_box, False, False, 0)
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
@@ -570,28 +568,26 @@ class EditorWindow:
         info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(Gtk.Label(), True, True, 0)
-        # Aug-2019 - SvdB - BB - Height doesn't need to be doubled. 1.4x is nicer
-        size_adj = 1
+
         size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22 - 22
         size_y = tlinewidgets.SCALE_HEIGHT
 
         info_h.set_size_request(size_x, size_y)
 
-        # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height
         marker_surface =  guiutils.get_cairo_image("marker")
-        markers_launcher =  guicomponents.PressLaunchPopover(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
+        markers_launcher =  guicomponents.PressLaunchPopover(tlineaction.marker_menu_lauch_pressed, marker_surface, 22, 22)
         markers_launcher.widget.set_tooltip_markup(_("Timeline Markers"))
 
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
-        tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
+        tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22, 22)
         tracks_launcher.widget.set_tooltip_markup(_("Tracks"))
         
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
-        levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
+        levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22, 22)
         levels_launcher.widget.set_tooltip_markup(_("Timeline Properties"))
         
         sync_launcher_surface = guiutils.get_cairo_image("sync_menu_launch")
-        sync_launcher = guicomponents.PressLaunchPopover(syncsplitevent.sync_menu_launch_pressed, sync_launcher_surface, 22*size_adj, 22*size_adj)
+        sync_launcher = guicomponents.PressLaunchPopover(syncsplitevent.sync_menu_launch_pressed, sync_launcher_surface, 22, 22)
         sync_launcher.widget.set_tooltip_markup(_("Syncing"))
         
         # Timeline top row
@@ -642,13 +638,13 @@ class EditorWindow:
         self.tline_hbox_2 = tline_hbox_2
 
         # Comp mode selector
-        size_adj = 1
+
         tds = guiutils.get_cairo_image("top_down")
         tdds = guiutils.get_cairo_image("top_down_auto")
         sas = guiutils.get_cairo_image("standard_auto")
         fta = guiutils.get_cairo_image("full_track_auto")
         surfaces = [tds, tdds, sas, fta]
-        comp_mode_launcher = guicomponents.ImageMenuLaunchPopover(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
+        comp_mode_launcher = guicomponents.ImageMenuLaunchPopover(projectaction.compositing_mode_menu_launched, surfaces, 22, 20)
         comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
         comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))
@@ -717,7 +713,6 @@ class EditorWindow:
         else:
             # Position is empty.
             self.top_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position 
-
 
         # ---------------------------------------------------------------- BOTTOM ROW
         # Horizon box for bottom row GUI elements

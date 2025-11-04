@@ -2054,7 +2054,10 @@ def bin_selection_changed(selection):
     gui.media_list_view.fill_data_model()
     gui.editor_window.bin_info.display_bin_info()
     editorlayout.show_panel(appconsts.PANEL_MEDIA)
-    
+
+def media_panel_to_front():
+    editorlayout.show_panel(appconsts.PANEL_MEDIA)
+
 def move_files_to_bin(new_bin, moved_files):
     # If we're moving clips to bin that they're already in, do nothing.
     if PROJECT().bins[new_bin] == current_bin():

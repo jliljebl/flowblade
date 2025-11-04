@@ -327,10 +327,11 @@ class BinTreeView(Gtk.VBox):
     Middle column expands.
     """
 
-    def __init__(self, bin_selection_cb, bin_name_edit_cb, bins_popup_cb):
+    def __init__(self, bin_selection_cb, bin_name_edit_cb, bins_popup_cb, button_press_cb):
         GObject.GObject.__init__(self)
 
         self.bins_popup_cb = bins_popup_cb
+        self.button_press_cb = button_press_cb
 
        # Datamodel: icon, text, text (folder, name, item count)
         self.storemodel = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
@@ -403,8 +404,8 @@ class BinTreeView(Gtk.VBox):
     def _button_press_event(self, widget, event):
         if event.button == 3:
             self.bins_popup_cb(widget, event)
-
-
+        elif event.button == 1:
+            self.button_press_cb()
 
 # ------------------------------------------------- item lists
 class ImageTextImageListView(Gtk.VBox):
