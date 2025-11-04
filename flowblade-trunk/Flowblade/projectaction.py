@@ -2392,7 +2392,6 @@ class DuplicateThread(threading.Thread):
 
         while self.seq_build_done == False:
             time.sleep(0.1)
-            
 
     def _do_seq_build(self, name, import_seq):
         # Add new sequence.
