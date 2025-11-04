@@ -136,6 +136,8 @@ def _general_options_panel():
     disk_cache_warning_combo.append_text(_("500 MB"))
     disk_cache_warning_combo.append_text(_("1 GB"))
     disk_cache_warning_combo.append_text(_("2 GB"))
+    disk_cache_warning_combo.append_text(_("4 GB"))
+    disk_cache_warning_combo.append_text(_("8 GB"))
     disk_cache_warning_combo.set_active(prefs.disk_space_warning)
     
     # Layout

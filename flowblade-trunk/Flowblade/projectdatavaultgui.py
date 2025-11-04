@@ -1008,7 +1008,11 @@ def _check_all_vaults_sizes():
                 warnings_str += _get_warning_str(name, size_str)
             elif check_level == 3 and size > 1000000 * 2000:
                 warnings_str += _get_warning_str(name, size_str)
-        
+            elif check_level == 4 and size > 1000000 * 4000:
+                warnings_str += _get_warning_str(name, size_str)
+            elif check_level == 5 and size > 1000000 * 8000:
+                warnings_str += _get_warning_str(name, size_str)
+                
         if len(warnings_str) > 0:
             primary_txt = _("Data Store Size Exceeds Current Warning Level!")
             warnings_str += _("\nYou can either delete data in Disk Store or change warning level in") + "\n" + \
