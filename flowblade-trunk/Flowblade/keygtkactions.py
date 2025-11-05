@@ -38,6 +38,7 @@ import projectaction
 import shortcuts
 import syncsplitevent
 import tlineaction
+import tlinewidgets
 import trackaction
 import trimmodes
 import updater
@@ -349,9 +350,10 @@ def _to_start_action():
     gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     PLAYER().seek_frame(0)
 
-    #tlinewidgets.pos = 0
-    updater.repaint_tline()
-    updater.update_tline_scrollbar()
+    if editorstate.timeline_visible():
+        tlinewidgets.pos = 0
+        updater.repaint_tline()
+        updater.update_tline_scrollbar()
 
 def _to_end_action():
     if PLAYER().is_playing():
@@ -359,8 +361,13 @@ def _to_end_action():
     gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     PLAYER().seek_end()
 
-    updater.repaint_tline()
-    updater.update_tline_scrollbar()
+    if editorstate.timeline_visible():
+        pos = current_sequence().get_length() - 1 - int(float(gui.tline_canvas.widget.get_allocation().width) / float(tlinewidgets.pix_per_frame) * 0.75)
+        if pos < 0:
+            pos = 0
+        tlinewidgets.pos = pos
+        updater.repaint_tline()
+        updater.update_tline_scrollbar()
 
 def _delete_sequence_action():
     if gui.sequence_list_view.text_rend_1.get_property("editing") == True:
