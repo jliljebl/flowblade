@@ -399,7 +399,7 @@ class ClipFilterStack:
         for i in range(0, len(self.filter_stack)):
             stack_item = self.filter_stack[i]
             stack_item.expander.set_expanded(expanded)
-            
+
     def get_expanded(self):
         state_list = []
         for stack_item in self.filter_stack:
@@ -518,6 +518,9 @@ def _create_widgets():
     guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
     
 # ------------------------------------------------------------------- interface
+def get_stack():
+    return _filter_stack
+    
 def set_clip(clip, track, clip_index, show_tab=True):
     """
     Sets clip being edited and inits gui.
@@ -601,6 +604,7 @@ def effect_select_row_double_clicked(treeview, tree_path, col, effect_select_com
 
     _add_filter_from_effect_select_panel(row_index, group_index)
 
+"""
 def add_currently_selected_effect():
     # Currently selected in effect select panel, not here.
     treeselection = gui.effect_select_list_view.treeview.get_selection()
@@ -610,6 +614,7 @@ def add_currently_selected_effect():
     group_index = gui.effect_select_combo_box.get_active()
 
     _add_filter_from_effect_select_panel(row_index, group_index)
+"""
 
 def get_currently_selected_filter_info():
     # Currently selected in effect select panel, not here.
@@ -627,6 +632,8 @@ def _add_filter_from_effect_select_panel(row_index, group_index):
     group_name, filters_array = mltfilters.groups[group_index]
     filter_info = filters_array[row_index]
 
+    expanded_panels = _filter_stack.get_expanded()
+
     data = {"clip":_filter_stack.clip, 
             "filter_info":filter_info,
             "filter_edit_done_func":filter_edit_done_stack_update}
@@ -638,6 +645,9 @@ def _add_filter_from_effect_select_panel(row_index, group_index):
 
     clip, track, clip_index = _filter_stack.get_clip_data()
     set_clip(clip, track, clip_index)
+
+    expanded_panels.append(True)
+    _filter_stack.set_expanded(expanded_panels)
 
     updater.repaint_tline()
 
@@ -1043,6 +1053,8 @@ def _filter_menu_callback(w, data):
     clip, track, item_id, item_data = data
     x, filter_info = item_data
 
+    expanded_panels = _filter_stack.get_expanded()
+
     action = get_filter_add_action(filter_info, clip)
     set_stack_update_blocked() # We update stack on set_clip below
     action.do_edit()
@@ -1051,7 +1063,8 @@ def _filter_menu_callback(w, data):
     # (re)open clip in editor.
     index = track.clips.index(clip)
     set_clip(clip, track, index)
-    set_filter_item_expanded(len(clip.filters) - 1)
+    expanded_panels.append(True)
+    _filter_stack.set_expanded(expanded_panels)
     
 def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:

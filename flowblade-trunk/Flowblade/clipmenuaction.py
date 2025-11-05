@@ -262,6 +262,11 @@ def _add_filter(data):
     clip, track, item_id, filter_info = data
     clip, track, x = _popover_clip_data 
 
+    if clipeffectseditor.get_stack() != None and clip == clipeffectseditor.get_stack().clip:
+        expanded_panels = clipeffectseditor.get_stack().get_expanded()
+    else:
+        expanded_panels = None
+
     action = clipeffectseditor.get_filter_add_action(filter_info, clip)
     clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
     action.do_edit()
@@ -271,7 +276,12 @@ def _add_filter(data):
     frame = tlinewidgets.get_frame(x)
     index = track.get_clip_index_at(frame)
     clipeffectseditor.set_clip(clip, track, index)
-    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+
+    if expanded_panels != None:
+        expanded_panels.append(True)
+        clipeffectseditor.get_stack().set_expanded(expanded_panels)
+    else:
+        clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
 def _add_filter_multi(data):
     clip, track, item_id, item_data = data

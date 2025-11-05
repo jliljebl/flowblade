@@ -481,7 +481,12 @@ def tline_effect_drop(x, y):
     selected_track_before = movemodes.selected_track
     selected_in_before = movemodes.selected_range_in
     selected_out_before = movemodes.selected_range_out
-    
+
+    if clipeffectseditor.get_stack() != None and clip == clipeffectseditor.get_stack().clip:
+        expanded_panels = clipeffectseditor.get_stack().get_expanded()
+    else:
+        expanded_panels = None
+        
     # Effect dropped on selected range, add to all in range.
     if selected_in_before != -1 and selected_track_before == track.id and ((selected_in_before <= index) and (selected_out_before >= index)):
         actions = []
@@ -508,7 +513,12 @@ def tline_effect_drop(x, y):
         action.do_edit()
 
     clipeffectseditor.set_clip(clip, track, index)
-    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+
+    if expanded_panels != None:
+        expanded_panels.append(True)
+        clipeffectseditor.get_stack().set_expanded(expanded_panels)
+    else:
+        clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
     
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we which later to enable dropping multiple media items.
