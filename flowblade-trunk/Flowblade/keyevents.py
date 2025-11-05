@@ -240,15 +240,5 @@ def _handle_delete():
     if gui.media_list_view.widget.get_focus_child() != None:
         projectaction.delete_media_files()
         return True
-    
-    focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
-    if focus_editor != None:
-        focus_editor.delete_pressed()
-        return True
-
-    focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
-    if focus_editor != None:
-        focus_editor.delete_pressed()
-        return True
 
     return False

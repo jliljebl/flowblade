@@ -207,7 +207,10 @@ def _filter_widget_keypress_handler(widget, event):
             else:
                 _next_frame_action(event)
             return True
-        
+        if action == "delete":
+            focus_editor.delete_pressed()
+            return True
+    
     return False
 
 
@@ -244,6 +247,15 @@ def _compositor_widget_keypress_handler(widget, event):
                         return True
                     if action == 'play_pause_loop_marks':
                         _play_pause_loop_marks_action()
+                        return True
+                    if action == 'prev_frame' or action == 'next_frame':
+                        if action == 'prev_frame':
+                            _prev_frame_action(event)
+                        else:
+                            _next_frame_action(event)
+                        return True
+                    if action == "delete":
+                        kfeditor.delete_pressed()
                         return True
     return False
 
