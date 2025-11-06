@@ -859,7 +859,7 @@ def _three_over_redo(self):
     # Remove and replace
     self.clips = []
     for i in range(self.in_index, self.out_index + 1): # + 1 == out_index inclusive
-        removed_clip = _remove_clip(self.track, i)
+        removed_clip = _remove_clip(self.track, self.in_index)
         self.clips.append(removed_clip)
 
     _insert_clip(self.track, self.clip, self.in_index, self.clip_in, self.clip_out)
