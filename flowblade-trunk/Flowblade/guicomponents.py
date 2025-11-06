@@ -1335,13 +1335,11 @@ class MediaPanel():
             self.widget.pack_start(filler, False, False, 0)
             self.row_widgets.append(filler)
             
-            info = Gtk.Label(label=_("Right Click to Add Media."))
-            info.set_sensitive(False)
-            dnd.connect_media_drop_widget(info)
-            filler = self._get_empty_filler(info)
-            self.widget.pack_start(filler, False, False, 0)
-            self.row_widgets.append(filler)
-            
+            self.add_info_text_row(_("Right Click to Add Media."))
+            self.add_info_text_row(_("\nRight Click on Timeline Clips, Tracks Column, "))
+            self.add_info_text_row(_("Bins Area and Sequences Area to"))
+            self.add_info_text_row(_("access related features."))
+
             filler = self._get_empty_filler()
             dnd.connect_media_drop_widget(filler)
             self.row_widgets.append(filler)
@@ -1427,7 +1425,14 @@ class MediaPanel():
             filler = gtkbuilder.EventBox(widget, "button-press-event", self.empty_pressed)
         return filler
 
-
+    def add_info_text_row(self, txt):
+        info = Gtk.Label(label=txt)
+        info.set_sensitive(False)
+        dnd.connect_media_drop_widget(info)
+        filler = self._get_empty_filler(info)
+        self.widget.pack_start(filler, False, False, 0)
+        self.row_widgets.append(filler)
+            
 class MediaObjectWidget:
 
     def __init__(self, media_file, panel, selected_callback, release_callback, indicator_icon, is_selected_test):
