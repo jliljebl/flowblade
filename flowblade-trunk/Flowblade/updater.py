@@ -468,6 +468,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.apply_widget_css_class_style_from_string(gui.editor_window.player_buttons_row, css_str)
 
     gui.pos_bar.widget.grab_focus()
+    gui.pos_bar.set_clip_bg(True)
     gui.media_list_view.widget.queue_draw()    
     gui.monitor_switch.widget.queue_draw()
     gui.monitor_waveform_display.update_visibility()
@@ -525,7 +526,8 @@ def display_sequence_in_monitor():
 
     css_str = "#player-bar { background-color: #333333; border-radius: 10px;}"
     gui.apply_widget_css_class_style_from_string(gui.editor_window.player_buttons_row, css_str)
-
+    gui.pos_bar.set_clip_bg(False)
+    
     gui.monitor_waveform_display.widget.hide()
     gui.monitor_switch.widget.queue_draw()
     repaint_tline()

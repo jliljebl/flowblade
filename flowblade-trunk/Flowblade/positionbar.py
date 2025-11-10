@@ -51,6 +51,7 @@ DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.5, 0.5, 0.5)
 DARK_BG_COLOR = (0.195, 0.195, 0.195)
+CLIP_BG_COLOR = (0.25, 0.25, 0.25)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
@@ -94,6 +95,8 @@ class PositionBar:
 
         self.handle_trimmodes = handle_trimmodes
 
+        self.clip_bg = False
+
         self.preview_frame = -1
         self.preview_range = None
 
@@ -116,6 +119,9 @@ class PositionBar:
         """
         self._pos = self._get_panel_pos(norm_pos)
         self.widget.queue_draw()
+
+    def set_clip_bg(self, clip_bg):
+        self.clip_bg = clip_bg
 
     def update_display_from_producer(self, producer):
         self.producer = producer
@@ -191,6 +197,8 @@ class PositionBar:
         
         # Draw bb
         draw_color = BG_COLOR
+        if self.clip_bg:
+            draw_color = CLIP_BG_COLOR
         if self.disabled:
             draw_color = DISABLED_BG_COLOR
         cr.set_source_rgb(*draw_color)
