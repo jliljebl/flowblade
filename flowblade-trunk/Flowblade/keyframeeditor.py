@@ -1847,8 +1847,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def mouse_scroll_down(self):
         view_size_index = self.geom_buttons_row.size_select.get_active()
         view_size_index = view_size_index + 1
-        if view_size_index > 2:
-            view_size_index = 2
+        if view_size_index > 3:
+            view_size_index = 3
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
     def _hamburger_pressed(self, launcher, widget, event, data):
@@ -2448,8 +2448,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def mouse_scroll_down(self):
         view_size_index = self.geom_buttons_row.size_select.get_active()
         view_size_index = view_size_index + 1
-        if view_size_index > 2:
-            view_size_index = 2
+        if view_size_index > 3:
+            view_size_index = 3
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
     def _hamburger_pressed(self, launcher, widget, event, data):
@@ -2707,8 +2707,8 @@ class GeometryNoKeyframes(Gtk.VBox):
     def mouse_scroll_down(self):
         view_size_index = self.geom_buttons_row.size_select.get_active()
         view_size_index = view_size_index + 1
-        if view_size_index > 2:
-            view_size_index = 2
+        if view_size_index > 3:
+            view_size_index = 3
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
 
