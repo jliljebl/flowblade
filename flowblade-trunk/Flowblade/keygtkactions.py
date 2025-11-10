@@ -58,7 +58,14 @@ TLINE_ALL = [TLINE_CANVAS, TLINE_TRACK_COLUMN, TLINE_SCALE, TLINE_LEFT_CORNER, T
 MONITOR_SWITCH = "monitorswitch"
 MONITOR_WAVEFORM_DISPLAY = "monitorwaveformdisplay"
 MONITOR_ALL = [MONITOR_SWITCH, MONITOR_WAVEFORM_DISPLAY, POS_BAR]
-TLINE_MONITOR_ALL = TLINE_ALL +  MONITOR_ALL
+MIDDLE_BUTTONS_1 = "midbar_b_1"
+MIDDLE_BUTTONS_2 = "midbar_b_2"
+MIDDLE_BUTTONS_3 = "midbar_b_3"
+MIDDLE_BUTTONS_4 = "midbar_b_4"
+MIDDLE_BUTTONS_5 = "midbar_b_5"
+MIDDLE_BUTTONS_6 = "midbar_b_6"
+MIDDLEBAR_BUTTONS = [MIDDLE_BUTTONS_1, MIDDLE_BUTTONS_2, MIDDLE_BUTTONS_3, MIDDLE_BUTTONS_4, MIDDLE_BUTTONS_5, MIDDLE_BUTTONS_6]
+TLINE_MONITOR_ALL = TLINE_ALL + MONITOR_ALL + MIDDLEBAR_BUTTONS
 
 # widget name -> widget object
 _widgets = {}
@@ -80,8 +87,13 @@ def init():
                 MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget,
                 SEQUENCE_LIST_VIEW: gui.sequence_list_view,
                 BIN_LIST_VIEW: gui.bin_list_view, 
-                LOG_LIST_VIEW: gui.editor_window.media_log_events_list_view
-                }
+                LOG_LIST_VIEW: gui.editor_window.media_log_events_list_view,
+                MIDDLE_BUTTONS_1: gui.editor_window.zoom_buttons.widget,
+                MIDDLE_BUTTONS_2: gui.editor_window.edit_buttons.widget,
+                MIDDLE_BUTTONS_3: gui.editor_window.edit_buttons_3.widget, 
+                MIDDLE_BUTTONS_4: gui.editor_window.edit_buttons_2.widget, 
+                MIDDLE_BUTTONS_5: gui.editor_window.monitor_insert_buttons.widget, 
+                MIDDLE_BUTTONS_6: gui.editor_window.undo_redo.widget}
 
     # TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
 
@@ -143,9 +155,11 @@ def init():
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
+        #print(widget_id)
         if widget in _controllers:
             _controllers[widget].add_shortcut(action, press_func, pass_event)
         else:
+            #print("ShortCutController")
             _controllers[widget] = ShortCutController(widget)
             _controllers[widget].add_shortcut(action, press_func, pass_event)
 
