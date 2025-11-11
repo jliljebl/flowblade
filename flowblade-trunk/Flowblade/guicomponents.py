@@ -495,6 +495,7 @@ class SequenceListView(ImageTextImageListView):
         self.arrow_path = respaths.IMAGE_PATH + "filter_save.png"
         
         # Set sequence name editable and connect 'edited' signal
+        self.icon_rend_1.props.xpad = 3
         self.text_rend_1.set_property("editable", True)
         self.text_rend_1.connect("edited",
                                  seq_name_edited_cb,
