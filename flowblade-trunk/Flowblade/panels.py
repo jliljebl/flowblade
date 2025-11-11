@@ -97,20 +97,23 @@ def get_bins_tree_panel(bin_list_view, callback):
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return panel
-    #hamburger = guicomponents.HamburgerPressLaunch(callback)
-    #hamburger.do_popover_callback = True
+    if editorpersistance.prefs.show_bins_and_sequences_titles == False:
+        return panel
+    else:
+        hamburger = guicomponents.HamburgerPressLaunch(callback)
+        hamburger.do_popover_callback = True
     
-    #return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, 2, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
+    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, 2, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     
 def get_sequences_panel(sequence_list_view, callback):
     panel = Gtk.VBox()
     panel.pack_start(sequence_list_view, True, True, 0)
-
-    return panel
-    #hamburger = guicomponents.HamburgerPressLaunch(callback)
     
-    #return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, 2, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
+    if editorpersistance.prefs.show_bins_and_sequences_titles == False:
+        return panel
+    else:
+        hamburger = guicomponents.HamburgerPressLaunch(callback)
+        return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, 2, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 
 def _set_sensive_widgets(sensitive, list):
     for widget in list:

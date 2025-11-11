@@ -194,7 +194,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
-    edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin = view_prefs_widgets
+    edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin, show_bins_and_seqs_titles = view_prefs_widgets
 
     perf_render_threads, perf_drop_frames = performance_widgets
 
@@ -226,6 +226,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
     prefs.perf_drop_frames = perf_drop_frames.get_active()
     prefs.show_full_file_names = full_names.get_active()
+    prefs.show_bins_and_sequences_titles = show_bins_and_seqs_titles.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.tracks_scale = tracks_combo.get_active()
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
@@ -391,3 +392,4 @@ class EditorPreferences:
         self.auto_sync_single_childs_on_trim = True
         self.audio_master_postion_is_top_row = True
         self.close_titler_on_save = False
+        self.show_bins_and_sequences_titles = True

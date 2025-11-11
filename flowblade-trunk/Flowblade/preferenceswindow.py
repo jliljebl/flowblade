@@ -380,7 +380,10 @@ def _view_prefs_panel():
     media_panel_width_spin = Gtk.SpinButton.new_with_range(editorpersistance.MEDIA_PANEL_WIDTH_MIN, editorpersistance.MEDIA_PANEL_WIDTH_MAX, 1)
     media_panel_width_spin.set_adjustment(spin_adj)
     media_panel_width_spin.set_numeric(True)
-    
+
+    show_bin_and_seq_titles = Gtk.CheckButton()
+    show_bin_and_seq_titles.set_active(prefs.show_bins_and_sequences_titles)
+
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
@@ -391,12 +394,14 @@ def _view_prefs_panel():
     row12 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Project panel width:")), project_panel_width_spin, PREFERENCES_LEFT))
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Filter Select panel width:")), filter_select_width_spin, PREFERENCES_LEFT))
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media panel width:")), media_panel_width_spin, PREFERENCES_LEFT))
-    
+    row15 = _row(guiutils.get_checkbox_row_box(show_bin_and_seq_titles, Gtk.Label(label=_("Show Bins And Sequences Area Titles"))))
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
+    vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
@@ -405,10 +410,10 @@ def _view_prefs_panel():
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
-
+    
     return vbox, (force_language_combo, window_mode_combo, show_full_file_names,
                   tracks_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
-                  layout_monitor, filter_select_width_spin)
+                  layout_monitor, filter_select_width_spin, show_bin_and_seq_titles)
 
 
 
