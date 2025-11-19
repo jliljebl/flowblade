@@ -53,6 +53,7 @@ import guipopover
 import mltinit
 import patternproducer
 import persistance
+import persistancecompat
 import projectdata
 import propertyparse
 import respaths
@@ -82,10 +83,29 @@ class ProjectLoadThread(threading.Thread):
     def run(self):
         persistance.show_messages = False
         project = persistance.load_project(self.filename, False, True)
-        
+
+        # Fix backwards compatibility.
+        for seq in project.sequences:
+            persistancecompat.FIX_MISSING_SEQUENCE_ATTRS(seq)
+            persistancecompat.FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq)
+            persistancecompat.FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq)
+            for track in seq.tracks:
+                persistancecompat.FIX_MISSING_TRACK_ATTRS(track)
+                for clip in track.clips:
+                    persistancecompat.FIX_MISSING_CLIP_ATTRS(clip)
+                    for filter in clip.filters:
+                        persistancecompat.FIX_MISSING_FILTER_ATTRS(filter)
+            for compositor in seq.compositors:
+                    persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(compositor)
+        for bin in project.bins:
+            persistancecompat.FIX_MISSING_BIN_ATTRS(bin)
+        for k, media_file in project.media_files.items():
+            persistancecompat.FIX_MISSING_MEDIA_FILE_ATTRS(media_file)
+
         global target_project
         target_project = project
         target_project.c_seq = project.sequences[target_project.c_seq_index]
+
         _update_media_assets()
 
         GLib.idle_add(self._load_done_update)
