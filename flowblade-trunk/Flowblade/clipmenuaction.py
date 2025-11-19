@@ -1002,15 +1002,24 @@ def _do_seq_link_tline_edit(data):
     new_clip.container_data.rendered_media_range_out = -1
     new_clip.container_data.unrendered_length = new_clip.get_length() - 1
     new_clip.link_seq_data = copy.deepcopy(clip.link_seq_data)
-    
+
+    # Handle possibly changed sequence length.
+    # If new clip out not in available media area,
+    # simply use full length of new media.
+    new_clip.clip_in = clip.clip_in
+    new_clip.clip_out = clip.clip_out
+    if clip.get_length() > new_clip.get_length():
+        if clip.clip_out > new_clip.get_length() - 1:
+            new_clip.clip_in = 0
+            new_clip.clip_out =  new_clip.get_length() - 1
     clip_index = track.clips.index(clip)
-    
+
     data = {"old_clip":clip,
             "new_clip":new_clip,
             "track":track,
             "index":clip_index, 
-            "clip_in":clip.clip_in, 
-            "clip_out":clip.clip_out}
+            "clip_in":new_clip.clip_in, 
+            "clip_out":new_clip.clip_out}
     action = edit.clip_replace(data)
     action.do_edit()
     
