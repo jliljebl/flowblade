@@ -66,7 +66,7 @@ def get_session_status(parent_folder, session_id):
     return (fraction, elapsed)
     
 def abort_render(parent_folder, session_id):
-    ccrutils.abort_render(session_id)
+    ccrutils.abort_render(parent_folder, session_id)
 
 
 
