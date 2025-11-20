@@ -1,6 +1,6 @@
 # FLOWBLADE ROADMAP
 
-Last updated NOvember 20th 2025.
+Last updated November 20th 2025.
 
 ### Planned Features
 
