@@ -1337,8 +1337,8 @@ class MediaPanel():
             self.row_widgets.append(filler)
             
             self.add_info_text_row(_("Right Click to Add Media."))
-            self.add_info_text_row(_("\nRight Click on Timeline Clips or Tracks Column"))
-            self.add_info_text_row(_("to access related features."))
+            self.add_info_text_row(_("\nRight Click on Timeline Clips, Media Items or"))
+            self.add_info_text_row(_("Tracks Column to access related features."))
 
             filler = self._get_empty_filler()
             dnd.connect_media_drop_widget(filler)
