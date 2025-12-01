@@ -179,8 +179,13 @@ def _open_clip_in_clip_monitor(data):
     if media_file == None and clip.container_data != None:
         media_file = PROJECT().get_media_file_for_container_data(clip.container_data)
 
-    media_file.mark_in = clip.clip_in
-    media_file.mark_out = clip.clip_out
+    try:
+        media_file.mark_in = clip.clip_in
+        media_file.mark_out = clip.clip_out
+    except:
+        # This fails for color clips and the correct fix is quite involved so this was added as temp for 2.24
+        return
+
     updater.set_and_display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()
 
