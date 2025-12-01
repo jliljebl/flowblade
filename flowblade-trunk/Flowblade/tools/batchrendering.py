@@ -986,7 +986,8 @@ class BatchRenderWindow:
         self.current_file.set_text("")
         self.remove_selected.set_sensitive(True)
         self.remove_finished.set_sensitive(True)
-
+        self.file_est.set_text("")
+        
         global queue_runner_thread, render_thread
         render_thread = None
         queue_runner_thread = None        
