@@ -28,6 +28,7 @@ EditAction objects and placing them on the undo/redo stack.
 import copy
 
 import appconsts
+import boxmove
 import clipeffectseditor
 import compositeeditor
 import containeractions
@@ -371,6 +372,7 @@ class EditAction:
         PLAYER().stop_playback()
 
         movemodes.clear_selected_clips()  # selection not valid after change in sequence
+        
         _remove_trailing_blanks_undo(self)
         _consolidate_all_blanks_undo(self)
     
@@ -379,10 +381,13 @@ class EditAction:
         _remove_all_trailing_blanks(None)
 
         resync.calculate_and_set_child_clip_sync_states()
+
+        boxmove.clear_data_and_tline_data()
         
         if do_gui_update:
             self._update_gui()
-            
+
+        
     def redo(self):
         resync.start_edit()
         
@@ -396,11 +401,13 @@ class EditAction:
         _remove_trailing_blanks_redo(self)
 
         resync.calculate_and_set_child_clip_sync_states()
-                
+
+        boxmove.clear_data_and_tline_data()
+        
         # Update GUI.
         if do_gui_update:
             self._update_gui()
-        
+
     def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
         updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.

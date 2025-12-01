@@ -43,6 +43,14 @@ def clear_data():
     box_selection_data = None
     edit_data = None
 
+def clear_data_and_tline_data():
+    # These need to cleared when box tool is activated
+    global box_selection_data, edit_data
+    box_selection_data = None
+    edit_data = None
+
+    tlinewidgets.set_edit_mode_data(None)
+    
 def get_selection_data():
     return box_selection_data
 
