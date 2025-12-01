@@ -95,8 +95,6 @@ def init():
                 MIDDLE_BUTTONS_5: gui.editor_window.monitor_insert_buttons.widget, 
                 MIDDLE_BUTTONS_6: gui.editor_window.undo_redo.widget}
 
-    # TODO: HANDLE 2 MONITORS!!!!!!!!!!!!!!
-
     # Create actions
     _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL)
     _create_action("to_mark_in", monitorevent.to_mark_in_pressed, TLINE_MONITOR_ALL)

@@ -308,7 +308,8 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     render_item.save()
 
     # Launch app if not already running.
-    launch_batch_rendering()
+    render_file_name = os.path.basename(render_path)
+    launch_batch_rendering(render_file_name)
 
 
 # ------------------------------------------------------- file utils
@@ -365,10 +366,13 @@ def maybe_create_render_folder(render_path):
         os.mkdir(folder)
         
 # --------------------------------------------------------------- app thread and data objects
-def launch_batch_rendering():
+def launch_batch_rendering(render_file_name=None):
     ipc_handle = BatchRenderIPC()
     if ipc_handle.app_running() == True:
-        _show_single_instance_info()
+        if render_file_name == None:
+            _show_single_instance_info()
+        else:
+            _show_queue_add_info(render_file_name)
     else:
         _do_batch_render_launch()
 
@@ -438,6 +442,31 @@ def _display_single_instance_window():
     primary_txt = _("Batch Render Queue already running!")
 
     msg = _("Batch Render Queue application was detected running.")
+
+    content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
+    align = dialogutils.get_default_alignment(content)
+
+    dialog = Gtk.Dialog("",
+                        None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("OK"), Gtk.ResponseType.OK))
+
+    dialog.vbox.pack_start(align, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', _early_exit)
+    dialog.show_all()
+
+def _show_queue_add_info(render_file_name):
+    global timeout_id
+    timeout_id = GLib.timeout_add(200, _display_queue_add_window, render_file_name)
+    
+def _display_queue_add_window(render_file_name):
+    GObject.source_remove(timeout_id)
+    primary_txt = _("Render Item added to Render Queue")
+
+    msg_template = _("Render Item <b>%s</b> was added to Render Queue.")
+    msg = msg_template % render_file_name
 
     content = dialogutils.get_warning_message_dialog_panel(primary_txt, msg, True)
     align = dialogutils.get_default_alignment(content)
