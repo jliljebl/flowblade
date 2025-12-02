@@ -147,9 +147,6 @@ def load_shortcuts():
     _set_keyboard_action_names()
     _set_key_names()
     set_keyboard_shortcuts()
-    #set_keyboard_shortcut_actions()
-    print("_keyboard_actions", _keyboard_actions)
-    #print("_keyboard_action_names", _keyboard_action_names)
 
 def set_keyboard_shortcuts():
     global _keyboard_actions, _editable
