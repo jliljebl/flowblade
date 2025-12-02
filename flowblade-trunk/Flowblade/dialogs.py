@@ -598,8 +598,8 @@ def about_dialog(parent_window):
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="2.22")
-    janne_label = Gtk.Label(label="Copyright 2024 Janne Liljeblad and contributors.")
+    ver_label = Gtk.Label(label="2.24")
+    janne_label = Gtk.Label(label="Copyright 2025 Janne Liljeblad and contributors.")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
@@ -624,20 +624,14 @@ def about_dialog(parent_window):
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
     up_projs2 = Gtk.Label(label="FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
-    tools_label = Gtk.Label(label=_("Tools:"))
-    tools_list = Gtk.Label(label="Geany, Inkscape, Gimp, ack-grep")
 
     up_label.modify_font(Pango.FontDescription("sans bold 12"))
-    tools_label.modify_font(Pango.FontDescription("sans bold 12"))
 
     vbox2 = Gtk.VBox(False, 4)
     vbox2.pack_start(guiutils.get_pad_label(30, 12), False, False, 0)
     vbox2.pack_start(up_label, False, False, 0)
     vbox2.pack_start(up_projs, False, False, 0)
     vbox2.pack_start(up_projs2, False, False, 0)
-    vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
-    vbox2.pack_start(tools_label, False, False, 0)
-    vbox2.pack_start(tools_list, False, False, 0)
     vbox2.pack_start(guiutils.get_pad_label(30, 22), False, False, 0)
     vbox2.pack_start(Gtk.Label(), True, True, 0)
 
