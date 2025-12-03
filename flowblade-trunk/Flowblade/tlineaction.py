@@ -1002,11 +1002,12 @@ def _view_mode_menu_item_item_activated(action, new_value_variant):
     guipopover._monitorview_popover.hide()
 
 def _waveform_callback(action, variant, msg):
-    new_state = not(action.get_state().get_boolean())
-    editorpersistance.prefs.show_waveform_in_monitor = new_state
-    editorpersistance.save()
-    action.set_state(GLib.Variant.new_boolean(new_state))
-    gui.monitor_waveform_display.update_visibility()
+    pass
+    #new_state = not(action.get_state().get_boolean())
+    #editorpersistance.prefs.show_waveform_in_monitor = new_state
+    #editorpersistance.save()
+    #action.set_state(GLib.Variant.new_boolean(new_state))
+    #gui.monitor_waveform_display.update_visibility()
     
 def set_monitor_display_mode(display_mode):
     editorstate.current_sequence().set_output_mode(display_mode)

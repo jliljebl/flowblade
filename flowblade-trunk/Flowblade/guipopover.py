@@ -477,10 +477,10 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity, wa
         add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
         _monitorview_menu.append_section(None, view_section)
 
-        checked_state = editorpersistance.prefs.show_waveform_in_monitor
-        waveform_section =  Gio.Menu.new()
-        add_menu_action_check(waveform_section, _("Show Clip Audio Waveform In Monitor"), "monitor.audiowaveform", checked_state, "monitor_waveform", waveform_callback)
-        _monitorview_menu.append_section(None, waveform_section)
+        #checked_state = editorpersistance.prefs.show_waveform_in_monitor
+        #waveform_section =  Gio.Menu.new()
+        #add_menu_action_check(waveform_section, _("Show Clip Audio Waveform In Monitor"), "monitor.audiowaveform", checked_state, "monitor_waveform", waveform_callback)
+        #_monitorview_menu.append_section(None, waveform_section)
         
         _opacity_section = menu_clear_or_create(_opacity_section)
         _opacity_submenu = menu_clear_or_create(_opacity_submenu)

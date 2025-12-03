@@ -549,10 +549,11 @@ class ClipWaveformArea:
                 (self.widget.get_allocation().width - WAVEFORM_AREA_END_PAD * 2)
     
     def update_visibility(self):
-        if editorpersistance.prefs.show_waveform_in_monitor == True:
-            self.widget.show()
-        else:
-            self.widget.hide()
+        pass
+        #if editorpersistance.prefs.show_waveform_in_monitor == True:
+        #    self.widget.show()
+        #else:
+        #    self.widget.hide()
 
     def _press_event(self, event):
         """
