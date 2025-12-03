@@ -729,7 +729,7 @@ class EditorWindow:
             
         # Put timeline between left and right bottom row panels.
         self.tline_pane.pack_start(self.tline_vpane, True, True, 0)
-        if editorpersistance.prefs.audio_master_postion_is_top_row == False:
+        if editorpersistance.prefs.audio_master_position_is_top_row == False:
             self.tline_pane.pack_end(self._get_audio_master_meter(), False, False, 0)
 
         # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel.
@@ -775,7 +775,7 @@ class EditorWindow:
         self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
-        if editorpersistance.prefs.audio_master_postion_is_top_row == True:
+        if editorpersistance.prefs.audio_master_position_is_top_row == True:
             self.top_row_hbox.pack_end(self._get_audio_master_meter(), False, False, 0)
 
         editorlayout.apply_tabs_positions()
@@ -1150,7 +1150,7 @@ class EditorWindow:
         audiomaster_menu.append(audiomaster_top)
         audiomaster_bottom = Gtk.RadioMenuItem.new_with_label([audiomaster_top], _("Bottom Row"))
 
-        if editorpersistance.prefs.audio_master_postion_is_top_row == True:
+        if editorpersistance.prefs.audio_master_position_is_top_row == True:
             audiomaster_top.set_active(True)
         else:
             audiomaster_bottom.set_active(True)
@@ -1287,10 +1287,10 @@ class EditorWindow:
 
     def _set_audiomaster_position(self, value):
         # We get 2 events from radio menu items, only handle one.
-        if editorpersistance.prefs.audio_master_postion_is_top_row == value:
+        if editorpersistance.prefs.audio_master_position_is_top_row == value:
             return 
             
-        editorpersistance.prefs.audio_master_postion_is_top_row = value
+        editorpersistance.prefs.audio_master_position_is_top_row = value
         editorpersistance.save()
 
         if value == True:
