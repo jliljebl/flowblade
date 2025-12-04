@@ -673,8 +673,11 @@ class RotoMaskEditShape(EditPointShape):
             if p.inside_box(self.box_drag_data):
                 selected_handle2_points.append(self.handles2.index(p))
                 bounding_box = p.update_bounding_box(bounding_box)
-                        
-        self.box_selection = (bounding_box, selected_curve_points, selected_handle1_points, selected_handle2_points)
+        
+        if bounding_box != None:
+            self.box_selection = (bounding_box, selected_curve_points, selected_handle1_points, selected_handle2_points)
+        else:
+            self.box_selection = None
 
     def translate_box_selection(self, delta):
         box_drag_data, selected_curve_points, selected_handle1_points, selected_handle2_points = self.box_selection

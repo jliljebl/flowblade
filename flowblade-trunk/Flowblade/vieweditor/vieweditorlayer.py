@@ -449,7 +449,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                                                         self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point))
                 self.edit_point_shape.create_box_selection()
                 self.edit_point_shape.box_drag_data = None
-                self.edit_point_shape.translate_box_selection((0.0, 0.0)) # Creates edit_point_shape.box_selection_drag_box object
+                if self.edit_point_shape.box_selection != None:
+                    # If we have selection, creates edit_point_shape.box_selection_drag_box object.
+                    self.edit_point_shape.translate_box_selection((0.0, 0.0)) 
             else:
                 self.edit_point_shape.translate_box_selection(delta)
                 self.edit_point_shape.box_selection = None
