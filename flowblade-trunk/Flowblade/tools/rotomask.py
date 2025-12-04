@@ -134,14 +134,17 @@ class RotoMaskEditor(Gtk.Window):
 
         self.kf_mode_button = Gtk.ToggleButton()
         gtkbuilder.button_set_image(self.kf_mode_button, "roto_kf_edit_mode")
+        self.kf_mode_button.set_tooltip_markup(_("<b>Add or move</b> single edit points and curve handles."))
         self.kf_mode_button.set_active(True) # we start with vieweditorlayer.ROTO_POINT_MODE edit mode
         self.kf_mode_button.connect("clicked", self._kf_mode_clicked)
         self.move_mode_button = Gtk.ToggleButton()
         gtkbuilder.button_set_image(self.move_mode_button, "roto_move_mode")
         self.move_mode_button.connect("clicked", self._move_mode_clicked)
+        self.move_mode_button.set_tooltip_markup(_("<b>Move all</b> edit points and curve handles."))
         self.box_mode_button = Gtk.ToggleButton()
         gtkbuilder.button_set_image(self.box_mode_button, "roto_box_mode")
         self.box_mode_button.connect("clicked", self._box_mode_clicked)
+        self.box_mode_button.set_tooltip_markup(_("<b>Drag to select</b> edit points and curve handles and then <b>move selected</b>."))
         
         red, green, blue, alpha = vieweditorshape.ROTO_CURVE_COLOR
         self.color_select = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red, green, blue, alpha))
