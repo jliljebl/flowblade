@@ -22,6 +22,15 @@
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+     <release version="2.24" date="2025-12-5">
+      <description>
+      <p>Features:</p>
+        <ul>
+          <li>Dual Sync Trim</li>
+          <li>New Container Clip Types</li>
+        </ul>
+      </description>
+    </release>
      <release version="2.22.1" date="2025-8-13">
       <description>
       <p>Features:</p>

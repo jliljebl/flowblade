@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 10:53+0200\n"
+"POT-Creation-Date: 2025-12-05 16:57+0200\n"
 "PO-Revision-Date: 2024-08-27 10:29+0200\n"
 "Last-Translator: Stanislaw Polak <polak@agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -9031,23 +9031,37 @@ msgstr "Klatka  multimediów: "
 msgid "RotoMaskEditor"
 msgstr "Edytor RotoMaski"
 
-#: tools/rotomask.py:165
+#: tools/rotomask.py:137
+msgid "<b>Add or move</b> single edit points and curve handles."
+msgstr ""
+
+#: tools/rotomask.py:143
+msgid "<b>Move all</b> edit points and curve handles."
+msgstr ""
+
+#: tools/rotomask.py:147
+msgid ""
+"<b>Drag to select</b> edit points and curve handles and then <b>move "
+"selected</b>."
+msgstr ""
+
+#: tools/rotomask.py:168
 msgid "Mask Type:"
 msgstr "Typ maski:"
 
-#: tools/rotomask.py:167
+#: tools/rotomask.py:170
 msgid "Curve Mask"
 msgstr "Maska krzywej"
 
-#: tools/rotomask.py:168
+#: tools/rotomask.py:171
 msgid "Line Mask"
 msgstr "Maska Linii"
 
-#: tools/rotomask.py:176
+#: tools/rotomask.py:179
 msgid "Allow to add / delete points in closed masks"
 msgstr "Pozwól dodawać / usuwać punkty w zamkniętych maskach"
 
-#: tools/rotomask.py:178
+#: tools/rotomask.py:181
 msgid "Close Tool"
 msgstr "Zamknij narzędzie"
 
