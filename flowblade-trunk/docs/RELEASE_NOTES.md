@@ -1,5 +1,104 @@
 # Release Notes
 
+
+## FLOWBLADE 2.24
+Date: December 6, 2025
+
+For this development cycle we focused mostly on UX improvents, bug fixes and GTK 4 port work with relatively few new features.
+
+### New Functionality
+
+* **Dual Trim for sync relation clips** Sync Child Clips can be now optionally be set to follow their Parent Clips when Parent Clip ends are trimmed. 
+
+* **New Compound Clips** We added two new ways to create Compound Clips:
+  
+  - Box selection compound clips.
+  - Timeline range compound clips.
+
+### Top level UX updates
+
+* **Theme touch-ups:** We removed unnecessery borders and paddings, dropped lighter background accent color from menubar and midbar, dropped fake led look for master audio level meter and improved Timeline Frame Scale UX with added contrast.
+- **Timeline/Clip Monitor Switch widget** had an UX update and was made colorized to make it a more prominent.
+
+- **Displaying Clip in monitor now highlights** Position Bar and Player Buttons Panel to make the difference between Timeline and Clip views more noticeable.
+
+- **'To Marks In' and 'To Marks Out'** buttons were put back in Player Buttons Panel.
+
+- **Info text in Media Panel was expanded** to point users to use context menus where appropriate. 
+
+- **Edit Panel can now be placed in a full height Right Column position** to provide maximum amount of space for filter editing when needed.
+
+- **Monitor info** was moved from top row to monitor panel.
+
+### Small features
+
+* **File render size estimation** and warning if estimated size exeeds 60% of available disk space are now displayed when rendering.
+
+* **Rotomask editor has new Box Select Move edit mode.** In this edit mode user can move a selection of edit points as a group. 
+
+* **'Mark selection on Timeline' keyboard shortcut** was added.
+
+### Gtk 4 port work
+
+We originally estimated that we could attempt GTK4 port in autumn 2025. If we fully committed to doing the port we could power through the remaining issues and get a launching GTK4 version in about a month and a releasable version in maybe 4-5 months.
+
+However, GTK4 has "windowless" widgets, which for us means that we 
+need to drop SDL2 video display for X11 systems and create a new video 
+consumer for GTK4 version
+
+So for video our options are:
+
+- Only create new Wayland video consumer and drop X11 support for GTK4 version.
+- Create new Wayland *and* X11 video consumers before porting tor GTK4 version.
+
+We will likely do only a Wayland video consumer and wait for 2+ years so that Gnome and KDE Wayland only versions are released and applied accross all major distros before commiting to doing the port.
+
+For this development cycle we did quite a lot of work on GTK4 port:
+
+* New keyboard shortcut framework with per widget shortcuts was created. This will map to the way GTK4 does things in this area.
+
+* Multiple smaller changes were done towards getting ready for port: we now use gtkevents.KeyPressEventAdapter for global keyevents, blocking dialogs were removed, we created a builder function for EventBoxes,  removed monitor EventBoxes from Script Tool and G'Mic Tool, added gtkbuilder button_set_image() method and moved Titler to use that, dropped last Gtk.FileChooserButton uses and ported cairoarea.py to use event controllers instead of signals.
+
+### Contributions
+
+* User **luzpaz** provided a typo fix patch.
+
+### Small features, UX updates and bug fixes
+
+* Fixed frozed track audio level in Audio Mixer.
+* Saving titles is now non-modal, title name is given in a text box in Titler. "Close on Save" checkbox defines if Ttler is closed when user saves a Title.
+* Selecting BIn auto reveals Madia Panel.
+* Rotomask editor line color is now user settable.
+* Audio master meter position is now user settable.
+* Fixed initiating keyboard trimming.
+* Fix ripple trim undo.
+* Clear box move data on undo/redo.
+* Show better info on adding items to Queue when Batch Render app already open.
+* Fixed Audio Sync Split undo bug.
+* "Changing compositing mode.." dialog text update.
+* Code cleanup, removed trim no-edit functions.
+* In /Project menu change 'Bin' sub menu to 'Bins'
+* Add 'Add Title...' menu item into Media Panel popover and app menu.
+* Make keyframe info bigger and move it to the left side in keyframe editors.
+* Add progress bar dialog for "Duplicate sequence..." action.
+* Fix three-point inserts for multi clip selections bug.
+* Make Media Item rating pop better.
+* Make backtimed three-point edits work as most users would expect.
+* Make Timeline up/down arrows to stop on marks too.
+* Make adding filter maintain other filters expanded state.
+* Improve Geometry editors reset options naming.
+* Fix Geometry editor mouse scroll not using full range.
+* Add larger limit values in Disc Cache Warning preference.
+* Left justify Sequences list with Bins list.
+* Add missing top level menu tooltips.
+* Fix clear filters bug.
+* Fix view update for setting all filters off/on.
+* Use new names when avoiding duplicate alpha filters.
+* Fix mltxml container clip render abort bug.
+* Fix Sequence Container Link Clip changed length bug.
+* Fix Media Re-linker backwards compatibility bug.
+
+
 ## FLOWBLADE 2.22.1.1
 Date: August 14, 2025
 
