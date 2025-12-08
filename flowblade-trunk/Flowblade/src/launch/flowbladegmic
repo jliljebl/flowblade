@@ -3,24 +3,18 @@
 import sys
 import os
 
+import launchutils
 
-modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
 
+modules_path = launchutils.get_modules_path()
 sys.path.insert(0, modules_path)
+
 import processutils
 processutils.update_sys_path(modules_path)
 
 try:
     import gmic
-    import editorstate # Used to decide which translations from file system are used
-                       # and SDL playback consumer version for Flatpak.
-    root_dir = modules_path.split("/")[1]
-    if root_dir == "home":
-        editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
-    elif root_dir == "app":
-        editorstate.app_running_from = editorstate.RUNNING_FROM_FLATPAK
-    else:
-        editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    launchutils.set_app_runtime_type(modules_path)
 
 except Exception as err:
     print ("Failed to import gmic")
