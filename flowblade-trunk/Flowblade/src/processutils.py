@@ -33,8 +33,7 @@ def update_sys_path(modules_path):
     sys.path.insert(0, modules_path + "/vieweditor")
     sys.path.insert(0, modules_path + "/tools")
     sys.path.insert(0, modules_path + "/edittools")
-    #root_path = modules_path.rstrip("/Flowblade") # TODO: THIS COULD BE CONDITIONAL ON BEING FILE SYSTEM INSTALLATION.
-    #sys.path.insert(0, root_path)
+    sys.path.insert(0, modules_path + "/propertyedit")
 
 def prepare_mlt_repo(repo):
     # Remove mlt services that interfere with Flowblade running correctly
