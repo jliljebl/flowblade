@@ -152,6 +152,7 @@ class AudioRenderLaunchThread(threading.Thread):
             project_data_path = OLD_STYLE_DATA_LAYOUT_PROJECT
 
         # Launch render process and wait for it to end
+        print(respaths.LAUNCH_DIR + "flowbladeaudiorender")
         FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
 
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
@@ -171,9 +172,8 @@ def _repaint():
     return False
     
 # --------------------------------------------------------- rendering
-def main():
-    # Set paths.
-    root_path = sys.argv[3]
+def main(root_path):
+     # Set paths.
     respaths.set_paths(root_path)
 
     try:

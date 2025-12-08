@@ -64,6 +64,7 @@ def set_paths(root_path):
     FLUXITY_API_DOC, USBHID_DRIVERS_PATH, INFO_TIPS_DOC
 
     ROOT_PATH = os.path.dirname(root_path)
+    #print("ROOT_PATH", ROOT_PATH)
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
     WIPE_RESOURCES_PATH = ROOT_PATH + "/res/filters/wipes/"
     PROFILE_PATH = ROOT_PATH + "/res/profiles/"
@@ -80,7 +81,7 @@ def set_paths(root_path):
     CONTRIBUTORS_DOC = ROOT_PATH + "/res/help/contributors"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = ROOT_PATH + "/res/patternproducer/"
-    LAUNCH_DIR = ROOT_PATH + "/launch/"
+    LAUNCH_DIR = ROOT_PATH + "/src/launch/"
     GMIC_SCRIPTS_DOC = ROOT_PATH + "/res/gmic/gmic2scripts.xml"
     PHANTOM_JAR = ROOT_PATH + "/phantom2d/Phantom2D.jar"
     SHORTCUTS_PATH = ROOT_PATH + "/res/shortcuts/"
