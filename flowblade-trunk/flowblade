@@ -36,21 +36,21 @@ print ("Launch script dir:", launch_dir)
 # - When running on distro.
 if os.path.realpath(launch_dir) == "/usr/bin":
     print ("Running from installation...")
-    modules_path = "/usr/share/flowblade/Flowblade"
+    modules_path = "/usr/share/flowblade/Flowblade/src"
     if not os.path.isdir(modules_path):
-        modules_path = "/usr/share/pyshared/Flowblade"
+        modules_path = "/usr/share/pyshared/Flowblade/src"
     print ("modules path:", modules_path)
 # - When running in flatpak.
 elif launch_dir == "/app/bin":
     print ("Running from Flatpak installation...")
-    modules_path = "/app/share/flowblade/Flowblade"
+    modules_path = "/app/share/flowblade/Flowblade/src"
     if not os.path.isdir(modules_path):
-        modules_path = "/app/share/pyshared/Flowblade"
+        modules_path = "/app/share/pyshared/Flowblade/src"
     print ("modules path:", modules_path)
 # - When running in filesystem.
 else:
     print ("Running from filesystem...")
-    modules_path = launch_dir + "/Flowblade"
+    modules_path = launch_dir + "/Flowblade/src"
 
 sys.path.insert(0, modules_path)
 

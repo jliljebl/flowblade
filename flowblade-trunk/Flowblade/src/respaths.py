@@ -22,6 +22,8 @@
 Module contains absolute paths to various resources.
 """
 
+import os
+
 ROOT_PATH = None
 
 BLACK_IMAGE_PATH = None
@@ -61,29 +63,29 @@ def set_paths(root_path):
     SHORTCUTS_PATH, FLUXITY_EMPTY_BG_RES_PATH, MEDIA_PLUGINS_PATH, \
     FLUXITY_API_DOC, USBHID_DRIVERS_PATH, INFO_TIPS_DOC
 
-    ROOT_PATH = root_path
+    ROOT_PATH = os.path.dirname(root_path)
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
-    WIPE_RESOURCES_PATH = root_path + "/res/filters/wipes/"
-    PROFILE_PATH = root_path + "/res/profiles/"
-    BLACK_IMAGE_PATH = root_path + "/res/darktheme/black.jpg"
-    FILTERS_XML_DOC = root_path + "/res/filters/filters.xml"
-    COMPOSITORS_XML_DOC = root_path + "/res/filters/compositors.xml"
-    REPLACEMENTS_XML_DOC = root_path + "/res/filters/replace.xml"
-    PREFS_PATH = root_path + "/res/prefs/"
-    HELP_DOC = root_path + "/res/help/help.html"
-    LOCALE_PATH = root_path + "/locale/"
-    GPL_3_DOC = root_path + "/res/help/gpl3"
-    TRANSLATIONS_DOC = root_path + "/res/help/translations"
-    DEVELOPERS_DOC = root_path + "/res/help/developers"
-    CONTRIBUTORS_DOC = root_path + "/res/help/contributors"
+    WIPE_RESOURCES_PATH = ROOT_PATH + "/res/filters/wipes/"
+    PROFILE_PATH = ROOT_PATH + "/res/profiles/"
+    BLACK_IMAGE_PATH = ROOT_PATH + "/res/darktheme/black.jpg"
+    FILTERS_XML_DOC = ROOT_PATH + "/res/filters/filters.xml"
+    COMPOSITORS_XML_DOC = ROOT_PATH + "/res/filters/compositors.xml"
+    REPLACEMENTS_XML_DOC = ROOT_PATH + "/res/filters/replace.xml"
+    PREFS_PATH = ROOT_PATH + "/res/prefs/"
+    HELP_DOC = ROOT_PATH + "/res/help/help.html"
+    LOCALE_PATH = ROOT_PATH + "/locale/"
+    GPL_3_DOC = ROOT_PATH + "/res/help/gpl3"
+    TRANSLATIONS_DOC = ROOT_PATH + "/res/help/translations"
+    DEVELOPERS_DOC = ROOT_PATH + "/res/help/developers"
+    CONTRIBUTORS_DOC = ROOT_PATH + "/res/help/contributors"
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
-    PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
-    LAUNCH_DIR = root_path + "/launch/"
-    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
-    PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
-    SHORTCUTS_PATH = root_path + "/res/shortcuts/"
-    FLUXITY_EMPTY_BG_RES_PATH = root_path + "/res/scripttool/not_rendered.png"
-    MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
-    FLUXITY_API_DOC = root_path + "/res/mediaplugins/fluxity.html"
-    INFO_TIPS_DOC = root_path + "/res/help/en/infotips.html"
-    USBHID_DRIVERS_PATH = root_path + "/res/usbhid/"
+    PATTERN_PRODUCER_PATH = ROOT_PATH + "/res/patternproducer/"
+    LAUNCH_DIR = ROOT_PATH + "/launch/"
+    GMIC_SCRIPTS_DOC = ROOT_PATH + "/res/gmic/gmic2scripts.xml"
+    PHANTOM_JAR = ROOT_PATH + "/phantom2d/Phantom2D.jar"
+    SHORTCUTS_PATH = ROOT_PATH + "/res/shortcuts/"
+    FLUXITY_EMPTY_BG_RES_PATH = ROOT_PATH + "/res/scripttool/not_rendered.png"
+    MEDIA_PLUGINS_PATH = ROOT_PATH + "/res/mediaplugins/"
+    FLUXITY_API_DOC = ROOT_PATH + "/res/mediaplugins/fluxity.html"
+    INFO_TIPS_DOC = ROOT_PATH + "/res/help/en/infotips.html"
+    USBHID_DRIVERS_PATH = ROOT_PATH + "/res/usbhid/"
