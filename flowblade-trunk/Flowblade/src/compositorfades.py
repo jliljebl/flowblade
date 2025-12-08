@@ -31,8 +31,7 @@ This module handles adding fade-ins and fade-outs to compositors and filters.
 Creating and managing keyframes is mostly handled by editor GUI components which cannot easily 
 be used for adding fade-ins and fade outs, so this dedicated module is needed.
 
-NOTE: This can all (maybe) be killed now and done more simply in keyframeeditor.py, original reasons for this existing
-may not apply anymore.
+NOTE: This should be renamed.
 """
 
 # Dissolve default fades group ("Dissolve", "Blend") keyframe property class names
@@ -342,7 +341,3 @@ def _show_defaults_length_error_dialog():
     primary_txt = _("Clip too short for Auto Fades!")
     secondary_txt = _("The Clip is too short to add the user set default fades on Compositor creation.")
     dialogutils.info_message(primary_txt, secondary_txt, parent_window)
-            
-            
-            
-            

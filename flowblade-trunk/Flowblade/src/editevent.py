@@ -19,10 +19,9 @@
 """
 
 """
-Handles or passes on mouse edit events from timeline.
-
-Handles edit mode setting.
+Handles or passes on edit events from timeline.
 """
+
 from gi.repository import Gdk
 
 import copy
@@ -64,11 +63,6 @@ import trimmodes
 import updater
 import userfolders
 
-
-# functions are monkeypatched in at app.py 
-
-#compositor_menu_item_activated = None
-#set_compositor_data = None
 
 # ----------------------------- module funcs
 def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
