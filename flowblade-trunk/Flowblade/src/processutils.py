@@ -34,7 +34,16 @@ def update_sys_path(modules_path):
     sys.path.insert(0, modules_path + "/tools")
     sys.path.insert(0, modules_path + "/edittools")
     sys.path.insert(0, modules_path + "/propertyedit")
-
+    sys.path.insert(0, modules_path + "/usb")
+    sys.path.insert(0, modules_path + "/widgets")
+    sys.path.insert(0, modules_path + "/dialogs")
+    sys.path.insert(0, modules_path + "/edit")
+    sys.path.insert(0, modules_path + "/mlt")
+    sys.path.insert(0, modules_path + "/window")
+    sys.path.insert(0, modules_path + "/audio")
+    sys.path.insert(0, modules_path + "/guiutils")
+    sys.path.insert(0, modules_path + "/process")
+    
 def prepare_mlt_repo(repo):
     # Remove mlt services that interfere with Flowblade running correctly
     repo.producers().set('qimage', None, 0)
