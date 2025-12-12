@@ -36,9 +36,9 @@ class SimpleStateEvent:
 class ScrollEvent:
     
     def __init__(self, dx, dy):
-        if dy == -1.0:
+        if dy < 0.0:
             self.direction = Gdk.ScrollDirection.UP
-        elif dy == 1.0:
+        elif dy > 0.0:
             self.direction = Gdk.ScrollDirection.DOWN
         elif dx == 1.0:
             self.direction = Gdk.ScrollDirection.RIGHT
