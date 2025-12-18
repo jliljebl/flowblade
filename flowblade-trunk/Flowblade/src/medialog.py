@@ -545,7 +545,6 @@ class MediaLogListView(Gtk.VBox):
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.MULTIPLE)
         self.treeview.connect("button-press-event", log_list_view_button_press)
-        #gtkevents.connect(self.treeview, "button-press-event-button3", log_list_view_button_press)
         self.treeview.connect("row-activated", display_log_clip_double_click_listener)
                               
         # Column views
