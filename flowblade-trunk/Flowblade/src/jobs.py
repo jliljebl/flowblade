@@ -137,7 +137,7 @@ class ProcessCommandListRunner(threading.Thread):
 def add_job(job_proxy):
     global _jobs, _jobs_list_view 
     _jobs.append(job_proxy)
-    _jobs_list_view.fill_data_model()
+    _jobs_list_view.fill_data_model(_jobs)
     if editorpersistance.prefs.open_jobs_panel_on_add == True:
         editorlayout.show_panel(appconsts.PANEL_JOBS)
     
@@ -188,14 +188,7 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
     else:
         _jobs[row].status = job_msg.status
 
-    tree_path = Gtk.TreePath.new_from_string(str(row))
-    store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
-
-    _jobs_list_view.storemodel.set_value(store_iter, 0, _jobs[row].text)
-    _jobs_list_view.storemodel.set_value(store_iter, 1, _jobs[row].get_elapsed_str())
-    _jobs_list_view.storemodel.set_value(store_iter, 2, _jobs[row].get_progress_str())
-
-    _jobs_list_view.scroll.queue_draw()
+    _jobs_list_view.update_row(row, _jobs)
 
 def _cancel_all_jobs():
     global _jobs, _remove_list
@@ -208,8 +201,7 @@ def _cancel_all_jobs():
         job.status = CANCELLED
         _remove_list.append(job)
 
-    _jobs_list_view.fill_data_model()
-    _jobs_list_view.scroll.queue_draw()
+    _jobs_list_view.fill_data_model(_jobs)
     GLib.timeout_add(4000, _remove_jobs)
         
 def get_jobs_of_type(job_type):
@@ -229,7 +221,7 @@ def proxy_render_ongoing():
 
 def create_jobs_list_view():
     global _jobs_list_view
-    _jobs_list_view = JobsQueueView()
+    _jobs_list_view = guicomponents.JobsQueueView()
     return _jobs_list_view
 
 def get_jobs_panel():
@@ -259,6 +251,8 @@ def _menu_action_pressed(launcher, widget, event, data):
     guipopover.jobs_menu_popover_show(launcher, widget, _hamburger_item_activated)
     
 def _hamburger_item_activated(action, variant, msg=None):
+    global _jobs
+        
     if msg == "cancel_all":
         _cancel_all_jobs()
 
@@ -275,8 +269,8 @@ def _hamburger_item_activated(action, variant, msg=None):
         job.status = CANCELLED
         _remove_list.append(job)
 
-        _jobs_list_view.fill_data_model()
-        _jobs_list_view.scroll.queue_draw()
+
+        _jobs_list_view.fill_data_model(_jobs)
         GLib.timeout_add(4000, _remove_jobs)
         
     elif msg == "open_on_add":
@@ -307,13 +301,13 @@ def _remove_jobs():
         if len(in_queue) > 0:
             in_queue[0].start_render()
 
-    _jobs_list_view.fill_data_model()
-    _jobs_list_view.scroll.queue_draw()
+    _jobs_list_view.fill_data_model(_jobs)
 
     _remove_list = []
 
 
-# --------------------------------------------------------- GUI 
+# --------------------------------------------------------- GUI
+"""
 class JobsQueueView(Gtk.VBox):
 
     def __init__(self):
@@ -386,7 +380,7 @@ class JobsQueueView(Gtk.VBox):
                         job.get_progress_str()]
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
-
+"""
 
 
 # ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
