@@ -45,6 +45,7 @@ def update_sys_path(modules_path):
     sys.path.insert(0, modules_path + "/process")
     sys.path.insert(0, modules_path + "/container")
     sys.path.insert(0, modules_path + "/actions")
+    sys.path.insert(0, modules_path + "/render")
     
 def prepare_mlt_repo(repo):
     # Remove mlt services that interfere with Flowblade running correctly
