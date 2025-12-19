@@ -37,6 +37,7 @@ from editorstate import current_sequence
 import mlttransitions
 import mltfilters
 import propertyparse
+import undo
 import utils
 
 
@@ -415,6 +416,15 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
+        edit_action = undo.ProperEditAction(self.undo_redo_write_value, str(self.value))
+
+        self.write_mlt_property_str_value(str_value)
+        self.value = str_value
+        self.write_filter_object_property(str_value)
+
+        edit_action.edit_done(str_value)
+
+    def undo_redo_write_value(self, str_value):
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)

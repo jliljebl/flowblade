@@ -25,11 +25,18 @@ on user requests.
 import gi
 from gi.repository import GLib
 
+import copy
 import time
 
 import callbackbridge
 import editorstate
 import utils
+import utilsgtk
+
+PROPERTY_EDIT_COMMIT_DELAY_MILLIS = 500
+PROPERTY_POLL_TICK_DELAY_MILLIS = 250 
+_property_edit_poll_ticker = None
+_first_action = None
 
 set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports.
 repaint_tline = None
@@ -90,6 +97,8 @@ def register_edit(undo_edit):
         save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
+
+
 
 def do_undo_and_repaint(widget=None, data=None):
     do_undo()
@@ -170,6 +179,61 @@ def undo_redo_stress_test():
             do_redo()
 
             time.sleep(delay)
+
+
+# ------------------------------------------- PROPERT EDIT UNDO
+def _property_edit_poll_event(property_edit_action):
+    print("tick")
+    global _property_edit_poll_ticker
+    if _property_edit_poll_ticker == None:
+        return
+    
+    current_time = round(time.time() * 1000)
+    
+    property_edit_action.maybe_commit_event(current_time)
+
+
+class ProperEditAction:
+    
+    def __init__(self, value_set_func, undo_val):
+        self.value_set_func = value_set_func
+        self.undo_val = copy.deepcopy(undo_val)
+        self.redo_val = None
+        self.creation_time = None 
+
+    def edit_done(self, redo_val):
+        self.redo_val = copy.deepcopy(redo_val)
+        self.creation_time = round(time.time() * 1000)
+                    
+        global _property_edit_poll_ticker, _first_action
+        if _property_edit_poll_ticker == None:
+            _first_action = self
+            _property_edit_poll_ticker = utilsgtk.GtkTicker(_property_edit_poll_event, PROPERTY_POLL_TICK_DELAY_MILLIS, self)
+            _property_edit_poll_ticker.start_ticker()
+        else:
+            _property_edit_poll_ticker.data = self
+
+    def maybe_commit_event(self, current_time):
+        if current_time - self.creation_time < PROPERTY_EDIT_COMMIT_DELAY_MILLIS:
+            return
+        
+        global _property_edit_poll_ticker, _first_action
+        _property_edit_poll_ticker.destroy_ticker()
+        _property_edit_poll_ticker = None
+        
+        self.undo_val = _first_action.undo_val 
+        _first_action = None 
+
+        register_edit(self)
+    
+    def undo(self):
+        print("ProperEditAction.undo", self.undo_val)
+        self.value_set_func(self.undo_val)
+
+    def redo(self):
+        print("ProperEditAction.redo", self.redo_val)
+        self.value_set_func(self.redo_val)
+
 
 # ------------------------------------------- LINKED SEQUENCE CYCLIC TESTING
 WHITE = 0
