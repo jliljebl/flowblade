@@ -43,6 +43,7 @@ import propertyparse
 import propertyedit
 import respaths
 import translations
+import undo
 import updater
 import utils
 import utilsgtk
@@ -212,13 +213,16 @@ class SliderEditor:
             self.init_for_slider(editable_property, slider_name, compact)
         
         self.editable_property = editable_property
-        
+
+        undo.set_editor_for_property(editable_property, self)
+
     def init_for_slider(self, editable_property, slider_name=None, compact=False):
         self.editor_type = SLIDER
         
         adjustment = editable_property.get_input_range_adjustment()
         adjustment.connect("value-changed", editable_property.adjustment_value_changed)
-
+        self.adjustment = adjustment
+ 
         hslider = Gtk.HScale()
         hslider.set_adjustment(adjustment)
         hslider.set_draw_value(False)
@@ -318,6 +322,8 @@ class SliderEditor:
 
             callbackbridge.clipeffectseditor_refresh_clip()
 
+    def get_adjustment(self):
+        return self.adjustment
 
 class KeyframesToggler:
     def __init__(self, parent_editor):

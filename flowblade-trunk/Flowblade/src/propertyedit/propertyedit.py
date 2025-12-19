@@ -225,6 +225,7 @@ class AbstractProperty:
         self.track = None # set in creator loops
         self.clip_index = None # set in creator loops
         self.name = None # mlt property name. set by extending classes
+        self.values_change_is_undo = False
         self._set_input_range()
         self._set_output_range()
     
@@ -416,18 +417,25 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
-        edit_action = undo.ProperEditAction(self.undo_redo_write_value, str(self.value))
+        if self.values_change_is_undo == False:
+            # Don't create undo object if value chantge is caused by doing undo/redo 
+            edit_action = undo.ProperEditAction(self.undo_redo_write_value, str(self.value), None)
 
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_filter_object_property(str_value)
 
-        edit_action.edit_done(str_value)
+        if self.values_change_is_undo == False:
+            edit_action.edit_done(str_value)
+        else:
+            self.values_change_is_undo = False
 
-    def undo_redo_write_value(self, str_value):
-        self.write_mlt_property_str_value(str_value)
-        self.value = str_value
-        self.write_filter_object_property(str_value)
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        editor = undo.get_editor_for_property(self)
+
+        if editor.editor_type == "slider":
+            self.values_change_is_undo = True
+            editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
 
     def write_mlt_property_str_value(self, str_value):
         # mlt property value

@@ -59,6 +59,11 @@ save_item = None
 undo_item = None 
 redo_item = None
 
+
+# dict edtable property -> editor, needed to update editors after undo/redo
+_editor_for_property = {}
+
+
 def clear_undos():
     global undo_stack, index
     undo_stack = []
@@ -192,12 +197,21 @@ def _property_edit_poll_event(property_edit_action):
     
     property_edit_action.maybe_commit_event(current_time)
 
+def set_editor_for_property(editable_property, editor):
+    global _editor_for_property
+    _editor_for_property[editable_property] = editor
+
+def get_editor_for_property(editable_property):
+    global _editor_for_property
+    return _editor_for_property[editable_property]
+    
 
 class ProperEditAction:
     
-    def __init__(self, value_set_func, undo_val):
+    def __init__(self, value_set_func, undo_val, edit_data):
         self.value_set_func = value_set_func
         self.undo_val = copy.deepcopy(undo_val)
+        self.edit_data = edit_data
         self.redo_val = None
         self.creation_time = None 
 
@@ -228,11 +242,11 @@ class ProperEditAction:
     
     def undo(self):
         print("ProperEditAction.undo", self.undo_val)
-        self.value_set_func(self.undo_val)
+        self.value_set_func(self.undo_val, self.edit_data)
 
     def redo(self):
         print("ProperEditAction.redo", self.redo_val)
-        self.value_set_func(self.redo_val)
+        self.value_set_func(self.redo_val, self.edit_data)
 
 
 # ------------------------------------------- LINKED SEQUENCE CYCLIC TESTING
