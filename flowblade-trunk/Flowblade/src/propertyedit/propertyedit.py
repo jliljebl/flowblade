@@ -29,7 +29,7 @@ and python side values (that are persistent).
 """
 import json
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import animatedvalue
 import appconsts
@@ -1416,9 +1416,12 @@ class CairoColorProperty(EditableProperty):
     there is something gone wrom
     """
     def get_value_rgba(self):
-        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
-        return (float(raw_r)/255.0, float(raw_g)/255.0, float(raw_b)/255.0, 1.0)
+        return self.hex_gdk_rgba(self.value)
 
+    def hex_gdk_rgba(self, hex_value):
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(hex_value)
+        return (float(raw_r)/255.0, float(raw_g)/255.0, float(raw_b)/255.0, 1.0)
+        
     def color_selected(self, color_button):
         color = color_button.get_color()
         raw_r, raw_g, raw_b = color.to_floats()
@@ -1427,7 +1430,14 @@ class CairoColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
-
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        color_button = undo.get_editor_for_property(self)
+        self.values_change_is_undo = True
+        gdk_color = self.hex_gdk_rgba(str_value)
+        color_button.set_rgba(Gdk.RGBA(*gdk_color))
+        self.write_value(str_value)
+        
+            
 class WipeResourceProperty(TransitionEditableProperty):
     """
     Converts user combobox selections to absolute paths containing wipe

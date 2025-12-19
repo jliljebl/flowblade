@@ -60,7 +60,7 @@ undo_item = None
 redo_item = None
 
 
-# dict edtable property -> editor, needed to update editors after undo/redo
+# dict edtable property -> editor, needed to update property editor GUI after undo/redo
 _editor_for_property = {}
 
 

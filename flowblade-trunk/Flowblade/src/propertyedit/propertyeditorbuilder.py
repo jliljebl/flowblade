@@ -527,6 +527,8 @@ def _get_color_selector(editable_property):
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
     color_button.connect("color-set", editable_property.color_selected)
 
+    undo.set_editor_for_property(editable_property, color_button)
+
     picker_button = Gtk.ToggleButton()
     gtkbuilder.button_set_image_icon_name(picker_button, Gtk.STOCK_COLOR_PICKER)
     
