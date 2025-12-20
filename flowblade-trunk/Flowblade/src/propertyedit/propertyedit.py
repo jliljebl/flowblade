@@ -1378,7 +1378,6 @@ EDITABLE_PROPERTY_CREATORS = { \
     SINGLE_KEYFRAME:lambda params: SingleKeyFrameProperty(params),
     KEYFRAME_HCS: lambda params : KeyFrameHCSFilterProperty(params),
     KEYFRAME_HCS_TRANSITION: lambda params : KeyFrameHCSTransitionProperty(params),
-    MULTIPART_KEYFRAME_HCS: lambda params : MultipartKeyFrameProperty(params),
     COLOR: lambda params : ColorProperty(params),
     CAIRO_COLOR: lambda params : CairoColorProperty(params),
     GEOMETRY_RECT_FILTER_KF: lambda params : KeyFrameFilterGeometryRectProperty(params),
