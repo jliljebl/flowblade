@@ -59,28 +59,17 @@ NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 DEFAULT = "default"                                         # value     (str(int), str(float) or str(str))
 DEFAULT_TRANSITION = "default_transition"                   # value     (str(int), str(float) or str(str))
 SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were juat presenting standard slider for these now. This kept for back wards compatibility.
-OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
-OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
-GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
 GEOMETRY_RECT_FILTER_KF = "geom_filt_rect_kf"               # frame=x y w h 1  with 1 being constant for full opacity
-GEOMETRY_ROTATING_FILTER_KF = "geom_filt_rotating_kf"       # extra editor parameter for "Positioan Size Rotation" filter
-GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
-GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
 KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separated
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separated, used to edit transitions
-MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separated
-FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
-FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs"                  # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
-CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
+CAIRO_COLOR = "cairo_color"                                 # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
-WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 FILTER_WIPE_RESOURCE = "filter_wipe_resource"               # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
-PLAIN_STRING = "plain_string"                               # String is just string, for text input
-RECT_NO_KF = "rect_no_kf"                                     # x y w h
+RECT_NO_KF = "rect_no_kf"                                   # x y w h
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
@@ -475,10 +464,22 @@ class TransitionEditableProperty(AbstractProperty):
         return self.clip.clip_in # compositor in and out points straight in timeline frames
         
     def write_value(self, str_value):
+        if self.values_change_is_undo == False:
+            # Don't create undo object if value chantge is caused by doing undo/redo 
+            edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
         self.write_transition_object_property(str_value)
 
+        if self.values_change_is_undo == False:
+            edit_action.edit_done(str_value)
+        else:
+            self.values_change_is_undo = False
+
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        print("undo_redo_write_value not impl.")
+            
     def write_mlt_property_str_value(self, str_value):
         self.transition.mlt_transition.set(str(self.name), str(str_value))
         
@@ -563,113 +564,6 @@ class SingleKeyFrameProperty(EditableProperty):
         self.write_value(val_str)
 
 
-class AffineFilterGeomProperty(EditableProperty):
-    """
-    Converts values of four sliders to position and size info
-    """
-    def slider_values_changed(self, all_sliders, w):
-        x_s, y_s, h_s = all_sliders
-        x = x_s.get_adjustment().get_value()
-        y = y_s.get_adjustment().get_value()
-        h = h_s.get_adjustment().get_value()
-
-        # "0=x/y:widthxheight:opacity"
-        val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100" # 100x MLT ignores width
-        self.write_value(val_str)
-
-
-class AffineFilterGeomPropertyV2(EditableProperty):
-    """
-    Converts values of four sliders to position and size info
-    """
-    def slider_values_changed(self, all_sliders, height):
-        x_s, y_s, xs_s = all_sliders
-        x = x_s.get_adjustment().get_value()
-        y = y_s.get_adjustment().get_value()
-        w = xs_s.get_adjustment().get_value()
-
-        # "0=x/y:widthxheight:opacity"
-        val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(height) + ":100" # 100x MLT does translate for height
-        self.write_value(val_str)
-
-
-class FreiPosHCSFilterProperty(EditableProperty):    
-    def adjustment_value_changed(self, adjustment):
-        value = adjustment.get_value()
-        out_value = self.get_out_value(value)
-        val_str = "0=" + str(out_value)
-        self.write_value(val_str)
-
-
-class OpacityInGeomSKFProperty(TransitionEditableProperty):
-    """
-    Converts adjustments to expressions like "0/0:720x576:76" for
-    opacity of 76% and creates adjustments from expressions.
-    
-    Only opacity part is edited.
-    """
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-        clip, property, property_index, args_str = params
-        name, value, type = property
-        self.value_parts = value.split(":")
-    
-    def get_input_range_adjustment(self):
-        try:
-            step = propertyparse.get_args_num_value(self.args[STEP])
-        except:
-            step = DEFAULT_STEP
-        lower, upper = self.input_range
-        in_value = self.get_in_value(float(self.value_parts[2]))
-        page_factor = self.get_page_factor(upper, lower, step)
-
-        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
-
-    def adjustment_value_changed(self, adjustment):
-        value = adjustment.get_value()
-        out_value = self.get_out_value(value)
-        val_str = self.value_parts[0] + ":" + self.value_parts[1] + ":" + str(out_value)
-        self.write_value(val_str)
-
-
-class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
-    
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-        clip, property, property_index, args_str = params
-        name, value, type = property
-        
-        # We need values of first keyframe for later
-        key_frames = value.split(";")
-        self.value_parts = key_frames[0].split(":")
-        self.screen_size_str = self.value_parts[1]
-        
-    def get_input_range_adjustment(self):
-        # initial opacity value
-        try:
-            step = propertyparse.get_args_num_value(self.args[STEP])
-        except:
-            step = DEFAULT_STEP
-        lower, upper = self.input_range
-        in_value = self.get_in_value(float(self.value_parts[2]))
-        page_factor = self.get_page_factor(upper, lower, step)
-
-        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
-
-    def write_out_keyframes(self, keyframes):
-        # key frame array of tuples (frame, opacity)
-        val_str = ""
-        for kf in keyframes:
-            frame, opac = kf
-            val_str += str(int(frame)) + "=" # frame
-            val_str += "0/0:" # pos
-            val_str += str(self.screen_size_str) + ":" # size
-            val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
-        
-        val_str = val_str.strip(";")
-        self.write_value(val_str)
-
-
 class LUTTableProperty(EditableProperty):
     def reset_to_linear(self):
         self.write_value("LINEAR")
@@ -693,43 +587,6 @@ class PointsListProperty(EditableProperty):
             val_str = val_str + str(p.x) + "/"  + str(p.y)
             if i < len(crpoints) - 1:
                 val_str = val_str + ";"
-        self.write_value(val_str)
-
-
-class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
-    """
-    Converts user edits to expressions like "12=11/21:720x576:76" for
-    to keyframes for position scale and opacity.
-    """
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-    
-    def get_input_range_adjustment(self):
-        # This is used for opacity slider
-        try:
-            step = propertyparse.get_args_num_value(self.args[STEP])
-        except:
-            step = DEFAULT_STEP
-        lower, upper = self.input_range
-        page_factor = self.get_page_factor(upper, lower, step)
-
-        return Gtk.Adjustment(value=float(1.0), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
-
-
-    def write_out_keyframes(self, keyframes):
-        # key frame array of tuples (frame, [x, y, width, height], opacity)
-        val_str = ""
-        for kf in keyframes:
-            frame, rect, opac, kf_type = kf
-            
-            eq_str = animatedvalue.TYPE_TO_EQ_STRING[kf_type]
-                        
-            val_str += str(int(frame)) + eq_str # frame
-            val_str += str(int(rect[0])) + "/" + str(int(rect[1])) + ":" # pos
-            val_str += str(int(rect[2])) + "x" + str(int(rect[3])) + ":" # size
-            val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
-        
-        val_str = val_str.strip(";")
         self.write_value(val_str)
 
 
@@ -1317,10 +1174,6 @@ class AlphaShapeRotatingGeometryProperty:
         self.clip_index = self.track.clips.index(self.clip)
         
 
-class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-
 
 class KeyFrameHCSFilterProperty(EditableProperty):
     """
@@ -1447,20 +1300,6 @@ class CairoColorProperty(EditableProperty):
         color_button.set_rgba(Gdk.RGBA(*gdk_color))
         self.write_value(str_value)
         
-            
-class WipeResourceProperty(TransitionEditableProperty):
-    """
-    Converts user combobox selections to absolute paths containing wipe
-    resource images.
-    """
-    def __init__(self, params):
-        TransitionEditableProperty.__init__(self, params)
-
-    def combo_selection_changed(self, combo_box, keys):
-        key = keys[combo_box.get_active()]
-        res_path = mlttransitions.get_wipe_resource_path(key)
-        self.write_value(str(res_path))
-
 
 class FilterWipeResourceProperty(EditableProperty):
     """
@@ -1505,37 +1344,6 @@ class RectNoKeyframes(EditableProperty):
         self.write_value(val_str)
 
 
-class MultipartKeyFrameProperty(AbstractProperty):
-    
-    def __init__(self, params):
-        clip, filter_index, property, property_index, args_str = params
-        AbstractProperty.__init__(self, args_str)
-        self.name, self.value, self.type = property
-        self.clip = clip
-        self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py
-        self.property_index = property_index # index of property in FilterObject.properties. This is the persistent object
-        self.is_compositor_filter = False # This is after changed after creation if needed
-
-    def get_input_range_adjustment(self):
-        try:
-            step = propertyparse.get_args_num_value(self.args[STEP])
-        except:
-            step = DEFAULT_STEP
-        lower, upper = self.input_range
-        page_factor = self.get_page_factor(upper, lower, step)
-    
-        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
-
-    def write_out_keyframes(self, keyframes):
-        val_str = ""
-        for kf in keyframes:
-            frame, val = kf
-            val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
-        val_str = val_str.strip(";")
-        self.value = val_str
-        filter_object = self.clip.filters[self.filter_index]
-        filter_object.update_value(val_str, self.clip, current_sequence().profile)
-
 
 class AffineScaleProperty(EditableProperty):
 
@@ -1566,24 +1374,14 @@ class AffineScaleProperty(EditableProperty):
 # Note: HCS means half comma separated
 EDITABLE_PROPERTY_CREATORS = { \
     DEFAULT:lambda params : EditableProperty(params),
-    PLAIN_STRING:lambda params : EditableProperty(params),
     DEFAULT_TRANSITION:lambda params : TransitionEditableProperty(params),
     SINGLE_KEYFRAME:lambda params: SingleKeyFrameProperty(params),
-    OPACITY_IN_GEOM_SINGLE_KF: lambda params : OpacityInGeomSKFProperty(params),
-    OPACITY_IN_GEOM_KF: lambda params : OpacityInGeomKeyframeProperty(params),
     KEYFRAME_HCS: lambda params : KeyFrameHCSFilterProperty(params),
-    FREI_POSITION_HCS: lambda params : FreiPosHCSFilterProperty(params),
-    FREI_GEOM_HCS_TRANSITION: lambda params : FreiGeomHCSTransitionProperty(params),
     KEYFRAME_HCS_TRANSITION: lambda params : KeyFrameHCSTransitionProperty(params),
     MULTIPART_KEYFRAME_HCS: lambda params : MultipartKeyFrameProperty(params),
     COLOR: lambda params : ColorProperty(params),
     CAIRO_COLOR: lambda params : CairoColorProperty(params),
-    GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOMETRY_RECT_FILTER_KF: lambda params : KeyFrameFilterGeometryRectProperty(params),
-    GEOMETRY_ROTATING_FILTER_KF: lambda params : KeyFrameFilterRotatingGeometryProperty(params),
-    GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
-    GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
-    WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     FILTER_WIPE_RESOURCE : lambda params : FilterWipeResourceProperty(params),
     FILE_RESOURCE : lambda params : FileResourceProperty(params),
     ROTO_JSON  : lambda params : RotoJSONProperty(params),

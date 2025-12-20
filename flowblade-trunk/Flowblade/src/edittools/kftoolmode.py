@@ -298,25 +298,6 @@ def _get_param_editable_property_with_filter_search(mlt_service_id, property_nam
                     pass
         
     return None
-    
-def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service_id):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.mlt_service_id == mlt_service_id:
-            editable_properties = propertyedit.get_filter_editable_properties(
-                                                           clip, 
-                                                           filter_object,
-                                                           i,
-                                                           track,
-                                                           clip_index)
-            for ep in editable_properties:
-                try:
-                    if ep.args["exptype"] == "multipart_keyframe":
-                        return ep
-                except:
-                    pass
-                    
-    return None
 
 def _has_deprecated_volume_filter(clip):
     try:
