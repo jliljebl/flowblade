@@ -93,6 +93,9 @@ def register_edit(undo_edit):
     if len(undo_stack) > MAX_UNDOS:
         del undo_stack[0]
         index = index - 1
+        # TODO: clear from _editor_for_property all edtable_property objects and editors 
+        # not referenced in current undo stacknot referenced in current undo stack.
+        # or we'll leak memory.
         
     # Add to stack and grow index
     undo_stack.append(undo_edit)
@@ -208,7 +211,8 @@ def get_editor_for_property(editable_property):
 
 class ProperEditAction:
     
-    def __init__(self, value_set_func, undo_val, edit_data):
+    def __init__(self, editable_property, value_set_func, undo_val, edit_data):
+        self.editable_property = editable_property
         self.value_set_func = value_set_func
         self.undo_val = copy.deepcopy(undo_val)
         self.edit_data = edit_data
