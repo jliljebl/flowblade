@@ -214,7 +214,7 @@ class AbstractProperty:
         self.track = None # set in creator loops
         self.clip_index = None # set in creator loops
         self.name = None # mlt property name. set by extending classes
-        self.ignore_value_change = False #  We hooked undo system into value write we need to ignore some of them.
+        self.ignore_write_for_undo = False #  We hooked undo system into value write we need to ignore some of them.
         self._set_input_range()
         self._set_output_range()
     
@@ -406,7 +406,7 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
-        if self.ignore_value_change == False:
+        if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
             edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
 
@@ -414,16 +414,16 @@ class EditableProperty(AbstractProperty):
         self.value = str_value
         self.write_filter_object_property(str_value)
 
-        if self.ignore_value_change == False:
+        if self.ignore_write_for_undo == False:
             edit_action.edit_done(str_value)
         else:
-            self.ignore_value_change = False
+            self.ignore_write_for_undo = False
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
 
         if editor.editor_type == "slider":
-            self.ignore_value_change = True
+            self.ignore_write_for_undo = True
             editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
 
     def write_mlt_property_str_value(self, str_value):
@@ -464,7 +464,7 @@ class TransitionEditableProperty(AbstractProperty):
         return self.clip.clip_in # compositor in and out points straight in timeline frames
         
     def write_value(self, str_value):
-        if self.ignore_value_change == False:
+        if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
             edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
             
@@ -472,10 +472,10 @@ class TransitionEditableProperty(AbstractProperty):
         self.value = str_value
         self.write_transition_object_property(str_value)
 
-        if self.ignore_value_change == False:
+        if self.ignore_write_for_undo == False:
             edit_action.edit_done(str_value)
         else:
-            self.ignore_value_change = False
+            self.ignore_write_for_undo = False
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         print("undo_redo_write_value not impl.")
@@ -615,7 +615,13 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
-
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        editor = undo.get_editor_for_property(self)
+        self.write_value(str_value)
+        editor.clip_editor.set_keyframes(self.value, self.get_in_value)
+        self.ignore_write_for_undo = True
+        editor.active_keyframe_changed()
+        
 class KeyFrameFilterRotatingGeometryProperty:
 
     def __init__(self, create_params, editable_properties, track, clip_index):
@@ -1203,7 +1209,7 @@ class KeyFrameHCSFilterProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
-        self.ignore_value_change = True
+        self.ignore_write_for_undo = True
         self.write_value(str_value)
         editor.clip_editor.set_keyframes(self.value, self.get_in_value)
         editor.active_keyframe_changed()
@@ -1273,7 +1279,7 @@ class ColorProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         color_button = undo.get_editor_for_property(self)
-        self.ignore_value_change = True
+        self.ignore_write_for_undo = True
         gdk_color = self.hex_gdk_rgba(str_value)
         color_button.set_rgba(Gdk.RGBA(*gdk_color))
         self.write_value(str_value)
@@ -1301,7 +1307,7 @@ class CairoColorProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         color_button = undo.get_editor_for_property(self)
-        self.ignore_value_change = True
+        self.ignore_write_for_undo = True
         gdk_color = self.hex_gdk_rgba(str_value)
         color_button.set_rgba(Gdk.RGBA(*gdk_color))
         self.write_value(str_value)

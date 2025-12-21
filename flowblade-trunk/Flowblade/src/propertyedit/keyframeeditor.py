@@ -1120,7 +1120,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
 
         orig_tline_frame = PLAYER().current_frame()
 
-        editable_property.ignore_value_change = True # self.active_keyframe_changed() causes value write via slider listener and this is just initing GUI panel
+        editable_property.ignore_write_for_undo = True # self.active_keyframe_changed() causes value write via slider listener and this is just initing GUI panel
         self.active_keyframe_changed() # to do update gui to current values
                                        # This also seeks tline frame to frame 0, thus value was saved in the line above.
 
