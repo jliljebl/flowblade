@@ -52,6 +52,7 @@ import keyframeeditcanvas
 import propertyedit
 import propertyparse
 import respaths
+import undo
 import utils
 
 # Draw consts.
@@ -962,6 +963,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
         self.initializing = True # Hack against too early for on slider listener
+
+        undo.set_editor_for_property(editable_property, self)
         
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -1099,8 +1102,8 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.clip_editor.keyframe_parser = propertyparse.single_value_keyframes_string_to_kf_array
 
         # parsers for other editable_property types
-        if isinstance(editable_property, propertyedit.OpacityInGeomKeyframeProperty):
-            self.clip_editor.keyframe_parser = propertyparse.geom_keyframes_value_string_to_opacity_kf_array
+        #if isinstance(editable_property, propertyedit.OpacityInGeomKeyframeProperty):
+        #    self.clip_editor.keyframe_parser = propertyparse.geom_keyframes_value_string_to_opacity_kf_array
             
         editable_property.value.strip('"')
         
@@ -1117,8 +1120,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
 
         orig_tline_frame = PLAYER().current_frame()
 
+        editable_property.ignore_value_change = True # self.active_keyframe_changed() causes value write via slider listener and this is just initing GUI panel
         self.active_keyframe_changed() # to do update gui to current values
-                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above.
 
         # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
         self.display_tline_frame(orig_tline_frame)

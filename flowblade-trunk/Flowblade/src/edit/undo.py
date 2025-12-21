@@ -27,6 +27,7 @@ from gi.repository import GLib
 
 import copy
 import time
+#import traceback
 
 import callbackbridge
 import editorstate
@@ -106,8 +107,9 @@ def register_edit(undo_edit):
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
 
+    #print("register edit: undo_stack", len(undo_stack))
 
-
+ 
 def do_undo_and_repaint(widget=None, data=None):
     do_undo()
     repaint_tline()
@@ -220,6 +222,7 @@ class ProperEditAction:
         self.creation_time = None 
 
     def edit_done(self, redo_val):
+        #print(traceback.print_stack())
         self.redo_val = copy.deepcopy(redo_val)
         self.creation_time = round(time.time() * 1000)
                     
@@ -245,11 +248,11 @@ class ProperEditAction:
         register_edit(self)
     
     def undo(self):
-        print("ProperEditAction.undo", self.undo_val)
+        print("ProperEditAction.undo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.undo_val, self.edit_data)
 
     def redo(self):
-        print("ProperEditAction.redo", self.redo_val)
+        print("ProperEditAction.redo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.redo_val, self.edit_data)
 
 
