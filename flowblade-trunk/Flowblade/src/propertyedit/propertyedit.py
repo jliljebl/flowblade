@@ -1386,12 +1386,13 @@ class AffineScaleProperty(EditableProperty):
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
 
-        if editor.editor_type == "slider":
-            self.ignore_write_for_undo = True
-            editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
+        if editor != None:
+            if editor.editor_type == "slider":
+                editor.editable_property.ignore_write_for_undo = True
+                editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
         else:
-            # TODO: Keyframe editor type
-            pass
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
 
 # ------------------------------------------ creator func dicts
 # dict EXPRESSION_TYPE args value -> class extending AbstractProperty
