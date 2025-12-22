@@ -208,8 +208,19 @@ def set_editor_for_property(editable_property, editor):
 
 def get_editor_for_property(editable_property):
     global _editor_for_property
-    return _editor_for_property[editable_property]
-    
+    print("keys:", len(_editor_for_property.keys()))
+    for ep in _editor_for_property.keys():
+        if  ep.clip == editable_property.clip and \
+            ep.filter_index == editable_property.filter_index and \
+            ep.property_index == editable_property.property_index:
+            return _editor_for_property[ep]
+
+    print("editable property not found ")
+    return None
+
+def clear_editors_dict():
+    global _editor_for_property
+    _editor_for_property = {}
 
 class ProperEditAction:
     

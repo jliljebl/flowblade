@@ -51,6 +51,7 @@ import propertyeditorbuilder
 import propertyparse
 import respaths
 import translations
+import undo
 import updater
 import utils
 
@@ -657,6 +658,8 @@ def clear_clip():
     """
     global _filter_stack
     _filter_stack = None
+    undo.clear_editors_dict()
+    
     _set_no_clip_info()
     show_text_in_edit_area(_("No Clip"))
 
@@ -684,6 +687,8 @@ def set_stack_update_unblocked():
     _block_stack_update = False
 
 def update_stack(clip, track, clip_index):
+    undo.clear_editors_dict()
+
     new_stack = ClipFilterStack(clip, track, clip_index)
     global _filter_stack
     _filter_stack = new_stack
@@ -933,12 +938,13 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     EditAction object calls this after edits and undos and redos.
     Methods updates filter stack to new state. 
     """
+    print("filter_edit_done_stack_update")
     if _block_stack_update == True:
         return
-        
+
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
-
+    
     track = _filter_stack.track
     clip_index = _filter_stack.clip_index
         

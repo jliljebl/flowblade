@@ -421,10 +421,13 @@ class EditableProperty(AbstractProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
-
-        if editor.editor_type == "slider":
+        if editor == None:
             self.ignore_write_for_undo = True
-            editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
+            self.write_value(str_value)
+        else:
+            if editor.editor_type == "slider":
+                editor.editable_property.ignore_write_for_undo = True
+                editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
 
     def write_mlt_property_str_value(self, str_value):
         # mlt property value
