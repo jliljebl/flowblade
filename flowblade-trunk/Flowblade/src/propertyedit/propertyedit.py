@@ -1282,10 +1282,14 @@ class ColorProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         color_button = undo.get_editor_for_property(self)
-        self.ignore_write_for_undo = True
-        gdk_color = self.hex_gdk_rgba(str_value)
-        color_button.set_rgba(Gdk.RGBA(*gdk_color))
-        self.write_value(str_value)
+        if color_button != None:
+            color_button.editable_property.ignore_write_for_undo = True
+            gdk_color = self.hex_gdk_rgba(str_value)
+            color_button.set_rgba(Gdk.RGBA(*gdk_color))
+            color_button.editable_property.write_value(str_value)
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
 
 class CairoColorProperty(EditableProperty):
     """
@@ -1310,12 +1314,15 @@ class CairoColorProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         color_button = undo.get_editor_for_property(self)
-        self.ignore_write_for_undo = True
-        gdk_color = self.hex_gdk_rgba(str_value)
-        color_button.set_rgba(Gdk.RGBA(*gdk_color))
-        self.write_value(str_value)
-        
-
+        if color_button != None:
+            color_button.editable_property.ignore_write_for_undo = True
+            gdk_color = self.hex_gdk_rgba(str_value)
+            color_button.set_rgba(Gdk.RGBA(*gdk_color))
+            color_button.editable_property.write_value(str_value)
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
+            
 class FilterWipeResourceProperty(EditableProperty):
     """
     Converts user combobox selections to absolute paths containing wipe

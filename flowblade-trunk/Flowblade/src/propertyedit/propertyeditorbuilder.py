@@ -526,6 +526,7 @@ def _get_color_selector(editable_property):
     gdk_color = editable_property.get_value_rgba()
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
     color_button.connect("color-set", editable_property.color_selected)
+    color_button.editable_property = editable_property
 
     undo.set_editor_for_property(editable_property, color_button)
 
