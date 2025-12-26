@@ -406,6 +406,7 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
+        print("ep write value")
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
             edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
@@ -1216,11 +1217,18 @@ class KeyFrameHCSFilterProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
-        self.ignore_write_for_undo = True
-        self.write_value(str_value)
-        editor.clip_editor.set_keyframes(self.value, self.get_in_value)
-        editor.active_keyframe_changed()
-
+        if editor != None:
+            editor.editable_property.ignore_write_for_undo = True
+            editor.editable_property.write_value(str_value)
+            editor.clip_editor.set_keyframes(editor.editable_property.value, editor.editable_property.get_in_value)
+            # active_keyframe_changed() has write_value as side effect, so we need to block undo object creation twice here.
+            # active_keyframe_changed() having write_value as side effect may be needed else where, so we just block twice.
+            editor.editable_property.ignore_write_for_undo = True
+            editor.active_keyframe_changed()
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
+        
 class RotoJSONProperty(EditableProperty):
 
     def write_out_keyframes(self, keyframes):
