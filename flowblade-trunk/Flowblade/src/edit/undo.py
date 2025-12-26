@@ -208,8 +208,13 @@ def set_editor_for_property(editable_property, editor):
 
 def get_editor_for_property(editable_property):
     global _editor_for_property
-    print("keys:", len(_editor_for_property.keys()))
+
+    if str(type(editable_property)) == "<class 'propertyedit.KeyFrameHCSTransitionProperty'>":
+        # These need different equality testing.
+        return _get_compositor_editor_for_property(editable_property)
+
     for ep in _editor_for_property.keys():
+        print(id(ep.clip), ep.filter_index, ep.property_index)
         if  ep.clip == editable_property.clip and \
             ep.filter_index == editable_property.filter_index and \
             ep.property_index == editable_property.property_index:
@@ -218,6 +223,17 @@ def get_editor_for_property(editable_property):
     print("editable property not found ")
     return None
 
+def _get_compositor_editor_for_property(editable_property):
+    global _editor_for_property
+
+    for ep in _editor_for_property.keys():
+        if  ep.compositor_destroy_id == editable_property.compositor_destroy_id and \
+            ep.property_index == editable_property.property_index:
+            return _editor_for_property[ep]
+
+    print("compositor editable property not found ")
+    return None
+    
 def clear_editors_dict():
     global _editor_for_property
     _editor_for_property = {}

@@ -462,6 +462,7 @@ class TransitionEditableProperty(AbstractProperty):
         self.transition = clip.transition # ... is compositor.transition
         self.property_index = property_index # index of property in mlttransitions.CompositorObject.transition.properties.
                                              # This is the persistent object
+        self.compositor_destroy_id = clip.destroy_id
 
     def get_clip_tline_pos(self):
         # self.clip is actually compositor ducktyping for clip
@@ -1259,6 +1260,20 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
         page_factor = self.get_page_factor(upper, lower, step)
     
         return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
+
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        editor = undo.get_editor_for_property(self)
+        if editor != None:
+            editor.editable_property.ignore_write_for_undo = True
+            editor.editable_property.write_value(str_value)
+            editor.clip_editor.set_keyframes(editor.editable_property.value, editor.editable_property.get_in_value)
+            # active_keyframe_changed() has write_value as side effect, so we need to block undo object creation twice here.
+            # active_keyframe_changed() having write_value as side effect may be needed else where, so we just block twice.
+            editor.editable_property.ignore_write_for_undo = True
+            editor.active_keyframe_changed()
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
