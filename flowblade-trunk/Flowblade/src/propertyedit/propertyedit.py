@@ -620,11 +620,15 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
 
     def undo_redo_write_value(self, str_value, undo_redo_data):
         editor = undo.get_editor_for_property(self)
-        self.ignore_write_for_undo = True
-        self.write_value(str_value)
-        editor.geom_kf_edit.set_keyframes(self.value, self.get_in_value)
-        editor.active_keyframe_changed()
-
+        if editor != None:
+            editor.editable_property.ignore_write_for_undo = True
+            editor.editable_property.write_value(str_value)
+            editor.geom_kf_edit.set_keyframes(editor.editable_property.value, editor.editable_property.get_in_value)
+            editor.active_keyframe_changed()
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
+            
 class KeyFrameFilterRotatingGeometryProperty:
 
     def __init__(self, create_params, editable_properties, track, clip_index):
