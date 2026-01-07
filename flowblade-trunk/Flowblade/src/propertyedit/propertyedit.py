@@ -582,6 +582,18 @@ class LUTTableProperty(EditableProperty):
         val_str = ''.join(l).rstrip(";")
         self.write_value(val_str)
 
+"""
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        editor = undo.get_editor_for_property(self)
+        if editor == None:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
+        else:
+            if editor.editor_type == "slider":
+                editor.editable_property.ignore_write_for_undo = True
+                editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
+"""
+
         
 class PointsListProperty(EditableProperty):
     

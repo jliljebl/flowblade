@@ -262,9 +262,14 @@ class ProperEditAction:
             _property_edit_poll_ticker.data = self
 
     def maybe_commit_event(self, current_time):
+        # NOTE: With this design user edting values of 2 _different_ editable properties
+        # in under 750 ms results in undo action for first edit not being part of the undo stack.
+        # We consider this acceptable because that a) almost never happens in practise,
+        # b) resulting unexpected behaviour when applying undos/redos is easily fixable by 
+        # redoing the edit.
         if current_time - self.creation_time < PROPERTY_EDIT_COMMIT_DELAY_MILLIS:
             return
-        
+
         global _property_edit_poll_ticker, _first_action
         _property_edit_poll_ticker.destroy_ticker()
         _property_edit_poll_ticker = None
