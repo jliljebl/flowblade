@@ -439,6 +439,7 @@ def layout_menu_show(launcher, widget, callback):
     if not(editorstate.SCREEN_WIDTH < 1919):
         add_menu_action(main_section, _("Layout Top Row 4 Panels"), "layout.fourpanels",  "top_row_four", callback)
     add_menu_action(main_section, _("Layout Media Panel Left Column"), "layout.medialeft",  "media_panel_left", callback)
+    add_menu_action(main_section, _("Layout Edit Panel Right Column"), "layout.editright",  "edit_panel_right", callback)
     _layout_menu.append_section(None, main_section)
 
     save_section = Gio.Menu.new()

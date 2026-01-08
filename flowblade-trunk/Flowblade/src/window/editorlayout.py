@@ -106,6 +106,19 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
 }
 
+EDIT_PANEL_RIGHT_POSITIONS = { \
+    appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE,
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_RIGHT_COLUMN,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+}
+
+
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
     appconsts.PANEL_MULTI_EDIT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
@@ -554,6 +567,9 @@ def _create_layout_presets_menu(menu):
 
     menu_item = guiutils.get_menu_item(_("Layout Media Panel Left Column"), callback, "media_panel_left")
     menu.add(menu_item)
+
+    menu_item = guiutils.get_menu_item(_("Layout Edit Panel Right Column"), callback, "edit_panel_right")
+    menu.add(menu_item)
     
     guiutils.add_separetor(menu)
     
@@ -577,6 +593,8 @@ def _top_bar_menu_item_activated(widget, msg):
          apply_layout(TOP_ROW_FOUR_POSITIONS)
     elif msg == "media_panel_left":
          apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
+    elif msg == "edit_panel_right":
+         apply_layout(EDIT_PANEL_RIGHT_POSITIONS)
     elif msg == "save_layout":
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
         dialogs.save_layout_data(_save_layout_callback, data)
