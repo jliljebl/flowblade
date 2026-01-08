@@ -51,6 +51,7 @@ _sequecne_panel_popover = None
 _sequence_panel_menu = None
 _layout_popover = None
 _layout_menu = None
+_layout_user_section = None
 _trimview_popover = None
 _trimview_menu = None
 _monitorview_popover = None 
@@ -428,8 +429,8 @@ def sequence_panel_popover_show(widget, x, y, callback):
     _sequecne_panel_popover.set_pointing_to(rect) 
     _sequecne_panel_popover.show()
 
-def layout_menu_show(launcher, widget, callback):
-    global _layout_popover, _layout_menu
+def layout_menu_show(launcher, widget, callback, _user_layouts):
+    global _layout_popover, _layout_menu, _layout_user_section
 
     _layout_menu = menu_clear_or_create(_layout_menu)
 
@@ -442,9 +443,16 @@ def layout_menu_show(launcher, widget, callback):
     add_menu_action(main_section, _("Layout Edit Panel Right Column"), "layout.editright",  "edit_panel_right", callback)
     _layout_menu.append_section(None, main_section)
 
+    if len(_user_layouts) > 0:
+        _layout_user_section = menu_clear_or_create(_layout_user_section)
+        for layoutname in _user_layouts:
+            add_menu_action(_layout_user_section, layoutname, "layout.user." + layoutname,  layoutname, callback)
+        _layout_menu.append_section(None, _layout_user_section)
+
     save_section = Gio.Menu.new()
     add_menu_action(save_section, _("Save Current Layout..."), "layout.save",  "save_layout", callback)
-    add_menu_action(save_section, _("Load Layout..."), "layout.load",  "load_layout", callback)
+    if len(_user_layouts) > 0:
+        add_menu_action(save_section, _("Delete User Layout..."), "layout.delete",  "delete_layout", callback)
     _layout_menu.append_section(None, save_section)
 
     _layout_popover = new_popover(widget, _layout_menu, launcher)
