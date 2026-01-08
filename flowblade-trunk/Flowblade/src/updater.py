@@ -58,7 +58,10 @@ PIX_PER_FRAME_MAX = 20.0 * 1.0 / SCALE_MULTIPLIER
 PIX_PER_FRAME_MIN = 0.001
 
 # For adjusting how fast mouse scrolls timeline sideways
-MOUSE_SIDE_SCROLL_SPEED = 1.4
+MOUSE_SIDE_SCROLL_SPEED_SLOWER = 1.4
+MOUSE_SIDE_SCROLL_SPEED_FASTER = 2.0
+MOUSE_SIDE_SCROLL_SPEED_FASTEST = 3.2
+
 MOUSE_SIDE_SCROLL_SPEED_LENGTH_CORRECTION_MULTI = 6000.0
 
 # Trim edit loop playback
@@ -66,7 +69,7 @@ TRIM_EDIT_PRE_ROLL = 25
 TRIM_EDIT_POST_ROLL = 20
 
 # Current limit for full view scale
-pix_per_frame_full_view = 0.2 
+pix_per_frame_full_view = 0.2
 
 # Icons
 IMG_PATH = None
@@ -90,7 +93,7 @@ last_clicked_media_row = -1
 # This needs to blocked for first and last window state events
 player_refresh_enabled = False
 
-#  This needs to be blocked when timeline is displayed as result 
+#  This needs to be blocked when timeline is displayed as result
 # of Append/Inset... from monitor to get correct results.
 save_monitor_frame = False
 
@@ -101,7 +104,7 @@ def load_icons():
     """
     global play_icon, play_loop_icon,  next_icon, next_trim_icon, \
     prev_icon, prev_trim_icon, stop_icon, stop_trim_icon
-     
+
     play_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "play_2_s.png")
     play_loop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "play_loop.png")
     next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH  + "next_frame_s.png")
@@ -126,12 +129,12 @@ def refresh_player(e):
 
     PLAYER().refresh()
 
-# --------------------------------- window 
+# --------------------------------- window
 def window_resized():
     try:
         # Set page offset.
         tlineypage.vertical_size_update(gui.tline_canvas.widget.get_allocation())
-        
+
         # Place clips in the middle of timeline canvas after window resize
         tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
         gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
@@ -169,8 +172,8 @@ def update_tline_scrollbar():
     else:
         page_size = (float(pix_per_frame_full_view) / \
                     tlinewidgets.pix_per_frame) * 100.0
-                    
-    # Get position, this might get called before GUI initiated 
+
+    # Get position, this might get called before GUI initiated
     try:
         old_adjustment = gui.tline_scroll.get_adjustment()
         pos = old_adjustment.get_value()
@@ -179,20 +182,20 @@ def update_tline_scrollbar():
 
     # Create and set adjustment
     page_size_in = page_size
-    adjustment = Gtk.Adjustment(value=pos, lower=0.0, upper=100.0, 
+    adjustment = Gtk.Adjustment(value=pos, lower=0.0, upper=100.0,
                                 step_increment=1.0, page_increment=10.0, page_size=page_size_in)
     adjustment.connect("value-changed", tline_scrolled)
     try: # when testing this might get called before gui is build
         gui.tline_scroll.set_adjustment(adjustment)
     except Exception:
-        pass 
+        pass
 
 def tline_scrolled(adjustment):
     """
     Callback from timeline scroller widget
     """
     if page_size != 100.0:
-        tlinewidgets.pos = ((adjustment.get_value() / 100.0) * 
+        tlinewidgets.pos = ((adjustment.get_value() / 100.0) *
                            current_sequence().get_length())
     else:
         tlinewidgets.pos = 0
@@ -202,16 +205,16 @@ def maybe_move_playback_tline_range(current_frame):
     # Prefs check
     if editorpersistance.prefs.playback_follow_move_tline_range == False:
         return False
-    
+
     moved = False
     last_frame = tlinewidgets.get_last_tline_view_frame()
     if current_frame > last_frame:
         moved = True
         adj_value = float(last_frame + 1) / float(current_sequence().get_length()) * 100.0
         gui.tline_scroll.set_value(adj_value)
-    
+
     return moved
- 
+
 def center_tline_to_current_frame():
     """
     Sets scroll widget adjustment to place current frame in the middle of display.
@@ -225,21 +228,21 @@ def center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom):
     """
     pos = tlinewidgets.get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom)
     gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
-    
+
 def init_tline_scale():
     """
-    Calculates and sets first scale quaranteed to display full view 
+    Calculates and sets first scale quaranteed to display full view
     when starting from PIX_PER_FRAME_MAX with SCALE_MULTIPLIER steps.
     """
     pix_per_frame = PIX_PER_FRAME_MAX * SCALE_MULTIPLIER
     while pix_per_frame > pix_per_frame_full_view:
         pix_per_frame *= SCALE_MULTIPLIER
-        
+
     tlinewidgets.pix_per_frame = pix_per_frame
 
 def update_pix_per_frame_full_view():
     """
-    Sets the value of pix_per_frame_full_view 
+    Sets the value of pix_per_frame_full_view
     Called at sequence init to display full sequence.
     """
     global pix_per_frame_full_view
@@ -267,7 +270,7 @@ def zoom_in():
     Zooms in in the timeline view.
     """
     mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
-    
+
     tlinewidgets.pix_per_frame *= 1.0 / SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame > PIX_PER_FRAME_MAX:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
@@ -284,7 +287,7 @@ def zoom_out():
     Zooms out in the timeline view.
     """
     mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
-    
+
     tlinewidgets.pix_per_frame *= SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame < PIX_PER_FRAME_MIN:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
@@ -294,10 +297,10 @@ def zoom_out():
         center_tline_to_current_frame()
     else:
         center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
-    
+
 def zoom_max():
     mouse_pos_frame_pre_zoom = tlinewidgets.get_mouse_pos_frame()
-    
+
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
     repaint_tline()
     update_tline_scrollbar()
@@ -318,7 +321,7 @@ def init_tline_view():
     tlinewidgets.pos = 0
     repaint_tline()
     update_tline_scrollbar()
-    
+
 def mouse_scroll_zoom(event):
     do_scroll = True
     if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
@@ -328,10 +331,17 @@ def mouse_scroll_zoom(event):
         if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             do_scroll = False
 
+    if editorpersistance.prefs.mouse_horizontal_scroll_speed == appconsts.MOUSE_H_SCROLL_SPEED_SLOWEST:
+        mouse_side_scroll_speed = MOUSE_SIDE_SCROLL_SPEED_SLOWER
+    elif editorpersistance.prefs.mouse_horizontal_scroll_speed == appconsts.MOUSE_H_SCROLL_SPEED_FASTER:
+        mouse_side_scroll_speed = MOUSE_SIDE_SCROLL_SPEED_FASTER
+    else:
+        mouse_side_scroll_speed = MOUSE_SIDE_SCROLL_SPEED_FASTEST
+
     if do_scroll == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
         length_multi = 1.0 / current_sequence().get_length() * MOUSE_SIDE_SCROLL_SPEED_LENGTH_CORRECTION_MULTI
-        incr = (adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)) * MOUSE_SIDE_SCROLL_SPEED * length_multi
+        incr = (adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)) * mouse_side_scroll_speed * length_multi
         if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
             incr = -incr
         if event.direction == Gdk.ScrollDirection.UP:
@@ -352,8 +362,8 @@ def maybe_autocenter():
 # ------------------------------------------ timeline shrinking
 def set_timeline_height():
     orig_pos = gui.editor_window.app_v_paned.get_position()
-    orig_height = tlinewidgets.HEIGHT 
-    
+    orig_height = tlinewidgets.HEIGHT
+
     if len(current_sequence().tracks) == 11 or PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL) == False:
         tlinewidgets.HEIGHT = appconsts.TLINE_HEIGHT
         set_v_paned = False
@@ -363,7 +373,7 @@ def set_timeline_height():
 
     gui.tline_canvas.widget.set_size_request(tlinewidgets.MINIMUM_WIDTH, tlinewidgets.HEIGHT)
     gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
-    
+
     if set_v_paned == True:
         new_pos = orig_pos + orig_height - tlinewidgets.HEIGHT
         gui.editor_window.app_v_paned.set_position(new_pos)
@@ -386,7 +396,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         dialogs.show_no_plugins_in_monitor_dialog()
         display_sequence_in_monitor()
         return
-        
+
     global save_monitor_frame
     save_monitor_frame = True
 
@@ -402,14 +412,14 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         saved_timeline_pos = PLAYER().current_frame()
         editorstate.tline_shadow_frame = saved_timeline_pos
 
-    # If we're already displaying monitor clip we stop consumer 
+    # If we're already displaying monitor clip we stop consumer
     # to suppress timeline flashing between monitor clips
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.stop()
 
     # Clear old clip
     current_sequence().clear_hidden_track()
-    
+
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         # pattern producer or image sequence
@@ -422,18 +432,18 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         # File producers
         clip_producer = current_sequence().display_monitor_clip(MONITOR_MEDIA_FILE().path)
 
-    # Timeline flash does not happen if we start consumer after monitor clip is 
+    # Timeline flash does not happen if we start consumer after monitor clip is
     # already on sequence
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.start()
-        
+
     # IMAGE_SEQUENCE files always returns 15000 for get_length from mlt so we have to monkeypatch that method to get correct results
     if MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         clip_producer.get_length = lambda : MONITOR_MEDIA_FILE().length
-    
+
     clip_producer.mark_in = MONITOR_MEDIA_FILE().mark_in
     clip_producer.mark_out = MONITOR_MEDIA_FILE().mark_out
-    
+
     # Give IMAGE and PATTERN_PRODUCER media types default mark in and mark out if not already set.
     # This makes them reasonably short and trimmable in both directions.
     if clip_producer.media_type == appconsts.IMAGE or clip_producer.media_type == appconsts.PATTERN_PRODUCER:
@@ -450,18 +460,18 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     # Display frame, marks and pos
     gui.pos_bar.update_display_from_producer(clip_producer)
     gui.monitor_waveform_display.update_display_from_producer(clip_producer)
-    
+
     display_monitor_clip_name()
 
     if MONITOR_MEDIA_FILE().type == appconsts.IMAGE or \
         MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER:
         PLAYER().seek_frame(0)
     else:
-        if editorpersistance.prefs.remember_monitor_clip_frame: 
+        if editorpersistance.prefs.remember_monitor_clip_frame:
             PLAYER().seek_frame(MONITOR_MEDIA_FILE().current_frame)
         else:
             PLAYER().seek_frame(0)
-                    
+
     display_marks_tc()
 
     css_str = "#player-bar { background-color: #464646; border-radius: 10px;}"
@@ -469,7 +479,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 
     gui.pos_bar.widget.grab_focus()
     gui.pos_bar.set_clip_bg(True)
-    gui.media_list_view.widget.queue_draw()    
+    gui.media_list_view.widget.queue_draw()
     gui.monitor_switch.widget.queue_draw()
     gui.monitor_waveform_display.update_visibility()
     repaint_tline()
@@ -490,7 +500,7 @@ def display_monitor_clip_name():#we're displaying length and range length also
             print("except at display_monitor_clip_name:")
             profile = PROJECT().profile
             gui.editor_window.monitor_desc_label.set_text(profile.description())
-    elif MONITOR_MEDIA_FILE().type == appconsts.AUDIO or MONITOR_MEDIA_FILE().type == appconsts.IMAGE: 
+    elif MONITOR_MEDIA_FILE().type == appconsts.AUDIO or MONITOR_MEDIA_FILE().type == appconsts.IMAGE:
         (f_name, ext) = os.path.splitext(MONITOR_MEDIA_FILE().name)
         gui.editor_window.monitor_desc_label.set_text(ext[1:])
     elif MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
@@ -506,7 +516,7 @@ def display_sequence_in_monitor():
     """
     if PLAYER() == None: # this method gets called too early when initializing, hack fix.
         return
-           
+
     editorstate._timeline_displayed = True
 
     # Clear hidden track that has been displaying monitor clip
@@ -519,15 +529,15 @@ def display_sequence_in_monitor():
     saved_timeline_pos = -1
 
     update_seqence_info_text()
-    
-    # Display marks and pos 
+
+    # Display marks and pos
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
     display_marks_tc()
 
     css_str = "#player-bar { background-color: #333333; border-radius: 10px;}"
     gui.apply_widget_css_class_style_from_string(gui.editor_window.player_buttons_row, css_str)
     gui.pos_bar.set_clip_bg(False)
-    
+
     gui.monitor_waveform_display.widget.hide()
     gui.monitor_switch.widget.queue_draw()
     repaint_tline()
@@ -544,7 +554,7 @@ def update_seqence_info_text():
 
     profile = PROJECT().profile
     gui.editor_window.monitor_desc_label.set_text(profile.description())
-    
+
     gui.editor_window.monitor_tc_info.set_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
 
 def switch_monitor_display():
@@ -562,7 +572,7 @@ def display_tline_cut_frame(track, index):
         index = 0
     if index > (len(track.clips) - 1):
         index = len(track.clips) - 1
-    
+
     clip_start_frame = track.clip_start(index)
     PLAYER().seek_frame(clip_start_frame)
 
@@ -575,11 +585,11 @@ def media_file_row_double_clicked(treeview, tree_path, col):
 
 def set_and_display_monitor_media_file(media_file):
     """
-    Displays media_file in clip monitor when new media file 
+    Displays media_file in clip monitor when new media file
     selected for display by double clicking or drag'n'drop
     """
     editorstate._monitor_media_file = media_file
-    
+
     if editorstate.timeline_visible() == True:
         display_clip_in_monitor()
     else:
@@ -599,12 +609,12 @@ def update_frame_displayers(frame):
         if save_monitor_frame:
             MONITOR_MEDIA_FILE().current_frame = frame
 
-    norm_pos = frame / float(producer_length) 
+    norm_pos = frame / float(producer_length)
     gui.pos_bar.set_normalized_pos(norm_pos)
     gui.monitor_waveform_display.set_normalized_pos(norm_pos)
 
     kftoolmode.update_clip_frame(frame)
-    
+
     gui.tline_scale.widget.queue_draw()
     gui.tline_canvas.widget.queue_draw()
     gui.big_tc.queue_draw()
@@ -616,7 +626,7 @@ def update_position_bar():
         gui.pos_bar.update_display_from_producer(PLAYER().producer)
     else:
         gui.pos_bar.update_display_from_producer(gui.pos_bar.producer)
-    
+
 def update_kf_editors_positions():
     clipeffectseditor.update_kfeditors_positions()
 
@@ -631,23 +641,23 @@ def display_marks_tc():
     else:
         update_seqence_info_text()
 
-# ----------------------------------------------- clip editors    
+# ----------------------------------------------- clip editors
 def clear_clip_from_editors(clip):
     if clipeffectseditor.clip_is_being_edited(clip):
         clipeffectseditor.clear_clip()
     if mediaplugin.clip_is_being_edited(clip):
         mediaplugin.clear_clip()
-    
+
 def open_clip_in_effects_editor(data):
     clip, track, item_id, x = data
     frame = tlinewidgets.get_frame(x)
     index = current_sequence().get_clip_index(track, frame)
 
     clipeffectseditor.set_clip(clip, track, index)
-    
+
     clip_start_frame = track.clip_start(index)
     PLAYER().seek_frame(clip_start_frame)
-        
+
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """
@@ -687,23 +697,22 @@ def update_current_bin_files_count():
     if len(rows) == 0:
         return
     row = max(rows[0])
-    
+
     value = str(len(PROJECT().bins[row].file_ids))
 
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
-    
+
     gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
 
 def update_bin_files_count(bin):
     # Get index for selected bin
     bin_index = PROJECT().bins.index(bin)
 
-    
+
     value = str(len(PROJECT().bins[bin_index].file_ids))
 
     tree_path = Gtk.TreePath.new_from_string(str(bin_index))
     store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
-    
+
     gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
-    

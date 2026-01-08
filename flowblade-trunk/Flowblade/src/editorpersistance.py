@@ -188,7 +188,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     autosave_combo, render_folder_select, disk_cache_warning_combo = gen_opts_widgets
 
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
-    hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
+    hor_scroll_dir, hor_scroll_speed, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
 
     auto_center_check, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
@@ -214,6 +214,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
+    prefs.mouse_horizontal_scroll_speed = hor_scroll_speed.get_active()
     prefs.single_click_effects_editor_load = (effects_editor_clip_load.get_active() == 1)
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
@@ -393,3 +394,4 @@ class EditorPreferences:
         self.audio_master_position_is_top_row = True
         self.close_titler_on_save = False
         self.show_bins_and_sequences_titles = True
+        self.mouse_horizontal_scroll_speed = 1 # value is appconstas.MOUSE_H_SCROLL_SPEED_<X> value.

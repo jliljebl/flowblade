@@ -474,7 +474,7 @@ VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
 
 # values set in /res/mediaplugins/plugins.json
-# and use in containerclip.py whencreating new 
+# and use in containerclip.py when creating new 
 # ContainerClipMediaItem objects for Generators.
 DEFAULT_RENDER_CLIP = "clip"
 DEFAULT_RENDER_ALPHA_CLIP = "alphaclip"
@@ -484,3 +484,7 @@ AUDIO_AUTO_SPLIT_OFF = 0
 AUDIO_AUTO_SPLIT_ALL_TACKS = 1
 AUDIO_AUTO_SPLIT_V1_V2 = 2
 AUDIO_AUTO_SPLIT_V1 = 3
+
+MOUSE_H_SCROLL_SPEED_SLOWEST = 0
+MOUSE_H_SCROLL_SPEED_FASTER = 1
+MOUSE_H_SCROLL_SPEED_FASTEST = 2
