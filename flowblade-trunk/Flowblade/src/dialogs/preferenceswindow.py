@@ -195,6 +195,13 @@ def _edit_prefs_panel():
     hor_scroll_dir.append_text(_("Scroll Down Forward"))
     hor_scroll_dir.set_active(active)
 
+    active = prefs.mouse_horizontal_scroll_speed
+    hor_scroll_speed = Gtk.ComboBoxText()
+    hor_scroll_speed.append_text(_("Slower"))
+    hor_scroll_speed.append_text(_("Normal"))
+    hor_scroll_speed.append_text(_("Faster"))
+    hor_scroll_speed.set_active(active)
+
     active = 0
     if prefs.single_click_effects_editor_load == True:
         active = 1
@@ -222,6 +229,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - For play_pause button
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Horizontal Scroll Direction:")), hor_scroll_dir, PREFERENCES_LEFT))
+    row18 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Horizontal Scroll Speed:")), hor_scroll_speed, PREFERENCES_LEFT))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
     row16 = _row(guiutils.get_checkbox_row_box(auto_render_plugins, Gtk.Label(label=_("Autorender Generators"))))
@@ -232,6 +240,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
+    vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
@@ -242,7 +251,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
-                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir,
+                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, hor_scroll_speed,
                   effects_editor_clip_load, auto_render_plugins, dnd_action)
 
 def _playback_prefs_panel():
