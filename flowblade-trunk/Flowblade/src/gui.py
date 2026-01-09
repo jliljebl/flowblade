@@ -112,7 +112,7 @@ def capture_references(new_editor_window):
 
     monitor_widget = editor_window.monitor_widget
     monitor_switch = editor_window.monitor_switch
-    monitor_waveform_display = monitor_widget.waveform_display
+    #monitor_waveform_display = monitor_widget.waveform_display
      
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
