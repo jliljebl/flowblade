@@ -163,10 +163,10 @@ class AudioRenderLaunchThread(threading.Thread):
 
 def _repaint():
     callbackbridge.updater_repaint_tline()
-    try:
-        gui.monitor_waveform_display.widget.queue_draw()
-    except:
-        pass # We might not have a producer set in monitor to draw.
+    #try:
+    #    gui.monitor_waveform_display.widget.queue_draw()
+    #except:
+    #    pass # We might not have a producer set in monitor to draw.
 
     return False
     

@@ -56,8 +56,8 @@ TLINE_SCROLL = "tlinescroll"
 TLINE_MONITOR_DISPLAY = "tlinemonitordisplay"
 TLINE_ALL = [TLINE_CANVAS, TLINE_TRACK_COLUMN, TLINE_SCALE, TLINE_LEFT_CORNER, TLINE_SCROLL, TLINE_MONITOR_DISPLAY]
 MONITOR_SWITCH = "monitorswitch"
-MONITOR_WAVEFORM_DISPLAY = "monitorwaveformdisplay"
-MONITOR_ALL = [MONITOR_SWITCH, MONITOR_WAVEFORM_DISPLAY, POS_BAR]
+#MONITOR_WAVEFORM_DISPLAY = "monitorwaveformdisplay"
+MONITOR_ALL = [MONITOR_SWITCH, POS_BAR]
 MIDDLE_BUTTONS_1 = "midbar_b_1"
 MIDDLE_BUTTONS_2 = "midbar_b_2"
 MIDDLE_BUTTONS_3 = "midbar_b_3"
@@ -84,7 +84,6 @@ def init():
                 TLINE_SCROLL: gui.tline_scroll,
                 TLINE_MONITOR_DISPLAY: gui.tline_display,
                 MONITOR_SWITCH: gui.monitor_switch.widget,
-                MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget,
                 SEQUENCE_LIST_VIEW: gui.sequence_list_view,
                 BIN_LIST_VIEW: gui.bin_list_view, 
                 LOG_LIST_VIEW: gui.editor_window.media_log_events_list_view,
