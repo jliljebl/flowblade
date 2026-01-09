@@ -83,8 +83,8 @@ class Player:
             print("Create SDL2 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
-            w = gui.tline_display.get_allocated_width()
-            h = gui.tline_display.get_allocated_height()
+            w = int(gui.tline_display.get_allocated_width() * gui.tline_display.get_scale_factor())
+            h = int(gui.tline_display.get_allocated_height() * gui.tline_display.get_scale_factor())
             self.consumer.set("window_width", w)
             self.consumer.set("window_height", h)
         else:
@@ -104,8 +104,8 @@ class Player:
 
     def display_resized(self):
         if self.consumer != None and _sdl_consumer_version == SDL_2:
-            w = gui.tline_display.get_allocated_width()
-            h = gui.tline_display.get_allocated_height()
+            w = int(gui.tline_display.get_allocated_width() * gui.tline_display.get_scale_factor())
+            h = int(gui.tline_display.get_allocated_height() * gui.tline_display.get_scale_factor())
             self.consumer.set("window_width", w)
             self.consumer.set("window_height", h)
 
