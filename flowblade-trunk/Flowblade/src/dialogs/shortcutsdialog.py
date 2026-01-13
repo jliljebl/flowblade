@@ -27,6 +27,7 @@ import dialogutils
 import gtkevents
 import guicomponents
 import guiutils
+import mutabletooltips
 import shortcuts
 import shortcutsquickeffects
 import workflow
@@ -98,7 +99,8 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, dialog):
     editorpersistance.prefs.shortcuts = selected_xml
     editorpersistance.save()
     shortcuts.set_keyboard_shortcuts()
-    
+    mutabletooltips.init()
+
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
 
     dialog.show_all()
@@ -326,7 +328,6 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
-
 
 def get_shorcuts_selector():
     shortcuts_combo = Gtk.ComboBoxText()

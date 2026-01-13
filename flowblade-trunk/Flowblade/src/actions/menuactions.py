@@ -39,6 +39,7 @@ from editorstate import current_sequence
 import editorstate
 import gui
 import guicomponents
+import mutabletooltips
 import projectdata
 import patternproducer
 import profilesmanager
@@ -212,7 +213,12 @@ def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
     editorpersistance.save()
     
     shortcuts.set_keyboard_shortcuts()
+    mutabletooltips.init()
 
+def change_single_shortcut(code, event, shortcut_label):
+    shortcuts.change_single_shortcut(code, event, shortcut_label)
+    mutabletooltips.init()
+     
 def keyboard_shortcuts_menu_item_selected_callback(widget, data):
 
     action, data = data
@@ -240,6 +246,7 @@ def _create_new_kb_shortcuts_group(dialog, response_id, entry):
         root = shortcuts.get_root()
         shortcuts.shortcut_files_display_names.append(root.get('name'))
         shortcuts.set_keyboard_shortcuts()
+        mutabletooltips.init()
         shortcutsdialog.update_shortcuts_combo(shortcutsdialog.shortcuts_combo)
         shortcutsdialog.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), shortcutsdialog.scroll_hold_panel)
         
@@ -249,6 +256,7 @@ def _delete_new_kb_shortcuts_group(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         shortcuts.delete_active_custom_shortcuts_xml()
         shortcuts.set_keyboard_shortcuts()
+        mutabletooltips.init()
         shortcutsdialog.update_shortcuts_combo(shortcutsdialog.shortcuts_combo)
         shortcutsdialog.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), shortcutsdialog.scroll_hold_panel)
         

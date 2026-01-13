@@ -97,6 +97,7 @@ import mlttransitions
 import modesetting
 import movemodes
 import multitrimmode
+import mutabletooltips
 import persistance
 import positionbar
 import processutils
@@ -391,7 +392,9 @@ class FlowbladeApplication(Gtk.Application):
         if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # Delete when everyone is on mlt 7.30 or moving to Gtk4.
             window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
         monitor_resize_id = gui.tline_display.connect("size-allocate", lambda w, e:tline_display_resized())
-
+        
+        mutabletooltips.init()
+    
         # Get existing autosave files
         autosave_files = get_autosave_files()
 

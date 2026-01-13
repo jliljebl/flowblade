@@ -732,6 +732,9 @@ class TooltipRunner:
         hit_code = self.glassbuttons._get_hit_code(x, y)
         if hit_code == NO_HIT:
             return False
+        
+        if self.tooltips == None:
+            return False
 
         # This is needed to get better position for tooltips when tooltips have significantly different amount of text displayed
         if hit_code != self.last_hit_code:

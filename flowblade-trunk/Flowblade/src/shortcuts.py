@@ -18,10 +18,10 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+# Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
 
 from gi.repository import Gdk, Gtk
 
-# Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
 import collections
 import os
 import xml.etree.ElementTree as etree
@@ -395,6 +395,24 @@ def get_shortcut_info(root, code):
         pass
 
     return (None, None)
+
+def get_shortcut_kb_str(root, code):
+    try:
+        events = root.iter('event')
+
+        for event in events:
+            if event.get('code') == code:
+                mod_name = _get_mod_string(event)
+                if mod_name != "":
+                    mod_name = mod_name + " + "
+                return mod_name + _key_names[event.text]
+    except Exception as e:
+        print("Exception: ", e)
+        print("error in get_shortcut_info, event.text:", event.text)
+        pass
+
+    return "not known"
+
 
 def get_shortcut_gtk_code(root, code):
     events = root.iter('event')
