@@ -19,7 +19,7 @@
 """
 
 """
-This module handles creating tools tip that can change because they display info about
+This module handles creating tooltips that might change because they contain info about
 user settable keyboard shortcuts.
 """
 
