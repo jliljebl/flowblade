@@ -107,7 +107,7 @@ def _update_gui_for_pattern_producer_media_object_add():
 def create_pattern_producer(profile, bin_clip):
     """
     bin_clip is instance of AbstractBinClip extending class
-    """    
+    """ 
     try:
         clip = bin_clip.create_mlt_producer(profile)
     except:
@@ -119,7 +119,7 @@ def create_pattern_producer(profile, bin_clip):
     clip.media_type = appconsts.PATTERN_PRODUCER
 
     # Save creation data for cloning when editing or doing save/load 
-    clip.create_data = copy.copy(bin_clip)
+    clip.create_data = copy.copy(bin_clip) # NOTE: GOES IN SAVE FILE VIA picle(), CAREFUL!!!
     clip.create_data.icon = None # this is not pickleable, recreate when needed
     return clip
 
@@ -226,7 +226,7 @@ class BinColorClip(AbstractBinClip):
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,  appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr = cairo.Context(surface)
         cr.set_source_rgb(*utils.gdk_color_str_to_cairo_rgb(self.gdk_color_str))
-        cr.rectangle(0, 0,   appconsts.THUMB_WIDTH + 1, appconsts.THUMB_HEIGHT + 1)
+        cr.rectangle(0, 0, appconsts.THUMB_WIDTH + 1, appconsts.THUMB_HEIGHT + 1)
         cr.fill()
         self.icon = surface
 
