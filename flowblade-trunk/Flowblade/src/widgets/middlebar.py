@@ -33,6 +33,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import mutabletooltips
 import scripttool
 import singletracktransition
 import titler
@@ -184,8 +185,9 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed, 9)
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed, 4)
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed, 4)
-    tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_DELETE_BUTTONS, editor_window.edit_buttons_3, tooltip_runner)
+    
     editor_window.edit_buttons_3.no_decorations = no_decorations
     editor_window.edit_buttons_3.show_prelight_icons()
 
@@ -205,8 +207,9 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
-    tooltips = [_("Overwrite Range"), _("Overwrite Selected Clip/s - T"), _("Insert Clip - Y"), _("Append Clip - U")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_MONITOR_INSERT_BUTTONS, editor_window.monitor_insert_buttons, tooltip_runner)
+    
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     editor_window.monitor_insert_buttons.show_prelight_icons()
     
