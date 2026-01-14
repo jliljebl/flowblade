@@ -73,6 +73,7 @@ export MLT_REPOSITORY=$INSTALL_DIR/lib/mlt-7
 export MLT_DATA=$INSTALL_DIR/share/mlt-7
 export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt-7/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
+export GDK_BACKEND=x11 
 
 # Launch repository Flowblade
 
