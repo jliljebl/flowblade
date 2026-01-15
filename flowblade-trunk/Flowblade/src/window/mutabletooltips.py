@@ -19,7 +19,11 @@
 """
 
 """
+<<<<<<< HEAD
 This module handles creating tools tip that can change because they display info about
+=======
+This module handles creating tooltips that might change because they contain info about
+>>>>>>> master
 user settable keyboard shortcuts.
 """
 
@@ -28,10 +32,20 @@ import shortcuts
 
 MIDDLEBAR_DELETE_BUTTONS = 0
 MIDDLEBAR_MONITOR_INSERT_BUTTONS = 1
+<<<<<<< HEAD
 
 _root_node = None
 
 _widgets_to_actioncodes = {}
+=======
+MIDDLEBAR_EDIT_BUTTONS = 3
+MIDDLEBAR_SPLIT_SYNC_BUTTONS = 4
+
+
+_root_node = None
+
+_widgetid_to_widgetdata = {}
+>>>>>>> master
 
 
 def init():
@@ -39,20 +53,34 @@ def init():
     _apply_tooltips()
 
 def add_widget(widget_id, widget, tooltip_runner):
+<<<<<<< HEAD
     global _widgets_to_actioncodes
     _widgets_to_actioncodes[widget_id] = (widget, tooltip_runner)
+=======
+    global _widgetid_to_widgetdata
+    _widgetid_to_widgetdata[widget_id] = (widget, tooltip_runner)
+>>>>>>> master
 
 def _set_rootnode():
     global _root_node
     _root_node = shortcuts.get_shortcuts_xml_root_node(editorpersistance.prefs.shortcuts)
 
 def _kb_str(action_code):
+<<<<<<< HEAD
     return shortcuts.get_shortcut_kb_str(_root_node, action_code)
 
 def _apply_tooltips():
     for widget_id in _widgets_to_actioncodes:
         apply_func = _tooptip_apply_funcs[widget_id]
         widget, tooltip_runner = _widgets_to_actioncodes[widget_id]
+=======
+    return "<b>" + shortcuts.get_shortcut_kb_str(_root_node, action_code) + "</b>" 
+
+def _apply_tooltips():
+    for widget_id in _widgetid_to_widgetdata:
+        apply_func = _tooptip_apply_funcs[widget_id]
+        widget, tooltip_runner = _widgetid_to_widgetdata[widget_id]
+>>>>>>> master
         apply_func(widget, tooltip_runner)
 
 def _middlebar_delete(widget, tooltip_runner):
@@ -60,10 +88,28 @@ def _middlebar_delete(widget, tooltip_runner):
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_monitor_insert(widget, tooltip_runner):
+<<<<<<< HEAD
     tooltips = [_("Overwrite Range") + _kb_str("overwrite_range"), _("Overwrite Selected Clip/s"), _("Insert Clip - ")  + _kb_str("insert"), _("Append Clip - ") + _kb_str("append")]
+=======
+    tooltips = [_("Overwrite Range - ") + _kb_str("overwrite_range"), _("Overwrite Selected Clip/s"), _("Insert Clip - ")  + _kb_str("insert"), _("Append Clip - ") + _kb_str("append")]
+    tooltip_runner.tooltips = tooltips
+
+def _middlebar_edit(widget, tooltip_runner):
+    tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - ") +  _kb_str("cut") + _("\nCut All Tracks - ") + _kb_str("cut_all")]
+    tooltip_runner.tooltips = tooltips
+
+def _middlebar_split_sync(widget, tooltip_runner):
+    tooltips = [_("Split Audio Synched - ") + _kb_str("split_selected"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s.\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track."), _("Resync Track Containing Selected Clip/s - ")  +  _kb_str("resync"), _("Resync Selected Clips")]
+>>>>>>> master
     tooltip_runner.tooltips = tooltips
 
 _tooptip_apply_funcs =  {
     MIDDLEBAR_DELETE_BUTTONS: _middlebar_delete,
+<<<<<<< HEAD
     MIDDLEBAR_MONITOR_INSERT_BUTTONS: _middlebar_monitor_insert
+=======
+    MIDDLEBAR_MONITOR_INSERT_BUTTONS: _middlebar_monitor_insert,
+    MIDDLEBAR_EDIT_BUTTONS: _middlebar_edit, 
+    MIDDLEBAR_SPLIT_SYNC_BUTTONS: _middlebar_split_sync
+>>>>>>> master
 }

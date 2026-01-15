@@ -174,8 +174,8 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), singletracktransition.add_transition_pressed)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
-    tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_EDIT_BUTTONS, editor_window.edit_buttons, tooltip_runner)
     editor_window.edit_buttons.no_decorations = no_decorations
     editor_window.edit_buttons.show_prelight_icons()
     
@@ -197,8 +197,8 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("set_track_sync"), tlineaction.set_track_sync_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
-    tooltips = [_("Split Audio Synched"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s.\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track."), _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clips")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_SPLIT_SYNC_BUTTONS, editor_window.edit_buttons_2, tooltip_runner)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
 
