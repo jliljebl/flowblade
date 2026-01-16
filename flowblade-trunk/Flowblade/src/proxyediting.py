@@ -290,7 +290,7 @@ def _proxy_render_stopped():
 
 
 # ----------------------------------------------------------- changing proxy modes
-def _convert_to_proxy_project():    
+def convert_to_proxy_project(manager_window):    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
@@ -300,10 +300,10 @@ def _convert_to_proxy_project():
     
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
-    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out)
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out, manager_window)
     load_thread.start()
 
-def _convert_to_original_media_project():
+def convert_to_original_media_project(manager_window):
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
     conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
@@ -313,7 +313,7 @@ def _convert_to_original_media_project():
     
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     global load_thread
-    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out)
+    load_thread = ProxyProjectLoadThread(conv_temp_project_path, manager_window.convert_progress_bar, mark_in, mark_out, manager_window)
     load_thread.start()
 
 def _auto_re_convert_after_proxy_render_in_proxy_mode():
@@ -352,7 +352,7 @@ def _open_project(project):
     editorstate.update_current_proxy_paths()
     persistance.show_messages = True
 
-def _converting_proxy_mode_done():
+def _converting_proxy_mode_done(manager_window):
     global load_thread
     load_thread = None
 
@@ -365,12 +365,13 @@ def _converting_proxy_mode_done():
 
 class ProxyProjectLoadThread(threading.Thread):
 
-    def __init__(self, proxy_project_path, progressbar, mark_in, mark_out):
+    def __init__(self, proxy_project_path, progressbar, mark_in, mark_out, manager_window):
         threading.Thread.__init__(self)
         self.proxy_project_path = proxy_project_path
         self.progressbar = progressbar
         self.mark_in = mark_in
         self.mark_out = mark_out
+        self.manager_window = manager_window
     
     def run(self):
         GLib.idle_add(self._do_proxy_project_load)
@@ -412,5 +413,5 @@ class ProxyProjectLoadThread(threading.Thread):
         selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
         if selections != None:
             render.set_saved_gui_selections(selections)
-        _converting_proxy_mode_done()
+        _converting_proxy_mode_done(self.manager_window)
 

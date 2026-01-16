@@ -34,6 +34,7 @@ import editorstate
 import gui
 import guiutils
 import jobs
+import proxyediting
 import renderconsumer
 
 manager_window = None
@@ -46,12 +47,40 @@ PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
 PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
 PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
+
+
+# ------------------------------------------------------------- event interface
+def show_proxy_manager_dialog():
+    global manager_window
+    manager_window = ProxyManagerDialog()
+    
+
 class ProxyManagerDialog:
     def __init__(self):
-        self.dialog = Gtk.Dialog(_("Proxy Manager"), gui.editor_window.window,
+        self.dialog = Gtk.Dialog(_("Proxy and Ingest Manager"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Close Manager"), Gtk.ResponseType.CLOSE))
 
+
+        proxy_panel = self.get_proxy_panel()
+        ingest_panel = self.get_ingest_panel()
+
+        guiutils.set_margins(proxy_panel, 8, 12, 12, 12)
+        guiutils.set_margins(ingest_panel, 8, 12, 12, 12)
+
+        notebook = Gtk.Notebook()
+        #notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
+        notebook.append_page(proxy_panel, Gtk.Label(label=_("Proxy Editing")))
+        notebook.append_page(ingest_panel, Gtk.Label(label=_("Media Ingest")))
+        guiutils.set_margins(notebook, 4, 24, 6, 0)
+            
+        self.dialog.vbox.pack_start(notebook, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
+        
+        self.dialog.connect('response', dialogutils.dialog_destroy)
+        self.dialog.show_all()
+
+    def get_proxy_panel(self):
         # Encoding
         self.enc_select = Gtk.ComboBoxText()
         encodings = renderconsumer.proxy_encodings
@@ -119,8 +148,8 @@ class ProxyManagerDialog:
         self.use_button = Gtk.Button(label=_("Use Proxy Media"))
         self.dont_use_button = Gtk.Button(label=_("Use Original Media"))
         self.set_convert_buttons_state()
-        self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
-        self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())
+        self.use_button.connect("clicked", lambda w: proxyediting.convert_to_proxy_project(self))
+        self.dont_use_button.connect("clicked", lambda w: proxyediting.convert_to_original_media_project(self))
 
         c_box_2 = Gtk.HBox(True, 8)
         c_box_2.pack_start(self.use_button, True, True, 0)
@@ -146,14 +175,15 @@ class ProxyManagerDialog:
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
-        guiutils.set_margins(vbox, 8, 12, 12, 12)
+        return vbox
 
-        self.dialog.vbox.pack_start(vbox, True, True, 0)
-        dialogutils.set_outer_margins(self.dialog.vbox)
+    def get_ingest_panel(self):
+
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(Gtk.Label(), False, False, 0)
+
+        return vbox
         
-        self.dialog.connect('response', dialogutils.dialog_destroy)
-        self.dialog.show_all()
-
     def set_convert_buttons_state(self):
         proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
         if jobs.proxy_render_ongoing() == True:
@@ -293,11 +323,3 @@ class ProxyRenderIssuesWindow:
             _create_proxy_files(self.files_to_render)
 
 
-# ------------------------------------------------------------- event interface
-def show_proxy_manager_dialog():
-    print("hailou")
-    global manager_window
-    manager_window = ProxyManagerDialog()
-
-def create_proxy_files_pressed(render_all=False):
-    pass
