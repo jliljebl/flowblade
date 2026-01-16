@@ -216,7 +216,7 @@ def _create_buttons(editor_window):
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
-    tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
+    tooltips = [_("Undo - <b>Ctrl + Z</b>"), _("Redo - <b>Ctrl + Y</b>")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
     editor_window.undo_redo.show_prelight_icons()

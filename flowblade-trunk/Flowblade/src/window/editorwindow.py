@@ -60,6 +60,7 @@ import mltplayer
 import modesetting
 import monitorevent
 import monitorwidget
+import mutabletooltips
 import respaths
 import render
 import rendergui
@@ -488,8 +489,8 @@ class EditorWindow:
         self._create_monitor_row_widgets()
 
         self.player_buttons = glassbuttons.PlayerButtonsCompact()
-        tooltips = [_("Prev Frame - Arrow Left"),  _("Play/Pause - Space"), _("Next Frame - Arrow Right")]
-        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, tooltips)
+        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, None)
+        mutabletooltips.add_widget(mutabletooltips.PLAYER_BUTTONS, self.player_buttons, tooltip_runner)
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
 
@@ -504,9 +505,9 @@ class EditorWindow:
                      monitorevent.to_mark_out_pressed]
         markbuttons = glassbuttons.MarkButtons(callbacks)
         markbuttons.widget.set_margin_right(12)
-        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"),  _("To Mark In - Alt + I"),  _("To Mark Out - Alt + K"), _("Clear Marks - Alt + K")]
-        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, mbtooltips)
-
+        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, None)
+        mutabletooltips.add_widget(mutabletooltips.MARK_BUTTONS, markbuttons, tooltip_runner)
+        
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
