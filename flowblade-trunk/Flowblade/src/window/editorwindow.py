@@ -60,6 +60,7 @@ import mltplayer
 import modesetting
 import monitorevent
 import monitorwidget
+import mutabletooltips
 import respaths
 import render
 import rendergui
@@ -489,8 +490,8 @@ class EditorWindow:
         self._create_monitor_row_widgets()
 
         self.player_buttons = glassbuttons.PlayerButtonsCompact()
-        tooltips = [_("Prev Frame - Arrow Left"),  _("Play/Pause - Space"), _("Next Frame - Arrow Right")]
-        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, tooltips)
+        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, None)
+        mutabletooltips.add_widget(mutabletooltips.PLAYER_BUTTONS, self.player_buttons, tooltip_runner)
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
 
@@ -505,9 +506,9 @@ class EditorWindow:
                      monitorevent.to_mark_out_pressed]
         markbuttons = glassbuttons.MarkButtons(callbacks)
         markbuttons.widget.set_margin_right(12)
-        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"),  _("To Mark In - Alt + I"),  _("To Mark Out - Alt + K"), _("Clear Marks - Alt + K")]
-        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, mbtooltips)
-
+        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, None)
+        mutabletooltips.add_widget(mutabletooltips.MARK_BUTTONS, markbuttons, tooltip_runner)
+        
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
@@ -784,10 +785,10 @@ class EditorWindow:
     def _init_app_menu(self, ui):
 
         # Get customizable shortcuts that are displayed in menu
-        root = shortcuts.get_root()
-        resync_shortcut = shortcuts.get_shortcut_gtk_code(root, "resync")
-        clear_filters_shortcut = shortcuts.get_shortcut_gtk_code(root, "clear_filters")
-        sync_all_shortcut = shortcuts.get_shortcut_gtk_code(root, "sync_all")
+        #root = shortcuts.get_root()
+        #resync_shortcut = shortcuts.get_shortcut_gtk_code(root, "resync")
+        #clear_filters_shortcut = shortcuts.get_shortcut_gtk_code(root, "clear_filters")
+        #sync_all_shortcut = shortcuts.get_shortcut_gtk_code(root, "sync_all")
         
         # Build menubar
         # Menubar build resources
@@ -822,14 +823,14 @@ class EditorWindow:
             ('SequenceDuplicate', None, _('Duplicate Sequence'), None, None, lambda a:projectaction.duplicate_sequence()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync Track'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
+            ('ResyncSelected', None, _('Resync Track'),  None, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:singletracktransition.add_transition_menu_item_selected()),
-            ('ClearFilters', None, _('Clear Filters'), clear_filters_shortcut, None, lambda a:clipmenuaction.clear_filters()),
+            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
-            ('SyncCompositors', None, _('Sync All Compositors'), sync_all_shortcut, None, lambda a:tlineaction.sync_all_compositors()),
+            ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
             ('AddVideoTrack', None, _('Add Video Track'), None, None, lambda a:projectaction.add_video_track()),
             ('AddAudioTrack', None, _('Add Audio Track'), None, None, lambda a:projectaction.add_audio_track()),
             ('DeleteVideoTrack', None, _('Delete Video Track'), None, None, lambda a:projectaction.delete_video_track()),

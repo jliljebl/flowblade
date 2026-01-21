@@ -19,8 +19,8 @@
 """
 
 """
-This module handles creating tooltips that might change because they contain info about
-user settable keyboard shortcuts.
+This module handles creating tooltips that might change runtime because they 
+contain information about user settable keyboard shortcuts.
 """
 
 import editorpersistance
@@ -30,7 +30,8 @@ MIDDLEBAR_DELETE_BUTTONS = 0
 MIDDLEBAR_MONITOR_INSERT_BUTTONS = 1
 MIDDLEBAR_EDIT_BUTTONS = 3
 MIDDLEBAR_SPLIT_SYNC_BUTTONS = 4
-
+PLAYER_BUTTONS = 5
+MARK_BUTTONS = 6
 
 _root_node = None
 
@@ -74,9 +75,19 @@ def _middlebar_split_sync(widget, tooltip_runner):
     tooltips = [_("Split Audio Synched - ") + _kb_str("split_selected"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s.\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track."), _("Resync Track Containing Selected Clip/s - ")  +  _kb_str("resync"), _("Resync Selected Clips")]
     tooltip_runner.tooltips = tooltips
 
+def _player_buttons(widget, tooltip_runner):
+    tooltips = [_("Prev Frame - <b>Arrow Left</b>"),  _("Play/Pause - ") + _kb_str("play_pause"), _("Next Frame - <b>Arrow Right</b>")]
+    tooltip_runner.tooltips = tooltips
+
+def _mark_buttons(widget, tooltip_runner):
+    tooltips = [_("Mark In - ") + _kb_str("mark_in"),  _("Mark Out - ") + _kb_str("mark_out"),  _("To Mark In - ") + _kb_str("to_mark_in"),  _("To Mark Out - ") + _kb_str("to_mark_out"), _("Clear Marks - ") + _kb_str("clear_io_marks")]
+    tooltip_runner.tooltips = tooltips
+
 _tooptip_apply_funcs =  {
     MIDDLEBAR_DELETE_BUTTONS: _middlebar_delete,
     MIDDLEBAR_MONITOR_INSERT_BUTTONS: _middlebar_monitor_insert,
     MIDDLEBAR_EDIT_BUTTONS: _middlebar_edit, 
-    MIDDLEBAR_SPLIT_SYNC_BUTTONS: _middlebar_split_sync
+    MIDDLEBAR_SPLIT_SYNC_BUTTONS: _middlebar_split_sync,
+    PLAYER_BUTTONS: _player_buttons,
+    MARK_BUTTONS: _mark_buttons
 }
