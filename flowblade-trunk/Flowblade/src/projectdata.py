@@ -96,6 +96,7 @@ class Project:
         self.media_log = []
         self.media_log_groups = []
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
+        self.ingest_data = None # Get's created on first time needed to be display or used.
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading

@@ -19,7 +19,7 @@
 """
 
 """
-This module handles creating tooltips that might change runtime because they 
+This module handles creating and updating tooltips that might change runtime because they 
 contain information about user settable keyboard shortcuts.
 """
 

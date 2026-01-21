@@ -34,6 +34,7 @@ import editorstate
 import gui
 import guiutils
 import jobs
+import miscdataobjects
 import proxyediting
 import renderconsumer
 
@@ -81,7 +82,7 @@ class ProxyManagerDialog:
         self.dialog.show_all()
 
     def get_proxy_panel(self):
-        # Encoding
+        # Encoding combo
         self.enc_select = Gtk.ComboBoxText()
         encodings = renderconsumer.proxy_encodings
         if len(encodings) < 1: # no encoding options available, system does not have right codecs
@@ -98,7 +99,7 @@ class ProxyManagerDialog:
         self.enc_select.connect("changed", 
                                 lambda w,e: self.encoding_changed(w.get_active()), 
                                 None)
-                            
+        # Size combo.
         self.size_select = Gtk.ComboBoxText()
         self.size_select.append_text(_("Project Image Size"))
         self.size_select.append_text(_("Half Project Image Size"))
@@ -172,6 +173,7 @@ class ProxyManagerDialog:
 
         # Pane
         vbox = Gtk.VBox(False, 2)
+        vbox.set_margin_top(12)
         vbox.pack_start(panel_encoding, False, False, 0)
         vbox.pack_start(panel_onoff, False, False, 0)
 
@@ -179,8 +181,60 @@ class ProxyManagerDialog:
 
     def get_ingest_panel(self):
 
+        if editorstate.PROJECT().ingest_data == None:
+            editorstate.PROJECT().ingest_data = miscdataobjects.IngestTranscodeData()
+            
+        # Encoding combo
+        self.ingest_enc_select = Gtk.ComboBoxText()
+        encodings = renderconsumer.ingest_encodings
+        if len(encodings) < 1: # no encoding options available, system does not have right codecs
+            editorstate.PROJECT().ingest_data.set_default_encoding(miscdataobjects.INGEST_ENCODING_NOT_SET)
+            self.ingest_enc_select.append_text(_("No Encoding Options Available"))
+        else:
+            if editorstate.PROJECT().ingest_data.get_default_encoding() == miscdataobjects.INGEST_ENCODING_NOT_SET:
+                # Environment has changed so that ingest encodigns are now available.
+                editorstate.PROJECT().ingest_data.set_default_encoding(0)
+                
+            for enc in encodings:
+                self.ingest_enc_select.append_text(enc.name)
+        
+                current_enc = editorstate.PROJECT().ingest_data.get_default_encoding()
+                if current_enc >= len(encodings): # current encoding selection not available
+                    current_enc = 0
+                    editorstate.PROJECT().ingest_data.set_default_encoding(0)
+
+                self.ingest_enc_select.set_active(current_enc)
+                self.ingest_enc_select.connect("changed", 
+                                        lambda w,e: self.ingest_encoding_changed(w.get_active()), 
+                                        None)
+
+        row_enc = Gtk.HBox(False, 2)
+        row_enc.pack_start(self.ingest_enc_select, False, False, 0)
+        row_enc.pack_start(Gtk.Label(), True, True, 0)
+        
+        panel_encoding = guiutils.get_named_frame(_("Ingest Optimized Transcode"), row_enc)
+
+        self.ingest_action_select = Gtk.ComboBoxText()
+        self.ingest_action_select.append_text(_("No Action"))
+        self.ingest_action_select.append_text(_("Ingest Copy"))
+        self.ingest_action_select.append_text(_("Ingest Optimized Transcode"))
+
+        self.ingest_action_select.set_active(editorstate.PROJECT().ingest_data.get_action())
+        self.ingest_action_select.connect(  "changed", 
+                                            lambda w,e: self.ingest_action_changed(w.get_active()), 
+                                            None)
+
+        row_action = Gtk.HBox(False, 2)
+        row_action.pack_start(self.ingest_action_select, False, False, 0)
+        row_action.pack_start(Gtk.Label(), True, True, 0)
+        
+        panel_action = guiutils.get_named_frame(_("Media Add Ingest Action"), row_action)
+        panel_action.set_margin_top(24)
+
         vbox = Gtk.VBox(False, 2)
-        vbox.pack_start(Gtk.Label(), False, False, 0)
+        vbox.set_margin_top(12)
+        vbox.pack_start(panel_encoding, False, False, 0)
+        vbox.pack_start(panel_action, False, False, 0)
 
         return vbox
         
@@ -206,6 +260,12 @@ class ProxyManagerDialog:
         
     def encoding_changed(self, enc_index):
         editorstate.PROJECT().proxy_data.encoding = enc_index
+
+    def ingest_encoding_changed(self, enc_index):
+        editorstate.PROJECT().ingest_data.set_default_encoding(enc_index)
+
+    def ingest_action_changed(self, action):
+        editorstate.PROJECT().ingest_data.set_action(action)
 
     def size_changed(self, size_index):
         editorstate.PROJECT().proxy_data.size = size_index

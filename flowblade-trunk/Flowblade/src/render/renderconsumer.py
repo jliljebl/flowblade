@@ -54,6 +54,7 @@ BITRATE_OPTION = "boption"
 QUALITY_GROUP = "qualityqroup"
 ENCODING_OPTION = "encodingoption"
 PROXY_ENCODING_OPTION = "proxyencodingoption"
+INGEST_ENCODING_OPTION = "ingestencodingoption"
 QGROUP = "qgroup"
 DEFAULT_INDEX = "defaultindex"
 PROFILE = "profile"
@@ -101,6 +102,7 @@ quality_option_groups = {}
 quality_option_groups_default_index = {}
 non_user_encodings = []
 proxy_encodings = None
+ingest_encodings = None
 
 # We pick this up on init to get alpha encoding later on request.
 _default_alpha_enc_opt = None
@@ -345,6 +347,20 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
+    # Ingest encoding
+    ingest_encoding_nodes = render_encoding_doc.getElementsByTagName(INGEST_ENCODING_OPTION)
+    found_ingest_encodings = []
+    for ingets_node in ingest_encoding_nodes:
+        ingest_encoding_option = EncodingOption(ingets_node)
+        if ingest_encoding_option.supported:
+            found_ingest_encodings.append(ingest_encoding_option)
+            print("ingets encoding " + ingest_encoding_option.name + " AVAILABLE.")
+        else:
+            print("proxy encoding " + ingest_encoding_option.name + " NOT AVAILABLE.")
+
+    global ingest_encodings
+    ingest_encodings = found_ingest_encodings
+    
 def remove_non_working_proxy_encodings(vcodec):
     global proxy_encodings
     proxy_encodings = [proxy_enc_opt for proxy_enc_opt in proxy_encodings if proxy_enc_opt.ffmpeggpuenc != vcodec]
