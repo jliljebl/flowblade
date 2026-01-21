@@ -107,6 +107,7 @@ import projectdatavault
 import projectdatavaultgui
 import projectinfogui
 import propertyeditorbuilder
+import proxyingestmanager
 import render
 import renderconsumer
 import rendergputest
@@ -494,6 +495,7 @@ def monkeypatch_callbacks():
     callbackbridge.movemodes_select_from_box_selection = movemodes.select_from_box_selection
     callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
     callbackbridge.projectaction_open_file_names = projectaction.open_file_names
+    callbackbridge.proxyingestmanager_show_proxy_issues_window = proxyingestmanager.show_proxy_issues_window
     callbackbridge.rotomask_show_rotomask = rotomask.show_rotomask
     callbackbridge.targetactions_get_handler_by_name = targetactions.get_handler_by_name
     callbackbridge.targetactions_move_player_position = targetactions.move_player_position

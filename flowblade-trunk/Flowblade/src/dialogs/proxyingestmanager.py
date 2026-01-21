@@ -54,7 +54,21 @@ PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 def show_proxy_manager_dialog():
     global manager_window
     manager_window = ProxyManagerDialog()
-    
+
+
+def show_proxy_issues_window(files_to_render, already_have_proxies, 
+                             not_video_files, is_proxy_file, other_project_proxies,
+                             proxy_w, proxy_h, proxy_file_extension, create_callback):
+    global proxy_render_issues_window
+    proxy_render_issues_window = ProxyRenderIssuesWindow(files_to_render, already_have_proxies, 
+                                                         not_video_files, is_proxy_file, other_project_proxies,
+                                                         proxy_w, proxy_h, proxy_file_extension, create_callback)
+    return
+
+def _set_media_files_to_use_unique_proxies(media_files_list):
+    for media_file in media_files_list:
+        media_file.use_unique_proxy = True
+
 
 class ProxyManagerDialog:
     def __init__(self):
@@ -278,7 +292,7 @@ class ProxyManagerDialog:
 
 class ProxyRenderIssuesWindow:
     def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, 
-                 other_project_proxies, proxy_w, proxy_h, proxy_file_extension):
+                 other_project_proxies, proxy_w, proxy_h, proxy_file_extension, create_callback):
         dialog_title =_("Proxy Render Info")
         
         self.files_to_render = files_to_render
@@ -287,6 +301,7 @@ class ProxyRenderIssuesWindow:
         self.proxy_w = proxy_w
         self.proxy_h = proxy_h
         self.proxy_file_extension = proxy_file_extension
+        self.create_callback = create_callback
 
         self.issues = 1
         if (len(files_to_render) + len(already_have_proxies) + len(other_project_proxies)) == 0 and not_video_files > 0:
@@ -379,7 +394,6 @@ class ProxyRenderIssuesWindow:
 
             global proxy_render_issues_window
             proxy_render_issues_window = None
-        
-            _create_proxy_files(self.files_to_render)
 
+            self.create_callback(self.files_to_render)
 

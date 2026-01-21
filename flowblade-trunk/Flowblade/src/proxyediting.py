@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import hashlib
 try:
     import mlt7 as mlt
@@ -218,23 +219,17 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
         files_to_render.append(f)
 
     if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
-        global proxy_render_issues_window
-        proxy_render_issues_window = ProxyRenderIssuesWindow(files_to_render, already_have_proxies, 
-                                                             not_video_files, is_proxy_file, other_project_proxies,
-                                                             proxy_w, proxy_h, proxy_file_extension)
+        callbackbridge.proxyingestmanager_show_proxy_issues_window( files_to_render, already_have_proxies, 
+                                                                    not_video_files, is_proxy_file, other_project_proxies,
+                                                                    proxy_w, proxy_h, proxy_file_extension, _create_proxy_files)
         return
 
     _create_proxy_files(files_to_render)
-
-def _set_media_files_to_use_unique_proxies(media_files_list):
-    for media_file in media_files_list:
-        media_file.use_unique_proxy = True
     
 def _create_proxy_files(media_files_to_render):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
     global runner_thread
-    #progress_window = ProxyRenderProgressDialog()
     runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
     runner_thread.start()
 
