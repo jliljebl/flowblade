@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import hashlib
 try:
     import mlt7 as mlt
@@ -72,7 +73,7 @@ def _set_media_files_to_use_unique_proxies(media_files_list):
 
 class ProxyManagerDialog:
     def __init__(self):
-        self.dialog = Gtk.Dialog(_("Proxy and Ingest Manager"), gui.editor_window.window,
+        self.dialog = Gtk.Dialog(_("Proxy and Transcode Manager"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Close Manager"), Gtk.ResponseType.CLOSE))
 
@@ -86,7 +87,7 @@ class ProxyManagerDialog:
         notebook = Gtk.Notebook()
         #notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
         notebook.append_page(proxy_panel, Gtk.Label(label=_("Proxy Editing")))
-        notebook.append_page(ingest_panel, Gtk.Label(label=_("Media Ingest")))
+        notebook.append_page(ingest_panel, Gtk.Label(label=_("Transcode and Ingest")))
         guiutils.set_margins(notebook, 4, 24, 6, 0)
             
         self.dialog.vbox.pack_start(notebook, True, True, 0)
@@ -226,12 +227,12 @@ class ProxyManagerDialog:
         row_enc.pack_start(self.ingest_enc_select, False, False, 0)
         row_enc.pack_start(Gtk.Label(), True, True, 0)
         
-        panel_encoding = guiutils.get_named_frame(_("Ingest Optimized Transcode"), row_enc)
+        panel_encoding = guiutils.get_named_frame(_("Transcode Optimized Encoding"), row_enc)
 
         self.ingest_action_select = Gtk.ComboBoxText()
         self.ingest_action_select.append_text(_("No Action"))
-        self.ingest_action_select.append_text(_("Ingest Copy"))
-        self.ingest_action_select.append_text(_("Ingest Optimized Transcode"))
+        self.ingest_action_select.append_text(_("Suggest Transcode for Selected"))
+        self.ingest_action_select.append_text(_("Transcode All"))
 
         self.ingest_action_select.set_active(editorstate.PROJECT().ingest_data.get_action())
         self.ingest_action_select.connect(  "changed", 
@@ -242,7 +243,7 @@ class ProxyManagerDialog:
         row_action.pack_start(self.ingest_action_select, False, False, 0)
         row_action.pack_start(Gtk.Label(), True, True, 0)
         
-        panel_action = guiutils.get_named_frame(_("Media Add Ingest Action"), row_action)
+        panel_action = guiutils.get_named_frame(_("Media Add Action"), row_action)
         panel_action.set_margin_top(24)
 
         vbox = Gtk.VBox(False, 2)

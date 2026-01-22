@@ -95,6 +95,7 @@ import rendergui
 import sequence
 import titler
 import tlinewidgets
+import transcodedialog
 import undo
 import updater
 import userfolders
@@ -1019,6 +1020,11 @@ def _hamburger_menu_item_selected(action, variant, msg):
         proxyediting.create_proxy_files_pressed()
     elif msg == "render all proxies":
         proxyediting.create_proxy_files_pressed(True)
+    elif msg == "render transcode files":
+        selection = gui.media_list_view.get_selected_media_objects()
+        if len(selection) < 1:
+            return
+        transcodedialog. show_transcode_dialog(selection)
     elif msg == "select all":
         gui.media_list_view.select_all()
         gui.media_list_view.selected_objects[0].widget.grab_focus()

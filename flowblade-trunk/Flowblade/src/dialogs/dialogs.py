@@ -155,7 +155,7 @@ def change_profile_project_dialog(project, callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Save With Changed Profile"), Gtk.ResponseType.ACCEPT))
 
-    info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
+    info_label = guiutils.bold_label(_("Project Profile can only be changed by saving a version\nwith different profile."))
 
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()

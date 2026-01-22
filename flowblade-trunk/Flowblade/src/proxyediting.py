@@ -148,10 +148,6 @@ class ProxyRenderRunnerThread(threading.Thread):
             job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
             job_queue_object.add_to_queue()
 
-    def abort(self):
-        render_thread.shutdown()
-        self.aborted = True
-        self.thread_running = False
 
 # ------------------------------------------------------------- event interface
 def create_proxy_files_pressed(render_all=False):

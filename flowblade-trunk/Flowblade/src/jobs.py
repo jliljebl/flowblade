@@ -927,6 +927,160 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 self.render_data.do_auto_re_convert_func()
 
 
+
+class TranscodeRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, render_data):
+        
+        AbstractJobQueueObject.__init__(self, session_id, PROXY_RENDER)
+        
+        self.render_data = render_data # 'render_data' is proxyediting.ProxyRenderItemData
+        self.parent_folder = userfolders.get_temp_render_dir()
+
+    def get_job_name(self):
+        folder, file_name = os.path.split(self.render_data.media_file_path)
+        return file_name
+        
+    def start_render(self):
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
+        
+        enc_opt = renderconsumer.proxy_encodings[self.render_data.enc_index]
+        args = self.render_data.get_data_as_args_tuple()
+        if enc_opt.ffmpeggpuenc == None:
+            # MLT proxy rendering
+            self.is_mlt_render = True
+            
+            # Create command list and launch process.
+            command_list = [sys.executable]
+            command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
+
+
+            # Info print, try to remove later.
+            proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
+            proxy_profile = mlt.Profile(proxy_profile_path)
+            enc_index = int(utils.get_headless_arg_value(args, "enc_index"))
+
+            for arg in args:
+                command_list.append(arg)
+                
+            session_arg = "session_id:" + str(self.session_id)
+            command_list.append(session_arg)
+
+            parent_folder_arg = "parent_folder:" + str(self.parent_folder)
+            command_list.append(parent_folder_arg)
+
+            # We need to wait() in thread.
+            command_list_runner = ProcessCommandListRunner(command_list)
+            command_list_runner.start()
+        else:
+            # FFMPEG CLI proxy rendering.
+            self.is_mlt_render = False
+            
+            # Build ffmpeg CLI string.
+            proxy_attr_str = enc_opt.attr_string
+            # Set scale size.
+            screen_size_str = str(self.render_data.proxy_w) + "x" + str(self.render_data.proxy_h)
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE, screen_size_str)
+            #...or
+            screen_size_str = str(self.render_data.proxy_w) + ":" + str(self.render_data.proxy_h)
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SCREENSIZE_2, screen_size_str)
+            # Set source file.
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_SOURCEFILE, self.render_data.media_file_path)
+            # Set proxy file.
+            proxy_attr_str = proxy_attr_str.replace(FFMPEG_ATTR_PROXYFILE, self.render_data.proxy_file_path)
+
+            ffmpeg_command = "ffmpeg -i " + str(proxy_attr_str)
+            
+            self.ffmpeg_start = time.monotonic()
+            
+            self.ffmpeg_remnder_thread = FFmpegRenderThread(ffmpeg_command)
+            self.ffmpeg_remnder_thread.start()
+
+    def update_render_status(self):
+
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
+        
+        if self.is_mlt_render == True:
+            if proxyheadless.session_render_complete(self.parent_folder, self.get_session_id()) == True:
+                
+                job_msg = self.get_completed_job_message()
+                update_job_queue(job_msg)
+                
+                proxyheadless.delete_session_folders(self.parent_folder, self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
+                
+                GLib.idle_add(self.proxy_render_complete)
+
+            else:
+                status = proxyheadless.get_session_status(self.parent_folder, self.get_session_id())
+                if status != None:
+                    fraction, elapsed = status
+                    
+                    self.progress = float(fraction)
+                    if self.progress > 1.0:
+                        self.progress = 1.0
+
+                    self.elapsed = float(elapsed)
+                    self.text = _("Proxy Render")  + " " + self.get_job_name()
+
+                    job_msg = self.get_job_queue_message()
+                    update_job_queue(job_msg)
+                else:
+                    # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
+                    pass
+        else:
+            if self.ffmpeg_remnder_thread.completed == True:
+                job_msg = self.get_completed_job_message()
+                update_job_queue(job_msg)
+                GLib.idle_add(self.proxy_render_complete)
+            else:
+                self.elapsed = float(time.monotonic() - self.ffmpeg_start)
+                prog_step = 0.07
+                if PROJECT().profile.height() > 1090:
+                    prog_step = 0.035
+                self.progress += prog_step
+                if self.progress > 1.0:
+                    self.progress = 0.99
+                    
+                self.text = _("Proxy Render")  + " " + self.get_job_name()
+
+                job_msg = self.get_job_queue_message()
+                update_job_queue(job_msg)
+                    
+    def abort_render(self):
+        if self.is_mlt_render == True:
+            # remove_as_status_polling_object(self)
+            motionheadless.abort_render(self.parent_folder, self.get_session_id())
+        
+        # NOTE: ffmpeg cli render not abortable currently.
+        
+    def proxy_render_complete(self):
+        try:
+            media_file = PROJECT().media_files[self.render_data.media_file_id]
+        except:
+            # User has deleted media file before proxy render complete
+            return
+
+        media_file.add_proxy_file(self.render_data.proxy_file_path)
+
+        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
+            media_file.set_as_proxy_media_file()
+        
+            # if the rendered proxy file was the last proxy file being rendered,
+            # auto re-convert to update proxy clips.
+            proxy_jobs = get_jobs_of_type(PROXY_RENDER)
+            if len(proxy_jobs) == 0:
+                self.render_data.do_auto_re_convert_func()
+            elif len(proxy_jobs) == 1:
+                self.render_data.do_auto_re_convert_func()
+
+
+TranscodeRenderJobQueueObject
+
 class FFmpegRenderThread(threading.Thread):
     
     def __init__(self, ffmpeg_command):
