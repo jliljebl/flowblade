@@ -385,9 +385,6 @@ class ProxyRenderIssuesWindow:
 
 
 #--------------------------------------------- transcode dialog
-
-
-
 def show_transcode_dialog(media_items):
     _maybe_create_ingest_data()
     
@@ -421,7 +418,12 @@ def show_transcode_dialog(media_items):
     dialog.show_all()
 
 def _transcode_response_callback(dialog, response_id, media_items, transcode_combo):
-    dialog.destroy()
+    if response_id == Gtk.ResponseType.ACCEPT: 
+        enc_index = transcode_combo.get_active()
+        dialog.destroy()
+        proxyediting.create_transcode_files(media_items, enc_index)
+    else:
+        dialog.destroy()
     
 def _get_transcode_encoding_combo():
     ingest_enc_select = Gtk.ComboBoxText()

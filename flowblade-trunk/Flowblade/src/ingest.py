@@ -56,41 +56,4 @@ class TranscodeRenderItemData:
         return args
 
 
-class TranscodeRenderJobsCreateThread(threading.Thread):
-    def __init__(self, media_items, encoding):
-        threading.Thread.__init__(self)
-        self.media_items = media_items
-        self.encoding = encoding
-
-    def run(self):        
-
-        w = editorstate.PROJECT().profile.width()
-        H = editorstate.PROJECT().profile.height()
-
-        encoding = renderconsumer.ingest_encodings[self.encoding]
-
-        transcode_render_items = []
-        for media_file in self.media_items:
-            # MOre restrictions !!!
-            if media_file.type != appconsts.IMAGE_SEQUENCE:
-
-                transcode_file_path = media_file.create_transcode_path()
-                item_data = TranscodeRenderItemData(media_file.id, w, h, enc_index,
-                                                transcode_file_path, proxy_rate, media_file.path,
-                                                self.proxy_profile.description(), 
-                                                None)
-
-            else:
-                pass
-                
-            transcode_render_items.append(item_data)
-            
-        
-        GLib.idle_add(self._create_job_queue_objects, transcode_render_items)
-        
-    def _create_job_queue_objects(self, transcode_render_items):
-        for transcode_render_data_item in transcode_render_items:
-            session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-            job_queue_object = jobs.TranscodeRenderJobQueueObject(session_id, transcode_render_data_item)
-            job_queue_object.add_to_queue()
 

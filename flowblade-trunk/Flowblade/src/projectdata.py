@@ -534,6 +534,12 @@ class MediaFile:
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_proxies_dir() + md_str + "/" + file_name)
 
+    def create_transcode_path_no_ext(self):
+        md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        path = str(userfolders.get_ingest_dir() + md_str)
+        print(path)
+        return path
+
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
         self.second_file_path = proxy_path

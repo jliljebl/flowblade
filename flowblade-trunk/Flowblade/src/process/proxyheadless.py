@@ -99,8 +99,11 @@ class ProxyClipRenderThread(threading.Thread):
             proxy_profile = mltprofiles.get_profile(self.proxy_profile_desc)
             
             # App wrote the temp profile when launching proxy render.
-            proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-            proxy_profile = mlt.Profile(proxy_profile_path)
+            if self.is_transcode == False:
+                proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
+                proxy_profile = mlt.Profile(proxy_profile_path)
+            else:
+                proxy_profile = mlt.Profile(self.proxy_profile_desc)
         
             renderconsumer.performance_settings_enabled = False # uuh...we're obviously disabling something momentarily.
             consumer = renderconsumer.get_render_consumer_for_encoding(

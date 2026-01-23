@@ -407,3 +407,54 @@ class ProxyProjectLoadThread(threading.Thread):
             render.set_saved_gui_selections(selections)
         _converting_proxy_mode_done(self.manager_window)
 
+
+# --------------------------------------------- transcoding
+def create_transcode_files(media_items, enc_index):
+    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
+
+    global runner_thread
+    runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index)
+    runner_thread.start()
+    
+
+class TranscodeRenderJobsCreateThread(threading.Thread):
+    def __init__(self, media_items, enc_index):
+        threading.Thread.__init__(self)
+        self.media_items = media_items
+        self.enc_index = enc_index
+
+    def run(self):
+        w = editorstate.PROJECT().profile.width()
+        h = editorstate.PROJECT().profile.height()
+
+        encoding = renderconsumer.ingest_encodings[self.enc_index]
+        proxy_rate = -1
+
+        transcode_render_items = []
+        for media_item_widget in self.media_items:
+            media_file = media_item_widget.media_file
+            # More restrictions !!!?? or in GUI?
+            if media_file.type != appconsts.IMAGE_SEQUENCE:
+
+                transcode_file_path = media_file.create_transcode_path_no_ext() + "." + encoding.extension
+                print(transcode_file_path)
+                
+                item_data = ProxyRenderItemData(media_file.id, w, h, self.enc_index,
+                                                transcode_file_path, proxy_rate, media_file.path,
+                                                editorstate.PROJECT().profile.description(), 
+                                                None, True)
+
+            else:
+                pass
+                
+            transcode_render_items.append(item_data)
+            
+        
+        GLib.idle_add(self._create_job_queue_objects, transcode_render_items)
+        
+    def _create_job_queue_objects(self, transcode_render_items):
+        for transcode_render_data_item in transcode_render_items:
+            session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+            job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, transcode_render_data_item)
+            job_queue_object.add_to_queue()
+
