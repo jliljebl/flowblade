@@ -61,7 +61,7 @@ PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 class ProxyRenderItemData:
     def __init__(   self, media_file_id, proxy_w, proxy_h, enc_index, 
                     proxy_file_path, proxy_rate, media_file_path, 
-                    proxy_profile_desc, lookup_path):
+                    proxy_profile_desc, lookup_path, is_transcode):
 
         self.media_file_id = media_file_id
         self.proxy_w = proxy_w
@@ -72,7 +72,7 @@ class ProxyRenderItemData:
         self.media_file_path = media_file_path
         self.proxy_profile_desc = proxy_profile_desc
         self.lookup_path = lookup_path # For img seqs only
-        
+        self.is_transcode = is_transcode
         # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py.
         self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
 
@@ -85,8 +85,9 @@ class ProxyRenderItemData:
                 "proxy_rate:"+ str(self.proxy_rate),
                 "media_file_path:" + str(self.media_file_path),
                 "proxy_profile_desc:" + str(self.proxy_profile_desc),
-                "lookup_path:" + str(self.lookup_path)) 
-            
+                "lookup_path:" + str(self.lookup_path),
+                "is_transcode:" + str(self.is_transcode))
+
         return args
 
 
@@ -123,7 +124,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                 item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, enc_index,
                                                 proxy_file_path, proxy_rate, media_file.path,
                                                 self.proxy_profile.description(), 
-                                                None)
+                                                None, False)
             else:
 
                 asset_folder, asset_file_name = os.path.split(media_file.path)
@@ -136,8 +137,8 @@ class ProxyRenderRunnerThread(threading.Thread):
                 item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, -1,
                                 proxy_file_path, -1, media_file.path,
                                 self.proxy_profile.description(),
-                                lookup_path)
-                
+                                lookup_path, False)
+
             proxy_render_items.append(item_data)
         
         GLib.idle_add(self._create_job_queue_objects, proxy_render_items)
