@@ -89,13 +89,13 @@ import propertyparse
 import projectdatavault
 import projectdatavaultgui
 import proxyediting
+import proxyingestmanager
 import render
 import renderconsumer
 import rendergui
 import sequence
 import titler
 import tlinewidgets
-import transcodedialog
 import undo
 import updater
 import userfolders
@@ -1024,7 +1024,7 @@ def _hamburger_menu_item_selected(action, variant, msg):
         selection = gui.media_list_view.get_selected_media_objects()
         if len(selection) < 1:
             return
-        transcodedialog. show_transcode_dialog(selection)
+        proxyingestmanager.show_transcode_dialog(selection)
     elif msg == "select all":
         gui.media_list_view.select_all()
         gui.media_list_view.selected_objects[0].widget.grab_focus()

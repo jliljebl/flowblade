@@ -70,6 +70,10 @@ def _set_media_files_to_use_unique_proxies(media_files_list):
     for media_file in media_files_list:
         media_file.use_unique_proxy = True
 
+def _maybe_create_ingest_data():
+    if editorstate.PROJECT().ingest_data == None:
+        editorstate.PROJECT().ingest_data = miscdataobjects.IngestTranscodeData()
+            
 
 class ProxyManagerDialog:
     def __init__(self):
@@ -196,30 +200,11 @@ class ProxyManagerDialog:
 
     def get_ingest_panel(self):
 
-        if editorstate.PROJECT().ingest_data == None:
-            editorstate.PROJECT().ingest_data = miscdataobjects.IngestTranscodeData()
+        _maybe_create_ingest_data()
             
         # Encoding combo
-        self.ingest_enc_select = Gtk.ComboBoxText()
-        encodings = renderconsumer.ingest_encodings
-        if len(encodings) < 1: # no encoding options available, system does not have right codecs
-            editorstate.PROJECT().ingest_data.set_default_encoding(miscdataobjects.INGEST_ENCODING_NOT_SET)
-            self.ingest_enc_select.append_text(_("No Encoding Options Available"))
-        else:
-            if editorstate.PROJECT().ingest_data.get_default_encoding() == miscdataobjects.INGEST_ENCODING_NOT_SET:
-                # Environment has changed so that ingest encodigns are now available.
-                editorstate.PROJECT().ingest_data.set_default_encoding(0)
-                
-            for enc in encodings:
-                self.ingest_enc_select.append_text(enc.name)
-        
-                current_enc = editorstate.PROJECT().ingest_data.get_default_encoding()
-                if current_enc >= len(encodings): # current encoding selection not available
-                    current_enc = 0
-                    editorstate.PROJECT().ingest_data.set_default_encoding(0)
-
-                self.ingest_enc_select.set_active(current_enc)
-                self.ingest_enc_select.connect("changed", 
+        self.ingest_enc_select = _get_transcode_encoding_combo()
+        self.ingest_enc_select.connect("changed", 
                                         lambda w,e: self.ingest_encoding_changed(w.get_active()), 
                                         None)
 
@@ -398,3 +383,66 @@ class ProxyRenderIssuesWindow:
 
             self.create_callback(self.files_to_render)
 
+
+#--------------------------------------------- transcode dialog
+
+
+
+def show_transcode_dialog(media_items):
+    _maybe_create_ingest_data()
+    
+    dialog = Gtk.Dialog(_("Transcode Media"), None,
+                        None,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Transcode"), Gtk.ResponseType.ACCEPT))
+
+    transcode_combo = _get_transcode_encoding_combo()
+    enc_row = guiutils.get_two_column_box(Gtk.Label(label=_("Transcode Encoding:")), transcode_combo,  250)
+    enc_vbox = guiutils.get_vbox([enc_row], False)
+    enc_frame = guiutils.get_named_frame(_("Encoding"), enc_vbox)
+
+    target_folder_combo = Gtk.ComboBoxText()
+    target_folder_combo.append_text(_("Project Data Store"))
+    target_folder_combo.append_text(_("External Folder"))
+
+    target_row = guiutils.get_two_column_box(Gtk.Label(label=_("File Folder:")), target_folder_combo,  250)
+    target_vbox = guiutils.get_vbox([target_row], False)
+    target_frame = guiutils.get_named_frame(_("Save Location"), target_vbox)
+
+    vbox = guiutils.get_vbox([enc_frame, target_frame], False)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.set_default_response(Gtk.ResponseType.OK)
+    dialog.set_resizable(False)
+    dialog.connect('response', _transcode_response_callback, media_items, transcode_combo)
+    
+    dialog.show_all()
+
+def _transcode_response_callback(dialog, response_id, media_items, transcode_combo):
+    dialog.destroy()
+    
+def _get_transcode_encoding_combo():
+    ingest_enc_select = Gtk.ComboBoxText()
+    encodings = renderconsumer.ingest_encodings
+
+    if len(encodings) < 1: # no encoding options available, system does not have right codecs
+        editorstate.PROJECT().ingest_data.set_default_encoding(miscdataobjects.INGEST_ENCODING_NOT_SET)
+        self.ingest_enc_select.append_text(_("No Encoding Options Available"))
+    else:
+        if editorstate.PROJECT().ingest_data.get_default_encoding() == miscdataobjects.INGEST_ENCODING_NOT_SET:
+            # Environment has changed and ingest encodigns are now available.
+            editorstate.PROJECT().ingest_data.set_default_encoding(0)
+            
+        for enc in encodings:
+            ingest_enc_select.append_text(enc.name)
+    
+        current_enc = editorstate.PROJECT().ingest_data.get_default_encoding()
+        if current_enc >= len(encodings): # current encoding selection not available
+            current_enc = 0
+            editorstate.PROJECT().ingest_data.set_default_encoding(0)
+
+        ingest_enc_select.set_active(current_enc)
+
+    return ingest_enc_select
