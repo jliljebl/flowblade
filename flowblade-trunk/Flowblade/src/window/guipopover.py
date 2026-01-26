@@ -785,7 +785,7 @@ def _fill_mf_proxy_section(_mf_proxy_section, media_file, callback):
         active = True
 
     add_menu_action(_mf_proxy_section, _("Create Proxy File"), "mediapanel.mediafile.proxy", ("Render Proxy File", None), callback, active)
-    add_menu_action(_mf_proxy_section, _("Transcode Optimized Media"), "mediapanel.mediafile.transcode", ("Transcode Optimized Media", None), callback, active)
+    add_menu_action(_mf_proxy_section, _("Transcode Optimized Media..."), "mediapanel.mediafile.transcode", ("Transcode Optimized Media", None), callback, active)
 
 def jobs_menu_popover_show(launcher, widget, callback):
     global _jobs_popover, _jobs_menu

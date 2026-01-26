@@ -34,6 +34,7 @@ import dialogutils
 import editorstate
 import gui
 import guiutils
+import gtkbuilder
 import jobs
 import miscdataobjects
 import proxyediting
@@ -392,7 +393,16 @@ def show_transcode_dialog(media_items):
                         None,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Transcode"), Gtk.ResponseType.ACCEPT))
-
+    
+    action_combo = Gtk.ComboBoxText()
+    action_combo.append_text(_("Create New Media Item"))
+    action_combo.append_text(_("Replace Media in Project"))
+    action_combo.set_active(0)
+ 
+    action_row = guiutils.get_two_column_box(Gtk.Label(label=_("Action After Transcode:")), action_combo,  250)
+    action_vbox = guiutils.get_vbox([action_row], False)
+    action_frame = guiutils.get_named_frame(_("Action"), action_vbox)
+ 
     transcode_combo = _get_transcode_encoding_combo()
     enc_row = guiutils.get_two_column_box(Gtk.Label(label=_("Transcode Encoding:")), transcode_combo,  250)
     enc_vbox = guiutils.get_vbox([enc_row], False)
@@ -401,23 +411,42 @@ def show_transcode_dialog(media_items):
     target_folder_combo = Gtk.ComboBoxText()
     target_folder_combo.append_text(_("Project Data Store"))
     target_folder_combo.append_text(_("External Folder"))
-
+    target_folder_combo.set_active(0)
     target_row = guiutils.get_two_column_box(Gtk.Label(label=_("File Folder:")), target_folder_combo,  250)
-    target_vbox = guiutils.get_vbox([target_row], False)
+    
+    data_folder_button = gtkbuilder.get_file_chooser_button(_("Select Folder"))
+    data_folder_button.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    data_folder_button.set_current_folder(os.path.expanduser("~") + "/")
+    folder_label = Gtk.Label(label=_("External Folder:"))
+    folder_label.set_sensitive(False)
+    data_folder_button.set_sensitive(False)
+    data_folder_row = guiutils.get_two_column_box(folder_label, data_folder_button, 250)
+
+    target_folder_combo.connect("changed", _terget_changed, folder_label, data_folder_button)
+        
+    target_vbox = guiutils.get_vbox([target_row, data_folder_row], False)
     target_frame = guiutils.get_named_frame(_("Save Location"), target_vbox)
 
-    vbox = guiutils.get_vbox([enc_frame, target_frame], False)
+    vbox = guiutils.get_vbox([action_frame, enc_frame, target_frame], False)
 
     alignment = dialogutils.get_default_alignment(vbox)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_response(Gtk.ResponseType.OK)
     dialog.set_resizable(False)
-    dialog.connect('response', _transcode_response_callback, media_items, transcode_combo)
+    dialog.connect('response', _transcode_response_callback, media_items, action_combo, transcode_combo, target_folder_combo)
     
     dialog.show_all()
 
-def _transcode_response_callback(dialog, response_id, media_items, transcode_combo):
+def _terget_changed(target_combo, folder_label, data_folder_button):
+    if target_combo.get_active() == 0:
+        folder_label.set_sensitive(False)
+        data_folder_button.set_sensitive(False)
+    else:
+        folder_label.set_sensitive(True)
+        data_folder_button.set_sensitive(True)
+
+def _transcode_response_callback(dialog, response_id, media_items, action_combo, transcode_combo, target_folder_combo):
     if response_id == Gtk.ResponseType.ACCEPT: 
         enc_index = transcode_combo.get_active()
         dialog.destroy()

@@ -2678,6 +2678,8 @@ def media_file_menu_item_selected(action, variant, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
+    if item_id == "Transcode Optimized Media":
+        proxyingestmanager.show_transcode_dialog([media_file])
     if item_id == "Recreate Icon":
         (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
         media_file.info = info
