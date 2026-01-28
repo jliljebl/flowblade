@@ -285,7 +285,7 @@ def _proxy_render_stopped():
 def convert_to_proxy_project(manager_window):    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
     conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
-    manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
+    manager_window.info_label.set_text(_("Converting Project to Use Proxy Media"))
     
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
     mark_out = editorstate.PROJECT().c_seq.tractor.mark_out
@@ -298,7 +298,7 @@ def convert_to_proxy_project(manager_window):
 def convert_to_original_media_project(manager_window):
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
     conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
-    manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
+    manager_window.info_label.set_text(_("Converting to Use Original Media"))
 
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
     mark_out = editorstate.PROJECT().c_seq.tractor.mark_out
@@ -366,9 +366,11 @@ class ProxyProjectLoadThread(threading.Thread):
         self.manager_window = manager_window
     
     def run(self):
+        """
         GLib.idle_add(self._do_proxy_project_load)
     
     def _do_proxy_project_load(self):
+        """
         pulse_runner = guiutils.PulseEvent(self.progressbar)
         time.sleep(2.0)
         persistance.show_messages = False
@@ -382,7 +384,12 @@ class ProxyProjectLoadThread(threading.Thread):
 
         pulse_runner.running = False
         time.sleep(0.3) # need to be sure pulse_runner has stopped
-        
+
+        GLib.idle_add(self._finish_proxy_project_load, project)
+
+    def _finish_proxy_project_load(self, project):
+        self.manager_window.info_label.set_text("") 
+
         project.c_seq.tractor.mark_in = self.mark_in
         project.c_seq.tractor.mark_out = self.mark_out
     

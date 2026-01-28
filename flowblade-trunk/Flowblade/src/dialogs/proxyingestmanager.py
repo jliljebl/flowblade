@@ -162,7 +162,9 @@ class ProxyManagerDialog:
         row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
 
         self.info_label = Gtk.Label()
-
+        self.info_label.set_sensitive(False) 
+        self.info_label.set_margin_bottom(4)
+            
         self.convert_progress_bar = Gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
