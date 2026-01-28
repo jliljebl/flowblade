@@ -42,6 +42,7 @@ import tlinewidgets
 import trackaction
 import trimmodes
 import updater
+import workflow
 
 # Widget names for action target setting and look up.
 SEQUENCE_LIST_VIEW = "sequencelistview"
@@ -148,6 +149,27 @@ def init():
     _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), TLINE_MONITOR_ALL)
     _create_action("mark_selection_range", monitorevent.mark_selection_range_pressed, TLINE_MONITOR_ALL)
+    _create_action("edittool_move", lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("edittool_multitrim", lambda: _editool(2), TLINE_MONITOR_ALL)
+    _create_action("edittool_spacer", lambda: _editool(3), TLINE_MONITOR_ALL)
+    _create_action("edittool_insert", lambda: _editool(4), TLINE_MONITOR_ALL)
+    _create_action("edittool_cut", lambda: _editool(5) , TLINE_MONITOR_ALL)
+    _create_action("edittool_keyframe", lambda: _editool(6) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_move", lambda: _editool(1) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_move", lambda: _editool(1) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_move", lambda: _editool(1) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_move",  lambda: _editool(1) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_multitrim",  lambda: _editool(2) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_multitrim",  lambda: _editool(2) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_spacer",  lambda: _editool(3) , TLINE_MONITOR_ALL)
+    _create_action("kp_str_edittool_spacer",  lambda: _editool(3) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_insert",  lambda: _editool(4) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_insert",  lambda: _editool(4) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_cut", lambda: _editool(5) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_cut",  lambda: _editool(5) , TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_keyframe",  lambda: _editool(6) , TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_keyframe",  lambda: _editool(6) , TLINE_MONITOR_ALL)
+
 
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
@@ -407,3 +429,7 @@ def _delete_log_action():
     # Delete media log event
     if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
         medialog.delete_selected()
+        
+# ------------------------------------------------- edit tools
+def _editool(keyboard_number): 
+    workflow.tline_tool_keyboard_selected_for_number(keyboard_number)

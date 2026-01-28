@@ -112,5 +112,23 @@
     <event code='toggle_audio_mute' name='Toggle Clip Audio Mute' modifiers='ALT'>t</event>
     <event code='set_sync_relation' name='Set Clip Sync Relation' modifiers='CTRL+ALT'>r</event>
     <event code='mark_selection_range' name='Mark Selection Range' modifiers='ALT'>j</event>
+    <event code='edittool_move' name='Move Tool'>1</event>
+    <event code='edittool_multitrim' name='Multitrim Tool'>2</event>
+    <event code='edittool_spacer' name='Spacer Tool'>3</event>
+    <event code='edittool_insert' name='Insert Tool'>4</event>
+    <event code='edittool_cut' name='Cut Tool'>5</event>
+    <event code='edittool_keyframe' name='Cut Tool'>6</event>
+    <event code='kp_edittool_move' name='Move Tool KP'>kp_1</event>
+    <event code='kpstr_edittool_move' name='Move Tool KPSTR'>kp_end</event>
+    <event code='kp_edittool_multitrim' name='Multitrim Tool KP'>kp_2</event>
+    <event code='kpstr_edittool_multitrim' name='Multitrim Tool KPSTR'>kp_down</event>
+    <event code='kp_edittool_spacer' name='Spacer Tool KP'>kp_3</event>
+    <event code='kp_str_edittool_spacer' name='Spacer Tool KPSTR'>kp_next</event>
+    <event code='kp_edittool_insert' name='Insert Tool KP'>kp_4</event>
+    <event code='kpstr_edittool_insert' name='Insert Tool KPSTR'>kp_left</event>
+    <event code='kp_edittool_cut' name='Cut Tool KP'>kp_5</event>
+    <event code='kpstr_edittool_cut' name='Cut Tool KPSTR'>kp_begin</event>
+    <event code='kp_edittool_keyframe' name='Keyframe Tool KP'>kp_6</event>
+    <event code='kpstr_edittool_keyframe' name='Keyframe Tool KPSTR'>kp_right</event>
   </shortcuts>
 </flowblade>

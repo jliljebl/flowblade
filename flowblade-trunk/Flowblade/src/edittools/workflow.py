@@ -234,6 +234,16 @@ def tline_tool_keyboard_selected(event):
 
     return False
 
+def tline_tool_keyboard_selected_for_number(keyboard_number):
+    tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
+    gui.editor_window.tline_cursor_manager.change_tool(tool_id)
+    try:
+        for item in dock_items:
+            item.set_item_color(False)
+        dock_items[keyboard_number - 1].set_item_color(True)
+    except:
+        pass
+
 def select_default_tool():
     tool_id = editorpersistance.prefs.active_tools[0]
     gui.editor_window.tline_cursor_manager.change_tool(tool_id)

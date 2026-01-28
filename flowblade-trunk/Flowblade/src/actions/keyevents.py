@@ -126,13 +126,7 @@ def key_down(widget, event):
             # by stopping signal.
             gui.editor_window.window.emit_stop_by_name("key_press_event")
         return was_handled
-    
-    # Insert shortcut keys need more focus then timeline shortcuts.
-    # these may already have been handled in timeline focus events.
-    was_handled = _handle_extended_monitor_focus_events(event)
-    if was_handled:
-        # Stop event handling here
-        return True
+
 
     was_handled = _handle_configurable_global_events(event)
     if was_handled:
@@ -182,23 +176,12 @@ def _handle_tline_key_event(event):
     Returns True for handled key presses to stop those
     keyevents from going forward.
     """
-    tool_was_selected = workflow.tline_tool_keyboard_selected(event)
-    if tool_was_selected == True:
-        return True
-
     was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)
     if was_handled == True:
         return True
 
     return False
 
-def _handle_extended_monitor_focus_events(event):
-    tool_was_selected = workflow.tline_tool_keyboard_selected(event)
-    if tool_was_selected == True:
-        return True
-
-    return False
-        
 # Apr-2017 - SvdB
 def _get_shortcut_action(event):
     return shortcuts.get_shortcut_action(event)
