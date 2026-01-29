@@ -234,7 +234,7 @@ def get_filter_group_icons(default_icon):
 
     return group_icons
 
-def timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
+def timeline_has_focus():
     if(tline_canvas.widget.is_focus()
        or tline_column.widget.is_focus()
        or editor_window.tool_selector.widget.is_focus()

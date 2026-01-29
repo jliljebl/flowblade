@@ -1221,7 +1221,7 @@ def do_compositor_data_paste(paste_objs):
         compositeeditor.set_compositor(compositormodes.compositor)
         return
 
-def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
+def _timeline_has_focus():
     if(gui.tline_canvas.widget.is_focus()
        or gui.tline_column.widget.is_focus()
        or gui.editor_window.tool_selector.widget.is_focus()

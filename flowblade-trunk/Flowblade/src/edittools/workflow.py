@@ -213,27 +213,6 @@ class ToolDockItem:
 
 
 # ------------------------------------------------------------- keyboard shortcuts
-def tline_tool_keyboard_selected(event):
-  
-    try:
-        state = event.get_state()
-        if state & Gdk.ModifierType.CONTROL_MASK or state & Gdk.ModifierType.MOD1_MASK or state & Gdk.ModifierType.SHIFT_MASK:
-            # CTRL, ALT, SHIFT + number may have other uses then selecting tools.
-            return False
-
-        keyboard_number = int(Gdk.keyval_name(event.keyval).lower())
-        tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
-        gui.editor_window.tline_cursor_manager.change_tool(tool_id)
-        for item in dock_items:
-            item.set_item_color(False)
-        dock_items[keyboard_number - 1].set_item_color(True)
-        return True
-    except:
-        # This fails if a valid number was not pressed, so probably most times.
-        pass
-
-    return False
-
 def tline_tool_keyboard_selected_for_number(keyboard_number):
     tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
     gui.editor_window.tline_cursor_manager.change_tool(tool_id)

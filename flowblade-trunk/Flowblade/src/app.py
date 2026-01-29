@@ -81,7 +81,6 @@ import gui
 import guicomponents
 import guipopoverclip
 import jobs
-import keyevents
 import keyframeeditor
 import keyframeeditcanvas
 import keygtkactions
@@ -576,12 +575,6 @@ def create_gui():
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
     gui.pos_bar.set_dark_bg_color()
-    
-    # Connect window global key listener.
-    #gui.global_key_controller_1 = gtkevents.KeyPressEventAdapter(gui.editor_window.window, keyevents.key_down, user_data=None, capture=True)
-    gui.editor_window.window.connect("key-press-event", keyevents.key_down)
-    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-        gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
     
     # Give undo a reference to uimanager for menuitem state changes.
     undo.set_menu_items(gui.editor_window.uimanager)

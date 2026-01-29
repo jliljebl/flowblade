@@ -57,28 +57,23 @@ def load_shortcuts():
     global _quick_effects_dict
     _quick_effects_dict = editorpersistance.prefs.quick_effects
 
-def maybe_do_quick_shortcut_filter_add(event):
-    state = event.get_state()
-    key_name = Gdk.keyval_name(event.keyval).lower()
-    if state & Gdk.ModifierType.CONTROL_MASK:
-        if key_name in _quick_effects_dict:
-            quick_add_filter = _quick_effects_dict[key_name]
-            if quick_add_filter != NO_SHORTCUT_SET:
-                if movemodes.selected_track == -1:
-                    return False
-                filter_info = mltfilters.get_filter_for_name(quick_add_filter)
-                range_in = movemodes.selected_range_in
-                range_out = movemodes.selected_range_out
-                track = current_sequence().tracks[movemodes.selected_track]
-                clips = track.clips[range_in:range_out +1]
-                data = {    "clips":clips,
-                            "filter_info":filter_info,
-                            "filter_edit_done_func": clipeffectseditor.filter_edit_multi_done_stack_update}
-                action = edit.add_filter_multi_action(data)
-                action.do_edit()
-                return True
-
-    return False
+def do_quick_shortcut_filter_add(key_name):
+    #key_name = Gdk.keyval_name(event.keyval).lower()
+    #if key_name in _quick_effects_dict:
+    quick_add_filter = _quick_effects_dict[key_name]
+    if quick_add_filter != NO_SHORTCUT_SET:
+        if movemodes.selected_track == -1:
+            return False
+        filter_info = mltfilters.get_filter_for_name(quick_add_filter)
+        range_in = movemodes.selected_range_in
+        range_out = movemodes.selected_range_out
+        track = current_sequence().tracks[movemodes.selected_track]
+        clips = track.clips[range_in:range_out +1]
+        data = {    "clips":clips,
+                    "filter_info":filter_info,
+                    "filter_edit_done_func": clipeffectseditor.filter_edit_multi_done_stack_update}
+        action = edit.add_filter_multi_action(data)
+        action.do_edit()
 
 def get_shortcuts_panel():
     vbox = Gtk.VBox()

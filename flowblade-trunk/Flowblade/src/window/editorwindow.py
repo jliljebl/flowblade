@@ -50,7 +50,6 @@ import guicomponents
 import guiutils
 import gtkbuilder
 import jobs
-import keyevents
 import medialinker
 import medialog
 import mediaplugin

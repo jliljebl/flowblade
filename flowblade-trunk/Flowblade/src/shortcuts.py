@@ -18,7 +18,8 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-# Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
+# This module has functions to scan available shortcut files, validate and load them,
+# Module also creates data stuctures needed to implement keyboard shortcut functionality.
 
 from gi.repository import Gdk, Gtk
 
@@ -53,11 +54,10 @@ _gtk_mod_names = {}
 _editable = False
 
 
-
-# Copied from keyevents.py so that we are using same code to 
 def get_shortcut_action(event):
     # Get the name of the key pressed.
     key_name = Gdk.keyval_name(event.keyval).lower()
+    #print(key_name)
 
     # Check if this key is in the dictionary.
     state = event.get_state()
