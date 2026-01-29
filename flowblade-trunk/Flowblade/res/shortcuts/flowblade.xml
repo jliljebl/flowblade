@@ -142,7 +142,6 @@
     <event code='quickeffect_10' name='Quick Effect 10' modifiers='CTRL'>f10</event>
     <event code='quickeffect_11' name='Quick Effect 11' modifiers='CTRL'>f11</event>
     <event code='quickeffect_12' name='Quick Effect 12' modifiers='CTRL'>f12</event>
-    <event code='global_delete' name='Global Delete'>delete</event>
     <event code='fullscreen' name='Fullscreen'>f11</event>
     <event code='global_escape' name='Global Escape'>escape</event>
     <event code='global_control_a' name='Global Control A' modifiers='CTRL'>a</event>

@@ -208,7 +208,7 @@ def init():
     _create_action("monitor_show_video",lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), APP_WINDOWS)
     _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), APP_WINDOWS)
     _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), APP_WINDOWS)
-    _create_action("global_delete", _global_delete, APP_WINDOWS)
+    _create_action("delete", _global_delete, APP_WINDOWS)
     _create_action("fullscreen",  menuactions.toggle_fullscreen, APP_WINDOWS)
     _create_action("global_escape", _global_escape, APP_WINDOWS)
     _create_action("global_control_a", _global_control_A, APP_WINDOWS)
