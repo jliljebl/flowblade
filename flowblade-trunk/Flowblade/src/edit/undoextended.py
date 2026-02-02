@@ -27,9 +27,41 @@ handle undo/redos.
 import undo
 
 
-
-
 class ColorGraderUndo(undo.PropertyEditAction):
     
-        def __init__(self, editable_property, value_set_func, undo_val, edit_data):
-            undo.PropertyEditAction.__init__(self, editable_property, value_set_func, undo_val, edit_data)
+        def __init__(self, editor):
+            undo.PropertyEditAction.__init__(self, self.undo_value_set_func, "")
+            self.editor = editor
+
+        def set_undo_val(self):
+            hue, sat = self._get_hue_and_sat(self.editor.band)
+            self.undo_val = self._get_value_str(self.editor.band, hue, sat) 
+        
+        def set_redo_val(self):
+            hue, sat = self._get_hue_and_sat(self.editor.band)
+            redo_val = self._get_value_str(self.editor.band, hue, sat) 
+            self.edit_done(redo_val)
+            
+        def _get_hue_and_sat(self, band):
+            if band == self.editor.SHADOW:
+                hue = self.editor.shadow_hue.value
+                sat = self.editor.shadow_saturation.value
+            elif band == self.editor.MID:
+                hue = self.editor.mid_hue.value
+                sat = self.editor.mid_saturation.value
+            else:
+                hue = self.editor.hi_hue.value
+                sat = self.editor.hi_saturation.value
+            
+            return (hue, sat)
+    
+        def _get_value_str(self, band, hue, sat):
+            return str(band) + ":" + hue + ":" + sat 
+    
+        def undo_value_set_func(self, str_value):
+            tokens = str_value.split(":")
+            band = int(tokens[0])
+            hue = float(tokens[1])
+            sat = float(tokens[2])
+        
+            self.editor.undo_redo_update(band, hue, sat)

@@ -966,6 +966,11 @@ class ColorGrader:
     DEGREE_CHAR = '\u00B0'
 
     def __init__(self, editable_properties):
+        # undo object needs these.
+        self.SHADOW = SHADOW
+        self.MID = MID
+        self.HI = HI
+
         # Initial active band
         self.band = SHADOW
 
@@ -1061,9 +1066,30 @@ class ColorGrader:
         self.band = band
 
     def color_box_values_changed(self):
-        print("color_box_values_changed")
+        edit_action = undoextended.ColorGraderUndo(self)
+        edit_action.set_undo_val()
+
         hue, sat = self.color_box.get_hue_saturation()
         self._write_out_filter_values(self.band, hue, sat)
+
+        edit_action.set_redo_val()
+    
+    def undo_redo_update(self, band, hue, sat):
+        self.band = band 
+        self._write_out_filter_values(self.band, hue, sat)
+        if band == SHADOW:
+            self.color_box.set_cursor(self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value())
+        elif band == MID:
+            self.color_box.set_cursor(self.mid_hue.get_float_value(), self.mid_saturation.get_float_value())
+        else:
+            self.color_box.set_cursor(self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
+    
+        self.color_box.set_cursors(self.shadow_hue.get_float_value(), self.shadow_saturation.get_float_value(),
+                                   self.mid_hue.get_float_value(), self.mid_saturation.get_float_value(),
+                                   self.hi_hue.get_float_value(), self.hi_saturation.get_float_value())
+
+
+        self.color_box.widget.queue_draw()
 
     def _write_out_filter_values(self, band, hue, sat):
         if band == SHADOW:
