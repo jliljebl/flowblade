@@ -44,7 +44,9 @@ import lutfilter
 import motiontracking
 import respaths
 import translations
+import undoextended
 import utils
+
 
 SHADOW = 0
 MID = 1
@@ -1059,15 +1061,18 @@ class ColorGrader:
         self.band = band
 
     def color_box_values_changed(self):
+        print("color_box_values_changed")
         hue, sat = self.color_box.get_hue_saturation()
+        self._write_out_filter_values(self.band, hue, sat)
 
-        if self.band == SHADOW:
+    def _write_out_filter_values(self, band, hue, sat):
+        if band == SHADOW:
             self.shadow_hue.write_number_value(hue)
             self.shadow_saturation.write_number_value(sat)
 
             self.filt.shadow_band.set_hue_and_saturation(hue, sat)
             self.filt.shadow_band.update_correction()
-        elif self.band == MID:
+        elif band == MID:
             self.mid_hue.write_number_value(hue)
             self.mid_saturation.write_number_value(sat)
 
@@ -1080,7 +1085,7 @@ class ColorGrader:
             self.filt.hi_band.set_hue_and_saturation(hue, sat)
             self.filt.hi_band.update_correction()
 
-        self._display_values(self.band, hue, sat)
+        self._display_values(band, hue, sat)
 
         self.filt.update_rgb_lookups()
         self.filt.write_out_tables()

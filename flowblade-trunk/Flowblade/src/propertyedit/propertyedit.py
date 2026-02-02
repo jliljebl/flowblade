@@ -412,7 +412,7 @@ class EditableProperty(AbstractProperty):
         print("EditableProperty.write value()")
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
-            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
 
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
@@ -423,7 +423,7 @@ class EditableProperty(AbstractProperty):
         else:
             self.ignore_write_for_undo = False
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
         if editor == None:
             self.ignore_write_for_undo = True
@@ -474,7 +474,7 @@ class TransitionEditableProperty(AbstractProperty):
     def write_value(self, str_value):
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
-            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
             
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
@@ -485,7 +485,7 @@ class TransitionEditableProperty(AbstractProperty):
         else:
             self.ignore_write_for_undo = False
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         print("undo_redo_write_value not impl.")
             
     def write_mlt_property_str_value(self, str_value):
@@ -514,7 +514,7 @@ class NonMltEditableProperty(AbstractProperty):
         self.write_adjustment_values = False # We are having this to avoid possible regressions when adding more editing capabilities to 
                                              # NonMltEditableProperty objects for 2.16, some earlier functionality could assume
                                              # that this is not happening.
-                                             
+
     def adjustment_value_changed(self, adjustment):
         if self.adjustment_listener != None:
             value = adjustment.get_value()
@@ -635,7 +635,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
         if editor != None:
             editor.editable_property.ignore_write_for_undo = True
@@ -723,7 +723,7 @@ class KeyFrameFilterRotatingGeometryProperty:
     def write_out_keyframes(self, keyframes):
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value change is caused by doing undo/redo.
-            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
 
         rect_val = ""
         roto_val = ""
@@ -760,7 +760,7 @@ class KeyFrameFilterRotatingGeometryProperty:
             self.ignore_write_for_undo = False
             self.value = self.get_value_keyframes_str()
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
         keyframes = propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(str_value, None)
         if editor != None:
@@ -1263,7 +1263,7 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         val_str = val_str.strip(";")
         self.write_value(val_str)
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
         if editor != None:
             editor.editable_property.ignore_write_for_undo = True
@@ -1308,7 +1308,7 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     
         return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_increment=float(step), page_increment=float(step)*page_factor)
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
         if editor != None:
             editor.editable_property.ignore_write_for_undo = True
@@ -1354,7 +1354,7 @@ class ColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         color_button = undo.get_editor_for_property(self)
         if color_button != None:
             color_button.editable_property.ignore_write_for_undo = True
@@ -1386,7 +1386,7 @@ class CairoColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         color_button = undo.get_editor_for_property(self)
         if color_button != None:
             color_button.editable_property.ignore_write_for_undo = True
@@ -1464,7 +1464,7 @@ class AffineScaleProperty(EditableProperty):
 
         return in_value  
 
-    def undo_redo_write_value(self, str_value, undo_redo_data):
+    def undo_redo_write_value(self, str_value):
         editor = undo.get_editor_for_property(self)
 
         if editor != None:

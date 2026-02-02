@@ -269,12 +269,9 @@ def clear_editors_dict():
 
 class PropertyEditAction:
     
-    def __init__(self, editable_property, value_set_func, undo_val, edit_data):
-        #print("PropertyEditAction", editable_property)
-        self.editable_property = editable_property
+    def __init__(self, value_set_func, undo_val):
         self.value_set_func = value_set_func
         self.undo_val = copy.deepcopy(undo_val)
-        self.edit_data = edit_data
         self.redo_val = None
         self.creation_time = None 
 
@@ -311,11 +308,11 @@ class PropertyEditAction:
     
     def undo(self):
         print("PropertyEditAction.undo id, u, r, ", id(self), self.undo_val,  self.redo_val)
-        self.value_set_func(self.undo_val, self.edit_data)
+        self.value_set_func(self.undo_val)
 
     def redo(self):
         print("PropertyEditAction.redo id, u, r, ", id(self), self.undo_val,  self.redo_val)
-        self.value_set_func(self.redo_val, self.edit_data)
+        self.value_set_func(self.redo_val)
 
 
 # ------------------------------------------- LINKED SEQUENCE CYCLIC TESTING

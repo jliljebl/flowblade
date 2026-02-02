@@ -422,6 +422,12 @@ class ColorGradeFilter:
                                          self.hi_band.b_correction_look_up[i])
 
     def write_out_tables(self):
+        
+        # Undos are handled in edtor and special undo object. 
+        self.r_table_prop.ignore_write_for_undo = True
+        self.g_table_prop.ignore_write_for_undo = True
+        self.b_table_prop.ignore_write_for_undo = True
+
         self.r_table_prop.write_out_table(self.r_lookup)
         self.g_table_prop.write_out_table(self.g_lookup)
         self.b_table_prop.write_out_table(self.b_lookup)
