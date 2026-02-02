@@ -63,7 +63,10 @@ redo_item = None
 
 # dict edtable property -> editor, needed to update property editor GUI after undo/redo
 _editor_for_property = {}
-
+# Undo system for filters requires property index to find and update correct GUI editor for property.
+# Some properties are not in editable_properties list (and thus don't have index) but are created from those to be used by editors.
+# In that case we set this dummy index to be used for finding editors for those properties in function get_editor_for_property().
+INDEX_FOR_PROPERTY_CREATED_FOR_EDITOR = -99
 
 def clear_undos():
     global undo_stack, index
@@ -192,6 +195,31 @@ def undo_redo_stress_test():
 
 
 # ------------------------------------------- PROPERT EDIT UNDO
+"""
+Property edit undo system works as described below. Most of the complexity here is to ensure that single 
+edit action that produces multiple writes to MLt property values (e.g. slider drag) 
+only produces single undoable actionT
+    - when a editor property is created editor calls set_editor_for_property()
+    to set is itself in _editor_for_property dict that is needed to possiblty update
+    editor GUI when undo/redo done
+    - when edit is done 'write_value()' is called on editable property. In 'write_value()'  
+    a PropertyEditAction object is created saving property value _before_ edit
+    is applied, _unless_ write value is caused by undo/redo, this is 
+    controlled by 'ignore_write_for_undo' property in 'EditableProperty'
+    - after MLT value is updated in 'write_value()' 'PropertyEditAction.edit_done()'
+    is called which creates apolling ticker if no exist.
+    - if polling ticker exists, is its 'data' property is set to be the created PropertyEditAction
+    object.
+    - polling ticker calls PropertyEditAction.maybe_commit_event() that crates undo object using available data
+    to set undo/redo values if more PROPERTY_EDIT_COMMIT_DELAY_MILLIS has passed since last property value update.
+    - this way we a single PropertyEditAction object is placed in undo stack and 
+    that only has the write value of last MLT write as redo value.
+    - when undo/redo is called it updates editor GUI if editor for property is found using 
+    with get_editor_for_property() 
+    - 'ignore_write_for_undo' is set 'True' on edited property when doing undo/redo so 
+    that no new PropertyEditAction object is created.
+"""
+
 def _property_edit_poll_event(property_edit_action):
     print("tick")
     global _property_edit_poll_ticker
@@ -203,6 +231,7 @@ def _property_edit_poll_event(property_edit_action):
     property_edit_action.maybe_commit_event(current_time)
 
 def set_editor_for_property(editable_property, editor):
+    print(editable_property, editor)
     global _editor_for_property
     _editor_for_property[editable_property] = editor
 
@@ -238,9 +267,10 @@ def clear_editors_dict():
     global _editor_for_property
     _editor_for_property = {}
 
-class ProperEditAction:
+class PropertyEditAction:
     
     def __init__(self, editable_property, value_set_func, undo_val, edit_data):
+        #print("PropertyEditAction", editable_property)
         self.editable_property = editable_property
         self.value_set_func = value_set_func
         self.undo_val = copy.deepcopy(undo_val)
@@ -262,9 +292,9 @@ class ProperEditAction:
             _property_edit_poll_ticker.data = self
 
     def maybe_commit_event(self, current_time):
-        # NOTE: With this design user edting values of 2 _different_ editable properties
+        # NOTE: With this design user editing values of 2 _different_ editable properties
         # in under 750 ms results in undo action for first edit not being part of the undo stack.
-        # We consider this acceptable because that a) almost never happens in practise,
+        # We consider this acceptable because that a) it almost never happens in practise,
         # b) resulting unexpected behaviour when applying undos/redos is easily fixable by 
         # redoing the edit.
         if current_time - self.creation_time < PROPERTY_EDIT_COMMIT_DELAY_MILLIS:
@@ -280,11 +310,11 @@ class ProperEditAction:
         register_edit(self)
     
     def undo(self):
-        print("ProperEditAction.undo id, u, r, ", id(self), self.undo_val,  self.redo_val)
+        print("PropertyEditAction.undo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.undo_val, self.edit_data)
 
     def redo(self):
-        print("ProperEditAction.redo id, u, r, ", id(self), self.undo_val,  self.redo_val)
+        print("PropertyEditAction.redo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.redo_val, self.edit_data)
 
 

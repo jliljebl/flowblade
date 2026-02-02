@@ -905,9 +905,11 @@ def _create_filter_roto_geom_editor(filt, editable_properties, editor_name, trac
                                 editable_properties[0].used_create_params, 
                                 editable_properties,
                                 track, 
-                                clip_index)
+                                clip_index,
+                                filter_index)
 
     kf_edit_geom_editor = keyframeeditor.FilterRotatingGeometryEditor(kf_editable_property)
+    undo.set_editor_for_property(kf_editable_property, kf_edit_geom_editor)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(kf_edit_geom_editor, False, False, 0)

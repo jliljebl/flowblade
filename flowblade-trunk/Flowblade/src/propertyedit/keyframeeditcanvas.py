@@ -270,7 +270,7 @@ class AbstractEditCanvas:
         self.current_clip_frame = 0
         
         # Keyframe tuples are of type (frame, rect, opacity)
-        self.keyframes = None # Set using function AbstractScreenEditor.set_keyframes(). Keyframes are in form [frame, shape, opacity]
+        self.keyframes = None # Set using function AbstractEditCanvas.set_keyframes(). Keyframes are in form [frame, shape, opacity]
         self.keyframe_parser = None # Function used to parse keyframes to tuples is different for different expressions
                                     # Parent editor sets this.
 

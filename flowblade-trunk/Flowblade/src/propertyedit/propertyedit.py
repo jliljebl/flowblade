@@ -74,7 +74,10 @@ NOT_PARSED = "not_parsed"                                   # A write out value 
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
 
 DEFAULT_STEP = 1.0 # for sliders
-                    
+
+
+
+
 def get_filter_editable_properties(clip, filter_object, filter_index, 
                                    track, clip_index, compositor_filter=False):
     """
@@ -406,10 +409,10 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
-        print("ep write value")
+        print("EditableProperty.write value()")
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
-            edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
 
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
@@ -471,7 +474,7 @@ class TransitionEditableProperty(AbstractProperty):
     def write_value(self, str_value):
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
-            edit_action = undo.ProperEditAction(self, self.undo_redo_write_value, str(self.value), None)
+            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
             
         self.write_mlt_property_str_value(str_value)
         self.value = str_value
@@ -594,7 +597,7 @@ class LUTTableProperty(EditableProperty):
                 editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
 """
 
-        
+
 class PointsListProperty(EditableProperty):
     
     def set_value_from_cr_points(self, crpoints):
@@ -645,7 +648,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
             
 class KeyFrameFilterRotatingGeometryProperty:
 
-    def __init__(self, create_params, editable_properties, track, clip_index):
+    def __init__(self, create_params, editable_properties, track, clip_index, filter_index):
 
         # Pick up the editable properties that actually have their values being written to on user edits
         # and affect to filter output.
@@ -663,6 +666,8 @@ class KeyFrameFilterRotatingGeometryProperty:
         self.is_compositor_filter = False
         self.track = track
         self.clip_index = clip_index
+        self.filter_index = filter_index
+        self.property_index = undo.INDEX_FOR_PROPERTY_CREATED_FOR_EDITOR
         self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
         self.get_display_name = lambda : "Opacity"
 
@@ -678,6 +683,7 @@ class KeyFrameFilterRotatingGeometryProperty:
         # to _two_ different properties, so this "dummy" editable property is created to act as the 
         # property being edited, and it converts editor output to property values of two different 
         # properties in method write_out_keyframes() below.
+        self.ignore_write_for_undo = False
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -714,7 +720,11 @@ class KeyFrameFilterRotatingGeometryProperty:
   
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
         
-    def write_out_keyframes(self, keyframes):    
+    def write_out_keyframes(self, keyframes):
+        if self.ignore_write_for_undo == False:
+            # Don't create undo object if value change is caused by doing undo/redo.
+            edit_action = undo.PropertyEditAction(self, self.undo_redo_write_value, str(self.value), None)
+
         rect_val = ""
         roto_val = ""
         profile_width = float(current_sequence().profile.width())
@@ -737,8 +747,33 @@ class KeyFrameFilterRotatingGeometryProperty:
         rect_val = rect_val.strip(";")
         roto_val = roto_val.strip(";")
 
+        # Undos are not done based on these values but based on self.value
+        self.rect_ep.ignore_write_for_undo = True
         self.rect_ep.write_value(rect_val)
+        self.fix_rotate_x_ep.ignore_write_for_undo = True
         self.fix_rotate_x_ep.write_value(roto_val)
+ 
+        if self.ignore_write_for_undo == False:
+            self.value = self.get_value_keyframes_str()
+            edit_action.edit_done(self.value)
+        else:
+            self.ignore_write_for_undo = False
+            self.value = self.get_value_keyframes_str()
+
+    def undo_redo_write_value(self, str_value, undo_redo_data):
+        editor = undo.get_editor_for_property(self)
+        keyframes = propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(str_value, None)
+        if editor != None:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            editor.geom_kf_edit.set_keyframes(self.value, self.get_in_value)
+            editor.clip_editor.keyframes = editor.get_clip_editor_keyframes()
+            editor.update_editor_view()
+            editor.pos_entries_row.update_entry_values(editor.geom_kf_edit.get_keyframe(editor.clip_editor.active_kf_index))
+            editor.buttons_row.set_kf_info(editor.clip_editor.get_kf_info())
+        else:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
  
     def write_value(self, str_value):
         pass
