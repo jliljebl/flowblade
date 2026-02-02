@@ -31,19 +31,28 @@ import gui
 import keyframeeditor
 import kftoolmode
 import medialog
+import menuactions
+import modesetting
 import monitorevent
 import movemodes
 import multitrimmode
 import projectaction
 import shortcuts
+import shortcutsquickeffects
 import syncsplitevent
 import tlineaction
 import tlinewidgets
+import tlineypage
 import trackaction
 import trimmodes
 import updater
+import workflow
+
+# This module handles creating keyboard shortcuts using data in shortcuts.py and executing related actions.
 
 # Widget names for action target setting and look up.
+APP_WINDOW = "appwindow"
+APP_WINDOW_2 = "appwindow2"
 SEQUENCE_LIST_VIEW = "sequencelistview"
 BIN_LIST_VIEW = "binlistview"
 LOG_LIST_VIEW = "loglistview"
@@ -56,8 +65,7 @@ TLINE_SCROLL = "tlinescroll"
 TLINE_MONITOR_DISPLAY = "tlinemonitordisplay"
 TLINE_ALL = [TLINE_CANVAS, TLINE_TRACK_COLUMN, TLINE_SCALE, TLINE_LEFT_CORNER, TLINE_SCROLL, TLINE_MONITOR_DISPLAY]
 MONITOR_SWITCH = "monitorswitch"
-MONITOR_WAVEFORM_DISPLAY = "monitorwaveformdisplay"
-MONITOR_ALL = [MONITOR_SWITCH, MONITOR_WAVEFORM_DISPLAY, POS_BAR]
+MONITOR_ALL = [MONITOR_SWITCH, POS_BAR]
 MIDDLE_BUTTONS_1 = "midbar_b_1"
 MIDDLE_BUTTONS_2 = "midbar_b_2"
 MIDDLE_BUTTONS_3 = "midbar_b_3"
@@ -73,10 +81,14 @@ _widgets = {}
 _controllers = {}
 
 
+class FocusError(Exception):
+    pass
+    
 def init():
     # Build _widgets data struct with live objects.
     global _widgets
-    _widgets = {TLINE_CANVAS: gui.tline_canvas.widget,
+    _widgets = {APP_WINDOW: gui.editor_window.window,
+                TLINE_CANVAS: gui.tline_canvas.widget,
                 TLINE_TRACK_COLUMN: gui.tline_column.widget,
                 TLINE_SCALE: gui.tline_scale.widget,
                 POS_BAR: gui.pos_bar.widget,
@@ -84,7 +96,6 @@ def init():
                 TLINE_SCROLL: gui.tline_scroll,
                 TLINE_MONITOR_DISPLAY: gui.tline_display,
                 MONITOR_SWITCH: gui.monitor_switch.widget,
-                MONITOR_WAVEFORM_DISPLAY: gui.monitor_waveform_display.widget,
                 SEQUENCE_LIST_VIEW: gui.sequence_list_view,
                 BIN_LIST_VIEW: gui.bin_list_view, 
                 LOG_LIST_VIEW: gui.editor_window.media_log_events_list_view,
@@ -95,6 +106,13 @@ def init():
                 MIDDLE_BUTTONS_5: gui.editor_window.monitor_insert_buttons.widget, 
                 MIDDLE_BUTTONS_6: gui.editor_window.undo_redo.widget}
 
+    # HANDLE TWO WINDOWS
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        APP_WINDOWS = [APP_WINDOW]
+    else:
+        APP_WINDOWS = [APP_WINDOW, APP_WINDOW_2]
+        _widgets[APP_WINDOW_2] = gui.editor_window.window2
+    
     # Create actions
     _create_action("mark_in", monitorevent.mark_in_pressed, TLINE_MONITOR_ALL)
     _create_action("to_mark_in", monitorevent.to_mark_in_pressed, TLINE_MONITOR_ALL)
@@ -149,15 +167,58 @@ def init():
     _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), TLINE_MONITOR_ALL)
     _create_action("mark_selection_range", monitorevent.mark_selection_range_pressed, TLINE_MONITOR_ALL)
+    _create_action("edittool_move", lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("edittool_multitrim", lambda: _editool(2), TLINE_MONITOR_ALL)
+    _create_action("edittool_spacer", lambda: _editool(3), TLINE_MONITOR_ALL)
+    _create_action("edittool_insert", lambda: _editool(4), TLINE_MONITOR_ALL)
+    _create_action("edittool_cut", lambda: _editool(5), TLINE_MONITOR_ALL)
+    _create_action("edittool_keyframe", lambda: _editool(6), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_move", lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_move", lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_move", lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_move",  lambda: _editool(1), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_multitrim",  lambda: _editool(2), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_multitrim",  lambda: _editool(2), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_spacer",  lambda: _editool(3), TLINE_MONITOR_ALL)
+    _create_action("kp_str_edittool_spacer",  lambda: _editool(3), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_insert",  lambda: _editool(4), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_insert",  lambda: _editool(4), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_cut", lambda: _editool(5), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_cut",  lambda: _editool(5), TLINE_MONITOR_ALL)
+    _create_action("kp_edittool_keyframe",  lambda: _editool(6), TLINE_MONITOR_ALL)
+    _create_action("kpstr_edittool_keyframe",  lambda: _editool(6), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_1", lambda: _quickeffect("f1"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_2", lambda: _quickeffect("f2"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_3", lambda: _quickeffect("f3"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_4", lambda: _quickeffect("f4"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_5", lambda: _quickeffect("f5"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_6", lambda: _quickeffect("f6"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_7", lambda: _quickeffect("f7"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_8", lambda: _quickeffect("f8"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_9", lambda: _quickeffect("f9"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_10", lambda: _quickeffect("f10"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_11", lambda: _quickeffect("f11"), TLINE_MONITOR_ALL)
+    _create_action("quickeffect_12", lambda: _quickeffect("f12"), TLINE_MONITOR_ALL)
+    _create_action("tline_page_down", tlineypage.page_down_key, APP_WINDOWS)
+    _create_action("tline_page_up", tlineypage.page_up_key, APP_WINDOWS)
+    _create_action("open_next", projectaction.open_next_media_item_in_monitor, APP_WINDOWS)
+    _create_action("open_prev", projectaction.open_prev_media_item_in_monitor, APP_WINDOWS)
+    _create_action("append_from_bin", _append_bin, APP_WINDOWS)
+    _create_action("move_media", _init_media_list_move, APP_WINDOWS)
+    _create_action("monitor_show_video",lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), APP_WINDOWS)
+    _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), APP_WINDOWS)
+    _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), APP_WINDOWS)
+    _create_action("delete", _global_delete, APP_WINDOWS)
+    _create_action("fullscreen",  menuactions.toggle_fullscreen, APP_WINDOWS)
+    _create_action("global_escape", _global_escape, APP_WINDOWS)
+    _create_action("global_control_a", _global_control_A, APP_WINDOWS)
 
 def _create_action(action, press_func, widget_list, pass_event=False):
     for widget_id in widget_list:
         widget = _widgets[widget_id]
-        #print(widget_id)
         if widget in _controllers:
             _controllers[widget].add_shortcut(action, press_func, pass_event)
         else:
-            #print("ShortCutController")
             _controllers[widget] = ShortCutController(widget)
             _controllers[widget].add_shortcut(action, press_func, pass_event)
 
@@ -167,13 +228,12 @@ class ShortCutController:
         self.shortcuts = {}
         self.widget = widget
         self.widget.connect("key-press-event", lambda w, e: self._short_cut_handler(e))
-    
+
     def add_shortcut(self, action, press_func, pass_event):
         self.shortcuts[action] = (press_func, pass_event)
     
     def _short_cut_handler(self, event):
         action = shortcuts.get_shortcut_action(event)
-        #print("ShortCutController: ", action)
         try:
             press_func, pass_event = self.shortcuts[action]
             if pass_event == False:
@@ -181,7 +241,7 @@ class ShortCutController:
             else:
                 press_func(event)
             return True
-        except KeyError:
+        except(KeyError, FocusError) as e:
             return False
 
         
@@ -402,9 +462,91 @@ def _delete_bin_action():
     if gui.bin_list_view.text_rend_1.get_property("editing") == True:
         return
     projectaction.delete_selected_bin()
-    
-    
+
 def _delete_log_action():
     # Delete media log event
     if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
         medialog.delete_selected()
+
+def _append_bin():
+    if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None: 
+        projectaction.append_selected_media_clips_into_timeline()
+        return
+    
+    raise FocusError("Wrong focus for global event")
+
+def _init_media_list_move():
+    gui.media_list_view.init_move()
+
+def _global_delete():
+    # Delete media file
+    if gui.media_list_view.widget.get_focus_child() != None:
+        projectaction.delete_media_files()
+        return
+
+    raise FocusError("Wrong focus for global event")
+
+def _global_escape():
+    if editorstate.current_is_move_mode() == False:
+        modesetting.set_default_edit_mode()
+        return
+    elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
+        gui.big_tc.set_visible_child_name("BigTCDisplay")
+        return
+
+    raise FocusError("Wrong focus for global event")
+
+def _global_control_A():
+    if gui.media_list_view.widget.has_focus() or gui.media_list_view.widget.get_focus_child() != None: 
+        gui.media_list_view.select_all()
+        return
+
+    raise FocusError("Wrong focus for global event")
+
+# ------------------------------------------------- edit tools
+def _editool(keyboard_number): 
+    workflow.tline_tool_keyboard_selected_for_number(keyboard_number)
+
+# ------------------------------------------------- quickeffects
+def _quickeffect(key_name):
+    shortcutsquickeffects.do_quick_shortcut_filter_add(key_name)
+
+
+# TODO: See if integration can be done and remove this comment.
+#
+# TODO: We should consider integrating some parts of this with targetactions.py
+# TODO:
+# TODO: As of this writing, targetactions.py has a superset of targetable
+# TODO: actions, as compared to keygtkevents.py, totally separate from any keyboard
+# TODO: event handling. There are a few new named target actions in there that
+# TODO: aren't available in here. There is also currently a lot code duplication
+# TODO: between the two modules. See targetactions.py for more details.
+# TODO:
+# TODO: At a minimum, if you add or modify any of the key actions in here,
+# TODO: please consider updating targetactions.py as well. Right now there
+# TODO: is a lot of duplication between these modules, and often a change
+# TODO: in one would warrant a change in the other.
+# TODO:
+# TODO: keygtkevents.py is all about handling key presses from the keyboard, and
+# TODO: routing those events to trigger actions in various parts of the program.
+# TODO:
+# TODO: targetactions.py is basically a bunch of zero-argument functions with
+# TODO: names based on the shortcut key names found here. It was created as part
+# TODO: of the USB HID work, so that USB jog/shuttle devices could have their
+# TODO: buttons target various actions within the program, without requiring
+# TODO: each USB driver to directly make connections to a dozen different parts
+# TODO: of the program to control it.
+# TODO:
+# TODO: So now we have two collections of shortcut key names which map to
+# TODO: basically the same actions, but in a different way. I originally wanted
+# TODO: to just use keygtkevents.py as the target for the USB driver actions, but
+# TODO: couldn't use it directly since this module is intertwined with the
+# TODO: main computer keyboard and its events.
+# TODO:
+# TODO: For now, I have integrated the new command targets from
+# TODO: targetactions.py into keygtkevents.py, both for completeness, and also as
+# TODO: a proof of concept as to how we might migrate some of the other code
+# TODO: in here over to call targetactions.py
+# TODO:
+# TODO:   -- Nathan Rosenquist (@ratherlargerobot)
+# TODO:      Feb 2022

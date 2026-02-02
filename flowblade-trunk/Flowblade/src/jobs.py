@@ -805,12 +805,6 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             command_list = [sys.executable]
             command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
 
-
-            # Info print, try to remove later.
-            proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-            proxy_profile = mlt.Profile(proxy_profile_path)
-            enc_index = int(utils.get_headless_arg_value(args, "enc_index"))
-
             for arg in args:
                 command_list.append(arg)
                 
@@ -873,8 +867,10 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                         self.progress = 1.0
 
                     self.elapsed = float(elapsed)
-                    self.text = _("Proxy Render")  + " " + self.get_job_name()
-
+                    if self.render_data.is_transcode == False:
+                        self.text = _("Proxy Render")  + " " + self.get_job_name()
+                    else:
+                        self.text = _("Transcode Render")  + " " + self.get_job_name()
                     job_msg = self.get_job_queue_message()
                     update_job_queue(job_msg)
                 else:
@@ -893,9 +889,12 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 self.progress += prog_step
                 if self.progress > 1.0:
                     self.progress = 0.99
-                    
-                self.text = _("Proxy Render")  + " " + self.get_job_name()
 
+                if self.render_data.is_transcode == False:
+                    self.text = _("Proxy Render")  + " " + self.get_job_name()
+                else:
+                    self.text = _("Transcode Render")  + " " + self.get_job_name()
+                        
                 job_msg = self.get_job_queue_message()
                 update_job_queue(job_msg)
                     
@@ -907,24 +906,27 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         # NOTE: ffmpeg cli render not abortable currently.
         
     def proxy_render_complete(self):
-        try:
-            media_file = PROJECT().media_files[self.render_data.media_file_id]
-        except:
-            # User has deleted media file before proxy render complete
-            return
+        if self.render_data.is_transcode == False:
+            try:
+                media_file = PROJECT().media_files[self.render_data.media_file_id]
+            except:
+                # User has deleted media file before proxy render complete
+                return
 
-        media_file.add_proxy_file(self.render_data.proxy_file_path)
+            media_file.add_proxy_file(self.render_data.proxy_file_path)
 
-        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
-            media_file.set_as_proxy_media_file()
-        
-            # if the rendered proxy file was the last proxy file being rendered,
-            # auto re-convert to update proxy clips.
-            proxy_jobs = get_jobs_of_type(PROXY_RENDER)
-            if len(proxy_jobs) == 0:
-                self.render_data.do_auto_re_convert_func()
-            elif len(proxy_jobs) == 1:
-                self.render_data.do_auto_re_convert_func()
+            if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
+                media_file.set_as_proxy_media_file()
+            
+                # if the rendered proxy file was the last proxy file being rendered,
+                # auto re-convert to update proxy clips.
+                proxy_jobs = get_jobs_of_type(PROXY_RENDER)
+                if len(proxy_jobs) == 0:
+                    self.render_data.do_auto_re_convert_func()
+                elif len(proxy_jobs) == 1:
+                    self.render_data.do_auto_re_convert_func()
+        else:
+            print("transcode render complete")
 
 
 class FFmpegRenderThread(threading.Thread):

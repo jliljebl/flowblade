@@ -31,6 +31,7 @@ import gtkevents
 bg_color = None
 
 
+
 class CairoDrawableArea2(Gtk.DrawingArea):
 
     def __init__(self, pref_width, pref_height, func_draw, use_widget_bg=False):
@@ -52,28 +53,22 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self._draw_func = func_draw
         self.connect('draw', self._draw_event)
 
-        #self.connect('button-press-event', self._button_press_event)
         self.press_controller = Gtk.GestureMultiPress(widget=self)
         self.press_controller.set_button(0)
         self.press_controller.connect("pressed", self._button_press_event)
         
-        #self.connect('button-release-event', self._button_release_event)
         self.release_controller = Gtk.GestureMultiPress(widget=self)
         self.release_controller.connect("released", self._button_release_event)
 
-        #self.connect('motion-notify-event', self._motion_notify_event)
         self.motion_controller = Gtk.EventControllerMotion(widget=self)
         self.motion_controller.connect("motion", self._motion_notify_event)
 
-        #self.connect('enter-notify-event', self._enter_notify_event)
         self.enter_controller = Gtk.EventControllerMotion(widget=self)
         self.enter_controller.connect("enter", self._enter_notify_event)
         
-        #self.connect('leave-notify-event', self._leave_notify_event)
         self.leave_controller = Gtk.EventControllerMotion(widget=self)
         self.leave_controller.connect("leave", self._leave_notify_event)
          
-        #self.connect("scroll-event", self._mouse_scroll_event)
         self.scroll_controller = Gtk.EventControllerScroll(widget=self)
         self.scroll_controller.set_flags(Gtk.EventControllerScrollFlags.BOTH_AXES)
         self.scroll_controller.connect("scroll", self._mouse_scroll_event)

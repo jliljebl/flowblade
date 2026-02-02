@@ -155,7 +155,7 @@ def change_profile_project_dialog(project, callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Save With Changed Profile"), Gtk.ResponseType.ACCEPT))
 
-    info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
+    info_label = guiutils.bold_label(_("Project Profile can only be changed by saving a version\nwith different profile."))
 
     default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
@@ -353,7 +353,8 @@ def save_layout_data(callback, data):
     
     dialog.connect('response', callback, data)
     dialog.show()
-    
+
+"""
 def load_layout_data(callback):
     parent = gui.editor_window.window
     dialog = Gtk.FileChooserDialog(_("Load Layout"), parent,
@@ -368,6 +369,37 @@ def load_layout_data(callback):
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()
+"""
+def delete_layout_data(_user_layouts, callback):
+
+                                                   
+
+    dialog = Gtk.Dialog(_("Delete USer Layout"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Delete"), Gtk.ResponseType.ACCEPT))
+
+    delete_combo = Gtk.ComboBoxText()
+    for layout in _user_layouts.keys():
+        delete_combo.append_text(layout)
+    delete_combo.set_active(0)
+    
+    delete_panel = panels.get_two_column_box(   Gtk.Label(label=_("Delete User Layout:")),
+                                               delete_combo,
+                                               250)
+
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(delete_panel, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(12, 12), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, delete_combo)
+    dialog.show_all()
 
 def save_media_plugin_plugin_properties(callback, default_name, data):
     parent = gui.editor_window.window

@@ -40,8 +40,7 @@ directly to the various parts of the program they want to control.
 # TODO: execute these functions, to avoid code duplication. Additionally,
 # TODO: the new target actions here could then be added as supported targets
 # TODO: for keyboard events.
-# TODO:
-# TODO: See keyevents.py for more details.
+
 
 import editorstate
 from editorstate import current_sequence

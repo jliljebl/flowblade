@@ -50,7 +50,6 @@ import guicomponents
 import guiutils
 import gtkbuilder
 import jobs
-import keyevents
 import medialinker
 import medialog
 import mediaplugin
@@ -60,6 +59,7 @@ import mltplayer
 import modesetting
 import monitorevent
 import monitorwidget
+import mutabletooltips
 import respaths
 import render
 import rendergui
@@ -72,6 +72,7 @@ import projectaddmediafolder
 import projectdatavaultgui
 import projectinfogui
 import proxyediting
+import proxyingestmanager
 import scripttool
 import shortcuts
 import shortcutsdialog
@@ -488,8 +489,8 @@ class EditorWindow:
         self._create_monitor_row_widgets()
 
         self.player_buttons = glassbuttons.PlayerButtonsCompact()
-        tooltips = [_("Prev Frame - Arrow Left"),  _("Play/Pause - Space"), _("Next Frame - Arrow Right")]
-        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, tooltips)
+        tooltip_runner = glassbuttons.TooltipRunner(self.player_buttons, None)
+        mutabletooltips.add_widget(mutabletooltips.PLAYER_BUTTONS, self.player_buttons, tooltip_runner)
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
 
@@ -504,9 +505,9 @@ class EditorWindow:
                      monitorevent.to_mark_out_pressed]
         markbuttons = glassbuttons.MarkButtons(callbacks)
         markbuttons.widget.set_margin_right(12)
-        mbtooltips = [_("Mark In - I"),  _("Mark Out - O"),  _("To Mark In - Alt + I"),  _("To Mark Out - Alt + K"), _("Clear Marks - Alt + K")]
-        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, mbtooltips)
-
+        tooltip_runner = glassbuttons.TooltipRunner(markbuttons, None)
+        mutabletooltips.add_widget(mutabletooltips.MARK_BUTTONS, markbuttons, tooltip_runner)
+        
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
@@ -783,10 +784,10 @@ class EditorWindow:
     def _init_app_menu(self, ui):
 
         # Get customizable shortcuts that are displayed in menu
-        root = shortcuts.get_root()
-        resync_shortcut = shortcuts.get_shortcut_gtk_code(root, "resync")
-        clear_filters_shortcut = shortcuts.get_shortcut_gtk_code(root, "clear_filters")
-        sync_all_shortcut = shortcuts.get_shortcut_gtk_code(root, "sync_all")
+        #root = shortcuts.get_root()
+        #resync_shortcut = shortcuts.get_shortcut_gtk_code(root, "resync")
+        #clear_filters_shortcut = shortcuts.get_shortcut_gtk_code(root, "clear_filters")
+        #sync_all_shortcut = shortcuts.get_shortcut_gtk_code(root, "sync_all")
         
         # Build menubar
         # Menubar build resources
@@ -821,14 +822,14 @@ class EditorWindow:
             ('SequenceDuplicate', None, _('Duplicate Sequence'), None, None, lambda a:projectaction.duplicate_sequence()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync Track'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
+            ('ResyncSelected', None, _('Resync Track'),  None, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:singletracktransition.add_transition_menu_item_selected()),
-            ('ClearFilters', None, _('Clear Filters'), clear_filters_shortcut, None, lambda a:clipmenuaction.clear_filters()),
+            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
-            ('SyncCompositors', None, _('Sync All Compositors'), sync_all_shortcut, None, lambda a:tlineaction.sync_all_compositors()),
+            ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
             ('AddVideoTrack', None, _('Add Video Track'), None, None, lambda a:projectaction.add_video_track()),
             ('AddAudioTrack', None, _('Add Audio Track'), None, None, lambda a:projectaction.add_audio_track()),
             ('DeleteVideoTrack', None, _('Delete Video Track'), None, None, lambda a:projectaction.delete_video_track()),
@@ -872,7 +873,7 @@ class EditorWindow:
             ('ShowProjectInfo', None, _('Project Info and Data'), None, None, lambda a:projectaction.show_project_info()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('ChangeProfile', None, _("Change Project Profile..."), None, None, lambda a: projectaction.change_project_profile()),
-            ('ProxyManager', None, _('Proxy Manager'), None, None, lambda a:proxyediting.show_proxy_manager_dialog()),
+            ('ProxyManager', None, _('Proxy and Transcode Manager'), None, None, lambda a:proxyingestmanager.show_proxy_manager_dialog()),
             ('DataStoreManager', None, _('Data Store Manager'), None, None, lambda a:projectdatavaultgui.show_project_data_manager_window()),
             ('ProjectDataInfo', None, _('Project Data'), None, None, lambda a:projectdatavaultgui.show_current_project_data_store_info_window()),
             ('RenderMenu', None, _('Render')),
@@ -890,7 +891,7 @@ class EditorWindow:
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
             ('QuickReferenceWeb', None, _('Contents Web'), None, None, lambda a:menuactions.quick_reference_web()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
-            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:shortcutsdialog.keyboard_shortcuts_dialog(self.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, shortcuts.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback)),
+            ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:shortcutsdialog.keyboard_shortcuts_dialog(self.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
             ('TOOL_ACTION_KEY_1', None, None, '1', None, lambda a:_this_is_not_used()),
             ('TOOL_ACTION_KEY_2', None, None, '2', None, lambda a:_this_is_not_used()),
@@ -1361,7 +1362,7 @@ class EditorWindow:
 
         # Monitor position bar
         self.pos_bar.set_listener(mltplayer.seek_position_normalized)
-        gui.monitor_waveform_display.set_listener(mltplayer.seek_position_normalized)
+        #gui.monitor_waveform_display.set_listener(mltplayer.seek_position_normalized)
         
     def _get_edit_buttons_row(self):
         tools_pixbufs = tlinecursors.get_tools_pixbuffs()

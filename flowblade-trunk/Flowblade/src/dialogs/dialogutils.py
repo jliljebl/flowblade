@@ -203,7 +203,7 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
 
 def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
                                       label, default_text):
-    dialog = Gtk.Dialog(title, None,
+    dialog = Gtk.Dialog(    title, None,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Cancel"), Gtk.ResponseType.CANCEL,
                             ok_button_text, Gtk.ResponseType.ACCEPT))

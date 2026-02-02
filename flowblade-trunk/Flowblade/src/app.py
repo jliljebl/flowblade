@@ -81,7 +81,6 @@ import gui
 import guicomponents
 import guipopoverclip
 import jobs
-import keyevents
 import keyframeeditor
 import keyframeeditcanvas
 import keygtkactions
@@ -97,6 +96,7 @@ import mlttransitions
 import modesetting
 import movemodes
 import multitrimmode
+import mutabletooltips
 import persistance
 import positionbar
 import processutils
@@ -106,6 +106,7 @@ import projectdatavault
 import projectdatavaultgui
 import projectinfogui
 import propertyeditorbuilder
+import proxyingestmanager
 import render
 import renderconsumer
 import rendergputest
@@ -391,7 +392,9 @@ class FlowbladeApplication(Gtk.Application):
         if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # Delete when everyone is on mlt 7.30 or moving to Gtk4.
             window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
         monitor_resize_id = gui.tline_display.connect("size-allocate", lambda w, e:tline_display_resized())
-
+        
+        mutabletooltips.init()
+    
         # Get existing autosave files
         autosave_files = get_autosave_files()
 
@@ -491,6 +494,7 @@ def monkeypatch_callbacks():
     callbackbridge.movemodes_select_from_box_selection = movemodes.select_from_box_selection
     callbackbridge.projectaction_open_rendered_file = projectaction.open_rendered_file
     callbackbridge.projectaction_open_file_names = projectaction.open_file_names
+    callbackbridge.proxyingestmanager_show_proxy_issues_window = proxyingestmanager.show_proxy_issues_window
     callbackbridge.rotomask_show_rotomask = rotomask.show_rotomask
     callbackbridge.targetactions_get_handler_by_name = targetactions.get_handler_by_name
     callbackbridge.targetactions_move_player_position = targetactions.move_player_position
@@ -571,12 +575,6 @@ def create_gui():
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
     gui.pos_bar.set_dark_bg_color()
-    
-    # Connect window global key listener.
-    #gui.global_key_controller_1 = gtkevents.KeyPressEventAdapter(gui.editor_window.window, keyevents.key_down, user_data=None, capture=True)
-    gui.editor_window.window.connect("key-press-event", keyevents.key_down)
-    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-        gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
     
     # Give undo a reference to uimanager for menuitem state changes.
     undo.set_menu_items(gui.editor_window.uimanager)

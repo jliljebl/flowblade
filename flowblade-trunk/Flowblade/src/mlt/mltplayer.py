@@ -153,7 +153,7 @@ class Player:
     def stop_consumer(self):
         if not self.consumer.is_stopped():
             self.consumer.stop()
-
+        
     def connect_and_start(self):
         """
         Connects current procer and consumer and
@@ -170,7 +170,6 @@ class Player:
         Starts playback from current producer
         """
         self.stop_timer_slowmo_playback()
-        
         self.producer.set_speed(1)
         self.stop_ticker()
         self.start_ticker()

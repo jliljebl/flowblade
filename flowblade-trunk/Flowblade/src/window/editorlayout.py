@@ -26,6 +26,7 @@ from gi.repository import Gtk, GLib
 
 import copy
 import pickle
+import os
 
 import appconsts
 import atomicfile
@@ -36,6 +37,7 @@ import dialogutils
 import gui
 import guiutils
 import guipopover
+import userfolders
 import utils
 
 # Transforms when adding panels.
@@ -106,6 +108,19 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
 }
 
+EDIT_PANEL_RIGHT_POSITIONS = { \
+    appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE,
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_RIGHT_COLUMN,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+}
+
+
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
     appconsts.PANEL_MULTI_EDIT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_RIGHT_COLUMN],
@@ -157,12 +172,15 @@ _position_notebooks = {}
 _positions_names = {}
 _panels_names = {}
 
+# Dict name -> ((name, layout, tabs), filename)
+_user_layouts = {}
+ 
 def top_level_project_panel():
     if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
         return True
 
     return False
-    
+
 # ----------------------------------------------------------- INIT
 def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks, PANEL_MINIMUM_SIZES
@@ -247,6 +265,18 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: None,
         appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: None
     }
+    
+    _init_user_layouts_list()
+
+def _init_user_layouts_list():
+    global _user_layouts
+    _user_layouts = {}
+     
+    layouts_dir = userfolders.get_data_dir() + appconsts.USER_LAYOUTS_DIR
+    for filename in os.listdir(layouts_dir):
+        layout_data = utils.unpickle(layouts_dir + filename)
+        name, layout, tabs = layout_data
+        _user_layouts[name] = (layout_data, filename)
 
 def show_panel(panel_id):
     # Iterate positions to find where panel is and bring it to front.
@@ -535,8 +565,7 @@ def get_tabs_menu_item():
     return tabs_menu_item
 
 def show_layout_press_menu(launcher, widget, event):
-    guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover)
-
+    guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover, _user_layouts)
 
 def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated
@@ -554,15 +583,10 @@ def _create_layout_presets_menu(menu):
 
     menu_item = guiutils.get_menu_item(_("Layout Media Panel Left Column"), callback, "media_panel_left")
     menu.add(menu_item)
-    
-    guiutils.add_separetor(menu)
-    
-    menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_layout")
-    menu.add(menu_item)
 
-    menu_item = guiutils.get_menu_item(_("Load Layout..."), callback, "load_layout")
+    menu_item = guiutils.get_menu_item(_("Layout Edit Panel Right Column"), callback, "edit_panel_right")
     menu.add(menu_item)
-
+    
     menu.show_all()
 
 def _top_bar_menu_item_activated_popover(action, variant, msg):
@@ -577,38 +601,60 @@ def _top_bar_menu_item_activated(widget, msg):
          apply_layout(TOP_ROW_FOUR_POSITIONS)
     elif msg == "media_panel_left":
          apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
+    elif msg == "edit_panel_right":
+         apply_layout(EDIT_PANEL_RIGHT_POSITIONS)
     elif msg == "save_layout":
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
-        dialogs.save_layout_data(_save_layout_callback, data)
-    elif msg == "load_layout":
-        dialogs.load_layout_data(_load_layout_callback)
-
-def _save_layout_callback(dialog, response_id, data):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        save_path = dialog.get_filenames()[0]
-        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
-            write_file = afw.get_file()
-            pickle.dump(data, write_file)
-            
-    dialog.destroy()
-
-def _load_layout_callback(dialog, response_id):
-    if response_id == Gtk.ResponseType.ACCEPT:
+        dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Save Current Layout"), _("Save"),
+                                      _("Save Current Layou as:"), "")
+        dialog.connect('response', _save_layout_callback, entry, data)
+        dialog.show_all()
+    elif msg == "delete_layout":
+        dialogs.delete_layout_data(_user_layouts, _delete_layout_callback)
+    else:
         try:
-            load_path = dialog.get_filenames()[0]
-            layout_data = utils.unpickle(load_path)
-            panel_positions, positions_tabs = layout_data
+            layout_data, file_path = _user_layouts[msg]
+            name, panel_positions, positions_tabs = layout_data
             apply_layout(panel_positions)
             editorpersistance.prefs.panel_positions = panel_positions
             editorpersistance.prefs.positions_tabs = positions_tabs
             editorpersistance.save()
             apply_tabs_positions()
-        except Exception as e:
-            apply_layout(DEFAULT_PANEL_POSITIONS)
-            editorpersistance.save()
-            dialogutils.info_message(_("Loading Layout Filed!"), "Exception message: " + str(e), gui.editor_window.window)
-                    
-    dialog.destroy()
+        except:
+            pass
+
+def _save_layout_callback(dialog, response_id, entry, data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        positions, tabs = data
+        user_layout_name = entry.get_text()
+        dialog.destroy()
+        if user_layout_name == "":
+            primary_txt = _("Naming Info")
+            secondary_txt = _("Saved layouts must be named.")
+            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            return
+        
+        save_data = (user_layout_name, positions, tabs)
+        file_name = "userlayout_" + utils.get_uid_str()
+        save_path = userfolders.get_data_dir() + appconsts.USER_LAYOUTS_DIR + file_name
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(save_data, write_file)
+        _init_user_layouts_list()
+    else:
+        dialog.destroy()
+
+def _delete_layout_callback(dialog, response_id, delete_widget):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        delete_index = delete_widget.get_active()
+        dialog.destroy()
+        
+        delete_key = list(_user_layouts.keys())[delete_index]
+        layoutdata, file_name = _user_layouts[delete_key]
+        os.remove(userfolders.get_data_dir() + appconsts.USER_LAYOUTS_DIR + file_name)
+        _user_layouts.pop(delete_key)
+    else:
+        dialog.destroy()
     
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):

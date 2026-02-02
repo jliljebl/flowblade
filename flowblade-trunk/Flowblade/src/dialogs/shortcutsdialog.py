@@ -27,6 +27,7 @@ import dialogutils
 import gtkevents
 import guicomponents
 import guiutils
+import mutabletooltips
 import shortcuts
 import shortcutsquickeffects
 import workflow
@@ -98,7 +99,8 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, dialog):
     editorpersistance.prefs.shortcuts = selected_xml
     editorpersistance.save()
     shortcuts.set_keyboard_shortcuts()
-    
+    mutabletooltips.init()
+
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
 
     dialog.show_all()
@@ -142,6 +144,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0) #_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_prev"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
@@ -326,7 +329,6 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
-
 
 def get_shorcuts_selector():
     shortcuts_combo = Gtk.ComboBoxText()

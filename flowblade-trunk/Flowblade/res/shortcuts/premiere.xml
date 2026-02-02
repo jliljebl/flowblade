@@ -112,5 +112,38 @@
     <event code='toggle_audio_mute' name='Toggle Clip Audio Mute' modifiers='ALT'>t</event>
     <event code='set_sync_relation' name='Set Clip Sync Relation' modifiers='CTRL+ALT'>r</event>
     <event code='mark_selection_range' name='Mark Selection Range' modifiers='ALT'>j</event>
+    <event code='edittool_move' name='Move Tool'>1</event>
+    <event code='edittool_multitrim' name='Multitrim Tool'>2</event>
+    <event code='edittool_spacer' name='Spacer Tool'>3</event>
+    <event code='edittool_insert' name='Insert Tool'>4</event>
+    <event code='edittool_cut' name='Cut Tool'>5</event>
+    <event code='edittool_keyframe' name='Cut Tool'>6</event>
+    <event code='kp_edittool_move' name='Move Tool KP'>kp_1</event>
+    <event code='kpstr_edittool_move' name='Move Tool KPSTR'>kp_end</event>
+    <event code='kp_edittool_multitrim' name='Multitrim Tool KP'>kp_2</event>
+    <event code='kpstr_edittool_multitrim' name='Multitrim Tool KPSTR'>kp_down</event>
+    <event code='kp_edittool_spacer' name='Spacer Tool KP'>kp_3</event>
+    <event code='kp_str_edittool_spacer' name='Spacer Tool KPSTR'>kp_next</event>
+    <event code='kp_edittool_insert' name='Insert Tool KP'>kp_4</event>
+    <event code='kpstr_edittool_insert' name='Insert Tool KPSTR'>kp_left</event>
+    <event code='kp_edittool_cut' name='Cut Tool KP'>kp_5</event>
+    <event code='kpstr_edittool_cut' name='Cut Tool KPSTR'>kp_begin</event>
+    <event code='kp_edittool_keyframe' name='Keyframe Tool KP'>kp_6</event>
+    <event code='kpstr_edittool_keyframe' name='Keyframe Tool KPSTR'>kp_right</event>
+    <event code='quickeffect_1' name='Quick Effect 1' modifiers='CTRL'>f1</event>
+    <event code='quickeffect_2' name='Quick Effect 2' modifiers='CTRL'>f2</event>
+    <event code='quickeffect_3' name='Quick Effect 3' modifiers='CTRL'>f3</event>
+    <event code='quickeffect_4' name='Quick Effect 4' modifiers='CTRL'>f4</event>
+    <event code='quickeffect_5' name='Quick Effect 5' modifiers='CTRL'>f5</event>
+    <event code='quickeffect_6' name='Quick Effect 6' modifiers='CTRL'>f6</event>
+    <event code='quickeffect_7' name='Quick Effect 7' modifiers='CTRL'>f7</event>
+    <event code='quickeffect_8' name='Quick Effect 8' modifiers='CTRL'>f8</event>
+    <event code='quickeffect_9' name='Quick Effect 9' modifiers='CTRL'>f9</event>
+    <event code='quickeffect_10' name='Quick Effect 10' modifiers='CTRL'>f10</event>
+    <event code='quickeffect_11' name='Quick Effect 11' modifiers='CTRL'>f11</event>
+    <event code='quickeffect_12' name='Quick Effect 12' modifiers='CTRL'>f12</event>
+    <event code='fullscreen' name='Fullscreen'>f11</event>
+    <event code='global_escape' name='Global Escape'>escape</event>
+    <event code='global_control_a' name='Global Control A' modifiers='CTRL'>a</event>
   </shortcuts>
 </flowblade>

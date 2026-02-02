@@ -33,6 +33,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import mutabletooltips
 import scripttool
 import singletracktransition
 import titler
@@ -173,8 +174,8 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), singletracktransition.add_transition_pressed)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
-    tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_EDIT_BUTTONS, editor_window.edit_buttons, tooltip_runner)
     editor_window.edit_buttons.no_decorations = no_decorations
     editor_window.edit_buttons.show_prelight_icons()
     
@@ -184,8 +185,9 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed, 9)
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed, 4)
     editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed, 4)
-    tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_DELETE_BUTTONS, editor_window.edit_buttons_3, tooltip_runner)
+    
     editor_window.edit_buttons_3.no_decorations = no_decorations
     editor_window.edit_buttons_3.show_prelight_icons()
 
@@ -195,8 +197,8 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("set_track_sync"), tlineaction.set_track_sync_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
-    tooltips = [_("Split Audio Synched"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s.\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track."), _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clips")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_SPLIT_SYNC_BUTTONS, editor_window.edit_buttons_2, tooltip_runner)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
 
@@ -205,15 +207,16 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
-    tooltips = [_("Overwrite Range"), _("Overwrite Selected Clip/s - T"), _("Insert Clip - Y"), _("Append Clip - U")]
-    tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
+    tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, None)
+    mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_MONITOR_INSERT_BUTTONS, editor_window.monitor_insert_buttons, tooltip_runner)
+    
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     editor_window.monitor_insert_buttons.show_prelight_icons()
     
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
-    tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
+    tooltips = [_("Undo - <b>Ctrl + Z</b>"), _("Redo - <b>Ctrl + Y</b>")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
     editor_window.undo_redo.show_prelight_icons()

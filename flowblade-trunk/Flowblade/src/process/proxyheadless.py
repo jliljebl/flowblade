@@ -58,14 +58,14 @@ def delete_session_folders(parent_folder, session_id):
 
 # --------------------------------------------------- render thread launch
 def main(root_path, parent_folder, session_id, media_file_id, proxy_w, proxy_h, enc_index, \
-            proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path):
+            proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path, is_transcode):
     
     # Here we are not using render data item, returned by mlt_env_init()
     mltheadlessutils.mlt_env_init(root_path, parent_folder, session_id)
 
     global _render_thread
     _render_thread = ProxyClipRenderThread(media_file_id, proxy_w, proxy_h, enc_index, 
-            proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path)
+            proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path, is_transcode)
     _render_thread.start()
 
        
@@ -73,7 +73,7 @@ def main(root_path, parent_folder, session_id, media_file_id, proxy_w, proxy_h, 
 class ProxyClipRenderThread(threading.Thread):
 
     def __init__(self, media_file_id, proxy_w, proxy_h, enc_index, 
-                    proxy_file_path, proxy_rate, media_file_path, proxy_profile_desc, lookup_path):
+                    proxy_file_path, proxy_rate, media_file_path, proxy_profile_desc, lookup_path, is_transcode):
 
         threading.Thread.__init__(self)
 
@@ -86,6 +86,7 @@ class ProxyClipRenderThread(threading.Thread):
         self.media_file_path = media_file_path
         self.proxy_profile_desc = proxy_profile_desc
         self.lookup_path = lookup_path # For img seqs only
+        self.is_transcode = bool(is_transcode)
         
         self.abort = False
 
@@ -98,8 +99,11 @@ class ProxyClipRenderThread(threading.Thread):
             proxy_profile = mltprofiles.get_profile(self.proxy_profile_desc)
             
             # App wrote the temp profile when launching proxy render.
-            proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-            proxy_profile = mlt.Profile(proxy_profile_path)
+            if self.is_transcode == False:
+                proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
+                proxy_profile = mlt.Profile(proxy_profile_path)
+            else:
+                proxy_profile = mlt.Profile(self.proxy_profile_desc)
         
             renderconsumer.performance_settings_enabled = False # uuh...we're obviously disabling something momentarily.
             consumer = renderconsumer.get_render_consumer_for_encoding(

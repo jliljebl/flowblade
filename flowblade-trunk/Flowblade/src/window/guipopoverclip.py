@@ -39,6 +39,7 @@ PARAM_KF_EDIT = 2
 
 _clip_popover = None
 _clip_menu = None
+_clip_monitor_section = None
 _audio_submenu = None 
 _markers_submenu = None
 _markers_submenu_static_items = None
@@ -53,6 +54,7 @@ _generator_section = None
 
 _audio_clip_popover = None
 _audio_clip_menu = None
+_audio_clip_monitor_section = None
 _sync_section = None
 _audio_mute_menu = None 
 _audio_markers_submenu = None
@@ -109,16 +111,16 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         transition_popover_menu_show(widget, clip, track, x, y, callback)
         return
 
-    global _clip_popover, _clip_menu, _audio_submenu, _markers_submenu, \
+    global _clip_popover, _clip_menu, _clip_monitor_section, _audio_submenu, _markers_submenu, \
     _markers_submenu_static_items, _reload_section, _edit_actions_menu, \
     _tools_submenu, _title_section, _compositor_section, _generator_section, _generator_sub_menu
 
     if _clip_menu == None:
         _clip_menu = guipopover.menu_clear_or_create(_clip_menu)
         
-        monitor_section = Gio.Menu.new()
-        add_menu_action(monitor_section, _("Open in Clip Monitor"), "clipmenu.openinmonitor", ("open_in_clip_monitor", None), callback)
-        _clip_menu.append_section(None, monitor_section)
+        _clip_monitor_section = Gio.Menu.new()
+        _fill_clip_monitor_section(_clip_monitor_section, clip, track, callback)
+        _clip_menu.append_section(None, _clip_monitor_section)
 
         audio_section = Gio.Menu.new()
         _audio_submenu = Gio.Menu.new()
@@ -189,6 +191,9 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         _clip_menu.append_section(None, edit_bottom_section)
 
     else: # Menu items with possible state changes need to recreated.
+        guipopover.menu_clear_or_create(_clip_monitor_section)
+        _fill_clip_monitor_section(_clip_monitor_section, clip, track, callback)
+
         guipopover.menu_clear_or_create(_audio_submenu)
         _fill_audio_menu(_audio_submenu, clip, track,  callback)
 
@@ -227,15 +232,15 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         return
         
     global _audio_clip_popover, _audio_clip_menu, _sync_section, _audio_mute_menu, \
-    _audio_markers_submenu, _audio_markers_submenu_static_items
+    _audio_markers_submenu, _audio_markers_submenu_static_items, _audio_clip_monitor_section
 
     if _audio_clip_menu == None:
         _audio_clip_menu = guipopover.menu_clear_or_create(_audio_clip_menu)
-        
-        monitor_section = Gio.Menu.new()
-        add_menu_action(monitor_section, _("Open in Clip Monitor"), "audioclipmenu.openinmonitor", ("open_in_clip_monitor", None), callback)
-        _audio_clip_menu.append_section(None, monitor_section)
 
+        _audio_clip_monitor_section = Gio.Menu.new()
+        _fill_audio_clip_monitor_section(_audio_clip_monitor_section, clip, track, callback)
+        _audio_clip_menu.append_section(None, _audio_clip_monitor_section)
+        
         _sync_section = Gio.Menu.new()
         _fill_audio_clip_sync_section(_sync_section, clip, callback)
         _audio_clip_menu.append_section(None, _sync_section)
@@ -283,6 +288,9 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         _audio_clip_menu.append_section(None, edit_bottom_section)
         
     else:
+        guipopover.menu_clear_or_create(_audio_clip_monitor_section)
+        _fill_audio_clip_monitor_section(_audio_clip_monitor_section, clip, track, callback)
+
         guipopover.menu_clear_or_create(_sync_section)
         _fill_audio_clip_sync_section(_sync_section, clip, callback)
 
@@ -421,6 +429,22 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
 
     rect = guipopover.create_rect(x, y)
     _transition_popover = guipopover.new_mouse_popover(widget, _transition_menu, rect, Gtk.PositionType.TOP)
+
+def _fill_clip_monitor_section(clip_monitor_section, clip, track, callback):
+    active = True
+    if hasattr(clip, "create_data"):
+        if str(type(clip.create_data)) == "<class 'patternproducer.BinColorClip'>":
+            active = False
+        
+    add_menu_action(clip_monitor_section, _("Open in Clip Monitor"), "clipmenu.openinmonitor", ("open_in_clip_monitor", None), callback, active)
+
+def _fill_audio_clip_monitor_section(clip_monitor_section, clip, track, callback):
+    active = True
+    if hasattr(clip, "create_data"):
+        if str(type(clip.create_data)) == "<class 'patternproducer.BinColorClip'>":
+            active = False
+    
+    add_menu_action(clip_monitor_section, _("Open in Clip Monitor"), "audioclipmenu.openinmonitor", ("open_in_clip_monitor", None), callback, active)
 
 def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
     active = (track.type == appconsts.VIDEO)

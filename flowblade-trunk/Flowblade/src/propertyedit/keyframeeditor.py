@@ -47,7 +47,6 @@ import gui
 import guicomponents
 import guipopover
 import guiutils
-import keyevents
 import keyframeeditcanvas
 import propertyedit
 import propertyparse

@@ -89,6 +89,7 @@ import propertyparse
 import projectdatavault
 import projectdatavaultgui
 import proxyediting
+import proxyingestmanager
 import render
 import renderconsumer
 import rendergui
@@ -1019,6 +1020,11 @@ def _hamburger_menu_item_selected(action, variant, msg):
         proxyediting.create_proxy_files_pressed()
     elif msg == "render all proxies":
         proxyediting.create_proxy_files_pressed(True)
+    elif msg == "render transcode files":
+        selection = gui.media_list_view.get_selected_media_objects()
+        if len(selection) < 1:
+            return
+        proxyingestmanager.show_transcode_dialog(selection)
     elif msg == "select all":
         gui.media_list_view.select_all()
         gui.media_list_view.selected_objects[0].widget.grab_focus()
@@ -2672,6 +2678,8 @@ def media_file_menu_item_selected(action, variant, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
+    if item_id == "Transcode Optimized Media":
+        proxyingestmanager.show_transcode_dialog([media_file])
     if item_id == "Recreate Icon":
         (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
         media_file.info = info

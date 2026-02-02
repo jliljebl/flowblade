@@ -60,6 +60,8 @@ movemodes_select_from_box_selection = None
 projectaction_open_rendered_file = None
 projectaction_open_file_names = None
 
+proxyingestmanager_show_proxy_issues_window = None
+
 rotomask_show_rotomask = None
 
 targetactions_get_handler_by_name = None
