@@ -65,3 +65,39 @@ class ColorGraderUndo(undo.PropertyEditAction):
             sat = float(tokens[2])
         
             self.editor.undo_redo_update(band, hue, sat)
+
+
+class ColorCurveUndo(undo.PropertyEditAction):
+        
+        RGB = 0
+        R = 1
+        G = 2
+        B = 3
+
+
+        def __init__(self, editor):
+            undo.PropertyEditAction.__init__(self, self.undo_value_set_func, "")
+            self.editor = editor
+
+        def set_undo_val(self):
+            channel = self.editor.current_edit_curve
+            points_str = self.editor.curve_editor.curve.get_old_points_string()
+            self.undo_val = self._get_val_str(channel, points_str)
+
+        def set_redo_val(self):
+            channel = self.editor.current_edit_curve
+            points_str = self.editor.curve_editor.curve.get_points_string()
+            redo_val = self._get_val_str(channel, points_str)
+            self.edit_done(redo_val)
+
+        def _get_val_str(self, channel, points_str):
+            return str(channel) + ":" + points_str
+
+        def undo_value_set_func(self, str_value):
+            tokens = str_value.split(":")
+            channel = int(tokens[0])
+            points_str = tokens[1] 
+
+            self.editor.undo_redo_update(channel, points_str)
+
+

@@ -853,9 +853,14 @@ class CatmullRomFilterEditor:
         self.update_editors_to_channel(channel)
 
     def curve_edit_done(self):
+        edit_action = undoextended.ColorCurveUndo(self)
+        edit_action.set_undo_val()
+        
         points_str = self.curve_editor.curve.get_points_string()
         self.write_points_to_current_curve(points_str)
 
+        edit_action.set_redo_val()
+        
     def write_points_to_current_curve(self, points_str):
         if self.current_edit_curve == CatmullRomFilterEditor.RGB:
             self.cr_filter.value_points_prop.write_property_value(points_str)
@@ -870,6 +875,24 @@ class CatmullRomFilterEditor:
             self.cr_filter.b_points_prop.write_property_value(points_str)
 
         self.cr_filter.update_table_property_values()
+
+    def undo_redo_update(self, channel, points_str):
+        self.current_edit_curve = channel
+        self.write_points_to_current_curve(points_str)
+
+        if channel == CatmullRomFilterEditor.RGB:
+            self.cr_filter.value_cr_curve.set_points_from_str(points_str)
+        elif channel == CatmullRomFilterEditor.R:
+            self.cr_filter.r_cr_curve.set_points_from_str(points_str)
+        elif channel== CatmullRomFilterEditor.G:
+            self.cr_filter.g_cr_curve.set_points_from_str(points_str)
+        else:
+            self.cr_filter.b_cr_curve.set_points_from_str(points_str)
+
+        self.update_editors_to_channel(channel)
+        
+        self.channel_buttons.pressed_button = channel
+        self.channel_buttons.widget.queue_draw()
 
 
 class CurvesBoxEditor(BoxEditor):
@@ -902,6 +925,8 @@ class CurvesBoxEditor(BoxEditor):
         self.widget.queue_draw()
 
     def _press_event(self, event):
+        self.curve.save_old_points()
+
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
         p = lutfilter.CurvePoint(int(round(vx * 255)), int(round(vy * 255)))
         self.last_point = p
@@ -925,6 +950,7 @@ class CurvesBoxEditor(BoxEditor):
     def _release_event(self, event):
         if self.edit_on == False:
             return
+
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
         p = lutfilter.CurvePoint(int(round(vx * 255)), int(round(vy * 255)))
         self.curve.remove_range(self.last_point.x, p.x)

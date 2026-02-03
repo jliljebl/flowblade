@@ -54,9 +54,13 @@ class CRCurve:
         self.X = 0
         self.Y = 1
         self.points = []
+        self.old_points = None
         self.curve = []
 
         self.curve_reset()
+
+    def save_old_points(self):
+        self.old_points = copy.deepcopy(self.points)
 
     def curve_reset(self):
         self.curve = []
@@ -89,9 +93,15 @@ class CRCurve:
         self.calculate_curve()
 
     def get_points_string(self):
+        return self._points_string(self.points)
+
+    def get_old_points_string(self):
+        return self._points_string(self.old_points)
+        
+    def _points_string(self, points):
         l = []
-        for i in range(0, len(self.points)):
-            p = self.points[i]
+        for i in range(0, len(points)):
+            p = points[i]
             l.append(str(p.x))
             l.append("/")
             l.append(str(p.y))
@@ -297,6 +307,10 @@ class CatmullRomFilter:
         r_table = self.apply_gamma_to_channel(gamma, self.r_cr_curve.curve)
         g_table = self.apply_gamma_to_channel(gamma, self.g_cr_curve.curve)
         b_table = self.apply_gamma_to_channel(gamma, self.b_cr_curve.curve)
+
+        self.r_table_prop.ignore_write_for_undo = True
+        self.g_table_prop.ignore_write_for_undo = True
+        self.b_table_prop.ignore_write_for_undo = True
         
         self.r_table_prop.write_out_table(r_table)
         self.g_table_prop.write_out_table(g_table)
