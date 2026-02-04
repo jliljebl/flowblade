@@ -101,3 +101,29 @@ class ColorCurveUndo(undo.PropertyEditAction):
             self.editor.undo_redo_update(channel, points_str)
 
 
+class ColorBoxUndo(undo.PropertyEditAction):
+    
+        def __init__(self, editor):
+            undo.PropertyEditAction.__init__(self, self.undo_value_set_func, "")
+            self.editor = editor
+
+        def set_undo_val(self):
+            hue, sat = self.editor.color_box.get_old_hue_saturation()
+            self.undo_val = self._get_value_str(hue, sat) 
+        
+        def set_redo_val(self):
+            hue, sat = self.editor.color_box.get_hue_saturation()
+            redo_val = self._get_value_str(hue, sat) 
+            self.edit_done(redo_val)
+
+        def _get_value_str(self, hue, sat):
+            return str(hue) + ":" + str(sat) 
+            
+        def undo_value_set_func(self, str_value):
+            tokens = str_value.split(":")
+            hue = float(tokens[0])
+            sat = float(tokens[1])
+        
+            self.editor.undo_redo_update(hue, sat)
+            
+

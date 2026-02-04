@@ -203,6 +203,8 @@ class ColorBox:
         self.edit_listener = edit_listener
         self.hue = 0.0
         self.saturation = 0.0
+        self.old_hue = 0.0
+        self.old_saturation = 0.0
         self.draw_saturation_gradient = True
         self.selection_cursor = SELECT_CIRCLE
         self.motion_on = False
@@ -210,9 +212,16 @@ class ColorBox:
     def get_hue_saturation(self):
         return (self.hue, self.saturation)
 
+    def get_old_hue_saturation(self):
+        return (self.old_hue, self.old_saturation)
+        
     def _save_values(self):
         self.hue = float((self.cursor_x - self.X_PAD)) / float((self.W - 2 * self.X_PAD))
         self.saturation = float(abs(self.cursor_y - self.H + self.Y_PAD)) / float((self.H - 2 * self.Y_PAD))
+    
+    def _save_old_values(self):
+        self.old_hue = self.hue
+        self.old_saturation = self.saturation
 
     def set_cursor(self, hue, saturation):
         self.cursor_x = self._x_for_hue(hue)
@@ -226,6 +235,7 @@ class ColorBox:
         return self.Y_PAD + (1.0 - saturation) * (self.H - self.Y_PAD *2)
 
     def _press_event(self, event):
+        self._save_old_values()
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
         self.edit_listener()
@@ -266,11 +276,6 @@ class ColorBox:
         We get cairo context and allocation.
         """
         x, y, w, h = allocation
-
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
 
         x_in = self.X_PAD
         x_out = self.W - self.X_PAD
@@ -389,11 +394,6 @@ class ThreeBandColorBox(ColorBox):
         """
         x, y, w, h = allocation
 
-        # Draw bg
-        #cr.set_source_rgb(*guiutils.get_theme_bg_color())
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
-
         x_in = self.X_PAD
         x_out = self.W - self.X_PAD
         y_in = self.Y_PAD
@@ -475,22 +475,49 @@ class ColorBoxFilterEditor:
         self._display_values(self.hue.get_float_value(), self.saturation.get_float_value())
 
     def color_box_values_changed(self):
+        edit_action = undoextended.ColorBoxUndo(self)
+        edit_action.set_undo_val()
+                        
         hue_val, sat_val = self.color_box.get_hue_saturation()
         self.hue.write_property_value(str(hue_val))
         self.saturation.write_property_value(str(sat_val))
         self._display_values(hue_val, sat_val)
         r, g, b = lutfilter.get_RGB_for_angle_saturation_and_value(hue_val * 360, sat_val * self.SAT_MAX, 0.5)
 
+        # Were handling all together with undoextended.ColorBoxUndo 
+        self.R.ignore_write_for_undo = True
+        self.G.ignore_write_for_undo = True
+        self.B.ignore_write_for_undo = True
+        
         self.R.write_value("0=" + str(r))
         self.G.write_value("0=" + str(g))
         self.B.write_value("0=" + str(b))
 
+        edit_action.set_redo_val()
+        
     def _display_values(self, hue, saturation):
         sat_str = str(int(saturation * 100)) + "%"
         hue_str = str(int(360 * hue)) + ColorGrader.DEGREE_CHAR + ' '
         self.h_label.set_text(hue_str)
         self.s_label.set_text(sat_str)
 
+    def undo_redo_update(self, hue, sat):
+        self.hue.write_property_value(str(hue))
+        self.saturation.write_property_value(str(sat))
+        self._display_values(hue, sat)
+        r, g, b = lutfilter.get_RGB_for_angle_saturation_and_value(hue * 360, sat * self.SAT_MAX, 0.5)
+
+        # Were handling all together with undoextended.ColorBoxUndo 
+        self.R.ignore_write_for_undo = True
+        self.G.ignore_write_for_undo = True
+        self.B.ignore_write_for_undo = True
+
+        self.R.write_value("0=" + str(r))
+        self.G.write_value("0=" + str(g))
+        self.B.write_value("0=" + str(b))
+
+        self.color_box.set_cursor(hue, sat)
+        self.color_box.widget.queue_draw()
 
 
 class ColorLGGFilterEditor:
