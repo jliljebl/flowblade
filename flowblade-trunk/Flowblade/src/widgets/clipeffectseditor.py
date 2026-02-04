@@ -938,7 +938,6 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     EditAction object calls this after edits and undos and redos.
     Methods updates filter stack to new state. 
     """
-    print("filter_edit_done_stack_update")
     if _block_stack_update == True:
         return
 

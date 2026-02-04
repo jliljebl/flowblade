@@ -409,7 +409,7 @@ class EditableProperty(AbstractProperty):
         return clone_ep
         
     def write_value(self, str_value):
-        print("EditableProperty.write value()")
+        #print("EditableProperty.write value()")
         if self.ignore_write_for_undo == False:
             # Don't create undo object if value chantge is caused by doing undo/redo 
             edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))

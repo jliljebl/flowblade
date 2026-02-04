@@ -221,7 +221,7 @@ only produces single undoable actionT
 """
 
 def _property_edit_poll_event(property_edit_action):
-    print("tick")
+    #print("tick")
     global _property_edit_poll_ticker
     if _property_edit_poll_ticker == None:
         return
@@ -231,7 +231,6 @@ def _property_edit_poll_event(property_edit_action):
     property_edit_action.maybe_commit_event(current_time)
 
 def set_editor_for_property(editable_property, editor):
-    print(editable_property, editor)
     global _editor_for_property
     _editor_for_property[editable_property] = editor
 
@@ -243,7 +242,6 @@ def get_editor_for_property(editable_property):
         return _get_compositor_editor_for_property(editable_property)
 
     for ep in _editor_for_property.keys():
-        print(id(ep.clip), ep.filter_index, ep.property_index)
         if  ep.clip == editable_property.clip and \
             ep.filter_index == editable_property.filter_index and \
             ep.property_index == editable_property.property_index:
@@ -276,7 +274,6 @@ class PropertyEditAction:
         self.creation_time = None 
 
     def edit_done(self, redo_val):
-        #print(traceback.print_stack())
         self.redo_val = copy.deepcopy(redo_val)
         self.creation_time = round(time.time() * 1000)
                     
@@ -307,11 +304,9 @@ class PropertyEditAction:
         register_edit(self)
     
     def undo(self):
-        print("PropertyEditAction.undo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.undo_val)
 
     def redo(self):
-        print("PropertyEditAction.redo id, u, r, ", id(self), self.undo_val,  self.redo_val)
         self.value_set_func(self.redo_val)
 
 

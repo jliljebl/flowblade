@@ -127,3 +127,26 @@ class ColorBoxUndo(undo.PropertyEditAction):
             self.editor.undo_redo_update(hue, sat)
             
 
+class ColorLGGUndo(undo.PropertyEditAction):
+
+        def __init__(self, editor):
+            undo.PropertyEditAction.__init__(self, self.undo_value_set_func, "")
+            self.editor = editor
+
+        def set_undo_val(self, lgg_str, hue, value):
+            self.undo_val = self._get_value_str(lgg_str, hue, value)
+        
+        def set_redo_val(self, lgg_str, hue, value):
+            redo_val = self._get_value_str(lgg_str, hue, value)
+            self.edit_done(redo_val)
+    
+        def _get_value_str(self, lgg_str, hue, value):
+            return lgg_str + ":" + str(hue) + ":" + str(value) 
+    
+        def undo_value_set_func(self, str_value):
+            tokens = str_value.split(":")
+            lgg = tokens[0]
+            hue = float(tokens[1])
+            value = float(tokens[2])
+    
+            self.editor.undo_redo_update(lgg, hue, value)

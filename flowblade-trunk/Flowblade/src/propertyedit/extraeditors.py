@@ -522,9 +522,15 @@ class ColorBoxFilterEditor:
 
 class ColorLGGFilterEditor:
 
+    LIFT = "lift"
+    GAIN = "gain"
+    GAMMA = "gamma"
+
     def __init__(self, editable_properties):
         self.widget = Gtk.VBox()
 
+        self.block_value_update = False
+        
         # Get MLT properties
         self.lift_r = [ep for ep in editable_properties if ep.name == "lift_r"][0]
         self.lift_g = [ep for ep in editable_properties if ep.name == "lift_g"][0]
@@ -685,53 +691,121 @@ class ColorLGGFilterEditor:
         self.update_gain_property_values()
 
     # -------------------------------------- value writers
-    def update_lift_property_values(self):
-        hue, sat = self.lift_hue_selector.get_hue_saturation()
+    def update_lift_property_values(self, hue=None, value=None):
+        if self.block_value_update == True:
+            self.block_value_update = False
+            return
+        
+        if hue == None:
+            old_hue = float(self.lift_hue.value)
+            old_value = float(self.lift_value.value)
+            edit_action = undoextended.ColorLGGUndo(self)
+            edit_action.set_undo_val(self.LIFT, old_hue, old_value)
+                
+            hue, sat = self.lift_hue_selector.get_hue_saturation()
+            value = self.lift_adjustment.get_value() / 100.0
+        else:
+            edit_action = None
+
         r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
-
-        value = self.lift_adjustment.get_value() / 100.0
-
         r = r * value
         g = g * value
         b = b * value
 
         self.lift_hue.write_number_value(hue)
         self.lift_value.write_number_value(value)
+        self.lift_r.ignore_write_for_undo = True
+        self.lift_g.ignore_write_for_undo = True
+        self.lift_b.ignore_write_for_undo = True
         self.lift_r.write_value(r)
         self.lift_g.write_value(g)
         self.lift_b.write_value(b)
 
-    def update_gamma_property_values(self):
-        hue, sat = self.gamma_hue_selector.get_hue_saturation()
+        if edit_action != None:
+            edit_action.set_redo_val(self.LIFT, hue, value)
+
+    def update_gamma_property_values(self, hue=None, value=None):
+        if self.block_value_update == True:
+            self.block_value_update = False
+            return
+            
+        if hue == None:
+            old_hue = float(self.gamma_hue.value)
+            old_value = float(self.gamma_value.value)
+            edit_action = undoextended.ColorLGGUndo(self)
+            edit_action.set_undo_val(self.GAMMA, old_hue, old_value)
+                        
+            hue, sat = self.gamma_hue_selector.get_hue_saturation()
+            
+            value = self.gamma_value.get_out_value(self.gamma_adjustment.get_value())
+        else:
+            edit_action = None
+
         r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
-
-        value = self.gamma_value.get_out_value(self.gamma_adjustment.get_value())
-
         r = 1.0 + r * (value - 1.0)
         g = 1.0 + g * (value - 1.0)
         b = 1.0 + b * (value - 1.0)
 
         self.gamma_hue.write_number_value(hue)
         self.gamma_value.write_number_value(value)
+        self.gamma_r.ignore_write_for_undo = True
+        self.gamma_g.ignore_write_for_undo = True
+        self.gamma_b.ignore_write_for_undo = True
         self.gamma_r.write_value(r)
         self.gamma_g.write_value(g)
         self.gamma_b.write_value(b)
 
-    def update_gain_property_values(self):
-        hue, sat = self.gain_hue_selector.get_hue_saturation()
+        if edit_action != None:
+            edit_action.set_redo_val(self.GAMMA, hue, value)
+
+    def update_gain_property_values(self, hue=None, value=None):
+        if self.block_value_update == True:
+            self.block_value_update = False
+            return
+            
+        if hue == None:
+            old_hue = float(self.gain_hue.value)
+            old_value = float(self.gain_value.value)
+            edit_action = undoextended.ColorLGGUndo(self)
+            edit_action.set_undo_val(self.GAIN, old_hue, old_value)
+            
+            hue, sat = self.gain_hue_selector.get_hue_saturation()
+            value = self.gain_value.get_out_value(self.gain_adjustment.get_value())
+        else:
+            edit_action = None
+
         r, g, b = lutfilter.get_RGB_for_angle(hue * 360)
-
-        value = self.gain_value.get_out_value(self.gain_adjustment.get_value())
-
         r = 1.0 + r * (value - 1.0)
         g = 1.0 + g * (value - 1.0)
         b = 1.0 + b * (value - 1.0)
 
         self.gain_hue.write_number_value(hue)
         self.gain_value.write_number_value(value)
+        self.gain_r.ignore_write_for_undo = True
+        self.gain_g.ignore_write_for_undo = True
+        self.gain_b.ignore_write_for_undo = True
         self.gain_r.write_value(r)
         self.gain_g.write_value(g)
         self.gain_b.write_value(b)
+
+        if edit_action != None:
+            edit_action.set_redo_val(self.GAIN, hue, value)
+            
+    def undo_redo_update(self, lgg, hue, value):
+        self.block_value_update = True
+
+        if lgg == self.LIFT:            
+            self.update_lift_display(hue, value * 100.0)
+            self.update_lift_property_values(hue, value)
+            self.lift_hue_selector.widget.queue_draw()
+        elif lgg == self.GAMMA:
+            self.update_gamma_display(hue, self.gamma_value.get_in_value(value))
+            self.update_gamma_property_values(hue, value)
+            self.gamma_hue_selector.widget.queue_draw()
+        else:
+            self.update_gain_display(hue, self.gain_value.get_in_value(value))
+            self.update_gain_property_values(hue, value)
+            self.gain_hue_selector.widget.queue_draw()
 
 
 class BoxEditor:
