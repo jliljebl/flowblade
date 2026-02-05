@@ -216,7 +216,7 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
         files_to_render.append(f)
 
     if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
-        callbackbridge.proxyingestmanager_show_proxy_issues_window( files_to_render, already_have_proxies, 
+        callbackbridge.proxytranscodemanager_show_proxy_issues_window( files_to_render, already_have_proxies, 
                                                                     not_video_files, is_proxy_file, other_project_proxies,
                                                                     proxy_w, proxy_h, proxy_file_extension, _create_proxy_files)
         return
@@ -438,8 +438,8 @@ class TranscodeRenderJobsCreateThread(threading.Thread):
         proxy_rate = -1
 
         transcode_render_items = []
-        for media_item_widget in self.media_items:
-            media_file = media_item_widget.media_file
+        for media_file in self.media_items:
+            #media_file = media_item_widget.media_file
             # More restrictions !!!?? or in GUI?
             if media_file.type != appconsts.IMAGE_SEQUENCE:
 

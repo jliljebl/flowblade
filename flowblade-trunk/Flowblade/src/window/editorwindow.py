@@ -72,7 +72,7 @@ import projectaddmediafolder
 import projectdatavaultgui
 import projectinfogui
 import proxyediting
-import proxyingestmanager
+import proxytranscodemanager
 import scripttool
 import shortcuts
 import shortcutsdialog
@@ -873,7 +873,7 @@ class EditorWindow:
             ('ShowProjectInfo', None, _('Project Info and Data'), None, None, lambda a:projectaction.show_project_info()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('ChangeProfile', None, _("Change Project Profile..."), None, None, lambda a: projectaction.change_project_profile()),
-            ('ProxyManager', None, _('Proxy and Transcode Manager'), None, None, lambda a:proxyingestmanager.show_proxy_manager_dialog()),
+            ('ProxyManager', None, _('Proxy and Transcode Manager'), None, None, lambda a:proxytranscodemanager.show_proxy_manager_dialog()),
             ('DataStoreManager', None, _('Data Store Manager'), None, None, lambda a:projectdatavaultgui.show_project_data_manager_window()),
             ('ProjectDataInfo', None, _('Project Data'), None, None, lambda a:projectdatavaultgui.show_current_project_data_store_info_window()),
             ('RenderMenu', None, _('Render')),
