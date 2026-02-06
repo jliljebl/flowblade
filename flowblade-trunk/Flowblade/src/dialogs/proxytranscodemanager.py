@@ -436,7 +436,7 @@ def show_transcode_dialog(media_items):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialog.set_default_response(Gtk.ResponseType.OK)
     dialog.set_resizable(False)
-    dialog.connect('response', _transcode_response_callback, media_items, action_combo, transcode_combo, target_folder_combo)
+    dialog.connect('response', _transcode_response_callback, media_items, action_combo, transcode_combo, target_folder_combo, data_folder_button)
     
     dialog.show_all()
 
@@ -448,11 +448,15 @@ def _terget_changed(target_combo, folder_label, data_folder_button):
         folder_label.set_sensitive(True)
         data_folder_button.set_sensitive(True)
 
-def _transcode_response_callback(dialog, response_id, media_items, action_combo, transcode_combo, target_folder_combo):
+def _transcode_response_callback(dialog, response_id, media_items, action_combo, transcode_combo, target_folder_combo, data_folder_button):
     if response_id == Gtk.ResponseType.ACCEPT: 
         enc_index = transcode_combo.get_active()
+        if target_folder_combo.get_active() == 0:
+            external_render_folder = None
+        else:
+            external_render_folder = data_folder_button.get_filename() + "/"
         dialog.destroy()
-        proxyediting.create_transcode_files(media_items, enc_index)
+        proxyediting.create_transcode_files(media_items, enc_index, external_render_folder)
     else:
         dialog.destroy()
     

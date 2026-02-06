@@ -105,8 +105,6 @@ class ProxyRenderRunnerThread(threading.Thread):
         proxy_render_items = []
         for media_file in self.files_to_render:
             if media_file.type != appconsts.IMAGE_SEQUENCE:
-                
-                
                 proxy_encoding = renderconsumer.proxy_encodings[enc_index]
                 proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
 
@@ -366,11 +364,6 @@ class ProxyProjectLoadThread(threading.Thread):
         self.manager_window = manager_window
     
     def run(self):
-        """
-        GLib.idle_add(self._do_proxy_project_load)
-    
-    def _do_proxy_project_load(self):
-        """
         pulse_runner = guiutils.PulseEvent(self.progressbar)
         time.sleep(2.0)
         persistance.show_messages = False
@@ -416,19 +409,20 @@ class ProxyProjectLoadThread(threading.Thread):
 
 
 # --------------------------------------------- transcoding
-def create_transcode_files(media_items, enc_index):
+def create_transcode_files(media_items, enc_index, external_render_folder):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
     global runner_thread
-    runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index)
+    runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index, external_render_folder)
     runner_thread.start()
     
 
 class TranscodeRenderJobsCreateThread(threading.Thread):
-    def __init__(self, media_items, enc_index):
+    def __init__(self, media_items, enc_index, external_render_folder):
         threading.Thread.__init__(self)
         self.media_items = media_items
         self.enc_index = enc_index
+        self.external_render_folder = external_render_folder
 
     def run(self):
         w = editorstate.PROJECT().profile.width()
@@ -439,24 +433,22 @@ class TranscodeRenderJobsCreateThread(threading.Thread):
 
         transcode_render_items = []
         for media_file in self.media_items:
-            #media_file = media_item_widget.media_file
             # More restrictions !!!?? or in GUI?
             if media_file.type != appconsts.IMAGE_SEQUENCE:
+                md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+                if self.external_render_folder == None: 
+                    transcode_file_path = str(userfolders.get_ingest_dir()) + md_str  + "." + encoding.extension
+                else:
+                    transcode_file_path = self.external_render_folder + md_str  + "." + encoding.extension
 
-                transcode_file_path = media_file.create_transcode_path_no_ext() + "." + encoding.extension
                 print(transcode_file_path)
-                
+
                 item_data = ProxyRenderItemData(media_file.id, w, h, self.enc_index,
                                                 transcode_file_path, proxy_rate, media_file.path,
                                                 editorstate.PROJECT().profile.description(), 
                                                 None, True)
+                transcode_render_items.append(item_data)
 
-            else:
-                pass
-                
-            transcode_render_items.append(item_data)
-            
-        
         GLib.idle_add(self._create_job_queue_objects, transcode_render_items)
         
     def _create_job_queue_objects(self, transcode_render_items):
