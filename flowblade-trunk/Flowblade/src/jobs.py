@@ -23,6 +23,7 @@ from gi.repository import Gtk, GLib
 from gi.repository import GObject
 from gi.repository import Pango
 
+import copy
 import os
 import subprocess
 import sys
@@ -42,6 +43,7 @@ import gui
 import guicomponents
 import guipopover
 import guiutils
+import medialinker
 import motionheadless
 import proxyheadless
 import renderconsumer
@@ -74,7 +76,6 @@ FFMPEG_ATTR_SCREENSIZE_2 = "%SCREEN%SIZE%TWO%"
 FFMPEG_ATTR_PROXYFILE = "%PROXYFILE"
 
 
-
 _status_polling_thread = None
 
 _jobs_list_view = None
@@ -83,6 +84,11 @@ _jobs = [] # proxy objects that represent background renders and provide info on
 _remove_list = [] # objects are removed from GUI with delay to give user time to notice copmpletion
 
 _jobs_render_progress_window = None
+
+ # If multiple files are transcoded with completion action ProxyRenderJobQueueObject.TRANSCODE_COMPLETED_ACTION_REPLACE_MEDIA_ITEM
+ # then paths data is collect in this dict and replace action is done for all in a single go.
+ # _transcode_multi_replace: old_media_path->replace_media_path
+_transcode_multi_replace = {}
 
 
 class JobProxy: # This object represents a job in the job queue. 
@@ -791,6 +797,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         self.render_data = render_data # 'render_data' is proxyediting.ProxyRenderItemData
         self.parent_folder = userfolders.get_temp_render_dir()
         self.completed_action = completed_action
+        self.apply_multi_replace = False
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.render_data.media_file_path)
@@ -933,7 +940,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 elif len(proxy_jobs) == 1:
                     self.render_data.do_auto_re_convert_func()
         else:
-            if self.completed_action ==  self.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM:
+            if self.completed_action == self.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM:
                 file_path = self.render_data.proxy_file_path
                 (directory, file_name) = os.path.split(str(self.render_data.media_file_path))
                 (name, ext) = os.path.splitext(file_name)
@@ -943,6 +950,13 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 gui.media_list_view.fill_data_model()
                 max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
                 gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+            else:
+                global _transcode_multi_replace
+                _transcode_multi_replace[self.render_data.media_file_path] = self.render_data.proxy_file_path
+                
+                if self.apply_multi_replace == True:
+                    medialinker.replace_multiple_files(PROJECT(), copy.deepcopy(_transcode_multi_replace))
+                    _transcode_multi_replace = {}
         
 
 class FFmpegRenderThread(threading.Thread):

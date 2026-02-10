@@ -409,20 +409,21 @@ class ProxyProjectLoadThread(threading.Thread):
 
 
 # --------------------------------------------- transcoding
-def create_transcode_files(media_items, enc_index, external_render_folder):
+def create_transcode_files(media_items, enc_index, external_render_folder, action_index):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
     global runner_thread
-    runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index, external_render_folder)
+    runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index, external_render_folder, action_index)
     runner_thread.start()
     
 
 class TranscodeRenderJobsCreateThread(threading.Thread):
-    def __init__(self, media_items, enc_index, external_render_folder):
+    def __init__(self, media_items, enc_index, external_render_folder, action_index):
         threading.Thread.__init__(self)
         self.media_items = media_items
         self.enc_index = enc_index
         self.external_render_folder = external_render_folder
+        self.action_index = action_index
 
     def run(self):
         w = editorstate.PROJECT().profile.width()
@@ -441,8 +442,6 @@ class TranscodeRenderJobsCreateThread(threading.Thread):
                 else:
                     transcode_file_path = self.external_render_folder + md_str  + "." + encoding.extension
 
-                print(transcode_file_path)
-
                 item_data = ProxyRenderItemData(media_file.id, w, h, self.enc_index,
                                                 transcode_file_path, proxy_rate, media_file.path,
                                                 editorstate.PROJECT().profile.description(), 
@@ -452,10 +451,19 @@ class TranscodeRenderJobsCreateThread(threading.Thread):
         GLib.idle_add(self._create_job_queue_objects, transcode_render_items)
         
     def _create_job_queue_objects(self, transcode_render_items):
-        for transcode_render_data_item in transcode_render_items:
+        for i in range(0, len(transcode_render_items)):
+            transcode_render_data_item = transcode_render_items[i]
             session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+            if self.action_index == 0: # indexes of combobox selction
+                action = jobs.ProxyRenderJobQueueObject.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM
+            else:
+                action = jobs.ProxyRenderJobQueueObject.TRANSCODE_COMPLETED_ACTION_REPLACE_MEDIA_ITEM
+                
             job_queue_object = jobs.ProxyRenderJobQueueObject(  session_id, 
                                                                 transcode_render_data_item, 
-                                                                jobs.ProxyRenderJobQueueObject.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM)
+                                                                action)
+            if i == len(transcode_render_items) - 1:
+                job_queue_object.apply_multi_replace = True
+
             job_queue_object.add_to_queue()
 

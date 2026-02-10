@@ -456,7 +456,7 @@ def _transcode_response_callback(dialog, response_id, media_items, action_combo,
         else:
             external_render_folder = data_folder_button.get_filename() + "/"
         dialog.destroy()
-        proxyediting.create_transcode_files(media_items, enc_index, external_render_folder)
+        proxyediting.create_transcode_files(media_items, enc_index, external_render_folder, action_combo.get_active())
     else:
         dialog.destroy()
     
