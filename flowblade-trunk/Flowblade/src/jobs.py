@@ -38,6 +38,7 @@ import callbackbridge
 import editorlayout
 import editorpersistance
 from editorstate import PROJECT
+import gui
 import guicomponents
 import guipopover
 import guiutils
@@ -71,6 +72,8 @@ FFMPEG_ATTR_SOURCEFILE = "%SOURCEFILE"
 FFMPEG_ATTR_SCREENSIZE = "%SCREENSIZE"
 FFMPEG_ATTR_SCREENSIZE_2 = "%SCREEN%SIZE%TWO%"
 FFMPEG_ATTR_PROXYFILE = "%PROXYFILE"
+
+
 
 _status_polling_thread = None
 
@@ -778,12 +781,16 @@ class TrackingDataRenderJobQueueObject(AbstractJobQueueObject):
 
 class ProxyRenderJobQueueObject(AbstractJobQueueObject):
 
-    def __init__(self, session_id, render_data):
+    TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM = 0
+    TRANSCODE_COMPLETED_ACTION_REPLACE_MEDIA_ITEM = 1
+
+    def __init__(self, session_id, render_data, completed_action=None):
         
         AbstractJobQueueObject.__init__(self, session_id, PROXY_RENDER)
         
         self.render_data = render_data # 'render_data' is proxyediting.ProxyRenderItemData
         self.parent_folder = userfolders.get_temp_render_dir()
+        self.completed_action = completed_action
 
     def get_job_name(self):
         folder, file_name = os.path.split(self.render_data.media_file_path)
@@ -926,8 +933,17 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 elif len(proxy_jobs) == 1:
                     self.render_data.do_auto_re_convert_func()
         else:
-            print("transcode render complete")
+            if self.completed_action ==  self.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM:
+                file_path = self.render_data.proxy_file_path
+                (directory, file_name) = os.path.split(str(self.render_data.media_file_path))
+                (name, ext) = os.path.splitext(file_name)
 
+                PROJECT().add_media_file(file_path, _("TRANSCODE_") + name)
+
+                gui.media_list_view.fill_data_model()
+                max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
+                gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+        
 
 class FFmpegRenderThread(threading.Thread):
     

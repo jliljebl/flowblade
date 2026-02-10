@@ -454,6 +454,8 @@ class TranscodeRenderJobsCreateThread(threading.Thread):
     def _create_job_queue_objects(self, transcode_render_items):
         for transcode_render_data_item in transcode_render_items:
             session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-            job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, transcode_render_data_item)
+            job_queue_object = jobs.ProxyRenderJobQueueObject(  session_id, 
+                                                                transcode_render_data_item, 
+                                                                jobs.ProxyRenderJobQueueObject.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM)
             job_queue_object.add_to_queue()
 
