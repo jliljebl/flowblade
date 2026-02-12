@@ -887,7 +887,9 @@ def _get_filter_rect_geom_editor(ep):
     return keyframeeditor.FilterRectGeometryEditor(ep)
 
 def _get_no_kf_rect_geom_editor(ep):
-    return keyframeeditor.GeometryNoKeyframes(ep)
+    editor = keyframeeditor.GeometryNoKeyframes(ep)
+    undo.set_editor_for_property(ep, editor)
+    return editor
 
 def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)

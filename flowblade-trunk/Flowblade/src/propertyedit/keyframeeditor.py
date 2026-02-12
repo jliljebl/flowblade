@@ -26,7 +26,6 @@ NOTE: All the editors are composites of smaller objects (so that similar
 but slightly different editors are easier to create)). There are a lots 
 of callbacks to parent objects.
 """
-
 import cairo
 import copy
 
@@ -2607,7 +2606,6 @@ class GeometryNoKeyframes(Gtk.VBox):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
         self.initializing = True # Hack against too early for on slider listener
-        
         self.set_homogeneous(False)
         self.set_spacing(2)
         self.editable_property = editable_property
@@ -2626,8 +2624,7 @@ class GeometryNoKeyframes(Gtk.VBox):
         
         g_frame = Gtk.Frame()
         g_frame.add(self.geom_kf_edit.widget)
-        
-      
+
         # Build gui
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.geom_buttons_row, False, False, 0)

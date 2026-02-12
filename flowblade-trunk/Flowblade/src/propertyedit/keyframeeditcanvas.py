@@ -636,7 +636,7 @@ class BoxEditCanvas(AbstractEditCanvas):
     def __init__(self, editable_property, parent_editor):
         AbstractEditCanvas.__init__(self, editable_property, parent_editor)
         self.source_edit_rect = None # Created later when we have allocation available
-
+        
     def reset_active_keyframe_shape(self, active_kf_index):
         frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
         rect = [0, 0, self.source_width, self.source_height]
