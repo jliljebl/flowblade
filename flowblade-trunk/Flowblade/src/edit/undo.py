@@ -196,9 +196,9 @@ def undo_redo_stress_test():
 
 # ------------------------------------------- PROPERT EDIT UNDO
 """
-Property edit undo system works as described below. Most of the complexity here is to ensure that single 
-edit action that produces multiple writes to MLt property values (e.g. slider drag) 
-only produces single undoable actionT
+Property edit undo system works differently to timeline edits undo system. Most of the complexity is to ensure that single 
+edit action that produces multiple writes to MLT property values (e.g. slider drag) 
+only produces single undoable action.
     - when a editor property is created editor calls set_editor_for_property()
     to set is itself in _editor_for_property dict that is needed to possiblty update
     editor GUI when undo/redo done

@@ -585,18 +585,6 @@ class LUTTableProperty(EditableProperty):
         val_str = ''.join(l).rstrip(";")
         self.write_value(val_str)
 
-"""
-    def undo_redo_write_value(self, str_value, undo_redo_data):
-        editor = undo.get_editor_for_property(self)
-        if editor == None:
-            self.ignore_write_for_undo = True
-            self.write_value(str_value)
-        else:
-            if editor.editor_type == "slider":
-                editor.editable_property.ignore_write_for_undo = True
-                editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
-"""
-
 
 class PointsListProperty(EditableProperty):
     
@@ -1439,7 +1427,19 @@ class RectNoKeyframes(EditableProperty):
 
         self.write_value(val_str)
 
-
+    def undo_redo_write_value(self, str_value):
+        editor = undo.get_editor_for_property(self)
+        if editor != None:
+            editor.editable_property.ignore_write_for_undo = True
+            editor.editable_property.write_value(str_value)
+            editor.geom_kf_edit.set_keyframes(editor.editable_property.value, editor.editable_property.get_in_value)
+            editor.active_keyframe_changed()
+            editor.geom_kf_edit._update_shape()
+            editor.geom_kf_edit.widget.queue_draw()
+        else:
+            self.ignore_write_for_undo = True
+            self.write_value(str_value)
+            
 
 class AffineScaleProperty(EditableProperty):
 
