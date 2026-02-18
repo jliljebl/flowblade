@@ -665,10 +665,10 @@ class KeyFrameFilterRotatingGeometryProperty:
 
         # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
         # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
-        # and is only used to the initialize the editor. The original design was that editor is given
+        # and is used to initialize the editor and do undo/redo. The original design was that editor is given
         # property value strings, and they then call keyframe_parser() method that is set when editor is 
         # build for particular type of property string. Here we need to write out keyframes
-        # to _two_ different properties, so this "dummy" editable property is created to act as the 
+        # to _two_ different properties, so this editable property is created to act as the 
         # property being edited, and it converts editor output to property values of two different 
         # properties in method write_out_keyframes() below.
         self.ignore_write_for_undo = False
@@ -1073,12 +1073,6 @@ class AlphaShapeRotatingGeometryProperty:
 
         # Pick up the editable properties that actually have their values being written to on user edits
         # and affect to filter output.
-        #<property name="Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
-        #<property name="Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
-        #<property name="Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.5</property>
-        #<property name="Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.5</property>
-        #<property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Tilt">0=0.5</property>
-        
         self.pos_x = [ep for ep in editable_properties if ep.name == "Position X"][0]
         self.pos_y = [ep for ep in editable_properties if ep.name == "Position Y"][0]
         self.size_x = [ep for ep in editable_properties if ep.name == "Size X"][0]
@@ -1096,6 +1090,8 @@ class AlphaShapeRotatingGeometryProperty:
         self.is_compositor_filter = False
         self.track = track
         self.clip_index = clip_index
+        self.filter_index = filter_index
+        self.property_index = undo.INDEX_FOR_PROPERTY_CREATED_FOR_EDITOR
         self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
         self.get_display_name = lambda : "Opacity"
 
@@ -1103,14 +1099,7 @@ class AlphaShapeRotatingGeometryProperty:
         self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
         self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
 
-        # This value is parsed to keyframes by keyframecanvas.RotatingEditCanvas
-        # using method propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(),
-        # and is only used to the initialize the editor. The original design was that editor is given
-        # property value strings, and they then call keyframe_parser() method that is set when editor is 
-        # build for particular type of property string. Here we need to write out keyframes
-        # to _two_ different properties, so this "dummy" editable property is created to act as the 
-        # property being edited, and it converts editor output to property values of two different 
-        # properties in method write_out_keyframes() below.
+        self.ignore_write_for_undo = False
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -1167,7 +1156,11 @@ class AlphaShapeRotatingGeometryProperty:
   
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
         
-    def write_out_keyframes(self, keyframes):    
+    def write_out_keyframes(self, keyframes):
+        if self.ignore_write_for_undo == False:
+            # Don't create undo object if value change is caused by doing undo/redo.
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
+             
         pos_x_val = ""
         pos_y_val = ""
         size_x_val = ""
@@ -1197,20 +1190,49 @@ class AlphaShapeRotatingGeometryProperty:
             size_y_val += str(frame) + eq_str +  str(size_y_tr) + ";"
             tilt_val += str(frame) + eq_str +  str(tilt_tr) + ";"
 
-
-
         pos_x_val = pos_x_val.strip(";")
         pos_y_val = pos_y_val.strip(";")
         size_x_val = size_x_val.strip(";")
         size_y_val = size_y_val.strip(";")
         tilt_val = tilt_val.strip(";")
 
+        self.pos_x.ignore_write_for_undo = True
+        self.pos_y.ignore_write_for_undo = True
+        self.size_x.ignore_write_for_undo = True
+        self.size_y.ignore_write_for_undo = True
+        self.tilt.ignore_write_for_undo = True
+        
         self.pos_x.write_value(pos_x_val)
         self.pos_y.write_value(pos_y_val)
         self.size_x.write_value(size_x_val)
         self.size_y.write_value(size_y_val)
         self.tilt.write_value(tilt_val)
  
+        # Complete edit action and maybe commit to undo stack
+        # if this write is from editor not undo stack,
+        # otherwise save value and reset ignore flag.
+        if self.ignore_write_for_undo == False:
+            self.value = self.get_value_keyframes_str()
+            edit_action.edit_done(self.value)
+        else:
+            self.ignore_write_for_undo = False
+            self.value = self.get_value_keyframes_str()
+
+    def undo_redo_write_value(self, str_value):
+        editor = undo.get_editor_for_property(self)
+        keyframes = propertyparse.filter_rotating_geom_keyframes_value_string_to_geom_kf_array(str_value, None)
+        if editor != None:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            editor.geom_kf_edit.set_keyframes(self.value, self.get_in_value)
+            editor.clip_editor.keyframes = editor.get_clip_editor_keyframes()
+            editor.update_editor_view()
+            editor.pos_entries_row.update_entry_values(editor.geom_kf_edit.get_keyframe(editor.clip_editor.active_kf_index))
+            editor.buttons_row.set_kf_info(editor.clip_editor.get_kf_info())
+        else:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            
     def write_value(self, str_value):
         pass
          
