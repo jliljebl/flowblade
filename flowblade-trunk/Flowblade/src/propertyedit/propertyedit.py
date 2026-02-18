@@ -924,7 +924,7 @@ class CropEditorProperty:
         # Relevant filter definition in filters.xml
         # <property name="Left" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         # <property name="Right" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
-        #<property name="Top" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
+        # <property name="Top" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         # <property name="Bottom" args="range_in=0.0,100.0 editor=slider step=0.1 scale_digits=1">0</property>
         self.left = [ep for ep in editable_properties if ep.name == "Left"][0]
         self.right = [ep for ep in editable_properties if ep.name == "Right"][0]
@@ -943,6 +943,8 @@ class CropEditorProperty:
         self.is_compositor_filter = False
         self.track = track
         self.clip_index = clip_index
+        self.filter_index = filter_index
+        self.property_index = undo.INDEX_FOR_PROPERTY_CREATED_FOR_EDITOR
         self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
         self.get_display_name = lambda : "Opacity"
 
@@ -958,6 +960,7 @@ class CropEditorProperty:
         # to _two_ different properties, so this "dummy" editable property is created to act as the 
         # property being edited, and it converts editor output to property values of two different 
         # properties in method write_out_keyframes() below.
+        self.ignore_write_for_undo = False
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -1005,6 +1008,9 @@ class CropEditorProperty:
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):
+        if self.ignore_write_for_undo == False:
+            # Don't create undo object if value change is caused by doing undo/redo.
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
 
         left_val = ""
         right_val = ""
@@ -1040,11 +1046,41 @@ class CropEditorProperty:
         right_val.strip(";")
         top_val.strip(";")
         bottom_val.strip(";")
+
+        self.left.ignore_write_for_undo = True
+        self.right.ignore_write_for_undo = True
+        self.top.ignore_write_for_undo = True
+        self.bottom.ignore_write_for_undo = True
         
         self.left.write_value(left_val)
         self.right.write_value(right_val)
         self.top.write_value(top_val)
         self.bottom.write_value(bottom_val)
+
+        # Complete edit action and maybe commit to undo stack
+        # if this write is from editor not undo stack,
+        # otherwise save value and reset ignore flag.
+        if self.ignore_write_for_undo == False:
+            self.value = self.get_value_keyframes_str()
+            edit_action.edit_done(self.value)
+        else:
+            self.ignore_write_for_undo = False
+            self.value = self.get_value_keyframes_str()
+
+    def undo_redo_write_value(self, str_value):
+        editor = undo.get_editor_for_property(self)
+        keyframes = propertyparse.crop_geom_keyframes_value_string_to_geom_kf_array(str_value, None)
+        if editor != None:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            editor.geom_kf_edit.set_keyframes(self.value, self.get_in_value)
+            editor.clip_editor.keyframes = editor.get_clip_editor_keyframes()
+            editor.update_editor_view()
+            editor.pos_entries_row.update_entry_values(editor.geom_kf_edit.get_keyframe(editor.clip_editor.active_kf_index))
+            editor.buttons_row.set_kf_info(editor.clip_editor.get_kf_info())
+        else:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
 
     def _clamp_norm(self, val):
         if val < 0.0:
