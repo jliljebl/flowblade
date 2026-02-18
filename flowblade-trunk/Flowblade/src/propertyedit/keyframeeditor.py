@@ -2803,8 +2803,6 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
         g_frame.add(self.geom_kf_edit.widget)
              
         self.buttons_row = ClipEditorButtonsRow(self, True, False)
-
-        #self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, self.geom_buttons_row)
         
         # Create clip editor keyframes from geom editor keyframes
         # that contain the property values when opening editor.
@@ -2813,7 +2811,6 @@ class GradientTintGeometryEditor(FilterRectGeometryEditor):
 
         # Build gui
         self.pack_start(g_frame, False, False, 0)
-        #self.pack_start(self.pos_entries_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 

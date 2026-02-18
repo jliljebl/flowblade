@@ -804,6 +804,8 @@ class GradientTintExtraEditorProperty:
         self.is_compositor_filter = False
         self.track = track
         self.clip_index = clip_index
+        self.filter_index = filter_index
+        self.property_index = undo.INDEX_FOR_PROPERTY_CREATED_FOR_EDITOR
         self.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
         self.get_display_name = lambda : "Opacity"
 
@@ -813,12 +815,15 @@ class GradientTintExtraEditorProperty:
 
         # This value is parsed to keyframes by keyframecanvas.GradientEditCanvas
         # using method propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array(),
-        # and is only used to the initialize the editor. The original design was that editor is given
-        # property value strings, and they then call keyframe_parser() method that is set when editor is 
-        # build for particular type of property string. Here we need to write out keyframes
-        # to multiple different properties, so this "dummy" editable property is created to act as the 
-        # property being edited, and it converts editor output to property values of the properties
+        # and is used to the initialize the editor and do undo/redo. 
+        #
+        # The editor is given property value strings, and they then call keyframe_parser() 
+        # method that is set when editor is build for particular type of property string. 
+        # Here we need to write out keyframes to multiple different properties, 
+        # so this editable property is created to act as the property being edited,
+        # and it converts editor output to property values of the properties
         # in method write_out_keyframes() below.
+        self.ignore_write_for_undo = False
         self.value = self.get_value_keyframes_str()
 
     def get_clip_length(self):
@@ -863,6 +868,9 @@ class GradientTintExtraEditorProperty:
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):
+        if self.ignore_write_for_undo == False:
+            # Don't create undo object if value change is caused by doing undo/redo.
+            edit_action = undo.PropertyEditAction(self.undo_redo_write_value, str(self.value))
 
         start_x_val = ""
         start_y_val = ""
@@ -895,12 +903,41 @@ class GradientTintExtraEditorProperty:
         start_y_val.strip(";")
         end_x_val.strip(";")
         end_y_val.strip(";")
+
+        self.start_x.ignore_write_for_undo = True
+        self.start_y.ignore_write_for_undo = True
+        self.end_x.ignore_write_for_undo = True
+        self.end_y.ignore_write_for_undo = True
         
         self.start_x.write_value(start_x_val)
         self.start_y.write_value(start_y_val)
         self.end_x.write_value(end_x_val)
         self.end_y.write_value(end_y_val)
-        
+
+        # Complete edit action and maybe commit to undo stack
+        # if this write is from editor not undo stack,
+        # otherwise save value and reset ignore flag.
+        if self.ignore_write_for_undo == False:
+            self.value = self.get_value_keyframes_str()
+            edit_action.edit_done(self.value)
+        else:
+            self.ignore_write_for_undo = False
+            self.value = self.get_value_keyframes_str()
+
+    def undo_redo_write_value(self, str_value):
+        editor = undo.get_editor_for_property(self)
+        keyframes = propertyparse.gradient_tint_geom_keyframes_value_string_to_geom_kf_array(str_value, None)
+        if editor != None:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            editor.geom_kf_edit.set_keyframes(self.value, self.get_in_value)
+            editor.clip_editor.keyframes = editor.get_clip_editor_keyframes()
+            editor.update_editor_view()
+            editor.buttons_row.set_kf_info(editor.clip_editor.get_kf_info())
+        else:
+            self.ignore_write_for_undo = True
+            self.write_out_keyframes(keyframes)
+            
     def write_value(self, str_value):
         pass
          
