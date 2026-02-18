@@ -931,6 +931,7 @@ def _create_gradient_tint_editor(filt, editable_properties, editor_name, track, 
 
     kf_edit_geom_editor = keyframeeditor.GradientTintGeometryEditor(kf_editable_property)
     kf_edit_geom_editor.set_margin_bottom(4)
+    undo.set_editor_for_property(kf_editable_property, kf_edit_geom_editor)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(kf_edit_geom_editor, False, False, 0)
@@ -949,6 +950,7 @@ def _create_crop_editor(filt, editable_properties, editor_name, track, clip_inde
 
     kf_edit_geom_editor = keyframeeditor.CropGeometryEditor(kf_editable_property)
     kf_edit_geom_editor.set_margin_bottom(4)
+    undo.set_editor_for_property(kf_editable_property, kf_edit_geom_editor)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(kf_edit_geom_editor, False, False, 0)
@@ -967,6 +969,7 @@ def _create_alpha_shape_editor(filt, editable_properties, editor_name, track, cl
 
     kf_edit_geom_editor = keyframeeditor.AlphaShapeGeometryEditor(kf_editable_property)
     kf_edit_geom_editor.set_margin_bottom(4)
+    undo.set_editor_for_property(kf_editable_property, kf_edit_geom_editor)
 
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(kf_edit_geom_editor, False, False, 0)
