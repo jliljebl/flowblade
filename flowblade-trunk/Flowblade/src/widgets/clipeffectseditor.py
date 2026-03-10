@@ -1153,7 +1153,6 @@ class EffectValuesSaveData:
     
     def __init__(self, filter_object):
         self.info = filter_object.info
-        self.multipart_filter = self.info.multipart_filter # DEPRECATED
 
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_object.properties)
@@ -1162,10 +1161,7 @@ class EffectValuesSaveData:
         except:
             self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
 
-        if self.multipart_filter == True: # DEPRECATED
-            self.value = filter_object.value
-        else:
-            self.value = None
+        self.value = None
         
     def save(self, save_path):
         with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
@@ -1178,12 +1174,10 @@ class EffectValuesSaveData:
         return False
 
     def set_effect_values(self, filter_object):
-        if self.multipart_filter == True: # DEPRECATED
-            filter_object.value = self.value
-         
         filter_object.properties = copy.deepcopy(self.properties)
         filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
         filter_object.update_mlt_filter_properties_all()
+
 
 class EffectStackSaveData:
     def __init__(self):

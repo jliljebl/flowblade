@@ -48,8 +48,6 @@ STEP = "step"                                               # Gtk.Adjustment ste
 EXPRESSION_TYPE = "exptype"                                 # type of string expression used as value
 EDITOR = "editor"                                           # editor used to edit property
 DISPLAY_NAME = "displayname"                                # name of property that is displayed to user
-MULTIPART_START_PROP = "multistartprop"                     # Value used to set multipart value at part start
-MULTIPART_END_PROP = "multiendprop"                         # Value used to set multipart value at part end
 ACCESSABLE_EDITOR = "access_editor"                          # Editor is placed in extraeditors.py global structure for access.
 
 # ranges values                                             expression is replaced with 
@@ -94,21 +92,6 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
         params = (clip, filter_index, (p_name, p_value, p_type), i, args_str)
 
         ep = _create_editable_property(p_type, args_str, params)
-
-        ep.is_compositor_filter = compositor_filter
-        ep.track = track
-        ep.clip_index = clip_index
-        editable_properties.append(ep)
-    
-    # Editable property for multipart filters
-    if isinstance(filter_object, mltfilters.MultipartFilterObject):
-        args_str, start_property, end_property = filter_object.info.multipart_desc
-        property_index = len(editable_properties)
-        params = (clip, filter_index, 
-                 ("no dispname given", filter_object.value, appconsts.PROP_EXPRESSION), 
-                 property_index, args_str)
-
-        ep = _create_editable_property(appconsts.PROP_EXPRESSION, args_str, params)
 
         ep.is_compositor_filter = compositor_filter
         ep.track = track

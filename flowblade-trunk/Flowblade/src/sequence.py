@@ -628,11 +628,6 @@ class Sequence:
         filter_object.create_mlt_filter(self.profile)
         return filter_object
 
-    def create_multipart_filter(self, filter_info, clip):
-        filter_object = mltfilters.MultipartFilterObject(filter_info)
-        filter_object.create_mlt_filters(self.profile, clip)
-        return filter_object
-
     def set_all_filters_active_state(self, is_active):
         for i in range(1, len(self.tracks)):
             track = self.tracks[i]

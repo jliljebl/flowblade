@@ -58,10 +58,6 @@ DROP_SERVICE = "dropservice"
 FILTER_MASK_FILTER = "filtermaskfilter"
 
 COMPOSITOR_FILTER_GROUP = "COMPOSITOR_FILTER" # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
-MULTIPART_FILTER = "multipart" # identifies filter as multipart filter
-MULTIPART_PROPERTY = "multipartproperty" # Describes properties of multipart filter
-MULTIPART_START = "multistartprop" # name of property into which value at start of part-filter is set 
-MULTIPART_END = "multiendprop" # name of property into which value at start of part-filter is set 
 
 # Document
 filters_doc = None
@@ -120,11 +116,6 @@ class FilterInfo:
     """
     def __init__(self, filter_node):
         self.mlt_service_id = filter_node.getAttribute(ID)
-        
-        try:
-            self.multipart_filter = (filter_node.getAttribute(MULTIPART_FILTER) == "true")
-        except: # default is False
-            self.multipart_filter = False
 
         # NOTE Turns out that non-existing attribute returns empty string and asking is not error.
         # This has caused some bugs.
@@ -145,19 +136,6 @@ class FilterInfo:
         
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
-    
-        # Multipart property describes how filters are created and edited when filter 
-        # consists of multiple filters.
-        # There 0 or 1 of these in the info object.
-        node_list = filter_node.getElementsByTagName(MULTIPART_PROPERTY)
-        if len(node_list) == 1:
-            mp = node_list[0]
-            value = mp.firstChild.nodeValue
-            args = mp.getAttribute(ARGS)
-            start_property = mp.getAttribute(MULTIPART_START)
-            end_property = mp.getAttribute(MULTIPART_END)
-            self.multipart_desc = (args, start_property, end_property)
-            self.multipart_value = value
 
         #  Extra editors that handle properties that have been set "no_editor"
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
@@ -227,116 +205,6 @@ class FilterObject:
         if replacement_happened == True:
             self.update_mlt_filter_properties_all()
 
-
-# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
-# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
-# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
-class MultipartFilterObject:
-    """
-    These objects are saved with projects. They are used to generate, 
-    update and hold references to a GROUP of mlt.Filter objects attached to a mlt.Producer object.
-    """
-    def __init__(self, filter_info):
-        self.info = filter_info
-        # Values of these are edited by the user.
-        self.properties = copy.deepcopy(filter_info.properties)
-        self.non_mlt_properties = copy.deepcopy(filter_info.non_mlt_properties)
-        self.value = copy.deepcopy(filter_info.multipart_value)
-        self.active = True
-        
-    def create_mlt_filters(self, mlt_profile, clip):
-        self.mlt_filters = []
-        self.keyframes = self._parse_value_to_keyframes()
-        # We need always at least 2 keyframes (at the start and end of 1 filter)
-        # but we only know the position of last keyframe now that we have the clip.
-        # The default value in filters.xml has only 1 keyframe for frame 0
-        # so we add the second one now.
-        if len(self.keyframes) == 1:
-            f, v = self.keyframes[0]
-            self.value = self.value.strip('"') + ";" + str(clip.get_length()) + "=" + str(v)
-            self.keyframes.append((clip.get_length(), v))
-
-        self.create_filters_for_keyframes(self.keyframes, mlt_profile)
-        self.update_mlt_filters_values(self.keyframes)
-        
-    def update_value(self, kf_str, clip, mlt_profile):
-        new_kf = self._parse_string_to_keyframes(kf_str)
-        
-        # If same amount of keyframes, just update values
-        if len(new_kf) == len(self.keyframes):
-            self.update_mlt_filters_values(new_kf)
-            self.keyframes = new_kf
-        else:
-            self.detach_all_mlt_filters(clip)
-            old_filters.append(self.mlt_filters) # hack to prevent object release crashes
-            self.mlt_filters = []
-            self.keyframes = new_kf
-            self.create_filters_for_keyframes(self.keyframes, mlt_profile)
-            self.update_mlt_filters_values(self.keyframes)
-            self.attach_all_mlt_filters(clip)
-        
-        self.value = kf_str
-
-    def create_filters_for_keyframes(self, keyframes, mlt_profile):
-        for i in range(0, len(keyframes) - 1): # There's one less filter parts than keyframes
-            mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
-            mltrefhold.hold_ref(mlt_filter)
-            self.mlt_filters.append(mlt_filter)
-            
-    def update_mlt_filters_values(self, keyframes):
-        """
-        Called obove at creation time and when loaded to set all mlt properties
-        of all filters
-        """
-        args, start_property, end_property = self.info.multipart_desc
-        for i in range(0, len(keyframes) - 1):
-            start_frame, start_value = keyframes[i]
-            end_frame, end_value = keyframes[i + 1]
-
-            mlt_filter = self.mlt_filters[i]
-
-            # Set all property values to defaults
-            for property in self.properties:
-                name, val, type = property
-                mlt_filter.set(str(name), str(val))
-                
-            # set in and out points
-            mlt_filter.set("in", str(start_frame))
-            end_frame = int(end_frame) - 1
-            mlt_filter.set("out", str(end_frame))
-            
-            # set start and end values
-            mlt_filter.set(str(start_property), str(start_value)) # Value at start of filter part
-            mlt_filter.set(str(end_property), str(end_value)) # Value at end of filter part
-
-    def _parse_value_to_keyframes(self):
-        return self._parse_string_to_keyframes(self.value)
-        
-    def _parse_string_to_keyframes(self, kf_string):
-        # returns list of (frame, value) tuples
-        value = kf_string.strip('"') # for some reason we have to use " around values or something broke
-        parts = value.split(";")
-        kfs = []
-        for part in parts:
-            tokens = part.split("=")
-            kfs.append((tokens[0],tokens[1]))
-        return kfs
-    
-    def attach_all_mlt_filters(self, clip):
-        for f in self.mlt_filters:
-            clip.attach(f)
-            
-    def detach_all_mlt_filters(self, clip):
-        for f in self.mlt_filters:
-            clip.detach(f)
-
-    def update_mlt_disabled_value(self):
-        if self.active == True:
-            for f in self.mlt_filters:
-                f.set("disable", str(0))
-        else:
-            for f in self.mlt_filters:
-                f.set("disable", str(1))
 
 # -------------------------------------------------------------------- init
 def load_filters_xml(services):

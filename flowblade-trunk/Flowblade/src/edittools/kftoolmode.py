@@ -299,20 +299,6 @@ def _get_param_editable_property_with_filter_search(mlt_service_id, property_nam
         
     return None
 
-def _has_deprecated_volume_filter(clip):
-    try:
-        for i in range(0, len(clip.filters)):
-            filter_object = clip.filters[i]
-            if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
-                return True 
-
-        return False
-    except:
-        # We had a single crash, here leaving print to get data if we hit this again.
-        print("Exception at kftoolmode._has_deprecated_volume_filter")
-        print(clip.__dict__)
-        return False
-
 def exit_tool():
     if _kf_editor == None:
         editor_was_open = False
@@ -375,13 +361,6 @@ def mouse_press(event, frame):
     # Exit on pressing blank clip.
     if clip.is_blanck_clip == True:
         exit_tool()
-        return
-
-    if _has_deprecated_volume_filter(clip) == True:
-        set_no_clip_edit_data()
-        primary_txt = _("This Clip has a deprecated Volume filter and cannot be edited with Keyframe Tool!")
-        secondary_txt = _("Flowblade 2.8 changed to use Volume filtes with dB values.\n\nOld style Volume filters will continue to function but they need be replaced\nto edit this Clip with Keyframe Tool.")
-        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
     init_tool_for_clip(clip, track)

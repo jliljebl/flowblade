@@ -2061,31 +2061,6 @@ def _add_two_filters_redo(self):
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
 
 
-#------------------- ADD MULTIPART FILTER
-# "clip","filter_info","filter_edit_done_func"
-# Adds filter to clip.
-def add_multipart_filter_action(data):
-    action = EditAction(_add_multipart_filter_undo,_add_multipart_filter_redo, data)
-    return action
-
-def _add_multipart_filter_undo(self):
-    self.filter_object.detach_all_mlt_filters(self.clip)
-    index = self.clip.filters.index(self.filter_object)
-    self.clip.filters.pop(index)
-
-    self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack
-
-def _add_multipart_filter_redo(self):
-    try: # if redo, fails for first
-        self.filter_object.attach_filters(self.clip)
-        self.clip.filters.append(self.filter_object)
-    except: # First do
-        self.filter_object = current_sequence().create_multipart_filter(self.filter_info, self.clip)
-        self.filter_object.attach_all_mlt_filters(self.clip)
-        self.clip.filters.append(self.filter_object)
-        
-    self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack
-
 #------------------- REMOVE FILTER
 # "clip","index","filter_edit_done_func"
 # Adds filter to clip.

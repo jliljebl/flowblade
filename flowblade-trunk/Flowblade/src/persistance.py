@@ -323,10 +323,6 @@ def get_p_filter(f):
     """
     s_filter = copy.copy(f)
     remove_attrs(s_filter, FILTER_REMOVE)
-    if f.info.multipart_filter == False:
-        s_filter.is_multi_filter = False
-    else:
-        s_filter.is_multi_filter = True
 
     return s_filter
 
@@ -514,7 +510,6 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
 
-    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->
     persistancecompat.FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq)
     
     # Grab and replace py tracks. Do this way to use same create
@@ -724,22 +719,16 @@ def fill_filters_mlt(mlt_clip, sequence):
 
         persistancecompat.FIX_MISSING_FILTER_ATTRS(py_filter)
         
-        if py_filter.is_multi_filter == False:
-            filter_object = mltfilters.FilterObject(py_filter.info)
-            filter_object.__dict__.update(py_filter.__dict__)
-            filter_object.create_mlt_filter(sequence.profile)
-            # Vidstab needs special casing because MLT does not take even 'None' value for prop 'results'
-            # without attempting to load a non-existing stabilize data file.
-            if filter_object.info.mlt_service_id == "vidstab":
-                prop_name, prop_value, prop_type = filter_object.non_mlt_properties[0]
-                if prop_value != appconsts.FILE_PATH_NOT_SET:
-                    filter_object.mlt_filter.set("results", str(prop_value))
-            mlt_clip.attach(filter_object.mlt_filter)
-        else:
-            filter_object = mltfilters.MultipartFilterObject(py_filter.info)
-            filter_object.__dict__.update(py_filter.__dict__)
-            filter_object.create_mlt_filters(sequence.profile, mlt_clip)
-            filter_object.attach_all_mlt_filters(mlt_clip)
+        filter_object = mltfilters.FilterObject(py_filter.info)
+        filter_object.__dict__.update(py_filter.__dict__)
+        filter_object.create_mlt_filter(sequence.profile)
+        # Vidstab needs special casing because MLT does not take even 'None' value for prop 'results'
+        # without attempting to load a non-existing stabilize data file.
+        if filter_object.info.mlt_service_id == "vidstab":
+            prop_name, prop_value, prop_type = filter_object.non_mlt_properties[0]
+            if prop_value != appconsts.FILE_PATH_NOT_SET:
+                filter_object.mlt_filter.set("results", str(prop_value))
+        mlt_clip.attach(filter_object.mlt_filter)
 
         if filter_object.active == False:
             filter_object.update_mlt_disabled_value()
