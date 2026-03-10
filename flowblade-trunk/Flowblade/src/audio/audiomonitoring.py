@@ -44,6 +44,7 @@ import appconsts
 import cairoarea
 import gtkbuilder
 import editorstate
+import editorpersistance
 import mltrefhold
 import guiutils
 import utils
@@ -668,17 +669,28 @@ class MasterVolumeMeter:
         self.GRAD_CUT = 37
         self.top_pad = 14
         
+        self.is_wide = editorpersistance.prefs.wide_audio_master
+    
         self.meter = AudioMeter(100)
         self.meter.x_pad_l = 6
         self.meter.x_pad_r = 14
+        if self.is_wide == True:
+            self.meter.x_pad_l = 8
+            self.meter.x_pad_r = 25
+                
         self.meter.right_channel.draw_dB = True
         self.meter.right_channel.dB_x_pad = -14
         self.meter.meter_width = 5
-
+        if self.is_wide == True:        
+            self.meter.meter_width = 14
+            self.meter.right_channel.dB_x_pad = 8
+                
         self.meter.right_channel.y_top_pad = self.top_pad 
         self.meter.left_channel.y_top_pad = self.top_pad 
 
         w = SLOT_W - 40
+        if self.is_wide == True:
+            w = SLOT_W - 10
         h = METER_SLOT_H + 2 + 40
         self.canvas = cairoarea.CairoDrawableArea2( w,
                                                     100, 
