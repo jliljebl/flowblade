@@ -747,8 +747,8 @@ def load_filters_translations():
     param_names["Magenta Hue Shift"] = _("Magenta Hue Shift")
     param_names["Magenta Saturation"] = _("Magenta Saturation")
     param_names["Magenta Lightness"] = _("Magenta Lightness")
-
-
+    param_names["Preserve Alpha"] = _("Preserve Alpha")
+ 
     # Combo options
     # From version 2.10 onwards Media Plugins combo options go here too.
     global combo_options

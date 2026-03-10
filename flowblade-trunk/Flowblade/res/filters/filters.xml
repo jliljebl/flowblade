@@ -709,12 +709,12 @@
         <property name="Type" args="editor=combobox exptype=default cbopts=Sharper:0.3,Fuzzier:0.8" >0.8</property>
         <property name="Edge" args="editor=booleancheckbox displayname=Edge">1</property>
     </filter>
-    <filter id="boxblur">
+    <filter id="box_blur">
         <name>Box Blur</name>
         <group>Blur</group>
-        <property name="start" args="range_in=1,50 range_out=1,50 displayname=Amount">5</property>
-        <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
-        <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
+        <property name="hradius" args="range_in=0.1,50.0 range_out=1.0,50.0 displayname=Horizontal step=0.1 scale_digits=1">1.0</property>
+        <property name="vradius" args="range_in=0.1,50.0 range_out=1.0,50.0 displayname=Vertical step=0.1 scale_digits=1">1.0</property>
+        <property name="preserve_alpha" args="editor=booleancheckbox displayname=Preserve!Alpha">1</property>
     </filter>
     <filter id="frei0r.rgbnoise">
         <name>RGB Noise</name>
