@@ -879,6 +879,7 @@ class HSLRangeFilterHueEditor(Gtk.VBox):
 
         self.hue.write_value(str(360.0 * hue)) 
  
+ 
 class BoxEditor:
 
     def __init__(self, pix_size):
