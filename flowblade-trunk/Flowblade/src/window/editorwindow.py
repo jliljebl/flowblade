@@ -1071,8 +1071,9 @@ class EditorWindow:
         #self.accel_group = accel_group
 
         # Add recent projects to menu
-        #self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
-        
+        #self.fill_recents_menu_widget()
+
+                
         # Disable audio mixer if not available
         #if editorstate.audio_monitoring_available == False:
             #self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
@@ -1238,7 +1239,8 @@ class EditorWindow:
         comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
         """
         
-    def fill_recents_menu_widget(self, menu_item, callback):
+    def fill_recents_menu_widget(self, callback):
+        menubar.fill_recents_menu_widget(projectaction.open_recent_project)
         """
         Fills menu item with menuitems to open recent projects.
         """

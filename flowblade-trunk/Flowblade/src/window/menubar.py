@@ -20,15 +20,18 @@
 
 from gi.repository import Gtk, Gio
 
+import editorpersistance
 from editorstate import APP
 import projectaction
+
+global recent_menu
 
 def get_menu():
 
     MENU_XML = """
     <interface>
       <menu id="menubar">
-        <submenu>
+        <submenu id="filemenu">
           <attribute name="label">File</attribute>
           <section>
             <item>
@@ -39,6 +42,9 @@ def get_menu():
               <attribute name="label">Open...</attribute>
               <attribute name="action">app.open</attribute>
             </item>
+            <submenu id="recentmenu">
+                <attribute name="label">Open Recent...</attribute>
+            </submenu>
             <item>
               <attribute name="label">Quit</attribute>
               <attribute name="action">app.quit</attribute>
@@ -65,6 +71,9 @@ def get_menu():
 
     builder = Gtk.Builder.new_from_string(MENU_XML, -1)
     menu_model = builder.get_object("menubar")
+    
+    global recent_menu
+    recent_menu = builder.get_object("recentmenu")
 
     # Create menubar widget
     menubar = Gtk.MenuBar.new_from_model(menu_model)
@@ -73,11 +82,30 @@ def get_menu():
 
 def create_actions():
     _create_action("new", lambda w, a:projectaction.new_project(), "<Ctrl>N")
-    _create_action("open",  lambda w, a:projectaction.load_project(), "<Ctrl>O")
-
+    _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
+    
 def _create_action(name, callback, accel=None):
     action = Gio.SimpleAction.new(name, None)
     action.connect("activate", callback)
     APP().add_action(action)
     if accel != None:
         APP().set_accels_for_action("app." + name, [accel])
+
+def fill_recents_menu_widget(callback):
+    """
+    Fills menu item with menuitems to open recent projects.
+    """
+    global recent_menu
+    recent_menu.remove_all()
+
+    # Add new menu items
+    recent_proj_names = editorpersistance.get_recent_projects()
+    if len(recent_proj_names) != 0:
+        for i in range (0, len(recent_proj_names)):
+            proj_name = recent_proj_names[i]
+            recent_menu.append(proj_name, "app.openrecent." + str(i))
+            action = Gio.SimpleAction.new("openrecent." + str(i), None)
+            action.connect("activate", lambda a, p: callback(i))
+            APP().add_action(action)
+    else:
+        recent_menu.append (_("Empty"), None)
