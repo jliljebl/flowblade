@@ -125,7 +125,7 @@ def capture_references(new_editor_window):
 
     big_tc = editor_window.big_TC
 
-    editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
+    #editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
     tline_cursor_manager = editor_window.tline_cursor_manager
 

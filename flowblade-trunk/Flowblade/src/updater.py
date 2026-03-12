@@ -677,6 +677,7 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     if not editorstate.current_is_move_mode():
         return
 
+    """
     ui = gui.editor_window.uimanager
     render_transition = ui.get_widget('/MenuBar/EditMenu/AddTransition')
     render_fade = ui.get_widget('/MenuBar/EditMenu/AddFade')
@@ -688,7 +689,8 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
         render_transition.set_sensitive(True)
     else:
         render_transition.set_sensitive(False)
-
+    """
+    
 # ----------------------------------------------------- bins
 def update_current_bin_files_count():
     # Get index for selected bin

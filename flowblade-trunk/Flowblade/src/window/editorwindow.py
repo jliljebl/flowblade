@@ -54,6 +54,7 @@ import medialinker
 import medialog
 import mediaplugin
 import menuactions
+import menubar
 import middlebar
 import mltplayer
 import modesetting
@@ -1051,35 +1052,37 @@ class EditorWindow:
         </ui>"""
         
         # Create global action group
-        action_group = Gtk.ActionGroup(name='WindowActions')
-        action_group.add_actions(menu_actions, user_data=None)
+        #action_group = Gtk.ActionGroup(name='WindowActions')
+        #action_group.add_actions(menu_actions, user_data=None)
 
         # Use UIManager and add accelators to window.
-        self.ui.insert_action_group(action_group, 0)
-        self.ui.add_ui_from_string(menu_string)
-        accel_group = self.ui.get_accel_group()
-        self.window.add_accel_group(accel_group)
+        #self.ui.insert_action_group(action_group, 0)
+        #self.ui.add_ui_from_string(menu_string)
+        #accel_group = self.ui.get_accel_group()
+        #self.window.add_accel_group(accel_group)
 
         # Get menu bar
-        self.menubar = self.ui.get_widget('/MenuBar')
+        #self.menubar = self.ui.get_widget('/MenuBar')
+        self.menubar = menubar.get_menu()
         #self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
 
         # Set reference to UI manager and acclegroup
-        self.uimanager = ui
-        self.accel_group = accel_group
+        #self.uimanager = ui
+        #self.accel_group = accel_group
 
         # Add recent projects to menu
-        self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
+        #self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
         
         # Disable audio mixer if not available
-        if editorstate.audio_monitoring_available == False:
-            self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
+        #if editorstate.audio_monitoring_available == False:
+            #self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
         # Hide G'Mic if not available.
-        if gmic.gmic_available() == False:
-            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
+        #if gmic.gmic_available() == False:
+            #self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
 
     def _init_view_menu(self, menu_item):
+        """
         menu = menu_item.get_submenu()
 
         # Full Screen -tem is already in menu, we need separator here
@@ -1205,8 +1208,10 @@ class EditorWindow:
         zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit"))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
-
+        """
+        
     def init_compositing_mode_menu(self):
+        """
         menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/CompositingModeMenu')
         menu = menu_item.get_submenu()
         guiutils.remove_children(menu)
@@ -1231,10 +1236,12 @@ class EditorWindow:
 
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
-    
+        """
+        
     def fill_recents_menu_widget(self, menu_item, callback):
         """
         Fills menu item with menuitems to open recent projects.
+        """
         """
         menu = menu_item.get_submenu()
 
@@ -1258,7 +1265,8 @@ class EditorWindow:
             new_item.set_sensitive(False)
             menu.append(new_item)
             new_item.show()
-
+        """
+        
     def _change_windows_preference(self, widget, new_window_layout):
         if widget.get_active() == False:
             return

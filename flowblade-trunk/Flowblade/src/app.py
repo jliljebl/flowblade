@@ -578,7 +578,7 @@ def create_gui():
     gui.pos_bar.set_dark_bg_color()
     
     # Give undo a reference to uimanager for menuitem state changes.
-    undo.set_menu_items(gui.editor_window.uimanager)
+    #undo.set_menu_items(gui.editor_window.uimanager)
     
     updater.display_sequence_in_monitor()
 
@@ -667,9 +667,9 @@ def init_editor_state():
     gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
 
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
-    gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
-    gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
-    gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
+    #gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
+    #gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
+    #gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
 
     # Center tracks vertical display and init some listeners to
     # new value and repaint tracks column.
