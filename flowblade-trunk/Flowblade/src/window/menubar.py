@@ -18,7 +18,10 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gio
+
+from editorstate import APP
+import projectaction
 
 def get_menu():
 
@@ -29,11 +32,11 @@ def get_menu():
           <attribute name="label">File</attribute>
           <section>
             <item>
-              <attribute name="label">New</attribute>
+              <attribute name="label">New...</attribute>
               <attribute name="action">app.new</attribute>
             </item>
             <item>
-              <attribute name="label">Open</attribute>
+              <attribute name="label">Open...</attribute>
               <attribute name="action">app.open</attribute>
             </item>
             <item>
@@ -48,11 +51,11 @@ def get_menu():
           <section>
             <item>
               <attribute name="label">Copy</attribute>
-              <attribute name="action">win.copy</attribute>
+              <attribute name="action">app.copy</attribute>
             </item>
             <item>
               <attribute name="label">Paste</attribute>
-              <attribute name="action">win.paste</attribute>
+              <attribute name="action">app.paste</attribute>
             </item>
           </section>
         </submenu>
@@ -60,7 +63,6 @@ def get_menu():
     </interface>
     """
 
-    print("")
     builder = Gtk.Builder.new_from_string(MENU_XML, -1)
     menu_model = builder.get_object("menubar")
 
@@ -68,3 +70,14 @@ def get_menu():
     menubar = Gtk.MenuBar.new_from_model(menu_model)
         
     return menubar
+
+def create_actions():
+    _create_action("new", lambda w, a:projectaction.new_project(), "<Ctrl>N")
+    _create_action("open",  lambda w, a:projectaction.load_project(), "<Ctrl>O")
+
+def _create_action(name, callback, accel=None):
+    action = Gio.SimpleAction.new(name, None)
+    action.connect("activate", callback)
+    APP().add_action(action)
+    if accel != None:
+        APP().set_accels_for_action("app." + name, [accel])

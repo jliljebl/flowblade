@@ -88,6 +88,7 @@ import kftoolmode
 import medialinker
 import medialog
 import mediaplugin
+import menubar
 import mltenv
 import mltfilters
 import mltplayer
@@ -435,6 +436,8 @@ class FlowbladeApplication(Gtk.Application):
         disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
         editorstate.app = self
+
+        menubar.create_actions()
 
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()
