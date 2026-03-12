@@ -29,7 +29,7 @@ import math
 import os
 import webbrowser
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 import appconsts
 import cairo
@@ -808,6 +808,77 @@ class ColorLGGFilterEditor:
             self.gain_hue_selector.widget.queue_draw()
 
 
+
+
+class HSLRangeFilterHueEditor(Gtk.VBox):
+
+    LIFT = "lift"
+    GAIN = "gain"
+    GAMMA = "gamma"
+
+    def __init__(self, ep):
+        GObject.GObject.__init__(self)
+        self.editor_type = "hsl_range_hue"
+        print(type(ep))
+        # Get eitable property
+        self.hue = ep
+
+        # Lift editor
+        self.hue_selector = self.get_hue_selector(self.hue_edited)
+        self.hue_value_label = Gtk.Label()
+        self.hue_row = self.get_hue_row(self.hue_selector.widget, self.hue_value_label)
+        
+        # Pack
+        self.pack_start(self.get_name_row("Hue"), True, True, 0)
+        self.pack_start(self.hue_row, True, True, 0)
+
+        self.set_hue_label_value(self.hue.value, self.hue_value_label)
+
+    # ---------------------------------------------- gui building
+    def get_hue_selector(self, callback):
+        color_box = ColorBox(callback, width=290, height=40)
+        color_box.draw_saturation_gradient = False
+        color_box.selection_cursor = SELECT_LINE
+        return color_box
+
+    def get_name_row(self, name):
+        name = _p(name)
+        name_label = Gtk.Label(label=name + ":")
+
+        hbox = Gtk.HBox(False, 4)
+        hbox.pack_start(name_label, False, False, 4)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+
+        return hbox
+
+    def get_hue_row(self, color_box, value_label):
+        hbox = Gtk.HBox(False, 4)
+        hbox.pack_start(color_box, False, False, 0)
+        hbox.pack_start(value_label, False, False, 4)
+        hbox.pack_start(Gtk.Label(), False, False, 0)
+
+        return hbox
+
+    # --------------------------------------- gui updating
+    def update_for_undo_redo(self, str_value):
+        print("update_for_undo_redo", str_value)
+        self.hue_value_label.set_text(str(int(float(str_value))))
+        # box is 0.0 - 1.0, ep value range is 0 - 360 
+        self.hue_selector.set_cursor(float(str_value)/360.0, 0.0)
+        self.hue_selector.widget.queue_draw()
+
+    def set_hue_label_value(self, hue, label):
+        # box is 0.0 - 1.0, display value range is 0 - 360 
+        hue_str = str(int(360 * hue)) + ColorGrader.DEGREE_CHAR + ' '
+        label.set_text(hue_str)
+
+    # ------------------------------ color box listeners
+    def hue_edited(self):
+        hue, sat = self.hue_selector.get_hue_saturation()
+        self.set_hue_label_value(hue, self.hue_value_label)
+
+        self.hue.write_value(str(360.0 * hue)) 
+ 
 class BoxEditor:
 
     def __init__(self, pix_size):

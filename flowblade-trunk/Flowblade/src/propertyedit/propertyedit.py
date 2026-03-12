@@ -415,6 +415,9 @@ class EditableProperty(AbstractProperty):
             if editor.editor_type == "slider":
                 editor.editable_property.ignore_write_for_undo = True
                 editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
+            elif editor.editor_type == "hsl_range_hue":
+                self.write_value(str_value)
+                editor.update_for_undo_redo(str_value)
 
     def write_mlt_property_str_value(self, str_value):
         # mlt property value

@@ -897,6 +897,16 @@
         <property name="s_scale_magenta" args="range_in=0,500 range_out=0,500 displayname=Magenta!Saturation">100</property>
         <property name="l_scale_magenta" args="range_in=0,200 range_out=0,200 displayname=Magenta!Lightness">100</property>
    </filter>
+   <filter id="hslrange">
+       <name>HSL Range</name>
+       <group>Color</group>
+       <property name="hue_center" args="editor=hsl_range_hue displayname=Hue">0</property>
+       <property name="hue_range" args="range_in=0,500 range_out=0,500 displayname=Hue!Range">100</property>
+       <property name="blend" args="range_in=0,500 range_out=0,500 displayname=Blend">100</property>
+       <property name="h_shift" args="range_in=0,360 range_out=0,360 displayname=Hue!Shift">0</property>
+       <property name="s_scale" args="range_in=0,500 range_out=0,500 displayname=Saturation">100</property>
+       <property name="l_scale" args="range_in=0,500 range_out=0,500 displayname=Lightness">100</property>
+   </filter>
 
 
     <!-- COLOR EFFECT -->

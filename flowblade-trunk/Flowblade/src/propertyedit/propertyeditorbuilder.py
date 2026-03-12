@@ -80,6 +80,7 @@ NO_KF_RECT = "no_keyframes_rect"                            # keyframeeditor.Geo
 GRADIENT_TINT = "gradient_tint_editor"                      # editor for Gradient Tint, "frei0r.cairogradient" MLT filter 
 CROP_EDITOR = "crop_editor"                                 # editor for Crop filter
 ALPHA_SHAPE_EDITOR = "alpha_shape_editor"                   # editor for Alpha Shape filter
+HSL_RANGE_HUE_EDITOR = "hsl_range_hue"                      # editor for hue value in HSLRange filter.
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -891,6 +892,11 @@ def _get_no_kf_rect_geom_editor(ep):
     undo.set_editor_for_property(ep, editor)
     return editor
 
+def _get_hsl_range_hue_editor(ep):
+    editor = extraeditors.HSLRangeFilterHueEditor(ep)
+    undo.set_editor_for_property(ep, editor)
+    return editor
+    
 def _create_crcurves_editor(filt, editable_properties, editor_name, track, clip_index):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
@@ -1263,6 +1269,7 @@ EDITOR_ROW_CREATORS = { \
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
     FADE_LENGTH: lambda ep: _get_fade_length_editor(ep),
+    HSL_RANGE_HUE_EDITOR: lambda ep: _get_hsl_range_hue_editor(ep),
     NO_EDITOR: lambda ep: _get_no_editor(),
     COMPOSITE_EDITOR_BUILDER: lambda comp, editable_properties: _create_composite_editor(comp, editable_properties),
     REGION_EDITOR_BUILDER: lambda comp, editable_properties: _create_region_editor(comp, editable_properties),
