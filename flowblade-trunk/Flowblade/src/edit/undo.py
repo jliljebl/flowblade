@@ -139,6 +139,7 @@ def do_undo():
     index = index - 1
     undo_edit = undo_stack[index]
     undo_edit.undo()
+    #print("do_undo", index)
     
     if index == 0:
         undo_item.set_sensitive(False)
@@ -165,7 +166,8 @@ def do_redo():
     redo_edit = undo_stack[index]
     redo_edit.redo()
     index = index + 1
-
+    #print("do_redo", index)
+    
     if index == len(undo_stack):
         redo_item.set_sensitive(False)
 

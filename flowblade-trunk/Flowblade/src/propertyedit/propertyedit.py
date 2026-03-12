@@ -416,6 +416,7 @@ class EditableProperty(AbstractProperty):
                 editor.editable_property.ignore_write_for_undo = True
                 editor.get_adjustment().set_value(self.get_in_value(float(str_value)))
             elif editor.editor_type == "hsl_range_hue":
+                editor.hue.ignore_write_for_undo = True
                 self.write_value(str_value)
                 editor.update_for_undo_redo(str_value)
 
