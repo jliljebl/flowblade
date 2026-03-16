@@ -39,6 +39,7 @@ import multitrimmode
 import projectaction
 import shortcuts
 import shortcutsquickeffects
+import singletracktransition
 import syncsplitevent
 import tlineaction
 import tlinewidgets
@@ -125,6 +126,7 @@ def init():
     _create_action("add_marker", tlineaction.add_marker, TLINE_MONITOR_ALL)
     _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)
     _create_action("cut_all", tlineaction.cut_all_pressed, TLINE_ALL)
+    _create_action("add_dissolve", singletracktransition.add_transition_pressed, TLINE_ALL)
     _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
     _create_action("set_length", tlineaction.set_length_from_keyevent, TLINE_ALL)
     _create_action("insert", tlineaction.insert_button_pressed, TLINE_MONITOR_ALL)
@@ -154,7 +156,9 @@ def init():
     _create_action("prev_cut", _prev_cut_action, TLINE_MONITOR_ALL)
     _create_action("enter_edit", _enter_edit_action, TLINE_ALL)
     _create_action("delete", _tline_delete_action, TLINE_ALL)
-    _create_action("lift", tlineaction.lift_button_pressed, TLINE_ALL) 
+    _create_action("lift", tlineaction.lift_button_pressed, TLINE_ALL)
+    _create_action("rippledelete", tlineaction.ripple_delete_button_pressed, TLINE_ALL)
+    _create_action("rangedelete", tlineaction.delete_range_button_pressed, TLINE_ALL)
     _create_action("play_pause_loop_marks", _play_pause_loop_marks_action, TLINE_MONITOR_ALL)
     _create_action("to_start", _to_start_action, TLINE_MONITOR_ALL)
     _create_action("to_end", _to_end_action, TLINE_MONITOR_ALL)
@@ -163,6 +167,8 @@ def init():
     _create_action("delete", _delete_log_action, [LOG_LIST_VIEW])
     _create_action("append_from_bin", projectaction.append_selected_media_clips_into_timeline, TLINE_MONITOR_ALL)
     _create_action("resync", tlineaction.resync_track_button_pressed, TLINE_MONITOR_ALL) # Currently menu global gets to this firsts.
+    _create_action("resync_selected",  tlineaction.resync_button_pressed, TLINE_MONITOR_ALL)
+    _create_action("set_sync_selected",  tlineaction.set_track_sync_button_pressed, TLINE_MONITOR_ALL)
     _create_action("monitor_show_video", lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_scope", lambda: tlineaction.set_monitor_display_mode(appconsts.VECTORSCOPE_MODE), TLINE_MONITOR_ALL)
     _create_action("monitor_show_rgb", lambda: tlineaction.set_monitor_display_mode(appconsts.RGB_PARADE_MODE), TLINE_MONITOR_ALL)

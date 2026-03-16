@@ -468,6 +468,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['log_range'] = _("Log Marked Clip Range")
     _keyboard_action_names['split_selected'] = _("Split Audio Synched")
     _keyboard_action_names['resync'] = _("Resync Track")
+    _keyboard_action_names['resync_selected'] = _("Resync Selecte Clip/s")
     _keyboard_action_names['delete'] = _("Delete Selected Item")
     _keyboard_action_names['lift'] = _("Lift Selected Item")
     _keyboard_action_names['to_start'] = _("Go To Start")
@@ -517,6 +518,11 @@ def _set_keyboard_action_names():
     _keyboard_action_names['toggle_audio_mute'] = _('Toggle Clip Audio Mute')
     _keyboard_action_names['set_sync_relation'] = _('Set Clip Sync Relation')
     _keyboard_action_names['mark_selection_range'] = _('Mark Selection Range')
+    _keyboard_action_names['rippledelete'] = _('Ripple Delete')
+    _keyboard_action_names['rangedelete'] = _('Range Delete')
+    _keyboard_action_names['set_sync_selected'] = _('Set Sync Relation for Clips on Track')
+    _keyboard_action_names['add_dissolve'] = _('Add Rendered Transition')
+
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names

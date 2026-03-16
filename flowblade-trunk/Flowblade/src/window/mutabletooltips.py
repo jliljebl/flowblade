@@ -60,19 +60,19 @@ def _apply_tooltips():
         apply_func(widget, tooltip_runner)
 
 def _middlebar_delete(widget, tooltip_runner):
-    tooltips = [_("Splice Out - ") + _kb_str("delete"),  _("Lift - ") +  _kb_str("lift"), _("Ripple Delete"), _("Range Delete")]
+    tooltips = [_("Splice Out - ") + _kb_str("delete"),  _("Lift - ") +  _kb_str("lift"), _("Ripple Delete - ") + _kb_str("rippledelete"), _("Range Delete - ") + _kb_str("rangedelete") ]
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_monitor_insert(widget, tooltip_runner):
-    tooltips = [_("Overwrite Range - ") + _kb_str("overwrite_range"), _("Overwrite Selected Clip/s"), _("Insert Clip - ")  + _kb_str("insert"), _("Append Clip - ") + _kb_str("append")]
+    tooltips = [_("Overwrite Range - ") + _kb_str("overwrite_range"), _("3 Point Overwrite Selected Clip/s - ") + _kb_str("3_point_overwrite"), _("Insert Clip - ")  + _kb_str("insert"), _("Append Clip - ") + _kb_str("append")]
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_edit(widget, tooltip_runner):
-    tooltips = [_("Add Rendered Transition - 2 clips selected"), _("Cut Active Tracks - ") +  _kb_str("cut") + _("\nCut All Tracks - ") + _kb_str("cut_all")]
+    tooltips = [_("Add Rendered Transition with 2 clips selected - ") + _kb_str("add_dissolve"), _("Cut Active Tracks - ") +  _kb_str("cut") + _("\nCut All Tracks - ") + _kb_str("cut_all")]
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_split_sync(widget, tooltip_runner):
-    tooltips = [_("Split Audio Synched - ") + _kb_str("split_selected"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s.\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track."), _("Resync Track Containing Selected Clip/s - ")  +  _kb_str("resync"), _("Resync Selected Clips")]
+    tooltips = [_("Split Audio Synched - ") + _kb_str("split_selected"), _("If <b>single</b> or <b>multi</b> selection set Sync for all Clips on Track Containing Selected Clip/s - ") + _kb_str("set_sync_selected") + _("\n\nIf <b>box selection</b> set Sync for all selected Clips to first Clip on center most Track - ") + _kb_str("set_sync_selected"), _("Resync Track Containing Selected Clip/s - ")  +  _kb_str("resync"), _("Resync Selected Clips - ") + _kb_str("resync_selected")]
     tooltip_runner.tooltips = tooltips
 
 def _player_buttons(widget, tooltip_runner):
