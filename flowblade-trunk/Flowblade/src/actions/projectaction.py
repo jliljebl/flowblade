@@ -810,7 +810,7 @@ def remove_save_icon():
     GObject.source_remove(save_icon_remove_event_id)
     updater.set_info_icon(None)
 
-def open_recent_project(index):
+def open_recent_project(action, variant, index):
     path = editorpersistance.recent_projects.projects[index]
     if _project_empty() == True:
         _actually_open_recent(path)
