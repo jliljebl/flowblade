@@ -366,6 +366,9 @@ class FlowbladeApplication(Gtk.Application):
         # Inits widgets with current sequence data.
         init_sequence_gui()
 
+        if editorpersistance.prefs.middlebar_visible == False:
+            gui.editor_window.set_middlebar_visible(False)
+
         # Set SDL consumer version to be used.
         #if editorstate.mlt_version_is_greater_correct("7.28.0") or editorstate.force_sdl2 == True \
         #    or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:

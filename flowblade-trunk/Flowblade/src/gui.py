@@ -112,7 +112,6 @@ def capture_references(new_editor_window):
 
     monitor_widget = editor_window.monitor_widget
     monitor_switch = editor_window.monitor_switch
-    #monitor_waveform_display = monitor_widget.waveform_display
      
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
@@ -207,8 +206,7 @@ def apply_widget_css_class_style_from_string(widget, css_str):#, widget_css_clas
     css_data = css_str.encode("utf-8")
     provider = Gtk.CssProvider()
     provider.load_from_data(css_data)
-    
-    #widget.get_style_context().add_class(widget_css_class_name)
+
     widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     
 def get_default_filter_icon():

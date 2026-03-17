@@ -71,6 +71,7 @@ original_active_flags = None
 
 # Conf panel
 toolbar_list_box = None
+show_check = None
 
 # Groups names for conf panel
 gui_object_names = None
@@ -364,6 +365,17 @@ def get_buttons_group(index):
     else:
         return Gtk.Label()
 
+
+def _apply_visiblity_choice():
+    if show_check.get_active() == editorpersistance.prefs.middlebar_visible:
+        return
+    
+    editorpersistance.prefs.middlebar_visible = show_check.get_active() 
+    editorpersistance.save()
+    
+    gui.editor_window.set_middlebar_visible(editorpersistance.prefs.middlebar_visible) 
+
+        
 # ----------------------------------------------------------------------------- Free Bar conf GUI
 def show_middlebar_conf_dialog():
     
@@ -391,7 +403,7 @@ def _conf_dialog_callback(dialog, response_id, data):
         editorpersistance.save()
         _load_layout_data()
         redo_layout(gui.editor_window)
-        
+        _apply_visiblity_choice()
     else:
         # Cancel conf edits
         editorpersistance.prefs.midbar_layout_buttons = original_buttons_list
@@ -404,9 +416,19 @@ def _conf_dialog_callback(dialog, response_id, data):
 def _get_conf_panel():
     prefs = editorpersistance.prefs
 
-    global toolbar_list_box
+    global toolbar_list_box, show_check
 
     # Widgets
+    show_check = Gtk.CheckButton()
+    show_check.set_active(prefs.middlebar_visible)
+    show_check.set_margin_right(4)
+    show_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+    show_hbox.pack_start(show_check, False, False, 0)
+    show_hbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Middlebar Visible"))]), True, True, 0)
+    show_hbox.set_margin_bottom(12)
+    visible_frame = guiutils.get_named_frame(_("Middlebar Visibility"), show_hbox)
+    visible_frame.set_margin_top(12)
+
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label(label=_("Set button group active state and position."))
     
@@ -434,9 +456,10 @@ def _get_conf_panel():
     groups_frame = guiutils.get_named_frame(_("Buttons Groups"), vbox)
     
     pane = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    #pane.pack_start(layout_frame, False, False, 0)
-    pane.pack_start(groups_frame, False, False, 0)
 
+    pane.pack_start(groups_frame, False, False, 0)
+    pane.pack_start(visible_frame, False, False, 0)
+    
     return pane
 
 def toggle_click(button, row_number):

@@ -633,7 +633,8 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     # This is the same as opening default project
     sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
     sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
-
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+    
     new_project = projectdata.get_default_project()
     vault_folder = projectdatavault.get_active_vault_folder()
     new_project.create_vault_folder_data(vault_folder)
@@ -1595,8 +1596,8 @@ def _media_import_data_ready():
         open_file_names(files_list)
         
     if len(generators_list) > 0:
-        primary_txt = _("Generators are not imported from another Projects!")
-        secondary_text = _("You attempted to import %s Generator/s.\n\nPlease use <b>Project/Add Generator.../Save/Load Generator Template</b> -feature\nto create reusable Generators.") 
+        primary_txt = _("Generators or Container Clips are not imported from another Projects!")
+        secondary_text = _("You attempted to import %s Generator/s or Container Clip/s.\n\nPlease use <b>Project/Add Generator.../Save/Load Generator Template</b> -feature\nto create reusable Generators.") 
         secondary_text = secondary_text  % (str(len(generators_list)))
 
         dialogutils.info_message(primary_txt, secondary_text, gui.editor_window.window)
