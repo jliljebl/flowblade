@@ -633,7 +633,8 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     # This is the same as opening default project
     sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
     sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
-
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+    
     new_project = projectdata.get_default_project()
     vault_folder = projectdatavault.get_active_vault_folder()
     new_project.create_vault_folder_data(vault_folder)
