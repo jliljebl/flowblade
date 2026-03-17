@@ -25,6 +25,7 @@ import copy
 import callbackbridge
 import editorpersistance
 from editorstate import APP
+import exporting
 import projectaction
 
 global recent_menu
@@ -59,14 +60,38 @@ def get_menu():
               <attribute name="action">app.saveas</attribute>
             </item>
           </section>
+         <section>
+            <submenu>
+              <attribute name="label">Export</attribute>
+                 <item>
+                  <attribute name="label">MLT XML</attribute>
+                  <attribute name="action">app.exportxml</attribute>
+                 </item>
+                  <item>
+                    <attribute name="label">EDL</attribute>
+                    <attribute name="action">app.exportedl</attribute>
+                  </item>
+                <item>
+                  <attribute name="label">Current Frame</attribute>
+                  <attribute name="action">app.exportcurrentframe</attribute>
+                </item>
+                <item>
+                  <attribute name="label">Current Sequence Audio As Ardour Session</attribute>
+                  <attribute name="action">app.exportardour</attribute>
+                </item>
+            </submenu>
+          </section>
           <section>
+          <item>
+            <attribute name="label">Close</attribute>
+            <attribute name="action">app.close</attribute>
+          </item>
             <item>
               <attribute name="label">Quit</attribute>
               <attribute name="action">app.quit</attribute>
             </item>
           </section>
         </submenu>
-
         <submenu>
           <attribute name="label">Edit</attribute>
           <section>
@@ -100,7 +125,13 @@ def create_actions():
     _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
     _create_action("save", lambda w, a:projectaction.save_project(), "<Ctrl>S")
     _create_action("saveas", lambda w, a:projectaction.save_project_as())
-    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+
+    _create_action("exportxml", lambda w, a:exporting.MELT_XML_export())
+    _create_action("exportedl", lambda w, a:exporting.EDL_export())
+    _create_action("exportcurrentframe", lambda w, a:exporting.screenshot_export())
+    _create_action("exportardour", lambda w, a:exporting.ardour_export())
+    _create_action("close", lambda w, a:projectaction.close_project(), "<Ctrl>Q")
+    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")                          
 
 def _create_action(name, callback, accel=None):
     action = Gio.SimpleAction.new(name, None)
