@@ -26,6 +26,7 @@ import callbackbridge
 import editorpersistance
 from editorstate import APP
 import exporting
+import menuactions
 import projectaction
 
 global recent_menu
@@ -105,6 +106,29 @@ def get_menu():
             </item>
           </section>
         </submenu>
+        <submenu>
+          <attribute name="label">Help</attribute>
+          <section>
+            <item>
+              <attribute name="label">Contents</attribute>
+              <attribute name="action">app.contents</attribute>
+            </item>
+            <item>
+              <attribute name="label">Contents Web</attribute>
+              <attribute name="action">app.contentsweb</attribute>
+            </item>
+            <item>
+              <attribute name="label">Runtime Environment</attribute>
+              <attribute name="action">app.runtime</attribute>
+            </item>
+            </section>
+            <section>
+            <item>
+              <attribute name="label">About</attribute>
+              <attribute name="action">app.about</attribute>
+            </item>
+          </section>
+        </submenu>
       </menu>
     </interface>
     """
@@ -130,8 +154,12 @@ def create_actions():
     _create_action("exportedl", lambda w, a:exporting.EDL_export())
     _create_action("exportcurrentframe", lambda w, a:exporting.screenshot_export())
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
-    _create_action("close", lambda w, a:projectaction.close_project(), "<Ctrl>Q")
-    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")                          
+    _create_action("close", lambda w, a:projectaction.close_project())
+    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+    _create_action("contents", lambda w, a:menuactions.quick_reference())
+    _create_action("contentsweb", lambda w, a:menuactions.quick_reference_web())
+    _create_action("runtime", lambda w, a:menuactions.environment())
+    _create_action("about", lambda w, a:menuactions.about())
 
 def _create_action(name, callback, accel=None):
     action = Gio.SimpleAction.new(name, None)
