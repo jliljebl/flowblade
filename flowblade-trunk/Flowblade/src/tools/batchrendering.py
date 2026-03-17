@@ -952,25 +952,28 @@ class BatchRenderWindow:
         
         self.items_rendered.set_text("  " + str(items))
 
-        est_free_mb = round(self.free_disk / 1048576)
-        if fraction > 0.25:
+        try:
+            est_free_mb = round(self.free_disk / 1048576)
+            if fraction > 0.25:
 
-            # We did some testing and pulled this algorithm right out of our...stetson hat.
-            # At least with short simple renders we get too small values all the way through.
-            est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
-            est_size_mb = est_file_size / 1048576
-            
-            if est_size_mb > 0.99999:
-                est_size_mb = round(est_size_mb)
+                # We did some testing and pulled this algorithm right out of our...stetson hat.
+                # At least with short simple renders we get too small values all the way through.
+                est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
+                est_size_mb = est_file_size / 1048576
+                
+                if est_size_mb > 0.99999:
+                    est_size_mb = round(est_size_mb)
+                else:
+                    est_size_mb = round(est_size_mb, 1)
+
+                self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
+                
+                if est_file_size > 0.6 * self.free_disk:
+                    self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
             else:
-                est_size_mb = round(est_size_mb, 1)
-
-            self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
-            
-            if est_file_size > 0.6 * self.free_disk:
-                self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
-        else:
-            self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
+                self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
+        except:
+            self.file_est.set_text(" " + _("N/A"))
             
     def abort_render(self):
         global queue_runner_thread
@@ -1584,26 +1587,29 @@ class SingleRenderWindow:
             est_str = ""
         self.est_time_left.set_text(est_str)
 
-        est_free_mb = round(self.free_disk / 1048576)
-        if fraction > 0.25:
+        try:
+            est_free_mb = round(self.free_disk / 1048576)
+            if fraction > 0.25:
 
-            # We did some testing and pulled this algorithm right out of our...stetson hat.
-            # At least with short simple renders we get too small values all the way through.
-            est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
-            est_size_mb = est_file_size / 1048576
-            
-            if est_size_mb > 0.99999:
-                est_size_mb = round(est_size_mb)
+                # We did some testing and pulled this algorithm right out of our...stetson hat.
+                # At least with short simple renders we get too small values all the way through.
+                est_file_size = (1.0 / fraction * self.file_size) * ((1.0 - (fraction - 0.25) / 0.75) * 0.1 + 1.0)
+                est_size_mb = est_file_size / 1048576
+                
+                if est_size_mb > 0.99999:
+                    est_size_mb = round(est_size_mb)
+                else:
+                    est_size_mb = round(est_size_mb, 1)
+
+                self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
+                
+                if est_file_size > 0.6 * self.free_disk:
+                    self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
             else:
-                est_size_mb = round(est_size_mb, 1)
-
-            self.file_est.set_text(" " + str(est_size_mb) + " MB / " + str(est_free_mb) + " MB")
+                self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
+        except:
+            self.file_est.set_text(" " + _("N/A"))
             
-            if est_file_size > 0.6 * self.free_disk:
-                self.size_warning.set_text(_("Warning! Estimated render size exeeds 60% of available disk space!"))
-        else:
-            self.file_est.set_text(" " + _("N/A") + " / " + str(est_free_mb) + " MB")
-
         if current_render_time_passed != 0:
             current_str= "  " + utils.get_time_str_for_sec_float(current_render_time_passed)
         else:
