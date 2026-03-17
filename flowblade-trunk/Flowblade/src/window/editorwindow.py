@@ -1278,6 +1278,10 @@ class EditorWindow:
     def _show_tools_middlebar(self, widget):
         if widget.get_active() == False:
             return
+        
+        self._do_show_tools_middlebar()
+    
+    def _do_show_tools_middlebar(self):
         editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         editorpersistance.save()
 
@@ -1313,6 +1317,9 @@ class EditorWindow:
         if widget.get_active() == False:
             return
 
+        self._do_show_tools_dock()
+
+    def _do_show_tools_dock(self):
         editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_LEFT_DOCK
         editorpersistance.save()
 
@@ -1337,6 +1344,22 @@ class EditorWindow:
 
         self.tline_box.pack_start(self.tool_dock, False, False, 0)
 
+    def set_middlebar_visible(self, visible):
+        if visible == False:
+            self.edit_buttons_frame.remove(self.edit_buttons_row)
+            self._do_show_tools_dock()
+            gui.tline_scale.widget.set_margin_top(4)
+            self.tline_hbox_1.set_margin_top(4)
+        else:
+            middlebar.re_create_tool_selector(self)
+            middlebar.redo_layout(self)
+            self.edit_buttons_frame.add(self.edit_buttons_row)
+            self.edit_buttons_frame.show()
+            self.edit_buttons_row.show()
+            self._do_show_tools_middlebar()
+            gui.tline_scale.widget.set_margin_top(0)
+            self.tline_hbox_1.set_margin_top(0)
+
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
@@ -1345,7 +1368,6 @@ class EditorWindow:
 
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
-        #guiutils.set_margins(self.monitor_tc_info.widget,5,0,0,0)
 
     def _monitor_switch_handler(self, action):
         if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:
