@@ -37,94 +37,94 @@ def get_menu():
     <interface>
       <menu id="menubar">
         <submenu id="filemenu">
-          <attribute name="label">File</attribute>
+          <attribute name="label">""" + _("File") + """</attribute>
           <section>
             <item>
-              <attribute name="label">New...</attribute>
+              <attribute name="label">""" + _("New...") + """</attribute>
               <attribute name="action">app.new</attribute>
             </item>
             <item>
-              <attribute name="label">Open...</attribute>
+              <attribute name="label">""" + _("Open...") + """</attribute>
               <attribute name="action">app.open</attribute>
             </item>
             <submenu id="recentmenu">
-                <attribute name="label">Open Recent...</attribute>
+                <attribute name="label">""" + _("Open Recent...") + """</attribute>
             </submenu>
           </section>
           <section>
             <item>
-              <attribute name="label">Save</attribute>
+              <attribute name="label">""" + _("Save") + """</attribute>
               <attribute name="action">app.save</attribute>
             </item>
             <item>
-              <attribute name="label">Save As...</attribute>
+              <attribute name="label">""" + _("Save As...") + """</attribute>
               <attribute name="action">app.saveas</attribute>
             </item>
           </section>
          <section>
             <submenu>
-              <attribute name="label">Export</attribute>
+              <attribute name="label">""" + _("Export") + """</attribute>
                  <item>
-                  <attribute name="label">MLT XML</attribute>
+                  <attribute name="label">""" + _("MLT XML") + """</attribute>
                   <attribute name="action">app.exportxml</attribute>
                  </item>
                   <item>
-                    <attribute name="label">EDL</attribute>
+                    <attribute name="label">""" + _("EDL") + """</attribute>
                     <attribute name="action">app.exportedl</attribute>
                   </item>
                 <item>
-                  <attribute name="label">Current Frame</attribute>
+                  <attribute name="label">""" + _("Current Frame") + """</attribute>
                   <attribute name="action">app.exportcurrentframe</attribute>
                 </item>
                 <item>
-                  <attribute name="label">Current Sequence Audio As Ardour Session</attribute>
+                  <attribute name="label">""" + _("Current Sequence Audio As Ardour Session") + """</attribute>
                   <attribute name="action">app.exportardour</attribute>
                 </item>
             </submenu>
           </section>
           <section>
           <item>
-            <attribute name="label">Close</attribute>
+            <attribute name="label">""" + _("Close") + """</attribute>
             <attribute name="action">app.close</attribute>
           </item>
             <item>
-              <attribute name="label">Quit</attribute>
+              <attribute name="label">""" + _("Quit") + """</attribute>
               <attribute name="action">app.quit</attribute>
             </item>
           </section>
         </submenu>
         <submenu>
-          <attribute name="label">Edit</attribute>
+          <attribute name="label">""" + _("Edit") + """</attribute>
           <section>
             <item>
-              <attribute name="label">Copy</attribute>
+              <attribute name="label">""" + _("Copy") + """</attribute>
               <attribute name="action">app.copy</attribute>
             </item>
             <item>
-              <attribute name="label">Paste</attribute>
+              <attribute name="label">""" + _("Paste") + """</attribute>
               <attribute name="action">app.paste</attribute>
             </item>
           </section>
         </submenu>
         <submenu>
-          <attribute name="label">Help</attribute>
+          <attribute name="label">""" + _("Help") + """</attribute>
           <section>
             <item>
-              <attribute name="label">Contents</attribute>
+              <attribute name="label">""" + _("Contents") + """</attribute>
               <attribute name="action">app.contents</attribute>
             </item>
             <item>
-              <attribute name="label">Contents Web</attribute>
+              <attribute name="label">""" + _("Contents Web") + """</attribute>
               <attribute name="action">app.contentsweb</attribute>
             </item>
             <item>
-              <attribute name="label">Runtime Environment</attribute>
+              <attribute name="label">""" + _("Runtime Environment") + """</attribute>
               <attribute name="action">app.runtime</attribute>
             </item>
             </section>
             <section>
             <item>
-              <attribute name="label">About</attribute>
+              <attribute name="label">""" + _("About") + """</attribute>
               <attribute name="action">app.about</attribute>
             </item>
           </section>
