@@ -106,6 +106,29 @@ def get_menu():
             </item>
           </section>
         </submenu>
+    <submenu>
+      <attribute name="label">""" + _("Render") + """</attribute>
+      <section>
+        <item>
+          <attribute name="label">""" + _("Add To Batch Render Queue...") + """</attribute>
+          <attribute name="action">app.contents</attribute>
+        </item>
+        <item>
+          <attribute name="label">""" + _("Rerender All Rendered Transitions") + """</attribute>
+          <attribute name="action">app.contentsweb</attribute>
+        </item>
+        <item>
+          <attribute name="label">""" + _("Render Timeline") + """</attribute>
+          <attribute name="action">app.runtime</attribute>
+        </item>
+        </section>
+        <section>
+        <item>
+          <attribute name="label">""" + _("About") + """</attribute>
+          <attribute name="action">app.about</attribute>
+        </item>
+      </section>
+    </submenu>
         <submenu>
           <attribute name="label">""" + _("Help") + """</attribute>
           <section>
