@@ -22,12 +22,14 @@ from gi.repository import Gtk, Gio
 
 import copy
 
+import batchrendering
 import callbackbridge
 import editorpersistance
 from editorstate import APP
 import exporting
 import menuactions
 import projectaction
+import singletracktransition
 
 global recent_menu
 
@@ -111,21 +113,23 @@ def get_menu():
       <section>
         <item>
           <attribute name="label">""" + _("Add To Batch Render Queue...") + """</attribute>
-          <attribute name="action">app.contents</attribute>
+          <attribute name="action">app.addtobatch</attribute>
         </item>
         <item>
-          <attribute name="label">""" + _("Rerender All Rendered Transitions") + """</attribute>
-          <attribute name="action">app.contentsweb</attribute>
-        </item>
-        <item>
-          <attribute name="label">""" + _("Render Timeline") + """</attribute>
-          <attribute name="action">app.runtime</attribute>
+          <attribute name="label">""" + _("Batch Render Queue") + """</attribute>
+          <attribute name="action">app.showbatch</attribute>
         </item>
         </section>
         <section>
         <item>
-          <attribute name="label">""" + _("About") + """</attribute>
-          <attribute name="action">app.about</attribute>
+          <attribute name="label">""" + _("Re-render All Rendered Transitions") + """</attribute>
+          <attribute name="action">app.rerendertransitions</attribute>
+        </item>
+        </section>
+        <section>
+        <item>
+          <attribute name="label">""" + _("Render Timeline") + """</attribute>
+          <attribute name="action">app.rendertimeline</attribute>
         </item>
       </section>
     </submenu>
@@ -179,6 +183,10 @@ def create_actions():
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
     _create_action("close", lambda w, a:projectaction.close_project())
     _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+    _create_action("addtobatch", lambda w, a: projectaction.add_to_render_queue())
+    _create_action("showbatch", lambda w, a: batchrendering.launch_batch_rendering())
+    _create_action("rerendertransitions", lambda w, a: singletracktransition.rerender_all_rendered_transitions())
+    _create_action("rendertimeline", lambda w, a: projectaction.do_rendering())
     _create_action("contents", lambda w, a:menuactions.quick_reference())
     _create_action("contentsweb", lambda w, a:menuactions.quick_reference_web())
     _create_action("runtime", lambda w, a:menuactions.environment())
