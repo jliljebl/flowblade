@@ -177,6 +177,11 @@ def _set_post_edit_mode():
     if editorstate.edit_mode != editorstate.INSERT_MOVE:
         set_post_undo_redo_edit_mode()
 
+def make_save_item_active():
+    global save_item
+    if editorstate.PROJECT().last_save_path != None and save_item != None:
+        save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
+        
 def undo_redo_stress_test():
     global undo_stack, index
     times = 10
