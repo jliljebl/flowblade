@@ -351,8 +351,6 @@ class Player:
             updater.update_frame_displayers(frame)
             
         frame = self.producer.get_frame()
-        # And make sure we deinterlace if input is interlaced.
-        frame.set("consumer_deinterlace", 1)
 
         # Now we are ready to get the image and save it.        
         rgb = frame.get_image(int(mlt.mlt_image_rgba), int(self.profile.width()), int(self.profile.height()))

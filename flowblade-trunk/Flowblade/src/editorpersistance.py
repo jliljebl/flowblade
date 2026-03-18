@@ -393,7 +393,7 @@ class EditorPreferences:
         self.show_waveform_in_monitor = True
         self.auto_sync_single_childs_on_trim = True
         self.audio_master_position_is_top_row = True
-        self.close_titler_on_save = False
+        self.close_titler_on_save = True
         self.show_bins_and_sequences_titles = True
         self.mouse_horizontal_scroll_speed = 1 # value is appconstas.MOUSE_H_SCROLL_SPEED_<X> value.
         self.wide_audio_master = True

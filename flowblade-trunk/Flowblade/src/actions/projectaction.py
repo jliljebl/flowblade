@@ -401,6 +401,7 @@ class AddMediaFilesThread(threading.Thread):
         gui.media_list_view.fill_data_model()
         max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
         gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+        undo.make_save_item_active()
         self.list_view_update_done = True
 
     def _post_load_update(self, anim_gif_name, extension_refused):
