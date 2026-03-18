@@ -22,14 +22,20 @@ from gi.repository import Gtk, Gio
 
 import copy
 
+import audiomonitoring
 import batchrendering
 import callbackbridge
 import editorpersistance
 from editorstate import APP
 import exporting
+import gmic
+import medialinker
 import menuactions
 import projectaction
+import scripttool
 import singletracktransition
+import titler
+
 
 global recent_menu
 
@@ -109,6 +115,38 @@ def get_menu():
           </section>
         </submenu>
     <submenu>
+      <attribute name="label">""" + _("Tool") + """</attribute>
+      <section>
+        <item>
+          <attribute name="label">""" + _("Titler") + """</attribute>
+          <attribute name="action">app.showtitler</attribute>
+        </item>
+        </section>
+        <section>
+        <item>
+          <attribute name="label">""" + _("Audio Mixer") + """</attribute>
+          <attribute name="action">app.showaudiomixer</attribute>
+        </item>
+        </section>
+        <section>
+        <item>
+          <attribute name="label">""" + _("G'MIC Effects") + """</attribute>
+          <attribute name="action">app.showgmic</attribute>
+        </item>
+
+        <item>
+          <attribute name="label">""" + _("Generator Script Editor") + """</attribute>
+          <attribute name="action">app.showgeneratoreditor</attribute>
+        </item>
+        </section>
+        <section>
+        <item>
+          <attribute name="label">""" + _("Media Relinker") + """</attribute>
+          <attribute name="action">app.showrelinker</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
       <attribute name="label">""" + _("Render") + """</attribute>
       <section>
         <item>
@@ -176,17 +214,24 @@ def create_actions():
     _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
     _create_action("save", lambda w, a:projectaction.save_project(), "<Ctrl>S")
     _create_action("saveas", lambda w, a:projectaction.save_project_as())
-
     _create_action("exportxml", lambda w, a:exporting.MELT_XML_export())
     _create_action("exportedl", lambda w, a:exporting.EDL_export())
     _create_action("exportcurrentframe", lambda w, a:exporting.screenshot_export())
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
     _create_action("close", lambda w, a:projectaction.close_project())
     _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+
+    _create_action("showtitler", lambda w, a: titler.show_titler())  
+    _create_action("showaudiomixer", lambda w, a: audiomonitoring.show_audio_monitor())  
+    _create_action("showgmic", lambda w, a: gmic.launch_gmic())  
+    _create_action("showgeneratoreditor", lambda w, a: scripttool.launch_scripttool())  
+    _create_action("showrelinker", lambda w, a: medialinker.display_linker())  
+
     _create_action("addtobatch", lambda w, a: projectaction.add_to_render_queue())
     _create_action("showbatch", lambda w, a: batchrendering.launch_batch_rendering())
     _create_action("rerendertransitions", lambda w, a: singletracktransition.rerender_all_rendered_transitions())
     _create_action("rendertimeline", lambda w, a: projectaction.do_rendering())
+
     _create_action("contents", lambda w, a:menuactions.quick_reference())
     _create_action("contentsweb", lambda w, a:menuactions.quick_reference_web())
     _create_action("runtime", lambda w, a:menuactions.environment())
