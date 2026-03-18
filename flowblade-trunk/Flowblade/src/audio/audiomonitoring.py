@@ -43,6 +43,7 @@ from gi.repository import PangoCairo
 import appconsts
 import cairoarea
 import gtkbuilder
+import gui
 import editorstate
 import editorpersistance
 import mltrefhold
@@ -395,6 +396,7 @@ class AudioMonitorWindow(Gtk.Window):
         self.set_title(_("Audio Mixer"))
         self.show_all()
         self.set_resizable(False)
+        self.set_transient_for(gui.editor_window.window)
 
     def update_tracks_mute_states(self):
         for i in range(1, len(self.gain_controls)):
