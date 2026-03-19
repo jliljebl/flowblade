@@ -115,6 +115,72 @@ def get_menu():
           </section>
         </submenu>
     <submenu>
+      <attribute name="label">""" + _("Sequence") + """</attribute>
+      <section>
+        <item>
+          <attribute name="label">""" + _("Add New Sequence") + """</attribute>
+          <attribute name="action">app.addnewsequence</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Edit Selected Sequence") + """</attribute>
+            <attribute name="action">app.editselectedsequence</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Delete Selected Sequence") + """</attribute>
+            <attribute name="action">app.deleteselectedsequence</attribute>
+        </item>
+      </section>
+      <section>
+        <submenu>
+            <attribute name="label">""" + _("Compositing Mode") + """</attribute>
+        </submenu>
+      </section>
+      <section>
+        <item>
+            <attribute name="label">""" + _("Import Another Sequence Into This Sequence...") + """</attribute>
+            <attribute name="action">app.importsequence</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Split to new Sequence at Playhead Position") + """</attribute>
+            <attribute name="action">app.splitsequence</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Duplicate Sequence") + """</attribute>
+            <attribute name="action">app.duplicatesequence</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+            <attribute name="label">""" + _("Add Video Track") + """</attribute>
+            <attribute name="action">app.addvideotrack</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Add Audio Track") + """</attribute>
+            <attribute name="action">app.addaudiotrack</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Delete Video Track") + """</attribute>
+            <attribute name="action">app.deletevideotrack</attribute>
+        </item>
+        <item>
+            <attribute name="label">""" + _("Delete Audio Track") + """</attribute>
+            <attribute name="action">app.deleteaudiotrack</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+            <attribute name="label">""" + _("Change Sequence Tracks Count...") + """</attribute>
+            <attribute name="action">app.changesequencetrackcount</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+            <attribute name="label">""" + _("Watermark...") + """</attribute>
+            <attribute name="action">app.addwatermark</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
       <attribute name="label">""" + _("Tool") + """</attribute>
       <section>
         <item>
@@ -221,6 +287,19 @@ def create_actions():
     _create_action("close", lambda w, a:projectaction.close_project())
     _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
 
+    _create_action("addnewsequence", lambda w, a: projectaction.add_new_sequence())  
+    _create_action("editselectedsequence", lambda w, a: projectaction.change_edit_sequence())  
+    _create_action("deleteselectedsequence", lambda w, a: projectaction.delete_selected_sequence())  
+    _create_action("importsequence", lambda w, a: projectaction.combine_sequences())  
+    _create_action("splitsequence", lambda w, a: tlineaction.sequence_split_pressed())  
+    _create_action("duplicatesequence", lambda w, a: projectaction.duplicate_sequence())  
+    _create_action("addvideotrack", lambda w, a: projectaction.add_video_track())  
+    _create_action("addaudiotrack", lambda w, a: projectaction.add_audio_track())  
+    _create_action("deletevideotrack", lambda w, a: projectaction.delete_video_track())  
+    _create_action("deleteaudiotrack", lambda w, a: projectaction.delete_audio_track())  
+    _create_action("changesequencetrackcount", lambda w, a: projectaction.change_sequence_track_count())  
+    _create_action("addwatermark", lambda w, a: menuactions.edit_watermark())  
+            
     _create_action("showtitler", lambda w, a: titler.show_titler())  
     _create_action("showaudiomixer", lambda w, a: audiomonitoring.show_audio_monitor())  
     _create_action("showgmic", lambda w, a: gmic.launch_gmic())  
@@ -264,6 +343,8 @@ def fill_recents_menu_widget(callback):
         recent_menu.append (_("Empty"), None)
 
 """
+
+                            
         menu_actions = [
             ('FileMenu', None, _('_File')),
             ('New', None, _('_New...'), '<control>N', None, lambda a:projectaction.new_project()),
