@@ -32,6 +32,7 @@ import exporting
 import gmic
 import medialinker
 import menuactions
+import middlebar
 import projectaction
 import projectaddmediafolder
 import projectdatavaultgui
@@ -39,6 +40,7 @@ import proxytranscodemanager
 import scripttool
 import singletracktransition
 import titler
+import updater
 
 
 global recent_menu
@@ -236,9 +238,41 @@ def get_menu():
                   <attribute name="label">""" + _("Window Mode") + """</attribute>
                 </submenu>
                 <submenu>
-                  <attribute name="label">""" + _("Middlebar Configuration...") + """</attribute>
+                  <attribute name="label">""" + _("Panel Placement") + """</attribute>
                 </submenu>
-            </section>    
+                <submenu>
+                  <attribute name="label">""" + _("Tabs Positions") + """</attribute>
+                </submenu>
+                <item>
+                  <attribute name="label">""" + _("Middlebar Configuration...") + """</attribute>
+                  <attribute name="action">app.showmiddlebarconfig</attribute>
+                </item>
+                <submenu>
+                  <attribute name="label">""" + _("Edit Tool Selection Widget") + """</attribute>
+                </submenu>
+                <submenu>
+                  <attribute name="label">""" + _("Audio Master Level Meter") + """</attribute>
+                </submenu>
+            </section>
+            <section>
+                <submenu>
+                  <attribute name="label">""" + _("Monitor Playback Interpolation") + """</attribute>
+                </submenu>
+            </section>
+            <section>
+                <item>
+                  <attribute name="label">""" + _("Zoom In") + """</attribute>
+                  <attribute name="action">app.zoomin</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Zoom out") + """</attribute>
+                  <attribute name="action">app.zoomout</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Zoom Fit") + """</attribute>
+                  <attribute name="action">app.zoomfit</attribute>
+                </item>
+            </section>
         </submenu>      
         <submenu>
           <attribute name="label">""" + _("Project") + """</attribute>
@@ -565,6 +599,12 @@ def create_actions():
     _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
     _create_action("showkeyboardshortcuts", lambda w, a: menuactions.profiles_manager())
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
+
+    _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen())
+    _create_action("showmiddlebarconfig", lambda w, a: middlebar.show_middlebar_conf_dialog())
+    _create_action("zoomin", lambda w, a: updater.zoom_in())
+    _create_action("zoomout", lambda w, a: updater.zoom_out())
+    _create_action("zoomfit", lambda w, a: updater.zoom_project_length())
 
     _create_action("addmedia", lambda w, a:  projectaction.add_media_files())
     _create_action("addimgseq", lambda w, a: projectaction.add_image_sequence())
