@@ -223,6 +223,23 @@ def get_menu():
                 </item>
             </section>
         </submenu>
+        <submenu id="filemenu">
+          <attribute name="label">""" + _("View") + """</attribute>
+            <section>
+                <item>
+                    <attribute name="label">""" + _("Fullscreen") + """</attribute>
+                    <attribute name="action">app.fullscreen</attribute>
+                </item>
+            </section>
+            <section>
+                <submenu>
+                  <attribute name="label">""" + _("Window Mode") + """</attribute>
+                </submenu>
+                <submenu>
+                  <attribute name="label">""" + _("Middlebar Configuration...") + """</attribute>
+                </submenu>
+            </section>    
+        </submenu>      
         <submenu>
           <attribute name="label">""" + _("Project") + """</attribute>
           <section>
@@ -573,6 +590,8 @@ def create_actions():
     _create_action("proxymanager", lambda w, a: proxytranscodemanager.show_proxy_manager_dialog())
     _create_action("transcodemanager", lambda w, a: proxytranscodemanager.show_transcode_manager_dialog())
 
+    _create_action("fullscreen",  lambda w, a: menuactions.toggle_fullscreen())
+
     _create_action("addnewsequence", lambda w, a: projectaction.add_new_sequence())  
     _create_action("editselectedsequence", lambda w, a: projectaction.change_edit_sequence())  
     _create_action("deleteselectedsequence", lambda w, a: projectaction.delete_selected_sequence())  
@@ -888,6 +907,132 @@ def fill_recents_menu_widget(callback):
                     </menu>
               </menubar>
             </ui>
+            
+                                menu = menu_item.get_submenu()
+
+                                # Full Screen -tem is already in menu, we need separator here
+                                sep = Gtk.SeparatorMenuItem()
+                                menu.append(sep)
+
+                                # Window Mode
+                                windows_menu_item = Gtk.MenuItem(_("Window Mode"))
+                                windows_menu = Gtk.Menu()
+                                one_window = Gtk.RadioMenuItem()
+                                one_window.set_label(_("Single Window"))
+
+                                windows_menu.append(one_window)
+
+                                two_windows = Gtk.RadioMenuItem.new_with_label([one_window], _("Two Windows"))
+
+                                if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+                                    one_window.set_active(True)
+                                else:
+                                    two_windows.set_active(True)
+
+                                one_window.connect("activate", lambda w: self._change_windows_preference(w, appconsts.SINGLE_WINDOW))
+                                two_windows.connect("activate", lambda w: self._change_windows_preference(w, appconsts.TWO_WINDOWS))
+
+                                windows_menu.append(two_windows)
+                                windows_menu_item.set_submenu(windows_menu)
+                                menu.append(windows_menu_item)
+
+                                # Panel positions.
+                                if editorlayout.panel_positioning_available() == True:
+                                    panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
+                                    menu.append(panel_positions_menu_item)
+                                    tabs_menu_item = editorlayout.get_tabs_menu_item()
+                                    menu.append(tabs_menu_item)
+                                else:
+                                    print("Panel positioning feature not available, too small screen.")
+
+                                # Middlebar Layout
+                                mb_menu_item = Gtk.MenuItem(_("Middlebar Configuration..."))
+                                mb_menu_item.connect("activate", lambda w: middlebar.show_middlebar_conf_dialog())
+                                menu.append(mb_menu_item)
+
+                                # Tool Selection Widget
+                                tool_selector_menu_item = Gtk.MenuItem(_("Edit Tool Selection Widget"))
+                                tool_selector_menu =  Gtk.Menu()
+                                tools_middlebar = Gtk.RadioMenuItem()
+                                tools_middlebar.set_label( _("Middlebar Menu"))
+
+                                tool_selector_menu.append(tools_middlebar)
+                                
+                                tools_dock = Gtk.RadioMenuItem.new_with_label([tools_middlebar], _("Dock"))
+
+                                if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+                                    tools_middlebar.set_active(True)
+                                else:
+                                    tools_dock.set_active(True)
+
+                                tools_middlebar.connect("activate", lambda w: self._show_tools_middlebar(w))
+                                tools_dock.connect("activate", lambda w: self._show_tools_dock(w))
+                                
+                                tool_selector_menu.append(tools_dock)
+                                tool_selector_menu_item.set_submenu(tool_selector_menu)
+                                menu.append(tool_selector_menu_item)
+                                
+                                # Audio master meter
+                                # Tool Selection Widget
+                                audiomaster_menu_item = Gtk.MenuItem(_("Audoi Master Level Meter"))
+                                audiomaster_menu = Gtk.Menu()
+                                audiomaster_top = Gtk.RadioMenuItem()
+                                audiomaster_top.set_label( _("Top Row"))
+                                audiomaster_menu.append(audiomaster_top)
+                                audiomaster_bottom = Gtk.RadioMenuItem.new_with_label([audiomaster_top], _("Bottom Row"))
+
+                                if editorpersistance.prefs.audio_master_position_is_top_row == True:
+                                    audiomaster_top.set_active(True)
+                                else:
+                                    audiomaster_bottom.set_active(True)
+                                audiomaster_top.connect("activate", lambda w: self._set_audiomaster_position(True))
+                                audiomaster_bottom.connect("activate", lambda w: self._set_audiomaster_position(False))
+
+                                audiomaster_menu.append(audiomaster_bottom)
+                                audiomaster_menu_item.set_submenu(audiomaster_menu)
+                                menu.append(audiomaster_menu_item)
+                                
+                                sep = Gtk.SeparatorMenuItem()
+                                menu.append(sep)
+
+                                # Monitor Playback Interpolation
+                                interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation"))
+                                interp_menu = Gtk.Menu()
+
+                                interp_nearest = Gtk.RadioMenuItem()
+                                interp_nearest.set_label(_("Nearest Neighbour (fast)"))
+                                interp_nearest.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
+                                interp_menu.append(interp_nearest)
+
+                                interp_bilinear = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bilinear (good)"))
+                                interp_bilinear.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bilinear"))
+                                interp_menu.append(interp_bilinear)
+
+                                interp_bicubic = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Bicubic (better)"))
+                                interp_bicubic.set_active(True)
+                                interp_bicubic.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("bicubic"))
+                                interp_menu.append(interp_bicubic)
+
+                                interp_hyper = Gtk.RadioMenuItem.new_with_label([interp_nearest], _("Hyper/Lanczos (best)"))
+                                interp_hyper.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("hyper"))
+                                interp_menu.append(interp_hyper)
+
+                                interp_menu_item.set_submenu(interp_menu)
+                                menu.append(interp_menu_item)
+
+                                sep = Gtk.SeparatorMenuItem()
+                                menu.append(sep)
+
+                                # Zoom
+                                zoom_in_menu_item = Gtk.MenuItem(_("Zoom In"))
+                                zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
+                                menu.append(zoom_in_menu_item)
+                                zoom_out_menu_item = Gtk.MenuItem(_("Zoom Out"))
+                                zoom_out_menu_item.connect("activate", lambda w: updater.zoom_out())
+                                menu.append(zoom_out_menu_item)
+                                zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit"))
+                                zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
+                                menu.append(zoom_fit_menu_item)
 """
         
         
