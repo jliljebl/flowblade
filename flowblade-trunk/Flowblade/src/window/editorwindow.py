@@ -1269,10 +1269,14 @@ class EditorWindow:
             new_item.show()
         """
         
-    def _change_windows_preference(self, widget, new_window_layout):
-        if widget.get_active() == False:
-            return
+    def change_windows_preference(self, action, value):
+        action.set_state(value)
 
+        if value.get_string() == "singlewindow":
+            new_window_layout = appconsts.SINGLE_WINDOW
+        else:
+            new_window_layout = appconsts.TWO_WINDOWS
+                                
         editorpersistance.prefs.global_layout = new_window_layout
         editorpersistance.save()
 

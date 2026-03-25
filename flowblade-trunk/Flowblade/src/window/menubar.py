@@ -18,10 +18,11 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, GLib
 
 import copy
 
+import appconsts
 import audiomonitoring
 import batchrendering
 import callbackbridge
@@ -30,6 +31,7 @@ import editorpersistance
 from editorstate import APP
 import exporting
 import gmic
+import gui
 import medialinker
 import menuactions
 import middlebar
@@ -236,6 +238,18 @@ def get_menu():
             <section>
                 <submenu>
                   <attribute name="label">""" + _("Window Mode") + """</attribute>
+                      <section>
+                      <item>
+                        <attribute name="label">""" + _("Single Window") + """</attribute>
+                        <attribute name="action">app.windowmode</attribute>
+                        <attribute name="target">singlewindow</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("Two Windows") + """</attribute>
+                        <attribute name="action">app.windowmode</attribute>
+                        <attribute name="target">twowindows</attribute>
+                      </item>
+                      </section>
                 </submenu>
                 <submenu>
                   <attribute name="label">""" + _("Panel Placement") + """</attribute>
@@ -601,6 +615,11 @@ def create_actions():
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
 
     _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen())
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:    
+        default_value = "singlewindow"
+    else:
+        default_value = "twowindows"
+    _create_stateful_action("windowmode", "s", default_value,  lambda a, v: gui.editor_window.change_windows_preference(a, v))
     _create_action("showmiddlebarconfig", lambda w, a: middlebar.show_middlebar_conf_dialog())
     _create_action("zoomin", lambda w, a: updater.zoom_in())
     _create_action("zoomout", lambda w, a: updater.zoom_out())
@@ -629,8 +648,6 @@ def create_actions():
     _create_action("projectinfoanddata", lambda w, a: projectdatavaultgui.show_current_project_data_store_info_window())
     _create_action("proxymanager", lambda w, a: proxytranscodemanager.show_proxy_manager_dialog())
     _create_action("transcodemanager", lambda w, a: proxytranscodemanager.show_transcode_manager_dialog())
-
-    _create_action("fullscreen",  lambda w, a: menuactions.toggle_fullscreen())
 
     _create_action("addnewsequence", lambda w, a: projectaction.add_new_sequence())  
     _create_action("editselectedsequence", lambda w, a: projectaction.change_edit_sequence())  
@@ -667,6 +684,14 @@ def _create_action(name, callback, accel=None):
     APP().add_action(action)
     if accel != None:
         APP().set_accels_for_action("app." + name, [accel])
+
+def _create_stateful_action(name, typestr, default_value, callback):
+    action = Gio.SimpleAction.new_stateful( name,
+                                            GLib.VariantType.new(typestr),
+                                            GLib.Variant(typestr, default_value))
+
+    action.connect("change-state", callback)
+    APP().add_action(action)
 
 def fill_recents_menu_widget(callback):
     """
