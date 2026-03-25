@@ -109,14 +109,119 @@ def get_menu():
           <attribute name="label">""" + _("Edit") + """</attribute>
           <section>
             <item>
-              <attribute name="label">""" + _("Copy") + """</attribute>
-              <attribute name="action">app.copy</attribute>
+              <attribute name="label">""" + _("Undo") + """</attribute>
+              <attribute name="action">app.undoaction</attribute>
             </item>
             <item>
-              <attribute name="label">""" + _("Paste") + """</attribute>
-              <attribute name="action">app.paste</attribute>
+              <attribute name="label">""" + _("Redo") + """</attribute>
+              <attribute name="action">app.redoaction</attribute>
             </item>
           </section>
+            <section>
+                <item>
+                  <attribute name="label">""" + _("Cut") + """</attribute>
+                  <attribute name="action">app.cutaction</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Copy") + """</attribute>
+                  <attribute name="action">app.copyaction</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Paste") + """</attribute>
+                  <attribute name="action">app.pasteaction</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Paste Filters / Properties") + """</attribute>
+                  <attribute name="action">app.pastefiltersaction</attribute>
+                </item>
+            </section>
+            <section>
+            <submenu>
+             <attribute name="label">""" + _("Add From Monitor") + """</attribute>
+                <section>
+                <item>
+                  <attribute name="label">""" + _("Append") + """</attribute>
+                  <attribute name="action">app.appendfrommonitor</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Insert") + """</attribute>
+                  <attribute name="action">app.insertfrommonitor</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Three Point Overwrite") + """</attribute>
+                  <attribute name="action">app.threepointoverwrite</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Range Overwrite") + """</attribute>
+                  <attribute name="action">app.rangeoverwrite</attribute>
+                </item>
+                </section>
+            </submenu>
+            </section>
+            <section>
+                <item>
+                  <attribute name="label">""" + _("Cut Clip At Playhead") + """</attribute>
+                  <attribute name="action">app.cutatplayhead</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Lift") + """</attribute>
+                  <attribute name="action">app.liftaction</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Splice Out") + """</attribute>
+                  <attribute name="action">app.spliceaction</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                  <attribute name="label">""" + _("Resync Track") + """</attribute>
+                  <attribute name="action">app.resynctrack</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Sync All Compositors") + """</attribute>
+                  <attribute name="action">app.syncallcompositors</attribute>
+                </item>
+            </section>
+            <section> 
+                <item>
+                  <attribute name="label">""" + _("All Filters Off") + """</attribute>
+                  <attribute name="action">app.allfiltersoff</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("All Filters On") + """</attribute>
+                  <attribute name="action">app.allfilterson</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Clear Filters") + """</attribute>
+                  <attribute name="action">app.clearfilters</attribute>
+                </item>
+            </section>
+            <section> 
+                <item>
+                  <attribute name="label">""" + _("Add Single Track Transition") + """</attribute>
+                  <attribute name="action">app.addtransition</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                  <attribute name="label">""" + _("Data Store Manager") + """</attribute>
+                  <attribute name="action">app.showdatastore</attribute>
+                </item>
+            </section>
+            <section> 
+                <item>
+                  <attribute name="label">""" + _("Profiles Manager") + """</attribute>
+                  <attribute name="action">app.showprofilesmanager</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Keyboard Shortcuts") + """</attribute>
+                  <attribute name="action">app.showkeyboardshortcuts</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Preferences") + """</attribute>
+                  <attribute name="action">app.showpreferences</attribute>
+                </item>
+            </section>
         </submenu>
         <submenu>
           <attribute name="label">""" + _("Project") + """</attribute>
@@ -144,34 +249,34 @@ def get_menu():
                 <attribute name="action">app.addcolorclip</attribute>
             </item>
             </section>
-                    <submenu>
-                      <attribute name="label">""" + _("Create Container Clip") + """</attribute>
-                        <section>
-                            <item>
-                            <attribute name="label">""" + _("From Selected Clips") + """</attribute>
-                            <attribute name="action">app.fromselected</attribute>
-                            </item>
-                            <item>
-                            <attribute name="label">""" + _("From Box Selection") + """</attribute>
-                            <attribute name="action">app.frombox</attribute>
-                            </item>
-                            <item>
-                            <attribute name="label">""" + _("From Timeline Range") + """</attribute>
-                            <attribute name="action">app.fromtimeline</attribute>
-                            </item>
-                            <item>
-                            <attribute name="label">""" + _("From Current Sequence") + """</attribute>
-                            <attribute name="action">app.fromcurrentsequence</attribute>
-                            </item>
-                            </section>
-                            <section>
-                            <item>
-                            <attribute name="label">""" + _("From G'Mic Script") + """</attribute>
-                            <attribute name="action">app.fromgmic</attribute>
-                            </item>
-                        </section>
-                    </submenu>
             <section>
+                <submenu>
+                  <attribute name="label">""" + _("Create Container Clip") + """</attribute>
+                    <section>
+                        <item>
+                        <attribute name="label">""" + _("From Selected Clips") + """</attribute>
+                        <attribute name="action">app.fromselected</attribute>
+                        </item>
+                        <item>
+                        <attribute name="label">""" + _("From Box Selection") + """</attribute>
+                        <attribute name="action">app.frombox</attribute>
+                        </item>
+                        <item>
+                        <attribute name="label">""" + _("From Timeline Range") + """</attribute>
+                        <attribute name="action">app.fromtimeline</attribute>
+                        </item>
+                        <item>
+                        <attribute name="label">""" + _("From Current Sequence") + """</attribute>
+                        <attribute name="action">app.fromcurrentsequence</attribute>
+                        </item>
+                        </section>
+                        <section>
+                        <item>
+                        <attribute name="label">""" + _("From G'Mic Script") + """</attribute>
+                        <attribute name="action">app.fromgmic</attribute>
+                        </item>
+                    </section>
+                </submenu>
                 <item>
                 <attribute name="label">""" + _("Add Sequence Link Container Clip...") + """</attribute>
                 <attribute name="action">app.addsequencelink</attribute>
@@ -191,6 +296,7 @@ def get_menu():
             <attribute name="action">app.loadgeneratorscript</attribute>
             </item>
             </section>
+            <section>
             <submenu>
               <attribute name="label">""" + _("Bins") + """</attribute>
                 <section>
@@ -204,6 +310,7 @@ def get_menu():
                     </item>
                 </section>
                 </submenu>
+            </section>
             <section>
                 <item>
                 <attribute name="label">""" + _("Log Marked Clip Range") + """</attribute>
@@ -228,7 +335,7 @@ def get_menu():
             </section>
             <section>
                 <item>
-                <attribute name="label">""" + _("Project Info and Data") + """</attribute>
+                <attribute name="label">""" + _("Project Data") + """</attribute>
                 <attribute name="action">app.projectinfoanddata</attribute>
                 </item>
             </section>
@@ -416,6 +523,31 @@ def create_actions():
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
     _create_action("close", lambda w, a:projectaction.close_project())
     _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+
+    _create_action("undoaction", lambda w, a:undo.do_undo_and_repaint())
+    _create_action("redoaction", lambda w, a:undo.do_undo_and_repaint())
+              
+    _create_action("copyaction", lambda w, a: copypaste.copy_action())
+    _create_action("pasteaction", lambda w, a: copypaste.paste_action())
+    _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
+    _create_action("cutaction", lambda w, a: copypaste.cut_action())
+    _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed())
+    _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed())
+    _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed())
+    _create_action("rangeoverwrite", lambda w, a: tlineaction.range_overwrite_pressed())
+    _create_action("cutatplayhead", lambda w, a: tlineaction.cut_pressed())
+    _create_action("liftaction", lambda w, a: tlineaction.lift_button_pressed())
+    _create_action("spliceaction", lambda w, a: tlineaction.splice_out_button_pressed())
+    _create_action("resynctrack", lambda w, a: tlineaction.resync_button_pressed())
+    _create_action("syncallcompositors", lambda w, a: tlineaction.sync_all_compositors())
+    _create_action("allfiltersoff", lambda w, a: tlineaction.all_filters_off())
+    _create_action("allfilterson", lambda w, a: tlineaction.all_filters_on())
+    _create_action("clearfilters", lambda w, a: clipmenuaction.clear_filters())
+    _create_action("addtransition", lambda w, a: singletracktransition.add_transition_menu_item_selected())
+    _create_action("showdatastore", lambda w, a: projectdatavaultgui.show_project_data_manager_window())
+    _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
+    _create_action("showkeyboardshortcuts", lambda w, a: menuactions.profiles_manager())
+    _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
 
     _create_action("addmedia", lambda w, a:  projectaction.add_media_files())
     _create_action("addimgseq", lambda w, a: projectaction.add_image_sequence())
