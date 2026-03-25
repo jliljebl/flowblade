@@ -25,6 +25,7 @@ import copy
 import audiomonitoring
 import batchrendering
 import callbackbridge
+import containerclip
 import editorpersistance
 from editorstate import APP
 import exporting
@@ -32,6 +33,9 @@ import gmic
 import medialinker
 import menuactions
 import projectaction
+import projectaddmediafolder
+import projectdatavaultgui
+import proxytranscodemanager
 import scripttool
 import singletracktransition
 import titler
@@ -114,6 +118,132 @@ def get_menu():
             </item>
           </section>
         </submenu>
+        <submenu>
+          <attribute name="label">""" + _("Project") + """</attribute>
+          <section>
+            <item>
+              <attribute name="label">""" + _("Add Video, Audio or Image...") + """</attribute>
+              <attribute name="action">app.addmedia</attribute>
+            </item>
+            <item>
+              <attribute name="label">""" + _("Add Image Sequence...") + """</attribute>
+              <attribute name="action">app.addimgseq</attribute>
+            </item>
+            </section>
+            <section>
+            <item>
+            <attribute name="label">""" + _("Add Generator...") + """</attribute>
+            <attribute name="action">app.addgenerator</attribute>
+            </item>
+            <item>
+              <attribute name="label">""" + _("Add Title...") + """</attribute>
+              <attribute name="action">app.addtitle</attribute>
+            </item>
+            <item>
+                <attribute name="label">""" + _("Add Color Clip...") + """</attribute>
+                <attribute name="action">app.addcolorclip</attribute>
+            </item>
+            </section>
+                    <submenu>
+                      <attribute name="label">""" + _("Create Container Clip") + """</attribute>
+                        <section>
+                            <item>
+                            <attribute name="label">""" + _("From Selected Clips") + """</attribute>
+                            <attribute name="action">app.fromselected</attribute>
+                            </item>
+                            <item>
+                            <attribute name="label">""" + _("From Box Selection") + """</attribute>
+                            <attribute name="action">app.frombox</attribute>
+                            </item>
+                            <item>
+                            <attribute name="label">""" + _("From Timeline Range") + """</attribute>
+                            <attribute name="action">app.fromtimeline</attribute>
+                            </item>
+                            <item>
+                            <attribute name="label">""" + _("From Current Sequence") + """</attribute>
+                            <attribute name="action">app.fromcurrentsequence</attribute>
+                            </item>
+                            </section>
+                            <section>
+                            <item>
+                            <attribute name="label">""" + _("From G'Mic Script") + """</attribute>
+                            <attribute name="action">app.fromgmic</attribute>
+                            </item>
+                        </section>
+                    </submenu>
+            <section>
+                <item>
+                <attribute name="label">""" + _("Add Sequence Link Container Clip...") + """</attribute>
+                <attribute name="action">app.addsequencelink</attribute>
+                </item>
+            </section>
+            <section>
+            <item>
+              <attribute name="label">""" + _("Add Media From Folder...") + """</attribute>
+              <attribute name="action">app.addfromfolder</attribute>
+            </item>
+            <item>
+            <attribute name="label">""" + _("Import Media From Project...") + """</attribute>
+            <attribute name="action">app.importfromproject</attribute>
+            </item>
+            <item>
+            <attribute name="label">""" + _("Load Generator Script...") + """</attribute>
+            <attribute name="action">app.loadgeneratorscript</attribute>
+            </item>
+            </section>
+            <submenu>
+              <attribute name="label">""" + _("Bins") + """</attribute>
+                <section>
+                    <item>
+                        <attribute name="label">""" + _("Add Bin") + """</attribute>
+                        <attribute name="action">app.addbinmainmenu</attribute>
+                    </item>
+                    <item>
+                        <attribute name="label">""" + _("'Delete Selected Bin") + """</attribute>
+                        <attribute name="action">app.deletebinmainmenu</attribute>
+                    </item>
+                </section>
+                </submenu>
+            <section>
+                <item>
+                <attribute name="label">""" + _("Log Marked Clip Range") + """</attribute>
+                <attribute name="action">app.logcliprange</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                <attribute name="label">""" + _("Recreate Media Icons...") + """</attribute>
+                <attribute name="action">app.recreateicons</attribute>
+                </item>
+                <item>
+                <attribute name="label">""" + _("Remove Unused Media...") + """</attribute>
+                <attribute name="action">appremoveunusedmedia.</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                <attribute name="label">""" + _("Change Project Profile...") + """</attribute>
+                <attribute name="action">app.changeprofile</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                <attribute name="label">""" + _("Project Info and Data") + """</attribute>
+                <attribute name="action">app.projectinfoanddata</attribute>
+                </item>
+            </section>
+            <section>
+            <item>
+            <attribute name="label">""" + _("Proxy Manager") + """</attribute>
+            <attribute name="action">app.proxymanager</attribute>
+            </item>
+            <item>
+            <attribute name="label">""" + _("Transcode Manager") + """</attribute>
+            <attribute name="action">app.transcodemanager</attribute>
+            </item>
+            </section>
+        </submenu>
+        
     <submenu>
       <attribute name="label">""" + _("Sequence") + """</attribute>
       <section>
@@ -286,6 +416,30 @@ def create_actions():
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
     _create_action("close", lambda w, a:projectaction.close_project())
     _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+
+    _create_action("addmedia", lambda w, a:  projectaction.add_media_files())
+    _create_action("addimgseq", lambda w, a: projectaction.add_image_sequence())
+    _create_action("addgenerator", lambda w, a: mediaplugin.show_add_media_plugin_window())
+    _create_action("addtitle", lambda w, a:  titler.show_titler())
+    _create_action("addcolorclip", lambda w, a: patternproducer.create_color_clip())
+    _create_action("fromselected", lambda w, a: projectaction.create_selection_compound_clip())
+    _create_action("frombox", lambda w, a: projectaction.create_box_compound_clip())
+    _create_action("fromtimeline", lambda w, a: projectaction.create_range_compound_clip())
+    _create_action("fromcurrentsequence", lambda w, a: projectaction.create_sequence_compound_clip())
+    _create_action("fromgmic", lambda w, a: containerclip.create_gmic_media_item())
+    _create_action("addsequencelink", lambda w, a: projectaction.create_sequence_link_container())
+    _create_action("addfromfolder", lambda w, a: projectaddmediafolder.show_add_media_folder_dialog())
+    _create_action("importfromproject", lambda w, a: projectaction.import_project_media())
+    _create_action("loadgeneratorscript", lambda w, a: containerclip.create_fluxity_media_item())
+    _create_action("addbinmainmenu", lambda w, a: projectaction.add_new_bin())
+    _create_action("deletebinmainmenu", lambda w, a: projectaction.delete_selected_bin())
+    _create_action("logcliprange", lambda w, a: medialog.log_range_clicked())
+    _create_action("recreateicons", lambda w, a: menuactions.recreate_media_file_icons())
+    _create_action("removeunusedmedia", lambda w, a: projectaction.remove_unused_media())
+    _create_action("changeprofile", lambda w, a: projectaction.change_project_profile())
+    _create_action("projectinfoanddata", lambda w, a: projectdatavaultgui.show_current_project_data_store_info_window())
+    _create_action("proxymanager", lambda w, a: proxytranscodemanager.show_proxy_manager_dialog())
+    _create_action("transcodemanager", lambda w, a: proxytranscodemanager.show_transcode_manager_dialog())
 
     _create_action("addnewsequence", lambda w, a: projectaction.add_new_sequence())  
     _create_action("editselectedsequence", lambda w, a: projectaction.change_edit_sequence())  
@@ -604,3 +758,5 @@ def fill_recents_menu_widget(callback):
             </ui>
 """
         
+        
+
