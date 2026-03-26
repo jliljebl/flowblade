@@ -1146,7 +1146,7 @@ class EditorWindow:
         
         # Audio master meter
         # Tool Selection Widget
-        audiomaster_menu_item = Gtk.MenuItem(_("Audoi Master Level Meter"))
+        audiomaster_menu_item = Gtk.MenuItem(_("Audio Master Level Meter"))
         audiomaster_menu = Gtk.Menu()
         audiomaster_top = Gtk.RadioMenuItem()
         audiomaster_top.set_label( _("Top Row"))
