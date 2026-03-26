@@ -267,6 +267,18 @@ def get_menu():
                 </item>
                 <submenu>
                   <attribute name="label">""" + _("Edit Tool Selection Widget") + """</attribute>
+                   <section>
+                   <item>
+                     <attribute name="label">""" + _("Middlebar Menu") + """</attribute>
+                     <attribute name="action">app.tooldockpos</attribute>
+                     <attribute name="target">middlebar</attribute>
+                   </item>
+                   <item>
+                     <attribute name="label">""" + _("Dock") + """</attribute>
+                     <attribute name="action">app.tooldockpos</attribute>
+                     <attribute name="target">dock</attribute>
+                   </item>
+                   </section>
                 </submenu>
                 <submenu>
                   <attribute name="label">""" + _("Audio Master Level Meter") + """</attribute>
@@ -641,15 +653,22 @@ def create_actions():
         default_value = "singlewindow"
     else:
         default_value = "twowindows"
-    _create_stateful_action("windowmode", "s", default_value,  lambda a, v: gui.editor_window.change_windows_preference(a, v))
+    _create_stateful_action("windowmode", "s", default_value, lambda a, v: gui.editor_window.change_windows_preference(a, v))
     _create_action("showmiddlebarconfig", lambda w, a: middlebar.show_middlebar_conf_dialog())
 
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        default_value = "middlebar"
+    else:
+        default_value = "dock"
+    _create_stateful_action("tooldockpos", "s", default_value, lambda a, v: gui.editor_window.show_tools_dock_change_from_menu(a, v))
+                                                
     if editorpersistance.prefs.audio_master_position_is_top_row == True:
         default_value = "toprow"
     else:
         default_value = "bottomrow"
-    _create_stateful_action("audiomasterposition", "s", default_value,  lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
-        
+    _create_stateful_action("audiomasterposition", "s", default_value, lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
+
+
     _create_action("zoomin", lambda w, a: updater.zoom_in())
     _create_action("zoomout", lambda w, a: updater.zoom_out())
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())

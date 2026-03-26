@@ -22,7 +22,7 @@
 Module contains the main editor window object and timeline cursor handling.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 
 import appconsts
@@ -42,6 +42,7 @@ import editevent
 import editorlayout
 import editorpersistance
 import editorstate
+from editorstate import APP
 import exporting
 import glassbuttons
 import gmic
@@ -1288,7 +1289,14 @@ class EditorWindow:
     # --------------------------------------------------------------- LAYOUT CHANGES
     # These methods are called from app menu and they show and hide panels or
     # move them around. When layout is created or startup we make sure that there is enough information  to
-    # do the changes, e.g. some caontainer either exist are are set to None etc.  
+    # do the changes, e.g. some caontainer either exist are are set to None etc. 
+
+    def show_tools_dock_change_from_menu(self, action, variant):
+        if variant.get_string() == "middlebar":
+            self._do_show_tools_middlebar()
+        else:
+            self._do_show_tools_dock()
+ 
     def _show_tools_middlebar(self, widget):
         if widget.get_active() == False:
             return
@@ -1305,6 +1313,9 @@ class EditorWindow:
         middlebar.re_create_tool_selector(self)
         middlebar.redo_layout(self)
         workflow.select_default_tool()
+
+        action = APP().lookup_action("tooldockpos")
+        action.set_state(GLib.Variant.new_string("middlebar"))
 
     def set_audiomaster_position(self, action, value):
         action.set_state(value)
@@ -1355,6 +1366,9 @@ class EditorWindow:
         middlebar.redo_layout(self)
         self.tool_selector = None
         workflow.select_default_tool()
+
+        action = APP().lookup_action("tooldockpos")
+        action.set_state(GLib.Variant.new_string("dock"))
 
     def update_tool_dock(self):
         self.tline_box.remove(self.tool_dock)
