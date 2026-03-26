@@ -730,7 +730,7 @@ def fill_recents_menu_widget(callback):
             proj_name = recent_proj_names[i]
             recent_menu.append(proj_name, "app.openrecent." + str(i))
             action = Gio.SimpleAction.new("openrecent." + str(i), None)
-            action.connect("activate", callback,  copy.deepcopy(i))
+            action.connect("activate", callback, copy.deepcopy(i))
             APP().add_action(action)
     else:
         recent_menu.append (_("Empty"), None)

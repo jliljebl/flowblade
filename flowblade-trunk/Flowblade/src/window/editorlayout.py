@@ -640,15 +640,10 @@ def _delete_layout_callback(dialog, response_id, delete_widget):
     
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position_menu_action(panel_id, a, v):
-    print(panel_id, a, v.get_string())
-    _change_panel_position(True, panel_id, pos_option)
-
+    _change_panel_position(True, panel_id, int(v.get_string()))
+    a.set_state(v)
 
 def _change_panel_position(do_update, panel_id, pos_option):
-    # We're again getting one event for activated item and one for the de-activated item.
-    #if widget != None and widget.get_active() == False:
-    #    return
-    
     # Refuse to make default notebook empty.
     panels_in_default_notebook = 0
     for pos in _panel_positions.values():
