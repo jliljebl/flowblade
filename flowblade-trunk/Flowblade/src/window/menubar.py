@@ -297,11 +297,6 @@ def get_menu():
                 </submenu>
             </section>
             <section>
-                <submenu>
-                  <attribute name="label">""" + _("Monitor Playback Interpolation") + """</attribute>
-                </submenu>
-            </section>
-            <section>
                 <item>
                   <attribute name="label">""" + _("Zoom In") + """</attribute>
                   <attribute name="action">app.zoomin</attribute>
