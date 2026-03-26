@@ -2707,7 +2707,10 @@ def change_current_sequence_compositing_mode_from_corner_menu(action, new_value_
         return 
     
     action.set_state(new_value_variant)
-    guipopover._compositing_mode_popover.hide()
+    try:
+        guipopover._compositing_mode_popover.hide()
+    except:
+        pass # When this gets called from app menu _compositing_mode_popover might not exist.
     
     dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
 
@@ -2722,7 +2725,7 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
     if response_id != Gtk.ResponseType.ACCEPT:
         gui.editor_window.init_compositing_mode_menu()
         return
-        
+
     do_compositing_mode_change(new_compositing_mode)
     
 def do_compositing_mode_change(new_compositing_mode):
