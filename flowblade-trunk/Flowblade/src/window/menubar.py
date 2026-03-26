@@ -27,6 +27,7 @@ import audiomonitoring
 import batchrendering
 import callbackbridge
 import containerclip
+import editorlayout
 import editorpersistance
 from editorstate import APP
 import exporting
@@ -251,7 +252,7 @@ def get_menu():
                       </item>
                       </section>
                 </submenu>
-                <submenu>
+                <submenu id="panelpositionsmenu">
                   <attribute name="label">""" + _("Panel Placement") + """</attribute>
                 </submenu>
                 <submenu>
@@ -583,7 +584,10 @@ def get_menu():
     
     global recent_menu
     recent_menu = builder.get_object("recentmenu")
-
+    
+    global _panel_positions_menu
+    _panel_positions_menu = builder.get_object("panelpositionsmenu")
+    
     # Create menubar widget
     menubar = Gtk.MenuBar.new_from_model(menu_model)
         
@@ -730,6 +734,19 @@ def fill_recents_menu_widget(callback):
             APP().add_action(action)
     else:
         recent_menu.append (_("Empty"), None)
+        
+        
+def fill_panel_positions_menu():
+    global _panel_positions_menu
+
+    # Panel positions.
+    if editorlayout.panel_positioning_available() == True:
+        editorlayout.get_panel_positions_menu_item(_panel_positions_menu)
+        #menu.append(panel_positions_menu_item)
+        #tabs_menu_item = editorlayout.get_tabs_menu_item()
+        #menu.append(tabs_menu_item)
+    else:
+        print("Panel positioning feature not available, too small screen.")
 
 """
 

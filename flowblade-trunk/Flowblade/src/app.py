@@ -443,6 +443,7 @@ class FlowbladeApplication(Gtk.Application):
         # Menu bar needs app available to create actions.
         menubar.create_actions()
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
+        menubar.fill_panel_positions_menu()
 
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()

@@ -22,7 +22,7 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, GLib, Gio
 
 import copy
 import pickle
@@ -32,6 +32,7 @@ import appconsts
 import atomicfile
 import editorpersistance
 import editorstate
+from editorstate import APP
 import dialogs
 import dialogutils
 import gui
@@ -435,102 +436,83 @@ def _create_notebook(position, editor_window):
     return notebook
     
 # ---------------------------------------------------------- APP MENU, TOP BAR BUTTON MENU
-def get_panel_positions_menu_item():
-    panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
-    panel_positions_menu = Gtk.Menu()
-    panel_positions_menu_item.set_submenu(panel_positions_menu)
+def get_panel_positions_menu_item(panel_positions_menu):
 
     # Presets
+    """
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        presets_menu_item = Gtk.MenuItem(_("Preset Layouts"))
+        presets_menu_item = Gio.MenuItem(_("Preset Layouts"))
         presets_menu = Gtk.Menu()
         presets_menu_item.set_submenu(presets_menu)
         _create_layout_presets_menu(presets_menu)
         panel_positions_menu.append(presets_menu_item)
         sep = Gtk.SeparatorMenuItem()
         panel_positions_menu.append(sep)
+    """
     
     # Project Panel
-    project_panel_menu_item = Gtk.MenuItem(_("Project Panel"))
-    panel_positions_menu.append(project_panel_menu_item)
+    project_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Project Panel"), project_panel_menu_item)
+    _get_position_selection_menu(project_panel_menu_item, appconsts.PANEL_PROJECT, "projectpanelpos")
 
-    project_panel_menu = _get_position_selection_menu(appconsts.PANEL_PROJECT)
-    project_panel_menu_item.set_submenu(project_panel_menu)
-    
     # Media Panel - we're forcing a position for this on two window mode for the time being.
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
-        panel_positions_menu.append(media_panel_menu_item)
-        
-        media_panel_menu = _get_position_selection_menu(appconsts.PANEL_MEDIA)
-        media_panel_menu_item.set_submenu(media_panel_menu)
+        media_panel_menu_item = Gio.Menu()
+        panel_positions_menu.append_submenu(("Media Panel"), media_panel_menu_item)
+        _get_position_selection_menu(media_panel_menu_item, appconsts.PANEL_MEDIA, "mediapanelpos")
 
     # Range Log Panel
-    range_log_panel_menu_item = Gtk.MenuItem(_("Range Log Panel"))
-    panel_positions_menu.append(range_log_panel_menu_item)
-    
-    range_log_panel_menu = _get_position_selection_menu(appconsts.PANEL_RANGE_LOG)
-    range_log_panel_menu_item.set_submenu(range_log_panel_menu)
-    
+    range_log_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Range Log Panel"), range_log_panel_menu_item)
+    _get_position_selection_menu(range_log_panel_menu_item, appconsts.PANEL_RANGE_LOG, "rangelogpanelpos")
+
     # Filter Panel
-    filter_panel_menu_item = Gtk.MenuItem(_("Edit Panel"))
-    panel_positions_menu.append(filter_panel_menu_item)
-
-    filter_panel_menu =  _get_position_selection_menu(appconsts.PANEL_MULTI_EDIT)
-    filter_panel_menu_item.set_submenu(filter_panel_menu)
-
+    filter_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Edit Panel"), filter_panel_menu_item)
+    _get_position_selection_menu(filter_panel_menu_item, appconsts.PANEL_MULTI_EDIT, "editpanelpos")
+    
     # Jobs
-    jobs_panel_menu_item = Gtk.MenuItem(_("Jobs Panel"))
-    panel_positions_menu.append(jobs_panel_menu_item)
-
-    jobs_panel_menu =  _get_position_selection_menu(appconsts.PANEL_JOBS)
-    jobs_panel_menu_item.set_submenu(jobs_panel_menu)
-
+    jobs_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Jobs Panel"), jobs_panel_menu_item)
+    _get_position_selection_menu(jobs_panel_menu_item, appconsts.PANEL_JOBS, "jobspanelpos")
+    
     # Render
-    render_panel_menu_item = Gtk.MenuItem(_("Render Panel"))
-    panel_positions_menu.append(render_panel_menu_item)
-
-    render_panel_menu =  _get_position_selection_menu(appconsts.PANEL_RENDERING)
-    render_panel_menu_item.set_submenu(render_panel_menu)
+    render_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Render Panel"), render_panel_menu_item)
+    _get_position_selection_menu(render_panel_menu_item, appconsts.PANEL_RENDERING, "renderpanelpos")
     
     # Filter Select Panel
-    filter_select_panel_menu_item = Gtk.MenuItem(_("Filter Select Panel"))
-    panel_positions_menu.append(filter_select_panel_menu_item)
+    filter_select_panel_menu_item = Gio.Menu()
+    panel_positions_menu.append_submenu(_("Filter Select Panel"), filter_select_panel_menu_item)
+    _get_position_selection_menu(filter_select_panel_menu_item, appconsts.PANEL_FILTER_SELECT, "filterselectpanelpos")
 
-    filter_select_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTER_SELECT)
-    filter_select_panel_menu_item.set_submenu(filter_select_panel_menu)
-    
-    return panel_positions_menu_item
 
-def _get_position_selection_menu(panel_id):
+
+def _get_position_selection_menu(positions_menu, panel_id, action_id):
     current_position = _get_panel_position(panel_id)
     available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel_id]
-    
-    positions_menu  = Gtk.Menu()
-    
-    first_item = None
-    menu_items = []
-    for pos_option in available_positions:
-        if first_item == None:
-            menu_item = Gtk.RadioMenuItem()
-            menu_item.set_label(_positions_names[pos_option])
-            positions_menu.append(menu_item)
-            first_item = menu_item
-            menu_items.append(menu_item)
-        else:
-            menu_item = Gtk.RadioMenuItem.new_with_label([first_item], _positions_names[pos_option])
-            positions_menu.append(menu_item)
-            menu_items.append(menu_item)
+    print(panel_id, current_position, available_positions)
+    #positions_menu  = Gtk.Menu()
+    variants = []
+    for pos_option in available_positions: 
+        label = _positions_names[pos_option]
+        variant_id = str(pos_option)
+        
+        print(action_id, label, variant_id)
+        target_variant = GLib.Variant.new_string(variant_id)
+        menu_item = Gio.MenuItem.new(label, "app." + action_id)
+        menu_item.set_action_and_target_value("app." + action_id, target_variant)
+        positions_menu.append_item(menu_item)
+        variants.append(target_variant)
 
+    # Create action and set state variant
     selected_index = available_positions.index(current_position)
-    menu_items[selected_index].set_active(True)
+        
+    selected_variant = variants[selected_index]
+    action = Gio.SimpleAction.new_stateful(name=action_id, parameter_type=GLib.VariantType.new("s"), state=selected_variant)
+    action.connect("change-state", lambda a, v: _change_panel_position_menu_action(panel_id, a, v))
+    APP().add_action(action)
     
-    for i in range(0, len(available_positions)):
-        menu_item = menu_items[i]
-        menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
-    
-    return positions_menu
-
 def get_tabs_menu_item():
     tabs_menu_item = Gtk.MenuItem(_("Tabs Positions"))
     tabs_menu = Gtk.Menu()
@@ -657,10 +639,15 @@ def _delete_layout_callback(dialog, response_id, delete_widget):
         dialog.destroy()
     
 # ----------------------------------------------- CHANGING POSITIONS
-def _change_panel_position(widget, panel_id, pos_option):
+def _change_panel_position_menu_action(panel_id, a, v):
+    print(panel_id, a, v.get_string())
+    _change_panel_position(True, panel_id, pos_option)
+
+
+def _change_panel_position(do_update, panel_id, pos_option):
     # We're again getting one event for activated item and one for the de-activated item.
-    if widget != None and widget.get_active() == False:
-        return
+    #if widget != None and widget.get_active() == False:
+    #    return
     
     # Refuse to make default notebook empty.
     panels_in_default_notebook = 0
@@ -684,7 +671,7 @@ def _change_panel_position(widget, panel_id, pos_option):
 
     # Show layout immediately if this called to change single position,
     # applying layout changes multiple positions.
-    if widget != None:
+    if do_update == True:
         gui.editor_window.window.show_all()
         set_positions_frames_visibility()
         GLib.timeout_add(100, _check_dimensions)
@@ -810,7 +797,8 @@ def apply_layout(layout_dict):
         try:
             current_position = _panel_positions[panel_id]
             if current_position != layout_position:
-                _change_panel_position(None, panel_id, layout_position)
+                print("haloo")
+                _change_panel_position(False, panel_id, layout_position)
         except KeyError:
             pass # Not all panels are part of current layout
             
