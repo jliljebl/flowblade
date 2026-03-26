@@ -266,6 +266,18 @@ def get_menu():
                 </submenu>
                 <submenu>
                   <attribute name="label">""" + _("Audio Master Level Meter") + """</attribute>
+                      <section>
+                      <item>
+                        <attribute name="label">""" + _("Top Row") + """</attribute>
+                        <attribute name="action">app.audiomasterposition</attribute>
+                        <attribute name="target">toprow</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("Bottom Row") + """</attribute>
+                        <attribute name="action">app.audiomasterposition</attribute>
+                        <attribute name="target">bottomrow</attribute>
+                      </item>
+                      </section>
                 </submenu>
             </section>
             <section>
@@ -621,6 +633,13 @@ def create_actions():
         default_value = "twowindows"
     _create_stateful_action("windowmode", "s", default_value,  lambda a, v: gui.editor_window.change_windows_preference(a, v))
     _create_action("showmiddlebarconfig", lambda w, a: middlebar.show_middlebar_conf_dialog())
+
+    if editorpersistance.prefs.audio_master_position_is_top_row == True:
+        default_value = "toprow"
+    else:
+        default_value = "bottomrow"
+    _create_stateful_action("audiomasterposition", "s", default_value,  lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
+        
     _create_action("zoomin", lambda w, a: updater.zoom_in())
     _create_action("zoomout", lambda w, a: updater.zoom_out())
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())

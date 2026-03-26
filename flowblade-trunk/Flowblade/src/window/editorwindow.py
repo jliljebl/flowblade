@@ -1306,15 +1306,21 @@ class EditorWindow:
         middlebar.redo_layout(self)
         workflow.select_default_tool()
 
-    def _set_audiomaster_position(self, value):
-        # We get 2 events from radio menu items, only handle one.
-        if editorpersistance.prefs.audio_master_position_is_top_row == value:
-            return 
+    def set_audiomaster_position(self, action, value):
+        action.set_state(value)
+
+        if value.get_string() == "toprow":
+            new_value = True
+        else:
+            new_value = False
+        
+        if new_value == editorpersistance.prefs.audio_master_position_is_top_row:
+            return
             
-        editorpersistance.prefs.audio_master_position_is_top_row = value
+        editorpersistance.prefs.audio_master_position_is_top_row = new_value
         editorpersistance.save()
 
-        if value == True:
+        if new_value == True:
             self.tline_pane.remove(self._get_audio_master_meter())
             self.top_row_hbox.pack_end(self._get_audio_master_meter(), False, False, 0)
         else:
