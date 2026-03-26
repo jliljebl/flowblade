@@ -439,51 +439,50 @@ def _create_notebook(position, editor_window):
 def get_panel_positions_menu_item(panel_positions_menu):
 
     # Presets
-    """
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        presets_menu_item = Gio.MenuItem(_("Preset Layouts"))
-        presets_menu = Gtk.Menu()
-        presets_menu_item.set_submenu(presets_menu)
+        presets_section = Gio.Menu.new()
+        presets_menu =  Gio.Menu.new()
+        presets_section.append_submenu(_("Preset Layouts"), presets_menu)
         _create_layout_presets_menu(presets_menu)
-        panel_positions_menu.append(presets_menu_item)
-        sep = Gtk.SeparatorMenuItem()
-        panel_positions_menu.append(sep)
-    """
-    
+        panel_positions_menu.append_section(None, presets_section)
+
+    panels_section = Gio.Menu.new()
+    panel_positions_menu.append_section(None, panels_section)
+        
     # Project Panel
     project_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Project Panel"), project_panel_menu_item)
+    panels_section.append_submenu(_("Project Panel"), project_panel_menu_item)
     _get_position_selection_menu(project_panel_menu_item, appconsts.PANEL_PROJECT, "projectpanelpos")
 
     # Media Panel - we're forcing a position for this on two window mode for the time being.
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
         media_panel_menu_item = Gio.Menu()
-        panel_positions_menu.append_submenu(("Media Panel"), media_panel_menu_item)
+        panels_section.append_submenu(("Media Panel"), media_panel_menu_item)
         _get_position_selection_menu(media_panel_menu_item, appconsts.PANEL_MEDIA, "mediapanelpos")
 
     # Range Log Panel
     range_log_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Range Log Panel"), range_log_panel_menu_item)
+    panels_section.append_submenu(_("Range Log Panel"), range_log_panel_menu_item)
     _get_position_selection_menu(range_log_panel_menu_item, appconsts.PANEL_RANGE_LOG, "rangelogpanelpos")
 
     # Filter Panel
     filter_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Edit Panel"), filter_panel_menu_item)
+    panels_section.append_submenu(_("Edit Panel"), filter_panel_menu_item)
     _get_position_selection_menu(filter_panel_menu_item, appconsts.PANEL_MULTI_EDIT, "editpanelpos")
     
     # Jobs
     jobs_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Jobs Panel"), jobs_panel_menu_item)
+    panels_section.append_submenu(_("Jobs Panel"), jobs_panel_menu_item)
     _get_position_selection_menu(jobs_panel_menu_item, appconsts.PANEL_JOBS, "jobspanelpos")
     
     # Render
     render_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Render Panel"), render_panel_menu_item)
+    panels_section.append_submenu(_("Render Panel"), render_panel_menu_item)
     _get_position_selection_menu(render_panel_menu_item, appconsts.PANEL_RENDERING, "renderpanelpos")
     
     # Filter Select Panel
     filter_select_panel_menu_item = Gio.Menu()
-    panel_positions_menu.append_submenu(_("Filter Select Panel"), filter_select_panel_menu_item)
+    panels_section.append_submenu(_("Filter Select Panel"), filter_select_panel_menu_item)
     _get_position_selection_menu(filter_select_panel_menu_item, appconsts.PANEL_FILTER_SELECT, "filterselectpanelpos")
 
 
@@ -491,14 +490,12 @@ def get_panel_positions_menu_item(panel_positions_menu):
 def _get_position_selection_menu(positions_menu, panel_id, action_id):
     current_position = _get_panel_position(panel_id)
     available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel_id]
-    print(panel_id, current_position, available_positions)
-    #positions_menu  = Gtk.Menu()
+
     variants = []
     for pos_option in available_positions: 
         label = _positions_names[pos_option]
         variant_id = str(pos_option)
         
-        print(action_id, label, variant_id)
         target_variant = GLib.Variant.new_string(variant_id)
         menu_item = Gio.MenuItem.new(label, "app." + action_id)
         menu_item.set_action_and_target_value("app." + action_id, target_variant)
@@ -550,27 +547,22 @@ def show_layout_press_menu(launcher, widget, event):
     guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover, _user_layouts)
 
 def _create_layout_presets_menu(menu):
-    callback = _top_bar_menu_item_activated
+    callback = _top_bar_menu_item_activated_popover
 
-    menu_item = guiutils.get_menu_item(_("Layout Monitor Left"), callback, "monitor_left")
-    menu.add(menu_item)
+    _add_menu_action(menu, _("Layout Monitor Left"), "presetmonitorleft", "monitor_left", callback)
+    _add_menu_action(menu, _("Layout Monitor Center"), "presetmonitorcenter", "monitor_center", callback)
+    if editorstate.SCREEN_WIDTH  > 1919:
+        _add_menu_action(menu, _("Layout Top Row 4 Panels"), "presettoprowfour", "top_row_four", callback)
+    _add_menu_action(menu, _("Layout Media Panel Left Column"), "presetmediapanelleft", "media_panel_left", callback)
+    _add_menu_action(menu, _("Layout Edit Panel Right Column"), "preseteditpanelright", "edit_panel_right", callback)
 
-    menu_item = guiutils.get_menu_item(_("Layout Monitor Center"), callback, "monitor_center")
-    menu.add(menu_item)
+def _add_menu_action(menu, label, item_id, data, callback):
+    menu.append(label, "app." + item_id) 
+    action = Gio.SimpleAction(name=item_id)
+    action.connect("activate", callback, data)
+    APP().add_action(action)
 
-    menu_item = guiutils.get_menu_item(_("Layout Top Row 4 Panels"), callback, "top_row_four")
-    menu.add(menu_item)
-    if editorstate.SCREEN_WIDTH < 1919:
-        menu_item.set_sensitive(False)
-
-    menu_item = guiutils.get_menu_item(_("Layout Media Panel Left Column"), callback, "media_panel_left")
-    menu.add(menu_item)
-
-    menu_item = guiutils.get_menu_item(_("Layout Edit Panel Right Column"), callback, "edit_panel_right")
-    menu.add(menu_item)
     
-    menu.show_all()
-
 def _top_bar_menu_item_activated_popover(action, variant, msg):
     _top_bar_menu_item_activated(None, msg)
 
@@ -792,7 +784,6 @@ def apply_layout(layout_dict):
         try:
             current_position = _panel_positions[panel_id]
             if current_position != layout_position:
-                print("haloo")
                 _change_panel_position(False, panel_id, layout_position)
         except KeyError:
             pass # Not all panels are part of current layout
