@@ -46,7 +46,10 @@ import titler
 import updater
 
 
-global recent_menu
+_recent_menu = None
+_panel_positions_menu = None
+_tabs_menu = None
+
 
 def get_menu():
 
@@ -255,7 +258,7 @@ def get_menu():
                 <submenu id="panelpositionsmenu">
                   <attribute name="label">""" + _("Panel Placement") + """</attribute>
                 </submenu>
-                <submenu>
+                <submenu id="tabsmenu">
                   <attribute name="label">""" + _("Tabs Positions") + """</attribute>
                 </submenu>
                 <item>
@@ -582,11 +585,14 @@ def get_menu():
     builder = Gtk.Builder.new_from_string(MENU_XML, -1)
     menu_model = builder.get_object("menubar")
     
-    global recent_menu
-    recent_menu = builder.get_object("recentmenu")
+    global _recent_menu
+    _recent_menu = builder.get_object("recentmenu")
     
     global _panel_positions_menu
     _panel_positions_menu = builder.get_object("panelpositionsmenu")
+    
+    global _tabs_menu
+    _tabs_menu = builder.get_object("tabsmenu")
     
     # Create menubar widget
     menubar = Gtk.MenuBar.new_from_model(menu_model)
@@ -720,31 +726,29 @@ def fill_recents_menu_widget(callback):
     """
     Fills menu item with menuitems to open recent projects.
     """
-    global recent_menu
-    recent_menu.remove_all()
+    global _recent_menu
+    _recent_menu.remove_all()
 
     # Add new menu items
     recent_proj_names = editorpersistance.get_recent_projects()
     if len(recent_proj_names) != 0:
         for i in range (0, len(recent_proj_names)):
             proj_name = recent_proj_names[i]
-            recent_menu.append(proj_name, "app.openrecent." + str(i))
+            _recent_menu.append(proj_name, "app.openrecent." + str(i))
             action = Gio.SimpleAction.new("openrecent." + str(i), None)
             action.connect("activate", callback, copy.deepcopy(i))
             APP().add_action(action)
     else:
-        recent_menu.append (_("Empty"), None)
+        _recent_menu.append (_("Empty"), None)
         
         
 def fill_panel_positions_menu():
-    global _panel_positions_menu
+    global _panel_positions_menu, _tabs_menu
 
     # Panel positions.
     if editorlayout.panel_positioning_available() == True:
         editorlayout.get_panel_positions_menu_item(_panel_positions_menu)
-        #menu.append(panel_positions_menu_item)
-        #tabs_menu_item = editorlayout.get_tabs_menu_item()
-        #menu.append(tabs_menu_item)
+        editorlayout.get_tabs_menu_item(_tabs_menu)
     else:
         print("Panel positioning feature not available, too small screen.")
 

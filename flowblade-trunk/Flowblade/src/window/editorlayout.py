@@ -485,8 +485,6 @@ def get_panel_positions_menu_item(panel_positions_menu):
     panels_section.append_submenu(_("Filter Select Panel"), filter_select_panel_menu_item)
     _get_position_selection_menu(filter_select_panel_menu_item, appconsts.PANEL_FILTER_SELECT, "filterselectpanelpos")
 
-
-
 def _get_position_selection_menu(positions_menu, panel_id, action_id):
     current_position = _get_panel_position(panel_id)
     available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel_id]
@@ -510,39 +508,40 @@ def _get_position_selection_menu(positions_menu, panel_id, action_id):
     action.connect("change-state", lambda a, v: _change_panel_position_menu_action(panel_id, a, v))
     APP().add_action(action)
     
-def get_tabs_menu_item():
-    tabs_menu_item = Gtk.MenuItem(_("Tabs Positions"))
-    tabs_menu = Gtk.Menu()
-    tabs_menu_item.set_submenu(tabs_menu)
+def get_tabs_menu_item(tabs_menu):
+    tabs_section = Gio.Menu.new()
+    tabs_menu.append_section(None, tabs_section)
     
     tabs_positions = editorpersistance.prefs.positions_tabs
     
     for position in tabs_positions:
         tabs_pos = tabs_positions[position]
 
-        positions_tabs_pos_item = Gtk.MenuItem(_positions_names[position])
-        tabs_menu.append(positions_tabs_pos_item)
+        positions_menu = Gio.Menu.new()
+        tabs_section.append_submenu(_positions_names[position], positions_menu)
+        _get_tabs_selection_menu(positions_menu, position, tabs_pos, "tabsposition" + str(position))
 
-        positions_menu = Gtk.Menu()
-        positions_tabs_pos_item.set_submenu(positions_menu)
-
-        up_item = Gtk.RadioMenuItem()
-        up_item.set_label(_("Top"))
-        positions_menu.append(up_item)
-
-        down_item = Gtk.RadioMenuItem.new_with_label([up_item], _("Bottom"))
-        positions_menu.append(down_item)
-
-        if tabs_pos == UP:
-            up_item.set_active(True)
-        else:
-            down_item.set_active(True)
+def _get_tabs_selection_menu(tabs_menu, position, tabs_pos, action_id):
         
-        up_item.connect("activate", _change_tabs_pos, position, UP)
-        down_item.connect("activate", _change_tabs_pos, position, DOWN)
-        
-    return tabs_menu_item
+    top_target_variant = GLib.Variant.new_string("top")
+    menu_item = Gio.MenuItem.new(_("Top"), "app." + action_id)
+    menu_item.set_action_and_target_value("app." + action_id, top_target_variant)
+    tabs_menu.append_item(menu_item)
 
+    bottom_target_variant = GLib.Variant.new_string("bottom")
+    menu_item = Gio.MenuItem.new(_("Bottom"), "app." + action_id)
+    menu_item.set_action_and_target_value("app." + action_id, bottom_target_variant)
+    tabs_menu.append_item(menu_item)
+    
+    if tabs_pos == UP:
+        selected_variant = top_target_variant
+    else:
+        selected_variant = bottom_target_variant
+
+    action = Gio.SimpleAction.new_stateful(name=action_id, parameter_type=GLib.VariantType.new("s"), state=selected_variant)
+    action.connect("change-state", lambda a, v: _change_tabs_pos_from_menu(a, v, position))
+    APP().add_action(action)
+    
 def show_layout_press_menu(launcher, widget, event):
     guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover, _user_layouts)
 
@@ -759,9 +758,19 @@ def _add_panel(panel_id, position):
 
     _panel_positions[panel_id] = position
 
+def _change_tabs_pos_from_menu(action, variant, position):
+    if variant.get_string() == "top":
+        direction = UP 
+    else:
+        direction = DOWN
+    _change_tabs_pos(None, position, direction)
+
 def _change_tabs_pos(widget, position, direction):
-    if widget.get_active() == False:
-        return
+    try:
+        if widget.get_active() == False:
+            return
+    except:
+        pass # this is spmetimes called with widget = None
 
     editorpersistance.prefs.positions_tabs[position] = direction
     editorpersistance.save()
