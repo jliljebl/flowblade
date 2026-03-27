@@ -104,7 +104,7 @@ class EditorWindow:
         self.tline_cursor_manager = tlinecursors.TLineCursorManager()
 
         # Create window(s)
-        self.window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
+        self.window = Gtk.ApplicationWindow(type=Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
         self.window.set_border_width(0)
 

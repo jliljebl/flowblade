@@ -33,6 +33,8 @@ from editorstate import APP
 import exporting
 import gmic
 import gui
+import keygtkactions
+import shortcuts
 import medialinker
 import menuactions
 import middlebar
@@ -128,7 +130,7 @@ def get_menu():
             <section>
                 <item>
                   <attribute name="label">""" + _("Cut") + """</attribute>
-                  <attribute name="action">app.cutaction</attribute>
+                  <attribute name="action">win.cutaction</attribute>
                 </item>
                 <item>
                   <attribute name="label">""" + _("Copy") + """</attribute>
@@ -619,6 +621,10 @@ def get_menu():
     return menubar
 
 def create_actions():
+    
+    root = shortcuts.get_root()
+    print(shortcuts.get_shortcut_kb_str(root, "resync_selected", True))
+    
     _create_action("new", lambda w, a:projectaction.new_project(), "<Ctrl>N")
     _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
     _create_action("save", lambda w, a:projectaction.save_project(), "<Ctrl>S")
@@ -636,7 +642,7 @@ def create_actions():
     _create_action("copyaction", lambda w, a: copypaste.copy_action())
     _create_action("pasteaction", lambda w, a: copypaste.paste_action())
     _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
-    _create_action("cutaction", lambda w, a: copypaste.cut_action())
+    _create_win_action("cutaction", lambda w, a: _dummy(w, a), shortcuts.get_shortcut_kb_str(root, "cut", True))
     _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed())
     _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed())
     _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed())
@@ -734,12 +740,29 @@ def create_actions():
     _create_action("runtime", lambda w, a:menuactions.environment())
     _create_action("about", lambda w, a:menuactions.about())
 
+    _connect_for_focus_notifications(gui.tline_canvas.widget)
+
+    wlist = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
+    print(wlist)
+
+
+def _dummy(w, a):
+    return False
+ 
 def _create_action(name, callback, accel=None):
     action = Gio.SimpleAction.new(name, None)
     action.connect("activate", callback)
     APP().add_action(action)
     if accel != None:
         APP().set_accels_for_action("app." + name, [accel])
+
+def _create_win_action(name, callback, accel=None):
+    action = Gio.SimpleAction.new(name, None)
+    action.connect("activate", callback)
+    gui.editor_window.window.add_action(action)
+    if accel != None:
+        APP().set_accels_for_action("app." + name, [accel])
+    action.set_enabled(True)
 
 def _create_stateful_action(name, typestr, default_value, callback):
     action = Gio.SimpleAction.new_stateful( name,
@@ -803,3 +826,15 @@ def set_undo_sensitive(sensitive):
 def set_redo_sensitive(sensitive):
     action = APP().lookup_action("redoaction")
     action.set_enabled(sensitive)
+
+def _connect_for_focus_notifications(widget):
+    widget.connect("focus-in-event", _handle_get_focus)
+    widget.connect("focus-out-event", _handle_lose_focus)
+    
+def _handle_get_focus(w, e):
+    print("get", w)
+    #focus-in-event
+
+def _handle_lose_focus(w, e):
+    print("lose", w)
+    

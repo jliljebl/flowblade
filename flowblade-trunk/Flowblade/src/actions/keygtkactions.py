@@ -250,7 +250,15 @@ class ShortCutController:
         except(KeyError, FocusError) as e:
             return False
 
-        
+
+def get_widgets_list(widgets_list):
+    list = []
+    for w in widgets_list:
+        list.append(_widgets[w])
+    
+    return list
+    
+
 # --------------------------------------------------------- effect editors
 def connect_filter_widget(widget):
     widget.connect("key-press-event", _filter_widget_keypress_handler)

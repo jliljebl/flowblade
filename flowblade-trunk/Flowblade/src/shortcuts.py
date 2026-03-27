@@ -396,7 +396,7 @@ def get_shortcut_info(root, code):
 
     return (None, None)
 
-def get_shortcut_kb_str(root, code):
+def get_shortcut_kb_str(root, code, for_menu=False):
     try:
         events = root.iter('event')
 
@@ -404,7 +404,10 @@ def get_shortcut_kb_str(root, code):
             if event.get('code') == code:
                 mod_name = _get_mod_string(event)
                 if mod_name != "":
-                    mod_name = mod_name + " + "
+                    if for_menu == False:
+                        mod_name = mod_name + " + "
+                    else:
+                        mod_name = "<" + mod_name + ">"
                 return mod_name + _key_names[event.text]
     except Exception as e:
         print("Exception: ", e)
