@@ -788,3 +788,18 @@ def update_compositing_mode_action_state():
 
     action.set_state(new_variant)
 
+def enable_save():
+    action = APP().lookup_action("save")
+    action.set_enabled(True)
+
+def set_save_action_sensitive(sensitive):
+    action = APP().lookup_action("save")
+    action.set_enabled(sensitive)
+
+def set_undo_sensitive(sensitive):
+    action = APP().lookup_action("undoaction")
+    action.set_enabled(sensitive)
+    
+def set_redo_sensitive(sensitive):
+    action = APP().lookup_action("redoaction")
+    action.set_enabled(sensitive)

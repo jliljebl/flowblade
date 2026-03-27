@@ -392,4 +392,4 @@ class RotoMaskEditor(Gtk.Window):
 
     def enable_save(self):
         if PROJECT().last_save_path != None:
-            gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+            gui.editor_window.enable_save()

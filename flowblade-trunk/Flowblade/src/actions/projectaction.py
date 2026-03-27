@@ -567,7 +567,7 @@ def _load_pulse_bar():
     
 def _enable_save():
     if PROJECT().last_save_path != None:
-        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+        gui.editor_window.enable_save()
 
     return False # Can be called with GLib.idle_add, docs said "If the function returns GLib.SOURCE_REMOVE or False it is automatically removed from the list of event sources and will not be called again."
 
@@ -750,8 +750,8 @@ def _save_as_dialog_callback(dialog, response_id):
         save_time = time.monotonic()
         clear_changed_since_last_save_flags()
 
-        gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
-        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+        gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")
+        gui.editor_window.enable_save()
 
         editorpersistance.add_recent_project_path(PROJECT().last_save_path)
         gui.editor_window.fill_recents_menu_widget(open_recent_project)

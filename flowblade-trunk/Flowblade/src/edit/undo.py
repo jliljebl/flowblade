@@ -56,10 +56,9 @@ undo_stack = []
 index = 0
 
 # Some menu items are set active/deactivate based on undo stack state.
-save_item = None
-undo_item = None 
-redo_item = None
-
+_enable_save_func = None
+_undo_item_set_sensitive_func = None
+_redo_item_set_sensitive_func = None
 
 # dict edtable property -> editor, needed to update property editor GUI after undo/redo
 _editor_for_property = {}
@@ -77,11 +76,11 @@ def set_post_undo_redo_callback(undo_redo_callback):
     global set_post_undo_redo_edit_mode
     set_post_undo_redo_edit_mode = undo_redo_callback
 
-def set_menu_items(uimanager):
-    global save_item, undo_item, redo_item
-    save_item = uimanager.get_widget("/MenuBar/FileMenu/Save")
-    undo_item = uimanager.get_widget("/MenuBar/EditMenu/Undo")
-    redo_item = uimanager.get_widget("/MenuBar/EditMenu/Redo")
+def set_menu_items(enable_save, undo_sensitive, redo_sensitive):
+    global _enable_save_func, _undo_item_set_sensitive_func, _redo_item_set_sensitive_func
+    _enable_save_func = enable_save
+    _undo_item_set_sensitive_func = undo_sensitive
+    _redo_item_set_sensitive_func = redo_sensitive
 
 def register_edit(undo_edit):
     """
@@ -106,9 +105,9 @@ def register_edit(undo_edit):
     index = index + 1
     
     if editorstate.PROJECT().last_save_path != None:
-        save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
-    undo_item.set_sensitive(True)
-    redo_item.set_sensitive(False)
+        _enable_save_func(True) # Disabled at load and save, first edit enables if project has been saved.
+    _undo_item_set_sensitive_func(True)
+    _redo_item_set_sensitive_func(False)
 
     #print("register edit: undo_stack", len(undo_stack))
 
@@ -128,8 +127,8 @@ def do_undo():
     
     # Empty stack, no undos
     if len(undo_stack) == 0:
-        undo_item.set_sensitive(False)
-        redo_item.set_sensitive(False)
+        _undo_item_set_sensitive_func(False)
+        _redo_item_set_sensitive_func(False)
         return
 
     # After undo we may change edit mode
@@ -142,21 +141,21 @@ def do_undo():
     #print("do_undo", index)
     
     if index == 0:
-        undo_item.set_sensitive(False)
+        _undo_item_set_sensitive_func(False)
     
-    redo_item.set_sensitive(True)
+    _redo_item_set_sensitive_func(True)
     
 def do_redo():
     global index
         
     # If we are at the top of the stack, can't do redo
     if index == len(undo_stack):
-        redo_item.set_sensitive(False)
+        _redo_item_set_sensitive_func(False)
         return
         
     # Empty stack, no redos
     if len(undo_stack) == 0:
-        redo_item.set_sensitive(False)
+        _redo_item_set_sensitive_func(False)
         return
 
     # After redo we may change edit mode
@@ -169,19 +168,19 @@ def do_redo():
     #print("do_redo", index)
     
     if index == len(undo_stack):
-        redo_item.set_sensitive(False)
+        _redo_item_set_sensitive_func(False)
 
-    undo_item.set_sensitive(True)
+    _undo_item_set_sensitive_func(True)
 
 def _set_post_edit_mode():
     if editorstate.edit_mode != editorstate.INSERT_MOVE:
         set_post_undo_redo_edit_mode()
 
 def make_save_item_active():
-    global save_item
-    if editorstate.PROJECT().last_save_path != None and save_item != None:
-        save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
-        
+    global _enable_save_func
+    if editorstate.PROJECT().last_save_path != None and _enable_save_func != None:
+        _enable_save_func(True) # Disabled at load and save, first edit enables if project has been saved.
+
 def undo_redo_stress_test():
     global undo_stack, index
     times = 10

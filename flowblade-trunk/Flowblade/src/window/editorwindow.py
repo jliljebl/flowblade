@@ -922,6 +922,18 @@ class EditorWindow:
             gui.tline_scale.widget.set_margin_top(0)
             self.tline_hbox_1.set_margin_top(0)
 
+    def enable_save(self):
+        menubar.set_save_action_sensitive(True)
+
+    def set_save_action_sensitive(self, sensitive):
+        menubar.set_save_action_sensitive(sensitive)
+
+    def set_undo_sensitive(self, sensitive):
+        menubar.set_undo_sensitive(False)
+
+    def set_redo_sensitive(self, sensitive):
+        menubar.set_redo_sensitive(False)
+        
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)

@@ -130,7 +130,7 @@ def capture_references(new_editor_window):
 
 def enable_save(project):
     if project.last_save_path != None:
-        editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+        editor_window.enable_save()
 
 # returns Gdk.RGBA color
 def get_bg_color():
@@ -168,7 +168,6 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("horizontal","")
     path_str = path_str.replace("[1/2]","")
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
-    print(path_str)
 
 def apply_theme():
     Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)

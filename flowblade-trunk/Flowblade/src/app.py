@@ -445,6 +445,10 @@ class FlowbladeApplication(Gtk.Application):
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
         menubar.fill_panel_positions_menu()
 
+        gui.editor_window.set_save_action_sensitive(False)
+        gui.editor_window.set_undo_sensitive(False)
+        gui.editor_window.set_redo_sensitive(False)
+        
         # Connect to USB HID device (if enabled)
         start_usb_hid_input()
 
@@ -578,17 +582,17 @@ def create_gui():
 
     # Unused frames take 3 pixels so hide those.
     editorlayout.set_positions_frames_visibility()
-        
+
     # All widgets are now realized and references captured so can find out theme colors.
     # TODO: Delete this code, we are not detecting anything anymore and theme colors not
     # variable anymore.
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
     gui.pos_bar.set_dark_bg_color()
-    
+
     # Give undo a reference to uimanager for menuitem state changes.
-    #undo.set_menu_items(gui.editor_window.uimanager)
-    
+    undo.set_menu_items(menubar.enable_save, menubar.set_undo_sensitive, menubar.set_redo_sensitive)
+
     updater.display_sequence_in_monitor()
 
 def create_player():
@@ -676,9 +680,10 @@ def init_editor_state():
     gui.media_view_filter_selector.set_pixbuf(editorstate.media_view_filter)
 
     gui.editor_window.window.set_title(editorstate.project.name + " - Flowblade")
-    #gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
-    #gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
-    #gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
+    if editorstate.APP() != None:
+        gui.editor_window.enable_save()
+        gui.editor_window.set_undo_sensitive(False)
+        gui.editor_window.set_redo_sensitive(False)
 
     # Center tracks vertical display and init some listeners to
     # new value and repaint tracks column.
