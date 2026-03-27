@@ -44,9 +44,13 @@ import projectdatavaultgui
 import proxytranscodemanager
 import scripttool
 import singletracktransition
+import tlineaction
 import titler
 import updater
 
+_tline_widgets = None 
+_tline_actions = None
+ 
 
 _recent_menu = None
 _panel_positions_menu = None
@@ -130,7 +134,7 @@ def get_menu():
             <section>
                 <item>
                   <attribute name="label">""" + _("Cut") + """</attribute>
-                  <attribute name="action">win.cutaction</attribute>
+                  <attribute name="action">app.cutaction</attribute>
                 </item>
                 <item>
                   <attribute name="label">""" + _("Copy") + """</attribute>
@@ -642,7 +646,7 @@ def create_actions():
     _create_action("copyaction", lambda w, a: copypaste.copy_action())
     _create_action("pasteaction", lambda w, a: copypaste.paste_action())
     _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
-    _create_win_action("cutaction", lambda w, a: _dummy(w, a), shortcuts.get_shortcut_kb_str(root, "cut", True))
+    _create_action("cutaction", lambda w, a: tlineaction.cut_pressed(), shortcuts.get_shortcut_kb_str(root, "cut", True))
     _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed())
     _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed())
     _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed())
@@ -740,12 +744,22 @@ def create_actions():
     _create_action("runtime", lambda w, a:menuactions.environment())
     _create_action("about", lambda w, a:menuactions.about())
 
-    _connect_for_focus_notifications(gui.tline_canvas.widget)
+    #_connect_for_focus_notifications(gui.tline_canvas.widget)
 
-    wlist = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
-    print(wlist)
+    global _tline_widgets, _tline_actions
+    _tline_widgets = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
+    
+    all_widgets = get_all_widgets(gui.editor_window.window)
+    for w in all_widgets:
+        _connect_for_focus_notifications(w)
+
+    _tline_action_ids = ["cutaction"]
+    _tline_actions = _get_actions(_tline_action_ids)
 
 
+
+    #gui.editor_window.window.connect("notify::focus", _on_focus_changed)
+        
 def _dummy(w, a):
     return False
  
@@ -827,14 +841,41 @@ def set_redo_sensitive(sensitive):
     action = APP().lookup_action("redoaction")
     action.set_enabled(sensitive)
 
-def _connect_for_focus_notifications(widget):
-    widget.connect("focus-in-event", _handle_get_focus)
-    widget.connect("focus-out-event", _handle_lose_focus)
-    
-def _handle_get_focus(w, e):
-    print("get", w)
-    #focus-in-event
+# ---------------------------------- action focus handling
+def get_all_widgets(container):
+    widgets = []
+    if isinstance(container, Gtk.Container):
+        for child in container.get_children():
+            widgets.append(child)
+            widgets.extend(get_all_widgets(child))
+            
+    return widgets
 
-def _handle_lose_focus(w, e):
-    print("lose", w)
-    
+
+def _connect_for_focus_notifications(widget):
+    widget.connect("notify::has-focus", _handle_state_change)
+
+def _get_actions(action_ids):
+    action_list = []
+    for aid in action_ids:
+        action_list.append(APP().lookup_action(aid))
+    return action_list
+
+def _handle_state_change(w, param_spec):
+    #focused = bool(Gtk.StateFlags.FOCUSED & flags)
+    widget = gui.editor_window.window.get_focus()
+    #print("---------------------------------------------")
+    #print(w)
+    #print(widget)
+    #print(w.has_focus(), w==widget)
+    if widget in _tline_widgets:
+        print("tlinewidget has focus")
+        _set_tline_actions_enabled(True)
+    else:
+        print("NON tlinewidget has focus")
+        _set_tline_actions_enabled(False)
+
+def _set_tline_actions_enabled(enabled):
+    for action in _tline_actions:
+        action.set_enabled(enabled)
+   
