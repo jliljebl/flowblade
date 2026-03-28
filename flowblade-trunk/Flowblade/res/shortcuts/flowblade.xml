@@ -52,6 +52,7 @@
     <date format='dd-Mmm-yyyy'>16-Apr-2017</date>
   </author>
   <shortcuts>
+    <event code='new_project' name='New Project' modifiers='CTRL'>n</event>
     <event code='mark_in' name='Mark In'>i</event>
     <event code='mark_out' name='Mark Out'>o</event>
     <event code='to_mark_in' name='Go To Mark In' modifiers='ALT'>i</event>

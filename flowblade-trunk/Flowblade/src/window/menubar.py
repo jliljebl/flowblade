@@ -629,7 +629,7 @@ def create_actions():
     root = shortcuts.get_root()
     print(shortcuts.get_shortcut_kb_str(root, "resync_selected", True))
     
-    _create_action("new", lambda w, a:projectaction.new_project(), "<Ctrl>N")
+    _create_action("new", lambda w, a:projectaction.new_project(), shortcuts.get_shortcut_kb_str(root, "new_project", True))
     _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
     _create_action("save", lambda w, a:projectaction.save_project(), "<Ctrl>S")
     _create_action("saveas", lambda w, a:projectaction.save_project_as())
