@@ -43,10 +43,12 @@ import projectaddmediafolder
 import projectdatavaultgui
 import proxytranscodemanager
 import scripttool
+import shortcutsdialog
 import singletracktransition
 import tlineaction
 import titler
 import updater
+import workflow
 
 _tline_widgets = None 
 _tline_actions = None
@@ -662,7 +664,7 @@ def create_actions():
     _create_action("addtransition", lambda w, a: singletracktransition.add_transition_menu_item_selected())
     _create_action("showdatastore", lambda w, a: projectdatavaultgui.show_project_data_manager_window())
     _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
-    _create_action("showkeyboardshortcuts", lambda w, a: menuactions.profiles_manager())
+    _create_action("showkeyboardshortcuts", lambda w, a: shortcutsdialog.keyboard_shortcuts_dialog(gui.editor_window.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback))
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
 
     _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen())

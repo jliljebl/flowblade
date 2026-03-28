@@ -525,7 +525,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['rangedelete'] = _('Range Delete')
     _keyboard_action_names['set_sync_selected'] = _('Set Sync Relation for Clips on Track')
     _keyboard_action_names['add_dissolve'] = _('Add Rendered Transition')
-    _keyboard_action_names['new_project'] = _('New...')
+    _keyboard_action_names['new_project'] = _('Create New Project')
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
