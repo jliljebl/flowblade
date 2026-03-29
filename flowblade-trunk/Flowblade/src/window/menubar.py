@@ -47,6 +47,7 @@ import shortcutsdialog
 import singletracktransition
 import tlineaction
 import titler
+import undo
 import updater
 import workflow
 
@@ -310,7 +311,7 @@ def get_menu():
                   <attribute name="action">app.zoomin</attribute>
                 </item>
                 <item>
-                  <attribute name="label">""" + _("Zoom out") + """</attribute>
+                  <attribute name="label">""" + _("Zoom Out") + """</attribute>
                   <attribute name="action">app.zoomout</attribute>
                 </item>
                 <item>
@@ -632,19 +633,18 @@ def create_actions():
     print(shortcuts.get_shortcut_kb_str(root, "resync_selected", True))
     
     _create_action("new", lambda w, a:projectaction.new_project(), shortcuts.get_shortcut_kb_str(root, "new_project", True))
-    _create_action("open", lambda w, a:projectaction.load_project(), "<Ctrl>O")
-    _create_action("save", lambda w, a:projectaction.save_project(), "<Ctrl>S")
+    _create_action("open", lambda w, a:projectaction.load_project(), shortcuts.get_shortcut_kb_str(root, "open_project", True))
+    _create_action("save", lambda w, a:projectaction.save_project(), shortcuts.get_shortcut_kb_str(root, "save_project", True))
     _create_action("saveas", lambda w, a:projectaction.save_project_as())
     _create_action("exportxml", lambda w, a:exporting.MELT_XML_export())
     _create_action("exportedl", lambda w, a:exporting.EDL_export())
     _create_action("exportcurrentframe", lambda w, a:exporting.screenshot_export())
     _create_action("exportardour", lambda w, a:exporting.ardour_export())
     _create_action("close", lambda w, a:projectaction.close_project())
-    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), "<Ctrl>Q")
+    _create_action("quit", lambda w, a:callbackbridge.app_shutdown(), shortcuts.get_shortcut_kb_str(root, "quit", True))
 
-    _create_action("undoaction", lambda w, a:undo.do_undo_and_repaint())
-    _create_action("redoaction", lambda w, a:undo.do_undo_and_repaint())
-              
+    _create_action("undoaction", lambda w, a: undo.do_undo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "undo", True))
+    _create_action("redoaction", lambda w, a: undo.do_redo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "redo", True))
     _create_action("copyaction", lambda w, a: copypaste.copy_action())
     _create_action("pasteaction", lambda w, a: copypaste.paste_action())
     _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
@@ -667,27 +667,23 @@ def create_actions():
     _create_action("showkeyboardshortcuts", lambda w, a: shortcutsdialog.keyboard_shortcuts_dialog(gui.editor_window.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback))
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
 
-    _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen())
+    _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen(), "F11")
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:    
         default_value = "singlewindow"
     else:
         default_value = "twowindows"
     _create_stateful_action("windowmode", "s", default_value, lambda a, v: gui.editor_window.change_windows_preference(a, v))
     _create_action("showmiddlebarconfig", lambda w, a: middlebar.show_middlebar_conf_dialog())
-
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         default_value = "middlebar"
     else:
         default_value = "dock"
     _create_stateful_action("tooldockpos", "s", default_value, lambda a, v: gui.editor_window.show_tools_dock_change_from_menu(a, v))
-                                                
     if editorpersistance.prefs.audio_master_position_is_top_row == True:
         default_value = "toprow"
     else:
         default_value = "bottomrow"
     _create_stateful_action("audiomasterposition", "s", default_value, lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
-
-
     _create_action("zoomin", lambda w, a: updater.zoom_in())
     _create_action("zoomout", lambda w, a: updater.zoom_out())
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())

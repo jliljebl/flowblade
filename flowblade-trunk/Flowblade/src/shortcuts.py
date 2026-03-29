@@ -526,6 +526,11 @@ def _set_keyboard_action_names():
     _keyboard_action_names['set_sync_selected'] = _('Set Sync Relation for Clips on Track')
     _keyboard_action_names['add_dissolve'] = _('Add Rendered Transition')
     _keyboard_action_names['new_project'] = _('Create New Project')
+    _keyboard_action_names['open_project'] = _('Open Project')
+    _keyboard_action_names['save_project'] = _('Save Project')
+    _keyboard_action_names['quit'] = _('Quit')
+    _keyboard_action_names['undo'] = _('Undo')
+    _keyboard_action_names['redo'] = _('Redo')
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
