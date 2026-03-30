@@ -686,8 +686,8 @@ def create_actions():
     else:
         default_value = "bottomrow"
     _create_stateful_action("audiomasterposition", "s", default_value, lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
-    _create_action("zoomin", lambda w, a: updater.zoom_in())
-    _create_action("zoomout", lambda w, a: updater.zoom_out())
+    _create_action("zoomin", lambda w, a: updater.zoom_in(), shortcuts.get_shortcut_kb_str(root, "zoom_in", True))
+    _create_action("zoomout", lambda w, a: updater.zoom_out(), shortcuts.get_shortcut_kb_str(root, "zoom_out", True))
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())
 
     _create_action("addmedia", lambda w, a:  projectaction.add_media_files())
@@ -739,7 +739,7 @@ def create_actions():
     _create_action("rerendertransitions", lambda w, a: singletracktransition.rerender_all_rendered_transitions())
     _create_action("rendertimeline", lambda w, a: projectaction.do_rendering())
 
-    _create_action("contents", lambda w, a:menuactions.quick_reference())
+    _create_action("contents", lambda w, a:menuactions.quick_reference(), shortcuts.get_shortcut_kb_str(root, "help", True))
     _create_action("contentsweb", lambda w, a:menuactions.quick_reference_web())
     _create_action("runtime", lambda w, a:menuactions.environment())
     _create_action("about", lambda w, a:menuactions.about())
@@ -749,7 +749,7 @@ def create_actions():
     _tline_widgets = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
     _tline_action_ids = ["cutatplayhead", "liftaction", "resynctrack", "syncallcompositors", \
                          "appendfrommonitor", "insertfrommonitor", "threepointoverwrite", \
-                         "rangeoverwrite", "clearfilters","addtransition"]
+                         "rangeoverwrite", "clearfilters", "addtransition", "zoomin", "zoomout"]
     _tline_actions = _get_actions(_tline_action_ids)
 
     # Connect all widgets in main window to send info on focus changes.
@@ -863,12 +863,12 @@ def _handle_state_change(w, param_spec):
     #print(widget)
     #print(w.has_focus(), w==widget)
     if widget in _tline_widgets:
-        print("tlinewidget has focus")
+        #print("tlinewidget has focus")
         _set_tline_actions_enabled(True)
         if editorstate.current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
             _set_action_enabled("syncallcompositors", False)
     else:
-        print("NON tlinewidget has focus")
+        #print("NON tlinewidget has focus")
         _set_tline_actions_enabled(False)
 
 def _set_tline_actions_enabled(enabled):

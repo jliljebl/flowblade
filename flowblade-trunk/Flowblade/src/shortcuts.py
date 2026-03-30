@@ -44,6 +44,8 @@ RESERVED_SHORTCUTS = [  ("left",[]), ("right",[]), ("up",[]), ("down",[]), ("c",
                         ("s", ["CTRL"]), ("q", ["CTRL"]), ("z", ["CTRL"]), ("y", ["CTRL"]), ("o", ["CTRL"]), ("f11", []), ("kp_1", []), \
                         ("kp_2", []), ("kp_3", []), ("kp_4", []), ("kp_5", []), ("kp_6", []), ("kp_7", []), ("kp_8", []), ("kp_9", []), ("kp_0", [])]
 
+_for_menu_key_names = {"-":"minus", "+":"plus"}
+
 shortcut_files = []
 shortcut_files_display_names = []
 _keyboard_actions = {}
@@ -412,7 +414,14 @@ def get_shortcut_kb_str(root, code, for_menu=False):
                         for single_mod in mod_names:
                             mods_out = mods_out + "<" + single_mod.strip() + ">"
                         mod_name = mods_out
-                return mod_name + _key_names[event.text]
+                
+                # We're using this function for both kbshortcuts dialog and action creation and need some keynames to be different.
+                key_name =_key_names[event.text]
+                if for_menu == True:
+                    if key_name in _for_menu_key_names:
+                        key_name = _for_menu_key_names[key_name]
+
+                return mod_name + key_name
     except Exception as e:
         print("Exception: ", e)
         print("error in get_shortcut_info, event.text:", event.text)
@@ -539,7 +548,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['copyaction'] = _("Copy Clips")
     _keyboard_action_names['pasteaction'] = _("Paste Clips")
     _keyboard_action_names['pastefiltersaction'] = _("Paste Filters/Clips")
-
+    _keyboard_action_names['help'] = _("Contents")
+    
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate
@@ -609,6 +619,8 @@ def _set_key_names():
     _key_names['period'] = _(".")
     _key_names['page_up'] = _("Page Up")
     _key_names['page_down'] = _("Page Down")
+    _key_names['f11'] = _("F11")
+    _key_names['f1'] = _("F1")
 
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")

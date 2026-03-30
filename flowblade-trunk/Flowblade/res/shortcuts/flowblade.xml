@@ -112,7 +112,6 @@
     <event code='play_pause_loop_marks' name='Play / Pause Mark In to Mark Out Loop' modifiers='CTRL'>space</event>
     <event code='trim_start' name='Trim Clip Start To Playhead'>q</event>
     <event code='trim_end' name='Trim Clip End To Playhead'>w</event>
-    <event code='tline_render_request' name='Render Timeline Range' modifiers='ALT'>f</event>
     <event code='toggle_track_output' name='Selected Clip Track Out Enabled/Disabled' modifiers='CTRL'>d</event>
     <event code='tline_page_up' name='Timeline Vertical Page Up'>page_up</event>
     <event code='tline_page_down' name='Timeline Vertical Page Down'>page_down</event>
@@ -156,6 +155,7 @@
     <event code='quickeffect_11' name='Quick Effect 11' modifiers='CTRL'>f11</event>
     <event code='quickeffect_12' name='Quick Effect 12' modifiers='CTRL'>f12</event>
     <event code='fullscreen' name='Fullscreen'>f11</event>
+    <event code='help' name='Help'>f1</event>
     <event code='global_escape' name='Global Escape'>escape</event>
     <event code='global_control_a' name='Global Control A' modifiers='CTRL'>a</event>
   </shortcuts>
