@@ -630,10 +630,9 @@ def get_menu():
     return menubar
 
 def create_actions():
-    
     root = shortcuts.get_root()
-    print(shortcuts.get_shortcut_kb_str(root, "resync_selected", True))
     
+    # NOTE: action ids and keyboard shortcut ids don't match because they were created at different times and the brough together here.
     _create_action("new", lambda w, a:projectaction.new_project(), shortcuts.get_shortcut_kb_str(root, "new_project", True))
     _create_action("open", lambda w, a:projectaction.load_project(), shortcuts.get_shortcut_kb_str(root, "open_project", True))
     _create_action("save", lambda w, a:projectaction.save_project(), shortcuts.get_shortcut_kb_str(root, "save_project", True))
@@ -668,6 +667,7 @@ def create_actions():
     _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
     _create_action("showkeyboardshortcuts", lambda w, a: shortcutsdialog.keyboard_shortcuts_dialog(gui.editor_window.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback))
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
+    _create_action("appendselected", lambda w, a: projectaction.append_selected_media_clips_into_timeline(), shortcuts.get_shortcut_kb_str(root, "append_from_bin", True)) # in a context menu 
 
     _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen(), "F11")
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:    

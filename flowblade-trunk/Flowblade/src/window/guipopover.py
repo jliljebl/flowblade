@@ -30,6 +30,7 @@ import editorstate
 import gui
 import guiutils
 import respaths
+import shortcuts
 import translations
 import utils
 
@@ -135,6 +136,11 @@ def add_menu_action(menu, label, item_id, data, callback, active=True, app=None)
         app.add_action(action)
 
     return action
+
+def add_menu_existing_action(menu, label, item_id, keyshortcut_id):
+    root = shortcuts.get_root()
+    shortcut_str = shortcuts.get_shortcut_kb_str(root, keyshortcut_id)
+    menu.append(label + "\t" + shortcut_str, "app." + item_id) 
 
 def add_menu_action_icon(menu, label, icon, item_id, data, callback):
     menu_item = Gio.MenuItem.new(label, "app." + item_id)
@@ -597,7 +603,8 @@ def media_hamburger_popover_show(launcher, widget, callback):
 
     append_section = Gio.Menu.new()
     add_menu_action(append_section, _("Append All Media to Timeline"), "mediapanel.appendall", "append all", callback)
-    add_menu_action(append_section, _("Append Selected Media to Timeline"), "mediapanel.appendselected", "append selected", callback)
+    add_menu_existing_action(append_section, _("Append Selected Media to Timeline"), "appendselected", "append_from_bin")
+    
     _media_panel_hamburger_menu.append_section(None, append_section)
 
     _media_panel_hamburger_popover = new_popover(widget, _media_panel_hamburger_menu, launcher)
