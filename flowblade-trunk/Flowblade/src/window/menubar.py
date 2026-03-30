@@ -27,8 +27,10 @@ import audiomonitoring
 import batchrendering
 import callbackbridge
 import containerclip
+import copypaste
 import editorlayout
 import editorpersistance
+import editorstate
 from editorstate import APP
 import exporting
 import gmic
@@ -646,22 +648,22 @@ def create_actions():
     _create_action("undoaction", lambda w, a: undo.do_undo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "undo", True))
     _create_action("redoaction", lambda w, a: undo.do_redo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "redo", True))
     _create_action("cutaction", lambda w, a: copypaste.cut_action(), shortcuts.get_shortcut_kb_str(root, "cutaction", True))
-    _create_action("copyaction", lambda w, a: copypaste.copy_action())
-    _create_action("pasteaction", lambda w, a: copypaste.paste_action())
-    _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
-    _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed())
-    _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed())
-    _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed())
-    _create_action("rangeoverwrite", lambda w, a: tlineaction.range_overwrite_pressed())
+    _create_action("copyaction", lambda w, a: copypaste.copy_action(), shortcuts.get_shortcut_kb_str(root, "copyaction", True))
+    _create_action("pasteaction", lambda w, a: copypaste.paste_action(), shortcuts.get_shortcut_kb_str(root, "pasteaction", True))
+    _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste(), shortcuts.get_shortcut_kb_str(root, "pastefiltersaction", True))
+    _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed(), shortcuts.get_shortcut_kb_str(root, "append", True))
+    _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed(), shortcuts.get_shortcut_kb_str(root, "insert", True))
+    _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed(), shortcuts.get_shortcut_kb_str(root, "3_point_overwrite", True))  
+    _create_action("rangeoverwrite", lambda w, a: tlineaction.range_overwrite_pressed(), shortcuts.get_shortcut_kb_str(root, "overwrite_range", True)) 
     _create_action("cutatplayhead", lambda w, a: tlineaction.cut_pressed(), shortcuts.get_shortcut_kb_str(root, "cut", True))
-    _create_action("liftaction", lambda w, a: tlineaction.lift_button_pressed())
+    _create_action("liftaction", lambda w, a: tlineaction.lift_button_pressed(), shortcuts.get_shortcut_kb_str(root, "lift", True))
     _create_action("spliceaction", lambda w, a: tlineaction.splice_out_button_pressed())
-    _create_action("resynctrack", lambda w, a: tlineaction.resync_button_pressed())
-    _create_action("syncallcompositors", lambda w, a: tlineaction.sync_all_compositors())
+    _create_action("resynctrack", lambda w, a: tlineaction.resync_button_pressed(), shortcuts.get_shortcut_kb_str(root, "resync", True))
+    _create_action("syncallcompositors", lambda w, a: tlineaction.sync_all_compositors(), shortcuts.get_shortcut_kb_str(root, "sync_all", True))
     _create_action("allfiltersoff", lambda w, a: tlineaction.all_filters_off())
     _create_action("allfilterson", lambda w, a: tlineaction.all_filters_on())
-    _create_action("clearfilters", lambda w, a: clipmenuaction.clear_filters())
-    _create_action("addtransition", lambda w, a: singletracktransition.add_transition_menu_item_selected())
+    _create_action("clearfilters", lambda w, a: clipmenuaction.clear_filters(), shortcuts.get_shortcut_kb_str(root, "clear_filters", True)) 
+    _create_action("addtransition", lambda w, a: singletracktransition.add_transition_menu_item_selected(), shortcuts.get_shortcut_kb_str(root, "add_dissolve", True)) 
     _create_action("showdatastore", lambda w, a: projectdatavaultgui.show_project_data_manager_window())
     _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
     _create_action("showkeyboardshortcuts", lambda w, a: shortcutsdialog.keyboard_shortcuts_dialog(gui.editor_window.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback))
@@ -704,7 +706,7 @@ def create_actions():
     _create_action("loadgeneratorscript", lambda w, a: containerclip.create_fluxity_media_item())
     _create_action("addbinmainmenu", lambda w, a: projectaction.add_new_bin())
     _create_action("deletebinmainmenu", lambda w, a: projectaction.delete_selected_bin())
-    _create_action("logcliprange", lambda w, a: medialog.log_range_clicked())
+    _create_action("logcliprange", lambda w, a: medialog.log_range_clicked(), shortcuts.get_shortcut_kb_str(root, "log_range", True))  
     _create_action("recreateicons", lambda w, a: menuactions.recreate_media_file_icons())
     _create_action("removeunusedmedia", lambda w, a: projectaction.remove_unused_media())
     _create_action("changeprofile", lambda w, a: projectaction.change_project_profile())
@@ -745,7 +747,9 @@ def create_actions():
     # Create data for timeline actions enbled/disabled handling.
     global _tline_widgets, _tline_actions
     _tline_widgets = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
-    _tline_action_ids = ["cutatplayhead"]
+    _tline_action_ids = ["cutatplayhead", "liftaction", "resynctrack", "syncallcompositors", \
+                         "appendfrommonitor", "insertfrommonitor", "threepointoverwrite", \
+                         "rangeoverwrite", "clearfilters","addtransition"]
     _tline_actions = _get_actions(_tline_action_ids)
 
     # Connect all widgets in main window to send info on focus changes.
@@ -842,7 +846,6 @@ def get_all_widgets(container):
             
     return widgets
 
-
 def _connect_for_focus_notifications(widget):
     widget.connect("notify::has-focus", _handle_state_change)
 
@@ -862,6 +865,8 @@ def _handle_state_change(w, param_spec):
     if widget in _tline_widgets:
         print("tlinewidget has focus")
         _set_tline_actions_enabled(True)
+        if editorstate.current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
+            _set_action_enabled("syncallcompositors", False)
     else:
         print("NON tlinewidget has focus")
         _set_tline_actions_enabled(False)
@@ -869,4 +874,7 @@ def _handle_state_change(w, param_spec):
 def _set_tline_actions_enabled(enabled):
     for action in _tline_actions:
         action.set_enabled(enabled)
-   
+  
+def _set_action_enabled(action_id, enabled):
+    action = APP().lookup_action(action_id)
+    action.set_enabled(enabled)

@@ -407,7 +407,11 @@ def get_shortcut_kb_str(root, code, for_menu=False):
                     if for_menu == False:
                         mod_name = mod_name + " + "
                     else:
-                        mod_name = "<" + mod_name + ">"
+                        mod_names = mod_name.split("+")
+                        mods_out = ""
+                        for single_mod in mod_names:
+                            mods_out = mods_out + "<" + single_mod.strip() + ">"
+                        mod_name = mods_out
                 return mod_name + _key_names[event.text]
     except Exception as e:
         print("Exception: ", e)
@@ -532,7 +536,10 @@ def _set_keyboard_action_names():
     _keyboard_action_names['undo'] = _('Undo')
     _keyboard_action_names['redo'] = _('Redo')
     _keyboard_action_names['cutaction'] = _("Cut")
-    
+    _keyboard_action_names['copyaction'] = _("Copy Clips")
+    _keyboard_action_names['pasteaction'] = _("Paste Clips")
+    _keyboard_action_names['pastefiltersaction'] = _("Paste Filters/Clips")
+
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate

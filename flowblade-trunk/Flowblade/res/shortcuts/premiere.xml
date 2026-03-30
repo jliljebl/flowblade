@@ -59,6 +59,9 @@
     <event code='undo' name='Undo' modifiers='CTRL'>z</event>
     <event code='redo' name='Redo' modifiers='CTRL'>y</event>
     <event code='cutaction' name='Cut' modifiers='CTRL'>x</event>
+    <event code='copyaction' name='Copy' modifiers='CTRL'>c</event>
+    <event code='pasteaction' name='Copy' modifiers='CTRL'>v</event>
+    <event code='pastefiltersaction' name='Paste Filters' modifiers='CTRL+SHIFT'>v</event>
     <event code='mark_in' name='Mark In'>i</event>
     <event code='mark_out' name='Mark Out'>o</event>
     <event code='to_mark_in' name='Go To Mark In' modifiers='ALT'>i</event>
@@ -70,9 +73,7 @@
     <event code='prev_frame' name='Go To Previous Frame' modifiers='Any'>left</event>
     <event code='next_frame' name='Go To Next Frame' modifiers='Any'>right</event>
     <event code='insert' name='Insert'>y</event>
-    <event code='insert' name='Insert' modifiers='SHIFT'>y</event>
     <event code='append' name='Append'>u</event>
-    <event code='append' name='Append' modifiers='SHIFT'>u</event>
     <event code='append_from_bin' modifiers='ALT' name='Append Selected Media From Bin'>a</event>
     <event code='slower' name='Slower'>j</event>
     <event code='stop' name='Stop'>k</event>
