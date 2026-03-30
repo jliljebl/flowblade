@@ -645,15 +645,15 @@ def create_actions():
 
     _create_action("undoaction", lambda w, a: undo.do_undo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "undo", True))
     _create_action("redoaction", lambda w, a: undo.do_redo_and_repaint(), shortcuts.get_shortcut_kb_str(root, "redo", True))
+    _create_action("cutaction", lambda w, a: copypaste.cut_action(), shortcuts.get_shortcut_kb_str(root, "cutaction", True))
     _create_action("copyaction", lambda w, a: copypaste.copy_action())
     _create_action("pasteaction", lambda w, a: copypaste.paste_action())
     _create_action("pastefiltersaction", lambda w, a: tlineaction.do_timeline_filters_paste())
-    _create_action("cutaction", lambda w, a: tlineaction.cut_pressed(), shortcuts.get_shortcut_kb_str(root, "cut", True))
     _create_action("appendfrommonitor", lambda w, a: tlineaction.append_button_pressed())
     _create_action("insertfrommonitor", lambda w, a: tlineaction.insert_button_pressed())
     _create_action("threepointoverwrite", lambda w, a: tlineaction.three_point_overwrite_pressed())
     _create_action("rangeoverwrite", lambda w, a: tlineaction.range_overwrite_pressed())
-    _create_action("cutatplayhead", lambda w, a: tlineaction.cut_pressed())
+    _create_action("cutatplayhead", lambda w, a: tlineaction.cut_pressed(), shortcuts.get_shortcut_kb_str(root, "cut", True))
     _create_action("liftaction", lambda w, a: tlineaction.lift_button_pressed())
     _create_action("spliceaction", lambda w, a: tlineaction.splice_out_button_pressed())
     _create_action("resynctrack", lambda w, a: tlineaction.resync_button_pressed())
@@ -742,24 +742,16 @@ def create_actions():
     _create_action("runtime", lambda w, a:menuactions.environment())
     _create_action("about", lambda w, a:menuactions.about())
 
-    #_connect_for_focus_notifications(gui.tline_canvas.widget)
-
+    # Create data for timeline actions enbled/disabled handling.
     global _tline_widgets, _tline_actions
     _tline_widgets = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)
-    
+    _tline_action_ids = ["cutatplayhead"]
+    _tline_actions = _get_actions(_tline_action_ids)
+
+    # Connect all widgets in main window to send info on focus changes.
     all_widgets = get_all_widgets(gui.editor_window.window)
     for w in all_widgets:
         _connect_for_focus_notifications(w)
-
-    _tline_action_ids = ["cutaction"]
-    _tline_actions = _get_actions(_tline_action_ids)
-
-
-
-    #gui.editor_window.window.connect("notify::focus", _on_focus_changed)
-        
-def _dummy(w, a):
-    return False
  
 def _create_action(name, callback, accel=None):
     action = Gio.SimpleAction.new(name, None)
@@ -784,6 +776,7 @@ def _create_stateful_action(name, typestr, default_value, callback):
     action.connect("change-state", callback)
     APP().add_action(action)
 
+# --------------------------------------------- View menu updates
 def fill_recents_menu_widget(callback):
     """
     Fills menu item with menuitems to open recent projects.

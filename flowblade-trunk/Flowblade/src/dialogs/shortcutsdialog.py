@@ -166,6 +166,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append_from_bin"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "3_point_overwrite"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "overwrite_range"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cutaction"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Shift + Control + V"), _("Paste Filters/Properties")), False, False, 0)

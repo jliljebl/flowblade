@@ -531,7 +531,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['quit'] = _('Quit')
     _keyboard_action_names['undo'] = _('Undo')
     _keyboard_action_names['redo'] = _('Redo')
-
+    _keyboard_action_names['cutaction'] = _("Cut")
+    
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate
