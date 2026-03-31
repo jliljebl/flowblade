@@ -458,12 +458,12 @@ def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
     active = True
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
-    add_menu_action(multi_audio_section, _("Split Audio Synched"), "multiclipmenu.multisplitaudiosynched",  ("multi_split_audio_synched", None), callback, active)
+    add_menu_action(multi_audio_section, _("Split Audio Synched"), "multiclipmenu.multisplitaudiosynched",  ("multi_split_audio_synched", None), callback, active, None, "split_selected")
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
 
-    add_menu_action(multi_audio_section, _("Mute Audio"), "multiclipmenu.muteaudio",  ("multi_mute_audio", None), callback, active)
-    add_menu_action(multi_audio_section, _("Unmute Audio"), "multiclipmenu.unmuteaudio",  ("multi_unmute_audio", None), callback, active)
+    add_menu_action(multi_audio_section, _("Mute Audio"), "multiclipmenu.muteaudio",  ("multi_mute_audio", None), callback, active, None, "toggle_audio_mute")
+    add_menu_action(multi_audio_section, _("Unmute Audio"), "multiclipmenu.unmuteaudio",  ("multi_unmute_audio", None), callback, active, None, "toggle_audio_mute")
 
 def _fill_multi_sync_section(sync_section, clip, track, callback):
     add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.multisetmaster",  ("multi_set_master", None), callback, active, None, "set_sync_relation")
@@ -480,27 +480,26 @@ def _fill_audio_menu(audio_submenu, clip, track, callback):
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
             active = False
-        add_menu_action(audio_submenu, _("Split Audio Synched"), "clipmenu.splitaudiosynched", ("split_audio_synched", None), callback, active)
+        add_menu_action(audio_submenu, _("Split Audio Synched"), "clipmenu.splitaudiosynched", ("split_audio_synched", None), callback, active, None, "split_selected")
 
     active = True
     if utils.is_mlt_xml_file(clip.path) == True:
         active = False
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
-    #producer = Mlt.Producer("")
-    #producer = mlt.Producer(PROJECT().profile, clip.path)
-    #info = utils.get_file_producer_info(producer)
-    #channels = int(info["channels"])
-    #if channels == 0:
-        #active = False
+
+    info = utils.get_file_producer_info(clip)
+    channels = int(info["channels"])
+    if channels == 0:
+        active = False
     active = True
     add_menu_action(audio_submenu, _("Select Clip to Audio Sync With..."), "clipmenu.setaudiosyncclip", ("set_audio_sync_clip", None), callback, active)
         
     active = not(clip.mute_filter==None)
-    add_menu_action(audio_submenu, _("Unmute"), "clipmenu.unmuteclip", ("mute_clip", False), callback, active)
+    add_menu_action(audio_submenu, _("Unmute"), "clipmenu.unmuteclip", ("mute_clip", False), callback, active, None, "toggle_audio_mute")
 
     active = (clip.mute_filter==None)
-    add_menu_action(audio_submenu, _("Mute Audio"), "clipmenu.muteclip", ("mute_clip", True), callback, active)
+    add_menu_action(audio_submenu, _("Mute Audio"), "clipmenu.muteclip", ("mute_clip", True), callback, active, None, "toggle_audio_mute")
 
 def _get_properties_submenu(callback, is_audio_properties=False):
     if is_audio_properties == True:
@@ -687,10 +686,10 @@ def _fill_audio_clip_sync_section(sync_section, clip, callback):
 
 def _fill_audio_mute_menu(audio_mute_menu, clip, callback, preid=""):
     active = not(clip.mute_filter==None)
-    add_menu_action(audio_mute_menu, _("Unmute"), preid + "audioclipmenu.unmuteclip", ("mute_clip", False), callback, active)
+    add_menu_action(audio_mute_menu, _("Unmute"), preid + "audioclipmenu.unmuteclip", ("mute_clip", False), callback, active, None, "toggle_audio_mute") 
 
     active = (clip.mute_filter==None)
-    add_menu_action(audio_mute_menu, _("Mute Audio"), preid + "audioclipmenu.muteclip", ("mute_clip", True), callback, active)
+    add_menu_action(audio_mute_menu, _("Mute Audio"), preid + "audioclipmenu.muteclip", ("mute_clip", True), callback, active, None, "toggle_audio_mute")
 
 def _fill_audio_edit_actions_menu(edit_actions_menu, callback):
     kf_section = Gio.Menu.new()
