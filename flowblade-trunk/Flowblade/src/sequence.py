@@ -427,8 +427,8 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """
-        producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-    
+        producer = mlt.Producer(self.profile, str(path), "avformat-novalidate")
+        
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
