@@ -175,7 +175,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         add_filter_menu = Gio.Menu.new()
         _fill_filters_menus(add_filter_menu, callback, "add_filter", "clipmenu.addfilter.")
         filters_section.append_submenu(_("Add Filter"), add_filter_menu)
-        add_menu_action(filters_section, _("Clear Filters"), "clipmenu.clearfilters",  ("clear_filters", None), callback)
+        add_menu_action(filters_section, _("Clear Filters"), "clipmenu.clearfilters",  ("clear_filters", None), callback, True, None, "clear_filters")
         _clip_menu.append_section(None, filters_section)
 
         filters_copy_section = Gio.Menu.new()
@@ -183,7 +183,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         _fill_clone_filters_menu(clone_sub_menu, callback, False, False)
         filters_copy_section.append_submenu(_("Clone Filter"), clone_sub_menu)
         add_menu_action(filters_copy_section, _("Copy Filters"), "clipmenu.copyfilters",  ("copy_filters", None), callback)
-        add_menu_action(filters_copy_section, _("Paste Filters"), "clipmenu.pastefilters",  ("paste_filters", None), callback)
+        add_menu_action(filters_copy_section, _("Paste Filters"), "clipmenu.pastefilters",  ("paste_filters", None), callback, True, None, "pastefiltersaction")
         _clip_menu.append_section(None, filters_copy_section)
 
         _title_section = Gio.Menu.new()
@@ -283,8 +283,8 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, False, True)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
-        add_menu_action(filters_section, _("Clear Filters"), "audioclipmenu.clearfilters",  ("clear_filters", None), callback)
-        add_menu_action(filters_section, _("Paste Filters"), "audioclipmenu.pastefilters",  ("paste_filters", None), callback)
+        add_menu_action(filters_section, _("Clear Filters"), "audioclipmenu.clearfilters",  ("clear_filters", None), callback, True, None, "clear_filters")
+        add_menu_action(filters_section, _("Paste Filters"), "audioclipmenu.pastefilters",  ("paste_filters", None), callback, True, None, "pastefiltersaction")
         _audio_clip_menu.append_section(None, filters_section)
 
         edit_bottom_section = Gio.Menu.new()
@@ -355,8 +355,8 @@ def multi_clip_popover_menu_show(widget, clip, track, x, y, callback):
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, True, False)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
-        add_menu_action(filters_section, _("Clear Filters"), "multiclipmenu.clearfilters",  ("clear_filters", None), callback)
-        add_menu_action(filters_section, _("Paste Filters"), "multiclipmenu.pastefilters",  ("paste_filters", None), callback)
+        add_menu_action(filters_section, _("Clear Filters"), "multiclipmenu.clearfilters",  ("clear_filters", None), callback, True, None, "clear_filters")
+        add_menu_action(filters_section, _("Paste Filters"), "multiclipmenu.pastefilters",  ("paste_filters", None), callback, True, None, "pastefiltersaction")
         _multi_clip_menu.append_section(None, filters_section)
 
         delete_section = Gio.Menu.new()
@@ -423,8 +423,8 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, False, False, True)
         filters_section.append_submenu(_("Clone Filter"), clone_sub_menu)
-        add_menu_action(filters_section, _("Clear Filters"), "transitionclipmenu.clearfilters",  ("clear_filters", None), callback)
-        add_menu_action(filters_section, _("Paste Filters"), "transitionclipmenu.pastefilters",  ("paste_filters", None), callback)
+        add_menu_action(filters_section, _("Clear Filters"), "transitionclipmenu.clearfilters",  ("clear_filters", None), callback, True, None, "clear_filters")
+        add_menu_action(filters_section, _("Paste Filters"), "transitionclipmenu.pastefilters",  ("paste_filters", None), callback, True, None, "pastefiltersaction")
         _transition_menu.append_section(None, filters_section)
 
     else: # Menu items with possible state changes need to recreated.
@@ -575,7 +575,7 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     edit_actions_menu.append_section(None, sync_section)
 
     length_section = Gio.Menu.new()
-    add_menu_action(length_section, _("Set Clip Length..."), "clipmenu.length",  ("length", None), callback)
+    add_menu_action(length_section, _("Set Clip Length..."), "clipmenu.length",  ("length", None), callback, True, None, "set_length")
     add_menu_action(length_section, _("Stretch Over Next Blank"), "clipmenu.stretchnext",  ("stretch_next", None), callback)
     add_menu_action(length_section,_("Stretch Over Prev Blank"), "clipmenu.stretchprev",  ("stretch_prev", None), callback)
     edit_actions_menu.append_section(None, length_section)
@@ -704,7 +704,7 @@ def _fill_audio_edit_actions_menu(edit_actions_menu, callback):
     edit_actions_menu.append_section(None, del_section)
 
     length_section = Gio.Menu.new()
-    add_menu_action(length_section, _("Set Clip Length..."), "audioclipmenu.length",  ("length", None), callback)
+    add_menu_action(length_section, _("Set Clip Length..."), "audioclipmenu.length",  ("length", None), callback, True, None, "set_length")
     add_menu_action(length_section, _("Stretch Over Next Blank"), "audioclipmenu.stretchnext",  ("stretch_next", None), callback)
     add_menu_action(length_section,_("Stretch Over Prev Blank"), "audioclipmenu.stretchprev",  ("stretch_prev", None), callback)
     edit_actions_menu.append_section(None, length_section)
