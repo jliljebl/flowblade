@@ -123,11 +123,13 @@ mh_transcode_sub_menu = None
     
 
 # -------------------------------------------------- menuitems builder functions
-def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None):
+def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None, shortcut_txt=None):
     if shortcut_id != None:
         root = shortcuts.get_root()
-        label = label  + "\t" +  shortcuts.get_shortcut_kb_str(root, shortcut_id)
-
+        label = label  + "\t              " +  shortcuts.get_shortcut_kb_str(root, shortcut_id)
+    elif shortcut_txt != None:
+        label = label  + "\t              " + shortcut_txt
+            
     if active == True:
         menu.append(label, "app." + item_id) 
     else:
@@ -585,7 +587,7 @@ def media_hamburger_popover_show(launcher, widget, callback):
     _media_panel_hamburger_menu.append_section(None, action_section)
 
     select_section = Gio.Menu.new()
-    add_menu_action(select_section, _("Select All"), "mediapanel.selectall", "select all", callback)
+    add_menu_action(select_section, _("Select All"), "mediapanel.selectall", "select all", callback, True, None, None, "Ctrl + C")
     add_menu_action(select_section, _("Select None"), "mediapanel.selectnone",  "select none", callback)
     _media_panel_hamburger_menu.append_section(None, select_section)
 

@@ -19,6 +19,9 @@
 """
 from gi.repository import Gio, Gtk
 
+
+import mlt7 as mlt
+    
 import copy
 
 import animatedvalue
@@ -26,6 +29,7 @@ import appconsts
 import callbackbridge
 import guipopover
 from editorstate import current_sequence
+from editorstate import PROJECT
 import mltfilters
 import toolsintegration
 import translations
@@ -87,8 +91,8 @@ _kf_select_menu = None
  
  
 # -------------------------------------------------- menuitems builder functions
-def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
-    return guipopover.add_menu_action(menu, label, item_id, data, callback, active, app)
+def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None, shortcut_txt=None):
+    return guipopover.add_menu_action(menu, label, item_id, data, callback, active, app, shortcut_id, shortcut_txt)
 
 def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback):
     return guipopover.add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback)
@@ -483,10 +487,13 @@ def _fill_audio_menu(audio_submenu, clip, track, callback):
         active = False
     if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
         active = False
-    info = utils.get_file_producer_info(clip)
-    channels = int(info["channels"])
-    if channels == 0:
-        active = False
+    #producer = Mlt.Producer("")
+    #producer = mlt.Producer(PROJECT().profile, clip.path)
+    #info = utils.get_file_producer_info(producer)
+    #channels = int(info["channels"])
+    #if channels == 0:
+        #active = False
+    active = True
     add_menu_action(audio_submenu, _("Select Clip to Audio Sync With..."), "clipmenu.setaudiosyncclip", ("set_audio_sync_clip", None), callback, active)
         
     active = not(clip.mute_filter==None)
@@ -552,8 +559,8 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     edit_actions_menu.append_section(None, kf_section)
 
     del_section = Gio.Menu.new()
-    add_menu_action(del_section,_("Delete"), "clipmenu.delete",  ("delete", None), callback)
-    add_menu_action(del_section,_("Lift"), "clipmenu.delete",  ("lift", None), callback)
+    add_menu_action(del_section,_("Delete"), "clipmenu.delete",  ("delete", None), callback,  True, None, None, _("Delete"))
+    add_menu_action(del_section,_("Lift"), "clipmenu.lift",  ("lift", None), callback, True, None, "lift")
     add_menu_action(del_section, _("Ripple Delete Clip Range"), "clipmenu.ripplerange",  ("ripplerange", None), callback)
     edit_actions_menu.append_section(None, del_section)
 
@@ -564,7 +571,7 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     add_menu_action(sync_section,_("Clear Sync Relation"), "clipmenu.clearsyncrel",  ("clear_sync_rel", None), callback, active)
 
     active = (clip.sync_data == None)
-    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.setmaster",  ("set_master", None), callback, active)
+    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.setmaster",  ("set_master", None), callback, active, None, "set_sync_relation")
     edit_actions_menu.append_section(None, sync_section)
 
     length_section = Gio.Menu.new()
