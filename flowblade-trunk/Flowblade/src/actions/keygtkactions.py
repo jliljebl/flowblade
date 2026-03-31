@@ -166,7 +166,7 @@ def init():
     _create_action("delete", _delete_bin_action, [BIN_LIST_VIEW])
     _create_action("delete", _delete_log_action, [LOG_LIST_VIEW])
     _create_action("append_from_bin", projectaction.append_selected_media_clips_into_timeline, TLINE_MONITOR_ALL)
-    _create_action("resync", tlineaction.resync_track_button_pressed, TLINE_MONITOR_ALL) # Currently menu global gets to this firsts.
+    _create_action("resync", tlineaction.resync_track_button_pressed, TLINE_MONITOR_ALL)
     _create_action("resync_selected",  tlineaction.resync_button_pressed, TLINE_MONITOR_ALL)
     _create_action("set_sync_selected",  tlineaction.set_track_sync_button_pressed, TLINE_MONITOR_ALL)
     _create_action("monitor_show_video", lambda: tlineaction.set_monitor_display_mode(appconsts.PROGRAM_OUT_MODE), TLINE_MONITOR_ALL)

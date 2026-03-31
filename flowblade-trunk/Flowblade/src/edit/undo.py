@@ -105,7 +105,7 @@ def register_edit(undo_edit):
     index = index + 1
     
     if editorstate.PROJECT().last_save_path != None:
-        _enable_save_func(True) # Disabled at load and save, first edit enables if project has been saved.
+        _enable_save_func() # Disabled at load and save, first edit enables if project has been saved.
     _undo_item_set_sensitive_func(True)
     _redo_item_set_sensitive_func(False)
 
@@ -179,7 +179,7 @@ def _set_post_edit_mode():
 def make_save_item_active():
     global _enable_save_func
     if editorstate.PROJECT().last_save_path != None and _enable_save_func != None:
-        _enable_save_func(True) # Disabled at load and save, first edit enables if project has been saved.
+        _enable_save_func() # Disabled at load and save, first edit enables if project has been saved.
 
 def undo_redo_stress_test():
     global undo_stack, index

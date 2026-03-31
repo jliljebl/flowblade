@@ -182,7 +182,7 @@ def clip_popover_menu_show(widget, clip, track, x, y, callback):
         clone_sub_menu = Gio.Menu.new()
         _fill_clone_filters_menu(clone_sub_menu, callback, False, False)
         filters_copy_section.append_submenu(_("Clone Filter"), clone_sub_menu)
-        add_menu_action(filters_copy_section, _("Copy Filters"), "clipmenu.copyfilters",  ("copy_filters", None), callback)
+        add_menu_action(filters_copy_section, _("Copy Filters"), "clipmenu.copyfilters",  ("copy_filters", None), callback, True, None, "copyaction")
         add_menu_action(filters_copy_section, _("Paste Filters"), "clipmenu.pastefilters",  ("paste_filters", None), callback, True, None, "pastefiltersaction")
         _clip_menu.append_section(None, filters_copy_section)
 
@@ -466,9 +466,9 @@ def _fill_multi_audio_section(multi_audio_section, clip, track, callback):
     add_menu_action(multi_audio_section, _("Unmute Audio"), "multiclipmenu.unmuteaudio",  ("multi_unmute_audio", None), callback, active)
 
 def _fill_multi_sync_section(sync_section, clip, track, callback):
-    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.multisetmaster",  ("multi_set_master", None), callback)
-    add_menu_action(sync_section,_("Resync"), "clipmenu.multiresync",  ("multi_resync", None), callback)
-    add_menu_action(sync_section,_("Clear Sync Relations"), "clipmenu.multiclearsyncrel",  ("multi_clear_sync_rel", None), callback)
+    add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.multisetmaster",  ("multi_set_master", None), callback, active, None, "set_sync_relation")
+    add_menu_action(sync_section,_("Resync"), "clipmenu.multiresync",  ("multi_resync", None), callback, None, "resync_selected")
+    add_menu_action(sync_section,_("Clear Sync Relations"), "clipmenu.multiclearsyncrel",  ("multi_clear_sync_rel", None), callback, True, None, "clear_sync_relation")
 
 def _fill_audio_menu(audio_submenu, clip, track, callback):
     if track.type == appconsts.VIDEO:
@@ -567,8 +567,8 @@ def _fill_edit_actions_menu(edit_actions_menu, clip, track, callback):
     sync_section = Gio.Menu.new()
 
     active = (clip.sync_data != None)
-    add_menu_action(sync_section,_("Resync"), "clipmenu.resync",  ("resync", None), callback, active)
-    add_menu_action(sync_section,_("Clear Sync Relation"), "clipmenu.clearsyncrel",  ("clear_sync_rel", None), callback, active)
+    add_menu_action(sync_section,_("Resync"), "clipmenu.resync",  ("resync", None), callback, active, None, "resync_selected")
+    add_menu_action(sync_section,_("Clear Sync Relation"), "clipmenu.clearsyncrel",  ("clear_sync_rel", None), callback, active, None, "clear_sync_relation")
 
     active = (clip.sync_data == None)
     add_menu_action(sync_section,_("Select Sync Parent Clip..."), "clipmenu.setmaster",  ("set_master", None), callback, active, None, "set_sync_relation")
@@ -681,9 +681,9 @@ def _fill_generator_render_section(generator_section, clip, callback):
     
 def _fill_audio_clip_sync_section(sync_section, clip, callback):
     is_synched = (clip.sync_data != None)
-    add_menu_action(sync_section, _("Resync"), "audioclipmenu.resync", ("resync", None), callback, is_synched)
-    add_menu_action(sync_section, _("Clear Sync Relation"), "audioclipmenu.clearsyncrel", ("clear_sync_rel", None), callback, is_synched)
-    add_menu_action(sync_section, _("Select Sync Parent Clip..."), "audioclipmenu.setmaster", ("set_master", None), callback, (not is_synched))
+    add_menu_action(sync_section, _("Resync"), "audioclipmenu.resync", ("resync", None), callback, is_synched, None, "resync_selected")
+    add_menu_action(sync_section, _("Clear Sync Relation"), "audioclipmenu.clearsyncrel", ("clear_sync_rel", None), callback, is_synched, None, "clear_sync_relation")
+    add_menu_action(sync_section, _("Select Sync Parent Clip..."), "audioclipmenu.setmaster", ("set_master", None), callback, (not is_synched), None, "set_sync_relation")
 
 def _fill_audio_mute_menu(audio_mute_menu, clip, callback, preid=""):
     active = not(clip.mute_filter==None)
