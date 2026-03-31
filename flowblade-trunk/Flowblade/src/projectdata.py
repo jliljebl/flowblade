@@ -684,7 +684,13 @@ class Thumbnailer:
         consumer.run()
         
         # consumer.run() blocks until done so the thubnailfile is now ready to be copied.
-        shutil.copyfile(userfolders.get_cache_dir() + "thumbnail001.png", thumbnail_path)
+        icon = cairo.ImageSurface.create_from_png(userfolders.get_cache_dir() + "thumbnail001.png")
+        scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH * 4, appconsts.THUMB_HEIGHT * 4)
+        cr = cairo.Context(scaled_icon)
+        cr.scale(float(appconsts.THUMB_WIDTH * 4) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT * 4) / float(icon.get_height()))
+        cr.set_source_surface(icon, 0, 0)
+        cr.paint()
+        scaled_icon.write_to_png(thumbnail_path)
         
         return (thumbnail_path, length, info)
 

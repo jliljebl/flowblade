@@ -25,7 +25,6 @@ Main functionality of the module is to replace unpickleable
 SwigPyObject MLT objects with pickleable python objects for save, 
 and then create MLT objects from pickled objects when project is loaded.
 """
-import time
 import copy
 import glob
 import fnmatch
@@ -391,7 +390,6 @@ def _save_changed_xml_file(s_media_file, new_profile):
 
 # -------------------------------------------------- LOAD
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
-    start = time.time()
     
     _show_msg("Unpickling")
 
@@ -502,9 +500,6 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     project.c_seq = project.sequences[project.c_seq_index]
     if icons_and_thumnails == True:
         project.init_thumbnailer()
-
-    duration = time.time() - start
-    print(duration)
     
     return project
 
