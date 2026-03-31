@@ -38,6 +38,7 @@ import gui
 import keygtkactions
 import shortcuts
 import medialinker
+import mediaplugin
 import menuactions
 import middlebar
 import projectaction
@@ -667,7 +668,7 @@ def create_actions():
     _create_action("showprofilesmanager", lambda w, a: menuactions.profiles_manager())
     _create_action("showkeyboardshortcuts", lambda w, a: shortcutsdialog.keyboard_shortcuts_dialog(gui.editor_window.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, menuactions.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback))
     _create_action("showpreferences", lambda w, a: preferenceswindow.preferences_dialog())
-    _create_action("appendselected", lambda w, a: projectaction.append_selected_media_clips_into_timeline(), shortcuts.get_shortcut_kb_str(root, "append_from_bin", True)) # in a context menu 
+
 
     _create_action("fullscreen", lambda w, a: menuactions.toggle_fullscreen(), "F11")
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:    
@@ -744,6 +745,8 @@ def create_actions():
     _create_action("runtime", lambda w, a:menuactions.environment())
     _create_action("about", lambda w, a:menuactions.about())
 
+    _create_action("appendselected", lambda w, a: projectaction.append_selected_media_clips_into_timeline(), shortcuts.get_shortcut_kb_str(root, "append_from_bin", True)) # in a context menu 
+    
     # Create data for timeline actions enbled/disabled handling.
     global _tline_widgets, _tline_actions
     _tline_widgets = keygtkactions.get_widgets_list(keygtkactions.TLINE_MONITOR_ALL)

@@ -123,7 +123,11 @@ mh_transcode_sub_menu = None
     
 
 # -------------------------------------------------- menuitems builder functions
-def add_menu_action(menu, label, item_id, data, callback, active=True, app=None):
+def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None):
+    if shortcut_id != None:
+        root = shortcuts.get_root()
+        label = label  + "\t" +  shortcuts.get_shortcut_kb_str(root, shortcut_id)
+
     if active == True:
         menu.append(label, "app." + item_id) 
     else:
@@ -240,7 +244,7 @@ def markers_menu_show(launcher, widget, callback):
         _markers_menu.append_section(None, markers_section)
 
     actions_section = Gio.Menu.new()
-    add_menu_action(actions_section, _("Add Marker"), "midbar.markers.addmarker", "add", callback)
+    add_menu_action(actions_section, _("Add Marker"), "midbar.markers.addmarker", "add", callback, True, None, "add_marker")
     add_menu_action(actions_section, _("Delete Marker"), "midbar.markers.delete", "delete", callback)
     add_menu_action(actions_section, _("Delete All Markers"), "midbar.markers.deleteall", "deleteall", callback)
     add_menu_action(actions_section, _("Rename Marker"), "midbar.markers.rename", "rename", callback)
