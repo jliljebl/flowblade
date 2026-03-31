@@ -1471,7 +1471,7 @@ def media_file_name_edited(dialog, response_id, data):
 
 def _display_file_info(media_file):
     # get info
-    clip = current_sequence().create_file_producer_clip(media_file.path, None, False, media_file.ttl)
+    clip = mlt.Producer(PROJECT().profile, str(media_file.path))
     info = utils.get_file_producer_info(clip)
 
     width = info["width"]
