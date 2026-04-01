@@ -38,9 +38,11 @@ import gui
 import keygtkactions
 import shortcuts
 import medialinker
+import medialog
 import mediaplugin
 import menuactions
 import middlebar
+import patternproducer
 import preferenceswindow
 import projectaction
 import projectaddmediafolder
@@ -406,7 +408,7 @@ def get_menu():
                         <attribute name="action">app.addbinmainmenu</attribute>
                     </item>
                     <item>
-                        <attribute name="label">""" + _("'Delete Selected Bin") + """</attribute>
+                        <attribute name="label">""" + _("Delete Selected Bin") + """</attribute>
                         <attribute name="action">app.deletebinmainmenu</attribute>
                     </item>
                 </section>
