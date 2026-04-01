@@ -398,3 +398,4 @@ class EditorPreferences:
         self.mouse_horizontal_scroll_speed = 1 # value is appconstas.MOUSE_H_SCROLL_SPEED_<X> value.
         self.wide_audio_master = True
         self.middlebar_visible = True
+        self.default_playback_interpolation = "nearest"

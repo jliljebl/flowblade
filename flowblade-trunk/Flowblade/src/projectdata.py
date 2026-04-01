@@ -68,7 +68,8 @@ thumbnailer = None
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
                                       appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last rendered transition render selections data
-                                      appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10}  
+                                      appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10, 
+                                      appconsts.P_PROP_PLAYBACK_INTERPOLATION: "nearest"}  
 
 # Flag used to decide if user should be prompt to save project on project exit.
 media_files_changed_since_last_save = False
@@ -100,6 +101,7 @@ class Project:
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
         self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
+        self.project_properties[appconsts.P_PROP_PLAYBACK_INTERPOLATION] = editorpersistance.prefs.default_playback_interpolation
         self.tracking_data = {}
         self.container_default_encoding = None # Set in coantaineractions.py by user.
 

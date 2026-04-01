@@ -310,6 +310,7 @@ def playback_settings_menu_launched(launcher, widget, event):
 def _playback_menu_item_activated(action, new_value_variant):
     msg = new_value_variant.get_string()
     set_monitor_playback_interpolation(msg)
+    PROJECT().set_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION, msg)
     action.set_state(new_value_variant)
     guipopover._playback_settings_popover.hide()
 

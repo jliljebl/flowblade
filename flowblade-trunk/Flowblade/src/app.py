@@ -95,6 +95,7 @@ import mltplayer
 import mltprofiles
 import mlttransitions
 import modesetting
+import monitorevent
 import movemodes
 import multitrimmode
 import mutabletooltips
@@ -781,8 +782,9 @@ def open_project(new_project):
 
     projectaction.clear_changed_since_last_save_flags()
 
-    # Set scrubbing
+    # Set scrubbing and interpolation
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
+    monitorevent.set_monitor_playback_interpolation(editorstate.PROJECT().get_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION))
     
 def _do_window_resized_update():
     GLib.source_remove(resize_timeout_id)
