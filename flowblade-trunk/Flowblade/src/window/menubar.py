@@ -41,6 +41,7 @@ import medialinker
 import mediaplugin
 import menuactions
 import middlebar
+import preferenceswindow
 import projectaction
 import projectaddmediafolder
 import projectdatavaultgui
