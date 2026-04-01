@@ -714,7 +714,7 @@ def create_actions():
     _create_action("recreateicons", lambda w, a: menuactions.recreate_media_file_icons())
     _create_action("removeunusedmedia", lambda w, a: projectaction.remove_unused_media())
     _create_action("changeprofile", lambda w, a: projectaction.change_project_profile())
-    _create_action("projectinfoanddata", lambda w, a: projectdatavaultgui.show_current_project_data_store_info_window())
+    _create_action("projectinfoanddata", lambda w, a: projectaction.show_project_info())
     _create_action("proxymanager", lambda w, a: proxytranscodemanager.show_proxy_manager_dialog())
     _create_action("transcodemanager", lambda w, a: proxytranscodemanager.show_transcode_manager_dialog())
 
