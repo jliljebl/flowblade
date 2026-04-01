@@ -496,7 +496,9 @@ class EditorWindow:
         self.view_mode_select = guicomponents.get_monitor_view_select_launcher(tlineaction.view_mode_menu_lauched)
         self.view_mode_select.widget.set_margin_end(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
-        self.playback_settings = guicomponents.get_playback_settings_launcher(monitorevent.trim_view_menu_launched)
+        self.playback_settings = guicomponents.get_playback_settings_launcher(monitorevent.playback_settings_menu_launched)
+        self.playback_settings.widget.set_margin_right(35) 
+        self.playback_settings.widget.set_tooltip_markup(_("Playback Settings"))
 
         callbacks = [monitorevent.mark_in_pressed,
                      monitorevent.mark_out_pressed,
@@ -939,8 +941,8 @@ class EditorWindow:
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
-        self.monitor_switch.widget.set_margin_top(2)
-        #self.monitor_switch.widget.set_margin_right(4)
+        self.monitor_switch.widget.set_margin_top(1)
+        self.monitor_switch.widget.set_margin_right(4)
 
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()

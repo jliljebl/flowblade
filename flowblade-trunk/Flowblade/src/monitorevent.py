@@ -304,6 +304,16 @@ def down_arrow_seek_on_monitor_clip():
 def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
 
+def playback_settings_menu_launched(launcher, widget, event):
+    guipopover.playback_setting_popupmenu_show(launcher, widget, _playback_menu_item_activated)
+
+def _playback_menu_item_activated(action, new_value_variant):
+    msg = new_value_variant.get_string()
+    set_monitor_playback_interpolation(msg)
+    action.set_state(new_value_variant)
+    guipopover._playback_settings_popover.hide()
+
+
 # -------------------------------------------------- selecting clips for filter editing
 def select_next_clip_for_filter_edit():
     if not editorstate.timeline_visible():

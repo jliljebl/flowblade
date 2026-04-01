@@ -120,6 +120,10 @@ mh_proxy_section = None
 mh_proxy_sub_menu = None
 mh_transcode_section = None
 mh_transcode_sub_menu = None
+_playback_settings_popover = None
+_playback_settings_menu = None
+_interpolation_section = None
+_interpolation_submenu = None
     
 
 # -------------------------------------------------- menuitems builder functions
@@ -517,6 +521,20 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity, wa
 
     _monitorview_popover = new_popover(widget, _monitorview_menu, launcher)
 
+def playback_setting_popupmenu_show(launcher, widget, callback):
+    global _playback_settings_popover, _playback_settings_menu, _interpolation_section, _interpolation_submenu
+
+    if _playback_settings_menu == None:
+        _playback_settings_menu = menu_clear_or_create(_playback_settings_menu)
+        
+        _interpolation_section = menu_clear_or_create(_interpolation_section)
+        items_data = [( _("Nearest Neighbour"), "nearest"), ( _("Bilinear"), "bilinear"), ( _("Bicubic"), "bicubic")]
+        active_index = 0 #current_sequence().get_mix_index()
+        add_menu_action_all_items_radio(_interpolation_section, items_data, "playback.interpolation", active_index, callback)
+        _playback_settings_menu.append_section(None, _interpolation_section)
+
+    _playback_settings_popover = new_popover(widget, _playback_settings_menu, launcher)
+    
 def bins_panel_widget_popover_show(launcher, widget, callback):
     global _bins_panel_widget_popover, _bins_panel_widget_menu
 
