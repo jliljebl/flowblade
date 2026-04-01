@@ -1678,6 +1678,15 @@ def get_trim_view_select_launcher(callback):
 
     menu_launch.widget.set_margin_top(2)
     return menu_launch
+
+def get_playback_settings_launcher(callback):
+    prefs = editorpersistance.prefs
+    surface = guiutils.get_cairo_image("playback_settings")
+    menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
+    menu_launch.surface_y = 3
+
+    menu_launch.widget.set_margin_top(2)
+    return menu_launch
     
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = Gtk.ComboBoxText()
