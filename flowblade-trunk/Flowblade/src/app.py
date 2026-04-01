@@ -784,8 +784,8 @@ def open_project(new_project):
 
     # Set scrubbing and interpolation
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
-    monitorevent.set_monitor_playback_interpolation(editorstate.PROJECT().get_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION))
-    
+    menubar.set_per_project_stateful_action_variants()
+
 def _do_window_resized_update():
     GLib.source_remove(resize_timeout_id)
     updater.window_resized()

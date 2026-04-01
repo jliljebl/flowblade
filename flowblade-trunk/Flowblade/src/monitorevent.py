@@ -305,14 +305,17 @@ def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
 
 def playback_settings_menu_launched(launcher, widget, event):
-    guipopover.playback_setting_popupmenu_show(launcher, widget, _playback_menu_item_activated)
+    guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated)
 
-def _playback_menu_item_activated(action, new_value_variant):
+def playback_menu_item_activated(action, new_value_variant):
     msg = new_value_variant.get_string()
     set_monitor_playback_interpolation(msg)
     PROJECT().set_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION, msg)
     action.set_state(new_value_variant)
-    guipopover._playback_settings_popover.hide()
+    try:
+        guipopover._playback_settings_popover.hide()
+    except:
+        pass
 
 
 # -------------------------------------------------- selecting clips for filter editing

@@ -41,6 +41,7 @@ import medialinker
 import medialog
 import mediaplugin
 import menuactions
+import monitorevent
 import middlebar
 import patternproducer
 import preferenceswindow
@@ -307,6 +308,28 @@ def get_menu():
                         <attribute name="label">""" + _("Bottom Row") + """</attribute>
                         <attribute name="action">app.audiomasterposition</attribute>
                         <attribute name="target">bottomrow</attribute>
+                      </item>
+                      </section>
+                </submenu>
+            </section>
+            <section>
+                <submenu>
+                    <attribute name="label">""" + _("Playback Interpolation") + """</attribute>
+                      <section>
+                      <item>
+                        <attribute name="label">""" + _("Nearest Neighbour") + """</attribute>
+                        <attribute name="action">app.playback.interpolation</attribute>
+                        <attribute name="target">nearest</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("Bilinear") + """</attribute>
+                        <attribute name="action">app.playback.interpolation</attribute>
+                        <attribute name="target">bilinear</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("Bicubic") + """</attribute>
+                        <attribute name="action">app.playback.interpolation</attribute>
+                        <attribute name="target">bicubic</attribute>
                       </item>
                       </section>
                 </submenu>
@@ -690,6 +713,8 @@ def create_actions():
     else:
         default_value = "bottomrow"
     _create_stateful_action("audiomasterposition", "s", default_value, lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
+    default_value = editorpersistance.prefs.default_playback_interpolation
+    _create_stateful_action("playback.interpolation", "s", default_value, lambda a, v: monitorevent.playback_menu_item_activated(a, v))
     _create_action("zoomin", lambda w, a: updater.zoom_in(), shortcuts.get_shortcut_kb_str(root, "zoom_in", True))
     _create_action("zoomout", lambda w, a: updater.zoom_out(), shortcuts.get_shortcut_kb_str(root, "zoom_out", True))
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())
@@ -786,6 +811,13 @@ def _create_stateful_action(name, typestr, default_value, callback):
     action.connect("change-state", callback)
     APP().add_action(action)
 
+# -------------------------------------------- per project stateful action updates
+def set_per_project_stateful_action_variants():
+    action = APP().lookup_action("playback.interpolation")
+    playback_value = GLib.Variant.new_string(editorstate.PROJECT().get_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION))
+    monitorevent.playback_menu_item_activated(action, playback_value)
+
+    
 # --------------------------------------------- View menu updates
 def fill_recents_menu_widget(callback):
     """
