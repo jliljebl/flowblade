@@ -177,13 +177,18 @@ def add_menu_action_radio(menu, label, item_id, target_variant):
     menu_item.set_action_and_target_value("app." + item_id, target_variant)
     menu.append_item(menu_item)
 
-def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, callback):
-
+def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, callback, has_shorcuts=False):
     variants = []
     for item_data in items_data: 
-        label, variant_id = item_data
+        if has_shorcuts == False:
+            label, variant_id = item_data
+            kbstr = ""
+        else:
+            label, variant_id, shortcut_id = item_data
+            root = shortcuts.get_root()
+            kbstr = "\t              " + shortcuts.get_shortcut_kb_str(root, shortcut_id)
         target_variant = GLib.Variant.new_string(variant_id)
-        menu_item = Gio.MenuItem.new(label, "app." + item_id)
+        menu_item = Gio.MenuItem.new(label + kbstr, "app." + item_id)
         menu_item.set_action_and_target_value("app." + item_id, target_variant)
         menu.append_item(menu_item)
         variants.append(target_variant)
@@ -194,7 +199,7 @@ def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, c
     action.connect("activate", callback)
     APP().add_action(action)
 
-    
+
 # --------------------------------------------------- helper functions
 def menu_clear_or_create(menu):
     if menu != None:
@@ -498,12 +503,12 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity, wa
     if _monitorview_menu == None:
         _monitorview_menu = menu_clear_or_create(_monitorview_menu)
         
-        items_data =[( _("Image"), "0"), (_("Vectorscope"), "1"), \
-                    ( _("RGB Parade"), "2")]
+        items_data =[( _("Image"), "0", "monitor_show_video"), (_("Vectorscope"), "1",  "monitor_show_scope"), \
+                    ( _("RGB Parade"), "2",  "monitor_show_rgb")]
         active_index = editorstate.tline_view_mode
         
         view_section = Gio.Menu.new()
-        add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
+        add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback, True)
         _monitorview_menu.append_section(None, view_section)
         
         _opacity_section = menu_clear_or_create(_opacity_section)
@@ -513,12 +518,12 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity, wa
         add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
         _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
         _monitorview_menu.append_section(None, _opacity_section)
-    else:
-        _opacity_submenu = menu_clear_or_create(_opacity_submenu)
-        items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
-        active_index = current_sequence().get_mix_index()
-        add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
-
+    #else:
+    #    _opacity_submenu = menu_clear_or_create(_opacity_submenu)
+    #    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
+    #    active_index = current_sequence().get_mix_index()
+    #    add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
+    
     _monitorview_popover = new_popover(widget, _monitorview_menu, launcher)
 
 def playback_setting_popupmenu_show(launcher, widget, callback):

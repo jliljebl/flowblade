@@ -999,7 +999,6 @@ def _view_mode_menu_item_item_activated(action, new_value_variant):
     editorstate.current_sequence().set_output_mode(msg)
     editorstate.tline_view_mode = msg
     action.set_state(new_value_variant)
-    guipopover._monitorview_popover.hide()
 
 def _waveform_callback(action, variant, msg):
     pass
@@ -1025,7 +1024,6 @@ def _opacity_menu_item_item_activated(action, new_value_variant):
     # see guicomponents.get_monitor_view_popupmenu and sequence.SCOPE_MIX_VALUES
     editorstate.current_sequence().set_scope_overlay_mix(mix_value_index)
     action.set_state(new_value_variant)
-    guipopover._monitorview_popover.hide()
 
 
 # ------------------------------------------------------- dialogs    

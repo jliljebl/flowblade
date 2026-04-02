@@ -302,7 +302,7 @@ def down_arrow_seek_on_monitor_clip():
 
 # -------------------------------------------------- monitor playback interpolation
 def set_monitor_playback_interpolation(new_interpolation):
-    PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
+    PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic" hardcoded into menu items
 
 def playback_settings_menu_launched(launcher, widget, event):
     guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated)
