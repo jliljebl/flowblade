@@ -39,6 +39,7 @@ import appconsts
 import atomicfile
 import editorstate
 import editorpersistance
+import loaddialog
 import mltprofiles
 import mltfilters
 import mlttransitions
@@ -109,10 +110,7 @@ class ProjectProfileNotFoundError(Exception):
 # -------------------------------------------------- LOAD MESSAGES
 def _show_msg(msg):
     if show_messages == True:
-        GLib.idle_add(_do_show_msg, msg)
-
-def _do_show_msg(msg):
-    load_dialog.info.set_text(msg)
+        loaddialog.write_message(msg)
         
 # -------------------------------------------------- SAVE
 def save_project(project, file_path, changed_profile_desc=None):

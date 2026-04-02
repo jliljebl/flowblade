@@ -86,6 +86,7 @@ import keyframeeditor
 import keyframeeditcanvas
 import keygtkactions
 import kftoolmode
+import loaddialog
 import medialinker
 import medialog
 import mediaplugin

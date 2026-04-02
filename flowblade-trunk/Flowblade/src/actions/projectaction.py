@@ -38,6 +38,7 @@ from PIL import Image
 import re
 import shutil
 import subprocess
+import sys
 import time
 import threading
 
@@ -74,6 +75,7 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import jobs
 import kftoolmode
+import loaddialog
 import medialinker
 import medialog
 import mediaplugin
@@ -93,6 +95,7 @@ import proxytranscodemanager
 import render
 import renderconsumer
 import rendergui
+import respaths
 import sequence
 import titler
 import tlinewidgets
@@ -119,8 +122,7 @@ _popover_media_file = None
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, dialog, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
-        self.dialog = dialog
+    def __init__(self, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
         self.filename = filename
         self.block_recent_files = block_recent_files
         self.is_first_video_load = is_first_video_load
@@ -137,9 +139,13 @@ class LoadThread(threading.Thread):
         self.transcode_info = transcode_info
         
     def run(self):
-        ticker = utils.Ticker(_load_pulse_bar, 0.15)
-        ticker.start_ticker()
+        #ticker = utils.Ticker(_load_pulse_bar, 0.15)
+        #ticker.start_ticker()
 
+        FLOG = open(userfolders.get_cache_dir() + "log_load_dialog", 'w')
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeloaddialog"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        loaddialog.write_message(_("Opening..."))
+                
         old_project = editorstate.project
         try:
             editorstate.project_is_loading = True
@@ -157,7 +163,7 @@ class LoadThread(threading.Thread):
             GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker, old_project)
             return
 
-        guiutils.update_text_idle(self.dialog.info, _("Opening"))
+        #guiutils.update_text_idle(self.dialog.info, _("Opening"))
 
         time.sleep(0.3)
 
@@ -183,7 +189,7 @@ class LoadThread(threading.Thread):
             project.last_save_path = first_video_load_project_save_path # This gets set to the temp file saved to change profile which is not correct.
             GLib.idle_add(_enable_save) # Enable save if project saved before video project load.
 
-        ticker.stop_ticker()
+        #ticker.stop_ticker()
 
     def _do_project_open(self, project):
         
@@ -211,7 +217,8 @@ class LoadThread(threading.Thread):
         else:
             pass
 
-        self.dialog.destroy()
+        #self.dialog.destroy()
+        loaddialog.write_message(loaddialog.SHUTDOWN)
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
 
         self.post_open_work_done = True
@@ -646,10 +653,10 @@ def actually_load_project(filename, block_recent_files=False, is_first_video_loa
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
     updater.set_info_icon("document-open")
 
-    dialog = dialogs.load_dialog()
-    persistance.load_dialog = dialog
+    #dialog = dialogs.load_dialog()
+    #persistance.load_dialog = dialog
 
-    load_launch = LoadThread(dialog, filename, False, is_first_video_load, is_autosave_load)
+    load_launch = LoadThread(filename, False, is_first_video_load, is_autosave_load)
     if replace_media_file != None:
         load_launch.set_replace_media_path(replace_media_file_path)
     load_launch.start()
@@ -658,10 +665,10 @@ def transcode_update_load_project(filename, transcoded_files):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
     updater.set_info_icon("document-open")
 
-    dialog = dialogs.load_dialog()
-    persistance.load_dialog = dialog
+    #dialog = dialogs.load_dialog()
+    #persistance.load_dialog = dialog
 
-    load_launch = LoadThread(dialog, filename, True, False, False)
+    load_launch = LoadThread(filename, True, False, False)
     load_launch.set_transcode_info(transcoded_files)
     load_launch.start()
     

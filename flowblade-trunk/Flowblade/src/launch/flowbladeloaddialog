@@ -1,0 +1,16 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+import launchutils
+
+
+modules_path = launchutils.get_modules_path()
+sys.path.insert(0, modules_path)
+
+import processutils
+processutils.update_sys_path(modules_path)
+
+import loaddialog
+loaddialog.main(modules_path)
