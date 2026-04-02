@@ -52,6 +52,7 @@ import sys
 import time
 
 import animatedvalue
+import appactions
 import appconsts
 import audiomonitoring
 import audiowaveformrenderer
@@ -442,7 +443,7 @@ class FlowbladeApplication(Gtk.Application):
         editorstate.app = self
 
         # Menu bar needs app available to create actions.
-        menubar.create_actions()
+        appactions.create_actions()
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
         menubar.fill_panel_positions_menu()
 
@@ -592,7 +593,7 @@ def create_gui():
     gui.pos_bar.set_dark_bg_color()
 
     # Give undo a reference to uimanager for menuitem state changes.
-    undo.set_menu_items(menubar.enable_save, menubar.set_undo_sensitive, menubar.set_redo_sensitive)
+    undo.set_menu_items(appactions.enable_save, appactions.set_undo_sensitive, appactions.set_redo_sensitive)
 
     updater.display_sequence_in_monitor()
 
@@ -784,7 +785,7 @@ def open_project(new_project):
 
     # Set scrubbing and interpolation
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
-    menubar.set_per_project_stateful_action_variants()
+    appactions.set_per_project_stateful_action_variants()
 
 def _do_window_resized_update():
     GLib.source_remove(resize_timeout_id)

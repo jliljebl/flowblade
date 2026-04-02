@@ -26,6 +26,7 @@ from gi.repository import Gtk, GLib
 
 
 import appconsts
+import appactions
 import audiomonitoring
 import audiosync
 import batchrendering
@@ -789,7 +790,7 @@ class EditorWindow:
 
     def init_compositing_mode_menu(self):
         try:
-            menubar.update_compositing_mode_action_state()
+            appactions.update_compositing_mode_action_state()
         except:
             pass
 
@@ -927,16 +928,16 @@ class EditorWindow:
             self.tline_hbox_1.set_margin_top(0)
 
     def enable_save(self):
-        menubar.set_save_action_sensitive(True)
+        appactions.set_save_action_sensitive(True)
 
     def set_save_action_sensitive(self, sensitive):
-        menubar.set_save_action_sensitive(sensitive)
+        appactions.set_save_action_sensitive(sensitive)
 
     def set_undo_sensitive(self, sensitive):
-        menubar.set_undo_sensitive(False)
+        appactions.set_undo_sensitive(False)
 
     def set_redo_sensitive(self, sensitive):
-        menubar.set_redo_sensitive(False)
+        appactions.set_redo_sensitive(False)
         
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
