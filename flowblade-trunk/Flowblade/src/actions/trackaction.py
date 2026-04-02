@@ -65,7 +65,6 @@ def _track_menu_height_activated(action, variant):
         
     action.set_state(variant)
     editorpersistance.save()
-    guipopover._tracks_column_popover.hide()
     
 def lock_track(track_index):
     track = get_track(track_index)

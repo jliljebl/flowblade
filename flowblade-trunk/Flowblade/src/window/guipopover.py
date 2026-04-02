@@ -1062,7 +1062,7 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
     _tracks_column_menu.append_section(None, sync_set_section)
 
     resync_section = Gio.Menu.new()
-    add_menu_action(resync_section, _("Resync Track"), "trackcolumn.sync.resync", (track,"resync", None), callback, active)
+    add_menu_action(resync_section, _("Resync Track"), "trackcolumn.sync.resync", (track,"resync", None), callback, active, None, "resync")
     _tracks_column_menu.append_section(None, resync_section)
 
     rect = create_rect(x, y)
