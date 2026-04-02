@@ -497,7 +497,7 @@ def trim_view_popover_show(launcher, widget, callback):
 
     _trimview_popover = new_popover(widget, _trimview_menu, launcher)
 
-def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity, waveform_callback):
+def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
     global _monitorview_popover, _monitorview_menu, _opacity_section, _opacity_submenu
 
     if _monitorview_menu == None:
