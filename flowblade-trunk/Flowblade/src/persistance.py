@@ -491,9 +491,11 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     persistancecompat.FIX_MISSING_BIN_ATTRS(project.c_bin)
  
     if icons_and_thumnails == True:
-        _show_msg(_("Loading icons"))
+        count = 1
         for k, media_file in project.media_files.items():
+            _show_msg(_("Loading icons") +  " " + str(count))
             media_file.create_icon()
+            count = count + 1
     
     project.c_seq = project.sequences[project.c_seq_index]
     if icons_and_thumnails == True:

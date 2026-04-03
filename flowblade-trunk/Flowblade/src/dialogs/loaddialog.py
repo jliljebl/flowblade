@@ -139,7 +139,7 @@ class ReadMessagesThread(threading.Thread):
 
     def run(self):
         self.msg = ""
-        self.ticker = utilsgtk.GtkTicker(_load_pulse_bar, 250)
+        self.ticker = utilsgtk.GtkTicker(_load_pulse_bar, 100)
         self.ticker.start_ticker()
 
         os.mkfifo(FIFO_PATH) if not os.path.exists(FIFO_PATH) else None
