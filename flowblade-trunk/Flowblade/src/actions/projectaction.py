@@ -139,8 +139,6 @@ class LoadThread(threading.Thread):
         self.transcode_info = transcode_info
         
     def run(self):
-        #ticker = utils.Ticker(_load_pulse_bar, 0.15)
-        #ticker.start_ticker()
 
         FLOG = open(userfolders.get_cache_dir() + "log_load_dialog", 'w')
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeloaddialog"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -568,10 +566,7 @@ def _not_matching_media_info_callback(dialog, response_id, media_file, to_be_tra
         if len(to_be_transcoded) > 0:
             print("haloo")
             proxytranscodemanager.show_transcode_dialog(to_be_transcoded, True)
-                    
-def _load_pulse_bar():
-    GLib.idle_add(persistance.load_dialog.progress_bar.pulse)
-    
+
 def _enable_save():
     if PROJECT().last_save_path != None:
         gui.editor_window.enable_save()
@@ -2469,9 +2464,6 @@ class DuplicateThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        ticker = utils.Ticker(self._pulse_bar, 0.15)
-        ticker.start_ticker()
-
         time.sleep(1.0)
 
         name = current_sequence().name + _("_duplicate_") + str(PROJECT().next_seq_number)
@@ -2529,9 +2521,6 @@ class DuplicateThread(threading.Thread):
         self.seq_build_done = True
 
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-
-    def _pulse_bar(self):
-        GLib.idle_add(persistance.load_dialog.progress_bar.pulse)
 
 
 def _append_sequence(import_seq):
