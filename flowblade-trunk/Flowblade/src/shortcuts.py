@@ -550,6 +550,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['pastefiltersaction'] = _("Paste Filters/Clips")
     _keyboard_action_names['help'] = _("Contents")
     _keyboard_action_names['add_media'] = _("Add Media")
+    _keyboard_action_names['render_timeline'] = _("Render Timeline")
 
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names

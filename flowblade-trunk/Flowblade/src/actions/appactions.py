@@ -172,7 +172,7 @@ def create_actions():
     _create_action("addtobatch", lambda w, a: projectaction.add_to_render_queue())
     _create_action("showbatch", lambda w, a: batchrendering.launch_batch_rendering())
     _create_action("rerendertransitions", lambda w, a: singletracktransition.rerender_all_rendered_transitions())
-    _create_action("rendertimeline", lambda w, a: projectaction.do_rendering())
+    _create_action("rendertimeline", lambda w, a: projectaction.do_rendering(), shortcuts.get_shortcut_kb_str(root, "render_timeline", True))   
 
     _create_action("contents", lambda w, a:menuactions.quick_reference(), shortcuts.get_shortcut_kb_str(root, "help", True))
     _create_action("contentsweb", lambda w, a:menuactions.quick_reference_web())

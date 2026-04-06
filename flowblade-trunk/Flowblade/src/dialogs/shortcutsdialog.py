@@ -148,6 +148,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "render_timeline"), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
 
     tline_vbox = Gtk.VBox()
