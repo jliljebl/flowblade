@@ -65,8 +65,7 @@ _tline_actions = None
 
 def create_actions():
     root = shortcuts.get_root()
-    
-    # NOTE: action ids and keyboard shortcut ids don't match because they were created at different times and the brough together here.
+
     _create_action("new", lambda w, a:projectaction.new_project(), shortcuts.get_shortcut_kb_str(root, "new_project", True))
     _create_action("open", lambda w, a:projectaction.load_project(), shortcuts.get_shortcut_kb_str(root, "open_project", True))
     _create_action("save", lambda w, a:projectaction.save_project(), shortcuts.get_shortcut_kb_str(root, "save_project", True))
@@ -126,7 +125,7 @@ def create_actions():
     _create_action("zoomout", lambda w, a: updater.zoom_out(), shortcuts.get_shortcut_kb_str(root, "zoom_out", True))
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())
 
-    _create_action("addmedia", lambda w, a:  projectaction.add_media_files())
+    _create_action("addmedia", lambda w, a:  projectaction.add_media_files(), shortcuts.get_shortcut_kb_str(root, "add_media", True))
     _create_action("addimgseq", lambda w, a: projectaction.add_image_sequence())
     _create_action("addgenerator", lambda w, a: mediaplugin.show_add_media_plugin_window())
     _create_action("addtitle", lambda w, a:  titler.show_titler())

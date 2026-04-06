@@ -549,7 +549,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['pasteaction'] = _("Paste Clips")
     _keyboard_action_names['pastefiltersaction'] = _("Paste Filters/Clips")
     _keyboard_action_names['help'] = _("Contents")
-    
+    _keyboard_action_names['add_media'] = _("Add Media")
+
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate

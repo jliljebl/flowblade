@@ -58,6 +58,7 @@
     <event code='quit' name='Quit' modifiers='CTRL'>q</event>
     <event code='undo' name='Undo' modifiers='CTRL'>z</event>
     <event code='redo' name='Redo' modifiers='CTRL'>y</event>
+    <event code='add_media' name='Add Media Items' modifiers='CTRL'>m</event>
     <event code='cutaction' name='Cut' modifiers='CTRL'>x</event>
     <event code='copyaction' name='Copy' modifiers='CTRL'>c</event>
     <event code='pasteaction' name='Paste' modifiers='CTRL'>v</event>

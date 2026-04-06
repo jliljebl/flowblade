@@ -136,6 +136,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "new_project"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "save_project"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("DELETE"), _("Delete Selected Item")), False, False, 0) # _get_dynamic_kb_row(root_node, "delete"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_media"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "move_media"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "quit"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "undo"), False, False, 0)
