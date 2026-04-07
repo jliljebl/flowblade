@@ -294,7 +294,11 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
         self.edit_mode = ROTO_POINT_MODE
+        self.closed_listener = None
 
+    def set_closed_listener(self, listener):
+        self.closed_listener = listener
+        
     # ----------------------------------------------------- mouse events
     def hit(self, p):
         self.last_pressed_edit_point = None
@@ -312,7 +316,6 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             return True
         else:
             return True
-
 
     def mouse_pressed(self):
         self.view_editor.edit_area_update_blocked = True
@@ -338,6 +341,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.edit_point_shape.closed = True
                         self.edit_point_shape.maybe_force_line_mask(True) # We start with line mask curve points
                         self.rotomask_editor.update_mask_create_freeze_gui() # Shape closed unfreeze GUI
+                        self.closed_listener.shape_closed()
                     else:
                         # Point pressed, we are moving it
                         self.edit_point_shape.clear_selection()

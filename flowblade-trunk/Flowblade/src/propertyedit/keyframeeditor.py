@@ -2927,6 +2927,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
     def __init__(self, editable_property, keyframe_parser):
         GObject.GObject.__init__(self)
         self.initializing = True # izneeded?!?
+        self.editable_property = editable_property
 
         use_clip_in = True
         
@@ -3107,7 +3108,9 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.clip_editor.set_sensitive(sensitive)
         self.clip_editor.widget.queue_draw()
 
-
+    def reinit_keyframes(self):
+        self.clip_editor.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
+        
 # ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
 class PositionNumericalEntries(Gtk.HBox):
     

@@ -253,7 +253,7 @@ def get_editor_for_property(editable_property):
             ep.property_index == editable_property.property_index:
             return _editor_for_property[ep]
 
-    print("editable property not found ")
+    print("get_editor_for_property(): editor for editable property not found. Is ok with rotomask, otherwise maybe an issue")
     return None
 
 def _get_compositor_editor_for_property(editable_property):

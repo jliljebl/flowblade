@@ -500,38 +500,6 @@ class RotoMaskEditShape(EditPointShape):
         self.maybe_force_line_mask()
         self.set_points_mask_type_data()
 
-    """
-    OLD ALGO FOR GETTING SEQ TO PLACE POINT IN BETWEEN
-    KEEP AROUND FOR COMPARISON
-    def get_point_insert_seq(self, p):
-        # Return index of first curve point in the curve seqment that is closest to given point.
-        seq_index = -1
-        closest_dist = 10000000000.0
-        for i in range(0, len(self.curve_points)):
-            dist = self.get_point_dist_from_seq(p, i)
-            if dist >= 0 and dist < closest_dist:
-                closest_dist = dist
-                seq_index = i
-        
-        return seq_index
-
-    def get_point_dist_from_seq(self, p, seq_index):
-        start = self.curve_points[seq_index].get_pos()
-
-        if seq_index < len(self.curve_points) - 1:
-            end = self.curve_points[seq_index + 1].get_pos()
-        else:
-            end = self.curve_points[0].get_pos()
-        
-        seq = viewgeom.get_vec_for_points(start, end)
-
-        if seq.point_is_between(p) == True:
-            dist = seq.get_distance_vec(p)
-            return abs(dist.get_length())
-        else:
-            return -1
-    """
-
     def get_point_insert_side(self, p):
         # We need possibility to have a closed polygon for this to be meaningful
         if len(self.curve_points) < 3:

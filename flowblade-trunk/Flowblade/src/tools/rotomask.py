@@ -32,6 +32,8 @@ import guiutils
 import keyframeeditor
 import propertyparse
 import respaths
+import shortcuts
+import undo
 import vieweditor
 import vieweditorlayer
 import vieweditorshape
@@ -97,6 +99,7 @@ class RotoMaskEditor(Gtk.Window):
         self.set_transient_for(gui.editor_window.window)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
+        self.lowest_allowed_undo = 999 # This disables undos until enabled.
         
         if editorstate.screen_size_small_height() == True:
             global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
@@ -247,6 +250,16 @@ class RotoMaskEditor(Gtk.Window):
 
         self.update_mask_create_freeze_gui()
 
+        if self.roto_mask_layer.edit_point_shape.closed == True:
+            # enable undos if mask closed only upto place where this editor was opened, we don't have code to handle unclosed masks or re-init after undo removes rotofilter.
+            self.lowest_allowed_undo = len(undo.index)
+        else:
+            self.roto_mask_layer.set_closed_listener(self)
+
+    def shape_closed(self):
+        # enable undos if mask closed only up to place where mask was closed, we don't have code to handle unclosed masks or re-init after undo removes rotofilter.
+        self.lowest_allowed_undo = len(undo.undo_stack)
+    
     def mask_type_selection_changed(self, combo_box):
         if combo_box.get_active() == 0:
             self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.CURVE_MASK)
@@ -376,6 +389,20 @@ class RotoMaskEditor(Gtk.Window):
             self.kf_editor.display_tline_frame(tline_frame)
             self.show_current_frame()
             return True
+        
+        action = shortcuts.get_shortcut_action(event)
+        if action == "undo":
+            if undo.index > self.lowest_allowed_undo + 1:
+                undo.do_undo_and_repaint()
+                self.kf_editor.reinit_keyframes()
+                self.show_current_frame()
+                self.roto_mask_layer.edit_point_shape.update_shape()
+
+        elif action == "redo":
+            undo.do_redo_and_repaint()
+            self.kf_editor.reinit_keyframes()
+            self.show_current_frame()
+            self.roto_mask_layer.edit_point_shape.update_shape()
             
         # Key event was not handled here.
         return False
