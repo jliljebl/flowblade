@@ -1,5 +1,9 @@
 # Release Notes
 
+## FLOWBLADE 2.24.1
+Date: December 6, 2025
+
+Fixes a mouse scroll regression issue, a typo in application menu and video monitor displayed image size issue on systems with scaled output.
 
 ## FLOWBLADE 2.24
 Date: December 6, 2025
