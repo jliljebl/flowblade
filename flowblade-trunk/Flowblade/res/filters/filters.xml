@@ -278,7 +278,7 @@
     <filter id="ladspa.1406">
         <name>Mono to Stereo</name>
         <group>Audio</group>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="channelswap">
         <name>Swap Channels</name>
@@ -287,24 +287,24 @@
     <filter id="dynamic_loudness">
         <name>Normalize</name>
         <group>Audio</group>
-        <property name="target_loudness" args="range_in=-50,-10 range_out=-50,-10 editor=ladspa_slider displayname=Target!Loudness">-23.0</property>
-        <property name="window" args="range_in=1,20 range_out=1,20 editor=ladspa_slider displayname=Analysis!Length">10</property>
-        <property name="max_gain" args="range_in=0,30 range_out=0,30 editor=ladspa_slider displayname=Max!Gain">15.0</property>
-        <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
+        <property name="target_loudness" args="range_in=-50,-10 range_out=-50,-10 editor=slider displayname=Target!Loudness">-23.0</property>
+        <property name="window" args="range_in=1,20 range_out=1,20 editor=slider displayname=Analysis!Length">10</property>
+        <property name="max_gain" args="range_in=0,30 range_out=0,30 editor=slider displayname=Max!Gain">15.0</property>
+        <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=slider displayname=Min!Gain">-15.0</property>
         <property name="max_rate" args="editor=no_editor">3.0</property>
     </filter>
     <filter id="ladspa.1410">
         <name>Noise Gate</name>
         <group>Audio</group> 
-        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=ladspa_slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
-        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
-        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
-        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
-        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
-        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
-        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
+        <property name="0" args="range_in=33.6,4800 range_out=33.6,4800 editor=slider step=0.1 scale_digits=1 displayname=LF!keyfilter(Hz)">33.6</property>
+        <property name="1" args="range_in=240,23520.0 range_out=240,23520.0 editor=slider step=0.1 scale_digits=1 displayname=HF!keyfilter(Hz)">23520.0</property>
+        <property name="2" args="range_in=-70,20 range_out=-70,20 editor=slider step=0.1 scale_digits=1 displayname=Threshold(dB)">-70.0</property>
+        <property name="3" args="range_in=0.01,1000 range_out=0.01,1000 editor=slider step=0.1 scale_digits=2 displayname=Attack(ms)">250.0</property>
+        <property name="4" args="range_in=2,2000 range_out=2,2000 editor=slider step=0.1 scale_digits=2 displayname=Hold(ms)">1500.0</property>
+        <property name="5" args="range_in=2,4000 range_out=2,4000 editor=slider step=0.1 scale_digits=2 displayname=Decay(ms)">2000.0</property>
+        <property name="6" args="range_in=-90,0 range_out=-90,0 editor=slider step=0.1 scale_digits=1 displayname=Range(dB)">-90.0</property>
         <property name="7" args="editor=no_editor">0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="channelswap">
       <name>Channel Copy</name>
@@ -319,221 +319,221 @@
     <filter id="ladspa.1433">
         <name>Pitchshifter - AM</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=25,400 range_out=0.25,4.0 editor=ladspa_slider displayname=Pitch!Shift">1.0</property>
-        <property name="1" args="range_in=1,7 range_out=1,7 editor=ladspa_slider displayname=Buffer!Size">4</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="0" args="range_in=25,400 range_out=0.25,4.0 editor=slider displayname=Pitch!Shift">1.0</property>
+        <property name="1" args="range_in=1,7 range_out=1,7 editor=slider displayname=Buffer!Size">4</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1408">
         <name>Distort - Barry's Satan</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=2,30 range_out=2,30 editor=ladspa_slider displayname=Decay!Time(samples)">30</property>
-        <property name="1" args="range_in=-90,0 range_out=-90,0 editor=ladspa_slider displayname=Knee!Point(dB)">-30</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="0" args="range_in=2,30 range_out=2,30 editor=slider displayname=Decay!Time(samples)">30</property>
+        <property name="1" args="range_in=-90,0 range_out=-90,0 editor=slider displayname=Knee!Point(dB)">-30</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1431">
         <name>Frequency Shift - Bode/Moog</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=0,5000 range_out=0,5000 editor=ladspa_slider displayname=Frequency!shift">100</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="0" args="range_in=0,5000 range_out=0,5000 editor=slider displayname=Frequency!shift">100</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1901">
         <name>Equalize - DJ 3-band</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=-70.0,6.0 range_out=-70.0,6.0 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Low!Gain(dB)">0</property>
-        <property name="1" args="range_in=-70,6 range_out=-70,6 editor=ladspa_slider displayname=Mid!Gain(dB)">0</property>
-        <property name="2" args="range_in=-70,6 range_out=-70,6 editor=ladspa_slider displayname=High!Gain(dB)">0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="0" args="range_in=-70.0,6.0 range_out=-70.0,6.0 step=0.1 scale_digits=1 editor=slider displayname=Low!Gain(dB)">0</property>
+        <property name="1" args="range_in=-70,6 range_out=-70,6 editor=slider displayname=Mid!Gain(dB)">0</property>
+        <property name="2" args="range_in=-70,6 range_out=-70,6 editor=slider displayname=High!Gain(dB)">0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1438">
         <name>Flanger - DJ</name>
         <group>Audio Filter</group>  
         <property name="0" args="editor=no_editor">0.0</property>
-        <property name="1" args="range_in=0.1,32.0 range_out=0.1,32.0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Oscillation!period(s)">1.0</property>
-        <property name="2" args="range_in=1,5 range_out=1,5 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Oscillation!depth(ms)">4.0</property>
-        <property name="3" args="range_in=-100,100 range_out=-100,100 editor=ladspa_slider displayname=Feedback%">0.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="1" args="range_in=0.1,32.0 range_out=0.1,32.0 editor=slider step=0.1 scale_digits=1 displayname=Oscillation!period(s)">1.0</property>
+        <property name="2" args="range_in=1,5 range_out=1,5 editor=slider step=0.1 scale_digits=1 displayname=Oscillation!depth(ms)">4.0</property>
+        <property name="3" args="range_in=-100,100 range_out=-100,100 editor=slider displayname=Feedback%">0.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1195">
         <name>Declipper</name>
         <group>Audio Filter</group>  
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1402">
         <name>Delayorama</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=0,1000 range_out=0,1000 editor=ladspa_slider displayname=Random!seed">0</property>
-        <property name="1" args="range_in=-96,24 range_out=-96,24 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Input!Gain(dB)">0.0</property>
-        <property name="2" args="range_in=0,100 range_out=0,100 editor=ladspa_slider displayname=Feedback(%)">0.0</property>
-        <property name="3" args="range_in=2,128 range_out=2,128 editor=ladspa_slider displayname=Number!of!taps">2</property>
-        <property name="4" args="range_in=0,5 range_out=0,5 editor=ladspa_slider step=0.1 scale_digits=2 displayname=First!Delay(s)">0.0</property>
-        <property name="5" args="range_in=0,6 range_out=0,6 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Delay!Range(s)">6.0</property>
-        <property name="6" args="range_in=0.2,5 range_out=0.2,5 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Delay!Change">1.0</property>
-        <property name="7" args="range_in=0,100 range_out=0,100 editor=ladspa_slider displayname=Delay!Random(%)">0.0</property>
-        <property name="8" args="range_in=0.2,5 range_out=0.2,5 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Amplitude!Change">1.0</property>
-        <property name="9" args="range_in=0,100 range_out=0,100 editor=ladspa_slider displayname=Amplitude!Random(%)">0.0</property>
+        <property name="0" args="range_in=0,1000 range_out=0,1000 editor=slider displayname=Random!seed">0</property>
+        <property name="1" args="range_in=-96,24 range_out=-96,24 editor=slider step=0.1 scale_digits=1 displayname=Input!Gain(dB)">0.0</property>
+        <property name="2" args="range_in=0,100 range_out=0,100 editor=slider displayname=Feedback(%)">0.0</property>
+        <property name="3" args="range_in=2,128 range_out=2,128 editor=slider displayname=Number!of!taps">2</property>
+        <property name="4" args="range_in=0,5 range_out=0,5 editor=slider step=0.1 scale_digits=2 displayname=First!Delay(s)">0.0</property>
+        <property name="5" args="range_in=0,6 range_out=0,6 editor=slider step=0.1 scale_digits=1 displayname=Delay!Range(s)">6.0</property>
+        <property name="6" args="range_in=0.2,5 range_out=0.2,5 editor=slider step=0.1 scale_digits=2 displayname=Delay!Change">1.0</property>
+        <property name="7" args="range_in=0,100 range_out=0,100 editor=slider displayname=Delay!Random(%)">0.0</property>
+        <property name="8" args="range_in=0.2,5 range_out=0.2,5 editor=slider step=0.1 scale_digits=2 displayname=Amplitude!Change">1.0</property>
+        <property name="9" args="range_in=0,100 range_out=0,100 editor=slider displayname=Amplitude!Random(%)">0.0</property>
         <property name="10" args="editor=no_editor">1.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1185">
         <name>Distort - Diode Processor</name>
         <group>Audio Filter</group>  
-        <property name="0" args="range_in=0,2.9 range_out=-0,2.9 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Amount">1.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=0,2.9 range_out=-0,2.9 editor=slider step=0.1 scale_digits=1 displayname=Amount">1.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1213">
         <name>Distort - Foldover</name>
         <group>Audio Filter</group>  
-        <property name="0" args="editor=ladspa_slider step=0.1 scale_digits=2 displayname=Drive">0.5</property>
-        <property name="1" args="editor=ladspa_slider step=0.1 scale_digits=2 displayname=Skew">0.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="editor=slider step=0.1 scale_digits=2 displayname=Drive">0.5</property>
+        <property name="1" args="editor=slider step=0.1 scale_digits=2 displayname=Skew">0.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1904">
         <name>Highpass - Butterworth</name>
         <group>Audio Filter</group> 
-        <property name="0" args="range_in=40,20000 range_out=40,20000 editor=ladspa_slider displayname=Cutoff!Frequency(Hz)">500</property>
-        <property name="1" args="range_in=0.1,1.49 range_out=0.1,1.49 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Resonance">0.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=40,20000 range_out=40,20000 editor=slider displayname=Cutoff!Frequency(Hz)">500</property>
+        <property name="1" args="range_in=0.1,1.49 range_out=0.1,1.49 editor=slider step=0.1 scale_digits=2 displayname=Resonance">0.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1903">
         <name>Lowpass - Butterworth</name>
         <group>Audio Filter</group> 
-        <property name="0" args="range_in=40,20000 range_out=40,20000 editor=ladspa_slider displayname=Cutoff!Frequency(Hz)">500</property>
-        <property name="1" args="range_in=0.1,1.49 range_out=0.1,1.49 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Resonance">0.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=40,20000 range_out=40,20000 editor=slider displayname=Cutoff!Frequency(Hz)">500</property>
+        <property name="1" args="range_in=0.1,1.49 range_out=0.1,1.49 editor=slider step=0.1 scale_digits=2 displayname=Resonance">0.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1215">
         <name>GSM Simulator</name>
         <group>Audio Filter</group> 
         <property name="0" args="editor=no_editor">1</property>
-        <property name="1" args="range_in=0,10 range_out=0,10 editor=ladspa_slider displayname=Passes">1</property>
-        <property name="2" args="range_in=0,30 range_out=0,30 editor=ladspa_slider displayname=Error!Rate">0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="1" args="range_in=0,10 range_out=0,10 editor=slider displayname=Passes">1</property>
+        <property name="2" args="range_in=0,30 range_out=0,30 editor=slider displayname=Error!Rate">0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1216">
         <name>Reverb - GVerb</name>
         <group>Audio Filter</group> 
-        <property name="0" args="range_in=1,300 range_out=1,300 editor=ladspa_slider displayname=Roomsize">75.75</property>
-        <property name="1" args="range_in=0.1,30 range_out=0.1,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Reverb!time(s)">7.575</property>
-        <property name="2" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Damping">0.5</property>
-        <property name="3" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Input!bandwidth">0.75</property>
-        <property name="4" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Dry!signal!level(dB)">-70.0</property>
-        <property name="5" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Early!reflection!level(dB)">0.0</property>
-        <property name="6" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Tail!level(dB)">-17.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=1,300 range_out=1,300 editor=slider displayname=Roomsize">75.75</property>
+        <property name="1" args="range_in=0.1,30 range_out=0.1,30 editor=slider step=0.1 scale_digits=1 displayname=Reverb!time(s)">7.575</property>
+        <property name="2" args="range_in=0,100 range_out=0,1 editor=slider displayname=Damping">0.5</property>
+        <property name="3" args="range_in=0,100 range_out=0,1 editor=slider displayname=Input!bandwidth">0.75</property>
+        <property name="4" args="range_in=-70,0 range_out=-70,0 editor=slider step=0.1 scale_digits=1 displayname=Dry!signal!level(dB)">-70.0</property>
+        <property name="5" args="range_in=-70,0 range_out=-70,0 editor=slider step=0.1 scale_digits=1 displayname=Early!reflection!level(dB)">0.0</property>
+        <property name="6" args="range_in=-70,0 range_out=-70,0 editor=slider step=0.1 scale_digits=1 displayname=Tail!level(dB)">-17.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1892">
         <name>Bandpass</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=4.8,20000 range_out=4.8,20000 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Center!Frequency(Hz)">300.0</property>
-        <property name="1" args="range_in=4.8,20000 range_out=4.8,20000 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Bandwidth(Hz)">300.0</property>
-        <property name="2" args="range_in=1,10 range_out=1,10 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Stages">1</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=4.8,20000 range_out=4.8,20000 editor=slider step=0.1 scale_digits=1 displayname=Center!Frequency(Hz)">300.0</property>
+        <property name="1" args="range_in=4.8,20000 range_out=4.8,20000 editor=slider step=0.1 scale_digits=1 displayname=Bandwidth(Hz)">300.0</property>
+        <property name="2" args="range_in=1,10 range_out=1,10 editor=slider step=0.1 scale_digits=1 displayname=Stages">1</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1194">
         <name>Pitchscaler - High Quality</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=0.5,2 range_out=0.5,2 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Pitch-coefficient">1.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=0.5,2 range_out=0.5,2 editor=slider step=0.1 scale_digits=2 displayname=Pitch-coefficient">1.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1197">
         <name>Equalize - Multiband</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=50Hz!gain">0</property>
-        <property name="1" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=100Hz!gain">0</property>
-        <property name="2" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=156Hz!gain">0</property>
-        <property name="3" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=220Hz!gain">0</property>
-        <property name="4" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=311Hz!gain">0</property>
-        <property name="5" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=440Hz!gain">0</property>
-        <property name="6" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=622Hz!gain">0</property>
-        <property name="7" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=880Hz!gain">0</property>
-        <property name="8" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=1250Hz!gain">0</property>
-        <property name="9" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=1750Hz!gain">0</property>
-        <property name="10" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=2500Hz!gain">0</property>
-        <property name="11" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=3500Hz!gain">0</property>
-        <property name="12" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=5000Hz!gain">0</property>
-        <property name="13" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=100000Hz!gain">0</property>
-        <property name="14" args="range_in=-70,30 range_out=-70,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=200000Hz!gain">0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=50Hz!gain">0</property>
+        <property name="1" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=100Hz!gain">0</property>
+        <property name="2" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=156Hz!gain">0</property>
+        <property name="3" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=220Hz!gain">0</property>
+        <property name="4" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=311Hz!gain">0</property>
+        <property name="5" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=440Hz!gain">0</property>
+        <property name="6" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=622Hz!gain">0</property>
+        <property name="7" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=880Hz!gain">0</property>
+        <property name="8" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=1250Hz!gain">0</property>
+        <property name="9" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=1750Hz!gain">0</property>
+        <property name="10" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=2500Hz!gain">0</property>
+        <property name="11" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=3500Hz!gain">0</property>
+        <property name="12" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=5000Hz!gain">0</property>
+        <property name="13" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=100000Hz!gain">0</property>
+        <property name="14" args="range_in=-70,30 range_out=-70,30 editor=slider step=0.1 scale_digits=1 displayname=200000Hz!gain">0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1423">
         <name>Reverb - Plate</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=0.01,8.5 range_out=0.01,8.5 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Reverb!time">4.25</property>
-        <property name="1" args="range_in=0,100 editor=ladspa_slider displayname=Damping">0.25</property>
-        <property name="2" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet!mix">0.66</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=0.01,8.5 range_out=0.01,8.5 editor=slider step=0.1 scale_digits=2 displayname=Reverb!time">4.25</property>
+        <property name="1" args="range_in=0,100 editor=slider displayname=Damping">0.25</property>
+        <property name="2" args="range_in=0,100 editor=slider displayname=Dry/Wet!mix">0.66</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1910">
         <name>Distort - Pointer cast</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=5,14400 range_out=5,14400 editor=ladspa_slider displayname=Effect!cutoff(Hz)">500</property>
-        <property name="1" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet!mix">0.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=5,14400 range_out=5,14400 editor=slider displayname=Effect!cutoff(Hz)">500</property>
+        <property name="1" args="range_in=0,100 editor=slider displayname=Dry/Wet!mix">0.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1417">
         <name>Rate Shifter</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=-4,4 range_out=-4,4 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Rate">0.5</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=-4,4 range_out=-4,4 editor=slider step=0.1 scale_digits=2 displayname=Rate">0.5</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1210">
         <name>Signal Shifter</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=0,1000 range_out=0,1000 editor=ladspa_slider displayname=Sift">20</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=0,1000 range_out=0,1000 editor=slider displayname=Sift">20</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1198">
         <name>Distort - Sinus Wavewrap</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=0,10 range_out=0,10 editor=ladspa_slider step=0.1 scale_digits=2 displayname=Amount">5.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=0,10 range_out=0,10 editor=slider step=0.1 scale_digits=2 displayname=Amount">5.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1905">
         <name>Vinyl Effect</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=1900,1990 range_out=1900,1990 editor=ladspa_slider displayname=Year">1950</property>
-        <property name="1" args="range_in=33,78 range_out=33,78 editor=ladspa_slider displayname=RPM">33</property>
-        <property name="2" args="range_in=0,100 editor=ladspa_slider displayname=Surface!warping">0</property>
-        <property name="3" args="range_in=0,100 editor=ladspa_slider displayname=Cracle">0</property>
-        <property name="4" args="range_in=0,100 editor=ladspa_slider displayname=Wear">0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1.0</property>
+        <property name="0" args="range_in=1900,1990 range_out=1900,1990 editor=slider displayname=Year">1950</property>
+        <property name="1" args="range_in=33,78 range_out=33,78 editor=slider displayname=RPM">33</property>
+        <property name="2" args="range_in=0,100 editor=slider displayname=Surface!warping">0</property>
+        <property name="3" args="range_in=0,100 editor=slider displayname=Cracle">0</property>
+        <property name="4" args="range_in=0,100 editor=slider displayname=Wear">0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1.0</property>
     </filter>
     <filter id="ladspa.1201">
         <name>Chorus - Multivoice</name>
         <group>Audio Filter</group>
-        <property name="0" args="range_in=1,8 range_out=1,8 editor=ladspa_slider displayname=Number!of!voices">1</property>
-        <property name="1" args="range_in=10,40 range_out=10,40 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Delay!base(ms)">10.0</property>
-        <property name="2" args="range_in=0,2 range_out=0,2 step=0.1 scale_digits=2 editor=ladspa_slider displayname=Voice!separation(ms)">0.5</property>
-        <property name="3" args="range_in=0,5 range_out=0,5 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Detune(%)">1.0</property>
-        <property name="4" args="range_in=2,30 range_out=2,30 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Oscillation!frequency(Hz)">9.0</property>
-        <property name="5" args="range_in=-20,0 range_out=-20,0 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Output!attenuation(dB)">0.0</property>
-        <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
+        <property name="0" args="range_in=1,8 range_out=1,8 editor=slider displayname=Number!of!voices">1</property>
+        <property name="1" args="range_in=10,40 range_out=10,40 step=0.1 scale_digits=1 editor=slider displayname=Delay!base(ms)">10.0</property>
+        <property name="2" args="range_in=0,2 range_out=0,2 step=0.1 scale_digits=2 editor=slider displayname=Voice!separation(ms)">0.5</property>
+        <property name="3" args="range_in=0,5 range_out=0,5 step=0.1 scale_digits=1 editor=slider displayname=Detune(%)">1.0</property>
+        <property name="4" args="range_in=2,30 range_out=2,30 step=0.1 scale_digits=1 editor=slider displayname=Oscillation!frequency(Hz)">9.0</property>
+        <property name="5" args="range_in=-20,0 range_out=-20,0 step=0.1 scale_digits=1 editor=slider displayname=Output!attenuation(dB)">0.0</property>
+        <property name="wetness" args="range_in=0,100 editor=slider displayname=Dry/Wet">1</property>
     </filter>
     <filter id="ladspa.1882">
         <name>Compressor</name>
         <group>Audio Filter</group>
         <extraeditor name="infotips" args="header=Compressor"></extraeditor> 
-        <property name="0" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=RMP-peak">0</property>
-        <property name="1" args="range_in=1.5,400 range_out=1.5,400 editor=ladspa_slider displayname=Attack(ms)">100</property>
-        <property name="2" args="range_in=2,800 range_out=2,800 editor=ladspa_slider displayname=Release(ms)">400</property>
-        <property name="3" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Threshold(dB)">0</property>
-        <property name="4" args="range_in=1,20 range_out=1,20 editor=ladspa_slider displayname=Ratio">1</property>
-        <property name="5" args="range_in=1,10 range_out=1,10 editor=ladspa_slider displayname=Knee!Radius(dB)">3.25</property>
-        <property name="6" args="range_in=0,24 range_out=0,24 editor=ladspa_slider displayname=Makeup!gain(dB)">0</property>
+        <property name="0" args="range_in=0,100 range_out=0,1 editor=slider displayname=RMP-peak">0</property>
+        <property name="1" args="range_in=1.5,400 range_out=1.5,400 editor=slider displayname=Attack(ms)">100</property>
+        <property name="2" args="range_in=2,800 range_out=2,800 editor=slider displayname=Release(ms)">400</property>
+        <property name="3" args="range_in=-30,0 range_out=-30,0 editor=slider displayname=Threshold(dB)">0</property>
+        <property name="4" args="range_in=1,20 range_out=1,20 editor=slider displayname=Ratio">1</property>
+        <property name="5" args="range_in=1,10 range_out=1,10 editor=slider displayname=Knee!Radius(dB)">3.25</property>
+        <property name="6" args="range_in=0,24 range_out=0,24 editor=slider displayname=Makeup!gain(dB)">0</property>
     </filter>
     <filter id="rbpitch">
         <name>Rubberband Octave Shift</name>
         <group>Audio Filter</group>
         <property name="octaveshift" args="range_in=-3.3,3.3 range_out=-3.3,3.3 step=0.01 scale_digits=2 editor=slider displayname=Octave!Shift">0</property>
         <property name="stretch" args="editor=booleancheckbox displayname=Stretch">0</property>
-        <property name="latency" args="range_in=0,2000 range_out=0,2000 editor=ladspa_slider displayname=Latency!ms">0</property>
+        <property name="latency" args="range_in=0,2000 range_out=0,2000 displayname=Latency!ms">0</property>
     </filter>
     <filter id="rbpitch">
         <name>Rubberband Pitch Scale</name>
         <group>Audio Filter</group>
         <property name="pitchscale" args="range_in=-0.1,10.0 range_out=-0.1,10.0 step=0.01 scale_digits=2 editor=slider displayname=Pitch!Scale">1</property>
         <property name="stretch" args="editor=booleancheckbox displayname=Stretch">0</property>
-        <property name="latency" args="range_in=0,2000 range_out=0,2000 editor=ladspa_slider displayname=Latency!ms">0</property>
+        <property name="latency" args="range_in=0,2000 range_out=0,2000 editor=slider displayname=Latency!ms">0</property>
     </filter>
 
 
@@ -1181,7 +1181,7 @@
         <property name="shape_color" args="editor=no_editor exptype=not_parsed">0xaa2222ff</property>
         <property name="blur" args="editor=no_editor exptype=not_parsed">0</property>
         <property name="blur_type" args="editor=no_editor exptype=not_parsed">0</property>
-        <property name="steps" args="editor=ladspa_slider range_in=1,10 range_out=1,10 displayname=Keyframe!Step">5</property>
+        <property name="steps" args="editor=slider range_in=1,10 range_out=1,10 displayname=Keyframe!Step">5</property>
         <property name="algo" args="editor=combobox displayname=Algorithm exptype=default cbopts=KCF:KCF,MIL:MIL,MEDIANFLOW:MEDIANFLOW,MOSSE:MOSSE,CSRT:CSRT">CSRT</property>
         <propertynonmlt name="results_save_data" args="editor=no_editor exptype=not_parsed">!!##PATHNOTSET##!!</propertynonmlt>
         <extraeditor name="analyzemotion"></extraeditor> 

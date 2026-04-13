@@ -113,7 +113,7 @@ def get_editor_row(editable_property):
         editor = editable_property.args[EDITOR]
     except KeyError:
         editor = SLIDER #default, if editor not specified
-    
+
     create_func = EDITOR_ROW_CREATORS[editor]
     return create_func(editable_property)
 
