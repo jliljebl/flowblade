@@ -279,9 +279,8 @@ class FlowbladeApplication(Gtk.Application):
         _set_draw_params()
 
         # Refuse to run on too small screen.
-        if scr_w < 1151 or scr_h < 767:
-            _too_small_screen_exit()
-            return
+        if scr_w < 1365 or scr_h < 767:
+            _too_small_screen_info()
 
         # Init MLT framework
         repo = mlt.Factory().init()
@@ -1022,19 +1021,18 @@ def _set_draw_params():
     sequence.TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH
     tlinewidgets.set_tracks_height_consts()
 
-def _too_small_screen_exit():
+def _too_small_screen_info():
     global exit_timeout_id
     exit_timeout_id = GLib.timeout_add(200, _show_too_small_info)
-    # Launch gtk+ main loop
-    Gtk.main()
+
 
 def _show_too_small_info():
     GLib.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
     scr_w, scr_h = utilsgtk.get_combined_monitors_size()
-    secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
+    secondary_txt = _("Minimum screen dimensions for this application are 1366 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
-    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    dialogutils.warning_message(primary_txt, secondary_txt, None, False)
 
 def _xdg_error_exit(error_str):
     global exit_timeout_id
