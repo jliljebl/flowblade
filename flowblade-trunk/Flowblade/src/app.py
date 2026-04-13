@@ -668,6 +668,8 @@ def init_sequence_gui():
     # Set initial timeline scale draw params.
     editorstate.current_sequence().update_length()
 
+    clipeffectseditor._clip_expanded_state = {}
+
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
     updater.repaint_tline()

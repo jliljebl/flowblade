@@ -86,7 +86,7 @@ stack_dnd_state = NOT_ON
 stack_dnd_event_time = 0.0
 stack_dnd_event_info = None
 
-
+_clip_expanded_state = {}
 
 # ---------------------------------------------------------- filter stack objects
 class FilterFooterRow:
@@ -391,16 +391,22 @@ class ClipFilterStack:
     def set_filter_item_expanded(self, filter_index):
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.expander.set_expanded(True)
+        
+        self._save_expanded_state()
 
     def set_filter_item_minified(self, filter_index):
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.expander.set_expanded(False)
+        
+        self._save_expanded_state()
         
     def set_all_filters_expanded_state(self, expanded):
         for i in range(0, len(self.filter_stack)):
             stack_item = self.filter_stack[i]
             stack_item.expander.set_expanded(expanded)
 
+        self._save_expanded_state()
+        
     def get_expanded(self):
         state_list = []
         for stack_item in self.filter_stack:
@@ -412,6 +418,8 @@ class ClipFilterStack:
             stack_item = self.filter_stack[i]
             stack_item.expander.set_expanded(state_list[i])
 
+        self._save_expanded_state()
+        
     def set_single_expanded(self, expanded_index):
         for i in range(0, len(self.filter_stack)):
             stack_item = self.filter_stack[i]
@@ -419,6 +427,14 @@ class ClipFilterStack:
         
         stack_item = self.filter_stack[expanded_index]
         stack_item.expander.set_expanded(True)
+        
+        self._save_expanded_state()
+
+    def _save_expanded_state(self):
+        state_list = self.get_expanded()
+
+        global _clip_expanded_state
+        _clip_expanded_state[self.clip] = state_list
 
 class Expander:
     
@@ -484,7 +500,7 @@ class Expander:
         self.expanded = not self.expanded
         self._update_label_row()
         self._update_child_row()
-        
+        _filter_stack._save_expanded_state()
 
 # -------------------------------------------------------------- GUI INIT
 def get_clip_effects_editor_info_row():
@@ -540,8 +556,13 @@ def set_clip(clip, track, clip_index, show_tab=True):
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)
-    if len(clip.filters) > 0:
-        set_filter_item_expanded(len(clip.filters) - 1)
+
+    try:
+        state_list = _clip_expanded_state[clip]
+        _filter_stack.set_expanded(state_list)
+    except:
+        if len(clip.filters) > 0:
+            set_filter_item_expanded(len(clip.filters) - 1)
 
     if len(clip.filters) > 0:
         pass # remove if nothing needed here.
