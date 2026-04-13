@@ -288,6 +288,8 @@ def _add_filter(data):
     else:
         clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
+    clipeffectseditor.scroll_to_bottom()
+
 def _add_filter_multi(data):
     clip, track, item_id, item_data = data
     filter_info = item_data

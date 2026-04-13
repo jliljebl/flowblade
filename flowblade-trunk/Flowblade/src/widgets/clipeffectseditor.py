@@ -703,6 +703,13 @@ def update_stack(clip, track, clip_index):
     widgets.value_edit_frame.add(scroll_window)
     widgets.value_edit_box = scroll_window
 
+def scroll_to_bottom():
+    GLib.idle_add(_do_scroll_to_bottom, widgets.value_edit_box)
+
+def _do_scroll_to_bottom(scrolled_window):
+    v_adj = scrolled_window.get_vadjustment()
+    v_adj.set_value(v_adj.get_upper() - v_adj.get_page_size())
+
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
        editorstate. current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -943,7 +950,7 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
 
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
-    
+
     track = _filter_stack.track
     clip_index = _filter_stack.clip_index
         
@@ -954,7 +961,7 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
 
     if len(_filter_stack.clip.filters) == 0:
         clear_effects_edit_panel()
-    
+
 def filter_edit_multi_done_stack_update(clips):
     for clip in clips:
         if clip == get_edited_clip():
@@ -1070,6 +1077,8 @@ def _filter_menu_callback(w, data):
     set_clip(clip, track, index)
     expanded_panels.append(True)
     _filter_stack.set_expanded(expanded_panels)
+    
+    scroll_to_bottom()
     
 def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
