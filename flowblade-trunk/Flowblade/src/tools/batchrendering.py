@@ -1317,13 +1317,17 @@ class SingleRenderLaunchThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     
-    def run(self):      
+    def run(self):
+        editorstate.PLAYER().stop_consumer()
+        
         # Launch render process and wait for it to end
         FLOG = open(userfolders.get_cache_dir() + "log_single_render", 'w')
         process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         process.wait()
 
-    
+        editorstate.PLAYER().start_consumer()
+        
+
 def single_render_main(root_path):
     
     # called from .../launch/flowbladesinglerender script

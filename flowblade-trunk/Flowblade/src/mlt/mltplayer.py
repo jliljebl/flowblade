@@ -151,8 +151,12 @@ class Player:
         return (self.producer.get_speed() == 0)
         
     def stop_consumer(self):
-        if not self.consumer.is_stopped():
-            self.consumer.stop()
+        self.consumer.stop()
+        self.stop_ticker()
+
+    def start_consumer(self):
+        self.consumer.start()
+        self.stop_ticker()
         
     def connect_and_start(self):
         """
