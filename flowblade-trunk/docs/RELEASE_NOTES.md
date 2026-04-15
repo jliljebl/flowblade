@@ -520,7 +520,7 @@ The **Titler** tool now creates **Title Media Items**. Clips on timeline created
 
 ### OTHER NEW FEATURES
 
-- **Switch to do clip paste on playhead position.** Previous we did paste on the nearest cut on target track, but doing paste as insert exactly on plyhead position is the established action pattern on popular video editors and we now do that as well.
+- **Switch to do clip paste on playhead position.** Previous we did paste on the nearest cut on target track, but doing paste as insert exactly on playhead position is the established action pattern on popular video editors and we now do that as well.
   
 - **Graphics clips can now be dragged to be arbitrarily long**. The previous underlying restrictions on doing this were no longer in place.
   
