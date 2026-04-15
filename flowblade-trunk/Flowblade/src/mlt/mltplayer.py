@@ -81,6 +81,10 @@ class Player:
         # Create consumer and set params
         if _sdl_consumer_version == SDL_2:
             print("Create SDL2 consumer...")
+
+            #self.profile.set_width(int(self.profile.width() / 2.0))
+            #self.profile.set_height(int(self.profile.height() / 2.0))
+
             self.consumer = mlt.Consumer(self.profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
             w = int(gui.tline_display.get_allocated_width() * gui.tline_display.get_scale_factor())
@@ -93,7 +97,7 @@ class Player:
             # SDL 1 consumer uses env param to communicate xid and 
             # that has already been set.
         self.consumer.set("real_time", 1)
-        self.consumer.set("rescale", "nearest") # MLT options "nearest", "bilinear", "bicubic", "hyper"
+        self.consumer.set("rescale", "nearest")
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
