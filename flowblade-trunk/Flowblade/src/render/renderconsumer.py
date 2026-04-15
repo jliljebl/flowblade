@@ -418,16 +418,8 @@ def get_img_seq_render_consumer(file_path, profile, encoding_option):
     render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + encoding_option.extension
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
-    # Jan-2017 - SvdB - perf_value instead of -1
-    if performance_settings_enabled == True:
-        if editorpersistance.prefs.perf_drop_frames == True:
-            perf_value = 1 * editorpersistance.prefs.perf_render_threads
-        else:
-            perf_value = -1 * editorpersistance.prefs.perf_render_threads
-        consumer.set("real_time", perf_value)
-    else:
-        consumer.set("real_time", -1)
-    consumer.set("rescale", "bicubic")
+    consumer.set("real_time", _get_render_threads_value())
+    consumer.set("rescale", editorpersistance.prefs.render_interpolation)
     consumer.set("vcodec", str(vcodec))
 
     return consumer
@@ -436,33 +428,18 @@ def get_img_seq_render_consumer_codec_ext(file_path, profile, vcodec, ext):
     render_path = os.path.dirname(file_path) + "/" + os.path.basename(file_path).split(".")[0] + "_%05d." + ext
     
     consumer = mlt.Consumer(profile, "avformat", str(render_path))
-    # Jan-2017 - SvdB - perf_value instead of -1
-    if performance_settings_enabled == True:
-        if editorpersistance.prefs.perf_drop_frames == True:
-            perf_value = 1 * editorpersistance.prefs.perf_render_threads
-        else:
-            perf_value = -1 * editorpersistance.prefs.perf_render_threads
-        consumer.set("real_time", perf_value)
-    else:
-        consumer.set("real_time", -1)
-    consumer.set("rescale", "bicubic")
+    consumer.set("real_time", _get_render_threads_value())
+    consumer.set("rescale", editorpersistance.prefs.render_interpolation)
     consumer.set("vcodec", str(vcodec))
 
     return consumer
     
 def get_mlt_render_consumer(file_path, profile, args_vals_list):
     consumer = mlt.Consumer(profile, "avformat", str(file_path))
-    # Jan-2017 - SvdB - perf_value instead of -1
-    if performance_settings_enabled == True:
-        if editorpersistance.prefs.perf_drop_frames == True:
-            perf_value = 1 * editorpersistance.prefs.perf_render_threads
-        else:
-            perf_value = -1 * editorpersistance.prefs.perf_render_threads
-        consumer.set("real_time", perf_value)
-    else:
-        consumer.set("real_time", -1)
-    consumer.set("rescale", "bicubic")
-
+    consumer.set("real_time", _get_render_threads_value())
+    consumer.set("rescale", editorpersistance.prefs.render_interpolation)
+    print(_get_render_threads_value(), editorpersistance.prefs.render_interpolation)
+    
     args_msg = ""
     for arg_val in args_vals_list:
         k, v = arg_val
@@ -473,6 +450,9 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
 
     return consumer
 
+def _get_render_threads_value():
+    return -1 * editorpersistance.prefs.perf_render_threads
+ 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
     encoding_option = encoding_options[enc_opt_index]
     if quality_opt_index >= 0:

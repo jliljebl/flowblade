@@ -429,25 +429,23 @@ def _view_prefs_panel():
                   tracks_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
                   layout_monitor, filter_select_width_spin, show_bin_and_seq_titles, wide_audio_master)
 
-
-
-
 def _performance_panel():
-    # Jan-2017 - SvdB
-    # Add a panel for performance settings. The first setting is allowing multiple threads to render
-    # the files. This is used for the real_time parameter to mlt in renderconsumer.py.
-    # The effect depends on the computer running the program.
-    # Max. number of threads is set to number of CPU cores. Default is 1.
-    # Allow Frame Dropping should help getting real time output on low performance computers.
     prefs = editorpersistance.prefs
 
-    warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.DIALOG)
-    warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
+    warning_icon = Gtk.Image.new_from_icon_name("dialog-warning", Gtk.IconSize.BUTTON)
+    warning_label = Gtk.Label(label=_("Making Render Threads value larger then 1 may cause instability."))
 
     spin_adj = Gtk.Adjustment(value=prefs.perf_render_threads, lower=1, upper=multiprocessing.cpu_count(), step_increment=1)
     perf_render_threads = Gtk.SpinButton(adjustment=spin_adj)
-    #perf_render_threads.set_adjustment(spin_adj)
     perf_render_threads.set_numeric(True)
+
+    render_interpolation_combo = Gtk.ComboBoxText()
+    render_interpolation_combo.append_text(_("Nearest Neighbour (fast)"))
+    render_interpolation_combo.append_text(_("Bilinear (better)"))
+    render_interpolation_combo.append_text(_("Bicubic (best)"))
+    options = ["nearest", "bilinear","bicubic"]
+    active_index = options.index(prefs.render_interpolation)
+    render_interpolation_combo.set_active(active_index)
 
     perf_drop_frames = Gtk.CheckButton()
     perf_drop_frames.set_active(prefs.perf_drop_frames)
@@ -457,20 +455,19 @@ def _performance_panel():
     perf_drop_frames.set_tooltip_text(_("Allow Frame Dropping for real-time rendering, when needed"))
 
     # Layout
-    row0 = _row(guiutils.get_left_justified_box([warning_icon, warning_label]))
+    row0 = _row(guiutils.get_left_justified_box([warning_icon, guiutils.pad_label(4, 4), warning_label]))
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Render Threads:")), perf_render_threads, PREFERENCES_LEFT))
-    row2 = _row(guiutils.get_checkbox_row_box(perf_drop_frames, Gtk.Label(label=_("Allow Frame Dropping"))))
+    row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Render Interpolation:")), render_interpolation_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row0, False, False, 0)
-    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (perf_render_threads, perf_drop_frames)
+    return vbox, (perf_render_threads, render_interpolation_combo)
 
 def _jog_shuttle_panel():
     prefs = editorpersistance.prefs

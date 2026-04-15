@@ -196,7 +196,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     force_language_combo, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
     edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin, show_bins_and_seqs_titles, wide_audio_master = view_prefs_widgets
 
-    perf_render_threads, perf_drop_frames = performance_widgets
+    perf_render_threads, render_interpolation_combo = performance_widgets
 
     usbhid_enabled_check, usbhid_config_combo = jog_shuttle_widgets
 
@@ -225,7 +225,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
-    prefs.perf_drop_frames = perf_drop_frames.get_active()
+    options = ["nearest", "bilinear","bicubic"]
+    prefs.render_interpolation = options[render_interpolation_combo.get_active()]
     prefs.show_full_file_names = full_names.get_active()
     prefs.show_bins_and_sequences_titles = show_bins_and_seqs_titles.get_active()
     prefs.wide_audio_master = wide_audio_master.get_active()
@@ -325,7 +326,7 @@ class EditorPreferences:
         self.hide_file_ext = False
         # Jan-2017 - SvdB
         self.perf_render_threads = 1
-        self.perf_drop_frames = False
+        self.perf_drop_frames = False # DEPRECATED
         # Feb-2017 - SvdB - for full file names.
         self.show_full_file_names = False
         self.center_on_arrow_move = True
@@ -399,3 +400,4 @@ class EditorPreferences:
         self.wide_audio_master = True
         self.middlebar_visible = True
         self.default_playback_interpolation = "nearest"
+        self.render_interpolation = "bilinear"

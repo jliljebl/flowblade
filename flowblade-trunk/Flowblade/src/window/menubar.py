@@ -282,17 +282,17 @@ def get_menu():
                     <attribute name="label">""" + _("Playback Interpolation") + """</attribute>
                       <section>
                       <item>
-                        <attribute name="label">""" + _("Nearest Neighbour") + """</attribute>
+                        <attribute name="label">""" + _("Nearest Neighbour (fast)") + """</attribute>
                         <attribute name="action">app.playback.interpolation</attribute>
                         <attribute name="target">nearest</attribute>
                       </item>
                       <item>
-                        <attribute name="label">""" + _("Bilinear") + """</attribute>
+                        <attribute name="label">""" + _("Bilinear (better)") + """</attribute>
                         <attribute name="action">app.playback.interpolation</attribute>
                         <attribute name="target">bilinear</attribute>
                       </item>
                       <item>
-                        <attribute name="label">""" + _("Bicubic") + """</attribute>
+                        <attribute name="label">""" + _("Bicubic (best)") + """</attribute>
                         <attribute name="action">app.playback.interpolation</attribute>
                         <attribute name="target">bicubic</attribute>
                       </item>

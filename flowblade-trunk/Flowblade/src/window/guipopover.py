@@ -533,7 +533,7 @@ def playback_setting_popupmenu_show(launcher, widget, callback):
         _playback_settings_menu = menu_clear_or_create(_playback_settings_menu)
         
         _interpolation_section = menu_clear_or_create(_interpolation_section)
-        items_data = [( _("Nearest Neighbour"), "nearest"), ( _("Bilinear"), "bilinear"), ( _("Bicubic"), "bicubic")]
+        items_data = [( _("Nearest Neighbour (fast)"), "nearest"), ( _("Bilinear (better)"), "bilinear"), ( _("Bicubic (best)"), "bicubic")]
         options = ["nearest", "bilinear","bicubic"]
         active_index = options.index(PROJECT().get_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION))
         add_menu_action_all_items_radio(_interpolation_section, items_data, "playback.interpolation", active_index, callback)
