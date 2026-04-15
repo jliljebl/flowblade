@@ -204,10 +204,14 @@ def create_widgets():
     widgets.queue_button = Gtk.Button(label=_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     widgets.render_range_panel = rendergui.RenderRangePanel(widgets.range_cb)
+    surface = guiutils.get_cairo_image("kb_configuration")
+    widgets.perf_settings_launch = guicomponents.PressLaunch(None, surface, 22, 18) # callback set at rendergui.py
+    widgets.perf_settings_launch.widget.set_tooltip_text(_("Show render performance settings"))
 
     # Add some tooltips
     widgets.range_cb.set_tooltip_text(_("Select render range"))
     widgets.render_button.set_tooltip_text(_("Begin Rendering"))
+
 
 def set_default_values_for_widgets(movie_name_too=False):
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available

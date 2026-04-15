@@ -381,7 +381,8 @@ class EditorWindow:
             render.create_widgets()
             render_panel_left = rendergui.get_render_panel_left(render.widgets,
                                                                 lambda w,e: projectaction.do_rendering(),
-                                                                lambda w,e: projectaction.add_to_render_queue())
+                                                                lambda w,e: projectaction.add_to_render_queue(),
+                                                                lambda w,e: preferenceswindow.preferences_dialog(True))
         except IndexError:
             print("No rendering options found")
             render_panel_left = None

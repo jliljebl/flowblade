@@ -763,7 +763,7 @@ def get_range_selection_combo():
     return range_cb
 
 # ------------------------------------------------------------ panels
-def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb):
+def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb, show_perf_settings_cb):
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
@@ -788,7 +788,9 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
             render_widgets.render_button.connect("clicked", 
                                                  render_clicked_cb, 
                                                  None)
+            render_widgets.perf_settings_launch.callback = show_perf_settings_cb
             buttons_panel = Gtk.HBox()
+            buttons_panel.pack_start(render_widgets.perf_settings_launch.widget, False, False, 0)
             buttons_panel.pack_start(Gtk.Label(), True, True, 0)
             buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
             buttons_panel.pack_start(render_widgets.render_button, False, False, 0)                                         

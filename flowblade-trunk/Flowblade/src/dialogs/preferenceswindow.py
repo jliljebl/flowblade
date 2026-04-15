@@ -38,7 +38,7 @@ PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
 PREFERENCES_LEFT = 410
 
-def preferences_dialog():
+def preferences_dialog(show_performance=False):
 
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
                     None,
@@ -72,8 +72,10 @@ def preferences_dialog():
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
 
-    notebook.set_current_page(0) # gen_opts_widgets
-
+    if show_performance == True:
+        notebook.set_current_page(4) # performance
+    else:
+        notebook.set_current_page(0) # gen_opts_widgets
 
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == Gtk.ResponseType.ACCEPT:
