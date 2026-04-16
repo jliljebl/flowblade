@@ -278,32 +278,6 @@ def get_menu():
                 </submenu>
             </section>
             <section>
-                <submenu>
-                    <attribute name="label">""" + _("Playback Interpolation") + """</attribute>
-                      <section>
-                      <item>
-                        <attribute name="label">""" + _("Nearest Neighbour (fast)") + """</attribute>
-                        <attribute name="action">app.playback.interpolation</attribute>
-                        <attribute name="target">nearest</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label">""" + _("Bilinear (better)") + """</attribute>
-                        <attribute name="action">app.playback.interpolation</attribute>
-                        <attribute name="target">bilinear</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label">""" + _("Bicubic (best)") + """</attribute>
-                        <attribute name="action">app.playback.interpolation</attribute>
-                        <attribute name="target">bicubic</attribute>
-                      </item>
-                      </section>
-                </submenu>
-                <item>
-                      <attribute name="label">Use Hardware Decoding</attribute>
-                      <attribute name="action">app.playback.gpudecode</attribute>
-                </item>
-            </section>
-            <section>
                 <item>
                   <attribute name="label">""" + _("Zoom In") + """</attribute>
                   <attribute name="action">app.zoomin</attribute>
