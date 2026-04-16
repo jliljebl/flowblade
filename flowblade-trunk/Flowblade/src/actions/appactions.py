@@ -163,7 +163,7 @@ def create_actions():
     _create_action("addwatermark", lambda w, a: menuactions.edit_watermark())  
     _create_stateful_action("compositing.compmode", "s", "fulltrackauto", lambda a, v: projectaction.change_current_sequence_compositing_mode_from_corner_menu(a, v))
 
-    _create_stateful_action("playback.gpudecode", "b", editorpersistance.prefs.use_gpu_decode, lambda a, v: monitorevent.decode_callback(a, v, "not used"))
+    _create_boolean_action("playback.gpudecode", editorpersistance.prefs.use_gpu_decode, lambda a, v: monitorevent.decode_callback(a, v, "not used"))
 
     _create_action("showtitler", lambda w, a: titler.show_titler())  
     _create_action("showaudiomixer", lambda w, a: audiomonitoring.show_audio_monitor())  
@@ -219,6 +219,12 @@ def _create_stateful_action(name, typestr, default_value, callback):
     action.connect("change-state", callback)
     APP().add_action(action)
 
+def _create_boolean_action(item_id, default_value, callback):
+    action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(default_value))
+    action.connect("activate", callback)
+    APP().add_action(action)
+
+    
 # -------------------------------------------- per project stateful action updates
 def set_per_project_stateful_action_variants():
     action = APP().lookup_action("playback.interpolation")

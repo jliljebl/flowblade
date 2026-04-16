@@ -298,6 +298,10 @@ def get_menu():
                       </item>
                       </section>
                 </submenu>
+                <item>
+                      <attribute name="label">Use Hardware Decoding</attribute>
+                      <attribute name="action">app.playback.gpudecode</attribute>
+                </item>
             </section>
             <section>
                 <item>
