@@ -163,6 +163,8 @@ def create_actions():
     _create_action("addwatermark", lambda w, a: menuactions.edit_watermark())  
     _create_stateful_action("compositing.compmode", "s", "fulltrackauto", lambda a, v: projectaction.change_current_sequence_compositing_mode_from_corner_menu(a, v))
 
+    _create_stateful_action("playback.gpudecode", "b", editorpersistance.prefs.use_gpu_decode, lambda a, v: monitorevent.decode_callback(a, v, "not used"))
+
     _create_action("showtitler", lambda w, a: titler.show_titler())  
     _create_action("showaudiomixer", lambda w, a: audiomonitoring.show_audio_monitor())  
     _create_action("showgmic", lambda w, a: gmic.launch_gmic())  
@@ -228,7 +230,7 @@ def set_per_project_stateful_action_variants():
 def update_compositing_mode_action_state():
     action = APP().lookup_action("compositing.compmode")
     
-    if editorstate.editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:  
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:  
         new_variant = GLib.Variant.new_string("fulltrackauto")
     else:
         new_variant = GLib.Variant.new_string("topdown")

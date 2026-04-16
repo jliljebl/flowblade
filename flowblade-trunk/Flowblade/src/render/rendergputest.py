@@ -267,12 +267,12 @@ def init_gpu_decoding():
         results = {k: _test_vaapi_decode(v) for k, v in tests.items()}
         print("VAAPI GPU decoding test results:", results)
 
-        if any(value for value in results.values()):
+        if any(value for value in results.values()) and editorpersistance.prefs.use_gpu_decode == True:
             _decoding_accel = "vaapi"
             _test_results = results
             os.environ["MLT_AVFORMAT_HWACCEL"] = _decoding_accel
 
-    if "cuda" in accels_info and _decoding_accel == None:
+    if "cuda" in accels_info and _decoding_accel == None and editorpersistance.prefs.use_gpu_decode == True:
         tests = {
             "h264": "gpu_test_clip.mp4",
         }

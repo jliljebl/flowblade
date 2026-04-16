@@ -22,6 +22,11 @@
 Module handles button presses from monitor control buttons row.
 """
 
+import os
+
+import gi
+from gi.repository import GLib
+
 import appconsts
 import boxmove
 import clipeffectseditor
@@ -38,6 +43,7 @@ from editorstate import MONITOR_MEDIA_FILE
 import gui
 import guipopover
 import movemodes
+import rendergputest
 import trimmodes
 import updater
 
@@ -305,7 +311,7 @@ def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic" hardcoded into menu items
 
 def playback_settings_menu_launched(launcher, widget, event):
-    guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated)
+    guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated, decode_callback)
 
 def playback_menu_item_activated(action, new_value_variant):
     msg = new_value_variant.get_string()
@@ -317,6 +323,19 @@ def playback_menu_item_activated(action, new_value_variant):
     except:
         pass
 
+def decode_callback(action, variant, msg):
+
+    new_state = not(action.get_state().get_boolean())
+    action.set_state(GLib.Variant.new_boolean(new_state))
+    
+    editorpersistance.prefs.use_gpu_decode = new_state
+    editorpersistance.save()
+    
+    accel, test_results = rendergputest.get_decoding_info()
+    if accel != None and new_state == True:
+        os.environ["MLT_AVFORMAT_HWACCEL"] = accel
+    else:
+        os.environ["MLT_AVFORMAT_HWACCEL"] = ""
 
 # -------------------------------------------------- selecting clips for filter editing
 def select_next_clip_for_filter_edit():

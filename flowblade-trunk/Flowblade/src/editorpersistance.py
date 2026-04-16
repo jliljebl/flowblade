@@ -401,3 +401,4 @@ class EditorPreferences:
         self.middlebar_visible = True
         self.default_playback_interpolation = "nearest"
         self.render_interpolation = "bilinear"
+        self.use_gpu_decode = True

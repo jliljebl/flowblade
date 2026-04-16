@@ -124,7 +124,7 @@ _playback_settings_popover = None
 _playback_settings_menu = None
 _interpolation_section = None
 _interpolation_submenu = None
-    
+_decode_section = None
 
 # -------------------------------------------------- menuitems builder functions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None, shortcut_txt=None):
@@ -518,19 +518,18 @@ def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
         add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
         _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
         _monitorview_menu.append_section(None, _opacity_section)
-    #else:
-    #    _opacity_submenu = menu_clear_or_create(_opacity_submenu)
-    #    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), ( _("20%"), "6")]
-    #    active_index = current_sequence().get_mix_index()
-    #    add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
-    
+
     _monitorview_popover = new_popover(widget, _monitorview_menu, launcher)
 
-def playback_setting_popupmenu_show(launcher, widget, callback):
-    global _playback_settings_popover, _playback_settings_menu, _interpolation_section, _interpolation_submenu
+def playback_setting_popupmenu_show(launcher, widget, callback, decode_callback):
+    global _playback_settings_popover, _playback_settings_menu, _interpolation_section, _interpolation_submenu, _decode_section
 
     if _playback_settings_menu == None:
         _playback_settings_menu = menu_clear_or_create(_playback_settings_menu)
+
+        _decode_section = menu_clear_or_create(_decode_section)
+        add_menu_action_check(_decode_section, _("Use Hardware Decoding"), "playback.gpudecode", editorpersistance.prefs.use_gpu_decode, "disabledrag", decode_callback)
+        _playback_settings_menu.append_section(None, _decode_section)
         
         _interpolation_section = menu_clear_or_create(_interpolation_section)
         items_data = [( _("Nearest Neighbour (fast)"), "nearest"), ( _("Bilinear (better)"), "bilinear"), ( _("Bicubic (best)"), "bicubic")]
