@@ -46,6 +46,7 @@ import panels
 import projectdatavaultgui
 import projectdatavault
 import renderconsumer
+import rendergputest
 import respaths
 import utils
 import utilsgtk
@@ -780,21 +781,56 @@ def environment_dialog(parent_window):
     vbox.pack_start(r4, False, False, 0)
     vbox.pack_start(r5, False, False, 0)
 
+    decoding_accel, test_results = rendergputest.get_decoding_info()
+    if decoding_accel == None:
+        dec_info = _("<b>Not available</b>")
+    else:
+        dec_info = "<b>" + decoding_accel.upper() + " - "
+        for codec, available in test_results.items():
+            if available == True:
+                dec_info += codec + " ," 
+        
+        dec_info = dec_info.rstrip(",")
+        dec_info += "</b>"
+        dec_label = Gtk.Label()
+        dec_label.set_markup(dec_info)
+    gpur1 = guiutils.get_left_justified_box([Gtk.Label(label=_("Hardware Decoding: ")),dec_label])
 
+
+    test_results = rendergputest.get_encoding_info()
+    enc_info = "<b>"
+    is_available = False    
+    for codec, error_val in test_results.items():
+        if error_val == 0:
+            is_available = True
+            enc_info += codec + " ,"
+    enc_info = enc_info.rstrip(",")
+    enc_info += "</b>"
+    if is_available == False:
+        enc_info = _("<b>Not available</b>")
+    enc_label = Gtk.Label()
+    enc_label.set_markup(enc_info)
+    gpur2 = guiutils.get_left_justified_box([Gtk.Label(label=_("Hardware Encoding: ")), enc_label])
+        
+    vbox2 = Gtk.VBox(False, 4)
+    vbox2.pack_start(gpur1, False, False, 0)
+    vbox2.pack_start(gpur2, False, False, 0)
+
+    ROWS = 13
     filters = sorted(mltenv.services)
-    filters_sw = _get_items_in_scroll_window(filters, 7, COLUMN_WIDTH, 140)
+    filters_sw = _get_items_in_scroll_window(filters, ROWS, COLUMN_WIDTH, 280)
 
     transitions = sorted(mltenv.transitions)
-    transitions_sw = _get_items_in_scroll_window(transitions, 7, COLUMN_WIDTH, 140)
+    transitions_sw = _get_items_in_scroll_window(transitions, ROWS, COLUMN_WIDTH, 280)
 
     v_codecs = sorted(mltenv.vcodecs)
-    v_codecs_sw = _get_items_in_scroll_window(v_codecs, 6, COLUMN_WIDTH, 125)
+    v_codecs_sw = _get_items_in_scroll_window(v_codecs, ROWS, COLUMN_WIDTH, 280)
 
     a_codecs = sorted(mltenv.acodecs)
-    a_codecs_sw = _get_items_in_scroll_window(a_codecs, 6, COLUMN_WIDTH, 125)
+    a_codecs_sw = _get_items_in_scroll_window(a_codecs, ROWS, COLUMN_WIDTH, 280)
 
     formats = sorted(mltenv.formats)
-    formats_sw = _get_items_in_scroll_window(formats, 5, COLUMN_WIDTH, 105)
+    formats_sw = _get_items_in_scroll_window(formats, ROWS, COLUMN_WIDTH, 280)
 
     enc_ops = renderconsumer.encoding_options + renderconsumer.not_supported_encoding_options
     enc_msgs = []
@@ -804,7 +840,7 @@ def environment_dialog(parent_window):
         else:
             msg = e_opt.name + _(" NOT AVAILABLE, ") + e_opt.err_msg + _(" MISSING")
         enc_msgs.append(msg)
-    enc_opt_sw = _get_items_in_scroll_window(enc_msgs, 5, COLUMN_WIDTH, 115)
+    enc_opt_sw = _get_items_in_scroll_window(enc_msgs, ROWS, COLUMN_WIDTH, 280)
 
     missing_mlt_services = []
     for f in mltfilters.not_found_filters:
@@ -812,24 +848,26 @@ def environment_dialog(parent_window):
         missing_mlt_services.append(msg)
     for t in mlttransitions.not_found_transitions:
         msg = "mlt.Transition " + t.mlt_service_id + _(" FOR TRANSITION ") + t.name + _(" NOT FOUND")
-    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 60)
+    missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, ROWS, COLUMN_WIDTH, 280)
+
+    notebook = Gtk.Notebook()
+    notebook.set_size_request(800, 280)
+    notebook.append_page(filters_sw, Gtk.Label(label=_("MLT Filters")))
+    notebook.append_page(transitions_sw, Gtk.Label(label=_("MLT Transitions")))
+    notebook.append_page(v_codecs_sw, Gtk.Label(label=_("Video Codecs")))
+    notebook.append_page(a_codecs_sw, Gtk.Label(label=_("Audio Codecs")))
+    notebook.append_page(formats_sw, Gtk.Label(label=_("Formats")))
+    notebook.append_page(missing_services_sw, Gtk.Label(label=_("Missing MLT Services")))
 
     l_pane = Gtk.VBox(False, 4)
-    l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), True, True, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), True, True, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), True, True, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), True, True, 0)
-
-    r_pane = Gtk.VBox(False, 4)
-    r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), True, True, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), True, True, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), True, True, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), True, True, 0)
-
+    l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("GPU"), vbox2), False, False, 0)
+    notebook_frame = guiutils.get_named_frame(_("MLT and FFmpeg"), notebook)
+    notebook_frame.set_margin_top(12)
+    l_pane.pack_start(notebook_frame, False, False, 0)
+    
     pane = Gtk.HBox(False, 4)
     pane.pack_start(l_pane, True, True, 0)
-    pane.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-    pane.pack_start(r_pane, True, True, 0)
 
     a = dialogutils.get_default_alignment(pane)
 
@@ -850,6 +888,7 @@ def _get_items_in_scroll_window(items, rows_count, w, h):
     sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     sw.add(items_pane)
     sw.set_size_request(w, h)
+    guiutils.set_margins(sw, 4,4,4,4)
     return sw
 
 def _get_item_columns_panel(items, rows):

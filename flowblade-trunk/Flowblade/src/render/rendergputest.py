@@ -69,7 +69,7 @@ test_thread = None
 
 test_results = {}
 
-_accels_decoding = None
+_decoding_accel = None
 _test_results = None
 
 def test_gpu_rendering_options(selector_update_func):
@@ -236,6 +236,9 @@ def _create_test_render_tractor(profile):
 
     return tractor
 
+def get_encoding_info():
+    return test_results
+
 
 # ------------------------------------------------ DISK DATA PATHS
 def _get_test_render_args_vals_path():
@@ -253,7 +256,7 @@ def init_gpu_decoding():
     )
     accels_info = result.stdout.lower()
 
-    global _accels_decoding, _test_results
+    global _decoding_accel, _test_results
     if "vaapi" in accels_info:
         tests = {
             "h264": "gpu_test_clip.mp4",
@@ -265,11 +268,11 @@ def init_gpu_decoding():
         print("VAAPI GPU decoding test results:", results)
 
         if any(value for value in results.values()):
-            _accels_decoding = "VAAPI"
+            _decoding_accel = "vaapi"
             _test_results = results
-            os.environ["MLT_AVFORMAT_HWACCEL"] = "vaapi"
+            os.environ["MLT_AVFORMAT_HWACCEL"] = _decoding_accel
 
-    if "cuda" in accels_info and _accels_decoding == None:
+    if "cuda" in accels_info and _decoding_accel == None:
         tests = {
             "h264": "gpu_test_clip.mp4",
         }
@@ -277,11 +280,11 @@ def init_gpu_decoding():
         print("CUDA decoding results:", results)
 
         if any(value for value in results.values()):
-            _accels_decoding = "CUDA"
+            _decoding_accel = "cuda"
             _test_results = results
-            os.environ["MLT_AVFORMAT_HWACCEL"] = "cuda"
+            os.environ["MLT_AVFORMAT_HWACCEL"] = _decoding_accel
 
-    if _accels_decoding == None:
+    if _decoding_accel == None:
         print("No GPU decoding available")
 
 def _test_vaapi_decode(file_name):
@@ -315,4 +318,8 @@ def _test_cuda_decode(file_name):
 
     result = subprocess.run(cmd, capture_output=True)
     return result.returncode == 0
+
+def get_decoding_info():
+    return (_decoding_accel, _test_results)
+
   

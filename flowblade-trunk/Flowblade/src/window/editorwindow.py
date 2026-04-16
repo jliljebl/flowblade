@@ -901,8 +901,11 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
-        action = APP().lookup_action("tooldockpos")
-        action.set_state(GLib.Variant.new_string("dock"))
+        try:
+            action = APP().lookup_action("tooldockpos")
+            action.set_state(GLib.Variant.new_string("dock"))
+        except:
+            pass
 
     def update_tool_dock(self):
         self.tline_box.remove(self.tool_dock)
