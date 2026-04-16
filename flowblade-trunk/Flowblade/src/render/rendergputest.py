@@ -22,6 +22,8 @@
 Module does render tests to find out which GPU encodings work on user system.
 """
 
+import os
+
 try:
     import pgi
     pgi.install_as_gi()
@@ -57,6 +59,8 @@ import translations
 import userfolders
 import utils
 
+#HWACCELS_VAAPI = "vaapi"
+#HWACCELS_NVENC = "nvenc"
 
 CURRENT_TEST_RENDER_ARGS_VALS_LIST = "gpu_test_render.argsvalslist"
 CURRENT_TEST_RENDER_OUT_FILE = "outfile"
@@ -65,6 +69,8 @@ test_thread = None
 
 test_results = {}
 
+_accels_decoding = None
+_test_results = None
 
 def test_gpu_rendering_options(selector_update_func):
     test_runner_thread = GPUTestRunnerThread(selector_update_func)
@@ -237,4 +243,76 @@ def _get_test_render_args_vals_path():
 
 def _get_test_render_out_file_path_start():
     return userfolders.get_cache_dir() + CURRENT_TEST_RENDER_OUT_FILE
+    
+    
+# ----------------------------------------------- DECODING AVAILABILITY
+def init_gpu_decoding():
+    result = subprocess.run(
+        ["ffmpeg", "-hwaccels"],
+        capture_output=True, text=True
+    )
+    accels_info = result.stdout.lower()
 
+    global _accels_decoding, _test_results
+    if "vaapi" in accels_info:
+        tests = {
+            "h264": "gpu_test_clip.mp4",
+            "hevc": "gpu_test_clip_hevc.mp4",
+            "vp9":  "gpu_test_clip.webm",
+            "av1":  "gpu_test_clip_av1.mkv"
+        }
+        results = {k: _test_vaapi_decode(v) for k, v in tests.items()}
+        print("VAAPI GPU decoding test results:", results)
+
+        if any(value for value in results.values()):
+            _accels_decoding = "VAAPI"
+            _test_results = results
+            os.environ["MLT_AVFORMAT_HWACCEL"] = "vaapi"
+
+    if "cuda" in accels_info and _accels_decoding == None:
+        tests = {
+            "h264": "gpu_test_clip.mp4",
+        }
+        results = {k: _test_cuda_decode(v) for k, v in tests.items()}
+        print("CUDA decoding results:", results)
+
+        if any(value for value in results.values()):
+            _accels_decoding = "CUDA"
+            _test_results = results
+            os.environ["MLT_AVFORMAT_HWACCEL"] = "cuda"
+
+    if _accels_decoding == None:
+        print("No GPU decoding available")
+
+def _test_vaapi_decode(file_name):
+    input_file =  respaths.ROOT_PATH + "/res/gpu-test/" + file_name
+    cmd = [
+        "ffmpeg",
+        "-v", "error",
+        "-hwaccel", "vaapi",
+        "-hwaccel_output_format", "vaapi",
+        "-vaapi_device", "/dev/dri/renderD128",
+        "-i", input_file,
+        "-frames:v", "5",
+        "-f", "null",
+        "-"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True)
+    return result.returncode == 0
+
+def _test_cuda_decode(file_name):
+    input_file = respaths.ROOT_PATH + "/res/gpu-test/" + file_name
+    cmd = [
+        "ffmpeg",
+        "-v", "error",
+        "-hwaccel", "cuda",
+        "-i", input_file,
+        "-frames:v", "5",
+        "-f", "null",
+        "-"
+    ]
+
+    result = subprocess.run(cmd, capture_output=True)
+    return result.returncode == 0
+  

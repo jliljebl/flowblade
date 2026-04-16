@@ -282,6 +282,9 @@ class FlowbladeApplication(Gtk.Application):
         if scr_w < 1365 or scr_h < 767:
             _too_small_screen_info()
 
+        # Detect availablke GPU decoding and set MLT env variable accoringly.
+        rendergputest.init_gpu_decoding()
+
         # Init MLT framework
         repo = mlt.Factory().init()
         processutils.prepare_mlt_repo(repo)
