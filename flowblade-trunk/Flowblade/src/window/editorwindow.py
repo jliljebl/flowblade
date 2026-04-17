@@ -848,8 +848,10 @@ class EditorWindow:
         middlebar.redo_layout(self)
         workflow.select_default_tool()
 
-        action = APP().lookup_action("tooldockpos")
-        action.set_state(GLib.Variant.new_string("middlebar"))
+        try:
+             appactions.update_tools_view_action_state()
+        except:
+            pass # This gets called too early on startup when placing widgets but is needed at runtime.
 
     def set_audiomaster_position(self, action, value):
         action.set_state(value)
@@ -902,10 +904,9 @@ class EditorWindow:
         workflow.select_default_tool()
 
         try:
-            action = APP().lookup_action("tooldockpos")
-            action.set_state(GLib.Variant.new_string("dock"))
+             appactions.update_tools_view_action_state()
         except:
-            pass
+            pass # This gets called too early on startup when placing widgets but is needed at runtime.
 
     def update_tool_dock(self):
         self.tline_box.remove(self.tool_dock)

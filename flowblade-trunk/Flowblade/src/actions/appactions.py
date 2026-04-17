@@ -259,6 +259,14 @@ def set_redo_sensitive(sensitive):
     action = APP().lookup_action("redoaction")
     action.set_enabled(sensitive)
 
+def update_tools_view_action_state():
+    action = APP().lookup_action("tooldockpos")
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        action.set_state(GLib.Variant.new_string("middlebar"))
+    else:
+        action.set_state(GLib.Variant.new_string("dock"))
+    
+
 # ---------------------------------- action focus handling
 def get_all_widgets(container):
     widgets = []

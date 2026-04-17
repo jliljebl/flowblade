@@ -447,6 +447,8 @@ class FlowbladeApplication(Gtk.Application):
 
         # Menu bar needs app available to create actions.
         appactions.create_actions()
+        appactions.update_tools_view_action_state()
+        appactions.update_compositing_mode_action_state()
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
         menubar.fill_panel_positions_menu()
 
