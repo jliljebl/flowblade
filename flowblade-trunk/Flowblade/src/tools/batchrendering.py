@@ -1320,10 +1320,16 @@ class SingleRenderLaunchThread(threading.Thread):
     def run(self):
         editorstate.PLAYER().stop_consumer()
         
+        # hw_accel=vaapi hangs on exit for rendering, disable until reason known.
+        hw_accel = os.environ["MLT_AVFORMAT_HWACCEL"]
+        os.environ["MLT_AVFORMAT_HWACCEL"] = ""
+        
         # Launch render process and wait for it to end
         FLOG = open(userfolders.get_cache_dir() + "log_single_render", 'w')
         process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         process.wait()
+
+        os.environ["MLT_AVFORMAT_HWACCEL"] = hw_accel
 
         editorstate.PLAYER().start_consumer()
         
