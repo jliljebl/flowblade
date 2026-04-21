@@ -541,6 +541,7 @@ def _fill_markers_menu(markers_submenu, markers_submenu_static_items, clip, call
 
     add_menu_action(markers_submenu_static_items, _("Add Clip Marker At Playhead Position"), pre_id + "clipmenu.markeritems.addclipmarker",  ("add_clip_marker", None), callback)
     add_menu_action(markers_submenu_static_items, _("Delete Clip Marker At Playhead Position"), pre_id + "clipmenu.markeritems.deleteclipmarker",  ("delete_clip_marker", None), callback)
+    add_menu_action(markers_submenu_static_items, _("Rename Clip Marker At Playhead Position"), pre_id + "clipmenu.markeritems.renameclipmarker",  ("rename_clip_marker", None), callback)
     add_menu_action(markers_submenu_static_items, _("Delete All Clip Markers"), pre_id + "clipmenu.markeritems.deleteall",  ("deleteall_clip_markers", None), callback)
 
 def _fill_reload_section(reload_section, clip, callback):

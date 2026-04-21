@@ -904,6 +904,45 @@ def _delete_clip_marker(data):
         clip.markers.pop(mrk_index)
         updater.repaint_tline()
 
+def _rename_clip_marker(data):
+    clip, track, item_id, item_data = data
+    current_frame = PLAYER().current_frame()
+
+    try:
+        current_frame_clip_index = track.get_clip_index_at(current_frame)
+        current_frame_clip = track.clips[current_frame_clip_index]
+    except:
+        current_frame_clip = None
+    
+    if current_frame_clip != clip:
+        return
+
+    clip_start_in_tline = track.clip_start(current_frame_clip_index)
+    clip_frame = current_frame - clip_start_in_tline + clip.clip_in
+    
+    
+    for i in range(0, len(clip.markers)):
+        marker_name, frame = clip.markers[i]
+        if frame == clip_frame:
+            name, marker_clip_frame = clip.markers[i]
+            dialog, entry = dialogutils.get_single_line_text_input_dialog(25, 200, _("Rename Clip Marker"), _("Rename"),
+                                                  _("Give new Name:"), name)
+            dialog.connect('response', _rename_marker_callback, entry, clip, i)
+            dialog.show_all()
+            break
+
+def _rename_marker_callback(dialog, response_id, entry, clip, i):
+    if response_id != Gtk.ResponseType.CANCEL:
+        name = entry.get_text()
+        if name == "": # No need for info dialog, user should really get this.
+            dialog.destroy()
+            return
+        
+        old_name, marker_frame = clip.markers[i]
+        clip.markers[i] = (name, marker_frame)
+
+    dialog.destroy()
+
 def _delete_all_clip_markers(data):
     clip, track, item_id, item_data = data
     clip.markers = []
@@ -1149,6 +1188,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "add_clip_marker":_add_clip_marker,
                   "go_to_clip_marker":_go_to_clip_marker,
                   "delete_clip_marker":_delete_clip_marker,
+                  "rename_clip_marker":_rename_clip_marker,
                   "deleteall_clip_markers":_delete_all_clip_markers,
                   "volumekf":_volume_keyframes,
                   "brightnesskf":_brightness_keyframes,
