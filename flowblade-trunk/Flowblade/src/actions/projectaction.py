@@ -1744,7 +1744,7 @@ def create_range_compound_clip():
         return
 
     # lets's just set something unique-ish 
-    default_name = _("selection_") + _get_compound_clip_default_name_date_str()
+    default_name = _("range_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_range_compound_clip, default_name, _("Save Range Container Clip"))
 
 def _do_create_range_compound_clip(dialog, response_id, name_entry):
