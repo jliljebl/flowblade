@@ -174,7 +174,9 @@ def _open_clip_in_effects_editor(data):
     
 def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
+    open_tline_clip_in_monitor(clip)
 
+def open_tline_clip_in_monitor(clip):
     media_file = PROJECT().get_media_file_for_path(clip.path)
     if media_file == None and clip.container_data != None:
         media_file = PROJECT().get_media_file_for_container_data(clip.container_data)

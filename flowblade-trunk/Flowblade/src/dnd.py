@@ -40,6 +40,7 @@ SOURCE_MEDIA_FILE = "media_file"
 SOURCE_MONITOR_WIDGET = "monitor"
 SOURCE_EFFECTS_TREE = "effects"
 SOURCE_RANGE_LOG = "range log"
+SOURCE_TLINE = "tline"
 
 # GUI consts
 MEDIA_ICON_WIDTH = 20
@@ -109,9 +110,9 @@ def connect_effects_select_tree_view(tree_view):
   
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-                         [MEDIA_FILES_DND_TARGET], 
+                         [MEDIA_FILES_DND_TARGET, CLIPS_DND_TARGET], 
                          Gdk.DragAction.COPY)
-
+                         
     widget.connect("drag_drop", _on_monitor_drop)
     widget.connect("drag_data_get", _save_monitor_media)
     
@@ -147,9 +148,11 @@ def start_tline_clips_out_drag(event, clips, widget):
     if tline_out_drag_context != None:
         return
     
-    global drag_data
+    global drag_data, drag_source
     drag_data = clips
-    target_list = Gtk.TargetList.new([RANGE_DND_TARGET])
+    drag_source = SOURCE_TLINE
+
+    target_list = Gtk.TargetList.new([RANGE_DND_TARGET, CLIPS_DND_TARGET])
     tline_out_drag_context = widget.drag_begin_with_coordinates(target_list, Gdk.DragAction.COPY, 1, event, -1, -1)
 
 def clear_tline_out_drag_context():
@@ -194,6 +197,16 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
     if drag_data == None: # A user error drag from monitor to monitor
         return
 
+    global drag_source
+    if drag_source == SOURCE_TLINE:
+        drag_source = ""
+        try:
+            callbackbridge.clipmenuaction_open_tline_clip_in_monitor(drag_data[0])
+        except:
+            pass
+        return
+    
+    drag_source = ""
     try:
         # Drag from media panel
         media_file = drag_data[0].media_file
@@ -244,6 +257,7 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         context.finish(True, False, timestamp)
         return
     
+    global drag_source
     if drag_source == SOURCE_EFFECTS_TREE:
         do_effect_drop_func(x, y)
         gui.tline_canvas.widget.grab_focus()
@@ -260,6 +274,8 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         callbackbridge.editevent_tline_range_item_drop(drag_data, x, y)
     else:
         print("_on_tline_drop failed to do anything")
+    
+    drag_source = ""
     
     context.finish(True, False, timestamp)
 

@@ -1174,7 +1174,6 @@ def show_render_properties_panel(render_item):
     else:
         proxy_mode = _("N/A")
 
-    
     LEFT_WIDTH = 200
     render_item.get_display_name()
     row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), Gtk.Label(label=enc_desc), LEFT_WIDTH)

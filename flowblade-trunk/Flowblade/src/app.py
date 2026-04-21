@@ -498,6 +498,7 @@ def monkeypatch_callbacks():
     callbackbridge.clipmenuaction_display_clip_menu = clipmenuaction.display_clip_menu
     callbackbridge.clipmenuaction_compositor_menu_item_activated = clipmenuaction.compositor_menu_item_activated
     callbackbridge.clipmenuaction_get_popover_clip_data = clipmenuaction.get_popover_clip_data
+    callbackbridge.clipmenuaction_open_tline_clip_in_monitor = clipmenuaction.open_tline_clip_in_monitor
     callbackbridge.clipmenuaction_set_compositor_data = clipmenuaction.set_compositor_data
     callbackbridge.editevent_tline_range_item_drop = editevent.tline_range_item_drop
     callbackbridge.compositeeditor_get_compositor = compositeeditor.get_compositor

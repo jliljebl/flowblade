@@ -38,6 +38,7 @@ clipmenuaction_display_clip_menu = None
 clipmenuaction_compositor_menu_item_activated = None
 clipmenuaction_get_popover_clip_data = None
 clipmenuaction_set_compositor_data = None
+clipmenuaction_open_tline_clip_in_monitor = None
 
 compositeeditor_get_compositor = None
 
