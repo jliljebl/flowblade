@@ -44,10 +44,15 @@ def set_scaling(scaling):
     else:
         _scaled_width = int(PROJECT().unscaled_width  * _scaled_height / PROJECT().unscaled_height)
 
-    print("preview_scale:", _scaled_width, _scaled_height)
+    print("Set preview_scale:", _scaled_width, _scaled_height)
 
     PROJECT().profile.set_width(_scaled_width)
     PROJECT().profile.set_height(_scaled_height)
+
+    PLAYER().stop_consumer()
+    PLAYER().consumer.set("width", _scaled_width)
+    PLAYER().consumer.set("height",_scaled_height)
+    PLAYER().start_consumer()
 
 def get_scaled_height(scaling):
     return _scaling_variants[scaling]
