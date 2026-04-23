@@ -54,10 +54,8 @@ def set_scaling(scaling):
     PLAYER().consumer.set("height",_scaled_height)
     PLAYER().start_consumer()
 
-def get_scaled_height(scaling):
-    return _scaling_variants[scaling]
-
-
-
-#self.consumer.set("width", int(self.profile.width() / 2.0))
-#self.consumer.set("height", int(self.profile.height() / 2.0))
+def scale():
+    return  _scaled_height / PROJECT().unscaled_height
+    
+def reverse_scale():
+    return  PROJECT().unscaled_height / _scaled_height

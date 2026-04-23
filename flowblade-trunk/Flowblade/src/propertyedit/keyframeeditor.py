@@ -47,6 +47,7 @@ import guicomponents
 import guipopover
 import guiutils
 import keyframeeditcanvas
+import previewscale
 import propertyedit
 import propertyparse
 import respaths
@@ -3222,10 +3223,11 @@ class PositionNumericalEntries(Gtk.HBox):
         entry.connect("activate", self.enter_pressed)
         
     def enter_pressed(self, entry):
+        scale = previewscale.scale()
         if self.rotating_geom == True:
             try:
-                x = float(self.x_entry.get_text())
-                y = float(self.y_entry.get_text())
+                x = float(self.x_entry.get_text()) * float(scale)
+                y = float(self.y_entry.get_text()) * float(scale)
                 xs = float(self.x_scale_entry.get_text())
                 ys = float(self.y_scale_entry.get_text())
                 rot = float(self.rotation_entry.get_text())
@@ -3248,7 +3250,8 @@ class PositionNumericalEntries(Gtk.HBox):
 
     def update_entry_values(self, active_kf):
         frame, shape, opacity, type = active_kf
-
+        reverse_scale = previewscale.reverse_scale()
+        print("reverse_scale", reverse_scale)
         if self.rotating_geom == False:
             x, y, w, h = shape
             self.x_entry.set_text("%.1f" % x)
@@ -3257,8 +3260,8 @@ class PositionNumericalEntries(Gtk.HBox):
             self.h_entry.set_text("%.1f" % h)
         else:
             x, y, xs, ys, rot = shape
-            self.x_entry.set_text("%.1f" % x)
-            self.y_entry.set_text("%.1f" % y)
+            self.x_entry.set_text("%.1f" % (x * reverse_scale))
+            self.y_entry.set_text("%.1f" % (y * reverse_scale))
             self.x_scale_entry.set_text("%.3f" % xs)
             self.y_scale_entry.set_text("%.3f" % ys)
             self.rotation_entry.set_text("%.1f" % rot)
