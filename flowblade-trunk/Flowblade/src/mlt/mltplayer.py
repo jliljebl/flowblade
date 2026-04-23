@@ -166,7 +166,7 @@ class Player:
 
     def start_consumer(self):
         self.consumer.start()
-        self.stop_ticker()
+        self.start_ticker()
         
     def connect_and_start(self):
         """
