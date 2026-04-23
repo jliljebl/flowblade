@@ -82,8 +82,7 @@ class Player:
         if _sdl_consumer_version == SDL_2:
             print("Create SDL2 consumer...")
 
-            #self.profile.set_width(int(self.profile.width() / 2.0))
-            #self.profile.set_height(int(self.profile.height() / 2.0))
+
 
             self.consumer = mlt.Consumer(self.profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
@@ -91,6 +90,13 @@ class Player:
             h = int(gui.tline_display.get_allocated_height() * gui.tline_display.get_scale_factor())
             self.consumer.set("window_width", w)
             self.consumer.set("window_height", h)
+            
+            #self.profile.set_width(int(self.profile.width() / 2.0))
+            #self.profile.set_height(int(self.profile.height() / 2.0))
+
+            #self.consumer.set("width", int(self.profile.width() / 2.0))
+            #self.consumer.set("height", int(self.profile.height() / 2.0))
+            
         else:
             print("Create SDL1 consumer...")
             self.consumer = mlt.Consumer(self.profile, "sdl")
