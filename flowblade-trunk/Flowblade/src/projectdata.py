@@ -83,8 +83,12 @@ class Project:
     """
     def __init__(self, profile): #profile is mlt.Profile here, made using file path
         self.name = _("untitled") + appconsts.PROJECT_FILE_EXTENSION
-        self.profile = profile
-        self.profile_desc = profile.description()
+        self.profile = profile # This may be changed for different preview scales
+        self.profile_desc = profile.description() # This is immutable once set and is the profile user sees project as being.
+                                                  # All output rendering is done with this profile.
+        self.preview_scale = appconsts.PREVIEW_SCALE_NONE
+        self.unscaled_height = profile.height()
+        self.unscaled_width = profile.width()
         self.bins = []
         self.bins_graphics_default_lengths = {} # Bin.uid -> default length
         self.media_files = {} # MediaFile.id(key) -> MediaFile object.

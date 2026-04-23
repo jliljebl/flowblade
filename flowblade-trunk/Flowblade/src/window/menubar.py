@@ -279,6 +279,36 @@ def get_menu():
             </section>
             <section>
                 <submenu>
+                    <attribute name="label">""" + _("Preview Scaling") + """</attribute>
+                      <section>
+                      <item>
+                        <attribute name="label">""" + _("No Scaling") + """</attribute>
+                        <attribute name="action">app.playback.scaling</attribute>
+                        <attribute name="target">noscaling</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("1080p") + """</attribute>
+                        <attribute name="action">app.playback.scaling</attribute>
+                        <attribute name="target">scaling1080</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("720p") + """</attribute>
+                        <attribute name="action">app.playback.scaling</attribute>
+                        <attribute name="target">scaling720</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("540p") + """</attribute>
+                        <attribute name="action">app.playback.scaling</attribute>
+                        <attribute name="target">scaling540</attribute>
+                      </item>
+                      <item>
+                        <attribute name="label">""" + _("320p") + """</attribute>
+                        <attribute name="action">app.playback.scaling</attribute>
+                        <attribute name="target">scaling360</attribute>
+                      </item>
+                      </section>
+                </submenu>
+                <submenu>
                     <attribute name="label">""" + _("Playback Interpolation") + """</attribute>
                       <section>
                       <item>

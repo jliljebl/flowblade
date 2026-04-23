@@ -445,10 +445,11 @@ class FlowbladeApplication(Gtk.Application):
 
         editorstate.app = self
 
-        # Menu bar needs app available to create actions.
+        # App actions.
         appactions.create_actions()
         appactions.update_tools_view_action_state()
         appactions.update_compositing_mode_action_state()
+        # Menu bar needs app an appactions available to create actions for recents and panel positions.
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
         menubar.fill_panel_positions_menu()
 
@@ -734,6 +735,12 @@ def new_project(profile_index, v_tracks, a_tracks):
 
 def open_project(new_project):
     stop_autosave()
+    
+    # Thie needs to be set once for projects created with version < 2.26 on first open.
+    if new_project.unscaled_height == -1:
+        new_project.unscaled_height = new_project.profile.height()
+        new_project.unscaled_width =  new_project.profile.width()
+
     gui.editor_window.window.handler_block(window_resize_id)
     if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # TODO: get rid of this
         gui.editor_window.window.handler_block(window_state_id)

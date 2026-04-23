@@ -121,6 +121,7 @@ def create_actions():
     _create_stateful_action("audiomasterposition", "s", default_value, lambda a, v: gui.editor_window.set_audiomaster_position(a, v))
     default_value = editorpersistance.prefs.default_playback_interpolation
     _create_stateful_action("playback.interpolation", "s", default_value, lambda a, v: monitorevent.playback_menu_item_activated(a, v))
+    _create_stateful_action("playback.scaling", "s", "noscaling", lambda a, v: monitorevent.scaling_menu_item_activated(a, v))
     _create_action("zoomin", lambda w, a: updater.zoom_in(), shortcuts.get_shortcut_kb_str(root, "zoom_in", True))
     _create_action("zoomout", lambda w, a: updater.zoom_out(), shortcuts.get_shortcut_kb_str(root, "zoom_out", True))
     _create_action("zoomfit", lambda w, a: updater.zoom_project_length())
@@ -231,6 +232,10 @@ def set_per_project_stateful_action_variants():
     playback_value = GLib.Variant.new_string(editorstate.PROJECT().get_project_property(appconsts.P_PROP_PLAYBACK_INTERPOLATION))
     monitorevent.playback_menu_item_activated(action, playback_value)
 
+    action = APP().lookup_action("playback.scaling")
+    scaling_value = GLib.Variant.new_string(editorstate.PROJECT().preview_scale)
+    monitorevent.scaling_menu_item_activated(action, scaling_value)
+    
     
 # --------------------------------------------- View menu updates
 def update_compositing_mode_action_state():

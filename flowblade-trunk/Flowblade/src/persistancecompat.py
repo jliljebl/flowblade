@@ -144,7 +144,12 @@ def FIX_MISSING_PROJECT_ATTRS(project):
 
     if(not hasattr(project, "ingest_data")):
         project.ingest_data = None
-        
+
+    if(not hasattr(project, "preview_scale")):
+        project.preview_scale = appconsts.PREVIEW_SCALE_NONE
+        project.unscaled_height = -1 # use value to detect if needs to set on first loead 
+        project.unscaled_width = -1
+                
 def FIX_MISSING_BIN_ATTRS(bin):
     if(not hasattr(bin, "uid")):
         bin.uid = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()

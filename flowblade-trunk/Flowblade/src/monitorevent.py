@@ -43,6 +43,7 @@ from editorstate import MONITOR_MEDIA_FILE
 import gui
 import guipopover
 import movemodes
+import previewscale
 import rendergputest
 import trimmodes
 import updater
@@ -311,7 +312,7 @@ def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic" hardcoded into menu items
 
 def playback_settings_menu_launched(launcher, widget, event):
-    guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated, decode_callback)
+    guipopover.playback_setting_popupmenu_show(launcher, widget, playback_menu_item_activated, decode_callback, scaling_menu_item_activated)
 
 def playback_menu_item_activated(action, new_value_variant):
     msg = new_value_variant.get_string()
@@ -322,6 +323,16 @@ def playback_menu_item_activated(action, new_value_variant):
         guipopover._playback_settings_popover.hide()
     except:
         pass
+
+def scaling_menu_item_activated(action, new_value_variant):
+    msg = new_value_variant.get_string()
+    action.set_state(new_value_variant)
+    try:
+        guipopover._playback_settings_popover.hide()
+    except:
+        pass
+
+    previewscale.set_scaling_from_menu(new_value_variant)
 
 def decode_callback(action, variant, msg):
 
