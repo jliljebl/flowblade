@@ -18,6 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import traceback
+
+import animatedvalue
 import appconsts
 from editorstate import PROJECT, PLAYER
 import mltprofiles
@@ -30,32 +33,110 @@ _scaling_variants = {
     "scaling360": 360
 }
 
-def set_scaling_from_menu(new_value_variant):
-    set_scaling(new_value_variant.get_string())
-
-def set_scaling(scaling):
-    PROJECT().preview_scaling = scaling
-
+def set_scale_heights(scaling):
     global _scaled_height, _scaled_width
-    _scaled_height = _scaling_variants[scaling]
-    if _scaled_height == -1:
-        _scaled_height = PROJECT().unscaled_height
+    _scaled_height = _get_scaling_height(scaling)
+    if scaling == "noscaling":
         _scaled_width = PROJECT().unscaled_width 
     else:
         _scaled_width = int(PROJECT().unscaled_width  * _scaled_height / PROJECT().unscaled_height)
 
     print("Set preview_scale:", _scaled_width, _scaled_height)
 
+def set_scaling_from_menu(new_value_variant):
+    set_scaling(new_value_variant.get_string())
+
+def set_scaling(scaling):
+    if PROJECT().preview_scale == scaling:
+        return
+    
+    old_scaled_height = _get_scaling_height(PROJECT().preview_scale)
+    
+    PROJECT().preview_scale = scaling
+    set_scale_heights(scaling)
+
+    PLAYER().stop_consumer()
+
+    scale_filter_parameters(PROJECT(), old_scaled_height, _scaled_height)
+
     PROJECT().profile.set_width(_scaled_width)
     PROJECT().profile.set_height(_scaled_height)
 
-    PLAYER().stop_consumer()
+
     PLAYER().consumer.set("width", _scaled_width)
     PLAYER().consumer.set("height",_scaled_height)
     PLAYER().start_consumer()
+
+def _get_scaling_height(scaling):
+    h = _scaling_variants[scaling]
+    if h == -1:
+        return PROJECT().unscaled_height
+    else:
+        return h
 
 def scale():
     return  _scaled_height / PROJECT().unscaled_height
     
 def reverse_scale():
     return  PROJECT().unscaled_height / _scaled_height
+
+# --------------------------------------------- convert funcs
+def scale_filter_parameters(project, from_height, to_height):
+    conv_scale = to_height / from_height
+    
+    for seq in project.sequences:
+        for ti in range(1, len(seq.tracks) - 1): # no bg or hidden trim track.
+            track = seq.tracks[ti]
+            for clip in track.clips:
+                #print(clip.__dict__)
+                if clip.is_blanck_clip == True:
+                    continue
+                for filter_object in clip.filters:
+                    f_name = filter_object.info.name
+                    for pi in range(0, len(filter_object.properties)):
+                        p_name, p_value, p_type = filter_object.properties[pi]
+                        try:
+                            conv_func = PREVIEW_SCALING_FUNCS[(f_name, p_name)]
+                            #print(f_name, p_name)
+                            #print("pre", p_value)
+                            p_value = conv_func(p_value, conv_scale)
+                            #print("post", p_value)
+                            filter_object.properties[pi] = (p_name, str(p_value), p_type)
+                            filter_object.mlt_filter.set(str(p_name), str(p_value))
+                        except:
+                            #traceback.print_exc()
+                            #print("pass")
+                            pass
+
+def _Position_Scale_Rotate_transition_rect(keyframes_str, conv_scale):
+    keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
+    new_keyframes_str = ""
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        frame, value, kf_type = get_token_frame_value_type(token)
+
+        values = value.split(' ')
+        eq_str = animatedvalue.TYPE_TO_EQ_STRING[kf_type]
+        new_value = frame + eq_str
+        x = str(float(values[0]) * conv_scale)
+        y = str(float(values[1]) * conv_scale)
+        x_scale = str(float(values[2]) * conv_scale)
+        y_scale = str(float(values[3]) * conv_scale)
+        new_value += x + " " + y + " " + x_scale  + " " + y_scale + ";"
+
+        new_keyframes_str += new_value
+    
+    new_keyframes_str = new_keyframes_str.strip(";")
+    return new_keyframes_str
+
+def get_token_frame_value_type(token):
+    kf_type, sides = animatedvalue.parse_kf_token(token)
+
+    # returns (frame, value, kf_type)
+    return(sides[0], sides[1], kf_type)
+    
+    
+PREVIEW_SCALING_FUNCS = { \
+    ("Position Scale Rotate", "transition.rect"): _Position_Scale_Rotate_transition_rect
+}
+      

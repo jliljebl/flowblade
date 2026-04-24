@@ -36,6 +36,7 @@ import appconsts
 from editorstate import current_sequence
 import mlttransitions
 import mltfilters
+import previewscale
 import propertyparse
 import undo
 import utils
@@ -181,6 +182,7 @@ def get_non_mlt_editable_properties(clip, filter_object, filter_index, track, cl
         editable_properties.append(ep)
     
     return editable_properties
+    
 
 # -------------------------------------------- property wrappers objs
 class AbstractProperty:
@@ -1577,4 +1579,5 @@ EDITABLE_PROPERTY_CREATORS = { \
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     AFFINE_SCALE : lambda params : AffineScaleProperty(params) }
+
 

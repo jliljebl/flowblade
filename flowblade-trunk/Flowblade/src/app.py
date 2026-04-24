@@ -103,6 +103,7 @@ import multitrimmode
 import mutabletooltips
 import persistance
 import positionbar
+import previewscale
 import processutils
 import projectaction
 import projectdata
@@ -323,7 +324,8 @@ class FlowbladeApplication(Gtk.Application):
         # There is always a project open, so at startup we create a default project.
         # Set default project as the project being edited.
         editorstate.project = projectdata.get_default_project()
-        
+        previewscale.set_scale_heights(editorstate.project.preview_scale)
+    
         # Init projectdatavault, we need it now to create project data folders.
         projectdatavault.init()
         vault_folder = projectdatavault.get_active_vault_folder()
@@ -798,9 +800,10 @@ def open_project(new_project):
 
     projectaction.clear_changed_since_last_save_flags()
 
-    # Set scrubbing and interpolation
+    # Set scrubbing, preview scale and interpolation
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     appactions.set_per_project_stateful_action_variants()
+    previewscale.set_scale_heights(new_project.preview_scale)
 
 def _do_window_resized_update():
     GLib.source_remove(resize_timeout_id)
