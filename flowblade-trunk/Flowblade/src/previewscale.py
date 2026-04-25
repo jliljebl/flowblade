@@ -35,7 +35,7 @@ _scaling_variants = {
 
 def set_scale_heights(scaling):
     global _scaled_height, _scaled_width
-    _scaled_height = _get_scaling_height(scaling)
+    _scaled_height = get_scaling_height(scaling)
     if scaling == "noscaling":
         _scaled_width = PROJECT().unscaled_width 
     else:
@@ -50,7 +50,7 @@ def set_scaling(scaling):
     if PROJECT().preview_scale == scaling:
         return
     
-    old_scaled_height = _get_scaling_height(PROJECT().preview_scale)
+    old_scaled_height = get_scaling_height(PROJECT().preview_scale)
     
     PROJECT().preview_scale = scaling
     set_scale_heights(scaling)
@@ -67,7 +67,7 @@ def set_scaling(scaling):
     PLAYER().consumer.set("height",_scaled_height)
     PLAYER().start_consumer()
 
-def _get_scaling_height(scaling):
+def get_scaling_height(scaling):
     h = _scaling_variants[scaling]
     if h == -1:
         return PROJECT().unscaled_height

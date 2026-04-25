@@ -499,7 +499,7 @@ class EditorWindow:
         self.view_mode_select.widget.set_margin_end(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
         self.playback_settings = guicomponents.get_playback_settings_launcher(monitorevent.playback_settings_menu_launched)
-        self.playback_settings.widget.set_margin_right(35) 
+        self.playback_settings.widget.set_margin_right(12) 
         self.playback_settings.widget.set_tooltip_markup(_("Playback Settings"))
 
         callbacks = [monitorevent.mark_in_pressed,
@@ -515,6 +515,7 @@ class EditorWindow:
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(self.playback_settings.widget, False, False, 0)
+        player_buttons_row.pack_start(self.monitor_tc_info.scaling, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
@@ -991,6 +992,7 @@ class EditorWindow:
         tline_info_box = Gtk.HBox(False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
         tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        #tline_info_box.pack_start(self.monitor_tc_info.scaling, False, False, 0)
         tline_info_box.pack_start(Gtk.Label(), True, True, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         guiutils.set_margins(tline_info_box, 0, 0, 4, 2)

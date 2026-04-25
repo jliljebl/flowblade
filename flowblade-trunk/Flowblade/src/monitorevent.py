@@ -326,6 +326,7 @@ def scaling_menu_item_activated(action, new_value_variant):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
     previewscale.set_scaling_from_menu(new_value_variant)
+    gui.editor_window.monitor_tc_info.set_scaling(previewscale.get_scaling_height(PROJECT().preview_scale))
 
 def decode_callback(action, variant, msg):
 

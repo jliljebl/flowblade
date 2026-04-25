@@ -2110,6 +2110,12 @@ class MonitorMarksTCInfo:
         self.widget = self.marks_tc_display.widget # Gtk.HBox()
         #self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
 
+        self.scaling = Gtk.Label()
+        self.scaling.modify_font(Pango.FontDescription(font_desc))
+        self.scaling.set_sensitive(False)
+        self.scaling.set_margin_right(10)
+        self.scaling.set_size_request(40, 2)
+
     def set_source_name(self, source_name):
         self.monitor_source.set_text(source_name)
         
@@ -2120,7 +2126,15 @@ class MonitorMarksTCInfo:
         self.marks_tc_display.set_marks_range_info(mark_in, mark_out)
         self.marks_tc_display.widget.queue_draw()
 
-
+    def set_scaling(self, scaling_height):
+        if scaling_height == -1:
+            info_str = ""
+        else:
+            info_str = str(scaling_height) + "p"
+        
+        self.scaling.set_text(info_str)
+        
+            
 
 class MonitorInfoDisplay:
 
