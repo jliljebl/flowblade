@@ -44,6 +44,7 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import persistancecompat
+import previewscale
 import propertyparse
 import resync
 import userfolders
@@ -411,6 +412,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
+    previewscale.update_project_profile_to_preview_scaling(project)
 
     persistancecompat.FIX_MISSING_PROJECT_ATTRS(project)
 

@@ -159,10 +159,13 @@ def get_hidden_profiles():
 def get_user_profiles():
     return _user_profiles
 
+def _get_clone_profile(profile):
+    return mlt.Profile(profile.file_path)
+
 def get_profile(profile_name):
     for fname, profile in _profile_list:
         if profile_name == profile.description():
-            return profile
+            return _get_clone_profile(profile)
     
     return None
 
@@ -175,7 +178,7 @@ def get_profile_file_path(profile_name):
 
 def get_profile_for_index(index):
     profile_name, profile = _profile_list[index]
-    return profile
+    return _get_clone_profile(profile)
 
 def get_profile_name_for_index(index):
     profile_name, profile = _profile_list[index]

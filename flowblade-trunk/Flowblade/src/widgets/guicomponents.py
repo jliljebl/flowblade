@@ -2133,8 +2133,8 @@ class MonitorMarksTCInfo:
             info_str = str(scaling_height) + "p"
         
         self.scaling.set_text(info_str)
-        
-            
+        self.scaling.queue_draw()
+
 
 class MonitorInfoDisplay:
 

@@ -161,8 +161,6 @@ class LoadThread(threading.Thread):
             GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker, old_project)
             return
 
-        #guiutils.update_text_idle(self.dialog.info, _("Opening"))
-
         time.sleep(0.3)
 
         # Open project
@@ -186,8 +184,6 @@ class LoadThread(threading.Thread):
             projectdata.media_files_changed_since_last_save = True
             project.last_save_path = first_video_load_project_save_path # This gets set to the temp file saved to change profile which is not correct.
             GLib.idle_add(_enable_save) # Enable save if project saved before video project load.
-
-        #ticker.stop_ticker()
 
     def _do_project_open(self, project):
         
@@ -637,7 +633,7 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
     sequence.VIDEO_TRACKS_COUNT = appconsts.INIT_V_TRACKS
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
-    
+
     new_project = projectdata.get_default_project()
     vault_folder = projectdatavault.get_active_vault_folder()
     new_project.create_vault_folder_data(vault_folder)
@@ -645,11 +641,8 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     projectdatavault.create_project_data_folders()
 
 def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False, replace_media_file_path=None):
-    gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
+    gui.tline_canvas.disconnect_mouse_events() # mouse events during load cause crashes because there is no data to handle
     updater.set_info_icon("document-open")
-
-    #dialog = dialogs.load_dialog()
-    #persistance.load_dialog = dialog
 
     load_launch = LoadThread(filename, False, is_first_video_load, is_autosave_load)
     if replace_media_file != None:
@@ -657,11 +650,8 @@ def actually_load_project(filename, block_recent_files=False, is_first_video_loa
     load_launch.start()
 
 def transcode_update_load_project(filename, transcoded_files):
-    gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
+    gui.tline_canvas.disconnect_mouse_events() # mouse events during load cause crashes because there is no data to handle
     updater.set_info_icon("document-open")
-
-    #dialog = dialogs.load_dialog()
-    #persistance.load_dialog = dialog
 
     load_launch = LoadThread(filename, True, False, False)
     load_launch.set_transcode_info(transcoded_files)

@@ -804,7 +804,6 @@ def open_project(new_project):
     # Set scrubbing, preview scale and interpolation
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     appactions.set_per_project_stateful_action_variants()
-    previewscale.set_scale_heights(new_project.preview_scale)
     gui.editor_window.monitor_tc_info.set_scaling(previewscale.get_scaling_height(editorstate.project.preview_scale))
 
 def _do_window_resized_update():

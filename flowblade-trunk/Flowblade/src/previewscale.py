@@ -27,9 +27,13 @@ Scaling actions:
 - new project: project "preview_scale" set to PREVIEW_SCALE_NONE at creation, UX scaling values set.
 - editing: project "preview_scale" set per user requests, UX scaling values set accordingly,
   filter properties scaled for matching output 
-- project save: project "preview_scale" set to PREVIEW_SCALE_NONE, filter properties set to unscaled values. 
-- project load: project loaded with non-scaled values, "preview_scale", UX and filter properties 
-  scaled to user selected scale if preference set.
+- project save: project saved "preview_scale" current preview scale 
+- project load: project loaded saved preview scale, profile width, height updated on load, GUI appdated to match, filter properties set
+  as is.
+- first video load: 
+- proxy load:
+- transcode load:
+- relink load:
 """
 
 
@@ -55,9 +59,11 @@ def set_scale_heights(scaling):
     if scaling == "noscaling":
         _scaled_width = PROJECT().unscaled_width 
     else:
-        _scaled_width = int(PROJECT().unscaled_width  * _scaled_height / PROJECT().unscaled_height)
+        _scaled_width = int(PROJECT().unscaled_width * _scaled_height / PROJECT().unscaled_height)
 
     print("Set preview_scale:", _scaled_width, _scaled_height)
+
+
 
 def set_scaling_from_menu(new_value_variant):
     set_scaling(new_value_variant.get_string())
@@ -83,9 +89,23 @@ def set_scaling(scaling):
     PLAYER().consumer.set("height",_scaled_height)
     PLAYER().start_consumer()
 
+# Called on load to updatye profile, only description for unscaled profile gets saved.
+def update_project_profile_to_preview_scaling(project):
+    if project.preview_scale == appconsts.PREVIEW_SCALE_NONE:
+        return
+    
+    height = get_scaling_height(project.preview_scale)
+    width = int(project.unscaled_width * height / project.unscaled_height)
+    
+    project.profile.set_width(_scaled_width)
+    project.profile.set_height(_scaled_height)
+    
 def get_scaling_height(scaling):
+    #print("get_scaling_height", scaling)
     h = _scaling_variants[scaling]
+    #print(h)
     if h == -1:
+        #print("unscaled_height", PROJECT().unscaled_height)
         return PROJECT().unscaled_height
     else:
         return h
@@ -99,7 +119,7 @@ def reverse_scale():
 # --------------------------------------------- convert funcs
 def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
     conv_scale = to_height / from_height
-    
+    print(conv_scale)
     for seq in project.sequences:
         for ti in range(1, len(seq.tracks) - 1): # no bg or hidden trim track.
             track = seq.tracks[ti]
@@ -113,17 +133,31 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
                         p_name, p_value, p_type = filter_object.properties[pi]
                         try:
                             conv_func = PREVIEW_SCALING_FUNCS[(f_name, p_name)]
-                            #print(f_name, p_name)
-                            #print("pre", p_value)
+                            print(f_name, p_name)
+                            print("pre", p_value)
                             p_value = conv_func(p_value, conv_scale)
-                            #print("post", p_value)
+                            print("post", p_value)
                             filter_object.properties[pi] = (p_name, str(p_value), p_type)
                             if scale_mlt == True:
                                 filter_object.mlt_filter.set(str(p_name), str(p_value))
                         except:
                             #traceback.print_exc()
-                            #print("pass")
+                            print("pass")
                             pass
+"""
+def save_scale_filter_parameters(project):
+    print("save_scale_filter_parameters", project.preview_scale)
+    # Project are always saved with project.preview_scale == appconsts.PREVIEW_SCALE_NONE.
+    if project.preview_scale == appconsts.PREVIEW_SCALE_NONE:
+        return
+
+    from_height = get_scaling_height(project.preview_scale)
+    to_height = get_scaling_height(appconsts.PREVIEW_SCALE_NONE)
+    
+    scale_filter_parameters(project, from_height, to_height, scale_mlt=False)
+
+    project.preview_scale = appconsts.PREVIEW_SCALE_NONE
+"""
 
 def _Position_Scale_Rotate_transition_rect(keyframes_str, conv_scale):
     keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away

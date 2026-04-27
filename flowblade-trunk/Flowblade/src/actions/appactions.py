@@ -233,8 +233,8 @@ def set_per_project_stateful_action_variants():
     monitorevent.playback_menu_item_activated(action, playback_value)
 
     action = APP().lookup_action("playback.scaling")
-    scaling_value = GLib.Variant.new_string(editorstate.PROJECT().preview_scale)
-    monitorevent.scaling_menu_item_activated(action, scaling_value)
+    scaling_value_variant = GLib.Variant.new_string(editorstate.PROJECT().preview_scale)
+    action.set_state(scaling_value_variant)
     
     
 # --------------------------------------------- View menu updates
