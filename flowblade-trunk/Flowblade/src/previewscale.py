@@ -18,6 +18,21 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module handles setting preview to lower then project 
+profile screen dimensions for improved playback preformance.
+
+Scaling actions:
+- app start: project "preview_scale" set to PREVIEW_SCALE_NONE at creation, UX scaling values set.
+- new project: project "preview_scale" set to PREVIEW_SCALE_NONE at creation, UX scaling values set.
+- editing: project "preview_scale" set per user requests, UX scaling values set accordingly,
+  filter properties scaled for matching output 
+- project save: project "preview_scale" set to PREVIEW_SCALE_NONE, filter properties set to unscaled values. 
+- project load: project loaded with non-scaled values, "preview_scale", UX and filter properties 
+  scaled to user selected scale if preference set.
+"""
+
+
 import traceback
 
 import animatedvalue
@@ -25,12 +40,13 @@ import appconsts
 from editorstate import PROJECT, PLAYER
 import mltprofiles
 
+
 _scaling_variants = {
-    "noscaling": -1,
-    "scaling1080": 1080,
-    "scaling720": 720,
-    "scaling540": 540,
-    "scaling360": 360
+    appconsts.PREVIEW_SCALE_NONE: -1,
+    appconsts.PREVIEW_SCALE_1080: 1080,
+    appconsts.PREVIEW_SCALE_720: 720,
+    appconsts.PREVIEW_SCALE_540: 540,
+    appconsts.PREVIEW_SCALE_360: 360
 }
 
 def set_scale_heights(scaling):
@@ -81,7 +97,7 @@ def reverse_scale():
     return  PROJECT().unscaled_height / _scaled_height
 
 # --------------------------------------------- convert funcs
-def scale_filter_parameters(project, from_height, to_height):
+def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
     conv_scale = to_height / from_height
     
     for seq in project.sequences:
@@ -102,7 +118,8 @@ def scale_filter_parameters(project, from_height, to_height):
                             p_value = conv_func(p_value, conv_scale)
                             #print("post", p_value)
                             filter_object.properties[pi] = (p_name, str(p_value), p_type)
-                            filter_object.mlt_filter.set(str(p_name), str(p_value))
+                            if scale_mlt == True:
+                                filter_object.mlt_filter.set(str(p_name), str(p_value))
                         except:
                             #traceback.print_exc()
                             #print("pass")
