@@ -3238,10 +3238,10 @@ class PositionNumericalEntries(Gtk.HBox):
                 print("Numerical input Exception - ", e)
         else:
             try:
-                x = float(self.x_entry.get_text())
-                y = float(self.y_entry.get_text())
-                w = float(self.w_entry.get_text())
-                h = float(self.h_entry.get_text())
+                x = float(self.x_entry.get_text()) * float(scale)
+                y = float(self.y_entry.get_text()) * float(scale)
+                w = float(self.w_entry.get_text()) * float(scale)
+                h = float(self.h_entry.get_text()) * float(scale)
                 shape = [x, y, w, h]
                 self.parent_editor.numerical_edit_done(shape)
             except Exception as e:
@@ -3254,10 +3254,10 @@ class PositionNumericalEntries(Gtk.HBox):
         print("reverse_scale", reverse_scale)
         if self.rotating_geom == False:
             x, y, w, h = shape
-            self.x_entry.set_text("%.1f" % x)
-            self.y_entry.set_text("%.1f" % y)
-            self.w_entry.set_text("%.1f" % w)
-            self.h_entry.set_text("%.1f" % h)
+            self.x_entry.set_text("%.1f" % (x * reverse_scale))
+            self.y_entry.set_text("%.1f" % (y * reverse_scale))
+            self.w_entry.set_text("%.1f" % (w * reverse_scale))
+            self.h_entry.set_text("%.1f" % (h * reverse_scale))
         else:
             x, y, xs, ys, rot = shape
             self.x_entry.set_text("%.1f" % (x * reverse_scale))
