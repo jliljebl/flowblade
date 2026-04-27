@@ -161,13 +161,15 @@ class Player:
         return (self.producer.get_speed() == 0)
         
     def stop_consumer(self):
+        print("stop_consumer")
         self.consumer.stop()
         self.stop_ticker()
 
     def start_consumer(self):
         self.consumer.start()
         self.start_ticker()
-
+        print("start_consumer")
+        
     def connect_and_start(self):
         """
         Connects current procer and consumer and
