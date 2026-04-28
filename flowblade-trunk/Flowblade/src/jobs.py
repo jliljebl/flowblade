@@ -137,9 +137,14 @@ class ProcessCommandListRunner(threading.Thread):
     def __init__(self, command_list):
         threading.Thread.__init__(self)
         self.command_list = command_list
+        self.logging = False # debugging
         
     def run(self):
-        process = subprocess.Popen(self.command_list)
+        if self.logging == False:
+            process = subprocess.Popen(self.command_list)
+        else:
+            FLOG = open(userfolders.get_cache_dir() + "log_job_ProcessCommandListRunner", 'w')
+            process = subprocess.Popen(self.command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         process.wait()
 
 #---------------------------------------------------------------- interface
@@ -831,11 +836,12 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
 
             # We need to wait() in thread.
             command_list_runner = ProcessCommandListRunner(command_list)
+            command_list_runner.logging = True
             command_list_runner.start()
         else:
             # FFMPEG CLI proxy rendering.
             self.is_mlt_render = False
-            
+
             # Build ffmpeg CLI string.
             proxy_attr_str = enc_opt.attr_string
             # Set scale size.
@@ -943,10 +949,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                     self.render_data.do_auto_re_convert_func()
         else:
             # Transcode render.
-            print(self.completed_action, self.is_media_add_transcode)
-
             if self.is_media_add_transcode == False and self.completed_action == self.TRANSCODE_COMPLETED_ACTION_ADD_MEDIA_ITEM:
-                print("add")
                 # Add new media item, do not replace existing one
                 file_path = self.render_data.proxy_file_path
                 (directory, file_name) = os.path.split(str(self.render_data.media_file_path))
@@ -958,7 +961,6 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
                 gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
             else:
-                print("replace")
                 # Replace existing media item.
                 # Media add transcodes are always replace, existing media transcodes on request.
                 global _transcode_multi_replace

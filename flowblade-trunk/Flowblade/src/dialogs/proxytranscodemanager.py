@@ -50,6 +50,7 @@ PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
 PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
 PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
+_proxy_sizes = [appconsts.PROXY_1080, appconsts.PROXY_720, appconsts.PROXY_540, appconsts.PROXY_360]
 
 
 # ------------------------------------------------------------- interface
@@ -116,16 +117,31 @@ class ProxyManagerDialog:
         self.enc_select.connect("changed", 
                                 lambda w,e: self.encoding_changed(w.get_active()), 
                                 None)
-        # Size combo.
+        # Size combo. This is stable because "unscaled_height" is immutable once created.
         self.size_select = Gtk.ComboBoxText()
-        self.size_select.append_text(_("Project Image Size"))
-        self.size_select.append_text(_("Half Project Image Size"))
-        self.size_select.append_text(_("Quarter Project Image Size"))
-        self.size_select.set_active(editorstate.PROJECT().proxy_data.size)
+        self.proxy_options = []
+        active_index = 0
+        active_option = 0
+        for i in range(0, len(_proxy_sizes)):
+            pixel_height = _proxy_sizes[i]
+            
+            if pixel_height < editorstate.PROJECT().unscaled_height:
+                if pixel_height == editorstate.PROJECT().proxy_data.size:
+                    active_index = active_option
+                self.proxy_options.append(pixel_height)
+                self.size_select.append_text(str(pixel_height)+ "p")
+                active_option += 1
+
+        # Convert pre 2.26 proxy size data to new values.
+        if editorstate.PROJECT().proxy_data.size < 360:
+            editorstate.PROJECT().proxy_data.size = self.proxy_options[0]
+            active_index = 0
+
+        self.size_select.set_active(active_index)
         self.size_select.connect("changed", 
                                 lambda w,e: self.size_changed(w.get_active()), 
                                 None)
-                                
+
         row_enc = Gtk.HBox(False, 2)
         row_enc.pack_start(Gtk.Label(), True, True, 0)
         row_enc.pack_start(self.enc_select, False, False, 0)
@@ -222,7 +238,8 @@ class ProxyManagerDialog:
         editorstate.PROJECT().proxy_data.encoding = enc_index
 
     def size_changed(self, size_index):
-        editorstate.PROJECT().proxy_data.size = size_index
+        editorstate.PROJECT().proxy_data.size = self.proxy_options[size_index]
+        print("New proxy size:", editorstate.PROJECT().proxy_data.size)
 
     def update_proxy_mode_display(self):
         self.set_convert_buttons_state()

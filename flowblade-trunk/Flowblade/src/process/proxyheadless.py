@@ -86,7 +86,10 @@ class ProxyClipRenderThread(threading.Thread):
         self.media_file_path = media_file_path
         self.proxy_profile_desc = proxy_profile_desc
         self.lookup_path = lookup_path # For img seqs only
-        self.is_transcode = bool(is_transcode)
+        if is_transcode == "True":
+            self.is_transcode = True
+        else:
+            self.is_transcode = False
         
         self.abort = False
 
@@ -95,16 +98,14 @@ class ProxyClipRenderThread(threading.Thread):
         
         if self.lookup_path == "None":
             # Video clips
-            
             proxy_profile = mltprofiles.get_profile(self.proxy_profile_desc)
-            
-            # App wrote the temp profile when launching proxy render.
+
             if self.is_transcode == False:
-                proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-                proxy_profile = mlt.Profile(proxy_profile_path)
-            else:
-                proxy_profile = mlt.Profile(self.proxy_profile_desc)
-        
+                proxy_profile = mltprofiles.get_profile(self.proxy_profile_desc)
+                proxy_profile.set_width(self.proxy_w)
+                proxy_profile.set_height(self.proxy_h)
+                print("Proxy size = ", self.proxy_w, self.proxy_h)
+
             renderconsumer.performance_settings_enabled = False # uuh...we're obviously disabling something momentarily.
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         self.proxy_file_path,

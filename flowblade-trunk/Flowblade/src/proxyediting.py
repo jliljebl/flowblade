@@ -52,11 +52,8 @@ render_thread = None
 runner_thread = None
 load_thread = None
 
-# These are made to correspond with size selector combobox indexes on manager window
-PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
-PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
-PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
+_proxy_sizes = [appconsts.PROXY_1080, appconsts.PROXY_720, appconsts.PROXY_540, appconsts.PROXY_360]
 
 class ProxyRenderItemData:
     def __init__(   self, media_file_id, proxy_w, proxy_h, enc_index, 
@@ -92,14 +89,12 @@ class ProxyRenderItemData:
 
 
 class ProxyRenderRunnerThread(threading.Thread):
-    def __init__(self, proxy_profile, files_to_render):
+    def __init__(self, files_to_render):
         threading.Thread.__init__(self)
-        self.proxy_profile = proxy_profile
         self.files_to_render = files_to_render
 
-    def run(self):        
-
-        proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
+    def run(self):
+        proxy_w, proxy_h =  _get_proxy_dimensions(editorstate.PROJECT())
         enc_index = editorstate.PROJECT().proxy_data.encoding
 
         proxy_render_items = []
@@ -121,7 +116,7 @@ class ProxyRenderRunnerThread(threading.Thread):
 
                 item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, enc_index,
                                                 proxy_file_path, proxy_rate, media_file.path,
-                                                self.proxy_profile.description(), 
+                                                editorstate.PROJECT().profile.description(), 
                                                 None, False)
             else:
 
@@ -138,7 +133,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                                 lookup_path, False)
 
             proxy_render_items.append(item_data)
-        
+
         GLib.idle_add(self._create_job_queue_objects, proxy_render_items)
         
     def _create_job_queue_objects(self, proxy_render_items):
@@ -171,8 +166,7 @@ def create_proxy_menu_item_selected(media_file):
     _do_create_proxy_files(media_files)
 
 def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
-    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
-    proxy_w, proxy_h =  _get_proxy_dimensions(proxy_profile, editorstate.PROJECT().proxy_data.size)
+    proxy_w, proxy_h =  _get_proxy_dimensions(editorstate.PROJECT())
     proxy_file_extension = _get_proxy_encoding().extension
 
     files_to_render = []
@@ -187,7 +181,7 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
         if f.type != appconsts.VIDEO and f.type != appconsts.IMAGE_SEQUENCE: # only video files and img seqs can have proxy files
             not_video_files = not_video_files + 1
             continue
-        if f.container_data != None:
+        if f.container_data != None: # no proxy files for container clips 
             not_video_files = not_video_files + 1
             continue
         if f.has_proxy_file == True: # no need to to create proxy files again, unless forced by user
@@ -222,10 +216,8 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
     _create_proxy_files(files_to_render)
     
 def _create_proxy_files(media_files_to_render):
-    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
-
     global runner_thread
-    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
+    runner_thread = ProxyRenderRunnerThread(media_files_to_render)
     runner_thread.start()
 
 # ------------------------------------------------------------------ module functions
@@ -233,43 +225,17 @@ def _get_proxy_encoding():
     enc_index = editorstate.PROJECT().proxy_data.encoding
     return renderconsumer.proxy_encodings[enc_index]
 
-def _get_proxy_dimensions(project_profile, proxy_size):
-    # Get new dimension that are about half of previous and diviseble by eight
-    if proxy_size == PROXY_SIZE_FULL:
-        size_mult = 1.0
-    elif proxy_size == PROXY_SIZE_HALF:
-        size_mult = 0.5
-    else: # quarter size
-        size_mult = 0.25
-
-    old_width_half = int(project_profile.width() * size_mult)
-    old_height_half = int(project_profile.height() * size_mult)
-    new_width = old_width_half - old_width_half % 2
-    new_height = old_height_half - old_height_half % 2
-    return (new_width, new_height)
-
-def _get_proxy_profile(project):
-    project_profile = project.profile
-    new_width, new_height = _get_proxy_dimensions(project_profile, project.proxy_data.size)
-    
-    file_contents = "description=" + "proxy render profile" + "\n"
-    file_contents += "frame_rate_num=" + str(project_profile.frame_rate_num()) + "\n"
-    file_contents += "frame_rate_den=" + str(project_profile.frame_rate_den()) + "\n"
-    file_contents += "width=" + str(new_width) + "\n"
-    file_contents += "height=" + str(new_height) + "\n"
-    file_contents += "progressive=1" + "\n"
-    file_contents += "sample_aspect_num=" + str(project_profile.sample_aspect_num()) + "\n"
-    file_contents += "sample_aspect_den=" + str(project_profile.sample_aspect_den()) + "\n"
-    file_contents += "display_aspect_num=" + str(project_profile.display_aspect_num()) + "\n"
-    file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
-
-    proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-    with atomicfile.AtomicFileWriter(proxy_profile_path, "w") as afw:
-        profile_file = afw.get_file()
-        profile_file.write(file_contents)
-
-    proxy_profile = mlt.Profile(proxy_profile_path)
-    return proxy_profile
+def _get_proxy_dimensions(project):
+    # Convert pre 2.26 proxy size value to new value.
+    if project.proxy_data.size < 360:
+        for proxy_height in _proxy_sizes:
+            if proxy_height < project.unscaled_height:
+                 project.proxy_data.size = proxy_height
+                 break
+    else:
+        proxy_height = project.proxy_data.size 
+    proxy_width = int(proxy_height * (project.unscaled_width / project.unscaled_height)) 
+    return (proxy_width, proxy_height)
 
 def _proxy_render_stopped():
     global progress_window, runner_thread
@@ -418,8 +384,6 @@ class ProxyProjectLoadThread(threading.Thread):
 # EXISTING MEDIA TRANSCODE: replace media item, no clips need to replaced
 # EXISTING MEDIA TRANSCODE: replace media item, clips need to replaced
 def create_transcode_files(media_items, enc_index, external_render_folder, action_index, is_media_add_transcode):
-    proxy_profile = _get_proxy_profile(editorstate.PROJECT())
-
     global runner_thread
     runner_thread = TranscodeRenderJobsCreateThread(media_items, enc_index, external_render_folder, action_index, is_media_add_transcode)
     runner_thread.start()

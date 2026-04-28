@@ -294,10 +294,10 @@ TLINE_RENDERING_OFF = 0
 TLINE_RENDERING_AUTO = 1
 TLINE_RENDERING_REQUEST = 2
 
-# Timeline rendering uses these now.
-PROXY_SIZE_FULL = 0
-PROXY_SIZE_HALF = 1
-PROXY_SIZE_QUARTER = 2
+# DEPRECATED 2.26, see PROXY_1080 etc. below.
+PROXY_SIZE_FULL = 0 # DEPRECATED
+PROXY_SIZE_HALF = 1 # DEPRECATED
+PROXY_SIZE_QUARTER = 2 # DEPRECATED
 
 # Container clip types.
 CONTAINER_CLIP_GMIC = 0
@@ -476,7 +476,7 @@ VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
 
 # values set in /res/mediaplugins/plugins.json
-# and use in containerclip.py when creating new 
+# and used in containerclip.py when creating new 
 # ContainerClipMediaItem objects for Generators.
 DEFAULT_RENDER_CLIP = "clip"
 DEFAULT_RENDER_ALPHA_CLIP = "alphaclip"
@@ -510,3 +510,7 @@ PREVIEW_SCALE_720 = "scaling720"
 PREVIEW_SCALE_540 = "scaling540" 
 PREVIEW_SCALE_360 = "scaling360" 
 
+PROXY_1080 = 1080
+PROXY_720 = 720
+PROXY_540 = 540
+PROXY_360 = 360

@@ -88,7 +88,7 @@ class Project:
                                                   # All output rendering is done with this profile.
         self.preview_scale = appconsts.PREVIEW_SCALE_NONE
         self.unscaled_height = profile.height()
-        print("setting unscaled_height",  profile.height()) 
+        #print("setting unscaled_height",  profile.height()) 
         self.unscaled_width = profile.width()
         self.bins = []
         self.bins_graphics_default_lengths = {} # Bin.uid -> default length

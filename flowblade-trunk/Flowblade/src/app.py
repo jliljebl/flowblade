@@ -742,7 +742,7 @@ def open_project(new_project):
     # Thie needs to be set once for projects created with version < 2.26 on first open.
     if new_project.unscaled_height == -1:
         new_project.unscaled_height = new_project.profile.height()
-        new_project.unscaled_width =  new_project.profile.width()
+        new_project.unscaled_width = new_project.profile.width()
 
     gui.editor_window.window.handler_block(window_resize_id)
     if mltplayer.get_sdl_consumer_version() == mltplayer.SDL_1: # TODO: get rid of this
