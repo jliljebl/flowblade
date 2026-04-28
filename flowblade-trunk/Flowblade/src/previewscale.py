@@ -27,8 +27,8 @@ Scaling actions:
 - new project: project "preview_scale" set to PREVIEW_SCALE_NONE at creation, UX scaling values set.
 - editing: project "preview_scale" set per user requests, UX scaling values set accordingly,
   filter properties scaled for matching output 
-- project save: project saved "preview_scale" current preview scale 
-- project load: project loaded saved preview scale, profile width, height updated on load, GUI appdated to match, filter properties set
+- project save: project saved with current "preview_scale" value, no scaling of any parfamters
+- project load: project loaded saved preview scale, profile width, height updated on load, GUI appdated to match, filter properties let be
   as is.
 - first video load: 
 - proxy load:
@@ -61,9 +61,7 @@ def set_scale_heights(scaling):
     else:
         _scaled_width = int(PROJECT().unscaled_width * _scaled_height / PROJECT().unscaled_height)
 
-    print("Set preview_scale:", _scaled_width, _scaled_height)
-
-
+    print("Set preview scale:", _scaled_width, _scaled_height)
 
 def set_scaling_from_menu(new_value_variant):
     set_scaling(new_value_variant.get_string())
@@ -87,6 +85,7 @@ def set_scaling(scaling):
 
     PLAYER().consumer.set("width", _scaled_width)
     PLAYER().consumer.set("height",_scaled_height)
+
     PLAYER().start_consumer()
 
 # Called on load to updatye profile, only description for unscaled profile gets saved.

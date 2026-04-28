@@ -302,7 +302,7 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
         y = values[1]
         w = values[2] 
         h = values[3] 
-        source_rect = [int(x), int(y), int(w), int(h)] #x,y,width,height
+        source_rect = [float(x), float(y), float(w), float(h)] #x,y,width,height
         add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)), kf_type)
         new_keyframes.append(add_kf)
     
@@ -318,7 +318,7 @@ def rect_NO_keyframes_value_string_to_geom_kf_array(rect_str, out_to_in_func):
     y = values[1]
     w = values[2] 
     h = values[3] 
-    source_rect = [int(x), int(y), int(w), int(h)] # x, y, width, height
+    source_rect = [float(x), float(y), float(w), float(h)] # x, y, width, height
     add_kf = (0, source_rect, 1.0, appconsts.KEYFRAME_LINEAR)
     new_keyframes.append(add_kf)
 
