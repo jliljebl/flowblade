@@ -133,9 +133,9 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
                         try:
                             conv_func = PREVIEW_SCALING_FUNCS[(f_name, p_name)]
                             #print(conv_func, f_name, p_name)
-                            print("pre", p_value)
+                            #print("pre", p_value)
                             p_value = conv_func(p_value, conv_scale)
-                            print("post", p_value)
+                            #print("post", p_value)
                             filter_object.properties[pi] = (p_name, str(p_value), p_type)
                             if scale_mlt == True:
                                 filter_object.mlt_filter.set(str(p_name), str(p_value))
@@ -143,20 +143,19 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
                             #traceback.print_exc()
                             #print("pass")
                             pass
-"""
-def save_scale_filter_parameters(project):
-    print("save_scale_filter_parameters", project.preview_scale)
-    # Project are always saved with project.preview_scale == appconsts.PREVIEW_SCALE_NONE.
-    if project.preview_scale == appconsts.PREVIEW_SCALE_NONE:
-        return
 
-    from_height = get_scaling_height(project.preview_scale)
-    to_height = get_scaling_height(appconsts.PREVIEW_SCALE_NONE)
-    
-    scale_filter_parameters(project, from_height, to_height, scale_mlt=False)
-
-    project.preview_scale = appconsts.PREVIEW_SCALE_NONE
-"""
+# Shear
+# Vignette Advanced
+# IRRBlur
+# Pixelize
+# Perspective
+# Rotate
+# Motion tracking create SPECIAL CASING, THIS MAYBE UNDOABLE
+# Stabilize
+# Sharpness
+# Emboss
+# Edge glow
+# + likely quite a few filtrs with non-scalable pixel effects
 
 def _Position_Scale_Rotate_transition_rect(keyframes_str, conv_scale):
     keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
