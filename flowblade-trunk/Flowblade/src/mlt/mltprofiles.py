@@ -160,7 +160,9 @@ def get_user_profiles():
     return _user_profiles
 
 def _get_clone_profile(profile):
-    return mlt.Profile(profile.file_path)
+    clone_profile = mlt.Profile(profile.file_path)
+    clone_profile.file_path = profile.file_path
+    return clone_profile
 
 def get_profile(profile_name):
     for fname, profile in _profile_list:

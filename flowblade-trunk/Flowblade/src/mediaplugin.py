@@ -29,7 +29,6 @@ Naming was changed to 'Generator' from 'Media Plugin' at the last moment before 
 so all code here refers to 'media plugins' instead of 'generators'.
 """  
 
-
 from gi.repository import Gtk, GObject, Pango, Gio
 
 import cairo
@@ -522,7 +521,6 @@ class AddMediaPluginWindow(Gtk.Window):
             success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
             script_data_object = json.loads(fctx.get_script_data())
         else:
-            
             new_selected_plugin = MediaPlugin(*plugin_template.plugin_data)
             script_data_object = plugin_template.edited_script_data
         
