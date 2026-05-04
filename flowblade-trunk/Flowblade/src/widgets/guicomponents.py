@@ -2100,13 +2100,14 @@ class MonitorMarksTCInfo:
         self.monitor_source = Gtk.Label()
         self.monitor_source.modify_font(Pango.FontDescription(font_desc))
         self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        #self.monitor_source.set_sensitive(False)
+        self.monitor_source.set_tooltip_markup(_("Monitor Source"))
         
         self.monitor_tc = Gtk.Label()
         self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
-
+        self.monitor_tc.set_tooltip_markup(_("Monitor Source Length"))
+        
         self.marks_tc_display = MonitorInfoDisplay()
-
+        
         self.widget = self.marks_tc_display.widget # Gtk.HBox()
         #self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
 
@@ -2115,6 +2116,7 @@ class MonitorMarksTCInfo:
         self.scaling.set_sensitive(False)
         self.scaling.set_margin_right(10)
         self.scaling.set_size_request(40, 2)
+        self.scaling.set_tooltip_markup(_("Preview Scaling"))
 
     def set_source_name(self, source_name):
         self.monitor_source.set_text(source_name)
@@ -2147,6 +2149,8 @@ class MonitorInfoDisplay:
         self.mark_out_img = guiutils.get_cairo_image("mark_out_tc", force=False)
         self.marks_length_img = guiutils.get_cairo_image("marks_length_tc", force=False)
 
+        self.widget.set_tooltip_markup(_("Marks Timecodes and Range Length"))
+        
         self.in_str = ""
         self.out_str = ""
         self.len_str = ""
