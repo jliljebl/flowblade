@@ -132,7 +132,7 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
                         p_name, p_value, p_type = filter_object.properties[pi]
                         try:
                             conv_func = PREVIEW_SCALING_FUNCS[(f_name, p_name)]
-                            #print(conv_func, f_name, p_name)
+                            print(conv_func, f_name, p_name)
                             #print("pre", p_value)
                             p_value = conv_func(p_value, conv_scale)
                             #print("post", p_value)
@@ -140,6 +140,7 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
                             if scale_mlt == True:
                                 filter_object.mlt_filter.set(str(p_name), str(p_value))
                         except:
+                            print("pass", f_name, p_name)
                             #traceback.print_exc()
                             #print("pass")
                             pass
@@ -199,6 +200,10 @@ def _Position_Scale_transition_rect(keyframes_str, conv_scale):
     new_keyframes_str = new_keyframes_str.strip(";")
     return new_keyframes_str
 
+def _Rotation_pos_offset(val_str, conv_scale):
+    print("posofset")
+    return  str(float(val_str) * conv_scale)
+        
 def get_token_frame_value_type(token):
     kf_type, sides = animatedvalue.parse_kf_token(token)
 
@@ -208,5 +213,7 @@ def get_token_frame_value_type(token):
     
 PREVIEW_SCALING_FUNCS = { \
     ("Position Scale Rotate", "transition.rect"): _Position_Scale_Rotate_transition_rect,
-    ("Position Scale", "transition.rect"): _Position_Scale_transition_rect
+    ("Position Scale", "transition.rect"): _Position_Scale_transition_rect,
+    ("Rotate", "transition.ox"): _Rotation_pos_offset,
+    ("Rotate", "transition.oy"): _Rotation_pos_offset
 }
