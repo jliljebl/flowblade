@@ -147,10 +147,9 @@ def scale_filter_parameters(project, from_height, to_height, scale_mlt=True):
 
 # Shear
 # Vignette Advanced
-# IRRBlur
-# Pixelize
+# IRRBlur NOT DOABLE, 
+# Pixelize Small difference, no idea what
 # Perspective
-# Rotate
 # Motion tracking create SPECIAL CASING, THIS MAYBE UNDOABLE
 # Stabilize
 # Sharpness
@@ -200,20 +199,32 @@ def _Position_Scale_transition_rect(keyframes_str, conv_scale):
     new_keyframes_str = new_keyframes_str.strip(";")
     return new_keyframes_str
 
-def _Rotation_pos_offset(val_str, conv_scale):
-    print("posofset")
+def _linear_scaled(val_str, conv_scale):
+    print("_linear_scaled")
     return  str(float(val_str) * conv_scale)
-        
+
+def _linear_reverse_scaled(val_str, conv_scale):
+    return  str(float(val_str) * (1.0 / conv_scale))
+    
 def get_token_frame_value_type(token):
     kf_type, sides = animatedvalue.parse_kf_token(token)
 
     # returns (frame, value, kf_type)
     return(sides[0], sides[1], kf_type)
-    
-    
+
+
 PREVIEW_SCALING_FUNCS = { \
     ("Position Scale Rotate", "transition.rect"): _Position_Scale_Rotate_transition_rect,
     ("Position Scale", "transition.rect"): _Position_Scale_transition_rect,
-    ("Rotate", "transition.ox"): _Rotation_pos_offset,
-    ("Rotate", "transition.oy"): _Rotation_pos_offset
+    ("Rotate", "transition.ox"): _linear_scaled,
+    ("Rotate", "transition.oy"): _linear_scaled,
+    ("Perspective", "av.sense"): _linear_scaled,
+    ("Perspective", "av.x0") : _linear_scaled,
+    ("Perspective", "av.y0"): _linear_scaled,
+    ("Perspective", "av.x1"): _linear_scaled,
+    ("Perspective", "av.y1"): _linear_scaled,
+    ("Perspective", "av.x2"): _linear_scaled,
+    ("Perspective", "av.y2"): _linear_scaled,
+    ("Perspective", "av.x3"): _linear_scaled,
+    ("Perspective", "av.y3"): _linear_scaled
 }
