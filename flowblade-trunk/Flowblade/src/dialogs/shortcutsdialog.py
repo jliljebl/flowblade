@@ -142,7 +142,6 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "undo"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "redo"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_project"), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0) #_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_prev"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
@@ -274,6 +273,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     roto = guiutils.get_named_frame(_("RotoMask Editor"), roto_vbox)
 
     monitor_vbox = Gtk.VBox()
+    monitor_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0)
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_video"), False, False, 0)
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_scope"), False, False, 0)
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_rgb"), False, False, 0)
