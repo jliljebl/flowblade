@@ -426,7 +426,8 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         release_func = mode_funcs[TL_MOUSE_RELEASE]
         release_func(x, y, frame, state)
 
-def tline_canvas_double_click(frame, x, y):
+def tline_canvas_double_click(frame, x, y, event):
+
     if PLAYER().looping():
         return
     elif PLAYER().is_playing():
@@ -452,9 +453,14 @@ def tline_canvas_double_click(frame, x, y):
     clip = track.clips[clip_index]
     if clip.is_blanck_clip == True:
         return
-        
+
     data = (clip, track, None, x)
-    updater.open_clip_in_effects_editor(data)
+    
+    if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+        media_file = PROJECT().get_media_file_for_path(clip.path)    
+        updater.set_and_display_monitor_media_file(media_file)
+    else:
+        updater.open_clip_in_effects_editor(data)
 
 
 # -------------------------------------------------- DND release event callbacks

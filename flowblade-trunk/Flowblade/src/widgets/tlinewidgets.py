@@ -1492,7 +1492,7 @@ class TimeLineCanvas:
         Mouse button callback
         """
         if event.n_press == 2:
-            self.double_click_listener(get_frame(event.x), event.x, event.y)
+            self.double_click_listener(get_frame(event.x), event.x, event.y, event)
             return
          
         self.drag_on = True
