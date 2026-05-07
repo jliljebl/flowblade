@@ -1032,8 +1032,8 @@ class BinInfoPanel(Gtk.HBox):
         self.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         self.pack_start(info_col_2, False, False, 0)
         self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
-        self.pack_start(info_col_3, False, False, 0)
-        self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
+        #self.pack_start(info_col_3, False, False, 0)
+        #self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
         self.pack_start(self.image_box, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         
