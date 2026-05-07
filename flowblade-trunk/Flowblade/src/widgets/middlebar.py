@@ -198,7 +198,7 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio"), tlineaction.split_audio_synched_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("set_track_sync"), tlineaction.set_track_sync_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
+    #editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, None)
     mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_SPLIT_SYNC_BUTTONS, editor_window.edit_buttons_2, tooltip_runner)
     editor_window.edit_buttons_2.no_decorations = no_decorations
@@ -255,7 +255,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
             
     if editorstate.screen_size_small_width() == False:
-        pad_w = 24
+        pad_w = 48
     else:
         pad_w = 5
 
