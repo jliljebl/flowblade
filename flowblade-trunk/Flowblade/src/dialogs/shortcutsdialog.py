@@ -276,6 +276,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_video"), False, False, 0)
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_scope"), False, False, 0)
     monitor_vbox.pack_start(_get_dynamic_kb_row(root_node, "monitor_show_rgb"), False, False, 0)
+    monitor_vbox.pack_start(_get_kb_row(_("Control + Mouse Double Click"), _("Open Clip In Monitor")), False, False, 0)
     monitor = guiutils.get_named_frame(_("Monitor View"), monitor_vbox)
 
     quick_effects_panel = shortcutsquickeffects.get_shortcuts_panel()
