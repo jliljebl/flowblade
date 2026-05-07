@@ -101,6 +101,7 @@
     <event code='zoom_out' name='Zoom Out'>minus</event>
     <event code='zoom_in' name='Zoom In'>equal</event>
     <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>equal</event>
+    <event code='zoom_fit' name='Zoom Fit' modifiers='CTRL'>equal</event>
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>return</event>

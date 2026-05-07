@@ -122,6 +122,7 @@ def init():
     _create_action("clear_io_marks", monitorevent.marks_clear_pressed, TLINE_MONITOR_ALL)
     _create_action("zoom_out", updater.zoom_out, TLINE_MONITOR_ALL)
     _create_action("zoom_in", updater.zoom_in, TLINE_MONITOR_ALL)
+    _create_action("zoom_fit", updater.zoom_project_length, TLINE_MONITOR_ALL)
     _create_action("switch_monitor", updater.switch_monitor_display, TLINE_MONITOR_ALL)
     _create_action("add_marker", tlineaction.add_marker, TLINE_MONITOR_ALL)
     _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)

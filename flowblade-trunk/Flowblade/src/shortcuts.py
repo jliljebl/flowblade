@@ -44,7 +44,7 @@ RESERVED_SHORTCUTS = [  ("left",[]), ("right",[]), ("up",[]), ("down",[]), ("c",
                         ("s", ["CTRL"]), ("q", ["CTRL"]), ("z", ["CTRL"]), ("y", ["CTRL"]), ("o", ["CTRL"]), ("f11", []), ("kp_1", []), \
                         ("kp_2", []), ("kp_3", []), ("kp_4", []), ("kp_5", []), ("kp_6", []), ("kp_7", []), ("kp_8", []), ("kp_9", []), ("kp_0", [])]
 
-_for_menu_key_names = {"-":"minus", "+":"plus"}
+_for_menu_key_names = {"-":"minus", "+":"plus",  "=":"equal"}
 
 shortcut_files = []
 shortcut_files_display_names = []
@@ -339,7 +339,7 @@ def change_custom_shortcut(code, key_val_name, mods_list, add_event=False):
         new_event.set('code', code)
         shortcuts_node = root.find("shortcuts")
         shortcuts_node.append(new_event)
-        
+
     events = root.iter('event')
     
     target_event = None
@@ -503,6 +503,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['edit_mode_box'] =  _("Box")
     _keyboard_action_names['zoom_out'] = _("Zoom Out")
     _keyboard_action_names['zoom_in'] =  _("Zoom In")
+    _keyboard_action_names['zoom_fit'] =  _("Zoom Fit")
     _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
     _keyboard_action_names['display_clip_in_monitor'] = _("Display Clip In Monitor")
     _keyboard_action_names['display_sequence_in_monitor'] = _("Display Sequence In Monitor")
