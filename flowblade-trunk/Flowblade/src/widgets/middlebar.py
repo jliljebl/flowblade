@@ -147,7 +147,7 @@ def _create_buttons(editor_window):
     tc_disp.widget.show()
     tc_entry.widget.show()
     editor_window.big_TC.add_named(tc_disp.widget, "BigTCDisplay")
-    #editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
+    editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
 
