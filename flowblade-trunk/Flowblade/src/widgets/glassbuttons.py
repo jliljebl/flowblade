@@ -704,7 +704,7 @@ class MarkButtons(GlassButtonsGroup):
     
     def __init__(self, callbacks):
             
-        GlassButtonsGroup.__init__(self, 16, 18, 0, 0, 2)
+        GlassButtonsGroup.__init__(self, 22, 18, 0, 0, 2)
             
         self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_in_xs.png"), callbacks[0])
         self.add_button(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "mark_out_xs.png"), callbacks[1])

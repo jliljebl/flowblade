@@ -1032,8 +1032,6 @@ class BinInfoPanel(Gtk.HBox):
         self.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         self.pack_start(info_col_2, False, False, 0)
         self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
-        #self.pack_start(info_col_3, False, False, 0)
-        #self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
         self.pack_start(self.image_box, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         
@@ -1875,10 +1873,10 @@ class BigTCDisplay:
         # Aug-2019 - SvdB -BB
         prefs = editorpersistance.prefs
 
-        self.widget = cairoarea.CairoDrawableArea2( 140,
+        self.widget = cairoarea.CairoDrawableArea2( 126,
                                                     22,
                                                     self._draw)
-        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed " + str(15))
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed " + str(11))
         
         # Draw consts
         x = 2
@@ -1893,7 +1891,7 @@ class BigTCDisplay:
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
 
         self.TEXT_X = 18
-        self.TEXT_Y = 1
+        self.TEXT_Y = 4
 
         self.widget.connect("button-press-event", self._button_press)
         self.widget.set_margin_top(1)
@@ -1939,7 +1937,8 @@ class BigTCDisplay:
         
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
-                
+    
+    """    
     def _round_rect_path(self, cr):
         x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
 
@@ -1949,7 +1948,8 @@ class BigTCDisplay:
         cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path ()
-
+    """
+    
     def _button_press(self, widget, event):
         gui.big_tc.set_visible_child_name("BigTCEntry")
         entry = gui.big_tc.get_visible_child()

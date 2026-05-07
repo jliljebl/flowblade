@@ -138,6 +138,7 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
 
 def _create_buttons(editor_window):
 
+    # TODO: Move elwhere, timecode display not in middlebar anymore
     editor_window.big_TC = Gtk.Stack()
     editor_window.big_TC.set_margin_top(4)
     editor_window.big_TC.set_margin_bottom(1)
@@ -146,7 +147,7 @@ def _create_buttons(editor_window):
     tc_disp.widget.show()
     tc_entry.widget.show()
     editor_window.big_TC.add_named(tc_disp.widget, "BigTCDisplay")
-    editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
+    #editor_window.big_TC.add_named(tc_entry.widget, "BigTCEntry")
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
 

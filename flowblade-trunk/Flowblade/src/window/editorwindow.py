@@ -508,24 +508,25 @@ class EditorWindow:
                      monitorevent.to_mark_in_pressed,
                      monitorevent.to_mark_out_pressed]
         markbuttons = glassbuttons.MarkButtons(callbacks)
+        markbuttons.widget.set_margin_top(7)
         markbuttons.widget.set_margin_right(12)
+        markbuttons.widget.set_margin_left(8)
+
         tooltip_runner = glassbuttons.TooltipRunner(markbuttons, None)
         mutabletooltips.add_widget(mutabletooltips.MARK_BUTTONS, markbuttons, tooltip_runner)
         
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
         player_buttons_row.pack_start(self.playback_settings.widget, False, False, 0)
-        #player_buttons_row.pack_start(self.monitor_tc_info.scaling, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.player_buttons.widget, False, False, 0)
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        player_buttons_row.pack_start(markbuttons.widget, False, False, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_top(7)
         player_buttons_row.set_margin_bottom(6)
         player_buttons_row.set_margin_left(12)
-        player_buttons_row.set_margin_right(12)
+        player_buttons_row.set_margin_right(8)
 
         # This is used in updater.py
         player_buttons_row.set_name("player-bar")
@@ -535,7 +536,8 @@ class EditorWindow:
         tc_player_row = Gtk.HBox(False, 0)
         tc_player_row.pack_start(self.big_TC, False, False, 0)
         tc_player_row.pack_start(player_buttons_row, True, True, 0)
-
+        tc_player_row.pack_start(markbuttons.widget, False, False, 0)
+        
         # pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
