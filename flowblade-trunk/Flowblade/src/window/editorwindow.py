@@ -953,6 +953,18 @@ class EditorWindow:
         self.monitor_switch.widget.set_margin_top(1)
         self.monitor_switch.widget.set_margin_right(4)
 
+        self.big_TC = Gtk.Stack()
+        self.big_TC.set_margin_top(4)
+        self.big_TC.set_margin_bottom(1)
+        tc_disp = guicomponents.BigTCDisplay()
+        tc_entry = guicomponents.BigTCEntry()
+        tc_disp.widget.show()
+        tc_entry.widget.show()
+        self.big_TC.add_named(tc_disp.widget, "BigTCDisplay")
+        self.big_TC.add_named(tc_entry.widget, "BigTCEntry")
+        self.big_TC.set_visible_child_name("BigTCDisplay")
+        gui.big_tc = self.big_TC 
+    
     def _create_monitor_row_widgets(self):
         self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
 
