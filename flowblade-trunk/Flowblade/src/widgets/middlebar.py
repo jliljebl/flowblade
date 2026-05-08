@@ -270,7 +270,10 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
 def get_required_width():
 
     w_tot = 0
-    wid, h = w.tool_selector.widget.get_preferred_width()
+    try:
+        wid, h = w.tool_selector.widget.get_preferred_width()
+    except:
+        wid = 0 # we are using tool dock
     w_tot += int(wid)
 
     if editorstate.screen_size_small_width() == False:
