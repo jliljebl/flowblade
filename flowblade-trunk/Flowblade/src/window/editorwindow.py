@@ -555,11 +555,12 @@ class EditorWindow:
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            monitor_vbox.pack_start(monitor_info_box, False, True, 0)
+
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(tc_player_row, False, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            monitor_vbox.pack_start(monitor_info_box, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
         self.monitor_frame = Gtk.Frame()
@@ -1005,14 +1006,20 @@ class EditorWindow:
         return buttons_row
 
     def _get_monitor_info_box(self):
-        tline_info_box = Gtk.HBox(False, 0)
-        tline_info_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
-        tline_info_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
-        tline_info_box.pack_start(Gtk.Label(), True, True, 0)
+        #self.monitor_tc_info.monitor_tc,
+        break_label = Gtk.Label(label="/")
+        break_label.set_sensitive(False)
+        break_label.set_margin_right(8)
+        break_label.set_margin_left(8)
+        
+        tline_info_box = Gtk.HBox(True, 0)
+        tline_info_box.pack_start(guiutils.get_left_justified_box([self.monitor_tc_info.monitor_source]), True, True, 0)
+        #tline_info_box.pack_start(Gtk.Label(), True, True, 0)
         tline_info_box.pack_start(self.monitor_tc_info.scaling, False, False, 0)
-        tline_info_box.pack_start(Gtk.Label(), True, True, 0)
-        tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        guiutils.set_margins(tline_info_box, 0, 0, 4, 2)
+        #tline_info_box.pack_start(Gtk.Label(), True, True, 0)
+        #tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        tline_info_box.pack_start(guiutils.get_right_justified_box([ self.monitor_tc_info.marks_tc_display.widget, break_label, self.monitor_tc_info.monitor_tc]), True, True, 0)
+        guiutils.set_margins(tline_info_box, 0, 0, 12, 10)
     
         return tline_info_box
         

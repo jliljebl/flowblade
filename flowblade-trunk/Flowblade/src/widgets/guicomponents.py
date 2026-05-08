@@ -2106,7 +2106,8 @@ class MonitorMarksTCInfo:
         self.monitor_tc = Gtk.Label()
         self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
         self.monitor_tc.set_tooltip_markup(_("Monitor Source Length"))
-        
+        self.monitor_tc.set_sensitive(False)
+
         self.marks_tc_display = MonitorInfoDisplay()
         
         self.widget = self.marks_tc_display.widget # Gtk.HBox()
@@ -2141,7 +2142,7 @@ class MonitorMarksTCInfo:
 
 class MonitorInfoDisplay:
 
-    def __init__(self, widget_width=299):
+    def __init__(self, widget_width=80):
         self.widget = cairoarea.CairoDrawableArea2( widget_width,
                                                     18,
                                                     self._draw)
@@ -2231,21 +2232,21 @@ class MonitorInfoDisplay:
         x, y, w, h = allocation
 
         # Draw round rect with gradient and stroke around for thin bezel        
-        cr.set_source_surface(self.mark_in_img, 12, 5)
-        cr.paint()
-        cr.set_source_surface(self.mark_out_img, 110, 5)
-        cr.paint()
-        cr.set_source_surface(self.marks_length_img, 205, 5)
-        cr.paint()
+        #cr.set_source_surface(self.mark_in_img, 12, 5)
+        #cr.paint()
+        #cr.set_source_surface(self.mark_out_img, 110, 5)
+        #cr.paint()
+        #cr.set_source_surface(self.marks_length_img, 205, 5)
+        #cr.paint()
         
         is_tc = True
         # Tc Texts
-        self.draw_tc(cr, self.in_str, 21, 2, not self.mark_in_empty)
-        self.draw_tc(cr, self.in_zeros_overlay, 21, 2, False)
-        self.draw_tc(cr, self.out_str, 118, 2, not self.mark_out_empty)
-        self.draw_tc(cr, self.out_zeros_overlay, 118, 2, False)
-        self.draw_tc(cr, self.len_str, 218, 2, not self.len_empty)
-        self.draw_tc(cr, self.len_zeros_overlay, 218, 2, False)
+        #self.draw_tc(cr, self.in_str, 21, 2, not self.mark_in_empty)
+        #self.draw_tc(cr, self.in_zeros_overlay, 21, 2, False)
+        #self.draw_tc(cr, self.out_str, 118, 2, not self.mark_out_empty)
+        #self.draw_tc(cr, self.out_zeros_overlay, 118, 2, False)
+        self.draw_tc(cr, self.len_str, 2, 2, not self.len_empty)
+        self.draw_tc(cr, self.len_zeros_overlay, 2, 2, False)
 
     def draw_tc(self, cr, tc_text, x, y, is_tc):
         layout = PangoCairo.create_layout(cr)

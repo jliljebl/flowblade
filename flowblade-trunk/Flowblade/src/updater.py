@@ -487,7 +487,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 def display_monitor_clip_name():#we're displaying length and range length also
     clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
 
-    gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name + " - ")
+    gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name)
     gui.editor_window.monitor_tc_info.set_source_tc(clip_len)
 
     if MONITOR_MEDIA_FILE().type == appconsts.VIDEO:
@@ -549,7 +549,7 @@ def update_seqence_info_text():
         prog_len = 0
     len_tc = utils.get_tc_string(prog_len)
 
-    gui.editor_window.monitor_tc_info.set_source_name(name + " - ")
+    gui.editor_window.monitor_tc_info.set_source_name(name)
     gui.editor_window.monitor_tc_info.set_source_tc(len_tc)
 
     profile = PROJECT().profile
