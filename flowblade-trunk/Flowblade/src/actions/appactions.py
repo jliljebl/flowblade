@@ -89,7 +89,7 @@ def create_actions():
     _create_action("rangeoverwrite", lambda w, a: tlineaction.range_overwrite_pressed(), shortcuts.get_shortcut_kb_str(root, "overwrite_range", True)) 
     _create_action("cutatplayhead", lambda w, a: tlineaction.cut_pressed(), shortcuts.get_shortcut_kb_str(root, "cut", True))
     _create_action("liftaction", lambda w, a: tlineaction.lift_button_pressed(), shortcuts.get_shortcut_kb_str(root, "lift", True))
-    _create_action("spliceaction", lambda w, a: tlineaction.splice_out_button_pressed())
+    _create_action("spliceaction", lambda w, a: tlineaction.splice_out_button_pressed(), shortcuts.get_shortcut_kb_str(root, "delete", True))
     _create_action("resynctrack", lambda w, a: tlineaction.resync_button_pressed(), shortcuts.get_shortcut_kb_str(root, "resync", True))
     _create_action("syncallcompositors", lambda w, a: tlineaction.sync_all_compositors(), shortcuts.get_shortcut_kb_str(root, "sync_all", True))
     _create_action("allfiltersoff", lambda w, a: tlineaction.all_filters_off())

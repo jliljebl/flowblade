@@ -963,6 +963,8 @@ class EditorWindow:
         self.big_TC.add_named(tc_disp.widget, "BigTCDisplay")
         self.big_TC.add_named(tc_entry.widget, "BigTCEntry")
         self.big_TC.set_visible_child_name("BigTCDisplay")
+        self.big_TC.set_margin_right(12)
+        self.big_TC.set_margin_left(2)
         gui.big_tc = self.big_TC 
     
     def _create_monitor_row_widgets(self):

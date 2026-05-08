@@ -1969,6 +1969,7 @@ class BigTCEntry:
         self.widget = Gtk.Entry()
         frame_str = self.get_current_frame_text()
         self.widget.set_text(frame_str)
+        self.widget.set_width_chars(11)
         self.visible = False
         self.widget.connect("activate", self._enter_pressed)
         self.widget.connect("focus-out-event", self._focus_lost)
