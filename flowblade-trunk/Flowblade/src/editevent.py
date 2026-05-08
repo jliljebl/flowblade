@@ -90,8 +90,8 @@ def do_clip_insert(track, new_clip, tline_pos, use_clip_in=False):
             "clip_out":clip_out}
     action = edit.insert_action(data)
     _do_action_and_maybe_autosplit_action(action, new_clip, track)
-    
-    updater.display_tline_cut_frame(track, index)
+
+    updater.display_tline_cut_frame(track, index + 1, True)
 
 def do_multiple_clip_insert(track, clips, tline_pos, use_as_action_build_func_for_paste=False):
     index = _get_insert_index(track, tline_pos)

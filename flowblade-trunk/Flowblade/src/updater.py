@@ -561,7 +561,7 @@ def switch_monitor_display():
     monitorevent.stop_pressed()
     gui.monitor_switch.toggle()
 
-def display_tline_cut_frame(track, index):
+def display_tline_cut_frame(track, index, display_end=False):
     """
     Displays sequence frame at cut
     """
@@ -570,8 +570,10 @@ def display_tline_cut_frame(track, index):
 
     if index < 0:
         index = 0
-    if index > (len(track.clips) - 1):
-        index = len(track.clips) - 1
+    
+    if display_end == False:
+        if index > (len(track.clips) - 1):
+            index = len(track.clips) - 1
 
     clip_start_frame = track.clip_start(index)
     PLAYER().seek_frame(clip_start_frame)
