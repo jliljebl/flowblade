@@ -239,7 +239,12 @@ def get_file_properties_panel(data):
     return vbox
     
 def get_clip_properties_panel(data):
-    mark_in, mark_out, length, size, path, vcodec, acodec = data
+    mark_in, mark_out, length, size, path, vcodec, acodec, is_proxy = data
+    
+    if is_proxy == True:
+        proxy_info = _("Yes")
+    else:
+        proxy_info = _("No")
 
     row0 = get_two_column_box(get_bold_label(_("Mark In:")), Gtk.Label(label=mark_in))
     row00 = get_two_column_box(get_bold_label(_("Mark Out:")), Gtk.Label(label=mark_out))
@@ -248,6 +253,7 @@ def get_clip_properties_panel(data):
     row3 = get_two_column_box(get_bold_label(_("Media Path:")), Gtk.Label(label=path))
     row4 = get_two_column_box(get_bold_label(_("Video Codec:")), Gtk.Label(label=vcodec))
     row5 = get_two_column_box(get_bold_label(_("Audio Codec:")), Gtk.Label(label=acodec))
+    row6 = get_two_column_box(get_bold_label(_("Is Proxy:")), Gtk.Label(label=proxy_info))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row0, False, False, 0)
@@ -257,6 +263,7 @@ def get_clip_properties_panel(data):
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     return vbox   

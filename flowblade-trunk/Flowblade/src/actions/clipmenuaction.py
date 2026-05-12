@@ -48,6 +48,7 @@ from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
+from editorstate import current_proxy_media_paths
 import kftoolmode
 import mediaplugin
 import mlttransitions
@@ -216,7 +217,10 @@ def _show_clip_info(data):
     if acodec == None:
         acodec = _("N/A")
 
-    dialogs.clip_properties_dialog((mark_in, mark_out, length, size, clip.path, vcodec, acodec))
+    proxy_paths = current_proxy_media_paths()
+    is_proxy = (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None
+                    
+    dialogs.clip_properties_dialog((mark_in, mark_out, length, size, clip.path, vcodec, acodec, is_proxy))
 
 def _rename_clip(data):
     clip, track, item_id, x = data
