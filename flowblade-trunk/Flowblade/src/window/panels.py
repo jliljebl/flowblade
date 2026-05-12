@@ -198,7 +198,15 @@ def get_two_text_panel(primary_txt, secondary_txt):
 def get_file_properties_panel(data):
     media_file, img, size, length, vcodec, acodec, channels, frequency, \
     fps, match_profile_name, matches_current_profile, pixel_format, colorspace = data
-
+    if media_file.is_proxy_file == True:
+        is_proxy = _("Yes")
+    else:
+        is_proxy = _("No")
+    if media_file.has_proxy_file == True:
+        has_proxy = _("Yes")
+    else:
+        has_proxy = _("No")
+        
     name_label = Gtk.Label(label=media_file.name)
     name_label.set_max_width_chars(100)
     name_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
@@ -218,7 +226,9 @@ def get_file_properties_panel(data):
     row7 = get_two_column_box_fixed(get_bold_label(_("Matches Project Profile:")), Gtk.Label(label=matches_current_profile))
     row8 = get_two_column_box_fixed(get_bold_label(_("Colorspace:")), Gtk.Label(label=colorspace))
     row9 = get_two_column_box_fixed(get_bold_label(_("Pixel Format:")), Gtk.Label(label=pixel_format))
-
+    row10 = get_two_column_box_fixed(get_bold_label(_("Points to Proxy File:")), Gtk.Label(label=is_proxy))
+    row12 = get_two_column_box_fixed(get_bold_label(_("Has Proxy File:")), Gtk.Label(label=has_proxy))
+                
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(img, False, False, 0)
     vbox.pack_start(guiutils.get_pad_label(12, 16), False, False, 0)
@@ -235,6 +245,8 @@ def get_file_properties_panel(data):
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
+    vbox.pack_start(row10, False, False, 0)
+    vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     return vbox
     

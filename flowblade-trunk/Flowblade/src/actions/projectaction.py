@@ -1515,7 +1515,7 @@ def _display_file_info(media_file):
         fps = utils.get_fps_str_with_two_decimals(str(float(num/den)))
     except:
         fps = _("N/A")
-
+    
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, 
                                     channels, frequency, fps, match_profile_name, 
                                     matches_project_profile, pixel_format, colorspace))
