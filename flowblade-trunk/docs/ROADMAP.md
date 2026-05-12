@@ -20,11 +20,11 @@ Last updated May 12th 2026.
 
 - Track Soloing,
 
-- Add new  keyframe types for Fluxity media Plugins.
+- Add new keyframe types for Fluxity media Plugins.
 
 - Alpha Shape GUI editor update to allow for controlling shape dimensions. 
 
-- Control key to toggle mouse zoom target between pointer / playhead.
+- ALT key to toggle mouse zoom target between pointer / playhead.
 
 - Drag and Drop from Timeline to Monitor. **coming 2.26**
 
