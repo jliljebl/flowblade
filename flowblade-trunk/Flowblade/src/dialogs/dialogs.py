@@ -909,7 +909,7 @@ def _get_item_columns_panel(items, rows):
     return hbox
 
 def file_properties_dialog(data):
-    dialog = Gtk.Dialog(_("File Properties"),  gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Media Item Properties"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         ( _("OK"), Gtk.ResponseType.ACCEPT))
 

@@ -803,7 +803,7 @@ def _fill_mf_properties_section(_mf_properties_section, media_file, callback):
         active = True 
     else:
         active = False
-    add_menu_action(_mf_properties_section, _("File Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", None), callback, active)
+    add_menu_action(_mf_properties_section, _("Media Item Properties"), "mediapanel.mediafile.fileproperties", ("File Properties", None), callback, active)
 
 def _fill_mf_icon_sectiion(_icon_section, media_file, callback):
     active = False
