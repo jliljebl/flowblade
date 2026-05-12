@@ -152,6 +152,8 @@ def get_menu():
                   <attribute name="label">""" + _("Cut Clip At Playhead") + """</attribute>
                   <attribute name="action">app.cutatplayhead</attribute>
                 </item>
+            </section>
+            <section>
                 <item>
                   <attribute name="label">""" + _("Lift") + """</attribute>
                   <attribute name="action">app.liftaction</attribute>
@@ -159,6 +161,14 @@ def get_menu():
                 <item>
                   <attribute name="label">""" + _("Splice Out") + """</attribute>
                   <attribute name="action">app.spliceaction</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Ripple Delete") + """</attribute>
+                  <attribute name="action">app.rippledelete</attribute>
+                </item>
+                <item>
+                  <attribute name="label">""" + _("Range Delete") + """</attribute>
+                  <attribute name="action">app.rangedelete</attribute>
                 </item>
             </section>
             <section>
