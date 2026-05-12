@@ -1,6 +1,6 @@
 # FLOWBLADE ROADMAP
 
-Last updated November 20th 2025.
+Last updated May 12th 2026.
 
 ### Planned Features
 
@@ -10,7 +10,7 @@ Last updated November 20th 2025.
 
 - Project Info popover with list of all markers and with new Project and Media Item notes.
 
-- Ingest feature with user selectable transcode or only copy.
+- Ingest feature with user selectable transcode or only copy. **coming 2.26**
 
 - Auto proxy creation if requested.
 
@@ -26,13 +26,13 @@ Last updated November 20th 2025.
 
 - Control key to toggle mouse zoom target between pointer / playhead.
 
-- Drag and Drop from Timeline to Monitor.
+- Drag and Drop from Timeline to Monitor. **coming 2.26**
 
-- Mouse Scroll horizontal  speed preference.
+- Mouse Scroll horizontal speed preference. **coming 2.26**
 
 ### GPU utilization
 
-* Enable GPU decoding for playback on AMD and later for NVidia cards.
+* Enable GPU decoding for playback on AMD and later for NVidia cards. **coming 2.26 for AMD cards**
 
 ### GTK 4 port
 
