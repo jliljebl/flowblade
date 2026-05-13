@@ -941,7 +941,34 @@ class Sequence:
         
         self.tracks[0].set("hide", 0) # Black bg track
         self.tracks[-1].set("hide", 0) # Hidden track
-        
+
+    def get_tracks_mute_state(self):
+        mute_states = []
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+
+            hide = int(track.get("hide"))
+            gain = float(track.gain_filter.get("gain"))
+
+            if track.id < self.first_video_index:
+                if gain == 0.0:
+                    mute_state = appconsts.TRACK_MUTE_ALL
+                else:
+                    mute_state = appconsts.TRACK_MUTE_VIDEO
+            else:
+                if hide == 0 and gain == 0.0:
+                    mute_state = appconsts.TRACK_MUTE_AUDIO
+                elif hide == 1 and gain != 0.0:
+                    mute_state = appconsts.TRACK_MUTE_VIDEO
+                elif hide == 1 and gain == 0.0:
+                    mute_state = appconsts.TRACK_MUTE_ALL
+                else:
+                    mute_state = appconsts.TRACK_MUTE_NOTHING
+
+            mute_states.append(mute_state)
+
+        return mute_states
+
     def set_output_mode(self, mode):
         if self.outputfilter != None:
             self.tractor.detach(self.outputfilter)
@@ -1342,6 +1369,8 @@ class Sequence:
         else: # TRACK_MUTE_NOTHING, TRACK_MUTE_VIDEO
             track.set("hide", int(track.mute_state))
             track.gain_filter.set("gain", str(track.audio_gain))
+        
+        print("track", track_index, "mute_state", mute_state, "hide", track.get("hide"), "gain", track.gain_filter.get("gain"))
             
     def drop_audio_levels(self):
         for i in range(1, len(self.tracks)):

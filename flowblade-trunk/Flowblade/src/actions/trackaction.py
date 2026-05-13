@@ -123,6 +123,26 @@ def resync_track(track_index):
 
     syncsplitevent.resync_selected_track(track)
 
+def solo_track(track_index):
+    mute_states = current_sequence().get_tracks_mute_state()
+    print(mute_states)
+    editorstate.set_tracks_unsolo_data(mute_states)
+    
+    for i in range(1, len(current_sequence().tracks) - 1):
+        current_sequence().set_track_mute_state(i, appconsts.TRACK_MUTE_ALL)
+
+    current_sequence().set_track_mute_state(track_index, mute_states[track_index - 1])
+    updater.repaint_tline()
+
+def unsolo_all_tracks(track_index):
+    mute_states = editorstate.get_tracks_unsolo_data()
+    print(mute_states)
+        
+    editorstate.set_tracks_unsolo_data(None)
+    
+    for i in range(1, len(current_sequence().tracks) - 1):
+        current_sequence().set_track_mute_state(i, mute_states[i - 1])
+
 def toggle_track_output():
     if movemodes.selected_track == -1:
         return
@@ -456,4 +476,6 @@ POPUP_HANDLERS = {"lock":lock_track,
                   "setsync":set_track_sync,
                   "setsyncfrompopover":set_track_sync_from_popover,
                   "resetsync":reset_track_sync, 
-                  "infolabel":edit_info_label}
+                  "infolabel":edit_info_label, 
+                  "solo_track":solo_track,
+                  "unsolo":unsolo_all_tracks}

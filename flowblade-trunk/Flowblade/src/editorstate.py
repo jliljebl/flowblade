@@ -154,6 +154,10 @@ gmic_path = None
 # For development and test use.
 force_sdl2 = True 
 
+# Saved mutestate for muted tracks whenm soloing a track. _unsolo_data == None
+# means that we are not in solo track state. 
+_unsolo_data = None
+
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
@@ -301,8 +305,13 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
  
+def get_tracks_unsolo_data():
+    return _unsolo_data
  
- 
+def set_tracks_unsolo_data(new_unsolo_data):
+    global _unsolo_data
+    _unsolo_data = new_unsolo_data
+     
 # Called from tline "motion_notify_event" when drag is not on.
 # This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):

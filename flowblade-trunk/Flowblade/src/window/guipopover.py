@@ -1059,6 +1059,12 @@ def tracks_popover_menu_show(track, widget, x, y, callback, callback_height):
 
     _tracks_column_menu.append_section(None, mute_section)
 
+    solo_section = Gio.Menu.new()
+    solo_state = editorstate.get_tracks_unsolo_data() != None   
+    add_menu_action(solo_section, _("Solo This Track"), "trackcolumn.solo", (track, "solo_track", None), callback, not solo_state)
+    add_menu_action(solo_section, _("Unsolo All Tracks"), "trackcolumn.unsolo", (track, "unsolo", None), callback, solo_state)
+    _tracks_column_menu.append_section(None, solo_section)
+    
     active = True
 
     sync_set_section = Gio.Menu.new()
