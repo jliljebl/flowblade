@@ -1369,9 +1369,7 @@ class Sequence:
         else: # TRACK_MUTE_NOTHING, TRACK_MUTE_VIDEO
             track.set("hide", int(track.mute_state))
             track.gain_filter.set("gain", str(track.audio_gain))
-        
-        print("track", track_index, "mute_state", mute_state, "hide", track.get("hide"), "gain", track.gain_filter.get("gain"))
-            
+
     def drop_audio_levels(self):
         for i in range(1, len(self.tracks)):
             clips = self.tracks[i].clips

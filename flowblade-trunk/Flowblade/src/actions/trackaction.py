@@ -125,7 +125,6 @@ def resync_track(track_index):
 
 def solo_track(track_index):
     mute_states = current_sequence().get_tracks_mute_state()
-    print(mute_states)
     editorstate.set_tracks_unsolo_data(mute_states)
     
     for i in range(1, len(current_sequence().tracks) - 1):
@@ -136,8 +135,6 @@ def solo_track(track_index):
 
 def unsolo_all_tracks(track_index):
     mute_states = editorstate.get_tracks_unsolo_data()
-    print(mute_states)
-        
     editorstate.set_tracks_unsolo_data(None)
     
     for i in range(1, len(current_sequence().tracks) - 1):
