@@ -265,7 +265,7 @@ def set_info_icon(info_icon_id, icon_gtk_image=None):
     widget.show()
 
 # --- ZOOM
-def zoom_in():
+def zoom_in(event=None):
     """
     Zooms in in the timeline view.
     """
@@ -277,12 +277,19 @@ def zoom_in():
 
     repaint_tline()
     update_tline_scrollbar()
-    if editorpersistance.prefs.zoom_to_playhead == True:
+    
+    # Revese playhead/cursor if ALT key pressed
+    use_pref = True
+    if event != None:
+        if event.get_state() & Gdk.ModifierType.MOD1_MASK:
+            use_pref = False
+        
+    if editorpersistance.prefs.zoom_to_playhead == use_pref:
         center_tline_to_current_frame()
     else:
         center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
 
-def zoom_out():
+def zoom_out(event=None):
     """
     Zooms out in the timeline view.
     """
@@ -293,7 +300,14 @@ def zoom_out():
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    if editorpersistance.prefs.zoom_to_playhead == True:
+
+    # Revese playhead/cursor if ALT key pressed
+    use_pref = True
+    if event != None:
+        if event.get_state() & Gdk.ModifierType.MOD1_MASK:
+            use_pref = False
+                
+    if editorpersistance.prefs.zoom_to_playhead == use_pref:
         center_tline_to_current_frame()
     else:
         center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom)
@@ -350,9 +364,9 @@ def mouse_scroll_zoom(event):
             adj.set_value(adj.get_value() - incr)
     else:
         if event.direction == Gdk.ScrollDirection.UP:
-            zoom_in()
+            zoom_in(event)
         else:
-            zoom_out()
+            zoom_out(event)
 
 def maybe_autocenter():
     if timeline_visible():
