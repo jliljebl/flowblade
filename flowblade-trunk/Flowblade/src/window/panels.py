@@ -551,6 +551,12 @@ def get_effect_selection_panel(double_click_cb):
     
     return (guiutils.set_margins(effects_vbox, 0, 1, 1, 1), effects_list_view, group_combo_box)
 
+def get_dissolve_selection_panel():
+    vbox = Gtk.VBox(False, 0)
+    vbox.pack_start(Gtk.Label(label="Disslove"), False, False, 0)
+
+    return vbox
+
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
 

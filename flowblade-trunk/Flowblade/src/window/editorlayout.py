@@ -24,6 +24,8 @@ in application window.
 """
 from gi.repository import Gtk, GLib, Gio
 
+import traceback
+
 import copy
 import pickle
 import os
@@ -70,7 +72,8 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 }
 
 MONITOR_CENTER_PANEL_POSITIONS = { \
@@ -82,7 +85,8 @@ MONITOR_CENTER_PANEL_POSITIONS = { \
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 }
 
 TOP_ROW_FOUR_POSITIONS = { \
@@ -94,7 +98,8 @@ TOP_ROW_FOUR_POSITIONS = { \
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 }
 
 MEDIA_PANEL_LEFT_POSITIONS = { \
@@ -106,7 +111,8 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE
 }
 
 EDIT_PANEL_RIGHT_POSITIONS = { \
@@ -118,7 +124,8 @@ EDIT_PANEL_RIGHT_POSITIONS = { \
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE
 }
 
 
@@ -131,10 +138,11 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_PROJECT_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
+    appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE],
+    appconsts.PANEL_DISSOLVE_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
 }
 
-PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_PROJECT, appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
+PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_PROJECT, appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_DISSOLVE_SELECT, appconsts.PANEL_RANGE_LOG, 
                             appconsts.PANEL_MULTI_EDIT, appconsts.PANEL_JOBS, appconsts.PANEL_PROJECT_SMALL_SCREEN, 
                             appconsts.PANEL_RENDERING,
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
@@ -148,7 +156,8 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: None,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None,
+    appconsts.PANEL_DISSOLVE_SELECT: None
 }
 
 UP  = 0
@@ -186,6 +195,12 @@ def top_level_project_panel():
 def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks, PANEL_MINIMUM_SIZES
     _panel_positions = editorpersistance.prefs.panel_positions
+    
+    # New panel needs to be made part of saced postions on firts load of 2.26.
+    try: 
+        pos = _panel_positions[appconsts.PANEL_DISSOLVE_SELECT]
+    except:
+        _panel_positions[appconsts.PANEL_DISSOLVE_SELECT] = appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 
     # Use default panels positions if nothing available yet or too small screen, 
     # or default panel position is empty, layout code makes too many assumptions to make that work.
@@ -241,7 +256,7 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: _("Bottom Row Right"),
         appconsts.PANEL_PLACEMENT_NOT_VISIBLE: _("Not Visible"),
         appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: _("Top Row Project Panel Default"),
-        appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: _("Right Column")
+        appconsts.PANEL_PLACEMENT_RIGHT_COLUMN: _("Right Column"),
     }
     
     _panels_names = { \
@@ -253,9 +268,10 @@ def init_layout_data():
         appconsts.PANEL_PROJECT: _("Project"),
         appconsts.PANEL_PROJECT_SMALL_SCREEN: _("Project"),
         appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: "tba",
-        appconsts.PANEL_FILTER_SELECT: _("Filter Select")
+        appconsts.PANEL_FILTER_SELECT: _("Filter"),
+        appconsts.PANEL_DISSOLVE_SELECT:  _("Transitions")
     }
-    
+
      # Values are possibly set to other then None as layout is being build
     _position_notebooks = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: None,
@@ -316,8 +332,10 @@ def _get_panels_widgets_dict(editor_window):
         appconsts.PANEL_JOBS: editor_window.jobs_pane,
         appconsts.PANEL_PROJECT: editor_window.top_project_panel,
         appconsts.PANEL_FILTER_SELECT: editor_window.effect_select_panel,
-        appconsts.PANEL_PROJECT_SMALL_SCREEN: editor_window.project_panel
+        appconsts.PANEL_PROJECT_SMALL_SCREEN: editor_window.project_panel,
+        appconsts.PANEL_DISSOLVE_SELECT: editor_window.dissolve_select_panel
     }
+    
     # appconsts.PANEL_PROJECT_SMALL_SCREEN, appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN
     # not available currently
 
@@ -569,13 +587,13 @@ def _top_bar_menu_item_activated(widget, msg):
     if msg == "monitor_center":
         apply_layout(MONITOR_CENTER_PANEL_POSITIONS)
     elif msg == "monitor_left":
-         apply_layout(DEFAULT_PANEL_POSITIONS)
+        apply_layout(DEFAULT_PANEL_POSITIONS)
     elif msg == "top_row_four":
-         apply_layout(TOP_ROW_FOUR_POSITIONS)
+        apply_layout(TOP_ROW_FOUR_POSITIONS)
     elif msg == "media_panel_left":
-         apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
+        apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
     elif msg == "edit_panel_right":
-         apply_layout(EDIT_PANEL_RIGHT_POSITIONS)
+        apply_layout(EDIT_PANEL_RIGHT_POSITIONS)
     elif msg == "save_layout":
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
         dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Save Current Layout"), _("Save"),
@@ -647,6 +665,7 @@ def _change_panel_position(do_update, panel_id, pos_option):
 
     # Remove panel if it currently has position in layout.
     if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
+
         _remove_panel(panel_id)
 
     # Add panel if new position is part of layout.
