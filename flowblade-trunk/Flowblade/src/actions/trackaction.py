@@ -360,7 +360,11 @@ def _tline_mouse_zoom_selected(action, variant):
     action.set_state(variant)
     editorpersistance.save()
     guipopover._tline_properties_popover.hide()
-    
+
+
+def transition_select_double_clicked():
+    print("here")
+
 # ------------------------------------------------------------- mouse events
 def track_active_switch_pressed(data):
     track = get_track(data.track) # data.track is index, not object

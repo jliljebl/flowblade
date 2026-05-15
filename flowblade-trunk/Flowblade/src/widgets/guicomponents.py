@@ -552,6 +552,28 @@ class FilterListView(ImageTextImageListView):
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
+class TransitionsListView(ImageTextImageListView):
+    """
+    GUI component displaying list of available filters.
+    """
+    def __init__(self, selection_cb=None):
+        ImageTextImageListView.__init__(self)
+
+        # Connect selection 'changed' signal
+        if not(selection_cb == None):
+            tree_sel = self.treeview.get_selection()
+            tree_sel.connect("changed", selection_cb)
+        
+    def fill_data_model(self, transition_group):
+        self.storemodel.clear()
+        for i in range(0, len(transition_group)):
+            name, icon = transition_group[i]
+            row_data = [icon,
+                        name,
+                        None] # None is historical on/off icon thingy, not used anymore
+            self.storemodel.append(row_data)
+            self.scroll.queue_draw()
+
 
 class FilterSwitchListView(Gtk.VBox):
     """

@@ -306,7 +306,8 @@ class FlowbladeApplication(Gtk.Application):
         mltfilters.set_icons(gui.get_default_filter_icon(), \
                              gui.get_filter_group_icons(gui.get_default_filter_icon()))
         mlttransitions.load_compositors_xml(mltenv.transitions)
-        
+        mlttransitions.create_wipe_groups(gui.get_wipe_icons())
+
         # Replace some services if better replacements available.
         mltfilters.replace_services(mltenv.services)
 

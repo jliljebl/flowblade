@@ -331,9 +331,11 @@ class EditorWindow:
         self.effect_select_combo_box = effect_select_combo_box
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        dissolve_select_panel = panels.get_dissolve_selection_panel()
+        dissolve_select_panel, transitions_list_view, transitions_group_select_combo_box = panels.get_dissolve_selection_panel(trackaction.transition_select_double_clicked)
         self.dissolve_select_panel = dissolve_select_panel
-        
+        self.transitions_list_view = transitions_list_view
+        self.transitions_group_select_combo_box = transitions_group_select_combo_box
+            
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)

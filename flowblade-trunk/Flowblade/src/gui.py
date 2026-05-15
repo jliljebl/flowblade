@@ -24,6 +24,8 @@ Module holds references to GUI widgets and offers some helper functions used in 
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
+import os
+
 import databridge
 import respaths
 
@@ -230,6 +232,14 @@ def get_filter_group_icons(default_icon):
     group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
 
     return group_icons
+
+def get_wipe_icons():
+    icons = []
+    for f in os.listdir(respaths.WIPE_ICONS_PATH):
+        icon = GdkPixbuf.Pixbuf.new_from_file(respaths.WIPE_ICONS_PATH + f)
+        icons.append((f, icon))
+    
+    return icons
 
 def timeline_has_focus():
     if(tline_canvas.widget.is_focus()

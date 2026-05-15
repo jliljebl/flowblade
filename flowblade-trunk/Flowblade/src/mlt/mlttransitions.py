@@ -76,6 +76,8 @@ blenders = None
 autofades = None
 alpha_combiners = None
 wipe_compositors = None
+wipe_groups = None        
+icon_to_translated_name = None
 
 # these are no longer presented as options for users since 2.4
 dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
@@ -83,7 +85,8 @@ dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners, wipe_compositors
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, \
+    single_track_render_type_names, autofades, alpha_combiners, wipe_compositors, wipe_icons, icon_to_translated_name
     wipe_lumas = { \
                 _("Burst"):"burst.pgm",
                 _("Checkerboard"):"checkerboard.pgm",
@@ -136,6 +139,13 @@ def init_module():
                 _("Vertical Top to Bottom"):"wipe_top_to_bottom.pgm",
                 _("Wood"):"wood.pgm"}
 
+    icon_to_translated_name = {}
+    for key, value in wipe_lumas.items():
+        value = value.split(".")[0]
+        icon_to_translated_name[value] = key
+    
+    #print(icon_to_translated_name)
+    
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
@@ -166,8 +176,6 @@ def init_module():
                 (_("Subtract"),"##subtract"),
                 (_("Value"),"##value")]
 
-    
-
     wipe_compositors = [(_("Wipe Clip Length"),"##wipe")]
 
     for comp in compositors:
@@ -185,6 +193,91 @@ def init_module():
     # Rendered transition names and types
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE)]
+
+def create_wipe_groups(wipe_icons_list):
+    global wipe_groups
+    wipe_icons = {}
+    for icon_item in wipe_icons_list:
+        icon_name, icon = icon_item
+        icon_name = icon_name.split(".")[0]
+        translated_name = icon_to_translated_name[icon_name]
+        wipe_icons[translated_name] = icon
+
+    # NOTE: fix later so that there is no need to provide translations wice.
+    wipe_group_basic = (    _("Diagonal 1"),
+                            _("Diagonal 2"),
+                            _("Diagonal 3"),
+                            _("Diagonal 4"),
+                            _("Horizontal From Center"),
+                            _("Horizontal Left to Right"),
+                            _("Horizontal Right to Left"),
+                            _("Vertical Bottom to Top"),
+                            _("Vertical From Center"),
+                            _("Vertical Top to Bottom"))
+    wipe_group_basic = sorted(wipe_group_basic, key=lambda comp: comp[0])
+    wipe_group_basic = _group_with_icons(wipe_group_basic, wipe_icons)
+
+    wipe_group_rectangle = (    _("Checkerboard"),
+                                _("Cross"),
+                                _("Rectangle Bars"),
+                                _("Rectangle From In"),
+                                _("Rectangle From Out"),
+                                _("Rectangles"),
+                                _("Stripes Horizontal Big"),
+                                _("Stripes Horizontal"),
+                                _("Stripes Horizontal Moving"),
+                                _("Stripes Vertical Big"),
+                                _("Stripes Vertical"))
+    wipe_group_rectangle = sorted(wipe_group_rectangle, key=lambda comp: comp[0])
+    wipe_group_rectangle = _group_with_icons(wipe_group_rectangle, wipe_icons)
+    
+    wipe_group_round = (    _("Circle From In"),
+                            _("Circle From Out"),
+                            _("Clock Left To Right"),
+                            _("Clock Right to Left"),
+                            _("Clock Symmetric"),
+                            _("Rings"),
+                            _("Sphere"),
+                            _("Spiral Abstract"),
+                            _("Spiral Big"),
+                            _("Spiral Galaxy"),
+                            _("Spiral Medium"),
+                            _("Spiral"))
+    wipe_group_round = sorted(wipe_group_round, key=lambda comp: comp[0])
+    wipe_group_round = _group_with_icons(wipe_group_round, wipe_icons)
+    
+    wipe_group_free_form = (    _("Burst"),
+                                _("Cloud"),
+                                _("Flower"),
+                                _("Fogg"),
+                                _("Free Curves"),
+                                _("Free Stripes"),
+                                _("Heart"),
+                                _("Honeycomb"),
+                                _("Paint"),
+                                _("Patches"),
+                                _("Puzzle"),
+                                _("Rays"),
+                                _("Sand"),
+                                _("Spots"),
+                                _("Star"),
+                                _("Torn frame"),
+                                _("Wood"))
+    wipe_group_free_form = sorted(wipe_group_free_form, key=lambda comp: comp[0])
+    wipe_group_free_form = _group_with_icons(wipe_group_free_form, wipe_icons)
+
+    wipe_groups = []
+    wipe_groups.append((_("Wipe Basic"), wipe_group_basic))
+    wipe_groups.append((_("Wipe Free Form"), wipe_group_free_form))
+    wipe_groups.append((_("Wipe Rectangle"), wipe_group_rectangle))
+    wipe_groups.append((_("Wipe Round"), wipe_group_round))
+    
+def _group_with_icons(group, wipe_icons):
+    group_with_icons = []
+    for wipe in group:
+        group_with_icons.append((wipe, wipe_icons[wipe]))
+    
+    return group_with_icons
 
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:

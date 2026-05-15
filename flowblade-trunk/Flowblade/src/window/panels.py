@@ -24,6 +24,8 @@ are used to build gui at callsites.
 """
 from gi.repository import Gtk, Pango
 
+import copy
+
 import appconsts
 import editorpersistance
 from editorstate import current_sequence
@@ -551,11 +553,31 @@ def get_effect_selection_panel(double_click_cb):
     
     return (guiutils.set_margins(effects_vbox, 0, 1, 1, 1), effects_list_view, group_combo_box)
 
-def get_dissolve_selection_panel():
-    vbox = Gtk.VBox(False, 0)
-    vbox.pack_start(Gtk.Label(label="Disslove"), False, False, 0)
+def get_dissolve_selection_panel(double_click_cb):
+    transitions_list_view = guicomponents.TransitionsListView(None)
+    group_combo_box = Gtk.ComboBoxText()
+    groups = copy.copy(mlttransitions.wipe_groups)
+    for group in groups:
+        group_name, transitions_array = group
 
-    return vbox
+        group_combo_box.append_text(group_name)
+        
+    group_combo_box.set_active(0)
+    group_combo_box.connect("changed", 
+                            lambda w,e: _transitions_group_selection_changed(w, groups, transitions_list_view), 
+                            None)
+    group_combo_box.set_margin_top(1)
+    
+    group_name, filters_array = groups[0]
+    transitions_list_view.fill_data_model(filters_array)
+    transitions_list_view.treeview.get_selection().select_path("0")
+    transitions_list_view.treeview.connect("row-activated", double_click_cb, group_combo_box)
+      
+    vbox = Gtk.VBox(False, 0)
+    vbox.pack_start(group_combo_box, False, False, 0)
+    vbox.pack_start(transitions_list_view, True, True, 0)
+    
+    return (guiutils.set_margins(vbox, 0, 1, 1, 1), transitions_list_view, group_combo_box)
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
@@ -568,6 +590,12 @@ def _group_selection_changed(group_combo, filters_list_view):
         filters_list_view.set_sensitive(False)
     else:
         filters_list_view.set_sensitive(True)
+
+def _transitions_group_selection_changed(group_combo, groups, transitions_list_view):
+    group_name, transitions_array = groups[group_combo.get_active()]
+
+    transitions_list_view.fill_data_model(transitions_array)
+    transitions_list_view.treeview.get_selection().select_path("0")
 
 # -------------------------------------------------- guiutils
 def get_bold_label(text):
