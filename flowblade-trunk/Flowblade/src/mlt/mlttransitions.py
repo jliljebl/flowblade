@@ -143,6 +143,7 @@ def init_module():
     for key, value in wipe_lumas.items():
         value = value.split(".")[0]
         icon_to_translated_name[value] = key
+    icon_to_translated_name["dissolve"] = _("Dissolve")
     
     #print(icon_to_translated_name)
     
@@ -201,7 +202,10 @@ def create_wipe_groups(wipe_icons_list):
         icon_name, icon = icon_item
         icon_name = icon_name.split(".")[0]
         translated_name = icon_to_translated_name[icon_name]
+        print(icon_name, translated_name)
         wipe_icons[translated_name] = icon
+
+    dissolve_group = [(_("Dissolve"), wipe_icons[_("Dissolve")])]
 
     # NOTE: fix later so that there is no need to provide translations wice.
     wipe_group_basic = (    _("Diagonal 1"),
@@ -267,6 +271,7 @@ def create_wipe_groups(wipe_icons_list):
     wipe_group_free_form = _group_with_icons(wipe_group_free_form, wipe_icons)
 
     wipe_groups = []
+    wipe_groups.append((_("Dissolve"), dissolve_group))
     wipe_groups.append((_("Wipe Basic"), wipe_group_basic))
     wipe_groups.append((_("Wipe Free Form"), wipe_group_free_form))
     wipe_groups.append((_("Wipe Rectangle"), wipe_group_rectangle))
