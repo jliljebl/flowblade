@@ -483,7 +483,7 @@ def get_panel_positions_menu_item(panel_positions_menu):
     panels_section.append_submenu(_("Range Log Panel"), range_log_panel_menu_item)
     _get_position_selection_menu(range_log_panel_menu_item, appconsts.PANEL_RANGE_LOG, "rangelogpanelpos")
 
-    # Filter Panel
+    # Edit Panel
     filter_panel_menu_item = Gio.Menu()
     panels_section.append_submenu(_("Edit Panel"), filter_panel_menu_item)
     _get_position_selection_menu(filter_panel_menu_item, appconsts.PANEL_MULTI_EDIT, "editpanelpos")
@@ -500,9 +500,14 @@ def get_panel_positions_menu_item(panel_positions_menu):
     
     # Filter Select Panel
     filter_select_panel_menu_item = Gio.Menu()
-    panels_section.append_submenu(_("Filter Select Panel"), filter_select_panel_menu_item)
+    panels_section.append_submenu(_("Filters Panel"), filter_select_panel_menu_item)
     _get_position_selection_menu(filter_select_panel_menu_item, appconsts.PANEL_FILTER_SELECT, "filterselectpanelpos")
 
+    # Transitions Panel
+    transition_select_menu_item = Gio.Menu()
+    panels_section.append_submenu(_("Transitions Panel"), transition_select_menu_item)
+    _get_position_selection_menu(transition_select_menu_item, appconsts.PANEL_DISSOLVE_SELECT, "transitionselectpanelpos")
+    
 def _get_position_selection_menu(positions_menu, panel_id, action_id):
     current_position = _get_panel_position(panel_id)
     available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel_id]
