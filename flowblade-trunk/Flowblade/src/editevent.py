@@ -53,6 +53,7 @@ import gui
 import guipopoverclip
 import kftoolmode
 import medialog
+import mlttransitions
 import modesetting
 import movemodes
 import multimovemode
@@ -463,7 +464,7 @@ def tline_canvas_double_click(frame, x, y, event):
         updater.open_clip_in_effects_editor(data)
 
 
-# -------------------------------------------------- DND release event callbacks
+# -------------------------------------------------- DND event callbacks
 def tline_effect_drop(x, y):
     clip, track, index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
     if clip == None:
@@ -521,6 +522,21 @@ def tline_effect_drop(x, y):
         clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
     clipeffectseditor.scroll_to_bottom()
+
+def tline_transition_drop(x, y):
+    print("transition drag begin")
+    selection = gui.editor_window.transitions_list_view.treeview.get_selection()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    selected_group = gui.editor_window.transitions_group_select_combo_box.get_active()
+    print(selected_group, row)
+    
+    group_name, group = mlttransitions.transition_groups[selected_group]
+    print(group)
+    item = group[row]
+    print(item)
+    name, pixbuf = item
+
 
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we which later to enable dropping multiple media items.

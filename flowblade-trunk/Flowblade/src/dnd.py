@@ -116,7 +116,8 @@ def connect_transitions_select_tree_view(tree_view):
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _transitions_drag_data_get)
     tree_view.connect("drag-begin", _on_transitions_drag_begin)
-
+    tree_view.drag_source_set_icon_pixbuf(clip_icon)
+    
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, CLIPS_DND_TARGET], 
@@ -131,11 +132,11 @@ def connect_video_monitor(widget):
     
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
-def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
+def connect_tline(widget, do_effect_drop_func, do_media_drop_func, do_transition_drop_func):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET, TRANSITIONS_DND_TARGET], 
                          Gdk.DragAction.COPY)
-    widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
+    widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func, do_transition_drop_func)
     widget.connect("drag_motion", _on_tline_motion)
     widget.connect("drag-leave", _on_tline_leave)
     
@@ -277,7 +278,7 @@ def _save_monitor_media(widget, context, selection, target_id, timestamp):
 
     return True
 
-def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
+def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func, do_transition_drop_func):
     if drag_data == None:
         context.finish(True, False, timestamp)
         return
@@ -299,6 +300,7 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         callbackbridge.editevent_tline_range_item_drop(drag_data, x, y)
     elif  drag_source == SOURCE_TRANSITIONS_TREE:
         print("Transitions drop")
+        do_transition_drop_func(x, y)
         gui.tline_canvas.widget.grab_focus()
     else:
         print("_on_tline_drop failed to do anything")

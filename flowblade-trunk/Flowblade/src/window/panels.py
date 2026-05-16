@@ -556,7 +556,7 @@ def get_effect_selection_panel(double_click_cb):
 def get_dissolve_selection_panel(double_click_cb):
     transitions_list_view = guicomponents.TransitionsListView(None)
     group_combo_box = Gtk.ComboBoxText()
-    groups = copy.copy(mlttransitions.wipe_groups)
+    groups = copy.copy(mlttransitions.transition_groups)
     for group in groups:
         group_name, transitions_array = group
 

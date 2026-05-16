@@ -76,7 +76,7 @@ blenders = None
 autofades = None
 alpha_combiners = None
 wipe_compositors = None
-wipe_groups = None        
+transition_groups = None        
 icon_to_translated_name = None
 
 # these are no longer presented as options for users since 2.4
@@ -195,8 +195,8 @@ def init_module():
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
                               (_("Wipe"), RENDERED_WIPE)]
 
-def create_wipe_groups(wipe_icons_list):
-    global wipe_groups
+def create_transition_groups(wipe_icons_list):
+    global transition_groups
     wipe_icons = {}
     for icon_item in wipe_icons_list:
         icon_name, icon = icon_item
@@ -270,12 +270,12 @@ def create_wipe_groups(wipe_icons_list):
     wipe_group_free_form = sorted(wipe_group_free_form, key=lambda comp: comp[0])
     wipe_group_free_form = _group_with_icons(wipe_group_free_form, wipe_icons)
 
-    wipe_groups = []
-    wipe_groups.append((_("Dissolve"), dissolve_group))
-    wipe_groups.append((_("Wipe Basic"), wipe_group_basic))
-    wipe_groups.append((_("Wipe Free Form"), wipe_group_free_form))
-    wipe_groups.append((_("Wipe Rectangle"), wipe_group_rectangle))
-    wipe_groups.append((_("Wipe Round"), wipe_group_round))
+    transition_groups = []
+    transition_groups.append((_("Dissolve"), dissolve_group))
+    transition_groups.append((_("Wipe Basic"), wipe_group_basic))
+    transition_groups.append((_("Wipe Free Form"), wipe_group_free_form))
+    transition_groups.append((_("Wipe Rectangle"), wipe_group_rectangle))
+    transition_groups.append((_("Wipe Round"), wipe_group_round))
     
 def _group_with_icons(group, wipe_icons):
     group_with_icons = []
