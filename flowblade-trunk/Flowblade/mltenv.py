@@ -48,9 +48,10 @@ def check_available_features(repo):
         formats = []
         services = {}
         transitions = {}
+        profile = mlt.Profile()
 
         # video codecs
-        cv = mlt.Consumer(mlt.Profile(), "avformat")
+        cv = mlt.Consumer(profile, "avformat")
         cv.set('vcodec', 'list')
         cv.start()
         codecs = mlt.Properties(cv.get_data('vcodec'))
@@ -58,7 +59,7 @@ def check_available_features(repo):
             vcodecs.append(codecs.get(i))
 
         # audio codecs
-        ca = mlt.Consumer(mlt.Profile(), "avformat")
+        ca = mlt.Consumer(profile, "avformat")
         ca.set('acodec', 'list')
         ca.start()
         codecs = mlt.Properties(ca.get_data('acodec'))
@@ -66,7 +67,7 @@ def check_available_features(repo):
             acodecs.append(codecs.get(i))
             
         # formats
-        cf = mlt.Consumer(mlt.Profile(), "avformat")
+        cf = mlt.Consumer(profile, "avformat")
         cf.set('f', 'list')
         cf.start()
         codecs = mlt.Properties(cf.get_data('f'))
