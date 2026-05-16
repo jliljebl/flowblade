@@ -412,8 +412,6 @@ def load_icons_and_set_colors():
 
     COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
 
-
-    
 def update_clip_thumbnail(media_file):
     global clip_thumbnails
 

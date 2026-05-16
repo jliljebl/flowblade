@@ -523,6 +523,13 @@ def tline_effect_drop(x, y):
 
     clipeffectseditor.scroll_to_bottom()
 
+def tline_dnd_motion(x, y, drag_source):
+    clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
+    if drag_source == dnd.SOURCE_TRANSITIONS_TREE:
+        print("transition", x, y, clip, track, clip_index)
+    else:
+        print("no", x, y)
+
 def tline_transition_drop(x, y):
     print("transition drag begin")
     selection = gui.editor_window.transitions_list_view.treeview.get_selection()
