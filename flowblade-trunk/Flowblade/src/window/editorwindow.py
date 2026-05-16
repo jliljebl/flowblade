@@ -335,7 +335,8 @@ class EditorWindow:
         self.dissolve_select_panel = dissolve_select_panel
         self.transitions_list_view = transitions_list_view
         self.transitions_group_select_combo_box = transitions_group_select_combo_box
-        dnd.connect_transitions_select_tree_view(   self.transitions_list_view.treeview)
+        dnd.connect_transitions_select_tree_view(self.transitions_list_view.treeview,
+                                                 editevent.transition_drag_begins)
             
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()

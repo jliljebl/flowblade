@@ -22,7 +22,7 @@
 Handles or passes on edit events from timeline.
 """
 
-from gi.repository import Gdk
+from gi.repository import Gtk, Gdk
 
 import copy
 import hashlib
@@ -527,9 +527,43 @@ def tline_dnd_motion(x, y, drag_source):
     clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
     if drag_source == dnd.SOURCE_TRANSITIONS_TREE:
         print("transition", x, y, clip, track, clip_index)
+        if track != None and clip != None:
+            clip_start = track.clip_start(clip_index)
+            clip_end = clip_start + clip.clip_out - clip.clip_in + 1
+            start_x = tlinewidgets._get_frame_x(clip_start)
+            end_x = tlinewidgets._get_frame_x(clip_end)
+            data = {}
+            if abs(start_x - x) > abs(end_x - x):
+                data["transition_frame"] = clip_end
+            else:
+                data["transition_frame"] = clip_start
+            data["track"] = track.id
+            print("data", tlinewidgets.canvas_widget.edit_mode_data, 
+                  "func", tlinewidgets.canvas_widget.edit_mode_overlay_draw_func)
+            tlinewidgets.set_edit_mode(data, tlinewidgets.draw_transition_drag_overlay)
+            print("transition", x, y, clip, track, clip_index)
+            updater.repaint_tline()
+        else:
+            print("no clip")
     else:
+        tlinewidgets.set_edit_mode(None, None)
         print("no", x, y)
 
+
+def transition_drag_begins(context):
+    selection = gui.editor_window.transitions_list_view.treeview.get_selection()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    selected_group = gui.editor_window.transitions_group_select_combo_box.get_active()
+    print(selected_group, row)
+    
+    group_name, group = mlttransitions.transition_groups[selected_group]
+    print(group)
+    item = group[row]
+    print(item)
+    name, pixbuf = item
+    Gtk.drag_set_icon_pixbuf(context, pixbuf, 18, 10)
+    
 def tline_transition_drop(x, y):
     print("transition drag begin")
     selection = gui.editor_window.transitions_list_view.treeview.get_selection()
@@ -543,7 +577,7 @@ def tline_transition_drop(x, y):
     item = group[row]
     print(item)
     name, pixbuf = item
-
+    tlinewidgets.set_edit_mode(None, None)
 
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we which later to enable dropping multiple media items.

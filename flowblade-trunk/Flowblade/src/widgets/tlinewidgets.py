@@ -1194,7 +1194,6 @@ def draw_clip_end_drag_overlay(cr, data):
     # Draw clips in draw range
     cr.set_line_width(MOVE_CLIPS_LINE_WIDTH)
 
-
     clip_length = end - start
     scale_length = clip_length * pix_per_frame
     scale_in = int(start * pix_per_frame) + 0.5
@@ -1304,6 +1303,22 @@ def draw_compositor_trim(cr, data):
         _draw_text_info_box(cr, info_x, y - 12, tc_str)
 
     _draw_snap(cr, y)
+
+def draw_transition_drag_overlay(cr, data):
+    print("draw")
+    #data["insert_index"] = insert_index
+    #data["track"] = track
+
+    track_height = current_sequence().tracks[data["track"]].height
+    track_y = _get_track_y(data["track"])
+    
+    frame_x = _get_frame_x(data["transition_frame"])
+
+    cr.set_line_width(1.0)
+    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.move_to(frame_x, track_y - 6.5)
+    cr.line_to(frame_x, track_y + track_height + 6.5)
+    cr.stroke()
     
 def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     scale_in = int(scale_in) + 0.5

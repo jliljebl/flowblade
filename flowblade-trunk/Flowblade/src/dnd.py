@@ -110,13 +110,13 @@ def connect_effects_select_tree_view(tree_view):
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
 
-def connect_transitions_select_tree_view(tree_view):
+def connect_transitions_select_tree_view(tree_view, drag_begin_listener):
     tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                        [TRANSITIONS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _transitions_drag_data_get)
-    tree_view.connect("drag-begin", _on_transitions_drag_begin)
-    tree_view.drag_source_set_icon_pixbuf(clip_icon)
+    tree_view.connect_after("drag-begin", _on_transitions_drag_begin, drag_begin_listener)
+
     
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
@@ -204,9 +204,10 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     drag_source = SOURCE_EFFECTS_TREE
     context.finish(True, False, timestamp)
 
-def _on_transitions_drag_begin(widget, context):
+def _on_transitions_drag_begin(widget, context, drag_begin_listener):
     global drag_source
     drag_source = SOURCE_TRANSITIONS_TREE
+    drag_begin_listener(context)
 
 def _transitions_drag_data_get(treeview, context, selection, target_id, timestamp):
     print("_transitions_drag_data_get")
