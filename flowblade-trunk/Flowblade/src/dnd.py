@@ -41,6 +41,7 @@ SOURCE_MONITOR_WIDGET = "monitor"
 SOURCE_EFFECTS_TREE = "effects"
 SOURCE_RANGE_LOG = "range log"
 SOURCE_TLINE = "tline"
+SOURCE_TRANSITIONS_TREE = "transitions"
 
 # GUI consts
 MEDIA_ICON_WIDTH = 20
@@ -48,6 +49,7 @@ MEDIA_ICON_HEIGHT = 15
 
 MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_APP, 0)
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
+TRANSITIONS_DND_TARGET = Gtk.TargetEntry.new('transitions', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
 CLIP_EFFECTS_DND_TARGET = Gtk.TargetEntry.new('clip_effect', Gtk.TargetFlags.SAME_APP, 0)
@@ -107,7 +109,14 @@ def connect_effects_select_tree_view(tree_view):
                                        [EFFECTS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
-  
+
+def connect_transitions_select_tree_view(tree_view):
+    tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
+                                       [TRANSITIONS_DND_TARGET], 
+                                       Gdk.DragAction.COPY)
+    tree_view.connect("drag_data_get", _transitions_drag_data_get)
+    tree_view.connect("drag-begin", _on_transitions_drag_begin)
+
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, CLIPS_DND_TARGET], 
@@ -124,9 +133,11 @@ def connect_video_monitor(widget):
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
-                         [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET], 
+                         [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET, TRANSITIONS_DND_TARGET], 
                          Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
+    widget.connect("drag_motion", _on_tline_motion)
+    widget.connect("drag-leave", _on_tline_leave)
     
 def connect_range_log(treeview, range_log_drop_on_monitor_callback):
     global range_log_drop_on_monitor
@@ -190,6 +201,17 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source
     drag_source = SOURCE_EFFECTS_TREE
+    context.finish(True, False, timestamp)
+
+def _on_transitions_drag_begin(widget, context):
+    global drag_source
+    drag_source = SOURCE_TRANSITIONS_TREE
+
+def _transitions_drag_data_get(treeview, context, selection, target_id, timestamp):
+    print("_transitions_drag_data_get")
+    _save_treeview_selection(treeview)
+    global drag_source
+    drag_source = SOURCE_TRANSITIONS_TREE
     context.finish(True, False, timestamp)
     
 def _on_monitor_drop(widget, context, x, y, timestamp):
@@ -275,12 +297,24 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
             print("monitor_drop fail")
     elif drag_source == SOURCE_RANGE_LOG:
         callbackbridge.editevent_tline_range_item_drop(drag_data, x, y)
+    elif  drag_source == SOURCE_TRANSITIONS_TREE:
+        print("Transitions drop")
+        gui.tline_canvas.widget.grab_focus()
     else:
         print("_on_tline_drop failed to do anything")
     
     drag_source = ""
     
     context.finish(True, False, timestamp)
+
+def _on_tline_motion(widget, context, x, y, timestamp):
+    if drag_source == SOURCE_TRANSITIONS_TREE:
+        print("transition", x, y)
+    else:
+        print("no", x, y)
+
+def _on_tline_leave(widget, context, timestamp):
+    print("leave")
 
 def _on_range_drop(widget, context, x, y, timestamp):
     callbackbridge.medialog_clips_drop(drag_data)
