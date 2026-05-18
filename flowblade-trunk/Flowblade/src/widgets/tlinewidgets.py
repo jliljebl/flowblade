@@ -1315,7 +1315,28 @@ def draw_transition_drag_overlay(cr, data):
     cr.move_to(frame_x, track_y - 6.5)
     cr.line_to(frame_x, track_y + track_height + 6.5)
     cr.stroke()
-    
+
+def draw_effect_drag_overlay(cr, data):
+    track_height = current_sequence().tracks[data["track"]].height
+    track_y = _get_track_y(data["track"])
+
+    # Draw clips
+    cr.set_line_width(2.0)
+    cr.set_source_rgba(*OVERLAY_COLOR, 0.3)
+    clip_start_in_tline = current_sequence().tracks[data["track"]].clip_start(data["clip_index"])
+    clip_start_frame = clip_start_in_tline - pos
+    for i in range(0, len(data["clips"])):
+        clip = data["clips"][i]
+        clip_length = clip.clip_out - clip.clip_in + 1
+
+        scale_length = clip_length * pix_per_frame
+        scale_in = clip_start_frame * pix_per_frame
+        cr.rectangle(scale_in, track_y + 1.5, scale_length, track_height - 2.0)
+        cr.stroke()
+
+        # Start frame for next clip
+        clip_start_frame += clip_length
+
 def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     scale_in = int(scale_in) + 0.5
     scale_length = int(scale_length)

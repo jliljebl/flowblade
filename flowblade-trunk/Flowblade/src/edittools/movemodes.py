@@ -53,7 +53,7 @@ MAGNETIC_AREA_IN_PIX = 5
 # Selection handling is part of this module because
 # selections can only be done when editing in move modes.
 # Therea are no area or multitrack selections in this application.
-selected_track = -1
+selected_track = -1 # track index
 selected_range_in = -1 # clip index
 selected_range_out = -1 # clip index, inclusive
 

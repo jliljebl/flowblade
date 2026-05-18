@@ -540,6 +540,22 @@ def tline_dnd_motion(x, y, drag_source):
                 tlinewidgets.set_edit_mode(None, None)
         else:
             tlinewidgets.set_edit_mode(None, None)
+    elif drag_source == dnd.SOURCE_EFFECTS_TREE:
+        if clip != None:
+            data = {}
+            data["track"] = track.id
+            if movemodes.selected_track == track.id and clip_index >= movemodes.selected_range_in and clip_index <= movemodes.selected_range_out:
+                data["clips"] = []
+                data["clip_index"] = movemodes.selected_range_in
+                for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+                    data["clips"].append(track.clips[i])
+            else:
+                data["clips"] = [clip]
+                data["clip_index"] = clip_index
+
+            tlinewidgets.set_edit_mode(data, tlinewidgets.draw_effect_drag_overlay)
+        else:
+            tlinewidgets.set_edit_mode(None, None)
     else:
         tlinewidgets.set_edit_mode(None, None)
         #print("no", x, y)
@@ -578,7 +594,6 @@ def tline_transition_drop(x, y):
 def _get_transition_clips_data(x, y):
     clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
     if track != None and clip != None:
-        print("1")
         clip_start = track.clip_start(clip_index)
         clip_end = clip_start + clip.clip_out - clip.clip_in + 1
         start_x = tlinewidgets._get_frame_x(clip_start)
@@ -587,7 +602,6 @@ def _get_transition_clips_data(x, y):
         data["track"] = track.id
         second_clip = None
         if abs(start_x - x) > abs(end_x - x):
-            print("2")
             data["transition_frame"] = clip_end
             if clip_index < len(track.clips) - 1:
                 second_clip = track.clips[clip_index + 1]
