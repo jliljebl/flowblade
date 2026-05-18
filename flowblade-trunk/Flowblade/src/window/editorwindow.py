@@ -638,7 +638,8 @@ class EditorWindow:
                             editevent.tline_effect_drop,
                             editevent.tline_media_drop, 
                             editevent.tline_transition_drop, 
-                            editevent.tline_dnd_motion)
+                            editevent.tline_dnd_motion,
+                            editevent.tline_dnd_leave)
 
         # Y Scroll
         self.tline_y_page = tlinewidgets.TimeLineYPage(tlineypage.page_up, tlineypage.page_down)

@@ -504,6 +504,11 @@ def load_compositors_xml(transitions):
 
         mlt_compositor_transition_infos[compositor_info.name] = compositor_info
 
+def get_sorted_wipe_luma_index_for_name(wipe_name):
+    keys = list(wipe_lumas.keys())
+    keys.sort()
+    return keys.index(wipe_name)
+
 def get_wipe_resource_path_for_sorted_keys_index(sorted_keys_index):
     # This exists to avoid sending a list of sorted keys around or having to use global variables
     keys = list(wipe_lumas.keys())

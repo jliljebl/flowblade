@@ -1305,17 +1305,13 @@ def draw_compositor_trim(cr, data):
     _draw_snap(cr, y)
 
 def draw_transition_drag_overlay(cr, data):
-    print("draw")
-    #data["insert_index"] = insert_index
-    #data["track"] = track
-
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])
     
     frame_x = _get_frame_x(data["transition_frame"])
 
-    cr.set_line_width(1.0)
-    cr.set_source_rgb(*OVERLAY_COLOR)
+    cr.set_line_width(2.0)
+    cr.set_source_rgb(*INSERT_MODE_COLOR)
     cr.move_to(frame_x, track_y - 6.5)
     cr.line_to(frame_x, track_y + track_height + 6.5)
     cr.stroke()

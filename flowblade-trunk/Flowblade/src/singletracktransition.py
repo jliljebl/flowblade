@@ -114,38 +114,86 @@ def get_transition_data_for_clips(track, from_clip, to_clip):
                        "max_length":max_length}
     return transition_data
 
+def add_transition_from_dnd(track, from_clip, to_clip, from_clip_index, is_dissolve, wipe_mame):
+    transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
+    print("from_clip", track.clips.index(from_clip))
+    print("to_clip", track.clips.index(to_clip))
+    transition_data["dnd_wipe_name"] = wipe_mame
+    transition_data["dnd_is_dissolve"] = is_dissolve
+    transition_data["dnd_from_clip_index"] = from_clip_index
+
+    from_clip_index = movemodes.selected_range_in
+    
+    # We're piggypacking existing dialog callback method and will use some default values for rendering. 
+    _add_transition_dialog_callback(None, None, None, transition_data)
+
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
-    if response_id != Gtk.ResponseType.ACCEPT:
+    # This is now baing used to create transitions from dnd and then no creation dialog exists. 
+    if dialog != None:
+
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+            return
+
+        # Get input data
+        type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, steal_frames, encodings = selection_widgets
+        transition_type_selection_index = type_combo.get_active()
+
+        quality_option_index = quality_combo.get_active()
+        
+        # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+        # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+        selected_encoding_option_index = enc_combo.get_active()
+        enc = encodings[selected_encoding_option_index]
+        encoding_option_index = renderconsumer.encoding_options.index(enc)
+        
+        extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+        sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
+        force_steal_frames = steal_frames.get_active()
+        editorstate.steal_frames = force_steal_frames # making this selection as default for next invocation
+
+        try:
+            length = int(length_entry.get_text())
+        except Exception as e:
+            # INFOWINDOW, bad input
+            dialog.destroy()
+            return
+
         dialog.destroy()
-        return
+        
+        from_clip_index = movemodes.selected_range_in    
+    else:
+        # Create data to match what we get from dialog when we caome here from 
+        length = 30
+        transition_type_selection_index = 0
+        sorted_wipe_luma_index = 0
+        if transition_data["dnd_is_dissolve"] == False:
+            transition_type_selection_index = 1
+            sorted_wipe_luma_index = mlttransitions.get_sorted_wipe_luma_index_for_name(transition_data["dnd_wipe_name"])
+            print(transition_data["dnd_wipe_name"], sorted_wipe_luma_index)
 
-    # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, steal_frames, encodings = selection_widgets
-    transition_type_selection_index = type_combo.get_active()
+        # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+        # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+        # TODO: See panels.py also, this needs to be killed somehow.
+        encodings = []
+        for encoding in renderconsumer.encoding_options:
+            if encoding.vcodec != "libx264":
+                encodings.append(encoding)
+            
+        quality_option_index = 0
+        selected_encoding_option_index = 0
+        enc = encodings[selected_encoding_option_index]
+        encoding_option_index = renderconsumer.encoding_options.index(enc)
+        
+        extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+        force_steal_frames = True
 
-    quality_option_index = quality_combo.get_active()
-    
-    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
-    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
-    selected_encoding_option_index = enc_combo.get_active()
-    enc = encodings[selected_encoding_option_index]
-    encoding_option_index = renderconsumer.encoding_options.index(enc)
-    
-    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
-    sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
-    force_steal_frames = steal_frames.get_active()
-    editorstate.steal_frames = force_steal_frames # making this selection as default for next invocation
-
-    try:
-        length = int(length_entry.get_text())
-    except Exception as e:
-        # INFOWINDOW, bad input
-        return
-
-    dialog.destroy()
+        from_clip_index = transition_data["dnd_from_clip_index"] 
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
+    #print("from_clip", track.clips.index(from_clip))
+    #print("to_clip", track.clips.index(to_clip))
 
     # Get values to build transition render sequence
     # Divide transition length between clips, odd frame goes to from_clip 
@@ -164,7 +212,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_req = to_part - (1 - add_thingy)
     from_handle = transition_data["from_handle"]
     to_handle = transition_data["to_handle"]
-    from_clip_index = movemodes.selected_range_in
+
     
     # Check that we have enough handles
     if from_req > from_handle or to_req > to_handle:

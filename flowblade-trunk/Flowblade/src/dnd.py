@@ -117,7 +117,6 @@ def connect_transitions_select_tree_view(tree_view, drag_begin_listener):
     tree_view.connect("drag_data_get", _transitions_drag_data_get)
     tree_view.connect_after("drag-begin", _on_transitions_drag_begin, drag_begin_listener)
 
-    
 def connect_video_monitor(widget):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, CLIPS_DND_TARGET], 
@@ -132,13 +131,13 @@ def connect_video_monitor(widget):
     
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
-def connect_tline(widget, do_effect_drop_func, do_media_drop_func, do_transition_drop_func, dnd_motion_listener):
+def connect_tline(widget, do_effect_drop_func, do_media_drop_func, do_transition_drop_func, dnd_motion_listener, dnd_leave_listener):
     widget.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
                          [MEDIA_FILES_DND_TARGET, EFFECTS_DND_TARGET, CLIPS_DND_TARGET, TRANSITIONS_DND_TARGET], 
                          Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func, do_transition_drop_func)
     widget.connect("drag_motion", _on_tline_motion, dnd_motion_listener)
-    widget.connect("drag-leave", _on_tline_leave)
+    widget.connect("drag-leave", _on_tline_leave, dnd_leave_listener)
     
 def connect_range_log(treeview, range_log_drop_on_monitor_callback):
     global range_log_drop_on_monitor
@@ -313,8 +312,9 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
 def _on_tline_motion(widget, context, x, y, timestamp, dnd_motion_listener):
     dnd_motion_listener(x, y, drag_source)
 
-def _on_tline_leave(widget, context, timestamp):
-    print("leave")
+def _on_tline_leave(widget, context, timestamp, leave_listener):
+    drag_source = ""
+    leave_listener()
 
 def _on_range_drop(widget, context, x, y, timestamp):
     callbackbridge.medialog_clips_drop(drag_data)

@@ -58,6 +58,7 @@ import modesetting
 import movemodes
 import multimovemode
 import multitrimmode
+import singletracktransition
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -525,59 +526,108 @@ def tline_effect_drop(x, y):
 
 def tline_dnd_motion(x, y, drag_source):
     clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
+
     if drag_source == dnd.SOURCE_TRANSITIONS_TREE:
-        print("transition", x, y, clip, track, clip_index)
         if track != None and clip != None:
+            data, from_clip, to_clip =  _get_transition_clips_data(x, y)
+            
+            """
             clip_start = track.clip_start(clip_index)
             clip_end = clip_start + clip.clip_out - clip.clip_in + 1
             start_x = tlinewidgets._get_frame_x(clip_start)
             end_x = tlinewidgets._get_frame_x(clip_end)
             data = {}
+            data["track"] = track.id
+            another_clip = None
             if abs(start_x - x) > abs(end_x - x):
                 data["transition_frame"] = clip_end
+                if clip_index < len(track.clips) - 1:
+                    another_clip = track.clips[clip_index + 1]
             else:
                 data["transition_frame"] = clip_start
-            data["track"] = track.id
-            print("data", tlinewidgets.canvas_widget.edit_mode_data, 
-                  "func", tlinewidgets.canvas_widget.edit_mode_overlay_draw_func)
-            tlinewidgets.set_edit_mode(data, tlinewidgets.draw_transition_drag_overlay)
-            print("transition", x, y, clip, track, clip_index)
-            updater.repaint_tline()
+                if clip_index > 0:
+                    another_clip = track.clips[clip_index - 1]
+            """ 
+            if data != None:
+                tlinewidgets.set_edit_mode(data, tlinewidgets.draw_transition_drag_overlay)
+            else:
+                tlinewidgets.set_edit_mode(None, None)
         else:
-            print("no clip")
+            tlinewidgets.set_edit_mode(None, None)
     else:
         tlinewidgets.set_edit_mode(None, None)
-        print("no", x, y)
+        #print("no", x, y)
 
+    updater.repaint_tline()
+
+
+def tline_dnd_leave():
+    print("leave")
+    tlinewidgets.set_edit_mode(None, None)
 
 def transition_drag_begins(context):
-    selection = gui.editor_window.transitions_list_view.treeview.get_selection()
-    (model, rows) = selection.get_selected_rows()
-    row = max(rows[0])
-    selected_group = gui.editor_window.transitions_group_select_combo_box.get_active()
-    print(selected_group, row)
-    
-    group_name, group = mlttransitions.transition_groups[selected_group]
-    print(group)
-    item = group[row]
-    print(item)
+    item =_get_selected_transition_item()
     name, pixbuf = item
     Gtk.drag_set_icon_pixbuf(context, pixbuf, 18, 10)
     
 def tline_transition_drop(x, y):
-    print("transition drag begin")
+    tlinewidgets.set_edit_mode(None, None)
+    
+    selected_group = gui.editor_window.transitions_group_select_combo_box.get_active()
+    name, pixbuf =_get_selected_transition_item()
+    if selected_group == 0:
+        is_dissolve = True
+        wipe_mame = "not used"
+    else:
+        is_dissolve = False
+        wipe_mame = name
+
+    clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
+    
+    if track != None and clip != None:
+        data, from_clip, to_clip =  _get_transition_clips_data(x, y)
+        if data != None:
+            from_clip_index = track.clips.index(from_clip)
+            singletracktransition.add_transition_from_dnd(track, from_clip, to_clip, from_clip_index, is_dissolve, wipe_mame)
+ 
+def _get_transition_clips_data(x, y):
+    clip, track, clip_index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
+    if track != None and clip != None:
+        print("1")
+        clip_start = track.clip_start(clip_index)
+        clip_end = clip_start + clip.clip_out - clip.clip_in + 1
+        start_x = tlinewidgets._get_frame_x(clip_start)
+        end_x = tlinewidgets._get_frame_x(clip_end)
+        data = {}
+        data["track"] = track.id
+        second_clip = None
+        if abs(start_x - x) > abs(end_x - x):
+            print("2")
+            data["transition_frame"] = clip_end
+            if clip_index < len(track.clips) - 1:
+                second_clip = track.clips[clip_index + 1]
+        else:
+            data["transition_frame"] = clip_start
+            if clip_index > 0:
+                second_clip = clip 
+                clip = track.clips[clip_index - 1]
+
+        if second_clip != None and clip != None and clip.is_blanck_clip == False and second_clip.is_blanck_clip == False:
+            return (data, clip, second_clip)
+        else:
+            return (None, None, None)
+
+    else:
+        return (None, None, None)
+                 
+def _get_selected_transition_item():
     selection = gui.editor_window.transitions_list_view.treeview.get_selection()
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     selected_group = gui.editor_window.transitions_group_select_combo_box.get_active()
-    print(selected_group, row)
-    
     group_name, group = mlttransitions.transition_groups[selected_group]
-    print(group)
     item = group[row]
-    print(item)
-    name, pixbuf = item
-    tlinewidgets.set_edit_mode(None, None)
+    return item
 
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we which later to enable dropping multiple media items.
