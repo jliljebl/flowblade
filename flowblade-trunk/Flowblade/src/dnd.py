@@ -104,12 +104,13 @@ def connect_bin_tree_view(treeview, move_files_to_bin_func):
                                          
     treeview.connect("drag_data_received", _bin_drag_data_received, move_files_to_bin_func)
 
-def connect_effects_select_tree_view(tree_view):
+def connect_effects_select_tree_view(tree_view, drag_begin_listener):
     tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                        [EFFECTS_DND_TARGET], 
                                        Gdk.DragAction.COPY)
     tree_view.connect("drag_data_get", _effects_drag_data_get)
-
+    tree_view.connect_after("drag-begin", _on_effects_drag_begin, drag_begin_listener)
+    
 def connect_transitions_select_tree_view(tree_view, drag_begin_listener):
     tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                        [TRANSITIONS_DND_TARGET], 
@@ -154,7 +155,6 @@ def connect_range_log(treeview, range_log_drop_on_monitor_callback):
     treeview.drag_source_set_icon_pixbuf(clip_icon)
     
 def start_tline_clips_out_drag(event, clips, widget):
-
     global tline_out_drag_context
     if tline_out_drag_context != None:
         return
@@ -197,6 +197,11 @@ def _range_log_drag_data_get(treeview, context, selection, target_id, timestamp)
     global drag_source
     drag_source = SOURCE_RANGE_LOG
 
+def _on_effects_drag_begin(widget, context, drag_begin_listener):
+    global drag_source
+    drag_source = SOURCE_EFFECTS_TREE
+    drag_begin_listener(context)
+    
 def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source

@@ -116,8 +116,6 @@ def get_transition_data_for_clips(track, from_clip, to_clip):
 
 def add_transition_from_dnd(track, from_clip, to_clip, from_clip_index, is_dissolve, wipe_mame):
     transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
-    print("from_clip", track.clips.index(from_clip))
-    print("to_clip", track.clips.index(to_clip))
     transition_data["dnd_wipe_name"] = wipe_mame
     transition_data["dnd_is_dissolve"] = is_dissolve
     transition_data["dnd_from_clip_index"] = from_clip_index
@@ -242,7 +240,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                 # Clip is not long enough for frame steeling, transition fails.
                 _show_failure_to_steal_frames_dialog(from_needed, from_clip.clip_length(), -1, -1)
                 return
-                
+
         # Force trim to clip if needed
         to_needed = to_req - to_handle
         if to_needed > 0:

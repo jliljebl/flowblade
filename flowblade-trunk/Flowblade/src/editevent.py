@@ -466,6 +466,10 @@ def tline_canvas_double_click(frame, x, y, event):
 
 
 # -------------------------------------------------- DND event callbacks
+def effects_drag_begins(context):
+    filter_info = clipeffectseditor.get_currently_selected_filter_info()
+    Gtk.drag_set_icon_pixbuf(context, filter_info.get_icon(), 20, 14)
+
 def tline_effect_drop(x, y):
     clip, track, index = tlinewidgets.get_clip_track_and_index_for_pos(x, y)
     if clip == None:
@@ -530,24 +534,6 @@ def tline_dnd_motion(x, y, drag_source):
     if drag_source == dnd.SOURCE_TRANSITIONS_TREE:
         if track != None and clip != None:
             data, from_clip, to_clip =  _get_transition_clips_data(x, y)
-            
-            """
-            clip_start = track.clip_start(clip_index)
-            clip_end = clip_start + clip.clip_out - clip.clip_in + 1
-            start_x = tlinewidgets._get_frame_x(clip_start)
-            end_x = tlinewidgets._get_frame_x(clip_end)
-            data = {}
-            data["track"] = track.id
-            another_clip = None
-            if abs(start_x - x) > abs(end_x - x):
-                data["transition_frame"] = clip_end
-                if clip_index < len(track.clips) - 1:
-                    another_clip = track.clips[clip_index + 1]
-            else:
-                data["transition_frame"] = clip_start
-                if clip_index > 0:
-                    another_clip = track.clips[clip_index - 1]
-            """ 
             if data != None:
                 tlinewidgets.set_edit_mode(data, tlinewidgets.draw_transition_drag_overlay)
             else:
@@ -562,7 +548,6 @@ def tline_dnd_motion(x, y, drag_source):
 
 
 def tline_dnd_leave():
-    print("leave")
     tlinewidgets.set_edit_mode(None, None)
 
 def transition_drag_begins(context):

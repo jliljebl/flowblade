@@ -329,7 +329,8 @@ class EditorWindow:
         self.effect_select_panel = effect_select_panel
         self.effect_select_list_view = effect_select_list_view
         self.effect_select_combo_box = effect_select_combo_box
-        dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
+        dnd.connect_effects_select_tree_view(   self.effect_select_list_view.treeview,
+                                                editevent.effects_drag_begins)
 
         dissolve_select_panel, transitions_list_view, transitions_group_select_combo_box = panels.get_dissolve_selection_panel(trackaction.transition_select_double_clicked)
         self.dissolve_select_panel = dissolve_select_panel
