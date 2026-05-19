@@ -436,7 +436,7 @@ class EditAction:
         PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
         updater.update_position_bar()
-        updater.update_seqence_info_text()
+        updater.update_sequence_info_text()
 
 
 

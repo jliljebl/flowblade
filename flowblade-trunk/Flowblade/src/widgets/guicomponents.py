@@ -1967,18 +1967,6 @@ class BigTCDisplay:
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
     
-    """    
-    def _round_rect_path(self, cr):
-        x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
-
-        cr.new_sub_path()
-        cr.arc (x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
-        cr.arc (x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
-        cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
-        cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
-        cr.close_path ()
-    """
-    
     def _button_press(self, widget, event):
         gui.big_tc.set_visible_child_name("BigTCEntry")
         entry = gui.big_tc.get_visible_child()
@@ -2152,8 +2140,8 @@ class MonitorMarksTCInfo:
     def set_source_name(self, source_name):
         self.monitor_source.set_text(source_name)
         
-    def set_source_tc(self, tc_str):
-        self.monitor_tc.set_text(tc_str)
+    def set_source_length(self, len_frames):
+        self.marks_tc_display.set_lengh_info(len_frames)
     
     def set_range_info(self, mark_in, mark_out):
         self.marks_tc_display.set_marks_range_info(mark_in, mark_out)
@@ -2171,7 +2159,7 @@ class MonitorMarksTCInfo:
 
 class MonitorInfoDisplay:
 
-    def __init__(self, widget_width=80):
+    def __init__(self, widget_width=165):
         self.widget = cairoarea.CairoDrawableArea2( widget_width,
                                                     18,
                                                     self._draw)
@@ -2182,18 +2170,16 @@ class MonitorInfoDisplay:
 
         self.widget.set_tooltip_markup(_("Marks Timecodes and Range Length"))
         
-        self.in_str = ""
-        self.out_str = ""
-        self.len_str = ""
+        self.source_len_str = ""
+        self.range_len_str = ""
 
-        self.in_zeros_overlay = ""
-        self.out_zeros_overlay = ""
-        self.len_zeros_overlay = ""
+        self.source_zeros_overlay = ""
+        self.range_len_zeros_overlay = ""
 
-        self.mark_in_empty = True
-        self.mark_out_empty = True
+        self.slaash_str = "/"
+
         self.len_empty = True
-        
+
         # Draw consts
         x = 2
         y = 2
@@ -2220,66 +2206,52 @@ class MonitorInfoDisplay:
         self._frame = frame # this is used in tools, editor window uses PLAYER frame
         self.widget.queue_draw()
 
+    def set_lengh_info(self, source_len):
+        self.source_zeros_overlay = ""
+        
+        # We're getting 1 frame len for empty timelines because of bg black image.
+        if source_len < 2:
+            source_len = 0
+
+        self.source_len_str = utils.get_tc_string(source_len)
+        self.source_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(source_len)
+                    
     def set_marks_range_info(self, mark_in, mark_out):
-        self.in_zeros_overlay = ""
-        self.out_zeros_overlay = ""
-        self.len_zeros_overlay = ""
-        
-        if mark_in != -1:
-            mark_in_info = utils.get_tc_string(mark_in)
-            self.in_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_in)
-            self.mark_in_empty = False
-        else:
-            mark_in_info = " - - : - - : - - : - -"
-            self.mark_in_empty = True
-        self.in_str = mark_in_info
-        
-        if mark_out != -1:
-            mark_out_info = utils.get_tc_string(mark_out)
-            self.out_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(mark_out)
-            self.mark_out_empty = False
-        else:
-            mark_out_info =  " - - : - - : - - : - - "
-            self.mark_out_empty = True
-        self.out_str = mark_out_info
+        self.range_len_zeros_overlay = ""
 
         range_len = mark_out - mark_in + 1 # +1, out incl.
         if mark_in != -1 and mark_out != -1:
             range_info = utils.get_tc_string(range_len)
-            self.len_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(range_len)
+            self.range_len_zeros_overlay = utils.get_tc_zeros_overlay_fine_grained(range_len)
             self.len_empty = False
         else:
-            range_info =  " - - : - - : - - : - - "
+            range_info =  "  - : - - : - - : - "
             self.len_empty = True
-        self.len_str = range_info
+        self.range_len_str = range_info
 
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
         We get cairo context and allocation.
         """
-        x, y, w, h = allocation
+        #  Draw slash
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(self.slaash_str)
+        layout.set_font_description(self.font_desc)
+        cr.set_source_rgb(0.4, 0.4, 0.4)
+        cr.move_to(80, 2)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
 
-        # Draw round rect with gradient and stroke around for thin bezel        
-        #cr.set_source_surface(self.mark_in_img, 12, 5)
-        #cr.paint()
-        #cr.set_source_surface(self.mark_out_img, 110, 5)
-        #cr.paint()
-        #cr.set_source_surface(self.marks_length_img, 205, 5)
-        #cr.paint()
-        
-        is_tc = True
         # Tc Texts
-        #self.draw_tc(cr, self.in_str, 21, 2, not self.mark_in_empty)
-        #self.draw_tc(cr, self.in_zeros_overlay, 21, 2, False)
-        #self.draw_tc(cr, self.out_str, 118, 2, not self.mark_out_empty)
-        #self.draw_tc(cr, self.out_zeros_overlay, 118, 2, False)
-        self.draw_tc(cr, self.len_str, 2, 2, not self.len_empty)
-        self.draw_tc(cr, self.len_zeros_overlay, 2, 2, False)
+        self.draw_tc(cr, self.source_len_str, 98, 2, True)
+        self.draw_tc(cr, self.source_zeros_overlay, 98, 2, False)
+        self.draw_tc(cr, self.range_len_str, 2, 2, not self.len_empty)
+        self.draw_tc(cr, self.range_len_zeros_overlay, 2, 2, False)
 
     def draw_tc(self, cr, tc_text, x, y, is_tc):
         layout = PangoCairo.create_layout(cr)
-        layout.set_text(tc_text) #+ "     " + self.out_str + "      " + self.len_str, -1)
+        layout.set_text(tc_text)
         layout.set_font_description(self.font_desc)
         if is_tc == True:
             cr.set_source_rgb(0.7, 0.7, 0.7)
@@ -2288,17 +2260,7 @@ class MonitorInfoDisplay:
         cr.move_to(x, y)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
-        
-    def _round_rect_path(self, cr):
-        x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
 
-        cr.new_sub_path()
-        cr.arc (x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
-        cr.arc (x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
-        cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
-        cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
-        cr.close_path ()
-        
 
 class TimeLineLeftBottom:
     def __init__(self, comp_mode_launch, tline_render_mode_launcher):

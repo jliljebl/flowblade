@@ -499,10 +499,8 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     repaint_tline()
 
 def display_monitor_clip_name():#we're displaying length and range length also
-    clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
-
     gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name)
-    gui.editor_window.monitor_tc_info.set_source_tc(clip_len)
+    gui.editor_window.monitor_tc_info.set_source_length(gui.pos_bar.producer.get_length())
 
     if MONITOR_MEDIA_FILE().type == appconsts.VIDEO:
         try:
@@ -542,7 +540,7 @@ def display_sequence_in_monitor():
         PLAYER().seek_frame(saved_timeline_pos)
     saved_timeline_pos = -1
 
-    update_seqence_info_text()
+    update_sequence_info_text()
 
     # Display marks and pos
     gui.pos_bar.update_display_from_producer(PLAYER().producer)
@@ -556,15 +554,12 @@ def display_sequence_in_monitor():
     gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 
-def update_seqence_info_text():
+def update_sequence_info_text():
     name = editorstate.current_sequence().name
     prog_len = PLAYER().producer.get_length()
-    if prog_len < 2: # # to 'fix' the single frame black frame at start, will bug for actual 1 frame sequences
-        prog_len = 0
-    len_tc = utils.get_tc_string(prog_len)
 
     gui.editor_window.monitor_tc_info.set_source_name(name)
-    gui.editor_window.monitor_tc_info.set_source_tc(len_tc)
+    gui.editor_window.monitor_tc_info.set_source_length(prog_len)
 
     profile = PROJECT().profile
     gui.editor_window.monitor_desc_label.set_text(profile.description())
@@ -655,7 +650,7 @@ def display_marks_tc():
     if not timeline_visible():
         display_monitor_clip_name()
     else:
-        update_seqence_info_text()
+        update_sequence_info_text()
 
 # ----------------------------------------------- clip editors
 def clear_clip_from_editors(clip):
