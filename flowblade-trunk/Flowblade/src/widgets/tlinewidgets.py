@@ -378,7 +378,8 @@ def load_icons_and_set_colors():
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, FRAME_SCALE_TEXT, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
-            TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR
+            TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR, \
+            COLUMN_ACTIVE_COLOR 
 
     FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
     FRAME_SCALE_TEXT = (0.65, 0.65, 0.65)
@@ -411,6 +412,7 @@ def load_icons_and_set_colors():
     TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
 
     COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
+    COLUMN_ACTIVE_COLOR = gui.get_accent_color()
 
 def update_clip_thumbnail(media_file):
     global clip_thumbnails
@@ -2607,7 +2609,6 @@ class TimeLineColumn:
             cr.paint()
 
         # Draw audio level info.
-
         if track.audio_gain != 1.0:
             pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
             # Draw track name
@@ -2943,21 +2944,6 @@ class TimeLineFrameScale:
         cr.set_source_rgb(0,0,0)
         cr.stroke()
 
-    """
-    def draw_text(self, cr, frame_str, x, y):
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(frame_str, -1)
-        layout.set_font_description(self.font_desc)
-
-        cr.set_source_rgb(*FRAME_SCALE_TEXT)
-        cr.move_to(x - 1, y) # fine-tuning x positioning here to just do it once
-
-        PangoCairo.update_layout(cr, layout)
-        PangoCairo.show_layout(cr, layout)
-        
-        cr.set_source_rgb(*FRAME_SCALE_LINES)
-    """
-    
     def _get_dark_theme_grad(self, h):
         r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
         grad = cairo.LinearGradient (0, 0, 0, h)

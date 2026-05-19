@@ -251,3 +251,7 @@ def timeline_has_focus():
         return True
 
     return False
+
+def get_accent_color():
+    return (0.063, 0.341, 0.659) #(0.72, 0.298, 0.72) - Yaru magenta
+ 

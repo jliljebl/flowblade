@@ -2755,7 +2755,7 @@ class MonitorSwitch:
         y_off_tline = -1
         y_off_clip = 0
 
-        cr.set_source_rgb(0.063, 0.341, 0.659)
+        cr.set_source_rgb(*gui.get_accent_color())
         self.create_round_rect_path(cr, 0, 0, 84, 20, 10.0)
         cr.fill()
 
