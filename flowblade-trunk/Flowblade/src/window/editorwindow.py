@@ -527,7 +527,7 @@ class EditorWindow:
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
         self.monitor_add_action = guicomponents.get_monitor_add_launcher(tlineaction.monitor_add_menu_launched)
         self.playback_settings = guicomponents.get_playback_settings_launcher(monitorevent.playback_settings_menu_launched)
-        self.playback_settings.widget.set_margin_right(12) 
+        self.playback_settings.widget.set_margin_right(8) 
         self.playback_settings.widget.set_tooltip_markup(_("Playback Settings"))
 
         callbacks = [monitorevent.mark_in_pressed,
