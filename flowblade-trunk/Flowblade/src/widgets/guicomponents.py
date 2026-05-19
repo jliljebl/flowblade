@@ -94,7 +94,8 @@ selection_icon = None
 title_icon = None
 
 add_compositors_is_multi_selection = False 
- 
+
+
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
     """
@@ -1682,7 +1683,6 @@ class EditorSeparator:
 
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_launcher(callback):
-    prefs = editorpersistance.prefs
     surface = guiutils.get_cairo_image("program_view_2")
     menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
     menu_launch.surface_y = 3
@@ -1691,7 +1691,6 @@ def get_monitor_view_select_launcher(callback):
     return menu_launch
 
 def get_trim_view_select_launcher(callback):
-    prefs = editorpersistance.prefs
     surface = guiutils.get_cairo_image("trim_view")
     menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
     menu_launch.surface_y = 3
@@ -1700,14 +1699,22 @@ def get_trim_view_select_launcher(callback):
     return menu_launch
 
 def get_playback_settings_launcher(callback):
-    prefs = editorpersistance.prefs
     surface = guiutils.get_cairo_image("playback_settings")
     menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
     menu_launch.surface_y = 3
 
     menu_launch.widget.set_margin_top(2)
     return menu_launch
-    
+
+def get_monitor_add_launcher(callback):
+    surface = guiutils.get_cairo_image("monitor_add")
+    menu_launch = PressLaunchPopover(callback, surface, w=24, h=16)
+    menu_launch.surface_y = 3
+
+    menu_launch.widget.set_margin_top(9)
+    menu_launch.widget.set_margin_right(8)
+    return menu_launch
+
 def get_compositor_track_select_combo(source_track, target_track, callback):
     tracks_combo = Gtk.ComboBoxText()
     active_index = -1

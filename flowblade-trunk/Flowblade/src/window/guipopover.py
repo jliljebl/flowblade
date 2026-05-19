@@ -126,7 +126,9 @@ _interpolation_section = None
 _scaling_section = None
 _interpolation_submenu = None
 _decode_section = None
+_monitor_add_popover = None
 
+ 
 # -------------------------------------------------- menuitems builder functions
 def add_menu_action(menu, label, item_id, data, callback, active=True, app=None, shortcut_id=None, shortcut_txt=None):
     if shortcut_id != None:
@@ -1229,10 +1231,8 @@ def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
     
     vbox = Gtk.VBox()
     kb_shortcut = 1
-    tool_ids = []
     for tool in toolsdata:
         label_text, icon_name, item_id, data, tooltip = tool
-        tool_ids.append(data)
         label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
         
         tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
@@ -1266,6 +1266,51 @@ def edittools_popover_custom_show(launcher, toolsdata, widget, callback):
 def _shut_down_prelight(launcher):
     launcher.shut_prelight()
  
+def monitor_add_popover_custom_show(launcher, additensdata, widget, callback):
+    global _monitor_add_popover
+     
+    vbox = Gtk.VBox()
+    add_ids = []
+    root = shortcuts.get_root()
+    for additem in additensdata:
+        label_text, icon_name, data, tooltip = additem
+        add_ids.append(data)
+        label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
+
+        add_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
+        add_img.set_size_request(30, 22)
+        add_img.set_margin_right(4)
+
+        # data for callback is chosen to match shortcut ids.
+        kb_shortcut = shortcuts.get_shortcut_kb_str(root, data)
+        kb_shortcut_label = Gtk.Label.new(str(kb_shortcut))
+        kb_shortcut_label.set_size_request(22, 22)
+        guiutils.set_margins(kb_shortcut_label, 0,0,12,2)
+         
+        hbox = Gtk.HBox()
+        hbox.pack_start(add_img, False, False, 0)
+        hbox.pack_start(label, True, True, 0)
+        hbox.pack_start(kb_shortcut_label, False, False, 0)
+        hbox.show_all()
+
+        menu_item = ToolMenuItem(data, hbox, tooltip, callback)
+
+        guiutils.set_margins(menu_item.widget, 4, 0, 4, 4)
+        vbox.pack_start(menu_item.widget, False, False, 0)
+
+    vbox.show_all()
+    guiutils.set_margins(vbox, 0,4,0,0)
+         
+    _monitor_add_popover = Gtk.Popover.new(widget)
+    _monitor_add_popover.add(vbox)
+    _monitor_add_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    _monitor_add_popover.connect("closed", lambda w: _shut_down_prelight(launcher))
+    _monitor_add_popover.show()
+
+def hide_monitor_add_popover():
+    global _monitor_add_popover
+    _monitor_add_popover.hide()
+
 class ToolMenuItem:
     
     def __init__(self, tool_id, hbox, tooltip, callback):

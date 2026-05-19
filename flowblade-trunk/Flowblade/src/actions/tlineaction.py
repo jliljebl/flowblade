@@ -1017,6 +1017,30 @@ def _opacity_menu_item_item_activated(action, new_value_variant):
     editorstate.current_sequence().set_scope_overlay_mix(mix_value_index)
     action.set_state(new_value_variant)
 
+def monitor_add_menu_launched(launcher, widget, event):
+    additensdata = []
+    add_item = ( _("Insert"), "insert_clip.png", "insert", "tooltip 1")
+    additensdata.append(add_item)
+    add_item = ( _("Selected Clip Overwrite"), "overwrite_clip.png", "3_point_overwrite", "tooltip 2")
+    additensdata.append(add_item)
+    add_item = (_("Range Overwrite"), "overwrite_range.png", "overwrite_range", "tooltip 3")
+    additensdata.append(add_item)
+    add_item = (_("Append"), "append_clip.png", "append", "tooltip 4")
+    additensdata.append(add_item)
+            
+    guipopover.monitor_add_popover_custom_show(launcher, additensdata, widget, _monitor_item_item_activated)
+
+def _monitor_item_item_activated(action, variant, action_id):
+    guipopover.hide_monitor_add_popover()
+
+    if action_id == "insert":
+        insert_button_pressed()
+    if action_id == "3_point_overwrite":
+        three_point_overwrite_pressed()
+    if action_id == "overwrite_range":
+        range_overwrite_pressed()
+    if action_id == "append":
+        append_button_pressed()
 
 # ------------------------------------------------------- dialogs    
 def no_monitor_clip_info(parent_window):

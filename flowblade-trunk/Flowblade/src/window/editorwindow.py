@@ -506,6 +506,7 @@ class EditorWindow:
         self.view_mode_select = guicomponents.get_monitor_view_select_launcher(tlineaction.view_mode_menu_lauched)
         self.view_mode_select.widget.set_margin_end(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
+        self.monitor_add_action = guicomponents.get_monitor_add_launcher(tlineaction.monitor_add_menu_launched)
         self.playback_settings = guicomponents.get_playback_settings_launcher(monitorevent.playback_settings_menu_launched)
         self.playback_settings.widget.set_margin_right(12) 
         self.playback_settings.widget.set_tooltip_markup(_("Playback Settings"))
@@ -545,6 +546,7 @@ class EditorWindow:
         tc_player_row.pack_start(self.big_TC, False, False, 0)
         tc_player_row.pack_start(player_buttons_row, True, True, 0)
         tc_player_row.pack_start(markbuttons.widget, False, False, 0)
+        tc_player_row.pack_start(self.monitor_add_action.widget, False, False, 0)
         
         # pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)

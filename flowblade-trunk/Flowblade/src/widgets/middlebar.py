@@ -194,7 +194,7 @@ def _create_buttons(editor_window):
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range"), tlineaction.range_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
-    #editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, None)
     mutabletooltips.add_widget(mutabletooltips.MIDDLEBAR_MONITOR_INSERT_BUTTONS, editor_window.monitor_insert_buttons, tooltip_runner)
     

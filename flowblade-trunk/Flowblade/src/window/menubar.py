@@ -137,7 +137,7 @@ def get_menu():
                   <attribute name="action">app.insertfrommonitor</attribute>
                 </item>
                 <item>
-                  <attribute name="label">""" + _("Three Point Overwrite") + """</attribute>
+                  <attribute name="label">""" + _("Selected Clip Overwrite") + """</attribute>
                   <attribute name="action">app.threepointoverwrite</attribute>
                 </item>
                 <item>
