@@ -375,6 +375,7 @@ def load_icons_and_set_colors():
         
     MARKER_ICON = _load_pixbuf("marker_yellow.png")
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
+    #TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head_red.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, FRAME_SCALE_TEXT, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
