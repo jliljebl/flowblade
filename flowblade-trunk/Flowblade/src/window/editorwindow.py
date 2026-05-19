@@ -573,8 +573,7 @@ class EditorWindow:
             monitor_vbox.pack_start(monitor_info_box, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
-        self.monitor_frame = Gtk.Frame()
-        self.monitor_frame.add(monitor_align)
+        self.monitor_frame = monitor_align
         self.monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
 
     def _init_tline(self):
@@ -1028,12 +1027,9 @@ class EditorWindow:
         
         tline_info_box = Gtk.HBox(True, 0)
         tline_info_box.pack_start(guiutils.get_left_justified_box([self.monitor_tc_info.monitor_source]), True, True, 0)
-        #tline_info_box.pack_start(Gtk.Label(), True, True, 0)
         tline_info_box.pack_start(self.monitor_tc_info.scaling, False, False, 0)
-        #tline_info_box.pack_start(Gtk.Label(), True, True, 0)
-        #tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         tline_info_box.pack_start(guiutils.get_right_justified_box([ self.monitor_tc_info.marks_tc_display.widget, break_label, self.monitor_tc_info.monitor_tc]), True, True, 0)
-        guiutils.set_margins(tline_info_box, 0, 0, 12, 10)
+        guiutils.set_margins(tline_info_box, 0, 2, 12, 10)
     
         return tline_info_box
         

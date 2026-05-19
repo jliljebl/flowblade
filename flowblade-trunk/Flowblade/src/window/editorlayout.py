@@ -44,16 +44,16 @@ import userfolders
 import utils
 
 # Transforms when adding panels.
-# 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
-# 1 -> 2    The pre-created Gtk.Frame is removed from layout box and panel is removed from it
+# 0 -> 1    The pre-created Gtk.VBox is filled with added panel.
+# 1 -> 2    The pre-created Gtk.VBox is removed from layout box and panel is removed from it
 #           New notebook is created and both panels are added into it.
 # 2 -> N    Panel is added into existing notebook.
 
 # Transforms when removing panels.
 # N -> 2    Panel is removed from notebook.
-# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from notebook
+# 2 -> 1    Notebook is removed from pre-created Gtk.VBox, panel is removed from notebook
 #           and added to pre-created Gtk.Frame.
-# 1 -> 0    Panel is removed from the pre-created Gtk.Frame.
+# 1 -> 0    Panel is removed from the pre-created Gtk.VBox.
 
 # Pre-created Gtk.Frames exist all through app life-cycle, notebooks are dynamically created
 # as needed.
