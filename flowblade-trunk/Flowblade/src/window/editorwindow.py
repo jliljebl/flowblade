@@ -159,18 +159,24 @@ class EditorWindow:
         else:
             self.window.set_position(Gtk.WindowPosition.CENTER)
 
-        #self.header_bar = Gtk.HeaderBar.new()
-        #self.header_bar.set_show_close_button(True)
-        #self.header_bar.pack_start(self.menu_vbox)
-        #self.window.set_titlebar(self.header_bar)
-
+        if editorpersistance.prefs.use_headerbar == True:
+            self.header_bar = Gtk.HeaderBar.new()
+            self.header_bar.set_show_close_button(True)
+            self.header_bar.pack_start(self.menubar_box)
+            self.layout_controls_box.set_margin_top(8)
+            self.header_bar.pack_end(self.layout_controls_box)
+            self.window.set_titlebar(self.header_bar)
+            #self.menubar_box = menubar_box
+            #self.project_info_box = project_info_box
+            #self.layout_controls_box = layout_controls_box
+            
         # Show window and all of its components
         self.window.show_all()
 
         # Show Monitor Window in two window mode
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
-            pane2.pack_start(self.top_row_window_2, False, False, 0)
+            #pane2.pack_start(self.top_row_window_2, False, False, 0)
             pane2.pack_start(self.monitor_frame, True, True, 0)
 
             # Set pane and show window
@@ -234,31 +240,35 @@ class EditorWindow:
         layout_controls_box = guiutils.get_right_justified_box(layout_widgets)
         layout_controls_box.set_margin_right(6)
 
-        if editorstate.SCREEN_WIDTH > 1550:
-            menu_vbox = Gtk.HBox(True, 0)
-        else:
-            menu_vbox = Gtk.HBox(False, 0) # small screens can't fit 3 equal sized panels here
+        if editorpersistance.prefs.use_headerbar == False:
 
-        menu_vbox.pack_start(menubar_box, True, True, 0)
-
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            if editorstate.screen_size_small_width() == False:
-                menu_vbox.pack_start(project_info_box, True, True, 0)
+            if editorstate.SCREEN_WIDTH > 1550:
+                menu_vbox = Gtk.HBox(True, 0)
             else:
-                menu_vbox.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-                menu_vbox.pack_start(project_info_box, False, False, 0)
-                menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
-            menu_vbox.pack_start(layout_controls_box, True, True, 0)
+                menu_vbox = Gtk.HBox(False, 0) # small screens can't fit 3 equal sized panels here
+
+            menu_vbox.pack_start(menubar_box, True, True, 0)
+            
+            if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+                if editorstate.screen_size_small_width() == False:
+                    menu_vbox.pack_start(project_info_box, True, True, 0)
+                else:
+                    menu_vbox.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+                    menu_vbox.pack_start(project_info_box, False, False, 0)
+                    menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
+                menu_vbox.pack_start(layout_controls_box, True, True, 0)
+            else:
+                menu_vbox.pack_start(project_info_box, True, True, 0)
+                menu_vbox.pack_start(layout_controls_box, True, True, 0)
         else:
-            menu_vbox.pack_start(project_info_box, True, True, 0)
-            menu_vbox.pack_start(layout_controls_box, True, True, 0)
-            tline_info_box = self._get_monitor_info_box()
-            self.top_row_window_2 = tline_info_box #Gtk.HBox(False, 0)
-        
-        #self.menu_vbox = menu_vbox
+            self.menubar_box = menubar_box
+            self.project_info_box = project_info_box
+            self.layout_controls_box = layout_controls_box
+
         # Pane
         pane = Gtk.VBox(False, 1)
-        pane.pack_start(menu_vbox, False, True, 0)
+        if editorpersistance.prefs.use_headerbar == False:
+            pane.pack_start(menu_vbox, False, True, 0)
         pane.pack_start(self.app_h_box, True, True, 0)
         return pane
 
@@ -566,17 +576,14 @@ class EditorWindow:
         dnd.connect_video_monitor(self.tline_display)
 
         # Top info row
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            monitor_info_box = self._get_monitor_info_box()
+        monitor_info_box = self._get_monitor_info_box()
 
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
-
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(tc_player_row, False, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            monitor_vbox.pack_start(monitor_info_box, False, True, 0)
+        monitor_vbox.pack_start(monitor_info_box, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
         self.monitor_frame = monitor_align
