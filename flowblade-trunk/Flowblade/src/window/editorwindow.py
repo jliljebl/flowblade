@@ -161,14 +161,14 @@ class EditorWindow:
 
         if editorpersistance.prefs.use_headerbar == True:
             self.header_bar = Gtk.HeaderBar.new()
+            self.header_bar.set_has_subtitle (True)
+            self.header_bar.set_subtitle ("HD 1080p 30fps")
             self.header_bar.set_show_close_button(True)
             self.header_bar.pack_start(self.menubar_box)
             self.layout_controls_box.set_margin_top(8)
             self.header_bar.pack_end(self.layout_controls_box)
             self.window.set_titlebar(self.header_bar)
-            #self.menubar_box = menubar_box
-            #self.project_info_box = project_info_box
-            #self.layout_controls_box = layout_controls_box
+            self.menubar_box.set_name("menubox")
             
         # Show window and all of its components
         self.window.show_all()
@@ -220,7 +220,10 @@ class EditorWindow:
         
         # Menu box
         self.menubar.set_margin_bottom(4)
-        self.menubar.set_name("lighter-bg-widget")
+        if editorpersistance.prefs.use_headerbar == False:
+            self.menubar.set_name("lighter-bg-widget")
+        else:
+            self.menubar.set_margin_top(1)
 
         menubar_box = Gtk.HBox(False, 0)
         if editorstate.screen_size_small_width() == False:
