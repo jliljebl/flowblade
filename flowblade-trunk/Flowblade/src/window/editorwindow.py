@@ -159,6 +159,11 @@ class EditorWindow:
         else:
             self.window.set_position(Gtk.WindowPosition.CENTER)
 
+        #self.header_bar = Gtk.HeaderBar.new()
+        #self.header_bar.set_show_close_button(True)
+        #self.header_bar.pack_start(self.menu_vbox)
+        #self.window.set_titlebar(self.header_bar)
+
         # Show window and all of its components
         self.window.show_all()
 
@@ -249,7 +254,8 @@ class EditorWindow:
             menu_vbox.pack_start(layout_controls_box, True, True, 0)
             tline_info_box = self._get_monitor_info_box()
             self.top_row_window_2 = tline_info_box #Gtk.HBox(False, 0)
-            
+        
+        #self.menu_vbox = menu_vbox
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
