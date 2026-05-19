@@ -24,8 +24,10 @@ from gi.repository import GObject
 from gi.repository import Pango
 
 import dialogutils
+import editorpersistance
 import editorstate
 from editorstate import PROJECT
+import gui
 import guicomponents
 import guiutils
 import utils
@@ -89,9 +91,13 @@ def get_top_level_project_info_panel():
     return project_info_vbox
     
 def update_project_info():
-    profile = PROJECT().profile
-    widgets.monitor_desc_label.set_text(profile.description())
-    profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
+    widgets.monitor_desc_label.set_text(PROJECT().profile.description())
+    if editorpersistance.prefs.use_headerbar == True:
+        gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+    else:
+        widgets.monitor_desc_label.set_text(PROJECT().profile.description())
+        
+    profile_info_text = guicomponents.get_profile_reduced_info_text(PROJECT().profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
 
 

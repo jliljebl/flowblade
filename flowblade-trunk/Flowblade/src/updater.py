@@ -501,23 +501,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 def display_monitor_clip_name():#we're displaying length and range length also
     gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name)
     gui.editor_window.monitor_tc_info.set_source_length(gui.pos_bar.producer.get_length())
-
-    if MONITOR_MEDIA_FILE().type == appconsts.VIDEO:
-        try:
-            best_media_profile_index = mltprofiles.get_closest_matching_profile_index(MONITOR_MEDIA_FILE().info)
-            profile = mltprofiles.get_profile_for_index(best_media_profile_index)
-            gui.editor_window.monitor_desc_label.set_text(profile.description())
-        except:
-            # We're being a bit paranoid here, this is going in late in the cycle.
-            print("except at display_monitor_clip_name:")
-            profile = PROJECT().profile
-            gui.editor_window.monitor_desc_label.set_text(profile.description())
-    elif MONITOR_MEDIA_FILE().type == appconsts.AUDIO or MONITOR_MEDIA_FILE().type == appconsts.IMAGE:
-        (f_name, ext) = os.path.splitext(MONITOR_MEDIA_FILE().name)
-        gui.editor_window.monitor_desc_label.set_text(ext[1:])
-    elif MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
-        (f_oath, ext) = MONITOR_MEDIA_FILE().path.split(".")
-        gui.editor_window.monitor_desc_label.set_text(ext + "(image sequence)")
+    
+    if editorpersistance.prefs.use_headerbar == True:
+        gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+    else:
+        gui.editor_window.monitor_desc_label.set_text(PROJECT().profile.description())
 
     gui.editor_window.monitor_tc_info.set_range_info(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
@@ -561,8 +549,10 @@ def update_sequence_info_text():
     gui.editor_window.monitor_tc_info.set_source_name(name)
     gui.editor_window.monitor_tc_info.set_source_length(prog_len)
 
-    profile = PROJECT().profile
-    gui.editor_window.monitor_desc_label.set_text(profile.description())
+    if editorpersistance.prefs.use_headerbar == True:
+        gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+    else:
+        gui.editor_window.monitor_desc_label.set_text(PROJECT().profile.description())
 
     gui.editor_window.monitor_tc_info.set_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
 
