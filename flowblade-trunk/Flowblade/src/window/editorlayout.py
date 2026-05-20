@@ -298,6 +298,8 @@ def _init_user_layouts_list():
 def show_panel(panel_id):
     # Iterate positions to find where panel is and bring it to front.
     for position in _positions_names:
+        if position == appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
+            continue 
         pos_panel_ids = _get_position_panels(position)
         if len(pos_panel_ids) == 0:
             continue
