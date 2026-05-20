@@ -161,7 +161,7 @@ def get_tline_tool_dock():
 
     dock.pack_start(Gtk.Label(), True, True, 0)
 
-    align = guiutils.set_margins(dock, 10, 0, 0, 0)
+    align = guiutils.set_margins(dock, 2, 0, 0, 0)
 
     frame = Gtk.Frame()
     frame.add(align)
