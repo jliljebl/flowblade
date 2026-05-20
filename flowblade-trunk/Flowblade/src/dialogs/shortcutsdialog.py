@@ -25,6 +25,7 @@ import editorpersistance
 import editorstate
 import dialogutils
 import gtkevents
+import gui
 import guicomponents
 import guiutils
 import mutabletooltips
@@ -395,7 +396,9 @@ class KBShortcutEditor:
             
         item_vbox = Gtk.HBox(False, 2)
         input_label = Gtk.Label(label=_("Input Shortcut"))
-        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+        theme = editorpersistance.prefs.theme
+        system_accent_color = editorpersistance.prefs.system_accent_color
+        SELECTED_BG = Gdk.RGBA(*gui.get_accent_color(theme, system_accent_color), 1.0)
         input_label.override_color(Gtk.StateType.NORMAL, SELECTED_BG)
         item_vbox.pack_start(input_label, True, True, 0)
            

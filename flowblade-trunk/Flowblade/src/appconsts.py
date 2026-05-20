@@ -250,14 +250,15 @@ MONITOR_TLINE_BUTTON_PRESSED = 1
 MONITOR_CLIP_BUTTON_PRESSED = 2
 
 # Application themes and colors preference.
-# NOTE: Deactivated 2.10 and higher because Gnome global theme light/dark preferences
-# caused Flatpak to present invisible window for certain combinations of glovbal prefenrence and 
-# Flowblade preference. See after Gtk 4 port if fixable.
+# NOTE: Originally Deactivated 2.10 and higher because Gnome global theme light/dark preferences
+# caused Flatpak issues.
+# Possibility to use system theme with selected accent color brought back for 2.26
 FLOWBLADE_THEME = 0 # Deprecated
-DARK_THEME = 1
-LIGHT_THEME = 2
+DARK_THEME = 1 # Deprecated
+LIGHT_THEME = 2 # Deprecated
 FLOWBLADE_THEME_GRAY = 3  # Deprecated
-FLOWBLADE_THEME_NEUTRAL = 4 # Forced for 2.10
+FLOWBLADE_THEME_NEUTRAL = 4 
+SYSTEM_THEME = 5
 
 # DND actions.
 DND_ALWAYS_OVERWRITE = 0

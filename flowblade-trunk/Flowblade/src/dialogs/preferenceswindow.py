@@ -21,7 +21,7 @@
 import multiprocessing
 import os
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import appconsts
 import databridge
@@ -400,7 +400,17 @@ def _view_prefs_panel():
 
     use_headerbar = Gtk.CheckButton()
     use_headerbar.set_active(prefs.use_headerbar)
+
+    active = 0
+    if prefs.theme == appconsts.SYSTEM_THEME:
+        active = 1
+    theme_select = Gtk.ComboBoxText()
+    theme_select.append_text(_("Flowblade Theme"))
+    theme_select.append_text(_("System Theme"))
+    theme_select.set_active(active)
     
+    system_accent_color = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*prefs.system_accent_color, 1.0))
+
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row6 = _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
@@ -414,6 +424,8 @@ def _view_prefs_panel():
     row15 = _row(guiutils.get_checkbox_row_box(show_bin_and_seq_titles, Gtk.Label(label=_("Show Bins And Sequences Area Titles"))))
     row16 = _row(guiutils.get_checkbox_row_box(wide_audio_master, Gtk.Label(label=_("Wide Audio Master Meter"))))
     row17 = _row(guiutils.get_checkbox_row_box(use_headerbar, Gtk.Label(label=_("Use HeaderBar"))))
+    row18 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application Theme:")), theme_select, PREFERENCES_LEFT))
+    row19 = _row(guiutils.get_checkbox_row_box(system_accent_color, Gtk.Label(label=_("System Theme Accent Color"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -428,6 +440,8 @@ def _view_prefs_panel():
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
     vbox.pack_start(row17, False, False, 0)
+    vbox.pack_start(row18, False, False, 0)
+    vbox.pack_start(row19, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
@@ -435,7 +449,7 @@ def _view_prefs_panel():
     return vbox, (force_language_combo, window_mode_combo, show_full_file_names,
                   tracks_combo, project_panel_width_spin, edit_panel_width_spin, media_panel_width_spin,
                   layout_monitor, filter_select_width_spin, show_bin_and_seq_titles, wide_audio_master,
-                  use_headerbar)
+                  use_headerbar, theme_select, system_accent_color)
 
 def _performance_panel():
     prefs = editorpersistance.prefs

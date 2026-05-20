@@ -81,9 +81,10 @@ def load():
     prefs.buttons_style = NO_DECORATIONS 
     prefs.buttons_style = NO_DECORATIONS 
     prefs.show_tool_tooltips = True
-    prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+    #prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
     prefs.icons_scale = appconsts.ICONS_SCALE_DEFAULT
-
+    #prefs.system_accent_color = (0.063, 0.341, 0.659)
+        
     try:
         recent_projects = utils.unpickle(recents_file_path)
     except:
@@ -195,7 +196,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     
     force_language_combo, window_mode_combo, full_names, tracks_combo, project_panel_width_spin, \
     edit_panel_width_spin, media_panel_width_spin, layout_monitor, filter_select_width_spin, \
-    show_bins_and_seqs_titles, wide_audio_master, use_headerbar = view_prefs_widgets
+    show_bins_and_seqs_titles, wide_audio_master, use_headerbar, theme_select, system_accent_color = view_prefs_widgets
 
     perf_render_threads, render_interpolation_combo = performance_widgets
 
@@ -232,6 +233,15 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.show_bins_and_sequences_titles = show_bins_and_seqs_titles.get_active()
     prefs.wide_audio_master = wide_audio_master.get_active()
     prefs.use_headerbar = use_headerbar.get_active()
+
+    if theme_select.get_active() == 0:
+        prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+    else:
+        prefs.theme = appconsts.SYSTEM_THEME
+
+    color = system_accent_color.get_color()
+    prefs.system_accent_color = utils.gdk_color_to_cairo_tuple(color)
+            
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.tracks_scale = tracks_combo.get_active()
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
@@ -405,3 +415,4 @@ class EditorPreferences:
         self.render_interpolation = "bilinear"
         self.use_gpu_decode = True
         self.use_headerbar = True
+        self.system_accent_color = (0.063, 0.341, 0.659)

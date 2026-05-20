@@ -194,6 +194,11 @@ class ToolDockItem:
         tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
         guiutils.set_margins(tool_img, 5, 5, 9, 7)
 
+        global SELECTED_BG
+        theme = editorpersistance.prefs.theme
+        system_accent_color = editorpersistance.prefs.system_accent_color
+        SELECTED_BG = Gdk.RGBA(*gui.get_accent_color(theme, system_accent_color), 1.0)
+
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
 

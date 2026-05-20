@@ -26,7 +26,9 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 
 import os
 
+import appconsts
 import databridge
+import editorpersistance
 import respaths
 
 
@@ -81,7 +83,7 @@ tline_cursor_manager = None
 # Theme colors
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.065, 0.342, 0.66), (0.065, 0.342, 0.66), "Flowblade Theme")
-
+_FLOWBLADE_ACCENT_COLOR = (0.063, 0.341, 0.659)
 MID_NEUTRAL_THEME_NEUTRAL= ((54.0/255.0), (54.0/255.0), (54.0/255.0), 1.0)
 
 _selected_bg_color = None
@@ -252,6 +254,8 @@ def timeline_has_focus():
 
     return False
 
-def get_accent_color():
-    return (0.063, 0.341, 0.659) #(0.72, 0.298, 0.72) # ) - Yaru magenta
- 
+def get_accent_color(theme, system_accent_color):
+    if theme != appconsts.SYSTEM_THEME:
+        return _FLOWBLADE_ACCENT_COLOR
+    else:
+        return editorpersistance.prefs.system_accent_color

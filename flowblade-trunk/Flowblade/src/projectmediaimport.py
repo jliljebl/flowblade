@@ -220,8 +220,8 @@ class ProjectImportApp(Gtk.Application):
         self.connect("activate", self.on_activate)
 
     def on_activate(self, data=None):
-        # Themes
-        gui.apply_theme()
+        if editorpersistance.prefs.theme != appconsts.SYSTEM_THEME:
+            gui.apply_theme()
 
         # Init mlt.
         repo = mltinit.init_with_translations()

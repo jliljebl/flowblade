@@ -56,7 +56,7 @@ def main(root_path):
     respaths.set_paths(root_path)
     userfolders.init()
     editorpersistance.load()
-    editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+    #editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
     
     app = LoadDialogApplication()
     global _app
@@ -73,7 +73,8 @@ class LoadDialogApplication(Gtk.Application):
     def on_activate(self, data=None):
         translations.init_languages()
     
-        gui.apply_theme()
+        if editorpersistance.prefs.theme != appconsts.SYSTEM_THEME:
+            gui.apply_theme()
 
         global _window
         _window = LoadProgressWindow()

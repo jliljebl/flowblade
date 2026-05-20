@@ -413,7 +413,10 @@ def load_icons_and_set_colors():
     TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
 
     COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
-    COLUMN_ACTIVE_COLOR = gui.get_accent_color()
+    
+    theme = editorpersistance.prefs.theme
+    system_accent_color = editorpersistance.prefs.system_accent_color
+    COLUMN_ACTIVE_COLOR = gui.get_accent_color(theme, system_accent_color)
 
 def update_clip_thumbnail(media_file):
     global clip_thumbnails
