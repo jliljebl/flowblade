@@ -129,7 +129,6 @@ def  _attempt_dnd_overwrite(track, clip, frame):
     # Dropping on first available frame after last clip is append 
     # and is handled by insert code
     if track.get_length() == frame:
-        print("insert")
         return False
 
     # Clip dropped after last clip on track
@@ -556,9 +555,10 @@ def tline_dnd_motion(x, y, drag_source):
             tlinewidgets.set_edit_mode(data, tlinewidgets.draw_effect_drag_overlay)
         else:
             tlinewidgets.set_edit_mode(None, None)
+    elif drag_source == dnd.SOURCE_MEDIA_FILE or dnd.SOURCE_MONITOR_WIDGET:
+        _handle_tline_media_dnd_motion(x, y, drag_source)
     else:
         tlinewidgets.set_edit_mode(None, None)
-        #print("no", x, y)
 
     updater.repaint_tline()
 
@@ -746,6 +746,66 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
     gui.media_list_view.clear_selection()
                 
     maybe_autorender_plugin(new_clip)
+
+def  _handle_tline_media_dnd_motion(x, y, drag_source):
+    # drag_data not used unless we which later to enable dropping multiple media items.
+    track = tlinewidgets.get_track(y)
+    if track == None:
+        tlinewidgets.set_edit_mode(None, None)
+        return
+    if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
+        tlinewidgets.set_edit_mode(None, None)
+        return 
+
+    frame = tlinewidgets.get_frame(x)
+
+    if drag_source == dnd.SOURCE_MONITOR_WIDGET:
+        media_file = dnd.drag_data
+    else:
+        media_file = gui.media_list_view.last_pressed.media_file
+    
+    if ((media_file.type == appconsts.AUDIO)
+       and (track.type == appconsts.VIDEO)):
+            tlinewidgets.set_edit_mode(None, None)
+            return
+    
+    # Non-insert DND actions
+    action_frame = None
+    action_type = None
+    if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
+        if track.id != current_sequence().first_video_track().id:
+            action_frame = _get_dnd_overwrite_motion_info(track, frame)
+            action_type = "overwrite"
+    elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
+            action_frame = _get_dnd_overwrite_motion_info(track, frame)
+            action_type = "overwrite"
+            
+    if action_frame == None:
+        action_frame = _get_dnd_insert_motion_info(track, frame)
+        action_type = "insert"
+
+    if action_frame != None:
+        data = {}
+        data["track"] = track.id
+        data["action_frame"] = action_frame
+        data["action_type"] = action_type
+        tlinewidgets.set_edit_mode(data, tlinewidgets.draw_media_drag_overlay)
+    else:
+        tlinewidgets.set_edit_mode(None, None)
+
+    print(action_frame)
+
+def _get_dnd_overwrite_motion_info(track, frame):
+    # Dropping on first available frame after last clip is append 
+    # and is handled by insert code
+    if track.get_length() == frame:
+        return None
+
+    return frame
+
+def _get_dnd_insert_motion_info(track, frame):
+    index = _get_insert_index(track, frame)
+    return track.clip_start(index)
 
 def tline_range_item_drop(rows, x, y):
     track = tlinewidgets.get_track(y)
