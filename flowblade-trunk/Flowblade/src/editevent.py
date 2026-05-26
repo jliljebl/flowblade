@@ -793,13 +793,27 @@ def  _handle_tline_media_dnd_motion(x, y, drag_source):
     else:
         tlinewidgets.set_edit_mode(None, None)
 
-    print(action_frame)
+    #print(action_frame)
 
 def _get_dnd_overwrite_motion_info(track, frame):
     # Dropping on first available frame after last clip is append 
     # and is handled by insert code
+    #print("track", track.id)
+            
     if track.get_length() == frame:
         return None
+
+    if frame < track.get_length():
+        index = track.get_clip_index_at(frame)
+        #print(track.id, index)
+        try:
+            clip = track.clips[index]
+            if clip.is_blanck_clip == False:
+                return None
+            else:
+                return frame
+        except:
+            return frame
 
     return frame
 

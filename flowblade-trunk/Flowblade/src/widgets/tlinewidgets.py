@@ -1329,10 +1329,26 @@ def draw_media_drag_overlay(cr, data):
     frame_x = _get_frame_x(data["action_frame"])
 
     cr.set_line_width(2.0)
-    cr.set_source_rgb(*INSERT_MODE_COLOR)
-    cr.move_to(frame_x, track_y - 6.5)
-    cr.line_to(frame_x, track_y + track_height + 6.5)
-    cr.stroke()
+    cr.move_to(frame_x, track_y - 1.5)
+    cr.line_to(frame_x, track_y + track_height + 1.5)
+    if data["action_type"] == "insert":
+        cr.set_source_rgb(*INSERT_MODE_COLOR)
+        cr.stroke()
+        cr.move_to(frame_x, track_y + track_height / 2.0 - 7.5)
+        cr.line_to(frame_x + 7.5, track_y + track_height / 2.0)
+        cr.line_to(frame_x, track_y + track_height / 2.0 + 7.5)
+        cr.close_path()
+        cr.fill()
+    else:
+        cr.set_source_rgb(*OVERLAY_TRIM_OVERWRITE_COLOR)
+        cr.stroke()
+        cr.move_to(frame_x - 7.5, track_y - 1.5)
+        cr.line_to(frame_x + 7.5, track_y - 1.5)
+        cr.line_to(frame_x, track_y + 5.5)
+        cr.close_path()
+        cr.fill()
+        
+
 
 def draw_effect_drag_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
