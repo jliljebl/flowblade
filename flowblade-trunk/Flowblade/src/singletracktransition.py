@@ -199,7 +199,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_part = real_length // 2
     from_part = real_length - to_part
 
-    # HACKFIX, I just tested this till it worked, not entirely sure on math here
+    # Fix to get even and odd length transitions working right.
     if to_part == from_part:
         add_thingy = 0
     else:

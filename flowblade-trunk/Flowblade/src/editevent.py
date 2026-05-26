@@ -612,6 +612,23 @@ def _get_transition_clips_data(x, y):
                 clip = track.clips[clip_index - 1]
 
         if second_clip != None and clip != None and clip.is_blanck_clip == False and second_clip.is_blanck_clip == False:
+            length = editorstate.transition_length
+            if length < 0:
+                length = 30 # TODO: add user pref for this?
+                
+            real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
+            to_part = real_length // 2
+            from_part = real_length - to_part
+
+            # Fix to get even and odd length transitions working right.
+            if to_part == from_part:
+                add_thingy = 0
+            else:
+                add_thingy = 1
+            
+            data["from_frame"] = data["transition_frame"]  - from_part + add_thingy
+            data["to_frame"] = data["transition_frame"]  + to_part
+
             return (data, clip, second_clip)
         else:
             return (None, None, None)
