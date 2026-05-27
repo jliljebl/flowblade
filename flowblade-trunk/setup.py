@@ -57,7 +57,12 @@ setup(  name='flowblade',
         url='https://github.com/jliljebl/flowblade',
         license='GNU GPL3',
         scripts=['flowblade'],
-        packages=['Flowblade/src','Flowblade/src/tools','Flowblade/src/vieweditor'],
+        packages=[  'Flowblade/src','Flowblade/src/tools','Flowblade/src/vieweditor',
+                    'Flowblade/src/actions', 'Flowblade/src/audio', 'Flowblade/src/container',
+                    'Flowblade/src/dialogs', 'Flowblade/src/edit', 'Flowblade/src/edittools',
+                    'Flowblade/src/guiutils', 'Flowblade/src/launch', 'Flowblade/src/mlt',
+                    'Flowblade/src/process', 'Flowblade/src/propertyedit', 'Flowblade/src/render',
+                    'Flowblade/src/usb', 'Flowblade/src/widgets', 'Flowblade/src/window'],
         package_data={'Flowblade':flowblade_package_data + locale_files},
         data_files=install_data)
 
