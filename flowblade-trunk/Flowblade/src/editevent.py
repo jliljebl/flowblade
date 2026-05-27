@@ -786,9 +786,9 @@ def  _handle_tline_media_dnd_motion(x, y, drag_source):
             tlinewidgets.set_edit_mode(None, None)
             return
     
-    # Non-insert DND actions
     action_frame = None
     action_type = None
+    clip_replace_data = None
     if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
         if track.id != current_sequence().first_video_track().id:
             action_frame = _get_dnd_overwrite_motion_info(track, frame)
@@ -800,29 +800,30 @@ def  _handle_tline_media_dnd_motion(x, y, drag_source):
     if action_frame == None:
         action_frame = _get_dnd_insert_motion_info(track, frame)
         action_type = "insert"
+        if action_frame != None:
+            clip_replace_data = _attempt_clip_center_drop_replace(track, frame, x)
+            if clip_replace_data != None:
+                action_type = "replace"
 
     if action_frame != None:
         data = {}
         data["track"] = track.id
         data["action_frame"] = action_frame
         data["action_type"] = action_type
+        data["clip_replace_data"] = clip_replace_data
         tlinewidgets.set_edit_mode(data, tlinewidgets.draw_media_drag_overlay)
     else:
         tlinewidgets.set_edit_mode(None, None)
 
-    #print(action_frame)
-
 def _get_dnd_overwrite_motion_info(track, frame):
     # Dropping on first available frame after last clip is append 
     # and is handled by insert code
-    #print("track", track.id)
             
     if track.get_length() == frame:
         return None
 
     if frame < track.get_length():
         index = track.get_clip_index_at(frame)
-        #print(track.id, index)
         try:
             clip = track.clips[index]
             if clip.is_blanck_clip == False:
@@ -838,6 +839,28 @@ def _get_dnd_insert_motion_info(track, frame):
     index = _get_insert_index(track, frame)
     return track.clip_start(index)
 
+def _attempt_clip_center_drop_replace(track, frame, x):
+    try:
+        index = _get_insert_index(track, frame)
+        clip = track.clips[index]
+    except:
+        return None
+
+    start_frame = track.clip_start(index)
+    end_frame = start_frame + clip.clip_out - clip.clip_in
+    
+    clip_start_x = tlinewidgets._get_frame_x(start_frame)
+    clip_end_x = tlinewidgets._get_frame_x(end_frame)
+    
+    MIN_WIDTH_FOR_CENTER_DROP = 30
+    DROP_AREA_WIDTH_HALF = 12
+    if clip_end_x - clip_start_x > MIN_WIDTH_FOR_CENTER_DROP:
+        center_x = clip_start_x + (clip_end_x - clip_start_x) / 2.0
+        if abs(x - center_x) < DROP_AREA_WIDTH_HALF:
+            return (track, index, clip_start_x, clip_end_x)
+
+    return None
+ 
 def tline_range_item_drop(rows, x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
