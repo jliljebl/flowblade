@@ -2065,3 +2065,9 @@ def get_duplicate_sequence_dialog():
     dialog.pulse_runner = pulse_runner
         
     return dialog
+
+def replace_clip_not_enough_material_info():
+    primary_txt = _("Cannot replace the clip!")
+    secondary_txt = _("The clip being replaced is longer then the clip being added.")
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+    

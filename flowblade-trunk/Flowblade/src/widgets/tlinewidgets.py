@@ -1339,7 +1339,6 @@ def draw_media_drag_overlay(cr, data):
 
     cr.set_line_width(1.0)
 
-    print(data["action_type"])
     if data["action_type"] == "insert":
         cr.set_source_rgb(*INSERT_MODE_COLOR)
         cr.move_to(frame_x, track_y - 1.5)

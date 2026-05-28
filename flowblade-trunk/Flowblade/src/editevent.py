@@ -120,6 +120,54 @@ def do_multiple_clip_insert(track, clips, tline_pos, use_as_action_build_func_fo
 
     updater.display_tline_cut_frame(track, index)
 
+
+def do_clip_replace(track, media_file, new_clip, frame):
+    # Can't put audio media on video track 
+    if ((new_clip.media_type == appconsts.AUDIO)
+       and (track.type == appconsts.VIDEO)):        
+        _display_no_audio_on_video_msg(track)
+        return
+
+    movemodes.clear_selected_clips()
+
+    index = _get_insert_index(track, frame)
+    old_clip = track.clips[index]
+
+    clip_in = -1
+    if media_file.mark_in != -1:
+        # if mark in to length long enough replace from matk in
+        if  new_clip.get_length() - media_file.mark_in >= old_clip.clip_length():
+            clip_in = media_file.mark_in
+            clip_out = media_file.mark_in + old_clip.clip_length() - 1 # -1 out imclusive
+        # if mark in set but not long enough, try 3-point mark out range
+        elif media_file.mark_out != -1:
+            if media_file.mark_out + 1 >= old_clip.get_length():
+                clip_in = media_file.mark_out - old_clip.clip_length()
+                clip_out = media_file.mark_out 
+    elif media_file.mark_out != -1:
+        # ifno  mark in, try 3-point mark out range
+        if media_file.mark_out + 1 >= old_clip.get_length():
+            clip_in = media_file.mark_out - old_clip.clip_length()
+            clip_out = media_file.mark_out 
+    elif new_clip.get_length() >= old_clip.clip_length():
+        # if no marks try replace from frame 0
+        clip_in = 0
+        clip_out = old_clip.clip_length() - 1 # -1 out imclusive
+
+    if clip_in == -1:
+        dialogs.replace_clip_not_enough_material_info()
+        # No replace range available clip too short, Some user info with action prompt here.
+        return
+
+    data = {"track":track,
+            "clip":new_clip,
+            "clip_in":clip_in,
+            "clip_out":clip_out,
+            "in_index":index,
+            "out_index":index}
+    action = edit.three_point_overwrite_action(data)
+    action.do_edit()
+
 def  _attempt_dnd_overwrite(track, clip, frame):
     # Can't put audio media on video track 
     if ((clip.media_type == appconsts.AUDIO)
@@ -758,8 +806,13 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             maybe_autorender_plugin(new_clip)
             gui.media_list_view.clear_selection()
             return
-            
-    do_clip_insert(track, new_clip, frame, use_clip_in)
+
+    clip_replace_data = _attempt_clip_center_drop_replace(track, frame, x)
+    if clip_replace_data == None:
+        do_clip_insert(track, new_clip, frame, use_clip_in)
+    else:
+        do_clip_replace(track, media_file, new_clip, frame)
+
     gui.media_list_view.clear_selection()
                 
     maybe_autorender_plugin(new_clip)
@@ -841,7 +894,7 @@ def _get_dnd_insert_motion_info(track, frame):
 
 def _attempt_clip_center_drop_replace(track, frame, x):
     try:
-        index = _get_insert_index(track, frame)
+        index = track.get_clip_index_at(frame)
         clip = track.clips[index]
     except:
         return None
@@ -851,12 +904,16 @@ def _attempt_clip_center_drop_replace(track, frame, x):
     
     clip_start_x = tlinewidgets._get_frame_x(start_frame)
     clip_end_x = tlinewidgets._get_frame_x(end_frame)
-    
+    clip_size_x = clip_end_x - clip_start_x
+     
     MIN_WIDTH_FOR_CENTER_DROP = 30
     DROP_AREA_WIDTH_HALF = 12
-    if clip_end_x - clip_start_x > MIN_WIDTH_FOR_CENTER_DROP:
-        center_x = clip_start_x + (clip_end_x - clip_start_x) / 2.0
-        if abs(x - center_x) < DROP_AREA_WIDTH_HALF:
+    if clip_size_x > MIN_WIDTH_FOR_CENTER_DROP:
+        center_x = clip_start_x + clip_size_x / 2.0
+        if clip_size_x / 8.0 > DROP_AREA_WIDTH_HALF:
+            DROP_AREA_WIDTH_HALF = clip_size_x / 8.0 
+        
+        if abs(center_x - x) < DROP_AREA_WIDTH_HALF:
             return (track, index, clip_start_x, clip_end_x)
 
     return None
