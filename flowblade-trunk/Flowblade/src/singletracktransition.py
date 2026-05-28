@@ -84,18 +84,35 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     else:
         _no_audio_tracks_mixing_info()
 
-def get_transition_drag_data(track, from_index):
+def get_transition_drag_data(track, index):
+    transition_data = {}
     try:
-        from_clip = track.clips[from_index]
-        to_clip = track.clips[from_index + 1]
+        current_transition_clip = track.clips[index]
+        from_clip = track.clips[index - 1]
+        to_clip = track.clips[index + 1]
+        transition_data["from_clip"] = from_clip
+        transition_data["to_clip"] = to_clip
     except:
-        return None
+         transition_data["legal"] = False
+         return 
 
-    transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
-    if transition_data["from_handle"] > transition_data["to_handle"]:
-        transition_data["max_handle"] = transition_data["to_handle"]
+    real_length = current_transition_clip.clip_length() + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
+    to_part = real_length // 2
+    from_part = real_length - to_part
+
+    # Fix to get even and odd length transitions working right.
+    if to_part == from_part:
+        add_thingy = 0
     else:
-        transition_data["max_handle"] = transition_data["from_handle"]
+        add_thingy = 1
+
+    transition_data["from_handle_from_center"] = from_clip.clip_length() - (from_clip.clip_out + from_part)
+    transition_data["to_handle_from_center"] = to_clip.clip_in - to_part
+    transition_data["center_frame"] = track.clip_start(index) + from_part
+    if transition_data["to_handle_from_center"]  > transition_data["from_handle_from_center"]:
+        transition_data["max_handle_from_center"] = transition_data["from_handle_from_center"]
+    else:
+        transition_data["max_handle_from_center"] = transition_data["to_handle_from_center"]
 
     return transition_data
 
@@ -103,7 +120,7 @@ def get_transition_data_for_clips(track, from_clip, to_clip):
     
     # Get available clip handles to do transition
     from_handle = from_clip.get_length() - from_clip.clip_out
-    from_clip_length = from_clip.clip_out - from_clip.clip_in                                                 
+    from_clip_length = from_clip.clip_out - from_clip.clip_in
     to_handle = to_clip.clip_in
     to_clip_length = to_clip.clip_out - to_clip.clip_in
     

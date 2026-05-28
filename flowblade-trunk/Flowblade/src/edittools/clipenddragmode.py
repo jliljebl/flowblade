@@ -65,13 +65,13 @@ def maybe_init_for_mouse_press(event, frame):
     if clip.is_blanck_clip:
         return
 
-    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
-
     # Tranasitions length drags init different edit mode.
     if hasattr(clip, "rendered_type"):
-        transitiondragmode.init_for_mouse_press(event, track, clip, clip_index, frame, cut_frame)
+        transitiondragmode.init_for_mouse_press(track, clip, clip_index, frame)
         return 
-        
+
+    cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
+
     if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
         _init_overwrite_drag(clip, clip_index, track, frame, cut_frame)
     else:

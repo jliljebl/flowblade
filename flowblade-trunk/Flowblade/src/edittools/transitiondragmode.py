@@ -21,45 +21,66 @@
 import editorstate
 import singletracktransition
 import tlinewidgets
+import updater
 
 _enter_mode = None
 _enter_draw_func = None
 
 _edit_data = None
 
-def init_for_mouse_press(event, track, clip, clip_index, frame, cut_frame):
+def init_for_mouse_press(track, clip, clip_index, frame):
     global _enter_mode, _enter_draw_func, _edit_data
 
     _enter_mode = editorstate.edit_mode
     _enter_draw_func = tlinewidgets.canvas_widget.edit_mode_overlay_draw_func
-    #editorstate.edit_mode = editorstate.CLIP_END_DRAG
 
-    editing_clip_end = True
-    if frame >= cut_frame:
-        editing_clip_end = False
-        clip_index = clip_index - 1
-
+    _edit_data = {}
+    try:
+        from_clip = track.clips[clip_index - 1]
+        to_clip = track.clips[clip_index + 1]
+    except:
+         _edit_data["legal"] = False
+         
     _edit_data = singletracktransition.get_transition_drag_data(track, clip_index)
     _edit_data["clip_index"] = clip_index
-    _edit_data["frame"] = frame
     _edit_data["press_frame"] = frame
-    _edit_data["editing_clip_end"] = editing_clip_end
-    _edit_data["track_height"] = track.height
-    _edit_data["cut_frame"] = cut_frame
-
+    _edit_data["track"] = track
+    _edit_data["legal"] = True
+    
     tlinewidgets.set_edit_mode(_edit_data, tlinewidgets.draw_transion_length_drag_overlay)
     editorstate.edit_mode = editorstate.TRANSITION_LENGTH_DRAG
     
 def transition_drag_press(event, frame):
-    pass
-
+    _update_edit_data(frame)
+    updater.repaint_tline()
+    
 def transition_drag_move(x, y, frame, state):
-    print("move")
-
+    _update_edit_data(frame)
+    updater.repaint_tline()
+    
 def transition_drag_release(x, y, frame, state):
     print("release")
     global _enter_mode, _enter_draw_func, _edit_data
 
+    _update_edit_data(frame)
+
     editorstate.edit_mode = _enter_mode
-    tlinewidgets.set_edit_mode(_enter_mode, _enter_draw_func)
-    
+    tlinewidgets.set_edit_mode(None, None)
+
+    updater.repaint_tline()
+
+def _update_edit_data(frame):
+    global _edit_data
+    """
+    if _edit_data["center_frame"] > frame:
+        if _edit_data["center_frame"] - frame > _edit_data["max_handle_from_center"]:
+            frame = _edit_data["center_frame"] -  _edit_data["max_handle_from_center"]
+    if _edit_data["center_frame"] < frame:
+        if frame - _edit_data["center_frame"] > _edit_data["max_handle_from_center"]:
+            frame = _edit_data["center_frame"] -  _edit_data["max_handle_from_center"]
+
+    if abs(frame - _edit_data["center_frame"]) < 2:
+        _edit_data["legal"] = False
+    """
+
+    _edit_data["press_frame"] = frame

@@ -1332,7 +1332,32 @@ def draw_transition_drag_overlay(cr, data):
     cr.stroke()
 
 def draw_transion_length_drag_overlay(cr, data):
-    print("draw")
+    track_height = data["track"].height
+    track_y = _get_track_y(data["track"].id)
+            
+    center_frame = data["center_frame"]
+    center_frame_x = _get_frame_x(center_frame)
+
+    #print("center_frame", center_frame)
+
+    cr.set_line_width(2.0)
+    cr.set_source_rgb(*OVERLAY_TRIM_OVERWRITE_COLOR)
+    cr.move_to(center_frame_x, track_y - 6.5)
+    cr.line_to(center_frame_x, track_y + track_height + 6.5)
+    cr.stroke()
+
+    side_length_frames = abs(center_frame - data["press_frame"])
+    #print("side_length_frames", side_length_frames)
+    from_frame_x = _get_frame_x(center_frame - side_length_frames)
+    to_frame_x = _get_frame_x(center_frame + side_length_frames)
+    #print("press_frame", data["press_frame"])
+
+    cr.move_to(from_frame_x, track_y)
+    cr.line_to(to_frame_x, track_y)
+    cr.line_to(to_frame_x, track_y + track_height)
+    cr.line_to(from_frame_x, track_y + track_height)
+    cr.close_path()
+    cr.stroke()
 
 def draw_media_drag_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
