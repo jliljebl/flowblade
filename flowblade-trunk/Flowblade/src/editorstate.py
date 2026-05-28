@@ -48,6 +48,7 @@ SELECT_TLINE_SYNC_CLIP = 12
 CUT = 13
 KF_TOOL = 14
 MULTI_TRIM = 15
+TRANSITION_LENGTH_DRAG = 16
 
 # Gtk.Application object for main app. 
 app = None

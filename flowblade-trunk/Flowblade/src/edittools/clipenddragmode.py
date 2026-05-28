@@ -31,6 +31,7 @@ import edit
 from editorstate import current_sequence
 import editorstate
 import tlinewidgets
+import transitiondragmode
 import updater
 
 # Edit mode that was active when mode was entered 
@@ -66,6 +67,11 @@ def maybe_init_for_mouse_press(event, frame):
 
     cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
 
+    # Tranasitions length drags init different edit mode.
+    if hasattr(clip, "rendered_type"):
+        transitiondragmode.init_for_mouse_press(event, track, clip, clip_index, frame, cut_frame)
+        return 
+        
     if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
         _init_overwrite_drag(clip, clip_index, track, frame, cut_frame)
     else:

@@ -84,6 +84,21 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     else:
         _no_audio_tracks_mixing_info()
 
+def get_transition_drag_data(track, from_index):
+    try:
+        from_clip = track.clips[from_index]
+        to_clip = track.clips[from_index + 1]
+    except:
+        return None
+
+    transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
+    if transition_data["from_handle"] > transition_data["to_handle"]:
+        transition_data["max_handle"] = transition_data["to_handle"]
+    else:
+        transition_data["max_handle"] = transition_data["from_handle"]
+
+    return transition_data
+
 def get_transition_data_for_clips(track, from_clip, to_clip):
     
     # Get available clip handles to do transition

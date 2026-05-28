@@ -1331,6 +1331,9 @@ def draw_transition_drag_overlay(cr, data):
     cr.close_path()
     cr.stroke()
 
+def draw_transion_length_drag_overlay(cr, data):
+    print("draw")
+
 def draw_media_drag_overlay(cr, data):
     track_height = current_sequence().tracks[data["track"]].height
     track_y = _get_track_y(data["track"])

@@ -61,6 +61,7 @@ import multitrimmode
 import singletracktransition
 import syncsplitevent
 import tlinewidgets
+import transitiondragmode
 import trimmodes
 import updater
 import userfolders
@@ -983,6 +984,9 @@ KFTOOL_FUNCS = [kftoolmode.mouse_press,
 MULTI_TRIM_FUNCS = [multitrimmode.mouse_press,
                     multitrimmode.mouse_move,
                     multitrimmode.mouse_release]
+TRANSITION_LENGTH_DRAG_FUNCS = [transitiondragmode.transition_drag_press,
+                                transitiondragmode.transition_drag_move,
+                                transitiondragmode.transition_drag_release]
 
 
 # (mode -> mouse handler function list) table
@@ -996,5 +1000,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
                    editorstate.CUT:CUT_FUNCS,
                    editorstate.KF_TOOL:KFTOOL_FUNCS,
-                   editorstate.MULTI_TRIM:MULTI_TRIM_FUNCS}
+                   editorstate.MULTI_TRIM:MULTI_TRIM_FUNCS,
+                   editorstate.TRANSITION_LENGTH_DRAG:TRANSITION_LENGTH_DRAG_FUNCS}
 
