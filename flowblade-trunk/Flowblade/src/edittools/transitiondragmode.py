@@ -43,6 +43,7 @@ def init_for_mouse_press(track, clip, clip_index, frame):
          
     _edit_data = singletracktransition.get_transition_drag_data(track, clip_index)
     _edit_data["clip_index"] = clip_index
+    _edit_data["old_transition"] = clip
     _edit_data["press_frame"] = frame
     _edit_data["track"] = track
     _edit_data["legal"] = True
@@ -66,6 +67,14 @@ def transition_drag_release(x, y, frame, state):
 
     editorstate.edit_mode = _enter_mode
     tlinewidgets.set_edit_mode(None, None)
+
+    drag_length = abs(_edit_data["center_frame"] - frame)
+    track = _edit_data["track"] = clip_index
+    index = _edit_data["clip_index"]
+    old_transition = _edit_data["old_transition"]
+
+
+
 
     updater.repaint_tline()
 

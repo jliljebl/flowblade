@@ -50,6 +50,34 @@ import userfolders
 # Used to store transition render data used at render complete callback.
 transition_render_data = None
 
+# ------------------------------------------------------------- parts computation funcs
+def _get_parts_for_length(length):
+    # Get values to build transition render sequence
+    # Divide transition length between clips, odd frame goes to from_clip 
+    real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
+    to_part = real_length // 2
+    from_part = real_length - to_part
+
+    # Fix to get even and odd length transitions working right.
+    if to_part == from_part:
+        add_thingy = 0
+    else:
+        add_thingy = 1
+    
+    return (from_part, to_part, add_thingy)
+
+def _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy):
+    # Get from in and out frames
+    from_in = from_clip.clip_out - from_part + add_thingy
+    from_out = from_in + length # or transition will include one frame too many
+    
+    # Get to in and out frames
+    to_in = to_clip.clip_in - to_part - 1 
+    to_out = to_in + length # or transition will include one frame too many
+
+    return (from_in, from_out, to_in, to_out)
+
+# ------------------------------------------------------------- external interface
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW
@@ -113,9 +141,6 @@ def get_transition_drag_data(track, index):
         transition_data["max_handle_from_center"] = transition_data["from_handle_from_center"]
     else:
         transition_data["max_handle_from_center"] = transition_data["to_handle_from_center"]
-
-    #print(from_clip.get_length(), to_clip.get_length() , transition_data["from_handle_from_center"],  transition_data["to_handle_from_center"])
-    #print("max_handle_from_center", transition_data["max_handle_from_center"])
 
     return transition_data
 
@@ -225,8 +250,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
-    #print("from_clip", track.clips.index(from_clip))
-    #print("to_clip", track.clips.index(to_clip))
 
     # Get values to build transition render sequence
     # Divide transition length between clips, odd frame goes to from_clip 
@@ -451,6 +474,53 @@ def _transition_RE_render_complete(clip_path):
 
     action = edit.replace_centered_transition_action(data)
     action.do_edit()
+
+def create_length_changed_transition(track, index, old_transition, new_length, completed_callback):
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+    sorted_wipe_luma_index = old_transition.creation_data
+        
+    from_clip = track.clips[index - 1]
+    to_clip = track.clips[index + 1]
+
+    from_part, to_part, add_thingy = _get_parts_for_length(new_length)
+    
+    # Set from_clip out and to_clip in temprarily to get correct overlaps
+    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy)
+
+    producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
+                                                                        from_clip,
+                                                                        to_clip,
+                                                                        from_out,
+                                                                        from_in,
+                                                                        to_out,
+                                                                        to_in,
+                                                                        transition_type_selection_index,
+                                                                        sorted_wipe_luma_index)
+
+    creation_data = (   from_clip.id,
+                        to_clip.id,
+                        from_out,
+                        from_in,
+                        to_out,
+                        to_in,
+                        transition_type_selection_index,
+                        sorted_wipe_luma_index)
+
+    encoding_option_index, quality_option_index = PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
+
+    # Save transition data into global variable to be available at render complete callback
+    global transition_render_data
+    transition_render_data = (trans_index, from_clip, to_clip, track.id, from_in, to_out, transition_type_selection_index, creation_data, add_thingy)
+    window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
+    window_text = _("Rendering ") + window_text
+
+    render.render_single_track_transition_clip( producer_tractor,
+                                                encoding_option_index,
+                                                quality_option_index, 
+                                                str(extension_text), 
+                                                completed_callback,
+                                                window_text)
+
 
 def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     SPACE_TAB = "    "
