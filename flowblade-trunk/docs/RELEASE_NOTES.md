@@ -1,5 +1,10 @@
 # Release Notes
 
+## FLOWBLADE 2.24.2
+Date: May 29, 2026
+
+Fixes crash with MLT version 7.38.
+
 ## FLOWBLADE 2.24.1
 Date: April 12, 2026
 
