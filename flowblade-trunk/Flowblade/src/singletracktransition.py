@@ -106,13 +106,16 @@ def get_transition_drag_data(track, index):
     else:
         add_thingy = 1
 
-    transition_data["from_handle_from_center"] = from_clip.clip_length() - (from_clip.clip_out + from_part)
-    transition_data["to_handle_from_center"] = to_clip.clip_in - to_part
+    transition_data["from_handle_from_center"] = abs(from_clip.get_length() - from_clip.clip_out - from_part)
+    transition_data["to_handle_from_center"] = abs(to_clip.clip_in - to_part)
     transition_data["center_frame"] = track.clip_start(index) + from_part
     if transition_data["to_handle_from_center"]  > transition_data["from_handle_from_center"]:
         transition_data["max_handle_from_center"] = transition_data["from_handle_from_center"]
     else:
         transition_data["max_handle_from_center"] = transition_data["to_handle_from_center"]
+
+    #print(from_clip.get_length(), to_clip.get_length() , transition_data["from_handle_from_center"],  transition_data["to_handle_from_center"])
+    #print("max_handle_from_center", transition_data["max_handle_from_center"])
 
     return transition_data
 

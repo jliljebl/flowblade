@@ -71,16 +71,16 @@ def transition_drag_release(x, y, frame, state):
 
 def _update_edit_data(frame):
     global _edit_data
-    """
+
     if _edit_data["center_frame"] > frame:
         if _edit_data["center_frame"] - frame > _edit_data["max_handle_from_center"]:
-            frame = _edit_data["center_frame"] -  _edit_data["max_handle_from_center"]
+            frame = _edit_data["center_frame"] +  _edit_data["max_handle_from_center"]
     if _edit_data["center_frame"] < frame:
         if frame - _edit_data["center_frame"] > _edit_data["max_handle_from_center"]:
             frame = _edit_data["center_frame"] -  _edit_data["max_handle_from_center"]
 
     if abs(frame - _edit_data["center_frame"]) < 2:
         _edit_data["legal"] = False
-    """
+
 
     _edit_data["press_frame"] = frame
