@@ -131,7 +131,7 @@ def do_clip_replace(track, media_file, new_clip, frame):
 
     movemodes.clear_selected_clips()
 
-    index = _get_insert_index(track, frame)
+    index = track.get_clip_index_at(int(frame))
     old_clip = track.clips[index]
 
     clip_in = -1
