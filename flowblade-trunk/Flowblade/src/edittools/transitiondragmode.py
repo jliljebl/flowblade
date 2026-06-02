@@ -69,12 +69,10 @@ def transition_drag_release(x, y, frame, state):
     tlinewidgets.set_edit_mode(None, None)
 
     drag_length = abs(_edit_data["center_frame"] - frame)
-    track = _edit_data["track"] = clip_index
+    track = _edit_data["track"]
     index = _edit_data["clip_index"]
-    old_transition = _edit_data["old_transition"]
 
-
-
+    singletracktransition.create_length_changed_transition(track, index, drag_length * 2)
 
     updater.repaint_tline()
 
@@ -90,6 +88,5 @@ def _update_edit_data(frame):
 
     if abs(frame - _edit_data["center_frame"]) < 2:
         _edit_data["legal"] = False
-
 
     _edit_data["press_frame"] = frame

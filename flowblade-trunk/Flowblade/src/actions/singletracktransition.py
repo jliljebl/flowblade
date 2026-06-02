@@ -225,8 +225,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
             if encoding.vcodec != "libx264":
                 encodings.append(encoding)
 
-        encoding_option_index, quality_option_index = PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
-        
+        try:
+            encoding_option_index, quality_option_index = PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
+        except:
+            encoding_option_index = 0
+            quality_option_index = 0
+
         extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
         from_clip_index = transition_data["dnd_from_clip_index"] 
@@ -295,7 +299,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                 window_text)
 
 def _transition_render_complete(clip_path):
-    print("Render complete")
 
     global transition_render_data
     transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data, length_fix = transition_render_data
@@ -402,18 +405,33 @@ def _transition_RE_render_complete(clip_path):
     action = edit.replace_centered_transition_action(data)
     action.do_edit()
 
-def create_length_changed_transition(track, index, old_transition, new_length, completed_callback):
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index = old_transition.creation_data
-        
+def create_length_changed_transition(track, index, new_length):
+    #from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+    #sorted_wipe_luma_index = old_transition.creation_data
+    
+    old_transition_clip = track.clips[index]
+    # We need transition type and possible wipe luma from old transition.
+    old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
+    sorted_wipe_luma_index = old_transition_clip.creation_data
+    
     from_clip = track.clips[index - 1]
     to_clip = track.clips[index + 1]
 
     from_part, to_part, add_thingy = _get_parts_for_length(new_length)
     
     # Set from_clip out and to_clip in temprarily to get correct overlaps
-    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy)
-
+    t_from_half = old_transition_clip.clip_length() // 2 
+    if old_transition_clip.clip_length() % 2 == 0:
+        t_to_half = t_from_half
+    else:
+        t_to_half = t_from_half + 1 
+        
+    from_clip.clip_out = from_clip.clip_out + t_from_half
+    to_clip.clip_in = from_clip.clip_in - t_to_half
+    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(new_length, from_clip, to_clip, from_part, to_part, add_thingy)
+    from_clip.clip_out = from_clip.clip_out - t_from_half
+    to_clip.clip_in = from_clip.clip_in + t_to_half
+    
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
                                                                         to_clip,
@@ -434,10 +452,11 @@ def create_length_changed_transition(track, index, old_transition, new_length, c
                         sorted_wipe_luma_index)
 
     encoding_option_index, quality_option_index = PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (trans_index, from_clip, to_clip, track.id, from_in, to_out, transition_type_selection_index, creation_data, add_thingy)
+    transition_render_data = (index, from_clip, to_clip, track, creation_data, transition_type_selection_index, old_transition_clip)
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
@@ -445,8 +464,38 @@ def create_length_changed_transition(track, index, old_transition, new_length, c
                                                 encoding_option_index,
                                                 quality_option_index, 
                                                 str(extension_text), 
-                                                completed_callback,
+                                                _length_changed_transition_rendered_callback,
                                                 window_text)
+
+def _length_changed_transition_rendered_callback(clip_path):
+
+    global transition_render_data
+    index, from_clip, to_clip, track, creation_data, transition_type, old_transition_clip = transition_render_data 
+
+    transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
+    transition_clip.creation_data = creation_data
+
+    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
+    transition_type_selection_index, sorted_wipe_luma_index = creation_data
+                    
+    old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, \
+    old_transition_type_selection_index, old_sorted_wipe_luma_index = old_transition_clip.creation_data
+
+    from_out_delta = from_out - old_from_out
+    to_in_delta = to_in - old_to_in
+
+    data = {"transition_clip":transition_clip,
+            "old_transition_clip":old_transition_clip,
+            "transition_index":index,
+            "from_clip":from_clip,
+            "to_clip":to_clip,
+            "track":track,
+            "from_out_delta":from_out_delta,
+            "to_in_delta":to_in_delta}
+
+    action = edit.replace_length_changed_transition_action(data)
+    action.do_edit()
+
 
 # ----------------------------------------------------------- re-redering
 def rerender_all_rendered_transitions():
