@@ -137,7 +137,6 @@ show_trim_view = appconsts.TRIM_VIEW_OFF
 # Remember fade and transition lengths for next invocation, users prefer this over one default value.
 fade_length = -1
 transition_length = -1
-steal_frames = True
 
 # Timeline rendering
 tline_render_mode = appconsts.TLINE_RENDERING_OFF

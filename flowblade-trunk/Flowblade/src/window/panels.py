@@ -348,11 +348,6 @@ def get_transition_panel(trans_data):
     in_clip_label = Gtk.Label(label=_("Second Clip In Handle:"))
     in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
 
-    steal_frames = Gtk.CheckButton()
-    steal_frames.set_active(editorstate.steal_frames)
-    
-    steal_check_row = guiutils.get_checkbox_row_box(steal_frames, Gtk.Label(label=_("Steal frames from clips if needed")))
-
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
     in_handle_row = get_two_column_box(in_clip_label, 
@@ -380,7 +375,6 @@ def get_transition_panel(trans_data):
     data_vbox.pack_start(out_handle_row, False, False, 0)
     data_vbox.pack_start(in_handle_row, False, False, 0)
     data_vbox.pack_start(guiutils.pad_label(4,4), False, False, 0)
-    data_vbox.pack_start(steal_check_row, False, False, 0)
     
     enconding_vbox = Gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
@@ -393,7 +387,7 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, steal_frames, encodings)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, encodings)
 
 def _get_encodings_widget_and_list():
     # We have an unexplained issue with rendering using libx264 vcodec
