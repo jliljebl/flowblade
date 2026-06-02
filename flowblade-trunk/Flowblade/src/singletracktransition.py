@@ -124,15 +124,7 @@ def get_transition_drag_data(track, index):
          transition_data["legal"] = False
          return 
 
-    real_length = current_transition_clip.clip_length() + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
-    to_part = real_length // 2
-    from_part = real_length - to_part
-
-    # Fix to get even and odd length transitions working right.
-    if to_part == from_part:
-        add_thingy = 0
-    else:
-        add_thingy = 1
+    from_part, to_part, add_thingy = _get_parts_for_length(current_transition_clip.clip_length() )
 
     transition_data["from_handle_from_center"] = abs(from_clip.get_length() - from_clip.clip_out - from_part)
     transition_data["to_handle_from_center"] = abs(to_clip.clip_in - to_part)
@@ -251,17 +243,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
 
-    # Get values to build transition render sequence
-    # Divide transition length between clips, odd frame goes to from_clip 
-    real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
-    to_part = real_length // 2
-    from_part = real_length - to_part
-
-    # Fix to get even and odd length transitions working right.
-    if to_part == from_part:
-        add_thingy = 0
-    else:
-        add_thingy = 1
+    from_part, to_part, add_thingy = _get_parts_for_length(length)
 
     # Get required handle lengths.
     from_req = from_part - add_thingy
@@ -319,14 +301,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                 return
 
     editorstate.transition_length = length # Saved for user so that last length becomes default for next invocation.
-    
-    # Get from in and out frames
-    from_in = from_clip.clip_out - from_part + add_thingy
-    from_out = from_in + length # or transition will include one frame too many
-    
-    # Get to in and out frames
-    to_in = to_clip.clip_in - to_part - 1 
-    to_out = to_in + length # or transition will include one frame too many
+
+    from_in, from_out, to_in, to_out = _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy)
 
     # Edit clears selection, get transition index before selection is cleared
     trans_index = from_clip_index + 1
@@ -635,10 +611,6 @@ def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to
 
     dialogutils.warning_message_with_panels(_("<b>Stealing frames from clips to transition failed!</b>"), 
                                             "", gui.editor_window.window, True, dialogutils.dialog_destroy, rows)
-
-
-
-
 
 def rerender_all_rendered_transitions():
     seq = editorstate.current_sequence()
