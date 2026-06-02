@@ -145,8 +145,6 @@ def init_module():
         icon_to_translated_name[value] = key
     icon_to_translated_name["dissolve"] = _("Dissolve")
     
-    #print(icon_to_translated_name)
-    
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
@@ -202,7 +200,6 @@ def create_transition_groups(wipe_icons_list):
         icon_name, icon = icon_item
         icon_name = icon_name.split(".")[0]
         translated_name = icon_to_translated_name[icon_name]
-        print(icon_name, translated_name)
         wipe_icons[translated_name] = icon
 
     dissolve_group = [(_("Dissolve"), wipe_icons[_("Dissolve")])]
