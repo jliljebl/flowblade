@@ -626,7 +626,7 @@ def get_rendered_transition_tractor(current_sequence,
 
     # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
-        kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=100.0"
+        kf_str = "0=0;"+ str(tractor.get_length() - 1) + "=100"
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
         filter_object = mltfilters.FilterObject(mltfilters._shape_filter_info)
         filter_object.create_mlt_filter(current_sequence.profile)
@@ -635,11 +635,12 @@ def get_rendered_transition_tractor(current_sequence,
         filter_object.mlt_filter.set(str("softness"), str(0))
         filter_object.mlt_filter.set(str("invert"), str(0))
         filter_object.mlt_filter.set(str("use_mix"), str(1))
+        filter_object.mlt_filter.set(str("use_luminance"), str(1))
         filter_object.mlt_filter.set(str("audio_match"), str(0))
         to_clip.attach(filter_object.mlt_filter)
 
     # Add transition
     field = tractor.field()
-    field.plant_transition(transition, 0,1)
+    field.plant_transition(transition, 0, 1)
 
     return tractor

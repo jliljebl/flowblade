@@ -189,7 +189,7 @@ def get_transition_drag_data(track, index):
          transition_data["legal"] = False
          return 
 
-    from_part, to_part, add_thingy = _get_parts_for_length(current_transition_clip.clip_length() )
+    from_req, to_req, from_part, to_part = get_parts_and_reqs_for_length(current_transition_clip.clip_length())
 
     transition_data["from_handle_from_center"] = abs(from_clip.get_length() - from_clip.clip_out - from_part)
     transition_data["to_handle_from_center"] = abs(to_clip.clip_in - to_part)
@@ -454,7 +454,7 @@ def create_length_changed_transition(track, index, new_length):
     from_clip = track.clips[index - 1]
     to_clip = track.clips[index + 1]
 
-    from_part, to_part, add_thingy = _get_parts_for_length(new_length)
+    from_req, to_req, from_part, to_part = get_parts_and_reqs_for_length(new_length)
     
     # Set from_clip out and to_clip in temprarily to get correct overlaps
     t_from_half = old_transition_clip.clip_length() // 2 
