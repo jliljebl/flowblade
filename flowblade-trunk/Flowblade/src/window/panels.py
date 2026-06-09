@@ -339,19 +339,23 @@ def get_transition_panel(trans_data):
     filler = Gtk.Label()
     filler.set_size_request(10,10)
 
-    out_clip_label = Gtk.Label(label=_("First Clip Out Handle Available/Required:"))
+    out_clip_label = Gtk.Label(label=_("First Clip Out Handle Available:"))
     out_clip_value = Gtk.Label(label=str(trans_data["from_handle"]) + _(" frame(s)"))
-    
-    in_clip_label = Gtk.Label(label=_("Second Clip In Handle Available/Required:"))
-    in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
 
     in_clip_label = Gtk.Label(label=_("Second Clip In Handle:"))
     in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
+
+    max_length_label = Gtk.Label(label=_("Maximum Available Transition Length:"))
+    max_length_value = Gtk.Label(label=str(trans_data["max_length"]) + _(" frame(s)"))
+
 
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
     in_handle_row = get_two_column_box(in_clip_label, 
                                        in_clip_value)
+
+    max_length_row = get_two_column_box(max_length_label, 
+                                       max_length_value)
 
     # Encoding widgets
     encodings, encodings_cb = _get_encodings_widget_and_list()
@@ -374,6 +378,7 @@ def get_transition_panel(trans_data):
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
     data_vbox.pack_start(in_handle_row, False, False, 0)
+    data_vbox.pack_start(max_length_row, False, False, 0)
     data_vbox.pack_start(guiutils.pad_label(4,4), False, False, 0)
     
     enconding_vbox = Gtk.VBox(False, 2)
@@ -392,6 +397,8 @@ def get_transition_panel(trans_data):
 def _get_encodings_widget_and_list():
     # We have an unexplained issue with rendering using libx264 vcodec
     # that needs to be papered over with this.
+    # TODO: This not working correctly,
+        
     encodings_cb = Gtk.ComboBoxText()
     encodings = []
     for encoding in renderconsumer.encoding_options:
@@ -479,23 +486,30 @@ def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
+    # TODO: This not woeking correctly, there is somehight wrong with whole encoding with transitions.
+    #print("hhhhhhhhhhhhhhhhhhhhhh")
     encodings_cb, encodings, quality_cb = widgets
     sel_enc_index = encodings_cb.get_active()
     sel_enc = encodings[sel_enc_index]
     enc_index = renderconsumer.encoding_options.index(sel_enc)
     encoding = renderconsumer.encoding_options[enc_index]
-
+    
+    #print("encoding.quality_default_index, quality_index", encoding.quality_default_index, quality_index)
+        
     quality_cb.get_model().clear()
     for quality_option in encoding.quality_options:
         quality_cb.append_text(quality_option.name)
 
     if quality_index == -1:
+
         if encoding.quality_default_index != None:
             quality_cb.set_active(encoding.quality_default_index)
         else:
+            #print("asdasdasdasd")
             quality_cb.set_active(0)
     else:
-            quality_cb.set_active(quality_index)
+        #print("adasd")
+        quality_cb.set_active(quality_index)
             
 def _set_saved_encoding(transition_widgets):
     saved_encoding = editorstate.PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)

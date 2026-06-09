@@ -549,15 +549,21 @@ def is_alpha_combiner(compositor_type_test):
 def get_rendered_transition_tractor(current_sequence, 
                                     orig_from,
                                     orig_to,
-                                    action_from_out,
-                                    action_from_in,
-                                    action_to_out,
-                                    action_to_in,
+                                    from_out,
+                                    from_in,
+                                    to_out,
+                                    to_in,
                                     transition_type_selection_index,
                                     wipe_luma_sorted_keys_index):
 
     name, transition_type = rendered_transitions[transition_type_selection_index]
-    
+
+    # We are rendering clipwith 1 frame overlap on each end
+    from_out = from_out + 1
+    from_in = from_in - 1
+    to_out = to_out + 1
+    to_in = to_in - 1
+
     # New from clip
     if orig_from.media_type != appconsts.PATTERN_PRODUCER:
         from_clip = current_sequence.create_file_producer_clip(orig_from.path, None, False, orig_from.ttl)# File producer
@@ -580,28 +586,30 @@ def get_rendered_transition_tractor(current_sequence,
     multitrack.connect(track0, 0)
     multitrack.connect(track1, 1)
 
+    """
     # Set in and out points for images and pattern producers.
     if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = action_from_out - action_from_in
+        length = from_out - from_in
         from_clip.clip_in = 0
         from_clip.clip_out = length
 
     if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = action_to_out - action_to_in
+        length = to_out - to_in
         to_clip.clip_in = 0
         to_clip.clip_out = length
-            
+    """
+
     # Add clips to tracks and create keyframe string for mixing
     # Images and pattern producers always fill full track.
     if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
-        track0.insert(from_clip, 0, action_from_in, action_from_out)
+        track0.insert(from_clip, 0, from_in, from_out)
     else:
-        track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
+        track0.insert(from_clip, 0, 0, from_out - from_in)
         
     if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
-        track1.insert(to_clip, 0, action_to_in, action_to_out)
+        track1.insert(to_clip, 0, to_in, to_out)
     else:
-        track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+        track1.insert(to_clip, 0, 0,  to_out - to_in)
 
     # Create transition
     kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=1.0"
@@ -615,7 +623,7 @@ def get_rendered_transition_tractor(current_sequence,
     transition.set("out", int(tractor.get_length() - 1))
     transition.set("a_track", 0)
     transition.set("b_track", 1)
-    
+
     # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
         kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=100.0"
@@ -629,7 +637,7 @@ def get_rendered_transition_tractor(current_sequence,
         filter_object.mlt_filter.set(str("use_mix"), str(1))
         filter_object.mlt_filter.set(str("audio_match"), str(0))
         to_clip.attach(filter_object.mlt_filter)
-        
+
     # Add transition
     field = tractor.field()
     field.plant_transition(transition, 0,1)

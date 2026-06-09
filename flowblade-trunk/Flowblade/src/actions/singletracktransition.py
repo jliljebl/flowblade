@@ -48,7 +48,86 @@ import userfolders
 # Used to store transition render data needed at render complete callback.
 transition_render_data = None
 
+#    NOTE: rendered transitions require 1 frame extra on both ends to in, from out
+#
+#
+#                to clip req            cut        from clip req
+#                (length + 2) // 2                 (length + 2) // 2 (+1 if length odd)
+#           |                            |                            | 
+#----------------------------------------|----------------------------------------
+#            |                           |                           |
+#                   to clip part                    from clip part
+#                     to clip req - 1               from clip req - 1
+#
+#
+#  from clip |              rendered transition clip on tline        | to clip
+#  out = orig out - to clip part                                       in = orig in + from clip part  
+#
+#
+#           |              rendered transition clip                   |
+#                          length + 2 = to clip reg + from clip req
+#           from in = from out orig - to clip req, from out = from in + length + 2 
+#           to in = to in orig - to clip req, to out = to in + length + 2  
+#
+#            |              rendered transition clip on tline        |
+#                           length, in = 1, out = media length - 1 (-1 out incl.)
+
+
+
 # ------------------------------------------------------------- parts computation funcs
+# ------------------------------------------------------------- parts computation funcs
+def _get_parts_and_reqs_for_length(length):
+    real_length = length + 2
+    to_req = real_length // 2
+    from_req = to_req
+    if length % 2 == 1:
+        from_req = from_req + 1
+    to_part = to_req - 1
+    from_part = from_req - 1
+    
+    return (from_req, to_req, from_part, to_part)
+
+def _get_available_handles(from_clip, to_clip):
+    from_handle = from_clip.get_length() - from_clip.clip_out - 1 # -1 out incl.
+    to_handle = to_clip.clip_in
+    
+    # Images have limitless handles, but we simulate that with big value
+    IMAGE_MEDIA_HANDLE_LENGTH = 1000
+    if from_clip.media_type == appconsts.IMAGE:
+        from_handle = IMAGE_MEDIA_HANDLE_LENGTH
+    if to_clip.media_type == appconsts.IMAGE:
+        to_handle = IMAGE_MEDIA_HANDLE_LENGTH
+        
+    return (from_handle -1, to_handle -1) # -1,-1 at least one unused frame outside of trnasition value required 
+
+def get_transition_data_for_clips(track, from_clip, to_clip):
+    from_handle, to_handle = _get_available_handles(from_clip, to_clip)
+    max_handle = from_handle
+    if to_handle < from_handle:
+        max_handle = to_handle    
+
+    max_length = max_handle * 2
+    
+    transition_data = {"track":track,
+                       "from_clip":from_clip,
+                       "to_clip":to_clip,
+                       "from_handle":from_handle,
+                       "to_handle":to_handle,
+                       "max_length":max_length}
+    return transition_data
+
+def _get_clips_overlapping_ranges(length, from_clip_out, to_clip_in, from_part, to_part):
+    # Get from in and out frames
+    from_in = from_clip_out - to_part
+    from_out = from_in + length - 1 # -1 out incl.
+    
+    # Get to in and out frames
+    to_in = to_clip_in - from_part
+    to_out = to_in + length - 1 # -1 out incl.
+
+    return (from_in, from_out, to_in, to_out)
+
+"""
 def _get_parts_for_length(length):
     # Get values to build transition render sequence
     # Divide transition length between clips, odd frame goes to from_clip 
@@ -64,33 +143,17 @@ def _get_parts_for_length(length):
     
     return (from_part, to_part, add_thingy)
 
-def _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy):
-    # Get from in and out frames
-    from_in = from_clip.clip_out - from_part + add_thingy
-    from_out = from_in + length # or transition will include one frame too many
-    
-    # Get to in and out frames
-    to_in = to_clip.clip_in - to_part - 1 
-    to_out = to_in + length # or transition will include one frame too many
 
-    return (from_in, from_out, to_in, to_out)
+"""
 
 # ------------------------------------------------------------- external interface
 def add_transition_menu_item_selected():
-    if movemodes.selected_track == -1:
-        # INFOWINDOW
-        return
-
-    clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
-    if not (clip_count == 2):
-        # INFOWINDOW
-        return
     add_transition_pressed()
 
 def add_transition_pressed(retry_from_render_folder_select=False):
     if movemodes.selected_track == -1:
         print("no selection track")
-        # INFOWINDOW
+
         return
 
     track = get_track(movemodes.selected_track)
@@ -104,6 +167,10 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     
     transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
     
+    if transition_data["max_length"] < 2:
+        # INFOWINDOW
+        return 
+
     if track.id >= current_sequence().first_video_index:
         singletracktransitiondialogs.transition_edit_dialog(_add_transition_dialog_callback, 
                                                             transition_data)
@@ -132,36 +199,6 @@ def get_transition_drag_data(track, index):
     else:
         transition_data["max_handle_from_center"] = transition_data["to_handle_from_center"]
 
-    return transition_data
-
-def get_transition_data_for_clips(track, from_clip, to_clip):
-    
-    # Get available clip handles to do transition
-    from_handle = from_clip.get_length() - from_clip.clip_out
-    from_clip_length = from_clip.clip_out - from_clip.clip_in
-    to_handle = to_clip.clip_in
-    to_clip_length = to_clip.clip_out - to_clip.clip_in
-    
-    if to_clip_length < from_handle:
-        from_handle = to_clip_length
-    if from_clip_length < to_handle:
-        to_handle = from_clip_length
-        
-    # Images have limitless handles, but we simulate that with big value
-    IMAGE_MEDIA_HANDLE_LENGTH = 1000
-    if from_clip.media_type == appconsts.IMAGE:
-        from_handle = IMAGE_MEDIA_HANDLE_LENGTH
-    if to_clip.media_type == appconsts.IMAGE:
-        to_handle = IMAGE_MEDIA_HANDLE_LENGTH
-     
-    max_length = from_handle + to_handle
-    
-    transition_data = {"track":track,
-                       "from_clip":from_clip,
-                       "to_clip":to_clip,
-                       "from_handle":from_handle,
-                       "to_handle":to_handle,
-                       "max_length":max_length}
     return transition_data
 
 def add_transition_from_dnd(track, from_clip, to_clip, from_clip_index, is_dissolve, wipe_mame):
@@ -237,17 +274,16 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
-
-    from_part, to_part, add_thingy = _get_parts_for_length(length)
-
-    # Get required handle lengths.
-    from_req = from_part - add_thingy
-    to_req = to_part - (1 - add_thingy)
+    
     from_handle = transition_data["from_handle"]
-    to_handle = transition_data["to_handle"]
+    to_hjandle = transition_data["to_handle"]
+
+
+    # Get required lengths and parts
+    from_req, to_req, from_part, to_part =  _get_parts_and_reqs_for_length(length)
 
     # Check that we have enough handles
-    if from_req > from_handle or to_req > to_handle:
+    if from_req > transition_data["from_handle"] or to_req >  transition_data["to_handle"]:
         singletracktransitiondialogs.show_no_handles_dialog( from_req,
                                      from_handle, 
                                      to_req,
@@ -257,7 +293,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     editorstate.transition_length = length # Saved for user so that last length becomes default for next invocation.
 
-    from_in, from_out, to_in, to_out = _get_clips_overlapping_ranges(length, from_clip, to_clip, from_part, to_part, add_thingy)
+    from_in, from_out, to_in, to_out = _get_clips_overlapping_ranges(length, from_clip.clip_out, to_clip.clip_in, from_part, to_part)
 
     # Edit clears selection, get transition index before selection is cleared
     trans_index = from_clip_index + 1
@@ -287,7 +323,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (trans_index, from_clip, to_clip, transition_data["track"], from_in, to_out, transition_type_selection_index, creation_data, add_thingy)
+    transition_render_data = (trans_index, from_clip, to_clip, transition_data["track"], from_in, to_out, transition_type_selection_index, creation_data)
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
@@ -301,7 +337,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 def _transition_render_complete(clip_path):
 
     global transition_render_data
-    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data, length_fix = transition_render_data
+    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
 
     transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
     transition_clip.creation_data = creation_data
@@ -312,8 +348,9 @@ def _transition_render_complete(clip_path):
             "to_clip":to_clip,
             "track":track,
             "from_in":from_in,
-            "to_out":to_out,
-            "length_fix":length_fix}
+            "to_out":to_out}
+
+    print(data)
 
     action = edit.add_centered_transition_action(data)
     action.do_edit()
@@ -428,7 +465,7 @@ def create_length_changed_transition(track, index, new_length):
         
     from_clip.clip_out = from_clip.clip_out + t_from_half
     to_clip.clip_in = from_clip.clip_in - t_to_half
-    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(new_length, from_clip, to_clip, from_part, to_part, add_thingy)
+    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(new_length, from_clip.clip_out, to_clip.clip_in, from_part, to_part, add_thingy)
     from_clip.clip_out = from_clip.clip_out - t_from_half
     to_clip.clip_in = from_clip.clip_in + t_to_half
     

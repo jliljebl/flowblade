@@ -3141,7 +3141,7 @@ def _add_centered_transition_redo(self):
     track = self.track
     from_clip = self.from_clip
     to_clip = self.to_clip
-    
+
     # Save from and to clip in/out points before adding transition
     self.orig_from_clip_out = from_clip.clip_out
     self.orig_to_clip_in = to_clip.clip_in
@@ -3158,8 +3158,9 @@ def _add_centered_transition_redo(self):
     # Insert transition
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 transition_clip.get_length() - 1 - self.length_fix)
+                 transition_clip.get_length() - 2)
 
+    print("transition_clip.clip_length", transition_clip.clip_length())
 
 #------------------- REPLACE CENTERED TRANSITION
 # "track", "transition_clip","transition_index"
