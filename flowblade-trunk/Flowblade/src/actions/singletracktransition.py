@@ -76,7 +76,7 @@ transition_render_data = None
 
 # ------------------------------------------------------------- parts computation funcs
 # ------------------------------------------------------------- parts computation funcs
-def _get_parts_and_reqs_for_length(length):
+def get_parts_and_reqs_for_length(length):
     real_length = length + 2
     to_req = real_length // 2
     from_req = to_req
@@ -280,7 +280,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
 
     # Get required lengths and parts
-    from_req, to_req, from_part, to_part =  _get_parts_and_reqs_for_length(length)
+    from_req, to_req, from_part, to_part =  get_parts_and_reqs_for_length(length)
 
     # Check that we have enough handles
     if from_req > transition_data["from_handle"] or to_req >  transition_data["to_handle"]:

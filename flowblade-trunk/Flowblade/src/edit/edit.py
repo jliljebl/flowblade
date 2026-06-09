@@ -725,9 +725,9 @@ def _cover_delete_transition_redo(self):
     self.original_to_in = cover_clip_to.clip_in
     
     _insert_clip(self.track, cover_clip_from, self.index - 1,
-                 cover_clip_from.clip_in, cover_clip_from.clip_out + self.from_part - 1)
+                 cover_clip_from.clip_in, cover_clip_from.clip_out + self.from_part)
     _insert_clip(self.track, cover_clip_to, self.index,
-                 cover_clip_to.clip_in - self.to_part, cover_clip_to.clip_out)
+                 cover_clip_to.clip_in - self.to_part + 1, cover_clip_to.clip_out)
 
 #----------------- LIFT MULTIPLE CLIPS 
 # "track","from_index","to_index"
@@ -3158,7 +3158,7 @@ def _add_centered_transition_redo(self):
     # Insert transition
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 transition_clip.get_length() - 2)
+                 transition_clip.get_length() - 2)  # last frame is dropped as it is 100% to clip
 
     print("transition_clip.clip_length", transition_clip.clip_length())
 

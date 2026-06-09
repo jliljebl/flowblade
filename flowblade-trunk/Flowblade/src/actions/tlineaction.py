@@ -56,6 +56,7 @@ import movemodes
 import multimovemode
 import projectaction
 import sequence
+import singletracktransition
 import syncsplitevent
 import updater
 import utils
@@ -426,71 +427,31 @@ def splice_out_button_pressed():
          gui.editor_window.window)
 
 def _attempt_clip_cover_delete(clip, track, index):
-    if clip.rendered_type == appconsts.RENDERED_FADE_OUT:
-        if index != 0:
-            cover_clip = track.clips[movemodes.selected_range_in - 1]
-            if clip.get_length() < (cover_clip.get_length() - cover_clip.clip_out + 1):
-                # Do delete
-                data = {"track":track,
-                        "clip":clip,
-                        "index":movemodes.selected_range_in}
-                edit_action = edit.cover_delete_fade_out(data)
-                edit_action.do_edit()
-                _splice_out_done_update()
-                return True
+
+    if index == 0:
         return False
-        
-    elif clip.rendered_type == appconsts.RENDERED_FADE_IN:
-        if index != len(track.clips) - 1:
-            cover_clip = track.clips[movemodes.selected_range_in + 1]
-            if clip.get_length() <= cover_clip.clip_in + 1:
-                # Do delete
-                data = {"track":track,
-                        "clip":clip,
-                        "index":movemodes.selected_range_in}
-                edit_action = edit.cover_delete_fade_in(data)
-                edit_action.do_edit()
-                _splice_out_done_update()
-                return True
+    if index == len(track.clips) - 1:
         return False
-        
-    else:# RENDERED_DISSOLVE, RENDERED_WIPE, RENDERED_COLOR_DIP
-        if index == 0:
-            return False
-        if index == len(track.clips) - 1:
-            return False
-        cover_form_clip = track.clips[movemodes.selected_range_in - 1]
-        cover_to_clip = track.clips[movemodes.selected_range_in + 1]
-        
-        real_length = clip.get_length() # this the mlt function giving media length, not length on timeline
+    cover_form_clip = track.clips[movemodes.selected_range_in - 1]
+    cover_to_clip = track.clips[movemodes.selected_range_in + 1]
 
-        to_part = real_length // 2
-        from_part = real_length - to_part
+    from_req, to_req, from_part, to_part = singletracktransition.get_parts_and_reqs_for_length( clip.clip_length())
 
-        # Fix lengths to match what existed before adding rendered transition
-        clip_marks_length = clip.clip_out - clip.clip_in
-        if clip_marks_length % 2 == 1:
-            to_part += -1
-        else:
-            from_part += 1
-            to_part += -1
+    if to_req > cover_to_clip.clip_in:
+        return False
+    if from_req > cover_form_clip.get_length() - cover_form_clip.clip_out:# -1, clip_out inclusive
+        return False
 
-        if to_part > cover_to_clip.clip_in:
-            return False
-        if from_part > cover_form_clip.get_length() - cover_form_clip.clip_out - 1:# -1, clip_out inclusive
-            return False
-            
-        # Do delete
-        data = {"track":track,
-                "clip":clip,
-                "index":movemodes.selected_range_in,
-                "to_part": to_part,
-                "from_part":from_part}
-        edit_action = edit.cover_delete_transition(data)
-        edit_action.do_edit()
-        return True
-  
-    return False
+    # Do delete
+    data = {"track":track,
+            "clip":clip,
+            "index":movemodes.selected_range_in,
+            "to_part": to_part,
+            "from_part":from_part}
+    edit_action = edit.cover_delete_transition(data)
+    edit_action.do_edit()
+
+    return True
 
 def _splice_out_done_update():
     # Nothing is selected after edit

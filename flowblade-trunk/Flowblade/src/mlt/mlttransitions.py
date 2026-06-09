@@ -558,7 +558,7 @@ def get_rendered_transition_tractor(current_sequence,
 
     name, transition_type = rendered_transitions[transition_type_selection_index]
 
-    # We are rendering clipwith 1 frame overlap on each end
+    # We are rendering clip with 1 frame overlap on each end.
     from_out = from_out + 1
     from_in = from_in - 1
     to_out = to_out + 1
