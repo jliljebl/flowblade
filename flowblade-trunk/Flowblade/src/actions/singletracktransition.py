@@ -48,7 +48,7 @@ import userfolders
 # Used to store transition render data needed at render complete callback.
 transition_render_data = None
 
-#    NOTE: rendered transitions require 1 frame extra on both ends to in, from out
+#    NOTE: rendered transitions require 1 frame extra on both ends: to in, from out
 #
 #
 #                to clip req            cut        from clip req
@@ -74,7 +74,6 @@ transition_render_data = None
 
 
 
-# ------------------------------------------------------------- parts computation funcs
 # ------------------------------------------------------------- parts computation funcs
 def get_parts_and_reqs_for_length(length):
     real_length = length + 2
@@ -127,24 +126,6 @@ def _get_clips_overlapping_ranges(length, from_clip_out, to_clip_in, from_part, 
 
     return (from_in, from_out, to_in, to_out)
 
-"""
-def _get_parts_for_length(length):
-    # Get values to build transition render sequence
-    # Divide transition length between clips, odd frame goes to from_clip 
-    real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
-    to_part = real_length // 2
-    from_part = real_length - to_part
-
-    # Fix to get even and odd length transitions working right.
-    if to_part == from_part:
-        add_thingy = 0
-    else:
-        add_thingy = 1
-    
-    return (from_part, to_part, add_thingy)
-
-
-"""
 
 # ------------------------------------------------------------- external interface
 def add_transition_menu_item_selected():
@@ -153,7 +134,7 @@ def add_transition_menu_item_selected():
 def add_transition_pressed(retry_from_render_folder_select=False):
     if movemodes.selected_track == -1:
         print("no selection track")
-
+        # TODO:  info?
         return
 
     track = get_track(movemodes.selected_track)
@@ -350,8 +331,6 @@ def _transition_render_complete(clip_path):
             "from_in":from_in,
             "to_out":to_out}
 
-    print(data)
-
     action = edit.add_centered_transition_action(data)
     action.do_edit()
 
@@ -443,32 +422,33 @@ def _transition_RE_render_complete(clip_path):
     action.do_edit()
 
 def create_length_changed_transition(track, index, new_length):
-    #from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    #sorted_wipe_luma_index = old_transition.creation_data
-    
+    # Get old transition data.
     old_transition_clip = track.clips[index]
     # We need transition type and possible wipe luma from old transition.
     old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
     sorted_wipe_luma_index = old_transition_clip.creation_data
-    
-    from_clip = track.clips[index - 1]
-    to_clip = track.clips[index + 1]
 
+    old_from_req, old_to_req, old_from_part, old_to_part = get_parts_and_reqs_for_length(old_transition_clip.clip_length())
+
+    # Get current from_to_clips.
+    try:
+        from_clip = track.clips[index - 1]
+        to_clip = track.clips[index + 1]
+    except:
+        print("clips not available")
+        # TODO: Info?
+        return
+
+    # Get new parts and reqs.
     from_req, to_req, from_part, to_part = get_parts_and_reqs_for_length(new_length)
-    
-    # Set from_clip out and to_clip in temprarily to get correct overlaps
-    t_from_half = old_transition_clip.clip_length() // 2 
-    if old_transition_clip.clip_length() % 2 == 0:
-        t_to_half = t_from_half
-    else:
-        t_to_half = t_from_half + 1 
-        
-    from_clip.clip_out = from_clip.clip_out + t_from_half
-    to_clip.clip_in = from_clip.clip_in - t_to_half
-    from_in, from_out, to_in, to_out =  _get_clips_overlapping_ranges(new_length, from_clip.clip_out, to_clip.clip_in, from_part, to_part, add_thingy)
-    from_clip.clip_out = from_clip.clip_out - t_from_half
-    to_clip.clip_in = from_clip.clip_in + t_to_half
-    
+
+    # Get from clip out and to clip in as if the currently exiting transition wasn't there.
+    from_clip_out = from_clip.clip_out + old_from_part
+    to_clip_in = to_clip.clip_in - old_to_part
+
+    # Get new transition clip ranges.
+    from_in, from_out, to_in, to_out = _get_clips_overlapping_ranges(new_length, from_clip_out, to_clip_in, from_part, to_part)
+
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
                                                                         to_clip,
@@ -493,7 +473,8 @@ def create_length_changed_transition(track, index, new_length):
 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
-    transition_render_data = (index, from_clip, to_clip, track, creation_data, transition_type_selection_index, old_transition_clip)
+    transition_render_data = (index, from_clip, to_clip, track, from_in, to_out, transition_type_selection_index, creation_data)
+    
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
@@ -507,32 +488,21 @@ def create_length_changed_transition(track, index, new_length):
 def _length_changed_transition_rendered_callback(clip_path):
 
     global transition_render_data
-    index, from_clip, to_clip, track, creation_data, transition_type, old_transition_clip = transition_render_data 
+    transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
 
     transition_clip = current_sequence().create_rendered_transition_clip(clip_path, transition_type)
     transition_clip.creation_data = creation_data
 
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
-    transition_type_selection_index, sorted_wipe_luma_index = creation_data
-                    
-    old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, \
-    old_transition_type_selection_index, old_sorted_wipe_luma_index = old_transition_clip.creation_data
-
-    from_out_delta = from_out - old_from_out
-    to_in_delta = to_in - old_to_in
-
     data = {"transition_clip":transition_clip,
-            "old_transition_clip":old_transition_clip,
-            "transition_index":index,
+            "transition_index":transition_index,
             "from_clip":from_clip,
             "to_clip":to_clip,
             "track":track,
-            "from_out_delta":from_out_delta,
-            "to_in_delta":to_in_delta}
+            "from_in":from_in,
+            "to_out":to_out}
 
     action = edit.replace_length_changed_transition_action(data)
     action.do_edit()
-
 
 # ----------------------------------------------------------- re-redering
 def rerender_all_rendered_transitions():

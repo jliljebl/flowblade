@@ -586,19 +586,6 @@ def get_rendered_transition_tractor(current_sequence,
     multitrack.connect(track0, 0)
     multitrack.connect(track1, 1)
 
-    """
-    # Set in and out points for images and pattern producers.
-    if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = from_out - from_in
-        from_clip.clip_in = 0
-        from_clip.clip_out = length
-
-    if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
-        length = to_out - to_in
-        to_clip.clip_in = 0
-        to_clip.clip_out = length
-    """
-
     # Add clips to tracks and create keyframe string for mixing
     # Images and pattern producers always fill full track.
     if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:

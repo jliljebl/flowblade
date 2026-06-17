@@ -3160,8 +3160,62 @@ def _add_centered_transition_redo(self):
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
                  transition_clip.get_length() - 2)  # last frame is dropped as it is 100% to clip
 
-    print("transition_clip.clip_length", transition_clip.clip_length())
 
+#------------------- ADD CENTERED TRANSITION
+# "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out", "length_fix"
+def replace_length_changed_transition_action(data):
+    action = EditAction(_replace_length_changed_transition_undo, _replace_length_changed_transition_redo, data)
+    return action
+
+def _replace_length_changed_transition_undo(self):
+    index = self.transition_index
+    track = self.track
+    from_clip = self.from_clip
+    to_clip = self.to_clip
+
+    for i in range(0, 3): # from, trans, to
+        _remove_clip(track, index - 1)
+    
+    _insert_clip(track, from_clip, index - 1, 
+                 from_clip.clip_in, self.orig_from_clip_out)
+
+    _insert_clip(track, self.old_transition_clip , index, 
+                 self.old_transition_clip.clip_in, self.old_transition_clip.clip_out)
+                     
+    _insert_clip(track, to_clip, index + 1, 
+                 self.orig_to_clip_in, to_clip.clip_out)
+
+def _replace_length_changed_transition_redo(self):
+    # get shorter refs
+    transition_clip = self.transition_clip
+    index = self.transition_index
+    track = self.track
+    from_clip = self.from_clip
+    to_clip = self.to_clip
+
+    # Save from and to clip in/out points before adding transition
+    self.orig_from_clip_out = from_clip.clip_out
+    self.orig_to_clip_in = to_clip.clip_in
+
+    # Length change from clip    
+    _remove_clip(track, index - 1)
+    _insert_clip(track, from_clip, index - 1, 
+                 from_clip.clip_in, self.from_in) # self.from_in == transition start on from clip
+
+    # Remove earliuer transition
+    self.old_transition_clip = _remove_clip(track, index)
+
+    # Length change to clip 
+    _remove_clip(track, index)
+    _insert_clip(track, to_clip, index, 
+                         self.to_out + 1, to_clip.clip_out)  # self.to_out == transition end on to clip
+                                                             # + 1  == because frame is part of inserted transition
+    # Insert transition
+    _insert_clip(track, transition_clip, 
+                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
+                 transition_clip.get_length() - 2)  # last frame is dropped as it is 100% to clip
+
+    
 #------------------- REPLACE CENTERED TRANSITION
 # "track", "transition_clip","transition_index"
 def replace_centered_transition_action(data):
@@ -3185,31 +3239,6 @@ def _replace_centered_transition_redo(self):
     _insert_clip(self.track, self.transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
                  self.transition_clip.clip_out)
-
-
-# ------------------- REPLACE LENGTH CHANGED TRANSITION
-# "transition_clip", "old_transition_clip", "transition_index", "from_clip", "to_clip", "track", "from_out_delta", "to_in_delta"
-
-def replace_length_changed_transition_action(data):
-    action = EditAction(_replace_length_changed_transition_undo, _replace_length_changed_transition_redo, data)
-    return action
-
-def _replace_length_changed_transition_undo(self):
-    _set_in_out(self.from_clip, self.from_clip.clip_in, self.from_clip.clip_out - self.from_out_delta)
-    _set_in_out(self.to_clip, self.to_clip.clip_in - self.to_in_delta, self.to_clip.clip_out)
-    _remove_clip(self.track, self.transition_index)
-    _insert_clip(self.track, self.old_transition_clip, 
-                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 self.old_transition_clip.clip_out)
-
-def _replace_length_changed_transition_redo(self):
-    _set_in_out(self.from_clip, self.from_clip.clip_in, self.from_clip.clip_out + self.from_out_delta)
-    _set_in_out(self.to_clip, self.to_clip.clip_in + self.to_in_delta, self.to_clip.clip_out)
-    _remove_clip(self.track, self.transition_index)
-    _insert_clip(self.track, self.transition_clip, 
-                 self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 self.transition_clip.get_length() - 1)
-
 
 # -------------------------------------------------------- REPLACE RENDERED FADE
 # "fade_clip", "index", "track", "length"
