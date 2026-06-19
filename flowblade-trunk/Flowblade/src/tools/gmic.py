@@ -112,7 +112,14 @@ def test_availablity():
         print("G'MIC NOT found")
 
 def set_gmic_path():
-    if os.path.exists("/usr/bin/gmic") == True:
+    appdir = os.environ.get("APPDIR")
+    appimage_gmic = None
+    if appdir != None:
+        appimage_gmic = os.path.join(appdir, "usr", "bin", "gmic")
+
+    if appimage_gmic != None and os.path.exists(appimage_gmic) == True:
+        editorstate.gmic_path = appimage_gmic
+    elif os.path.exists("/usr/bin/gmic") == True:
         editorstate.gmic_path = "/usr/bin/gmic"
     elif os.path.exists("/app/bin/gmic") == True: # File system and flatpak
         editorstate.gmic_path = "/app/bin/gmic"

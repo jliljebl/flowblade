@@ -764,6 +764,8 @@ def environment_dialog(parent_window):
         run_type = _("INSTALLATION")
     elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
         run_type = "FLATPAK"
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_APPIMAGE:
+        run_type = "APPIMAGE"
     else:
         run_type = _("DEVELOPER VERSION")
     r4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Running from: ")), Gtk.Label(label=run_type)])
@@ -2070,4 +2072,3 @@ def replace_clip_not_enough_material_info():
     primary_txt = _("Cannot replace the clip!")
     secondary_txt = _("The clip being replaced is longer then the clip being added.")
     dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-    

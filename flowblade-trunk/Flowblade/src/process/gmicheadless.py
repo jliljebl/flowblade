@@ -96,7 +96,14 @@ def main(root_path, session_id, parent_folder, script, clip_path, range_in, rang
     # Set paths.
     respaths.set_paths(root_path)
 
-    if os.path.exists("/usr/bin/gmic") == True: # distro install an dev.
+    appdir = os.environ.get("APPDIR")
+    appimage_gmic = None
+    if appdir != None:
+        appimage_gmic = os.path.join(appdir, "usr", "bin", "gmic")
+
+    if appimage_gmic != None and os.path.exists(appimage_gmic) == True:
+        editorstate.gmic_path = appimage_gmic
+    elif os.path.exists("/usr/bin/gmic") == True: # distro install an dev.
         editorstate.gmic_path = "/usr/bin/gmic"
     elif os.path.exists("/app/bin/gmic") == True: # Flatpak
         editorstate.gmic_path = "/app/bin/gmic"
