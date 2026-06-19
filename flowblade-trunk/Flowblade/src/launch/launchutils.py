@@ -10,6 +10,13 @@ def get_modules_path():
 def set_app_runtime_type(modules_path): 
     
     import editorstate
+    appdir = os.environ.get("APPDIR")
+    if appdir != None:
+        appdir = os.path.realpath(appdir)
+        if os.path.realpath(sys.argv[0]).startswith(appdir + os.sep):
+            editorstate.app_running_from = editorstate.RUNNING_FROM_APPIMAGE
+            return
+
     root_dir = modules_path.split("/")[1]
     
      # Used to decide which translations from file system are used.

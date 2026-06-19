@@ -379,9 +379,7 @@ class FlowbladeApplication(Gtk.Application):
             gui.editor_window.set_middlebar_visible(False)
 
         # Set SDL consumer version to be used.
-        #if editorstate.mlt_version_is_greater_correct("7.28.0") or editorstate.force_sdl2 == True \
-        #    or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-        if editorstate.force_sdl2 == True:
+        if editorstate.mlt_version_is_greater_correct('7.28.0') or editorstate.force_sdl2 == True:
             mltplayer.set_sdl_consumer_version(mltplayer.SDL_2)
         else:
             mltplayer.set_sdl_consumer_version(mltplayer.SDL_1)
@@ -1232,4 +1230,3 @@ def _app_destroy():
     gui.editor_window.window.destroy()
     os._exit(0)
     #_app.quit()
-

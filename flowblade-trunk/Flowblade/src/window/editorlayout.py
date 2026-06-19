@@ -195,12 +195,6 @@ def top_level_project_panel():
 def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks, PANEL_MINIMUM_SIZES
     _panel_positions = editorpersistance.prefs.panel_positions
-    
-    # New panel needs to be made part of saced postions on firts load of 2.26.
-    try: 
-        pos = _panel_positions[appconsts.PANEL_DISSOLVE_SELECT]
-    except:
-        _panel_positions[appconsts.PANEL_DISSOLVE_SELECT] = appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 
     # Use default panels positions if nothing available yet or too small screen, 
     # or default panel position is empty, layout code makes too many assumptions to make that work.
@@ -212,6 +206,10 @@ def init_layout_data():
             _panel_positions[appconsts.PANEL_FILTER_SELECT] = appconsts.PANEL_PLACEMENT_NOT_VISIBLE
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
+
+    # New panel needs to be made part of saved positions on first load of 2.26.
+    if appconsts.PANEL_DISSOLVE_SELECT not in _panel_positions:
+        _panel_positions[appconsts.PANEL_DISSOLVE_SELECT] = appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT
 
     if editorpersistance.prefs.positions_tabs == None:
         editorpersistance.prefs.positions_tabs = DEFAULT_TABS_POSITIONS
@@ -825,5 +823,4 @@ def apply_layout(layout_dict):
             
     gui.editor_window.window.show_all()
     set_positions_frames_visibility()
-
 
