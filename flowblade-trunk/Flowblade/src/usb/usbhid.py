@@ -32,7 +32,12 @@ drivers in the usbhiddrivers module.
 
 from gi.repository import GObject
 
-import usb1
+try:
+    import usb1
+except ImportError as e:
+    # USB jog/shuttle support is optional, so keep application startup working.
+    usb1 = None
+    _usb1_import_error = e
 
 import time
 
@@ -86,6 +91,10 @@ def start_usb_hid_input(device_config_name):
 
     global usb_driver_ctx
     global usb_hid_input_id
+
+    if usb1 is None:
+        raise UsbHidError("USB HID support requires python-libusb1: %s" % \
+                          (str(_usb1_import_error),))
 
     if usb_driver_ctx is not None:
         raise UsbHidError("USB HID device already in use")
