@@ -3,7 +3,8 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/darktheme/header_text.png "Flowblade")
 
-**New release 2.24 available. See release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+
+**Project on summer break, activity will resume in August.**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
@@ -16,6 +17,7 @@
 
 
 # Introduction
+
 
 Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
 
