@@ -29,12 +29,23 @@ print ("---------------------------")
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+real_launch_dir = os.path.realpath(launch_dir)
+appdir = os.environ.get("APPDIR")
+appdir_usr_bin = None
+if appdir != None:
+    appdir = os.path.realpath(appdir)
+    appdir_usr_bin = os.path.join(appdir, "usr", "bin")
 
 print ("Launch script dir:", launch_dir)
 
 # Update sys.path to include modules.
+# - When running in AppImage.
+if appdir_usr_bin != None and real_launch_dir == appdir_usr_bin:
+    print ("Running from AppImage...")
+    modules_path = appdir + "/usr/share/flowblade/Flowblade/src"
+    print ("modules path:", modules_path)
 # - When running on distro.
-if os.path.realpath(launch_dir) == "/usr/bin":
+elif real_launch_dir == "/usr/bin":
     print ("Running from installation...")
     modules_path = "/usr/share/flowblade/Flowblade/src"
     if not os.path.isdir(modules_path):
@@ -77,7 +88,9 @@ try:
     import app
     import editorstate
 
-    if launch_dir == "/usr/bin":
+    if appdir_usr_bin != None and real_launch_dir == appdir_usr_bin:
+        editorstate.app_running_from = editorstate.RUNNING_FROM_APPIMAGE
+    elif launch_dir == "/usr/bin":
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     elif launch_dir == "/app/bin": 
         editorstate.app_running_from = editorstate.RUNNING_FROM_FLATPAK

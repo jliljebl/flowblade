@@ -103,6 +103,7 @@ appversion = "2.24"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 RUNNING_FROM_FLATPAK = 2
+RUNNING_FROM_APPIMAGE = 3
 app_running_from = RUNNING_FROM_INSTALLATION
 audio_monitoring_available = False
 
@@ -152,7 +153,7 @@ _trim_clips_cache = {}
 gmic_path = None
 
 # For development and test use.
-force_sdl2 = True 
+force_sdl2 = False
 
 # Saved mutestate for muted tracks whenm soloing a track. _unsolo_data == None
 # means that we are not in solo track state. 
@@ -220,19 +221,7 @@ def timeline_visible():
     return _timeline_displayed
 
 def mlt_version_is_greater_correct(test_version):
-    runtime_ver = mlt_version.split(".")
-    test_ver = test_version.split(".")
-    
-    if runtime_ver[0] > test_ver[0]:
-        return True
-    elif runtime_ver[0] == test_ver[0]:
-        if runtime_ver[1] > test_ver[1]:
-            return True
-        elif runtime_ver[1] == test_ver[1]:
-            if  runtime_ver[2] > test_ver[2]:
-                return True
-    
-    return False
+    return runtime_version_greater_then_test_version(test_version, mlt_version)
 
 def runtime_version_greater_then_test_version(test_version, runtime_version):
     runtime_ver = list(map(int, runtime_version.split(".")))

@@ -33,6 +33,7 @@ try:
 except:
     import mlt
 import os
+import shutil
 import threading
 import time
 
@@ -96,10 +97,13 @@ def main(root_path, session_id, parent_folder, script, clip_path, range_in, rang
     # Set paths.
     respaths.set_paths(root_path)
 
-    if os.path.exists("/usr/bin/gmic") == True: # distro install an dev.
-        editorstate.gmic_path = "/usr/bin/gmic"
-    elif os.path.exists("/app/bin/gmic") == True: # Flatpak
-        editorstate.gmic_path = "/app/bin/gmic"
+    gmic_path = shutil.which('gmic')
+    if gmic_path != None:
+        editorstate.gmic_path = gmic_path
+    elif os.path.exists('/usr/bin/gmic') == True: # distro install an dev.
+        editorstate.gmic_path = '/usr/bin/gmic'
+    elif os.path.exists('/app/bin/gmic') == True: # Flatpak
+        editorstate.gmic_path = '/app/bin/gmic'
     else:
         print("No G'Mic in gmicheadless main(), something is wrong.") # Should not be possible
 

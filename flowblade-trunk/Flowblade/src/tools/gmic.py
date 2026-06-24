@@ -112,10 +112,13 @@ def test_availablity():
         print("G'MIC NOT found")
 
 def set_gmic_path():
-    if os.path.exists("/usr/bin/gmic") == True:
-        editorstate.gmic_path = "/usr/bin/gmic"
-    elif os.path.exists("/app/bin/gmic") == True: # File system and flatpak
-        editorstate.gmic_path = "/app/bin/gmic"
+    gmic_path = shutil.which('gmic')
+    if gmic_path != None:
+        editorstate.gmic_path = gmic_path
+    elif os.path.exists('/usr/bin/gmic') == True:
+        editorstate.gmic_path = '/usr/bin/gmic'
+    elif os.path.exists('/app/bin/gmic') == True: # File system and flatpak
+        editorstate.gmic_path = '/app/bin/gmic'
 
 def gmic_available():
     return _gmic_found
@@ -123,7 +126,7 @@ def gmic_available():
 def launch_gmic(launch_data=None):
     if _gmic_found == False:
         primary_txt = _("G'Mic not found!")
-        secondary_txt = _("G'Mic binary was not present at <b>/usr/bin/gmic</b>.\nInstall G'MIC to use this tool.")
+        secondary_txt = _("G'Mic binary was not found.\nInstall G'MIC to use this tool.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return
 
@@ -346,9 +349,7 @@ def _finish_clip_open(use_default_profile):
     _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
 
     # Set SDL consumer version to be used.
-    #if editorstate.mlt_version_is_greater_correct("7.28.0") or editorstate.force_sdl2 == True \
-    #    or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-    if editorstate.force_sdl2 == True:
+    if editorstate.mlt_version_is_greater_correct('7.28.0') or editorstate.force_sdl2 == True:
         gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_2)
     else:
         gmicplayer.set_sdl_consumer_version(gmicplayer.SDL_1)
