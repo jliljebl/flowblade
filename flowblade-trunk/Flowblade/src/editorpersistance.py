@@ -416,3 +416,4 @@ class EditorPreferences:
         self.use_gpu_decode = True
         self.use_headerbar = True
         self.system_accent_color = (0.063, 0.341, 0.659)
+        self.tooldock_menu_items_visibility = [True, True, True, True, True, True]

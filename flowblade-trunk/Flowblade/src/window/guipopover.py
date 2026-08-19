@@ -127,6 +127,7 @@ _scaling_section = None
 _interpolation_submenu = None
 _decode_section = None
 _monitor_add_popover = None
+_tooldock_popover = None
 
  
 # -------------------------------------------------- menuitems builder functions
@@ -1307,18 +1308,65 @@ def monitor_add_popover_custom_show(launcher, additensdata, widget, callback):
     _monitor_add_popover.connect("closed", lambda w: _shut_down_prelight(launcher))
     _monitor_add_popover.show()
 
+def tooldock_menu_custom_popover_show(launcher, groups, widget, callback):
+    global _tooldock_popover
+     
+    vbox = Gtk.VBox()
+    add_ids = []
+    root = shortcuts.get_root()
+    for group in groups:
+        for additem in group:
+            label_text, icon_name, data, tooltip = additem
+            add_ids.append(data)
+            label = guiutils.get_left_justified_box([Gtk.Label.new(label_text)])
+
+            add_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + icon_name)
+            add_img.set_size_request(30, 22)
+            add_img.set_margin_right(4)
+
+            # data for callback is chosen to match shortcut ids.
+            kb_shortcut = shortcuts.get_shortcut_kb_str(root, data)
+            kb_shortcut_label = Gtk.Label.new(str(kb_shortcut))
+            kb_shortcut_label.set_size_request(22, 22)
+            guiutils.set_margins(kb_shortcut_label, 0,0,12,2)
+             
+            hbox = Gtk.HBox()
+            hbox.pack_start(add_img, False, False, 0)
+            hbox.pack_start(label, True, True, 0)
+            hbox.pack_start(kb_shortcut_label, False, False, 0)
+            hbox.show_all()
+
+            menu_item = ToolMenuItem(data, hbox, tooltip, callback, launcher)
+            
+            guiutils.set_margins(menu_item.widget, 4, 0, 4, 4)
+            vbox.pack_start(menu_item.widget, False, False, 0)
+        guiutils.set_margins(menu_item.widget, 4, 12, 4, 4)
+            
+    vbox.show_all()
+    guiutils.set_margins(vbox, 0,4,0,0)
+         
+    _tooldock_popover = Gtk.Popover.new(widget)
+    launcher.popover = _tooldock_popover
+    _tooldock_popover.add(vbox)
+    _tooldock_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    _tooldock_popover.connect("closed", lambda w: launcher.shut_prelight())
+    _tooldock_popover.show()
+    
 def hide_monitor_add_popover():
     global _monitor_add_popover
     _monitor_add_popover.hide()
 
 class ToolMenuItem:
     
-    def __init__(self, tool_id, hbox, tooltip, callback):
+    def __init__(self, tool_id, hbox, tooltip, callback, launcher=None):
         color = gui.get_bg_color()
         self.tool_id = tool_id
         self.hbox = hbox
         self.widget = Gtk.EventBox()
-        self.widget.connect("button-press-event", lambda w,e: callback(w, e, self.tool_id))
+        if launcher == None:
+            self.widget.connect("button-press-event", lambda w,e: callback(w, e, self.tool_id))
+        else:
+            self.widget.connect("button-press-event", lambda w,e: callback(launcher, self.tool_id))
         self.widget.connect('enter-notify-event', self._enter_notify_event)
         self.widget.connect('leave-notify-event', self._leave_notify_event)
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)

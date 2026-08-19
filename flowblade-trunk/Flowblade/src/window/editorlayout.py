@@ -196,7 +196,10 @@ def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks, PANEL_MINIMUM_SIZES
     _panel_positions = editorpersistance.prefs.panel_positions
     
-    # New panel needs to be made part of saced postions on firts load of 2.26.
+    if _panel_positions == None:
+        _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
+
+    # New panel needs to be made part of saced postions on first load of 2.26.
     try: 
         pos = _panel_positions[appconsts.PANEL_DISSOLVE_SELECT]
     except:

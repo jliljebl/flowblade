@@ -46,6 +46,14 @@ DEFAULT_BUTTONS_TIMECODE_LEFT = ['undo_redo', 'zoom_buttons', 'edit_buttons', 'e
 DEFAULT_BUTTONS_TIMECODE_CENTER = ['undo_redo', 'zoom_buttons', 'edit_buttons_3', 'edit_buttons', 'edit_buttons_2', 'monitor_insert_buttons']
 DEFAULT_BUTTONS_COMPONENTS_CENTERED = ['undo_redo', 'zoom_buttons', 'edit_buttons', 'edit_buttons_2', 'edit_buttons_3', 'monitor_insert_buttons']
 
+# Tooldock menu items groups
+UNDO_GROUP = 0
+ZOOM_GROUP = 1
+EDIT_GROUP = 2
+SYNC_SPLIT_GROUP = 3
+DELETE_GROUP = 4
+MONITOR_ADD_GROUP = 5
+    
 # editorwindow.EditorWindow object.
 # This needs to be set here because gui.py module ref is not available at init time
 w = None
@@ -371,7 +379,7 @@ def show_middlebar_conf_dialog():
     
     _save_layout_data()
     
-    dialog = Gtk.Dialog(_("Middlebar Configuration"), None,
+    dialog = Gtk.Dialog(_("Middlebar and Tooldock Configuration"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
                     _("OK"), Gtk.ResponseType.ACCEPT))
@@ -410,15 +418,20 @@ def _get_conf_panel():
 
     # Widgets
     show_check = Gtk.CheckButton()
-    show_check.set_active(prefs.middlebar_visible)
-    show_check.set_margin_right(4)
-    show_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
-    show_hbox.pack_start(show_check, False, False, 0)
-    show_hbox.pack_start(guiutils.get_left_justified_box([Gtk.Label(label=_("Middlebar Visible"))]), True, True, 0)
-    show_hbox.set_margin_bottom(12)
-    visible_frame = guiutils.get_named_frame(_("Middlebar Visibility"), show_hbox)
-    visible_frame.set_margin_top(12)
 
+    visibility_combo  = Gtk.ComboBoxText()
+    visibility_combo.append_text(_("Middlebar with Toolsmenu"))
+    visibility_combo.append_text(_("Middlebar and Toolsdock"))
+    visibility_combo.append_text(_("Toolsdock only"))
+    visibility_combo.set_active(prefs.media_load_order)
+
+    visible_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    visibility_combo.set_margin_top(12)
+    visible_box.pack_start(visibility_combo, False, False, 0)
+    visibility_combo.set_margin_bottom(12)
+    
+    visible_frame = guiutils.get_named_frame(_("Middlebar and Tooldock Visibility"), visible_box)
+    
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label(label=_("Set button group active state and position."))
     
@@ -437,20 +450,59 @@ def _get_conf_panel():
     box_move.pack_start(Gtk.Label(), True, True, 0)
     box_move.pack_start(button_reset, False, False, 0)
 
-    vbox.pack_start(choice, False, False, 0)
+    #vbox.pack_start(choice, False, False, 0)
     vbox.pack_start(toolbar_list_box, False, False, 0)
     vbox.pack_start(box_move, False, False, 0)
     draw_listbox(vbox)
     vbox.set_size_request(400, 200)
+    vbox = guiutils.set_margins(vbox, 8,8,8,8)
 
-    groups_frame = guiutils.get_named_frame(_("Buttons Groups"), vbox)
-    
+    tooldock_menu = Gtk.VBox()
+    tooldock_menu.set_size_request(200, 100)
+    tooldock_menu.set_margin_top(12)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Undo Group"), UNDO_GROUP), False, False, 0)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Zoom Group"), ZOOM_GROUP), False, False, 0)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Edit Group"), EDIT_GROUP), False, False, 0)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Sync Split Group"), SYNC_SPLIT_GROUP), False, False, 0)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Delete Group"), DELETE_GROUP), False, False, 0)
+    tooldock_menu.pack_start(_add_tooldock_menu_config_row(_("Monitor Add Group"), MONITOR_ADD_GROUP), False, False, 0)
+    tooldock_menu.pack_start(Gtk.Label(), True, True, 0)
+
+    tooldock_menu_frame = guiutils.get_named_frame(_("Hamburger Menu Items Visibility"), tooldock_menu, left_padding=4, right_padding=6, right_out_padding=4, tooltip_txt=None)
+    tooldock_menu_frame.set_margin_left(4)
+    tooldock_menu_frame.set_margin_top(12)
+
+    notebook = Gtk.Notebook()
+    notebook.append_page(vbox, Gtk.Label(label=_("Middlebar")))
+    notebook.append_page(tooldock_menu_frame, Gtk.Label(label=_("Tooldock")))
+
     pane = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-
-    pane.pack_start(groups_frame, False, False, 0)
     pane.pack_start(visible_frame, False, False, 0)
+    pane.pack_start(notebook, False, False, 0)
     
     return pane
+
+def _add_tooldock_menu_config_row(text, group):
+    active = editorpersistance.prefs.tooldock_menu_items_visibility[group]
+
+    row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    check = Gtk.CheckButton()
+    check.set_active(active)
+    check.set_margin_right(4)
+    check.set_margin_left(12)
+    check.connect("toggled", lambda w: _tooldock_menu_item_visibility_changed(check, group))
+
+    row.pack_start(check, False, False, 0)
+    row.pack_start(Gtk.Label(label=text), False, False, 0)
+    row.pack_start(Gtk.Label(), True, True, 0)
+    row.pack_start(Gtk.Label(), True, True, 0)
+    row.set_margin_bottom(4)
+    return row
+
+def _tooldock_menu_item_visibility_changed(check, group):
+    print(group)
+
+    editorpersistance.prefs.tooldock_menu_items_visibility[group] = check.get_active()
 
 def toggle_click(button, row_number):
     global current_active_flags
@@ -517,4 +569,30 @@ def draw_listbox(vbox):
 
     vbox.show_all()
 
-    
+
+# ----------------------------------------------------------------------------- tooldock menu item actions
+def tooldock_menu_item_activated(launcher, tool_id):
+    launcher.popover.hide()
+
+    action_func = TOOL_DOCK_MENU_FUNCS[tool_id]
+    action_func()
+
+
+TOOL_DOCK_MENU_FUNCS = { \
+        "zoom_out": updater.zoom_out,
+        "zoom_fit": updater.zoom_project_length,
+        "add_dissolve": singletracktransition.add_transition_pressed,
+        "cut": tlineaction.cut_pressed,
+        "delete": tlineaction.splice_out_button_pressed,
+        "lift": tlineaction.lift_button_pressed,
+        "rippledelete": tlineaction.ripple_delete_button_pressed,
+        "rangedelete": tlineaction.delete_range_button_pressed,
+        "split_selected": tlineaction.split_audio_synched_button_pressed,
+        "set_track_sync": tlineaction.set_track_sync_button_pressed,
+        "resync": tlineaction.resync_track_button_pressed,
+        "overwrite_range": tlineaction.range_overwrite_pressed,
+        "3_point_overwrite":  tlineaction.three_point_overwrite_pressed,
+        "insert": tlineaction.insert_button_pressed,
+        "append": tlineaction.append_button_pressed,
+        "undo": undo.do_undo_and_repaint,
+        "redo": undo.do_redo_and_repaint }

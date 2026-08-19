@@ -144,7 +144,7 @@ def _get_tooltip_text(tool_id):
 
 
 # ---------------------------------------------------- tools dock
-def get_tline_tool_dock():
+def get_tline_tool_dock(hamburger_menu_launcher):
     dock = Gtk.VBox()
     global dock_items
     dock_items = []
@@ -160,6 +160,7 @@ def get_tline_tool_dock():
         kb_shortcut_number = kb_shortcut_number + 1
 
     dock.pack_start(Gtk.Label(), True, True, 0)
+    dock.pack_start(hamburger_menu_launcher.widget, False, False, 0)
 
     align = guiutils.set_margins(dock, 2, 0, 0, 0)
 
@@ -215,6 +216,83 @@ class ToolDockItem:
             color = Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0)
             color.parse("#292929")
             self.widget.override_background_color(Gtk.StateType.NORMAL, color)
+
+
+def tooldock_hamburger_launch_pressed(launcher, widget, callback):
+    groups = []
+
+    # These correspond with editorpersistance.prefs.tooldock_menu_items_visibility and middlebar.py
+    UNDO_GROUP = 0
+    ZOOM_GROUP = 1
+    EDIT_GROUP = 2
+    SYNC_SPLIT_GROUP = 3
+    DELETE_GROUP = 4
+    MONITOR_ADD_GROUP = 5
+
+
+    print(editorpersistance.prefs.tooldock_menu_items_visibility)
+    
+    if editorpersistance.prefs.tooldock_menu_items_visibility[UNDO_GROUP] == True:
+        items = []
+        add_item = ( _("Undo"), "undo.png", "undo", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Redo"), "redo.png", "redo", "tooltip 2")
+        items.append(add_item)
+        groups.append(items)
+
+    if editorpersistance.prefs.tooldock_menu_items_visibility[ZOOM_GROUP] == True:
+        items = []
+        add_item = ( _("Zoom In"), "zoom_in.png", "zoom_in", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Zoom Out"), "zoom_out.png", "zoom_out", "tooltip 2")
+        items.append(add_item)
+        add_item = ( _("Zoom Fit"), "zoom_length.png", "zoom_fit", "tooltip 2")
+        items.append(add_item)
+        groups.append(items)
+
+    if editorpersistance.prefs.tooldock_menu_items_visibility[EDIT_GROUP] == True:
+        items = []
+        add_item = ( _("Add Single Track Transition"), "dissolve.png", "add_dissolve", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Cut"), "cut.png", "cut", "tooltip 2")
+        items.append(add_item)
+        groups.append(items)
+
+    if editorpersistance.prefs.tooldock_menu_items_visibility[SYNC_SPLIT_GROUP] == True:
+        items = []
+        add_item = ( _("Split Audio"), "split_audio.png", "split_selected", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Set Track Sync"), "set_track_sync.png", "set_track_sync", "tooltip 2")
+        items.append(add_item)
+        add_item = ( _("Resync Track"), "resync_track.png", "resync", "tooltip 2")
+        items.append(add_item)
+        groups.append(items)
+
+    if editorpersistance.prefs.tooldock_menu_items_visibility[DELETE_GROUP] == True:
+        items = []
+        add_item = ( _("Splice Out"), "splice_out.png", "delete", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Lift"), "lift.png", "lift", "tooltip 2")
+        items.append(add_item)
+        add_item = (_("Ripple Delete"), "ripple_delete.png", "rippledelete", "tooltip 3")
+        items.append(add_item)
+        add_item = (_("Range Delete"), "delete_range.png", "rangedelete", "tooltip 4")
+        items.append(add_item)
+        groups.append(items)
+        
+    if editorpersistance.prefs.tooldock_menu_items_visibility[MONITOR_ADD_GROUP] == True:
+        items = []
+        add_item = ( _("Insert"), "insert_clip.png", "insert", "tooltip 1")
+        items.append(add_item)
+        add_item = ( _("Selected Clip Overwrite"), "overwrite_clip.png", "3_point_overwrite", "tooltip 2")
+        items.append(add_item)
+        add_item = (_("Range Overwrite"), "overwrite_range.png", "overwrite_range", "tooltip 3")
+        items.append(add_item)
+        add_item = (_("Append"), "append_clip.png", "append", "tooltip 4")
+        items.append(add_item)
+        groups.append(items)
+
+    guipopover.tooldock_menu_custom_popover_show(launcher, groups, widget, callback)
 
 
 # ------------------------------------------------------------- keyboard shortcuts

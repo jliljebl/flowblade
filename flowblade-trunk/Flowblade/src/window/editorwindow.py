@@ -661,10 +661,10 @@ class EditorWindow:
 
         # Y Scroll
         self.tline_y_page = tlinewidgets.TimeLineYPage(tlineypage.page_up, tlineypage.page_down)
-
+        
         # Create tool dock if needed
         if editorpersistance.prefs.tools_selection != appconsts.TOOL_SELECTOR_IS_MENU:
-            self.tool_dock = workflow.get_tline_tool_dock()
+            self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
         else:
             self.tool_dock = None
 
@@ -926,7 +926,7 @@ class EditorWindow:
         if self.tool_dock != None:
             self.tline_box.remove(self.tool_dock)
 
-        self.tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
         self.tool_dock.show_all()
 
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
@@ -941,10 +941,23 @@ class EditorWindow:
         except:
             pass # This gets called too early on startup when placing widgets but is needed at runtime.
 
+
+    def get_tooldock_hamburger(self):
+        hamburger = guicomponents.HamburgerPressLaunch(self._tooldock_hamburger_launch_pressed)
+        hamburger.widget.set_margin_left(6)
+        hamburger.widget.set_margin_bottom(8)
+        hamburger.do_popover_callback = True
+        return hamburger
+
+    def _tooldock_hamburger_launch_pressed(self, launcher, widget, event, data):
+        print("tooldock hamburger", type(widget))
+
+        workflow.tooldock_hamburger_launch_pressed( launcher, widget, middlebar.tooldock_menu_item_activated)
+    
     def update_tool_dock(self):
         self.tline_box.remove(self.tool_dock)
 
-        self.tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
         self.tool_dock.show_all()
 
         self.tline_box.pack_start(self.tool_dock, False, False, 0)

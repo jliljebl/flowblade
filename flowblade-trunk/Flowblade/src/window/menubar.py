@@ -253,24 +253,9 @@ def get_menu():
                   <attribute name="label">""" + _("Tabs Positions") + """</attribute>
                 </submenu>
                 <item>
-                  <attribute name="label">""" + _("Middlebar Configuration...") + """</attribute>
+                  <attribute name="label">""" + _("Middlebar and Tooldock Configuration...") + """</attribute>
                   <attribute name="action">app.showmiddlebarconfig</attribute>
                 </item>
-                <submenu>
-                  <attribute name="label">""" + _("Edit Tool Selection Widget") + """</attribute>
-                   <section>
-                   <item>
-                     <attribute name="label">""" + _("Middlebar Menu") + """</attribute>
-                     <attribute name="action">app.tooldockpos</attribute>
-                     <attribute name="target">middlebar</attribute>
-                   </item>
-                   <item>
-                     <attribute name="label">""" + _("Dock") + """</attribute>
-                     <attribute name="action">app.tooldockpos</attribute>
-                     <attribute name="target">dock</attribute>
-                   </item>
-                   </section>
-                </submenu>
                 <submenu>
                   <attribute name="label">""" + _("Audio Master Level Meter") + """</attribute>
                       <section>
