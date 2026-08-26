@@ -115,10 +115,16 @@ def _get_user_profiles_panel():
     progressive = Gtk.CheckButton()
     progressive.set_active(False)
 
+    colorspace = Gtk.ComboBoxText()
+    colorspace.append_text("Rec. 601")
+    colorspace.append_text("Rec. 709")
+    colorspace.append_text("Rec. 2020")
+    colorspace.set_active(2)
+
     save_button = Gtk.Button(label=_("Save New Profile"))
 
     widgets = (load_profile_combo, description, f_rate_num, f_rate_dem, width, height, s_rate_num,
-                s_rate_dem, d_rate_num, d_rate_dem, progressive)
+                s_rate_dem, d_rate_num, d_rate_dem, progressive, colorspace)
     _fill_new_profile_panel_widgets(default_profile, widgets)
     
     # build panel
@@ -137,6 +143,7 @@ def _get_user_profiles_panel():
     row7 = guiutils.get_two_column_box(Gtk.Label(label=_("Display aspect num.:")), d_rate_num, PROFILE_MANAGER_LEFT)
     row8 = guiutils.get_two_column_box(Gtk.Label(label=_("Display aspect den.:")), d_rate_dem, PROFILE_MANAGER_LEFT)
     row9 = guiutils.get_two_column_box(Gtk.Label(label=_("Progressive:")), progressive, PROFILE_MANAGER_LEFT)
+    row10 = guiutils.get_two_column_box(Gtk.Label(label=_("Color Space:")), colorspace, PROFILE_MANAGER_LEFT)
 
     save_row = Gtk.HBox(False,0)
     save_row.pack_start(Gtk.Label(), True, True, 0)
@@ -155,6 +162,7 @@ def _get_user_profiles_panel():
     create_vbox.pack_start(row7, False, False, 0)
     create_vbox.pack_start(row8, False, False, 0)
     create_vbox.pack_start(row9, False, False, 0)
+    create_vbox.pack_start(row10, False, False, 0)
     create_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     create_vbox.pack_start(save_row, False, False, 0)
 
@@ -213,7 +221,10 @@ def _get_factory_profiles_panel(user_profiles_list):
     return vbox
 
 def _fill_new_profile_panel_widgets(profile, widgets):
-    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
+    load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
+    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem,\
+    progressive, colorspace = widgets
+    
     description.set_text(_("User ") + profile.description())
     f_rate_num.set_text(str(profile.frame_rate_num()))
     f_rate_dem.set_text(str(profile.frame_rate_den()))
@@ -224,17 +235,23 @@ def _fill_new_profile_panel_widgets(profile, widgets):
     d_rate_num.set_text(str(profile.display_aspect_num()))
     d_rate_dem.set_text(str(profile.display_aspect_den()))
     progressive.set_active(profile.progressive())
+    try:
+        cspace = ["601", "709", "2020"].index(str(profile.colorspace()))
+    except:
+        print("ERROR! Unknown coloespace value in profilesmanager._fill_new_profile_panel_widgets()")
+        cspace = 1
+    colorspace.set_active(cspace)
     
 def _load_values_clicked(widgets):
     load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
+    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive, colorspace = widgets
     
     profile = mltprofiles.get_profile_for_index(load_profile_combo.get_active())
     _fill_new_profile_panel_widgets(profile, widgets)
 
 def _save_profile_clicked(widgets, user_profiles_view):
     load_profile_combo, description, f_rate_num, f_rate_dem, width, height, \
-    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive = widgets
+    s_rate_num, s_rate_dem, d_rate_num, d_rate_dem, progressive, colorspace = widgets
 
     profile_file_name = description.get_text().lower().replace(os.sep, "_").replace(" ","_")
     
@@ -252,7 +269,10 @@ def _save_profile_clicked(widgets, user_profiles_view):
     file_contents += "sample_aspect_den=" + s_rate_dem.get_text() + "\n"
     file_contents += "display_aspect_num=" + d_rate_num.get_text() + "\n"
     file_contents += "display_aspect_den=" + d_rate_dem.get_text() + "\n"
-
+    colorspace_options = ["601", "709", "2020"]
+    colorspace_value = colorspace_options[colorspace.get_active()]
+    file_contents += "colorspace=" + colorspace_value + "\n"
+    
     profile_path = userfolders.get_data_dir() + mltprofiles.USER_PROFILES_DIR + profile_file_name
 
     if os.path.exists(profile_path):
