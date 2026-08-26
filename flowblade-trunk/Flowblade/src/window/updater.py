@@ -33,6 +33,7 @@ import clipeffectseditor
 import compositeeditor
 import dialogs
 import gui
+import guicomponents
 import editorstate
 from editorstate import current_sequence
 from editorstate import MONITOR_MEDIA_FILE
@@ -504,6 +505,8 @@ def display_monitor_clip_name():#we're displaying length and range length also
     
     if editorpersistance.prefs.use_headerbar == True:
         gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+        tooltip_text = guicomponents.get_full_profile_info_text(editorstate.PROJECT().profile)
+        gui.editor_window.header_bar.set_tooltip_markup(tooltip_text) 
     else:
         gui.editor_window.monitor_desc_label.set_text(PROJECT().profile.description())
 
@@ -551,6 +554,8 @@ def update_sequence_info_text():
 
     if editorpersistance.prefs.use_headerbar == True:
         gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+        tooltip_text = guicomponents.get_full_profile_info_text(editorstate.PROJECT().profile)
+        gui.editor_window.header_bar.set_tooltip_markup(tooltip_text) 
     else:
         gui.editor_window.monitor_desc_label.set_text(PROJECT().profile.description())
 

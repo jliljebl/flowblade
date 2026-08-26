@@ -1796,6 +1796,7 @@ def get_profile_info_text(profile):
     pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
     pa_str =  "%.2f" % pix_asp
     str_list.append(", " + _("Pixel Aspect: ") + pa_str)
+    str_list.append(", " + "Rec. " + str(profile.colorspace()))
 
     return ''.join(str_list)
     
@@ -1827,7 +1828,9 @@ def set_profile_info_labels_text(label, show_description):
     str_list.append(_("Pixel aspect ratio: "))
     str_list.append("\n")
     str_list.append(_("Progressive:"))
-
+    str_list.append("\n")
+    str_list.append(_("Color space:"))
+    
     label_label_text = ''.join(str_list)
     label.set_text(label_label_text)
     label.set_justify(Gtk.Justification.LEFT)
@@ -1857,7 +1860,7 @@ def get_full_profile_info_text(profile):
         prog = _("No")
     str_list.append(_("Progressive: ") + prog)
     str_list.append("\n")
-    str_list.append(_("Color space: ") + "ITU-R " + str(profile.colorspace()))
+    str_list.append(_("Color space: ") + "Rec. " + str(profile.colorspace()))
     return ''.join(str_list)
 
 def set_profile_info_values_text(profile, label, show_description):
@@ -1891,6 +1894,9 @@ def set_profile_info_values_text(profile, label, show_description):
     else:
         prog = _("No")
     str_list.append(prog)
+    str_list.append("\n")
+    str_list.append("Rec. " + str(profile.colorspace()))
+
     value_label_text = ''.join(str_list)
     label.set_text(value_label_text)
     label.set_justify(Gtk.Justification.LEFT)

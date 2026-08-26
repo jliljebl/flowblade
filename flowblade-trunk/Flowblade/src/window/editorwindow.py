@@ -169,7 +169,8 @@ class EditorWindow:
             self.header_bar.pack_end(self.layout_controls_box)
             self.window.set_titlebar(self.header_bar)
             self.menubar_box.set_name("menubox")
-            
+            tooltip_text = guicomponents.get_full_profile_info_text(editorstate.PROJECT().profile)
+            self.header_bar.set_tooltip_markup(tooltip_text) 
         # Show window and all of its components
         self.window.show_all()
 

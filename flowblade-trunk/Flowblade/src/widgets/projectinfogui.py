@@ -94,6 +94,9 @@ def update_project_info():
     widgets.monitor_desc_label.set_text(PROJECT().profile.description())
     if editorpersistance.prefs.use_headerbar == True:
         gui.editor_window.header_bar.set_subtitle (PROJECT().profile.description())
+        tooltip_text = guicomponents.get_full_profile_info_text(editorstate.PROJECT().profile)
+        gui.editor_window.header_bar.set_tooltip_markup(tooltip_text) 
+                    
     else:
         widgets.monitor_desc_label.set_text(PROJECT().profile.description())
         
