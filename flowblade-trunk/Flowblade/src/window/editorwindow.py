@@ -914,7 +914,7 @@ class EditorWindow:
         return hamburger
 
     def _tooldock_hamburger_launch_pressed(self, launcher, widget, event, data):
-        workflow.tooldock_hamburger_launch_pressed( launcher, widget, middlebar.tooldock_menu_item_activated)
+        workflow.tooldock_hamburger_launch_pressed(launcher, widget, middlebar.tooldock_menu_item_activated)
     
     def update_tool_dock(self):
         self.tline_box.remove(self.tool_dock)

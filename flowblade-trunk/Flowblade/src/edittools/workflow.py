@@ -229,9 +229,6 @@ def tooldock_hamburger_launch_pressed(launcher, widget, callback):
     DELETE_GROUP = 4
     MONITOR_ADD_GROUP = 5
 
-
-    print(editorpersistance.prefs.tooldock_menu_items_visibility)
-    
     if editorpersistance.prefs.tooldock_menu_items_visibility[UNDO_GROUP] == True:
         items = []
         add_item = ( _("Undo"), "undo.png", "undo", "tooltip 1")

@@ -177,7 +177,6 @@ def _get_user_profiles_panel():
 
     return (vbox, user_profiles_list)
 
-
 def _get_factory_profiles_panel(user_profiles_list):
 
     # Factory

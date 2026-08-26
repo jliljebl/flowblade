@@ -366,7 +366,7 @@ class FlowbladeApplication(Gtk.Application):
         # Create main window and make widgeta available from gui.py.
         create_gui()
 
-        # These need widget objects to exist to build ata structures
+        # These need widget objects to exist to build data structures
         keygtkactions.init()
 
         # Inits widgets with project data.
@@ -451,7 +451,6 @@ class FlowbladeApplication(Gtk.Application):
 
         # App actions.
         appactions.create_actions()
-        #appactions.update_tools_view_action_state()
         appactions.update_compositing_mode_action_state()
         # Menu bar needs app an appactions available to create actions for recents and panel positions.
         menubar.fill_recents_menu_widget(projectaction.open_recent_project)
