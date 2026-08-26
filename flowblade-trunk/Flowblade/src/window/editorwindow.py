@@ -854,37 +854,92 @@ class EditorWindow:
         dialogutils.info_message(primary_txt, secondary_txt, self.window)
 
     # --------------------------------------------------------------- LAYOUT CHANGES
-    # These methods are called from app menu and they show and hide panels or
-    # move them around. When layout is created or startup we make sure that there is enough information  to
-    # do the changes, e.g. some caontainer either exist are are set to None etc. 
-
-    def show_tools_dock_change_from_menu(self, action, variant):
-        if variant.get_string() == "middlebar":
-            self._do_show_tools_middlebar()
-        else:
-            self._do_show_tools_dock()
- 
-    def _show_tools_middlebar(self, widget):
-        if widget.get_active() == False:
-            return
+    def update_middlebar_toolsmenu_and_toolsdock(self, vibility_selection):
         
-        self._do_show_tools_middlebar()
-    
-    def _do_show_tools_middlebar(self):
-        editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
-        editorpersistance.save()
+        # vibility_selection values correspond with combox selections created in middlebar._get_conf_panel()
+        # "Middlebar with Toolsmenu")
+        if vibility_selection == 0:
 
+            editorpersistance.prefs.tools_selection =  appconsts.TOOL_SELECTOR_IS_MENU
+            editorpersistance.prefs.middlebar_visible = True
+            editorpersistance.save()
+        
+            self.set_middlebar_visible(True)
+        # "Middlebar and Toolsdock")
+        elif vibility_selection == 1:
+
+            editorpersistance.prefs.tools_selection =  appconsts.TOOL_SELECTOR_IS_LEFT_DOCK
+            editorpersistance.prefs.middlebar_visible = True
+            editorpersistance.save()
+            
+            self.set_middlebar_visible(True)
+            self._do_show_tools_dock()
+        # "Toolsdock only"
+        else: 
+
+            editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_LEFT_DOCK
+            editorpersistance.prefs.middlebar_visible = False
+            editorpersistance.save()
+            
+            self.set_middlebar_visible(False)
+
+    def _do_show_tools_middlebar(self):
         if self.tool_dock != None:
             self.tline_box.remove(self.tool_dock)
 
         middlebar.re_create_tool_selector(self)
         middlebar.redo_layout(self)
         workflow.select_default_tool()
+    
+    def _do_show_tools_dock(self):
+        if self.tool_dock != None:
+            self.tline_box.remove(self.tool_dock)
 
-        try:
-             appactions.update_tools_view_action_state()
-        except:
-            pass # This gets called too early on startup when placing widgets but is needed at runtime.
+        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
+        self.tool_dock.show_all()
+
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+            self.tline_box.pack_start(self.tool_dock, False, False, 0)
+
+        middlebar.redo_layout(self)
+        self.tool_selector = None
+        workflow.select_default_tool()
+
+    def get_tooldock_hamburger(self):
+        hamburger = guicomponents.HamburgerPressLaunch(self._tooldock_hamburger_launch_pressed)
+        hamburger.widget.set_margin_left(6)
+        hamburger.widget.set_margin_bottom(8)
+        hamburger.do_popover_callback = True
+        return hamburger
+
+    def _tooldock_hamburger_launch_pressed(self, launcher, widget, event, data):
+        workflow.tooldock_hamburger_launch_pressed( launcher, widget, middlebar.tooldock_menu_item_activated)
+    
+    def update_tool_dock(self):
+        self.tline_box.remove(self.tool_dock)
+
+        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
+        self.tool_dock.show_all()
+
+        self.tline_box.pack_start(self.tool_dock, False, False, 0)
+
+    def set_middlebar_visible(self, visible):
+        if visible == False:
+            self.edit_buttons_frame.remove(self.edit_buttons_row)
+            self._do_show_tools_dock()
+            gui.tline_scale.widget.set_margin_top(4)
+            self.tline_hbox_1.set_margin_top(4)
+        else:
+            middlebar.re_create_tool_selector(self)
+            middlebar.redo_layout(self)
+            if len(self.edit_buttons_frame.get_children()) > 0:
+                self.edit_buttons_frame.remove(self.edit_buttons_row)
+            self.edit_buttons_frame.add(self.edit_buttons_row)
+            self.edit_buttons_frame.show()
+            self.edit_buttons_row.show()
+            self._do_show_tools_middlebar()
+            gui.tline_scale.widget.set_margin_top(0)
+            self.tline_hbox_1.set_margin_top(0)
 
     def set_audiomaster_position(self, action, value):
         action.set_state(value)
@@ -912,72 +967,7 @@ class EditorWindow:
             self. audio_master_meter = audiomonitoring.get_master_meter()
         
         return self.audio_master_meter
-
-    def _show_tools_dock(self, widget):
-        if widget.get_active() == False:
-            return
-
-        self._do_show_tools_dock()
-
-    def _do_show_tools_dock(self):
-        editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_LEFT_DOCK
-        editorpersistance.save()
-
-        if self.tool_dock != None:
-            self.tline_box.remove(self.tool_dock)
-
-        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
-        self.tool_dock.show_all()
-
-        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
-            self.tline_box.pack_start(self.tool_dock, False, False, 0)
-
-        middlebar.redo_layout(self)
-        self.tool_selector = None
-        workflow.select_default_tool()
-
-        try:
-             appactions.update_tools_view_action_state()
-        except:
-            pass # This gets called too early on startup when placing widgets but is needed at runtime.
-
-
-    def get_tooldock_hamburger(self):
-        hamburger = guicomponents.HamburgerPressLaunch(self._tooldock_hamburger_launch_pressed)
-        hamburger.widget.set_margin_left(6)
-        hamburger.widget.set_margin_bottom(8)
-        hamburger.do_popover_callback = True
-        return hamburger
-
-    def _tooldock_hamburger_launch_pressed(self, launcher, widget, event, data):
-        print("tooldock hamburger", type(widget))
-
-        workflow.tooldock_hamburger_launch_pressed( launcher, widget, middlebar.tooldock_menu_item_activated)
-    
-    def update_tool_dock(self):
-        self.tline_box.remove(self.tool_dock)
-
-        self.tool_dock = workflow.get_tline_tool_dock(self.get_tooldock_hamburger())
-        self.tool_dock.show_all()
-
-        self.tline_box.pack_start(self.tool_dock, False, False, 0)
-
-    def set_middlebar_visible(self, visible):
-        if visible == False:
-            self.edit_buttons_frame.remove(self.edit_buttons_row)
-            self._do_show_tools_dock()
-            gui.tline_scale.widget.set_margin_top(4)
-            self.tline_hbox_1.set_margin_top(4)
-        else:
-            middlebar.re_create_tool_selector(self)
-            middlebar.redo_layout(self)
-            self.edit_buttons_frame.add(self.edit_buttons_row)
-            self.edit_buttons_frame.show()
-            self.edit_buttons_row.show()
-            self._do_show_tools_middlebar()
-            gui.tline_scale.widget.set_margin_top(0)
-            self.tline_hbox_1.set_margin_top(0)
-
+        
     def enable_save(self):
         appactions.set_save_action_sensitive(True)
 

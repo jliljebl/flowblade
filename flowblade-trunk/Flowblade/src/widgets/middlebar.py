@@ -363,16 +363,6 @@ def get_buttons_group(index):
     else:
         return Gtk.Label()
 
-
-def _apply_visiblity_choice():
-    if show_check.get_active() == editorpersistance.prefs.middlebar_visible:
-        return
-    
-    editorpersistance.prefs.middlebar_visible = show_check.get_active() 
-    editorpersistance.save()
-    
-    gui.editor_window.set_middlebar_visible(editorpersistance.prefs.middlebar_visible) 
-
         
 # ----------------------------------------------------------------------------- Free Bar conf GUI
 def show_middlebar_conf_dialog():
@@ -381,33 +371,20 @@ def show_middlebar_conf_dialog():
     
     dialog = Gtk.Dialog(_("Middlebar and Tooldock Configuration"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel"), Gtk.ResponseType.REJECT,
-                    _("OK"), Gtk.ResponseType.ACCEPT))
+                    (_("Close"), Gtk.ResponseType.ACCEPT))
 
-    panel = _get_conf_panel()
+    panel, visibility_combo = _get_conf_panel()
+    visibility_combo.connect("changed", lambda w: gui.editor_window.update_middlebar_toolsmenu_and_toolsdock(visibility_combo.get_active()))
     
     guiutils.set_margins(panel, 4, 24, 6, 0)
-    dialog.connect('response', _conf_dialog_callback, (None, None))
+    dialog.connect('response', _conf_dialog_callback)
     dialog.vbox.pack_start(panel, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
 
-def _conf_dialog_callback(dialog, response_id, data):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        editorpersistance.prefs.midbar_layout_buttons = current_buttons_list
-        editorpersistance.prefs.cbutton = current_active_flags
-        editorpersistance.save()
-        _load_layout_data()
-        redo_layout(gui.editor_window)
-        _apply_visiblity_choice()
-    else:
-        # Cancel conf edits
-        editorpersistance.prefs.midbar_layout_buttons = original_buttons_list
-        editorpersistance.prefs.cbutton = original_active_flags
-        editorpersistance.save()
-
+def _conf_dialog_callback(dialog, response_id):
     dialog.destroy()
     
 # Toolbar preferences panel for free elements and order
@@ -423,7 +400,15 @@ def _get_conf_panel():
     visibility_combo.append_text(_("Middlebar with Toolsmenu"))
     visibility_combo.append_text(_("Middlebar and Toolsdock"))
     visibility_combo.append_text(_("Toolsdock only"))
-    visibility_combo.set_active(prefs.media_load_order)
+
+    if prefs.middlebar_visible == True:
+        if prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+            active_index = 0
+        else:
+            active_index = 1
+    else:
+        active_index = 2
+    visibility_combo.set_active(active_index)
 
     visible_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
     visibility_combo.set_margin_top(12)
@@ -433,8 +418,7 @@ def _get_conf_panel():
     visible_frame = guiutils.get_named_frame(_("Middlebar and Tooldock Visibility"), visible_box)
     
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    choice = Gtk.Label(label=_("Set button group active state and position."))
-    
+
     toolbar_list_box = Gtk.ListBox()
     toolbar_list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
 
@@ -450,7 +434,6 @@ def _get_conf_panel():
     box_move.pack_start(Gtk.Label(), True, True, 0)
     box_move.pack_start(button_reset, False, False, 0)
 
-    #vbox.pack_start(choice, False, False, 0)
     vbox.pack_start(toolbar_list_box, False, False, 0)
     vbox.pack_start(box_move, False, False, 0)
     draw_listbox(vbox)
@@ -480,7 +463,7 @@ def _get_conf_panel():
     pane.pack_start(visible_frame, False, False, 0)
     pane.pack_start(notebook, False, False, 0)
     
-    return pane
+    return (pane, visibility_combo)
 
 def _add_tooldock_menu_config_row(text, group):
     active = editorpersistance.prefs.tooldock_menu_items_visibility[group]
@@ -500,13 +483,14 @@ def _add_tooldock_menu_config_row(text, group):
     return row
 
 def _tooldock_menu_item_visibility_changed(check, group):
-    print(group)
-
     editorpersistance.prefs.tooldock_menu_items_visibility[group] = check.get_active()
 
 def toggle_click(button, row_number):
     global current_active_flags
     current_active_flags[row_number] = button.get_active()
+
+    if editorpersistance.prefs.middlebar_visible == True:
+        _apply_midbar_change()
 
 def row_up(event, vbox):
     reselect_row = -1
@@ -531,7 +515,9 @@ def row_up(event, vbox):
     if reselect_row != -1:
         row = toolbar_list_box.get_row_at_index(reselect_row)
         toolbar_list_box.select_row(row)
-    
+
+    _apply_midbar_change()
+
 def row_down(event, vbox):
     reselect_row = -1
     for row_number in range(0, len(current_buttons_list)):
@@ -554,6 +540,8 @@ def row_down(event, vbox):
         row = toolbar_list_box.get_row_at_index(reselect_row)
         toolbar_list_box.select_row(row)
 
+    _apply_midbar_change()
+
 def draw_listbox(vbox):
     for row_number in range(0, len(current_buttons_list)):
         row = Gtk.ListBoxRow.new()
@@ -569,6 +557,12 @@ def draw_listbox(vbox):
 
     vbox.show_all()
 
+def _apply_midbar_change():
+    editorpersistance.prefs.midbar_layout_buttons = current_buttons_list
+    editorpersistance.prefs.cbutton = current_active_flags
+    editorpersistance.save()
+    _load_layout_data()
+    redo_layout(gui.editor_window)
 
 # ----------------------------------------------------------------------------- tooldock menu item actions
 def tooldock_menu_item_activated(launcher, tool_id):

@@ -115,7 +115,7 @@ def create_actions():
         default_value = "middlebar"
     else:
         default_value = "dock"
-    _create_stateful_action("tooldockpos", "s", default_value, lambda a, v: gui.editor_window.show_tools_dock_change_from_menu(a, v))
+    #_create_stateful_action("tooldockpos", "s", default_value, lambda a, v: gui.editor_window.show_tools_dock_change_from_menu(a, v))
     if editorpersistance.prefs.audio_master_position_is_top_row == True:
         default_value = "toprow"
     else:
@@ -265,12 +265,12 @@ def set_redo_sensitive(sensitive):
     action = APP().lookup_action("redoaction")
     action.set_enabled(sensitive)
 
-def update_tools_view_action_state():
-    action = APP().lookup_action("tooldockpos")
-    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-        action.set_state(GLib.Variant.new_string("middlebar"))
-    else:
-        action.set_state(GLib.Variant.new_string("dock"))
+#def update_tools_view_action_state():
+#    action = APP().lookup_action("tooldockpos")
+#    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+#        action.set_state(GLib.Variant.new_string("middlebar"))
+#    else:
+#        action.set_state(GLib.Variant.new_string("dock"))
     
 
 # ---------------------------------- action focus handling
