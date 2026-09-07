@@ -324,7 +324,7 @@ def _get_dynamic_kb_row(root_node, code):
     return _get_kb_row(key_name, action_name, edit_launch)
 
 def _get_kb_row(msg1, msg2, edit_launch=None):
-    label1 = Gtk.Label(label=msg1)
+    label1 = Gtk.Label(label=str(msg1))
     label2 = guiutils.bold_label(str(msg2))
     if edit_launch == None:
         widget = Gtk.Label()
