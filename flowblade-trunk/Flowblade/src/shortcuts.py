@@ -103,6 +103,7 @@ def get_shortcut_action(event):
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
     default_shortcuts_file_found = False
+
     loadable_shortcuts_files = os.listdir(respaths.SHORTCUTS_PATH) + os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
 
     for f in loadable_shortcuts_files:
