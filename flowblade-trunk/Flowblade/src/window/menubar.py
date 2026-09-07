@@ -24,6 +24,7 @@ import copy
 
 import editorlayout
 import editorpersistance
+import editorstate
 from editorstate import APP
 
 
@@ -34,7 +35,7 @@ _tabs_menu = None
 
 def get_menu():
 
-    MENU_XML = """
+    MENU_XML_START = """
     <interface>
       <menu id="menubar">
         <submenu id="filemenu">
@@ -246,12 +247,18 @@ def get_menu():
                       </item>
                       </section>
                 </submenu>
-                <submenu id="panelpositionsmenu">
-                  <attribute name="label">""" + _("Panel Placement") + """</attribute>
-                </submenu>
-                <submenu id="tabsmenu">
-                  <attribute name="label">""" + _("Tabs Positions") + """</attribute>
-                </submenu>
+                """
+                
+    MENU_XML_PANEL_PLACEMENT = """
+    <submenu id="panelpositionsmenu">
+      <attribute name="label">""" + _("Panel Placement") + """</attribute>
+    </submenu>
+    <submenu id="tabsmenu">
+      <attribute name="label">""" + _("Tabs Positions") + """</attribute>
+    </submenu>
+    """
+                
+    MENU_XML_END = """
                 <item>
                   <attribute name="label">""" + _("Middlebar and Tooldock Configuration...") + """</attribute>
                   <attribute name="action">app.showmiddlebarconfig</attribute>
@@ -633,6 +640,11 @@ def get_menu():
     </interface>
     """
 
+    if editorstate.SCREEN_WIDTH > 1679:
+        MENU_XML = MENU_XML_START + MENU_XML_PANEL_PLACEMENT + MENU_XML_END
+    else:
+        MENU_XML = MENU_XML_START + MENU_XML_END
+
     builder = Gtk.Builder.new_from_string(MENU_XML, -1)
     menu_model = builder.get_object("menubar")
     
@@ -675,6 +687,7 @@ def fill_recents_menu_widget(callback):
 def fill_panel_positions_menu():
     global _panel_positions_menu, _tabs_menu
 
+        
     # Panel positions.
     if editorlayout.panel_positioning_available() == True:
         editorlayout.get_panel_positions_menu_item(_panel_positions_menu)
