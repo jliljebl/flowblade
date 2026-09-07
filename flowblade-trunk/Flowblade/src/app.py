@@ -363,7 +363,7 @@ class FlowbladeApplication(Gtk.Application):
         # Create player object.
         create_player()
 
-        # Create main window and make widgeta available from gui.py.
+        # Create main window and make widgets available from gui.py.
         create_gui()
 
         # These need widget objects to exist to build data structures
