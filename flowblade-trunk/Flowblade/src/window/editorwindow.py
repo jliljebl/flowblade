@@ -240,7 +240,12 @@ class EditorWindow:
         project_info_box.pack_start(monitor_desc_panel, False, False, 0)
         project_info_box.pack_start(Gtk.Label(), True, True, 0)
 
-        layout_widgets = [self.tools_buttons.widget, guiutils.pad_label(24,2), self.fullscreen_press.widget, guiutils.pad_label(6,2), self.layout_press.widget]
+        layout_widgets = [self.tools_buttons.widget, guiutils.pad_label(24,2), self.fullscreen_press.widget]
+        # Only show layouts menu for screen widths 1680 and up.
+        if editorstate.SCREEN_WIDTH > 1679:
+            layout_widgets.append(guiutils.pad_label(6,2))
+            layout_widgets.append(self.layout_press.widget)
+        
         layout_controls_box = guiutils.get_right_justified_box(layout_widgets)
         layout_controls_box.set_margin_right(6)
 
