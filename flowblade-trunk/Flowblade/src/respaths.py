@@ -54,7 +54,6 @@ INFO_TIPS_DOC = None
 
 
 def set_paths(root_path):
-    # Apr-2017 - SvdB - Added SHORTCUTS_PATH for keyboard shortcuts files
     global ROOT_PATH, IMAGE_PATH, THUMBNAIL_PATH, PROFILE_PATH,\
     BLACK_IMAGE_PATH, FILTERS_XML_DOC, COMPOSITORS_XML_DOC, \
     WIPE_RESOURCES_PATH, PREFS_PATH, HELP_DOC, LOCALE_PATH, \
@@ -64,8 +63,8 @@ def set_paths(root_path):
     SHORTCUTS_PATH, FLUXITY_EMPTY_BG_RES_PATH, MEDIA_PLUGINS_PATH, \
     FLUXITY_API_DOC, USBHID_DRIVERS_PATH, INFO_TIPS_DOC, WIPE_ICONS_PATH
 
-    ROOT_PATH = os.path.dirname(root_path)
-    #print("ROOT_PATH", ROOT_PATH)
+    ROOT_PATH = root_path
+    
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
     WIPE_RESOURCES_PATH = ROOT_PATH + "/res/filters/wipes/"
     WIPE_ICONS_PATH = ROOT_PATH + "/res/filters/wipe_icons/"

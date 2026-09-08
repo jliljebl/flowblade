@@ -36,23 +36,24 @@ print ("Launch script dir:", launch_dir)
 # - When running on distro.
 if os.path.realpath(launch_dir) == "/usr/bin":
     print ("Running from installation...")
-    modules_path = "/usr/share/flowblade/Flowblade/src"
+    root_path = "/usr/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
-        modules_path = "/usr/share/pyshared/Flowblade/src"
-    print ("modules path:", modules_path)
+        root_path = "/usr/share/pyshared/Flowblade"
+    print ("App install root path:", root_path)
 # - When running in flatpak.
 elif launch_dir == "/app/bin":
     print ("Running from Flatpak installation...")
-    modules_path = "/app/share/flowblade/Flowblade/src"
+    root_path = "/app/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
-        modules_path = "/app/share/pyshared/Flowblade/src"
-    print ("modules path:", modules_path)
+        root_path = "/app/share/pyshared/Flowblade"
+    print ("App install root path:", root_path)
 # - When running in filesystem.
 else:
     print ("Running from filesystem...")
-    modules_path = launch_dir + "/Flowblade/src"
+    root_path = launch_dir + "/Flowblade"
+    print ("App install root path:", root_path)
 
-sys.path.insert(0, modules_path)
+sys.path.insert(0, root_path + "/src")
 
 
 # Check that we have MLT, missing is fatal.
@@ -72,7 +73,7 @@ except Exception as err:
 try:
 
     import processutils
-    processutils.update_sys_path(modules_path)
+    processutils.update_sys_path(root_path + "/src")
     
     import app
     import editorstate
@@ -86,8 +87,8 @@ try:
 except Exception as err:
     print ("Failed to import module app.py to launch Flowblade!")
     print ("ERROR:", err)
-    print ("Installation was assumed to be at:", modules_path)
+    print ("Installation was assumed to be at:",  root_path)
     sys.exit(1)
 
 # Launch application.
-app.main(modules_path)
+app.main(root_path)
