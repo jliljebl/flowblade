@@ -9,5 +9,6 @@ Type=Application
 Icon=io.github.jliljebl.Flowblade
 Categories=GNOME;GTK;AudioVideo;AudioVideoEditing;
 MimeType=application/vnd.flowblade-project;
+StartupWMClass=Flowblade
 X-Ubuntu-Gettext-Domain=Flowblade
 Name[en_US]=flowblade
