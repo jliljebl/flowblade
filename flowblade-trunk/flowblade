@@ -37,7 +37,7 @@ print ("Launch script dir:", launch_dir)
 if os.path.realpath(launch_dir) == "/usr/bin":
     print ("Running from installation...")
     root_path = "/usr/share/flowblade/Flowblade"
-    if not os.path.isdir(modules_path):
+    if not os.path.isdir(root_path):
         root_path = "/usr/share/pyshared/Flowblade"
     print ("App install root path:", root_path)
 # - When running in flatpak.
