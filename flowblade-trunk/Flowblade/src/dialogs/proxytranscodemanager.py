@@ -492,7 +492,7 @@ def show_transcode_dialog(media_items, is_media_add_transcode=False):
     
     action_combo = Gtk.ComboBoxText()
     action_combo.append_text(_("Create New Media Item"))
-    action_combo.append_text(_("Replace Media in Project"))
+    action_combo.append_text(_("Replace Media In Project"))
     action_combo.set_active(0)
  
     action_row = guiutils.get_two_column_box(Gtk.Label(label=_("Action After Transcode:")), action_combo,  250)
