@@ -472,7 +472,7 @@ def get_menu():
             <attribute name="action">app.proxymanager</attribute>
             </item>
             <item>
-            <attribute name="label">""" + _("Transcode Manager") + """</attribute>
+            <attribute name="label">""" + _("Transcode Settings") + """</attribute>
             <attribute name="action">app.transcodemanager</attribute>
             </item>
             </section>

@@ -84,7 +84,7 @@ def _maybe_create_ingest_data():
 
 class ProxyManagerDialog:
     def __init__(self):
-        self.dialog = Gtk.Dialog(_("Proxy and Transcode Manager"), gui.editor_window.window,
+        self.dialog = Gtk.Dialog(_("Proxy Manager"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Close Manager"), Gtk.ResponseType.CLOSE))
 
@@ -250,9 +250,9 @@ class ProxyManagerDialog:
 
 class TranscodeManagerDialog:
     def __init__(self):
-        self.dialog = Gtk.Dialog(_("Transcode Manager"), gui.editor_window.window,
+        self.dialog = Gtk.Dialog(_("Transcode Settings"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            (_("Close Manager"), Gtk.ResponseType.CLOSE))
+                            (_("Close"), Gtk.ResponseType.CLOSE))
 
         ingest_panel = self.get_ingest_panel()
         ingest_panel.set_size_request(430, 50)
