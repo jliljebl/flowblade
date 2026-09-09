@@ -23,4 +23,4 @@ except Exception as err:
     sys.exit(1)
 
 
-gmic.main(modules_path)
+gmic.main(os.path.dirname(modules_path))

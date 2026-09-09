@@ -22,4 +22,4 @@ except Exception as err:
     sys.exit(1)
 
 
-medialinker.main(modules_path, sys.argv[1]) # sys.argv[1] is possibly a file path to project to be opened at startup
+medialinker.main(os.path.dirname(modules_path), sys.argv[1]) # sys.argv[1] is possibly a file path to project to be opened at startup

@@ -13,4 +13,4 @@ import processutils
 processutils.update_sys_path(modules_path)
 
 import rendergputest
-rendergputest.main(modules_path)
+rendergputest.main(os.path.dirname(modules_path))
