@@ -139,17 +139,14 @@ class LoadThread(threading.Thread):
         self.transcode_info = transcode_info
         
     def run(self):
-
         FLOG = open(userfolders.get_cache_dir() + "log_load_dialog", 'w')
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeloaddialog"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         loaddialog.write_message(_("Opening..."))
-                
         old_project = editorstate.project
         try:
             editorstate.project_is_loading = True
             
             project = persistance.load_project(self.filename)
-
             sequence.set_track_counts(project)
             
             editorstate.project_is_loading = False
@@ -246,7 +243,6 @@ class LoadThread(threading.Thread):
             gui.media_list_view.widget.queue_draw()
                 
     def _exit_on_file_not_found_error(self, e, ticker):
-        print("LoadThread.run() - FileProducerNotFoundError")
         self._error_stop(self.dialog, ticker)
         primary_txt = _("Media asset was missing!")
         secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value + "</b>\n\n" + \
@@ -560,7 +556,6 @@ def _not_matching_media_info_callback(dialog, response_id, media_file, to_be_tra
             actually_load_project(path, False, True)
     else:
         if len(to_be_transcoded) > 0:
-            print("haloo")
             proxytranscodemanager.show_transcode_dialog(to_be_transcoded, True)
 
 def _enable_save():
@@ -828,7 +823,6 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
         if editorstate.PROJECT().last_save_path != None:
             persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
             projectdatavault.project_saved( PROJECT().last_save_path)
-            print("_open_recent_shutdown_dialog_callback")
         else:
             dialogutils.warning_message(_("Project has not been saved previously"), 
                                     _("Save project with File -> Save As before closing."),
@@ -1240,7 +1234,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     # Check if img seq is to be transcoded.
     was_transcode_target_file = False
-    print(PROJECT().ingest_data)
+
     if PROJECT().ingest_data != None and PROJECT().ingest_data.get_action() == appconsts.INGEST_ACTION_TRANSCODE_SELECTED:
         if PROJECT().ingest_data.data[appconsts.TRANSCODE_SELECTED_IMGSEQ] == True:
             was_transcode_target_file = True

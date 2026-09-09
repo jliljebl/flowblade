@@ -37,4 +37,4 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-stabilizeheadless.main(modules_path, session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom)
+stabilizeheadless.main(os.path.dirname(modules_path), session_id, parent_folder, profile_desc, write_file, clip_path, accuracy, shakiness, smoothing, zoom)

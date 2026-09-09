@@ -13,4 +13,4 @@ processutils.update_sys_path(modules_path)
 
 import batchrendering
 
-batchrendering.single_render_main(modules_path)
+batchrendering.single_render_main(os.path.dirname(modules_path))

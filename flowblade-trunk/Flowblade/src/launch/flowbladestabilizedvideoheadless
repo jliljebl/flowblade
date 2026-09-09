@@ -36,5 +36,5 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-stabilizedvideoheadless.main(   modules_path, session_id, parent_folder, write_file, results_file, profile_desc, encoding_option_index, 
+stabilizedvideoheadless.main(   os.path.dirname(modules_path), session_id, parent_folder, write_file, results_file, profile_desc, encoding_option_index, 
                                 quality_option_index, source_path)
