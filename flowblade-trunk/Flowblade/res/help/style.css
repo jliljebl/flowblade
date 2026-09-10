@@ -15,6 +15,17 @@ body {
 	vertical-align: baseline;
 }
 
+a:link {
+  color: #294563;
+  	font-size:14px;
+  background-color: transparent;
+}
+
+a:visited {
+  color: #3d6793;
+  background-color: transparent;
+}
+
 #content {
   width: 700px ;
   margin-left: auto ;
@@ -212,19 +223,25 @@ body {
 h1, h2, h3, h4, h5, h6{
 	text-transform: uppercase;
 	margin:2px 0;
-	color: #000000;
+	color: #4575a7;
 	font-weight:400;
 }
 
 /* Otsikot 2 */
 h1{
 	font-size:30px;
-	color: #000000;
+	color: #ff0000;
 }
+
+
+
+
 h2{
 	margin-top: 80px;
 	font-size:26px;
+	border-bottom: solid 0.06em #aaa;
 }
+
 h3{
 	font-size:22px;
 	margin-top: 50px;
