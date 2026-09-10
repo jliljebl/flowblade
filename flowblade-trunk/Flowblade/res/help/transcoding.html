@@ -19,7 +19,7 @@
 Transcoding is converting a digital media item from one encoding to another.
 </p>
 <p>
-Within the context of video editing the reason for doing this is usually to have media with more suitable colorspace or screen dimensions, or to have a media item with better playback performace e.g. by converting a frame sequence to a video clip.
+Within the context of video editing the reason for doing this is usually to have media with more suitable colorspace or screen dimensions, or to have a media item with better playback performace e.g. by converting a frame sequence to a video clip, or converting to encoding supported by hardware decoding available in the system.
 </p>
 
 <div id="toc"></div>
@@ -29,19 +29,23 @@ Within the context of video editing the reason for doing this is usually to have
 <ol>
 <li> Press <b>Right Mouse</b> on <b>Media Item</b> and select menu item <b>Transcode Media</b>.. from popup menu.</li>
 
-<li> <b>Transcode Media</b> Window will open.  displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
+<li> <b>Transcode Media</b> Window will open with <b>Action</b>, <b>Encoding</b> and <b>Save Location</b> panels.</li>
 <ul>
-<li> <b>Action</b> drop down menu has two otions:</li>
+<li> <b>Action</b> panel has <b>Action After Transcode</b> drop down menu with two otions:</li>
 <ul>
 <li> <b>Create New Media Item</b> Creates a new <b>Media Item</b> and leaves <b>Media Item</b> used to request transcode as is.</li>
 <li> <b>Replace Media In Project</b> Replaces <b>Media Item</b> used to request transcode and all clips in Project created from it.</li>
 </ul>
 
-<li> <b>Encoding</b> drop down menu allows for selection encoding for the created clip. <i>Note that all transcoded media will be created using Project Profile properties such as screen dimensions, fps, colorspace etc.</i></li>
-<li> <b>Save Location</b></li>
+<li> <b>Encoding</b> panel has <b>Transcode Encoding</b> drop down menu that allows for selection encoding for the created clip. <i>Note that all transcoded media will be created using Project Profile properties such as screen dimensions, fps, colorspace etc.</i></li>
+<li> <b>Save Location</b> panel has two widgets.</li>
 <ul>
-<li> <b>Create New Media Item</b> Creates a new <b>Media Item</b> and leaves <b>Media Item</b> used to request transcode as is.</li>
-<li> <b>Replace Media In Project</b> Replaces <b>Media Item</b> used to request transcode and all clips in Project created from it.</li>
+<li> <b>File Folder</b> drop down menu has two options:</li>
+<ul>
+<li> <b>Project Data Store</b> Transcoded file in saved in project's <b>Data Store</b>.</li>
+<li> <b>External Folder</b> Transcoded file is saved in a user defined folder.</li>
+</ul>
+<li> <b>External Folder</b> button activates if corresponding drop down menu selection is active and allows selecting the directory the transcoded file is saved in.</li>
 </ul>
 </ul>
 
