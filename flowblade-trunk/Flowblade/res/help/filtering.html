@@ -70,6 +70,39 @@ Filters property values can also be edited on timeline, see <a href="./edit_tool
 <li> Select clip or range of clips in Timeline and select <b>Clear Filters</b> from application menu.</li>
 </ul>
 
+<h3>Filter Masking</h3>
+
+<p>
+Filter masking allows for one or more filters to be applied only on some user defined part of image</b>.
+</p>
+
+<img src="filter_mask.png">
+<p>
+<i>1) Filter masking menu launch button above red triangle, 2) Filters editor after adding mask with all filter edit panels minified. Mask - Begin and Mask - End filters define which filters are masked.</i>
+</p>
+
+<ol>
+<li> Click Filter Mask Menu launch button and select if you wish to apply mask on one or all filters.</li>
+<li> In submenu select mask <b>Alpha Shape</b>, <b>Alpha Shape Motion Tracked</b>, <b>Luma Key</b>, <b>Video/Image File Alpha</b>, <b>Video/Image File Luma</b> or <b>Color Select</b>.</li>
+<li> Edit mask parameters in filter edit panel for <b>Mask - Begin</b> filter.</li>
+<li> You can movefilters in and out of the masked range of filter stack.</li>
+<ul>
+</ol>
+
+<h3>Tips for Filters</h3>
+<h4>Compressor</h4>
+<p>
+    Information on how audio dynamic range compression works, and on meaning and function of parameters in this filter is available in this Wikipedia <a href="https://en.wikipedia.org/wiki/Dynamic_range_compression">article</a>.
+</p>
+<h4>Perspective</h4>
+<p>
+    With parameter <b>Sense</b> set to value <b>Destination</b> it is possible to set the corners of image anywhere in the destination image but there is <i>visual glitch</i> with sides of image being stretched, this is a known issue described <a href="https://trac.ffmpeg.org/ticket/8124">here</a>.
+</p>
+<p>
+    The workaround is to add a <b>Crop</b> filter before <b>Perspective</b> filter and cut at least 1 pixel from all sides of the image.
+</p>
+
+
 <h3>Filter editing Keyboard shortcuts</h3>
 <p>
 See tables <b>Keyframe and Geometry Editor</b>, <b>Geometry Editor</b> and <b>RotoMask Editor</b> in <a href="./kbshortcuts.html">Flowblade Default keyboard Shortcuts</a> document.

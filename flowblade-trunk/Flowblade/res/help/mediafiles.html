@@ -1,0 +1,90 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Working with Media Files</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div class="subject-header">Working with Media Files</div>
+
+<div id="toc"></div>
+
+<div id="toccontent">
+
+
+<p>
+Flowblade Movie Editor holds files in <b>Media</b> tab. Files displayed as thubnails showing in unnamed table that displays contents of the currently selected Bin. Bins are listed in the <b>Bins</b> table.
+</p>
+
+
+<h3>Opening Media Files</h3>
+
+
+<ol>
+<li> Press <b>Right Mouse</b> on <b>Media</b> tab empty area and select menu item <b>Add Video, Audio or Image...</b>.
+<li> Or select  <b>Project -> Add Video, Audio or Image...</b> from application menu.
+<li> Use dialog to find and select files.</li>
+<li> Files are displayed as thumbnails.</li>
+<li> Note that creating thumbnails for opened files will take some time.</li>
+</ol>
+
+
+<h3>Project Media: Absolute and relative paths</h3>
+<ul>
+<li> Flowblade <b>saves references</b> to media files used in a project as <b>absolute paths</b>.</li>
+<li> If a media is <b>not found on load</b>, Flowblade attempts to find a media file with the same name in subfolders relative to the project file.</li>
+<li> If all media used by a project is saved in subfolders relative to project file, <b>project file and media can moved as a unit</b> and the project will load successfully after data is copied to a different place</li>
+<li> <b>Rendered files</b> like transitions are saved by default in a <b>Data Store</b>, see chapter: <a href="datastores.html">Data Stores</a>.</li>
+<li> <b>Load order</b> between absolute and relative paths can be set in preferences window</li>
+<li> <b>Media Relinker</b> tool can be used to fix problems that may occur </li>
+</ul>
+
+
+<p>
+In video editing a bin is a named location for storing media. The term is used in Avid and was earlier used by film editors.
+</p>
+
+<p>
+    <b>Adding a Bin:</b>
+<p>
+<ul>
+<li> <b>Default layout:</b> Press <b>Right Mouse</b> on Bin area to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> <b>Small screen layout:</b> Press <b>Right Mouse</b> in the <b>Media</b> tab <b>Bins</b> panel to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> Or select  <b>Project -> Bin -> Add Bin</b> from application menu.</li>
+</ul>
+
+<p><b>Deleting a Bin</b>: Delete actions can be accessed from the same places as above.</p>
+<p><b>Renaming a Bin</b>: Click on the Bin name, type new name and press <b>Enter</b>.</p>
+<p><b>Moving files to another Bin:</b></p>
+<ul>
+<li> Select and drag files on top of the Bin you wish to move the files into.</li>
+<li> Select files and open <b>Hamburger menu</b> in <b>Media</b> panel and select menu item <b>Move Selected media to Bin</b> and then the menu item with the Bins name.</li>
+</ul>
+<div class="tabbed">
+
+</div>
+
+<h4>Filtering Bin View</h4>
+<p>
+    Bins can be made to display only subset of media items they contain. Press on filtering button in <b>Media Panel</b> bottom row next <b>Hamburger</b> and <b>columns</b> buttons.
+<p>
+    <ul>
+    <li> <b>Filtering by media type.</b> Select one of options <i>All Files, Video Files Audio Files, Graphics Files, Image Sequences, Pattern Producers, Unused Files</i>.</li>
+    <li> <b>Filtering by ratings.</b> Select one of options in submenu <i>Ratings</i>, either <i>Show All Ratings, Show Favorites, Hide bad</i>. Each media item can be given a rating in context popover submenu <i>Rating</i>.</li>
+    </ul>
+    
+
+</div>
+
+</div>
+
+</body>
+
+</html> 

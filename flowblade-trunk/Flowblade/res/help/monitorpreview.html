@@ -1,0 +1,76 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Monitor and Preview</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Monitor and Preview</div>
+
+
+<div id="toc"></div>
+
+<h2>Monitor Controls</h2>
+
+<ol>
+<li> Press <b>Right Mouse</b> on <b>Media Item</b> and select menu item <b>Transcode Media</b>.. from popup menu.</li>
+
+<li> <b>Transcode Media</b> Window will open with <b>Action</b>, <b>Encoding</b> and <b>Save Location</b> panels.</li>
+<ul>
+<li> <b>Action</b> panel has <b>Action After Transcode</b> drop down menu with two otions:</li>
+<ul>
+<li> <b>Create New Media Item</b> Creates a new <b>Media Item</b> and leaves <b>Media Item</b> used to request transcode as is.</li>
+<li> <b>Replace Media In Project</b> Replaces <b>Media Item</b> used to request transcode and all clips in Project created from it.</li>
+</ul>
+
+<li> <b>Encoding</b> panel has <b>Transcode Encoding</b> drop down menu that allows for selection encoding for the created clip. <i>Note that all transcoded media will be created using Project Profile properties such as screen dimensions, fps, colorspace etc.</i></li>
+<li> <b>Save Location</b> panel has two widgets.</li>
+<ul>
+<li> <b>File Folder</b> drop down menu has two options:</li>
+<ul>
+<li> <b>Project Data Store</b> Transcoded file in saved in project's <b>Data Store</b>.</li>
+<li> <b>External Folder</b> Transcoded file is saved in a user defined folder.</li>
+</ul>
+<li> <b>External Folder</b> button activates if corresponding drop down menu selection is active and allows selecting the directory the transcoded file is saved in.</li>
+</ul>
+</ul>
+
+<li> Press <b>Transcode</b> button to launch a transcode rendering job shown in <b>Jobs</b> panel.</li>
+</ol>
+
+<h2>Preview Scaling</h2>
+
+
+<h2>Preview Interpolation</h2>
+
+<h2>GPU Decoding</h2>
+
+<h3>Available GPU decoding</h3>
+<ul>
+<li> <b>VAAPI</b></li>
+<ul>
+<li>h264</li>
+<li>hevc</li>
+<li>vp9</li>
+<li>av1</li>
+</ul>
+<li> <b>CUDA</b></li>
+<ul>
+<li>h264</li>
+</ul>
+</ul>
+            
+</div>
+</div>
+</body>
+
+</html> 
