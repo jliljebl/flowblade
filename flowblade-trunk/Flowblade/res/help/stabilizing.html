@@ -1,0 +1,64 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Stabilizing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+
+<script src="tocgen.js"></script>
+
+<div class="subject-header">Stabilizing</div>
+
+<div id="toc"></div>
+
+<div id="toccontent">
+
+
+<h2>Workflow</h2>
+<p>
+    In Flowblade stabilizing a video clip is implemented using filter <b>Stabilize</b> available in filter category <b>Movement or by creating a new, stabilized Media Item.</b>. 
+</p>
+<p>
+    This filter requires two passes. The first pass performs analysis and stores the result internally in a file. After completed analysis stabilizing can be applied using the created data.
+</p>
+
+<h4>Parameters</h4>
+<p>
+    <b>Analysis Shakiness</b> Used during analysis. How shaky the video is.
+</p>
+<p>
+    <b>Accuracy</b> Used during analysis. The accuracy of shakiness detection.
+</p>
+<p>
+    <b>Smoothing</b> Used during application. Number of frames for lowpass filtering (2N + 1 frames).
+
+</p>
+<p>
+    <b>Zoom</b> Used during application. Additional zoom amount.
+</P>
+<p>
+    <b>Analyze Video</b> Pressing this button analyzes video and saves the created data internally. Upon completion stabilizing is applied and can be controlled using <b>Smoothing</b> and <b>Zoom</b> parameters.
+</p>
+
+
+
+<h4>Creating Stabilized Media Item</h4>
+
+<ul>
+<li>
+Select <b>Render Stabilized File</b> item from <i>Media Item</i> <b>Right mouse</b> context menu.
+</li>
+</ul>
+
+</div>
+
+</div>
+
+</body>
+
+</html> 
