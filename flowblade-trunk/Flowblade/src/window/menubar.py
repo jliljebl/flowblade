@@ -462,7 +462,7 @@ def get_menu():
             </section>
             <section>
                 <item>
-                <attribute name="label">""" + _("Project Data") + """</attribute>
+                <attribute name="label">""" + _("Project Info and Data") + """</attribute>
                 <attribute name="action">app.projectinfoanddata</attribute>
                 </item>
             </section>

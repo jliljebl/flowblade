@@ -18,7 +18,7 @@
 <div class="subject-header">Data Stores</div>
 
 <p>
-Since Flowblade version 2.12 the new <b>Data Store</b> feature allows user to decide where project data such as proxy files, thumbnails and rendered clips for containers and generators is saved.
+Flowblade <b>Data Store</b> feature allows user to decide where project data such as proxy files, thumbnails and rendered clips for containers and generators is saved.
 </p>
 <p>
 Deleting data of individual projects without affecting other projects is now also possible.
@@ -27,48 +27,57 @@ Deleting data of individual projects without affecting other projects is now als
 
 <h2>Data Stores and Project Data folders</h2>
 <ul>
-<li> <b>Data Store</b> is a folder that contains <b>Project Data Folders</b>.</li>
-<li> <b>Project Data Folder</b> is created for each new project automatically in the currently active <b>Data Store</b> on application startup, or when creating a new Project with <b>File->New...</b>.</li>
-<li> Every subsequent saved version of the project keeps data in the same <b>Data Store</b> and <b>Project Data Folder</b>.</li>
-<li> Default <b>Data Store</b> is located at folder <i><b>$XDG_DATA_HOME/projectsdata</i></b>.</li>
-<li> If value of environment variable <i><b>$XDG_DATA_HOME</i></b> is changed, a new default <b>Data Store</b> is created at location <i><b>$XDG_DATA_HOME/projectsdata</i></b>.</li>
+<li> <b>Data Store</b> is a folder that contains Project Data Folders.</li>
+<li> <b>Project Data Folder</b> is created for each new project automatically in the currently active Data Store on application startup, or when creating a new Project with <b>File > New...</b>.</li>
+<li> Every subsequent saved version of the project keeps data in the same Data Store and Project Data Folder.</li>
+<li> Default Data Store is located at folder <i><b>$XDG_DATA_HOME/projectsdata</i></b>.</li>
+<li> If value of environment variable <i><b>$XDG_DATA_HOME</i></b> is changed, a new default Data Store is created at location <i><b>$XDG_DATA_HOME/projectsdata</i></b>.</li>
 </ul>
 
 <h2>You can ignore Data Stores</h2>
 
 <p>
-<b>Project Data Folders</b> are automatically created for projects. Users only do need to pay attention to them if they wish to save or move project data into some other place then the default <b>Data Store</b>, or delete project data of completed projects to save disk space.
+Project Data Folders are automatically created for projects. Users only do need to pay attention to them if they wish to save or move project data into some other place then the default Data Store, or delete project data of completed projects to save disk space.
 </p>
 
+
+<h2>Data Store Manager interface</h2>
+<img style="padding: 12px 0px 0px 0px" src="datastore.png">
+
+<h2>Project Info and Data interface</h2>
+<img style="padding: 12px 0px 0px 0px" src="datastoreinfo.png">
+
 <h2>Project Data actions</h2>
-<h4>Selecting Data Store for Project Data Folder</h4>
+<h4>Selecting non-default Data Store for new Project</h4>
 <ol>
-<li> Select <b>File->New...</b> from application menu.</li>
-<li> In <b>Data Store</b> panel select some other then current default <b>Data Store</b>.</li>
-<li> If you like to create a new <b>Data Store</b> for the project click <b>Create Data Store</b> button.</li>
-<li> Click <b>Ok</b> and a <b>Project Data Folder</b> is created in the selected <b>Data Store</b>.</li>
+<li> Select <b>File > New...</b> from application menu.</li>
+<li> In <b>Data Store</b> panel select some other then current default Data Store.</li>
+<li> If you like to create a new Data Store for the project click <b>Create Data Store</b> button.</li>
+<li> Click <b>Ok</b> and a Project Data Folder is created in the selected Data Store.</li>
 </ol>
 <h4>Viewing Project Data Info</h4>
 <ul>
-<li> For current Project select <b>Project->Project Data</b> from application menu.</li>
-<li> For all projects created in the system select <b>Edit->Data Store Manager</b>.</li>
+<li> For current Project select <b>Project > Project Info and Data</b> from application menu.</li>
+<li> For all projects created in the system select <b>Edit > Data Store Manager</b>.</li>
 </ul>
 <h4>Deleting Project Data</h4>
 <ol>
-<li> Select <b>Edit->Data Store Manager</b>.</li>
-<li> In <b>Data Store</b> panel select <b>Data Store</b> where <b>Project Data Folder</b> you wish to delete is located.</li>
-<li> Identify the project data you wish to delete by <b>Last Save File</b> info and select that row in the table. </li>
-<li> Click on check button to enable <b>Delete Project Data</b> button in the info panel.</li>
-<li> Confirm deleting project data.</li>
+<li> Select <b>Edit > Data Store Manager</b>.</li>
+<li> In <b>Data Stores</b> panel select the Data Store where Project Data Folder you wish to delete is located.</li>
+<li> Identify the project data you wish to delete by <b>Last Saved Project File [4]</b> info and select that row in the table. </li>
+<li> Click on check button to enable <b>Destroy Project Data [5]</b> button in the info panel.</li>
+<li> Confirm deleting Project data.</li>
 </ol>
 <p>Data for currently open Project cannot be deleted.</p>
+
 <h4>Moving Project Data </h4>
-<p><b>Project Data Folder</b> placement in a <b>Data Store</b> is immutable once project is created. To move <b>Project Data Folder</b> you will need to create a cloned project with <b>Project Data Folder</b> in another data store and then optionally delete original <b>Project Data Folder</b>.</p>
+<p>Project Data Folder placement in a Data Store is immutable once project is created.</p>
+<p> To move Project Data Folder you will need to create a cloned project with Project Data Folder in another data store and then optionally delete original Project Data Folder.</p>
 <ol>
-<li> Select <b>Project->Project Info and Data</b> from application menu.</li>
-<li> Press <b>Create Clone Project With Project Data in another Data Store</b> button in <b>Data Store</b> panel.</li>
+<li> Select <b>Project > Project Info and Data</b> from application menu.</li>
+<li> Press <b>Create Clone Project With Project Data in another Data Store [6]</b> button in <b>Data Store</b> panel.</li>
 <li> Give file name for the new cloned project that has project data in another data store.</li>
-<li> Select <b>Data Store</b> where cloned <b>Project Data Folder</b> is placed.</li>
+<li> Select Data Store where cloned Project Data Folder is placed.</li>
 <li> Press <b>Create Clone Project</b> button.</li>
 </ol>
 <div class="important">
@@ -80,25 +89,25 @@ Deleting data of individual projects without affecting other projects is now als
 <h4>Creating a new Data Store</h4>
 <ol>
 <li> Select <b>Edit->Data Store Manager</b>.</li>
-<li> Press <b>Create Data Store</b> button and select an empty folder as the <b>Data Store</b>.</li>
+<li> Press <b>Create Data Store [1]</b> button and select an empty folder as the Data Store.</li>
 </ol>
 <h4>Changing active Data Store</h4>
 <ol>
-<li> Select <b>Edit->Data Store Manager</b>.</li>
-<li> Select <b>Data Store</b> you wish to make active.</li>
+<li> Select <b>Edit > Data Store Manager</b>.</li>
+<li> Select Data Store you wish to make active.</li>
 <li> Press <b>Make This Data Store Active</b>.</li>
 </ol>
 <h4>Dropping Data Store</h4>
 <ol>
-<li> Select <b>Edit->Data Store Manager</b>.</li>
-<li> Select <b>Data Store</b> you wish to drop.</li>
-<li> Press <b>Drop Data Store</b> button.</li>
+<li> Select <b>Edit > Data Store Manager</b>.</li>
+<li> Select Data Store you wish to drop.</li>
+<li> Press <b>Drop Data Store [3]</b> button.</li>
 </ol>
 <h4>Connecting Data Store</h4>
 <ol>
-<li> Select <b>Edit->Data Store Manager</b>.</li>
-<li> Press <b>Connect Data Store</b> button.</li>
-<li> Select folder with Flowblade <b>Data Store</b> data inside.</li>
+<li> Select <b>Edit > Data Store Manager</b>.</li>
+<li> Press <b>Connect Data Store [2]</b> button.</li>
+<li> Select a folder with Flowblade Data Store data inside.</li>
 </ol>
 
 
