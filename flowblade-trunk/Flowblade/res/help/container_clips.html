@@ -28,9 +28,9 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 </p>
 <h3>Components</h3>
 <ol>
-<li><b>Unrendered Media</b> This is what is displayed on timeline if container clip media is not rendered.</li>
-<li><b>Program</b> This data is used to render a media clip on timeline, sometimes using unrendered media as input.</li>
-<li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
+<li><b>Unrendered Media</b> This is what is displayed on timeline if Container Clip media is not rendered.</li>
+<li><b>Program</b> This is data that is used to create Clip on Tgimeline, sometimes using unrendered media as input.</li>
+<li><b>Rendered Media</b> This is what is displayed on Timeline after Container Clip is rendered.</li>
 </ol>
 
 <h2>Selection Container Clips</h2>
@@ -53,7 +53,7 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 
 <ol>
 <li> Select 2 or more adjacent clips from a single track.</li>
-<li> Select <b>Project->Create Container Clip->From Selected Clips</b></li>
+<li> Select <b>Project > Create Container Clip > From Selected Clips</b></li>
 <li> A new Media Item appears in the current Bin.</li>
 </ol>
 
@@ -61,7 +61,7 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 
 <ol>
 <li> Select an area on Timeline by dragging a box selection with <b>Left Mouse</b> around all items you wish to be part of the <b>Compound Clip</b>.</li>
-<li> Select <b>Project->Create Container Clip->From Selected Box Selection</b></li>
+<li> Select <b>Project > Create Container Clip> From Selected Box Selection</b></li>
 <li> A new Media Item appears in the current Bin.</li>
 </ol>
 
@@ -69,14 +69,14 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 
 <ol>
 <li> Select a range on Timeline by setting <b>Mark In</b> and <b>Mark Out</b> points.</li>
-<li> Select <b>Project->Create Container Clip->From Timeline Range</b></li>
+<li> Select <b>Project > Create Container Clip > From Timeline Range.</b></li>
 <li> A new Media Item appears in the current Bin. It will contain all full and partial Clips in the given range.</li>
 </ol>
 
 <h5> Creating Selection Container Clip from Sequence</h5>
 
 <ol>
-<li> Select <b>Project->Create Container Clip->From Current Sequence</b></li>
+<li> Select <b>Project > Create Container Clip > From Current Sequence</b></li>
 <li> A new Media Item appears in the current Bin.</li>
 </ol>
 
@@ -90,7 +90,7 @@ A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that 
 	<li> Audio from clip treated as video is muted.</li>
 	</ul>
 </li>
-<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> Select <b>Project > Create Container Clip > Audio Sync Merge Clip From 2 Media Items</b></li>
 <li> If audio sync is successful a dialog appears. Give a name for the new Media Item in the dialog.</li>
 <li> A new Media Item appears in the current Bin.</li>
 </ol>
@@ -101,14 +101,14 @@ Audio syncing looks for best mathemathical match between two audio waveforms, so
 
 <h2>Generator Container Clips</h2>
 <p>
-<b>Generators</b> are Container Clips too, see more info in chapter <a href="generatorsfluxity.html">Generators and Fluxity API</a>
+<b>Generators</b> are Container Clips too, see more info in chapter <a href="generatorsfluxity.html">Generators</a>
 </p>
 
 <h2>Sequence Link Container Clips</h2>
 
 <p>
 <ul style="list-style-type:none">
-<li><b>Unrendered Media</b> A MLT XML video clip created or recreated from Contents of a Sequence on request</li>
+<li><b>Unrendered Media</b> A MLT XML video clip created or recreated from Contents of a Sequence on request.</li>
 <li><b>Program</b>  Contents of a Sequence.</li>
 <li><b>Rendered Media</b> Clip Rendered from MLT XML Clip.</li>
 </ul>
@@ -121,7 +121,7 @@ Audio syncing looks for best mathemathical match between two audio waveforms, so
 
 <h5> Creating Sequence Link Container Clips</h5>
 <ul>
-<li>Select from menu <b>Project->Add Sequence Link Container Clip</b> to create a <b>Sequence Link Container Clip</b> media item.</li>
+<li>Select from menu <b>Project > Add Sequence Link Container Clip</b> to create a <b>Sequence Link Container Clip</b> media item.</li>
 <li>Drag <b>Sequence Link Container Clip</b> Media Item on Timeline to create a clip.</li>
 <li><b>Sequence Link Container Clips</b> can't be placed on Sequences they link to and creating cyclic dependencies between sequencse using <b>Sequence Link Container Clips</b> is not allowed.</li>
 </ul>
@@ -132,7 +132,7 @@ Audio syncing looks for best mathemathical match between two audio waveforms, so
 <h5> Replacing Sequence Link Container Clip with Sequence Contents</h5>
 <ul>
 <li>Place Playhead at the beginning of <b>Sequence Link Container Clip</b>.</li>
-<li>Select from menu <b>Sequence->Import Another Sequence Into This Sequence...</b> and select option <b>Insert Sequence at Playhead position</b> and do import.</li>
+<li>Select from menu <b>Sequence > Import Another Sequence Into This Sequence...</b> and select option <b>Insert Sequence at Playhead position</b> and do import.</li>
 <li>Delete <b>Sequence Link Container Clip</b>.</li>
 </ul>
 
@@ -159,7 +159,7 @@ Audio syncing looks for best mathemathical match between two audio waveforms, so
 <li>Open <b>G'Mic tool</b>.</li>
 <li>Create G'Mic effect script. See section on <b>G'Mic Effects</b> in Chapter <b>Tools</b>.</li>
 <li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
-<li>Select menu item <b>Project -> Create Container Clip -> From G'Mic Script</b>.</li>
+<li>Select menu item <b>Project > Create Container Clip > From G'Mic Script</b>.</li>
 <li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
 </ol>
 

@@ -18,56 +18,71 @@
 
 <div id="toccontent">
 
+<h3>Navigating Timeline</h3>
+
 <h4>Scrolling Timeline</h4>
 <ul>
-<li> Press and Drag <b>Scrollbar</b> below Timeline</li>
+<li> Press and drag scrollbar widget below Timeline</li>
 <li> Scroll <b>Mouse Middle</b> button + <b>CTRL</b> key while on top of Timeline</li>
 </ul>
 
 <h4>Zooming Timeline</h4>
 <ul>
-<li> Click <b>Zoom In</b>, <b>Zoom Out</b> or <b>Zoom Length</b> buttons.</li>
 <li> Scroll <b>Mouse Middle</b> button on top of Timeline </li>
 <li> Scrolling with <b>Mouse Middle</b> button will scroll towards playhead or cursor position on timeline depending selection in Timeline Properties menu above Tracks Column.</li>
-<li> Scroll with <b>Mouse Middle</b> button + <b>ALT</b> to reverse current preference of scolling towards playhead or cursor position on timeline.</li>
+<li> Scroll with <b>Mouse Middle</b> button + <b>ALT</b> key to reverse current preference of scolling towards Playhead or cursor position on Timeline.</li>
+<li> Click <b>Zoom In</b>, <b>Zoom Out</b> or <b>Zoom Fit</b> buttons in Middlebar.</li>
 </ul>
 
-<h4>Changing Current Frame</h4>
+<h4>Setting Scroll / Zoom Settings</h4>
 <ul>
-<li> Drag with <b>Right Mouse</b> button starting from  an empty space in the Timeline.</li>
-<li> Drag with <b>Left Mouse</b> button on the Frame Scale.</li>
-<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
+<li> Select <b>Edit > Preferences</b> from application menu and open <b>Editing</b> panel.</li>
+<ul>
+<li> <b>Mouse Middle Button Scroll Action</b> dropdown allows setting whether scroll or zoom is the default scroll button action.</li>
+<li> <b>Mouse Horizontal Scroll Direction</b> dropdown allows reversing timeline scroll direction in relation to mouse scroll direction.</li>
+<li> <b>Mouse Horizontal Scroll Speed</b> dropdown allows setting timeline scroll speed.</li>
+</ul>
+
+</ul>
+
+<h3>Changing Playhead Position </h4>
+<p>To change the frame being previewed change the position of Playhead <b>[1]</b> on the Timeline.</p>
+<img style="padding: 12px 0px 0px 0px" src="playhead.png">
+<ul>
+<li> Drag with <b>Right Mouse</b> button starting from  an empty space in the Timeline <b>[2]</b>.</li>
+<li> Drag with <b>Left Mouse</b> button on the Frame Scale <b>[3]</b>.</li>
+<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar <b>[4]</b>.</li>
 <li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
 <li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous cut on topmost active track.</li>
-<li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+<li> Click <b>Next [6]</b> or <b>Prev[5]</b> button in Monitor Buttons area to move to next or previous frame.</li>
 </ul>
 
-<h4>Changing Current Frame when Clip is displayed on Monitor</h4>
-<ul>
-<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
-<li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
-<li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous of the following: Mark In/Mark Out/Start/End</li>
-<li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
-</ul>
+<p>Also see related chapters <a href="monitor.html">Monitor</a> and <a href="monitor.html">Preview</a>.</p>
 
-<h4>Switching between Timeline and Clip Display</h4>
-<ul>
-<li> Click buttons with icons representing sequence or single clip in Monitor Buttons area.</li>
-<li> Drag Media File on top of <b>Monitor</b> to display Clip.</li>
-</ul>
 
-<h4>Setting Active Tracks</h4>
-<ul>
-<li> Click <b>Track Active Switch</b> on the right side of Tracks Column area. Topmost  <b>Track Active Switch</b> displays arrow pointing downwards indicating that <b>Insert From Monitor</b> and other buttons place clips on that track.</li>
-</ul>
+<h3>Working With Tracks Active State </h3>
+<p>In Flowblade effects of some edits are targeted by setting Tracks active states. </p>
+<img style="padding: 12px 0px 0px 0px" src="active_tracks.png">
 
-<div class="note">
+<p><i>[1] Non-active Track.</i></p>
+<p><i>[2] First active Track.</i></p>
+<p><i>[3] Active Track.</i></p>
+
+
 <h4>Effects of Track Active State</h4>
 <ul>
 <li> Cuts are only performed on active Tracks.</li>
-<li> Inserting Media File that is currently displayed in Monitor using <b>Insert From Monitor, Append From Monitor</b> or <b>3-Point Overwrite</b> buttons places clip on the top most active Track indicated by arrow icon.</li>
+<li> Inserts and overwrites from Source Clip Monitor to Timeline are placed on first active Track. </li>
 </ul>
-</div>
+
+<h4>Setting Track Active State</h4>
+<ul>
+<li> Click <b>Track Active Switch</b> on the right side of Tracks Column area. Topmost <b>Track Active Switch</b> displays arrow pointing downwards indicating that it is the target of Source Clip Monitor edits.</li>
+</ul>
+
+
+
+<h3>Selecting clips on Timeline</h3>
 
 <h4>Selecting single clip</h4>
 <ul>
@@ -86,6 +101,12 @@
 <li> Click on Timeline area background.</li>
 </ul>
 
+<h4>Box selection</h4>
+<ol>
+<li> Press with <b>Left Mouse</b> on Timeline area background.</li>
+<li> Drag mouse to select a group of Clips on one or more Tracks.</li>
+<li> If Clips are selected only on one Track, selection is interpreted as a multi-selection on a single Track, not as a box selection.</li>
+</ol>
 
 </div>
 
