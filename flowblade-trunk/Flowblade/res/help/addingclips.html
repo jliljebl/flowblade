@@ -19,49 +19,48 @@
 <div id="toccontent">
 
 
-<h4>Drag'n'Drop</h4>
-<p> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on.</p>
+<h3>Drag'n'Drop</h3>
 
-<ul>
-<li> If <i>'Always Overwrite Blanks' </i> is selected as preference for drag'n'drop action:</li>
-<ul>
-<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
-</ul>
-<li>  If <i>'Overwrite blanks on non-V1 tracks' </i> is selected as preference for drag'n'drop action:</li>
-<ul>
-<li> On track V1 clip will be inserted on the track at the nearest cut. </li>
-<li> On non-V1 tracks:. </li>
-<ul>
-<li> Clip will be inserted if dropped on a clip. </li>
-<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
-</ul>
-</ul>
-<li>  If <i>'Always Insert' </i> is selected as preference for drag'n'drop action:</li>
-<ul>
-<li> Clip will be inserted on the track at the nearest cut. </li>
-</ul>
-</ul>
 
-<h4>From Monitor</h4>
+
 <ol>
-<li>Open clip in Monitor by either:</li>
+<li>Inititing drag by pressing with <b>Left Mouse</b> on:</li>
+
+
 <ul>
-<li> double clicking on thumbnail icon,</li>
-<li> dragging Media File on top of Monitor or</li>
-<li> selecting <b>Open in Clip Monitor</b> item from <b>Right Mouse</b> context menu.</li>
+<li>A Media Item in Media Panel.</li>
+<li>Monitor area when Source Clip is displayed on Monitor.</li>
+<li>A Range Log Item row in Range Log panel.</li>
 </ul>
-<li>Select insert range</li>
+<li>A clip icon appears under cursor as drag is initiated.</li>
+<li>Continue drag into Timeline area. A <b>positioning indicator</b> will appear on drop target Track.</li>
 <ul>
-<li> Use <b>Mark In</b> and <b>Mark Out</b> buttons to select range. </li>
-<li> Use <b>I</b> an <b>O</b> keys to set to select range.</li>
-<li> If range is not set, then the full clip length will be inserted.</li>
+<li>A <b>red line</b> with small down pointing triangle indicates that an <b><i>overwrite</i></b> will be performed on all blank frames after the indicator.</li>
+<li>A <b>yellow line</b> with small left pointing triangle indicates that an <b><i>insert</i></b> will be performed between two clips.</li>
+<li>A <b>red box</b> around a clip indicates a <b><i>clip replace</i></b> will be performed on that clip. This indicator appears when cursor is placed near the middle of the replace target clip.</li>
 </ul>
-<li>Press <b>Insert From Monitor</b> button</li>
+<li>Release <b>Left Mouse</b> to perform the indicated edit.</li>
 <ul>
-<li> Clip will be inserted on the first active track at the cut nearest of the currently displayed frame. First active track is marked by down arrow in the track Active Switch.</li>
+<li>For Media Item and Monitor drags the range of added media will be the set Clip Range if that has been set, see chapter Monitor.</li>
+<li>For Range Log Item the range of added media will be the set range.</li>
 </ul>
 </ol>
 
+<h4>Configuring Drag'n'Drop</h4>
+
+<ol>
+<li>Select <b>Edit > Preferences</b> from application menu.</li>
+<li>In <b>Editing</b> panel select option from <b>Drag-and-Drop Action</b> drop down menu:</li>
+<ul>
+<li> <b>Always overwrite Blanks</b> Does overwrite when targeted on empty and insert when targeted on clip on all Tracks.</li>
+<li> <b>Overwrite blanks on non-V1 tracks'</b> Does insert always on Track V1 and on other tracks does overwrite when targeted on empty and insert when targeted on clip.</li> </li>
+<li> <b>'Always Insert'</b> Always does insert on all Tracks.</li>
+</ul>
+<li>Clip replace will always be performed if draop is atrgeted on the ecnter of a clip.</li>
+</ol>
+
+
+<h3>3 point add edits</h3>
 
 
 </div>
