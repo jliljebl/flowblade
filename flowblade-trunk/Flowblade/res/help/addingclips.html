@@ -19,48 +19,196 @@
 <div id="toccontent">
 
 
-<h3>Drag'n'Drop</h3>
+<h3>Drag and Drop</h3>
 
-
-
-<ol>
-<li>Inititing drag by pressing with <b>Left Mouse</b> on:</li>
-
-
-<ul>
-<li>A Media Item in Media Panel.</li>
-<li>Monitor area when Source Clip is displayed on Monitor.</li>
-<li>A Range Log Item row in Range Log panel.</li>
-</ul>
-<li>A clip icon appears under cursor as drag is initiated.</li>
-<li>Continue drag into Timeline area. A <b>positioning indicator</b> will appear on drop target Track.</li>
-<ul>
-<li>A <b>red line</b> with small down pointing triangle indicates that an <b><i>overwrite</i></b> will be performed on all blank frames after the indicator.</li>
-<li>A <b>yellow line</b> with small left pointing triangle indicates that an <b><i>insert</i></b> will be performed between two clips.</li>
-<li>A <b>red box</b> around a clip indicates a <b><i>clip replace</i></b> will be performed on that clip. This indicator appears when cursor is placed near the middle of the replace target clip.</li>
-</ul>
-<li>Release <b>Left Mouse</b> to perform the indicated edit.</li>
-<ul>
-<li>For Media Item and Monitor drags the range of added media will be the set Clip Range if that has been set, see chapter Monitor.</li>
-<li>For Range Log Item the range of added media will be the set range.</li>
-</ul>
-</ol>
-
-<h4>Configuring Drag'n'Drop</h4>
+<h4>Performing a Drag and Drop Edit</h4>
 
 <ol>
-<li>Select <b>Edit > Preferences</b> from application menu.</li>
-<li>In <b>Editing</b> panel select option from <b>Drag-and-Drop Action</b> drop down menu:</li>
-<ul>
-<li> <b>Always overwrite Blanks</b> Does overwrite when targeted on empty and insert when targeted on clip on all Tracks.</li>
-<li> <b>Overwrite blanks on non-V1 tracks'</b> Does insert always on Track V1 and on other tracks does overwrite when targeted on empty and insert when targeted on clip.</li> </li>
-<li> <b>'Always Insert'</b> Always does insert on all Tracks.</li>
-</ul>
-<li>Clip replace will always be performed if draop is atrgeted on the ecnter of a clip.</li>
+  <li>
+    Start dragging by pressing and holding <strong>Left Mouse</strong> on:
+    <ul>
+      <li>A Media Item in the <strong>Media Panel</strong>.</li>
+      <li>The <strong>Monitor</strong> area when a Source Clip is displayed.</li>
+      <li>A Range Log Item row in the <strong>Range Log</strong> panel.</li>
+    </ul>
+  </li>
+
+  <li>
+    A clip icon appears under the cursor when the drag starts.
+  </li>
+
+  <li>
+    Drag the clip into the <strong>Timeline</strong>. A
+    <strong>positioning indicator</strong> appears on the target track:
+    <ul>
+      <li>
+        A <strong>red line</strong> with a small downward-pointing triangle
+        indicates that an <strong>overwrite</strong> will be performed on the
+        blank area starting at the indicated position.
+      </li>
+      <li>
+        A <strong>yellow line</strong> with a small left-pointing triangle
+        indicates that an <strong>insert</strong> will be performed between
+        two clips or after a clip.
+      </li>
+      <li>
+        A <strong>red box</strong> around a clip indicates that a
+        <strong>clip replace</strong> will be performed on that clip.
+        This indicator appears when the cursor is positioned near the center
+        of the clip.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    Release <strong>Left Mouse</strong> to perform the indicated edit.
+    <ul>
+      <li>
+        For Media Item and Monitor drags, the range of media added is the
+        current <strong>Clip Range</strong>, if one has been set.
+        See the <strong>Monitor</strong> chapter.
+      </li>
+      <li>
+        For Range Log Item drags, the range of media added is the range
+        defined by the Range Log Item.
+      </li>
+    </ul>
+  </li>
 </ol>
 
 
-<h3>3 point add edits</h3>
+<h4>Configuring Drag and Drop</h4>
+
+<ol>
+  <li>
+    Select <strong>Edit &gt; Preferences</strong> from the application menu.
+  </li>
+
+  <li>
+    In the <strong>Editing</strong> panel, select an option from the
+    <strong>Drag-and-Drop Action</strong> drop-down menu:
+    <ul>
+      <li>
+        <strong>Always Overwrite Blanks</strong> &mdash;
+        On all tracks, dragging onto an empty area performs an overwrite,
+        while dragging onto an existing clip performs an insert.
+      </li>
+
+      <li>
+        <strong>Overwrite Blanks on Non-V1 Tracks</strong> &mdash;
+        On Track V1, dragging always performs an insert. On other tracks,
+        dragging onto an empty area performs an overwrite, while dragging
+        onto an existing clip performs an insert.
+      </li>
+
+      <li>
+        <strong>Always Insert</strong> &mdash;
+        Dragging always performs an insert on all tracks.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    <strong>Clip replace</strong> always takes precedence when the drop
+    position is near the center of an existing clip.
+  </li>
+</ol>
+
+
+<h3>3-point Edits</h3>
+
+<p>
+3-point editing allows you to specify an edit with source range and a target position or range using three points in time.
+</p>
+
+<p>
+  In Flowblade, the <strong>source</strong> is the video or audio clip
+  currently displayed in the <strong>Source Clip Monitor</strong>.
+  The <strong>target</strong> is the current <strong>Sequence</strong>
+  on the Timeline.
+</p>
+
+
+<h4>Performing 3-point Edits</h4>
+
+<ol>
+  <li>
+    Set the source range. See the <strong>Monitor</strong> chapter for
+    information on setting <strong>Mark In</strong> and
+  <strong>Mark Out</strong>.
+    <ul>
+      <li>
+        If <strong>both Mark In and Mark Out</strong> are defined, the source
+        range is the part of the clip between those marks, including the
+        frame at Mark In.
+      </li>
+
+      <li>
+        If <strong>neither Mark In nor Mark Out</strong> is defined, the
+        source range is the full range of the source media.
+      </li>
+
+      <li>
+        If <strong>only Mark In</strong> is defined, the source range starts
+        at the Mark In frame and continues to the end of the source media.
+      </li>
+
+      <li>
+        If <strong>only Mark Out</strong> is defined, the source range starts
+        at the beginning of the source media and ends at the Mark Out frame.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    Flowblade provides four types of 3-point edits:
+    <ul>
+      <li>
+        <strong>Insert</strong> &mdash;
+        Inserts the source range on the first active track at the nearest
+        cut to the Playhead.
+      </li>
+
+      <li>
+        <strong>Selected Clip Overwrite</strong> &mdash;
+        Overwrites one or more selected clips on the Timeline with the
+        source range.
+      </li>
+
+      <li>
+        <strong>Range Overwrite</strong> &mdash;
+        Overwrites the range between Mark In and Mark Out on the first
+        active track with the source range.
+      </li>
+
+      <li>
+        <strong>Append</strong> &mdash;
+        Inserts the source range on the first active track after the last
+        clip.
+      </li>
+    </ul>
+  </li>
+
+  <li>
+    3-point edits can be performed from three locations:
+    <ul>
+      <li>The <strong>Tool Dock</strong> menu, <i>(see below left)</i> .</li>
+      <li>The <strong>Middlebar</strong> buttons, <i>(see below right)</i> .</li>
+      <li>The <strong>Edit &gt; Add from Monitor</strong> submenu.</li>
+    </ul>
+    <p>
+  <img src="3pointmenu.png" alt="3-point edit menu">
+  <img src="3pointbuttons.png" alt="3-point edit buttons">
+</p>
+  </li>
+
+  <li>
+    Select the desired 3-point edit from one of these locations to perform
+    the edit.
+  </li>
+</ol>
+
+
 
 
 </div>
