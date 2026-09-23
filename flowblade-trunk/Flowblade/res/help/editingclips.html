@@ -31,30 +31,89 @@ Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html
 
 <h4>Cutting Clips</h4>
 <ol>
-<li>Select cut frame</li>
+<li>Select cut frame.</li>
 <ul>
 <li> Cut is always made before the currently displayed frame on all active tracks.</li>
 </ul>
-<li>Cut clip</li>
+<li>Cut clip.</li>
 <ul>
 <li> Press <b>Cut</b> button or press <b>X</b> on the keyboard.</li>
 </ul>
 </ol>
 
-
 <h4>Deleting Clips</h4>
-<p><b>Splice Out</b>: Select clip(s) and press <b>Delete</b> key or use the <b>Splice Out</b> button on middle bar. All the clips in the track after the deleted clip(s) are moved to left to cover the created empty space.</p>
-<p><b>Lift</b>: Select clip(s) and press the <b>Lift</b> button on the middle bar. Clip is replaced with a blank if it is in middle of track. Other clips on the track are not moved.
-<p><b>Ripple Delete</b>: Select clip(s) and press the <b>Ripple Delete</b> button on middle bar. All the clips on <b>all tracks</b> are moved forward to cover the created empty space. If moving clips backwards would cause an overwrite to happen on timeline, edit is not allowed.</p>
-<p><b>Range Delete</b>: Set <b>Mark In</b> and <b>Mark out</b> on timeline and press the <b>Range Delete</b> button on middle bar. All the clips and blanks on <b>all tracks</b> are deleted between marks and everything after deleted range is moved forward the length of the deleted range.</p>
+
+<p><strong>Splice Out</strong></p>
+
+<p>Select clip(s) and press the <strong>Delete</strong> key or use the
+<strong>Splice Out</strong> button on the middle bar.</p>
+
+<ul>
+    <li>The selected clip(s) are deleted.</li>
+    <li>All clips after the deleted clip(s) on the track are moved backward
+    to cover the empty space.</li>
+</ul>
+
+<p><strong>Lift</strong></p>
+
+<p>Select clip(s) and press the <strong>Lift</strong> button on the middle bar.</p>
+
+<ul>
+    <li>The selected clip(s) are replaced with blanks.</li>
+    <li>Other clips on the track are not moved.</li>
+    <li>If the selected clip is in the middle of the track, a blank is left
+    in its place.</li>
+</ul>
+
+<p><strong>Ripple Delete</strong></p>
+
+<p>Select clip(s) and press the <strong>Ripple Delete</strong> button on the
+middle bar.</p>
+
+<ul>
+    <li>The selected clip(s) are deleted.</li>
+    <li>Clips on <strong>all tracks</strong> after the deleted clip(s) are
+    moved backward to cover the empty space.</li>
+    <li>If moving the clips backward would cause an overwrite on the timeline,
+    the edit is not allowed.</li>
+</ul>
+
+<p><strong>Range Delete</strong></p>
+
+<p>Set <strong>Mark In</strong> and <strong>Mark Out</strong> on the timeline
+and press the <strong>Range Delete</strong> button on the middle bar.</p>
+
+<ul>
+    <li>All clips and blanks on <strong>all tracks</strong> within the marked
+    range are deleted.</li>
+    <li>Everything after the deleted range is moved backward by the length
+    of the deleted range.</li>
+</ul>
+
+<p><strong>Fade/Transition Cover Delete</strong></p>
+
+<p>Select a single rendered fade or transition clip and press the
+<strong>Delete</strong> key or button.</p>
+
+<ul>
+    <li>If the clips before and after the deleted clip have frames available,
+    the empty space is covered using material from the adjacent clips.</li>
+    <li>If sufficient material is not available, a splice out is performed.</li>
+    <li>A preference is available to always perform a splice out when deleting
+    fades and transitions.</li>
+</ul>
 
 <div class="note">
-<p><b>Fade/Transition cover delete</b>: Select a single rendered fade or transition clip and press <b>Delete</b> key or button. If clips before and after of the deleted clip have frames available, then the space left by the deleted clip will covered using material from adjacent clips. If material is not available a splice out will be performed. A preference exists to always perform splice out on fades and transitions.
-</div>
-<div class="note">
-<b>Use Keyboard Shortcuts!</b> It is much faster to use <b>X</b> key to cut clips and <b>Delete</b> key to splice out clips than it is to use buttons for the same operations.
-</div>
+<p><strong>Use Keyboard Shortcuts!</strong></p>
 
+<p>It is much faster to use keyboard shortcuts than to use the buttons for
+the same operations:</p>
+
+<ul>
+    <li>Press <strong>X</strong> to cut clips.</li>
+    <li>Press <strong>Delete</strong> to splice out clips.</li>
+</ul>
+</div>
 
 </div>
 
