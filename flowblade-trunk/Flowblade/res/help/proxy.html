@@ -17,78 +17,90 @@
 
 <div class="subject-header">Proxy Editing</div>
 
-<p>
-Proxy editing is a method of editing in which original media clips are presented on timeline by proxy clips.
 
-</p> 
-<div id="toc"></div>
+<p>Proxy editing is a method of editing in which original media clips are represented on the timeline by proxy clips.</p>
+
+<ol>
+  <li><a href="file:///home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/res/help/proxy.html#Rationale">Rationale</a></li>
+  <li><a href="file:///home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/res/help/proxy.html#Generic_Proxy_Editing_workflow">Generic Proxy Editing workflow</a></li>
+  <li><a href="file:///home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/res/help/proxy.html#Flowblade_proxy_editing">Flowblade proxy editing</a></li>
+  <li><a href="file:///home/janne/codes/flowblade/flowblade/flowblade-trunk/Flowblade/res/help/proxy.html#Important_notes_about_Flowblade_proxy_editing">Important notes about Flowblade proxy editing</a></li>
+</ol>
 
 <h3>Rationale</h3>
-<p>
-There are two main reasons to use proxy editing:
-</p>
+
+<p>There are two main reasons to use proxy editing:</p>
+
 <ul>
-<li> Original media from which the program is edited makes too high demands for either disk bandwidth or CPU processing power for decoding to enable responsive editing </li>
-<li> Original is kept on network server, slow external disk or other media with restricted access and does not enable provide responsive editing if accessed directly.</li>
+  <li>Original media from which the program is edited places too high a demand on either disk bandwidth or CPU processing power for decoding to allow responsive editing.</li>
+  <li>Original media is stored on a network server, slow external disk, or other media with restricted access, and accessing it directly does not allow responsive editing.</li>
 </ul>
 
 <h3>Generic Proxy Editing workflow</h3>
 
-<p>
-All proxy editing workflows have the same phases:
-</p>
+<p>All proxy editing workflows have the same phases:</p>
+
 <ol>
-<li> Render proxy media from original media </li>
-<li> Replace original media with proxy media </li>
-<li> Edit using proxy media </li>
-<li> Replace proxy media with original media </li>
-<li> Render final program using original media </li>
+  <li>Render proxy media from the original media.</li>
+  <li>Replace the original media with the proxy media.</li>
+  <li>Edit using the proxy media.</li>
+  <li>Replace the proxy media with the original media.</li>
+  <li>Render the final program using the original media.</li>
 </ol>
 
 <h3>Flowblade proxy editing</h3>
-<ol>
-<li> Creating Proxy Media
-	<ol>
-	<li> Select <b>Project->Proxy Manager</b> in menu and set proxy file settings in <b>Proxy Encoding</b> area  </li>
-	<li> Select Video Media files in <b>'Media'</b> Panel</li>
-	<li> Press button with proxy file icon next Delete button in 'Media' Panel</li>
-	<li> If Project is already in <b>'Using Proxy Media'</b> proxy mode, timeline clips with original media that had proxy media rendered to will be replaced with proxy media immediately</li>
-	</ol>
-</li>
-<li>Converting to use Proxy media
-	<ol>
-	<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
-	<li> Press <b>Use Proxy Media</b> button</li>
-	</ol>
-</li>
-<li>Editing with proxy media
-	<ol>
-	<li> Clips that use proxy media have a blue stripe indicating that status</li>
-	<li> A proxy editing indicator icon is displayed at left bottom corner</li>
-	<li> If new proxy media is rendered timeline clips using the original media in question will be replaced with proxy media immediately</li>
-	<li> Project can be saved normally and converted after load to use original media</li>
-</li>
-</ol>
-<li>Converting to use Original Media</li>
-<ol>
-<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
-<li> Press <b>Use Original Media</b> button</li>
-</ol>
-</ol>
-<h3>Important notes about Flowblade proxy editing</h3>
-<div class="important">
-<li> <b>DESTROYING ANY MEDIA while doing proxy editing WILL PREVENT CONVERTING BACK TO USING ORIGINAL MEDIA</b> </li>
-<li> <b>It is only possible to use all <i>existing</i> proxy media and clips or all original media</b>. It is not possible to use only some of the created proxy media.</li>
 
+<ol>
+  <li>
+    <strong>Creating Proxy Media</strong>
+    <ol>
+      <li>Select <strong>Project-&gt;Proxy Manager</strong> from the menu and set the proxy file settings in the <strong>Proxy Encoding</strong> area.</li>
+      <li>Select video media files in the <strong>'Media'</strong> Panel.</li>
+      <li>Press the button with the proxy file icon next to the Delete button in the <strong>'Media'</strong> Panel.</li>
+      <li>If the Project is already in <strong>'Using Proxy Media'</strong> proxy mode, timeline clips using original media for which proxy media has been rendered will be replaced with proxy media immediately.</li>
+    </ol>
+  </li>
+  <li>
+    <strong>Converting to use Proxy media</strong>
+    <ol>
+      <li>Select <strong>Project-&gt;Proxy Manager</strong> to open the Proxy Manager.</li>
+      <li>Press the <strong>Use Proxy Media</strong> button.</li>
+    </ol>
+  </li>
+  <li>
+    <strong>Editing with proxy media</strong>
+    <ol>
+      <li>Clips that use proxy media have a blue stripe indicating this status.</li>
+      <li>A proxy editing indicator icon is displayed in the bottom-left corner.</li>
+      <li>If new proxy media is rendered, timeline clips using the corresponding original media will be replaced with proxy media immediately.</li>
+      <li>The Project can be saved normally and converted after loading to use the original media.</li>
+    </ol>
+  </li>
+  <li>
+    <strong>Converting to use Original Media</strong>
+    <ol>
+      <li>Select <strong>Project-&gt;Proxy Manager</strong> to open the Proxy Manager.</li>
+      <li>Press the <strong>Use Original Media</strong> button.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3>Important notes about Flowblade proxy editing</h3>
+
+<div class="important">
+<ol>
+  <li><strong>DESTROYING ANY MEDIA while doing proxy editing WILL PREVENT CONVERTING BACK TO USING ORIGINAL MEDIA.</strong></li>
+  <li><strong>It is only possible to use all</strong> <em><strong>existing</strong></em> <strong>proxy media and clips, or all original media.</strong> It is not possible to use only some of the created proxy media.</li>
+</ol>
 </div>
+
+
 <div class="note">
-<p>
-Flowblade uses a programming technique that changes the paths used by media items and clips to point either to hidden proxy media or original media.
-</p>
-<p>
- Changing from one to another is implemented by writing a hidden temporary project file to disk and replacing paths when project is read back. Because of this any missing original media makes conversion back to using original media fail.
-</p>
+<p>Flowblade uses a programming technique that changes the paths used by media items and clips to point either to hidden proxy media or to the original media.</p>
+
+<p>Changing from one to the other is implemented by writing a hidden temporary project file to disk and replacing the paths when the project is read back. Because of this, any missing original media will cause conversion back to using original media to fail.</p>
 </div>
+
 
 </div>
 </div>
