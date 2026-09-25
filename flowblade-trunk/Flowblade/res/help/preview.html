@@ -1,0 +1,112 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Preview Options</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png" >
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Preview Options</div>
+
+
+<div id="toc"></div>
+
+<h2>Preview performance and quality</h2>
+
+<img style="padding: 12px 0px 0px 0px" src="previewcontrols.png">
+<p style="padding: 0px 0px 0px 0px">
+<i>Preview controls menu in monitor controls area.</i>
+</p>
+<p>
+Quality, performance and smoothness of preview playback can be controlled by selecting Scaling and Interpolation options.
+</p>
+
+<p>
+With better image quality less filters can used before issues with playback smoothness start occurring.
+
+Compomising on image quality offers better performing playback and more filters can be used without issues.
+</p>
+
+<p>
+Playback performance can also be improved by emplying GPU decoding, if available in the system.
+</p>
+
+
+<h3>Preview Interpolation</h3>
+
+<p>
+Preview interpolation options:
+</p>
+<ul>
+<li> <b>Nearest Neighbour</b> - fastest, some jagged edges on image maybe visible.</li>
+<li> <b>Bilinear</b> - better image quality, no image artifacts should be visible.</li>
+<li> <b>Bilcubic</b> - best image quality, but worst performance.</li>
+</ul>
+
+<h3>Preview Scaling</h3>
+
+<p>Preview scaling is feature in which rendering output is executed at a smaller resolution then the full resolution of the Project Profile of the current Project.</p>
+<p>Selecting options with smaller image resolution results in lower image quality but better playback performance.</p>
+<p>
+Preview scaling options:
+</p>
+<ul>
+<li> <b>No Scaling</b></li>
+<li> <b>1080p</b></li>
+<li> <b>720p</b></li>
+<li> <b>540p</b></li>
+<li> <b>360p</b></li>
+</ul>
+<p>Combining preview scaling with proxy editing using proxy clips of the exact same resolution results in improved playback performace since less image scaling happends during rendering output.</p>
+
+
+<h3>GPU Decoding</h3>
+
+<p>Many modern systems are equipped with GPU hardware that can used to decode video during playback. This can improve playback performance and allow for having better image quality of active filters with smoothness issues.
+
+<h4>Available GPU decoding in your system</h4>
+
+<ol>
+<li>Select <b>Help > Runtime Environment</b> from application menu.</li>
+<li>Video formats that can be decoded in GPU are listed on line <b>GPU Decoding</b> in section <b>GPU</b>.</li>
+</ol>
+<div class="note">
+It can be useful to transcode material to encoding that can be decoded by GPU in your system, see chapter <b>Transcoding</b>.
+</div>
+
+<h4>Enabling GPU decoding</h4>
+<ul>
+<li>Check <b>View > Enable Harware Decoding</b> checkbox in application menu.</li>
+<li>Alternatively check <b>Enable Harware Decoding</b> checkbox in <b>Preview Options</b> pop-up menu.</li>
+</ul>
+
+
+<h4>Available GPU decoding</h4>
+Depending on system configuration the following video formats may be GPU decodable.</p><p> <b>VAAPI</b> based decoding is available on systems with AMD or Intel GPU hardware, <b>CUDA</b> based decoding is available on systems with NVIDIA GPU hardware.</p>
+<ul>
+<li> <b>VAAPI</b></li>
+<ul>
+<li>h264</li>
+<li>hevc</li>
+<li>vp9</li>
+<li>av1</li>
+</ul>
+<li> <b>CUDA</b></li>
+<ul>
+<li>h264</li>
+</ul>
+</ul>
+
+</div>
+</div>
+</body>
+
+</html> 
