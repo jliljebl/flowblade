@@ -21,6 +21,21 @@ a:link {
   background-color: transparent;
 }
 
+a.nolines {
+    text-decoration:none;
+	color:#222222;
+     background-color: transparent;
+}
+
+.nolines:hover {
+    text-decoration: underline;
+}
+
+.nolines:visited {
+	color:#222222;
+}
+
+
 a:visited {
   color: #3d6793;
   background-color: transparent;
@@ -37,9 +52,9 @@ a:visited {
 	width: 900px;
 	margin-bottom: 80px;
 	display: flex;
-	justify-content: center;
+	justify-content: left;
 	flex-direction: column;
-	text-align: center;
+	text-align: left;
 }
 
 .appendix-index{
@@ -65,19 +80,6 @@ a:visited {
 	font-size:18px;
 }
 
-.subject-cell {
-	padding-right: 20px;
-	color:#222222;
-	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
-	font-family: sans-serif;
-	word-wrap: break-word;
-	line-height: 1.4;
-	vertical-align: baseline;
-	font-weight:400;
-	font-size:30px;
-	margin-bottom: 35px;
-}
-
 .grid-container {
 	margin-top: 80px;
         width: 700px;
@@ -99,15 +101,17 @@ a:visited {
 
 .subject-cell {
 	padding-right: 20px;
-	color:#222222;
+	color:#000009;
 	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
 	font-family: sans-serif;
 	word-wrap: break-word;
 	line-height: 1.4;
 	vertical-align: baseline;
 	font-weight:400;
-	font-size:22px;
 	text-transform: uppercase;
+	font-size:30px;
+  	text-decoration: none;
+
 }
 
 .appendix-pad {
