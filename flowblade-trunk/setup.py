@@ -31,7 +31,7 @@ install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblad
                 ('lib/mime/packages',['installdata/flowblade']),
                 ('share/man/man1',['installdata/flowblade.1'])]
 
-flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
+flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/filters/wipe_icons/*', 'res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
                           'res/patternproducer/*','res/help/*','res/help/*/*','locale/Flowblade/*',
                           'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*',
