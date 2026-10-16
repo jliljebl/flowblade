@@ -1,42 +1,141 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>title</title>
+  <title>Monitor and Preview</title>
   <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
 </head>
 
 <body>
 
 <div id="content">
 <img src="header_text_5.png" >
-
 <script src="tocgen.js"></script>
-
-<div class="subject-header">title</div>
-
-<div id="toc"></div>
 
 <div id="toccontent">
 
-<h4>Changing Current Frame when Clip is displayed on Monitor</h4>
+<div class="subject-header">Monitor and Preview</div>
+
+
+<div id="toc"></div>
+
+<h2>Monitor Controls</h2>
+
+<img style="padding: 12px 0px 0px 0px" src="monitor.png">
+<p><b>[1] Timecode</b> Timecode of current position on current source media.</p>
+<p><b>[2] Source Media Name Display</b> Name of the source displayed in the Monitor.</p>
+<p><b>[3] Source Switcher</b> Swiching between Timeline and Clip Source Monitor.</p>
+<p><b>[4] Preview Options Menu</b> Interpolation, preview scaling and hardware encoding options.</p>
+<p><b>[5] Preview Image Height Display</b> Image height of currently active preview scaling option.</p>
+<p><b>[6] Play/Stop, Next and Prev Buttons</b> Playback and seek controls.</p>
+<p><b>[7] Monitor Position Bar</b> Allows for seeking currently displayed media with mouse.</p>
+<p><b>[8] Trim View and Monitoring Menus</b> Trim view and image monitoring options.</p>
+<p><b>[9] Mark Buttons</b> Setting, seeking to and clearing Mark In and Mark Out on current media.</p>
+<p><b>[10] 3-point Edit Menu</b> 3-point edit actions.</p>
+<p><b>[11] Marked Range and Monitor Source Length Display</b> Length of marked range on the left and the length of the currently displayed media on the right.</p>
+
+
+<h2>Sequence and Clip Source Monitoring</h2>
+
+<p>Flowblade Monitor allows preview of different media sources.
 <ul>
-<li> Drag with <b>Left Mouse</b> on the Monitor Position Bar.</li>
-<li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to next or previous frame.</li>
-<li> Click <b>Up Arrow</b> key or <b>Down Arrow</b> key to move to next or previous of the following: Mark In/Mark Out/Start/End</li>
-<li> Click <b>Next</b> or <b>Prev</b> button in Monitor Buttons area to move to next or previous frame.</li>
+<li> <b>Sequence Source</b> source shows the current displayed frame of the Sequence on the Timeline.</li>
+<li> <b>Clip Source</b> shows the current displayed frame of Clip Source media loaded into Monitor.</li>
+</ul>
+</p>
+
+<h3>Switching between Sequence and Clip Sources</h3>
+ <p><b>[3] Source Switcher</b> has two buttons on blue backgroud that can be used to switch between monitor soueces.
+ 
+ <ul>
+<li> <b>Sequence Source</b> button is on the left with an icon displaying a sequence film frames.</li>
+<li> <b>Clip Source</b> button is on the right with an icon displaying a single film frame.</li>
+</ul>
+
+<h4>Switching to view Sequence Source</h4>
+ <ul>
+<li> Use <b>[3] Source Switcher.</b> </li>
+<li> Click on Timeline when Clip Source is displayed.</li>
+<li> Press <b>TAB</b> key to toggle between source views.</li>
+ </ul>
+<h4>Switching to view Clip Source</h4>
+ <ul>
+<li> Use <b>[3] Source Switcher.</b> </li>
+<li> Drag Media Item from Media panel on top of the monitor.</li>
+<li> Drag Clip from the Timeline on top of the monitor.</li>
+<li> Press <b>Right Mouse</b> on a Clip on the Timeline and select item <b>Open in Monitor</b> from popup menu.</li>
+<li> Press <b>TAB</b> key to toggle between source views.</li>
+
+ </ul>
+ 
+<h2>Playback and seeking</h2>
+
+<h3>Playback</h3>
+<ul>
+<li> Press <b>Space Bar</b> key to start/stop playback.</li>
+<li> Press <b>[6] Play/Stop</b> button to start/stop playback.</li>
+</ul>
+
+<h3>Seek</h3>
+<ul>
+<li> Drag with <b>Left Mouse</b> on the <b>[7] Monitor Position Bar</b>.</li>
+<li> Click <b>Left Arrow</b> key or <b>Right Arrow</b> key to move to the next or the previous frame.</li>
+<li> Press <b>[6] Prev</b> or <b>[6] Next</b> buttons to move to the next or the previous frame.</li>
+<li> Click <b>Up Arrow</b> key or <b>Down Arrow</b>.</li>
+<ul>
+<li> When viewing <b>Clip Source</b> playhead moves to next or previous of the following:  Mark In / Mark Out / Start / End.</li>
+<li> When viewing <b>Sequence Source</b> playhead moves to next or previous of the following:  Next Cut on Timeline / Mark In / Mark Out / Start / End.</li>
+</ul>
+</ul>
+
+<h3>J, K, L Playback and Seek</h3>
+<p>
+Keys <b>J, K</b> and <b>L</b> provide a unified interface to a shuttle style seek and playback. 
+</p>
+
+<p> <b>J,K,L Playback Speeds:</b> -32.0x, -16.0x, -8.0x, -1.0x, -0.35x, 0.0, 0.35x, 1.0x, 1.8x, 3.0x, 5.0x, 8.0x</b></p>
+<ul>
+<li> Pressing key <b>L</b> selects the next speed forward of the available playback speeds. </li>
+<ul>
+<li> First press when paused starts playback at <b>0.35x</b> speed forward.</li>
+<li> Pressing <b>L</b> increases speed during forward playback until <b>8.0x</b> playback speed achieved. </li>
+<li> Pressing <b>L</b> decreases speed during backwards playback until playback is paused and playback direction changes.</li>
+</ul>
+<li> Pressing key <b>J</b> selects the next speed backward of the available playback speeds. </li>
+<ul>
+<li> First press when paused starts playback at <b>0.35x</b> speed backwards.</li>
+<li> Pressing <b>J</b> increases speed during backwards playback until <b>32.0x</b> playback speed achieved. </li>
+<li> Pressing <b>J</b> decreases speed during forward playback until playback is paused and playback direction changes.</li>
+</ul>
+<li> Pressing key <b>K</b> pauses playback. </li>
 </ul>
 
 
-<h3>Switching between Timeline and Clip Preview</h3>
+<h2>Setting Mark In and Mark Out</h2>
+<img style="padding: 12px 0px 0px 0px" src="marksbuttons.png">
+
+
+<p><b>Mark Buttons</b> from left to right:</p>
 <ul>
-<li> Click buttons with icons representing sequence or single clip in Monitor Buttons area.</li>
-<li> Drag Media File on top of <b>Monitor</b> to display Clip.</li>
+<li> <b>Set Mark In</b></li>
+<li> <b>Set Mark Out</b></li>
+<li> <b>Go to Mark In</b></li>
+<li> <b>Go To Mark Out</b></li>
+<li> <b>Clear Marks</b></li>
 </ul>
 
-</div>
+<p>Keyboard shortcuts for Marks actions:</p>
+<ul>
+<li> <b>Set Mark In - I</b></li>
+<li> <b>Set Mark Out - O</b></li>
+<li> <b>Go to Mark In - ALT + I</b></li>
+<li> <b>Go To Mark Out - ALT + O</b></li>
+<li> <b>Clear Marks - ALT + K</b></li>
+</ul>
+
 
 </div>
-
+</div>
 </body>
 
 </html> 
