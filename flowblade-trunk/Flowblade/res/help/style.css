@@ -13,6 +13,7 @@ body {
 	word-wrap: break-word;
 	line-height: 1.4;
 	vertical-align: baseline;
+    padding-bottom: 20px;
 }
 
 a:link {

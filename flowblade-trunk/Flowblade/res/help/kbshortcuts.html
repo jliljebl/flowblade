@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Keyboard Shortcuts</title>
+  <link rel="stylesheet" href="style.css">
 <style>
 .tablestyle {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -46,13 +48,60 @@ h1, h2, h3, h4, h5, h6 {
 <body>
 
 <div id="content">
+<img src="header_text_5.png" >
 
+<script src="tocgen.js"></script>
 
+<div class="subject-header">Keyboard Shortcuts</div>
 
-<h1>Flowblade Default keyboard Shortcuts</h1>
+<div id="toc"></div>
 
+<div id="toccontent">
 
-<h2>Timeline Edits</h2>
+<h2>Custom Keyboard Shortcuts</h2>
+<h3>Creating Custom Shortcuts Group</h3>
+<ol>
+<li>Select <b>Edit > Keyboard Shortcuts</b> from application menu.</li>
+<li>A dialog window opens. Press button <b>Add Custom Shortcuts Group</b>.</li>
+<li>Enter a name for new group and press button <b>Create</b>.</li>
+<li>A new shortcut group will be created and made active.</li>
+<li>Click on icon <img src="kb_configuration.png" > next to the shortcut you wish to change.</li>
+<li>Enter new keyboard shortcut.</li>
+</ol>
+
+<h3>Deleting Custom Shortcuts Group</h3>
+<ol>
+<li>Select <b>Edit > Keyboard Shortcuts</b> from application menu.</li>
+<li>A dialog window opens. Make sure that the custom groupo you wish to delete is active.</li>
+<li>Press button <b>Delete Active Custom Shortcuts Group</b>.</li>
+<li>Group will be deleted and default shortcuts will be made active.</li>
+</ol>
+
+<h2>Quick Filters</h2>
+<p>
+<b>Quick Filters</b> is a feature that makes possible to add Filters to Clips using a keyboard shortcut.
+</p>
+
+<p>
+The keyboard shortcut pattern for all Quick Filters is <b>Control + NUMBER</b>.
+</p>
+
+<p>
+To add a Quick Filter to a Timeline Clip first select it and press <b>Control + NUMBER</b> to add the previously configured filter to the selected Clip.
+</p>
+
+<h3>Configuring Quick Filters</h3>
+<ol>
+<li>Select <b>Edit > Keyboard Shortcuts</b> from application menu.</li>
+<li>A dialog window opens. Scroll to the bottom of shortcuts list to the Quick Filters section.</li>
+<li>To create a Quick filter shortcut click on icon <img src="kb_configuration.png" > next to Quick Filter shortcut you wish to activate.</li>
+<li>Select Filter from dropdown menu and press <b>Set Quick Filter for Shortcut Key</b> button.</li>
+<li>To clear Quick Filter press <b>Delete Quick Filter from Shortcut Key</b> button.</li>
+</ol>
+
+<h2>Default Keyboard Shortcuts</h2>
+
+<h3>Timeline Edits</h3>
 
 <table class="tablestyle">
 <thead>
@@ -122,7 +171,6 @@ h1, h2, h3, h4, h5, h6 {
 <td>R</td>
 <td>Overwrite Range</td>
 </tr>
-
 <tr>
 <td>Control + X</td>
 <td>Cut Clips</td>
@@ -135,20 +183,19 @@ h1, h2, h3, h4, h5, h6 {
 <td>Control + V</td>
 <td>Paste Clips</td>
 </tr>
-
 <tr>
 <td>Control + V</td>
 <td>Paste Filters/Clips</td>
 </tr>
-
+<tr>
 <td>Alt + T</td>
 <td>Toggle Clip Audio Mute</td>
 </tr>
-
+<tr>
 <td>Alt + D</td>
 <td>Add Rendered Transition</td>
 </tr>
-
+<tr>
 <td>,</td>
 <td>Nudge Move Selection Back 1 Frame</td>
 </tr>
@@ -167,7 +214,7 @@ h1, h2, h3, h4, h5, h6 {
 </tbody>
 </table>
 
-<h2>Timeline Actions</h2>
+<h3>Timeline Actions</h3>
 
 <table class="tablestyle">
 <thead>
@@ -201,7 +248,7 @@ h1, h2, h3, h4, h5, h6 {
 </table>
 
 
-<h2>Trimming</h2>
+<h3>Trimming</h3>
 
 <table class="tablestyle">
 <thead>
@@ -234,7 +281,7 @@ h1, h2, h3, h4, h5, h6 {
 </table>
 
 
-<h2>Sync</h2>
+<h3>Sync</h3>
 
 <table class="tablestyle">
 <thead>
@@ -277,7 +324,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-<h2>Marks</h2>
+<h3>Marks</h3>
 <table class="tablestyle">
 <thead>
 <tr>
@@ -319,7 +366,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-<h2>Track Head Column</h2>
+<h3>Track Head Column</h3>
 
 <table class="tablestyle">
 <thead>
@@ -336,7 +383,7 @@ h1, h2, h3, h4, h5, h6 {
 </tbody>
 </table>
 
-<h2>Playback</h2>
+<h3>Playback</h3>
 
 <table class="tablestyle">
 <thead>
@@ -418,7 +465,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-<h2>General</h2>
+<h3>General</h3>
 <table class="tablestyle">
 <thead>
 <tr>
@@ -496,7 +543,7 @@ h1, h2, h3, h4, h5, h6 {
 </table>
 
 
-<h2>Keyframe and Geometry Editor</h2>
+<h3>Keyframe and Geometry Editor</h3>
 
 <table class="tablestyle">
 <thead>
@@ -521,7 +568,7 @@ h1, h2, h3, h4, h5, h6 {
 </tbody>
 </table>
 
-<h2>Geometry Editor GUI Panel</h2>
+<h3>Geometry Editor GUI Panel</h3>
 
 <table class="tablestyle">
 <thead>
@@ -578,7 +625,7 @@ h1, h2, h3, h4, h5, h6 {
 </tbody>
 </table>
 
-<h2>RotoMask Editor</h2>
+<h3>RotoMask Editor</h3>
 
 <table class="tablestyle">
 <thead>
@@ -605,7 +652,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 
-<h2>Monitor View</h2>
+<h3>Monitor View</h3>
 
 <table class="tablestyle">
 <thead>

@@ -13,14 +13,17 @@
 
 <script src="tocgen.js"></script>
 
-<div id="toccontent">
+
 
 <div class="subject-header">Range Log</div>
 
-<p>
-Flowblade provides functionality save, name and manage <b>in point to out point ranges</b> on media items.
-
 <div id="toc"></div>
+<div id="toccontent">
+
+<p>
+Flowblade provides functionality to save, name and manage <b>in point to out point ranges</b> of media items.
+</p>
+
 
 <h3>Rationale</h3>
 This functionality is mainly useful then there are <b>media items that contain multiple areas of interest</b> or if the user wants to save in and out points of an edit for later use.
@@ -33,12 +36,21 @@ A typical example use case for the feature would be:
 <li> User wants to mark and name the interesting parts of the speech</li>
 </ol>
 
+<h3>GUI</h3>
+<img  style="padding: 24px 12px 12px 0px" src="rangelogpanel.png" >
+<p><b>[1] Group Select</b> dropdown menu.</p>
+<p><b>[2] Star Controls</b> Left to right: Show starred, Show non-starred, Set selected starred, Clear star from selected.</p>
+<p><b>[3] Range Log Items Table</b>.</p>
+<p><b>[4] Range Log Panel Menu</b>.</p>
+<p><b>[5] Items Buttons</b> Left to right: Create Item, Delete Item.</p>
+<p><b>[6] Timeline Buttons</b> Left to right: Insert Selected, Append Displayed.</p>
+
 <h3>Creating Range Log Items</h3>
 <h4> With Clip Monitor</h4>
 <ol>
 <li>Add Media Item to Clip Monitor</li>
 <li>Set Mark In and Mark Out points</li>
-<li>Press 'Log Current marked Range' -button on the bottom left in the Range Log panel</li>
+<li>Press <b>[5]</b> Create Item button.</li>
 </ol>
 <h4>Drag'n'Drop from Timeline</h4>
 <ol>
@@ -49,8 +61,8 @@ A typical example use case for the feature would be:
 <h3> Adding Range Log items to Timeline</h3>
 <h4>With buttons</h4>
 <ul>
-<li> Press 'Append displayed..." -button on the bottom right corner to append all Items as Clips on active Track</li>
-<li> Press 'Insert selected..." -button next to bottom right corner button to insert all selected Items on active track at nearest cut from the currently displayed Timeline position</li>
+<li> Press <b>[6]</b> Append Displayed button to append all Items as Clips on active Track</li>
+<li> Press <b>[6]</b> Insert Selected button to insert all selected Items on active track at nearest cut from the currently displayed Timeline position.</li>
 </ul>
 <h4>Drag'n'Drop into Timeline</h4>
 <ul>
@@ -59,8 +71,9 @@ A typical example use case for the feature would be:
 
 <h3>Managing Range Log Items</h3>
 <ul>
-<li> Use top row drop down menu to select the displayed Items Group</li>
-<li> Use the top left corner button drop down menu to create, rename and delete Items Groups</li>
+<li> Use <b>[1]</b> dropdown menu to select the displayed Items Group.</li>
+<li> Use <b>[2]</b> Star Controls to star and unstar items, and selected filtered views based on if items are starred or not.</li>
+<li> Use <b>[4]</b> Panel Menu to create, rename and delete Items Groups, move items between groups and to select displayed sorting by item creation time, clip name or comment.</li>
 </ul>
 
 </div>
