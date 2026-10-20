@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>title</title>
+  <title>Working with Layouts</title>
   <link rel="stylesheet" href="style.css">
 
   <style>
@@ -23,13 +23,44 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">title</div>
+<div class="subject-header">Working with Layouts</div>
 
 <div id="toc"></div>
 
 <div id="toccontent">
 
-<div class="row">
+<p>
+Flowlade provies functionality to configure application layout by moving Panels to named postions or switching to use one of the available preset layouts.
+</p>
+
+<p>
+User custom layouts can also be named and saved to be used from the same menu as the preset layout options.
+</p>
+
+<h3> Using preset layouts</h3>
+
+
+<h4>Changing to another preset layout</h4>
+<ol>
+<li>Press <b>Layout button</b> <img src="layout.png"> in the right side of the application menubar.</li>
+<li>Select one of the preset layout options.</li>
+<li>New layout will be applied immediately.</li>
+</ol>
+<p>
+Alternatively it is possible to use appmenu.
+</p>
+<ol>
+<li>Select one of the options in application menu submenu <b>View > Panel Placement > Preset Layouts</b>.</li>
+<li>New layout will be applied immediately.</li>
+</ol>
+
+<h4>Preset layout options</h4>
+
+<p>
+Five layout options are available in the Layout menu.
+</p>
+
+<div class="row" style="padding-top: 12px">
   <div class="column">
 <img src="mini_monitorleft.png" style="width:100%">
   </div>
@@ -53,6 +84,64 @@
   </div>
 </div>
 
+<p><b>[1] Monitor Left</b>.</p>
+<p><b>[2] Monitor Center</b>.</p>
+<p><b>[3] Top Row 4 Panels</b>.</p>
+<p><b>[4] Media Panel Left Column</b>.</p>
+<p><b>[5] Edit Panel Right Column</b>.</p>
+
+
+<p>
+Option <b>[3] Top Row 4 Panels</b> is only available for screen sizes with widht 1920 pixels or higher. 
+</p>
+
+<h3>Custom layouts</h3>
+
+<h4>Creating custom layouts</h4>
+<ol>
+<li>Open position submenu for panel you wish to move to another position in submenu <b>View > Panel Placement</b>.</li>
+
+<li>For example if you wish to move <b> Edit</b> panel to another position open <b>View > Panel Placement > Edit Panel</b> and select one of the options <b>Top Row Default Notebook, Top Row Right, Left Column, Bottom Row Left, Right Column</b></li>
+
+<li>Panel will be moved to the new position immediately.</li>
+<li>Note that it is not quaranteed that the new layout created by moving a panel will fit the available screen space.</li>
+</ol>
+<h4>Saving custom layouts</h4>
+<ol>
+<li>Press <b>Layout button</b> <img src="layout.png"> in the right side of the application menubar.</li>
+<li>Select menu item <b>Save current layout</b>.</li>
+<li>A dialog with text input widget will be presented. Provide a name for the custom layout and press button <b>Save</b>.</li>
+</ol>
+
+
+<h4>Applying custom layouts</h4>
+<ol>
+<li>Press <b>Layout button</b> <img src="layout.png"> in the right side of the application menubar.</li>
+<li>Custom layouts will appers as menu items with the name given when saved as item text.</li>
+<li>Select the wanted custom layout menu item.</li>
+<li>New layout will be applied immediately.</li>
+</ol>
+
+<h3>Available panel positions</h3>
+<p>
+Application layout has two rows: top row which always contains the Monitor Area and bottom row which always contains the Timeline.
+</p>
+
+<p>
+Some panels can be positioned in left or right side columns which cover the full application height.
+</p>
+
+<p>
+There are 7 named positions that panels can be moved into.
+</p>
+
+<p><b>Top Row Project Panel Default.</b> This is the left most position on top row.</p>
+<p><b>Top Row Default Notebook.</b> This is betweeen Top Row Project Panel Default and Monitor Area in the top row.</p>
+<p><b>Top Row Right.</b> This is the right most position on top row, to the right of Monitor Area.</p>
+<p><b>Bottom Row Left.</b> This is the left most position on bottom row, to the left of Timeline.</p>
+<p><b>Bottom Row Right.</b> This is the right most position on bottom row, to the right of Timeline.</p>
+<p><b>Left Column.</b> This is to the left of all Panels in both rows and covers the full height of the application except for the top menubar.</p>
+<p><b>Right Column.</b> This is to the right of all Panels in both rows and covers the full height of application except for the top menubar.</p>
 </div>
 
 </div>

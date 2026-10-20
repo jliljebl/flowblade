@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Creating New Project</title>
+  <title>Working with Projects</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,50 +12,76 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">Creating New Project</div>
+<div class="subject-header">Working with Projects</div>
 
 <div id="toc"></div>
 
 
 <p>
-Flowblade Movie Editor saves work in project files.
+Flowblade Movie Editor saves work in Project files.
 </p>
+
+<h3>Project Contents</h3>
 <p>
-To create a new Project:
-</p>
-<ul>
-<li> <b>Menu:</b> Select <b>File > New</b> from menu.</li>
-<li> <b>Keyboard Shortcut:</b> Press <b>Control + N</b>.</li>
-</ul>
-<p>
-A project contains:
+A Project contains:
 </p>
  <ul>
-<li> One or more Sequences of edited media</li>
-<li> A collection of Media Files stored in Bins.</li>
-<li> Rendered media and thumbnails stored in Data Store.</li>
+ <li>A <b>Project Profile</b> determining video preview and output parameters, see below.</li>
+<li> One or more  <b>Sequences</b> of edited media</li>
+<li> A collection of  <b>Media Files</b> stored in <b>Bins</b>.</li>
+<li> Rendered media, rendered data items and thumbnails stored in <b>Data Store</b>.</li>
 </ul>
-<p>
-There are two parameters that can be selected for a new project:
-</p>
-<ul style="list-style-type:none">
-<li> <b>Project Profile</b> Project Profile determines:
+
+
+<h3>Project Profile</h3>
+
+<p> Project Profile is the main data item selected to define video playback and export properties of a Project. Project Profile determines:</p>
 <ul>
+
          <li>Frame rate.</li>
          <li>Image Dimensions.</li>
          <li>Image size in pixels.</li>
          <li>Pixel aspect ratio.</li>
          <li>Colorspace.</li>
-</ul
-<li> <b>Tracks count</b> Select the deafult number of video and audio tracks that are used for all new Sequences in project. Sequence track count can be changed later.</li>
-
 </ul>
 <div class="note">
 For <b>best possible quality</b> the <b>input material, Project Profile and Rendering Profile</b> should <b>all have the same pixel dimensions</b> and pixel aspect ratio.
 </div>
+
+<h3>Creating New Project</h3>
+
+
+
+
+<ol>
+<li>
+Open the Project creation dialog:
+</li>
+<ul>
+<li> Application menu: Select <b>File > New</b>.</li>
+<li> Keyboard shortcut: Press <b>Control + N</b>.</li>
+</ul>
+<li>
+Dialog allows setting two parameters for the new project:
+</li>
+<ul>
+<li><p> <b>Tracks count</b>.</p> <p>Select the default number of video and audio tracks that are used for all new Sequences in project. Sequence track count can be changed later.</p></li>
+
+<li> 
 <p>
-<b>Data Store</b> location is selected on project creation.</p> <p>Data Store contains thumbnails, Generator and Rendered Transitions, stabilizing and motion tracking data, proxy files etc. used in the Project. See chapter: <a href="datastores.html">Data Stores</a>.
+<b>Data Store location</b> is also selected on project creation.</p> <p>Data Store contains thumbnails, Generator and Rendered Transitions, stabilizing and motion tracking data, proxy files etc. used in the Project. See chapter: <a href="datastores.html">Data Stores</a>.
 </p>
+</li>
+
+</ul>
+<li>
+Remember always to save Project before closing the application or all work and data created during the editing session will be lost. 
+</li>
+</ol>
+
+
+
+
 
 
 

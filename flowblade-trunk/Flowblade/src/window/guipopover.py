@@ -464,12 +464,12 @@ def layout_menu_show(launcher, widget, callback, _user_layouts):
     _layout_menu = menu_clear_or_create(_layout_menu)
 
     main_section = Gio.Menu.new()
-    add_menu_action(main_section, _("Layout Monitor Left"), "layout.monitorleft",  "monitor_left", callback)
-    add_menu_action(main_section, _("Layout Monitor Center"), "layout.monitorcenter",  "monitor_center", callback)
+    add_menu_action(main_section, _("Monitor Left"), "layout.monitorleft",  "monitor_left", callback)
+    add_menu_action(main_section, _("Monitor Center"), "layout.monitorcenter",  "monitor_center", callback)
     if not(editorstate.SCREEN_WIDTH < 1919):
-        add_menu_action(main_section, _("Layout Top Row 4 Panels"), "layout.fourpanels",  "top_row_four", callback)
-    add_menu_action(main_section, _("Layout Media Panel Left Column"), "layout.medialeft",  "media_panel_left", callback)
-    add_menu_action(main_section, _("Layout Edit Panel Right Column"), "layout.editright",  "edit_panel_right", callback)
+        add_menu_action(main_section, _("Top Row 4 Panels"), "layout.fourpanels",  "top_row_four", callback)
+    add_menu_action(main_section, _("Media Panel Left Column"), "layout.medialeft",  "media_panel_left", callback)
+    add_menu_action(main_section, _("Edit Panel Right Column"), "layout.editright",  "edit_panel_right", callback)
     _layout_menu.append_section(None, main_section)
 
     if len(_user_layouts) > 0:

@@ -576,12 +576,12 @@ def show_layout_press_menu(launcher, widget, event):
 def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated_popover
 
-    _add_menu_action(menu, _("Layout Monitor Left"), "presetmonitorleft", "monitor_left", callback)
-    _add_menu_action(menu, _("Layout Monitor Center"), "presetmonitorcenter", "monitor_center", callback)
+    _add_menu_action(menu, _("Monitor Left"), "presetmonitorleft", "monitor_left", callback)
+    _add_menu_action(menu, _("Monitor Center"), "presetmonitorcenter", "monitor_center", callback)
     if editorstate.SCREEN_WIDTH  > 1919:
-        _add_menu_action(menu, _("Layout Top Row 4 Panels"), "presettoprowfour", "top_row_four", callback)
-    _add_menu_action(menu, _("Layout Media Panel Left Column"), "presetmediapanelleft", "media_panel_left", callback)
-    _add_menu_action(menu, _("Layout Edit Panel Right Column"), "preseteditpanelright", "edit_panel_right", callback)
+        _add_menu_action(menu, _("Top Row 4 Panels"), "presettoprowfour", "top_row_four", callback)
+    _add_menu_action(menu, _("Media Panel Left Column"), "presetmediapanelleft", "media_panel_left", callback)
+    _add_menu_action(menu, _("Edit Panel Right Column"), "preseteditpanelright", "edit_panel_right", callback)
 
 def _add_menu_action(menu, label, item_id, data, callback):
     menu.append(label, "app." + item_id) 
