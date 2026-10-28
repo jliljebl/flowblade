@@ -19,18 +19,73 @@
 <div id="toccontent">
 
 <h2>Rendered Items</h2>
+<p>
+In addition to externally created video, audio or image media Flowblade Sequences can contain <b> Rendered Items</b> that are created by the application on user requests.
+</p>
 
+<p>
+These take noticable time to create and are presented as Jobs in <b>Jobs Panel</b> during creation. 
+</p>
+<p>
+Created items are most often used as Media Items or Timeline Clips. Data items are used as input data to create tracking and stabilizing effects.
+</p>
+
+<p>
+Rendered Items are saved in <a href="datastores.html">Data Stores</a>. They can also sometimes be saved in user selected places in the file system. 
+</p>
+
+<h3>Rendered Item Types</h3>
 <h4>Transition Clips</h4>
+<p>
+See chapter	<a href="compositor.html">Dissolves, Wipes, Blends</a>.
+</p>
 
 <h4>Motion Clips</h4>
+<p>
+See chapter <a href="motionclips.html">Motion Clips-</a>.
+</p>
 
 <h4>Container Clips</h4>
+<p>
+See chapter <a href="container_clips.html">Container Clips</a>.
+</p>
+ 
+ 
+<h4>Generator Clips</h4>
+<p>
+See chapter <a href="generatorsfluxity.html">Generators</a>.
+</p>
 
 <h4>Tracking data</h4>
+<p>
+See chapter <a href="motiontracking.html">Tracking</a>.
+</p>
 
 <h4>Stabilizing data</h4>
+<p>
+See chapter <a href="stabilizing.html">Stabilizing</a>. 
+</p>
 
+<h4>G'Mic Clips</h4>
+<p>
+See chapter <a href="gmic.html">G'Mic Effects</a>.
+</p>
+		
 <h2>Jobs Panel</h2>
+<img style="padding: 24px 0px 12px 0px" src="jobspanel.png">
+
+<p><b>[1] Jobs Table</b>. New Jobs are added here on creation and are rendered in the creation order. Table has three columns:</p>
+<ol>
+<li>Jobs Item Description. This has two parts: type description and item identifier.</li>
+<li>Render Time. Starts counting up when Job Item becomes active and rendering begins.</li>
+<li>Progress. Progress in percentage of current active item render.</li>
+</ol>
+<p><b>[2] Panel Menu</b>.</p>
+<ul>
+<li>Cancel Selected Render.</li>
+<li>Cancel All Renders.</li>
+<li>Show Jobs Panel on Adding New Job.</li>
+</ul>
 
 </div>
 
