@@ -152,10 +152,10 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            GLib.idle_add(self._exit_on_file_not_found_error, e, ticker)
+            GLib.idle_add(self._exit_on_file_not_found_error, e)
             return
         except persistance.ProjectProfileNotFoundError as e:
-            GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker, old_project)
+            GLib.idle_add(self._exit_on_profile_file_not_found_error, e, old_project)
             return
 
         time.sleep(0.3)
@@ -242,8 +242,11 @@ class LoadThread(threading.Thread):
             
             gui.media_list_view.widget.queue_draw()
                 
-    def _exit_on_file_not_found_error(self, e, ticker):
-        self._error_stop(self.dialog, ticker)
+    def _exit_on_file_not_found_error(self, e):
+        loaddialog.write_message(loaddialog.SHUTDOWN)
+        
+        editorstate.project_is_loading = False
+                                
         primary_txt = _("Media asset was missing!")
         secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value + "</b>\n\n" + \
                         _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
@@ -267,20 +270,17 @@ class LoadThread(threading.Thread):
         # We exit to same state as when app is first opened.
         callbackbridge.app_open_project(projectdata.get_default_project())
 
-    def _exit_on_profile_file_not_found_error(self, e, ticker, old_project):
-        self._error_stop(self.dialog, ticker)
+    def _exit_on_profile_file_not_found_error(self, e, old_project):
+        loaddialog.write_message(loaddialog.SHUTDOWN)
+
+        editorstate.project_is_loading = False
+
         primary_txt = _("Profile with Description: '") + e.value  + _("' was not found on load!")
         secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
                         _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
         dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
         editorstate.project = old_project # persistance.load_project() changes this,
                                           # we simply change it back as no GUI or other state is yet changed
-                                              
-    def _error_stop(self, dialog, ticker):
-        editorstate.project_is_loading = False
-        updater.set_info_icon(None)
-        dialog.destroy()
-        ticker.stop_ticker()
 
     def _missing_file_dialog_callback(self, dialog, response_id):
         if self.open_check.get_active() == True:

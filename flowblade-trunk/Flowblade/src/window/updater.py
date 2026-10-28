@@ -144,7 +144,7 @@ def window_resized():
         msg = str(e)
         print("updater.window_resized() failed with " + msg)
         print("reattempting updater.window_resized()...")
-        GLib.idle_add(window_resized)
+        GLib.timeout_add(100, window_resized)
         return False
 
     return False
