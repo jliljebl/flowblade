@@ -1520,7 +1520,7 @@ class OpenTitlerItemThread(threading.Thread):
             _titler.show_info(_("Saved Title Media Item."))
             GLib.idle_add(self._recreate_pango_layers)
         else:
-            close_titler()
+            GLib.idle_add(close_titler)
         
     def _recreate_pango_layers(self):
         global _titler, _titler_data
