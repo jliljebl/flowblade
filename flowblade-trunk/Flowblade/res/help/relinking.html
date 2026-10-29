@@ -18,21 +18,53 @@
 
 <div id="toccontent">
 
-<h2> Media Relinker </h2>
 <p>
-Media Relinker</b> is a standalone application running in its own process and does not affect the project that is open in Flowblade
+<b>Relinking</b> is the action of changing Media Item file path that points to a media file to point to another media file.
 </p>
+<p>
+This is typically done to replace a missing file with another to enable loading Project that contains missing media. 
+</p>
+<p>
+Another use case is to replace media in Project for some techniical or artistic reason.
+</p>
+ 
+<p>
+Flowblade has a dedicated <b> Media Relinker Tool </b> to perform this task.
+</p>
+
+
+<h2> Media Relinker Tool </h2>
+
+<img style="padding: 24px 0px 12px 0px" src="relinkwindow.png">
+
+
+<p><b>[1] Load Project button</b> Only Active whenb window launched from menu with no relink project set.</p>
+<p><b>[2] Missing Media and Project info row</b>.</p>
+<p><b>[3] Media Item row</b> Displays Media Item paths and the user set relink paths for them. Active row is displayed with blue background. <b>[7] Action buttons</b> actions are targeted at active Media Items.</p>
+<p><b>[4] Media Item row context menu</b> Actions that can be taken on target row Media Item.</p>
+<p><b>[5] Media Items Table</b> Displays missing media items and the user set relink paths for them. Can be set to display found Media Items with <b>[6] Display Selector</b> to relink found Media Items too. </p>
+<p><b>[6] Display Selector</b> Switches between displaying mssing and found media items.</p>
+<p><b>[7] Action buttons</b> Actions that can be taken on active Media Item.</p>
+<p><b>[8] Close and Save buttons</b> See below.</p>
+
+
+<h3>Main Relinking workflow</h3>
+
 <ol>
-<li> Start by pressing <b>Load Project For Relinking</b> button and select the project you wish to relink.</li>
-<li> Select the media file you wish to replace with some other media file. Press <b>Set File Relink Path</b> button or press <b>Right Mouse</b> on item to start selecting the new file. Clips and wipes in the project are linked to this new media file. </li>
-<li> Use drop down menu at bottom left to display either missing or found media files</li>
+<li> Launch Media Relinker Tool either by:</li>
+<ul>
+<li> selecting <b>Tool > Media Relinker</b> from application menu </li>
+<li> pressing <b>Ok</b> in missing media info dialog with <i>Open Project in Media Relinker tool</i> checkbox active.</li>
+</ul>
+  
+<li> If tool was lauched from applicaiotn menu press <b>Load Project For Relinking</b> button and select the project you wish to relink.</li>
+<li> Select the media file you wish to replace with some other media file. Press <b>[7]</b>  <b>Set File Relink Path</b> button or use context menu <b>[4]</b> to start selecting the new file. </li>
+<li> Use drop down menu <b>[6]</b> to display either missing or found media files</li>
 <li> Press <b>Save Relinked Project As...</b> button to save the relinked version of the project</li>
 <li> Open the relinked project in Flowblade and continue working with it</li>
-<li> Media Relinker runs in its own process and does not share state or data with the running application.</li>
-<li> When relinking a project you have open in Flowblade at the same time make sure that do not overwrite the relinked version of project when saving the project you have open in Flowblade</li>
 </ol>
-
-
+<div class="note" style="margin: 50px 15px 20px 25px"> 
+When relinking a project make sure to not have it open in Flowblade to avoid any unintented overwrites. 
 </div>
 
 </div>
