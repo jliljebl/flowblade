@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>title</title>
+  <title>Audio Mixer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,13 +12,28 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">title</div>
+<div class="subject-header">Audio Mixer</div>
 
 <div id="toc"></div>
 
 <div id="toccontent">
 
-<h2> Audio Mixer </h2>
+<h2> Audio Mixer Window</h2>
+
+<img style="padding: 24px 12px 12px 0px" src="mixerwindow.png">
+
+<p><b>[1] Audio Level meters area</b> 
+<ul>
+<li><i>Master Out</i> level is on the left, levels for each track are from left to right.</li>
+<li>Left and Right channels have eparate level bars.</li>
+<li>Peak values remain visible for short while as small horizontal line.</li>
+<li>When peak voluma hits 0db a red diamond shape is shown as a clipping indicator above the channel that was clipped.</li>
+</ul>
+</p>
+<p><b>[2] Labels and control amount info</b>. Master and each track are labeled here cunrrent amount of applied level control displayed.</p>
+<p><b>[3] Level control</b>. Slidewr control for output volume level</p>
+<p><b>[4] Balance Controls and info</b>. Toggle button to activate Left/Right balancve control, numerical display for the applied balance setting and slider for changing balance.</p>
+
 <p>Features:</p>
 <ul>
 <li> Monitor audio levels on VU meters during playback</li>

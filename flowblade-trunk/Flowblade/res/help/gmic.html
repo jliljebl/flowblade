@@ -30,11 +30,32 @@ Flowblade G'MIC tool presents user with a selection of commands that can be used
 <p>
 Commands are mostly embedded in the <b>/usr/bin/gmic</b> binary itself, so to have access to more commands you will mostly need to upgrade the binary in your system.
 </p>
-<p>
-It is however possible to add and use custom commands and use them for video filtering, <a href="  http://gmic.eu/reference.shtml#section11">more info here.</a>
-</p>
 
-<h4>Loading clip and rendering previews</h4>
+<h3>G'Mic Tool Window</h3>
+
+<img style="padding: 12px 12px 12px 0px" src="gmicwindow.png">
+
+<p><b>[1] G'Mic Application menu</b> With menu items: <i>Load Clip, G'Mic Webpage, Close</i>.</p>
+<p><b>[2] Load Clip button</b>. Press to select Clip to work on.</p>
+<p><b>[3] Clip Info</b>. Clip name and properties</p>
+<p><b>[4] Preview Info</b>. Last Preview frame timecode anf the filter used.</p>
+<p><b>[5] Current Clip Frame</b>.</p>
+<p><b>[6] Preview display</b>.</p>
+<p><b>[7] Timecode display and Positionbar</b> Drag on Positionbar to select view frame and preview render target frame.</p>
+<p><b>[8] Marks buttons</b> Set and clear marks to select export render range.</p>
+<p><b>[9] Preview button</b>. Pres s to render preview for current displayed clip frame.</p>
+<p><b>[10] Script Select menu</b> See <a href="usingtimeline.html" >Using Timeline</a>.</p>
+<p><b>[11] Script Edit Area</b>. Text area displaying the script input string used to achieve filterd output.</p>
+<p><b>[12] Add to Script checkbutton</b>. If this is active then selecting new item from script select menu appds the filtering command after current contents in Script Edit Area.</p>
+<p><b>[13] Script output display</b>. Text output from G'Mic created during rendering.</p>
+<p><b>[14] Marks Info</b>. Info Mark In, Mark Out positions and lengt of out put range.</p>
+<p><b>[15] Encoding Controls</b>. Activating chechkbutton renders video after frame sequence of filterd frames has been created. <i>Encode Settings</i> button opens a dialog to selcted desired video encoding.</p>
+<p><b>[16] Frame Output Controls</b>. Select name and target folder for frames created when doing export rendering.</p>
+<p><b>[17] Render Info and Controls</b>. Progressbar and start/stop buttons for rendering.</p>
+<p><b>[18] Script Save and Load</b> Buttons to save and load Script Edit Area contents.</p>
+<p><b>[19] Close button</b>.</p>
+
+<h3>Loading clip and rendering previews</h3>
 <ul>
 <li> Start by pressing <b>Load Clip</b> button, and select the video clip you wish to apply filtering on.</li>
 <li> Press on the downward triangle on top of the <b>Script Edit Area</b> on the left middle of the window to select a gmic command.</li>
@@ -43,7 +64,7 @@ It is however possible to add and use custom commands and use them for video fil
 <li> After rendering preview the area below <b>Script Edit Area</b> shows text output from gmic with possible error messages.</li>
 <li> You can apply multiple commands by checking <b>Add to script</b> checkbox.</li>
 </ul>
-<h4>Rendering Output</h4>
+<h3>Rendering Output</h3>
 <ul>
 <li> To render a frame sequence you will need to set <b>Mark In and Mark out points</b> and  <b>select a folder</b> to hold the rendered frame sequence.</li>
 <li> To render a video file from the filtered frame sequence, check <b>Encode video</b> checkbox and press the <b>Encoding Settings</b> button to set properties of the rendered video file.</li>

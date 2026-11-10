@@ -29,65 +29,46 @@ Almost all the encodings available for FLOSS applications can used in Flowblade.
 
 <div id="toc"></div>
 
-<h3>Rendering Panel</h3>
+<h3>Render Panel</h3>
 
-<h4>Widgets</h4>
-<h5><b>Folder</b> select button</h5> <div class="r-widget">Select folder to place the output file in.</div>
-<h5><b>Name</b> entry widget</h5> <div class="r-widget">Set the name of the output file.</div>
-<h5><b>Type</b> drop down menu</h5> <div class="r-widget">Select between rendering with user defined parameter or use preset render params and file types.</div>
-<h5><b>Presets</b> drop down menu</h5> <div class="r-widget">Select preset rendering params and file type.</div>
-<h5><b>Use Project Profile</b> check box</h5> <div class="r-widget">Uncheck to select some other then project profile to used for rendered video.</div>
-<h5><b>Profile</b> drop down menu</h5> <div class="r-widget">Select project profile for rendering</div>
-<h5><b>Encoding / File Type</b> drop down menu</h5> <div class="r-widget">Select encoding and container format for rendering.</div>
-<h5><b>Bitrate</b> drop down menu</h5> <div class="r-widget">Select bitrate for rendering.</div>
-<h5><b>Render Using Args</b> check box</h5> <div class="r-widget">Rendering using arguments set in text edit area below.</div>
-<h5><b>Args</b> text area</h5> <div class="r-widget">Set arguments for rendering.</div>
-<h5><b>Load Selection</b> button</h5> <div class="r-widget">Load rendering arguments defined in left panel into args text area.</div>
-<h5><b>Ext</b> entry widget drop down menu</h5> <div class="r-widget">Set file extension for args rendered file.</div>
-<h5><b>Open File In Bin</b> check box</h5> <div class="r-widget">Open the rendered file as media item in current bin.</div>
-<h5><b>Render Range</b> drop down menu</h5> <div class="r-widget">Select between rending the complete program or the marked range.</div>
-<h5><b>Render</b> button</h5> <div class="r-widget">Renders timeline into a file.</div>
+<img style="padding: 24px 12px 12px 0px" src="renderpanel.png">
+
+<p><b>[1] Folder</b> select button. Select folder to place the output file in.</p>
+<p><b>[2] File Name</b> text entry widget. Set the name of the output file.</p>
+<p><b>[3] Render Profile</b> section.
+<ul>
+<li><b>Use Project Profile</b> check button. Uncheck to select some other then project profile to be used for rendered video.</li>
+<li><b>Project Select</b> drop down menu. Select project profile for rendering.</li>
+<li><b>Project Info</b>. Dimensions, frames per second, pixel aspect, colorspace.</li>
+</ul>
+</p>
+<p><b>[4] Encoding Format</b> section.
+<ul>
+<li><b>Encoding / File Type</b> drop down menu. Select encoding and container format for rendering.</li>
+<li><b>Bitrate</b> drop down menu. Select bitrate for rendering. No selections available for some encodings.</li>
+<li><b>Sample Rate</b> drop down menu.  Select audio sample rate for rendering. No selections available for some encodings</li>
+</ul>
+</p>
+
+<p><b>[5] Render Using Args</b> row.</p>
+<ul>
+<li><b>Render Using Args</b> checkbox. Activating makes rendering use list of defined arguments instead of preset options selected in Encoding Format section.</li>
+<li><b>Args Info</b> text. Only visible when args rendering activated.</li>
+<li><b>Set Args</b> popup launcher. becomes active when args rendering activated.</li>
 </ul>
 
-<h4>Rendering output</h4>
+<p><b>[6] Range</b> defines output render range, either the full Sequence length or the area between Timeline Mark In and Mark Out.</p>
+<p><b>[7] Performance and Quality</b> settings launcher. Displays Preferences dialog Performance panel with some rendering related options.</p>
+<p><b>[8] To Queue</b> button. Creates a render item with current render settings and Sequence state. Opens Batch Render application to display the newly created render item.</p>
+<p><b>[9] Render</b> button. Launcher rendering of current Sequence with selected render options.</p>
+
+<h3>Rendering output</h3>
 <ol>
 <li> Press <b>Render</b> Button to begin rendering.</li>
 <li> A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
 <li> After rendering is complete, Render Window will close automatically.</li>
 </ol>
 
-<h3> Batch Render Queue </h3>
-
-<p>
-Flowblade offers a dedicated Batch Render Queue application. Batch Render Queue is a separate application to Flowblade and runs on different process, so it is possible to close Flowblade without affecting ongoing renders.
-</p>
-<p>
-Render queue is a persistent data structure of render items on disk. Each item consists of a Project file and saved render parameters. Users can add render items to render queue and then render the whole queue without any further user input.
-</p>
-
-<h4>Adding Items to Batch Render Queue</h4>
-<ul>
-<li> Press <b>To Queue</b> button in <b>Render</b> tab.</li>
-<li> Select <b>Render->Add to Batch Render Queue...</b> item from menu</li>
-</ul>
-
-<h4>Using Batch Render Queue application</h4>
-<ol>
-<li> Open Batch Render Queue application by selecting <b>Render->Batch Render Queue</b> from menu.</li>
-<li> Press <b>Reload Queue</b> button to display render items that have been added to render queue since it was opened.</li>
-<li> Use <b>Delete Selected</b> and <b>Delete Finished</b> buttons to remove items from queue.</li>
-<li> Use checkbox widget in the Render column to select which items will be rendered.</li>
-<li> Press <b>Render</b> button to begin rendering.</li>
-</ol>
-<p>
-UI actions:
-</p>
-<ul>
-<li> <b>Right Mouse Click</b> render item to show render item context menu.</li>
-<li> <b>Save Item Project As...</b> allows th user to save the Project file of the render item into same other location</li>
-<li> <b>Render Properties</b> displays the render properties that were set when the item was added to render queue.</li>
-<li> <b>Delete</b> deletes the item from queue</li>
-</ul>
 <h3>Rendering behind the scenes: MLT and libavformat(FFMpeg)</h3>
 <p>
 Flowblade Movie Editor is a Python application interfacing to MLT multitrack media framework.
