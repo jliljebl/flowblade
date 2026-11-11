@@ -152,9 +152,9 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         if self.abort == True:
             return
-
-        script_file = open(self.script_path)
-        user_script = script_file.read()
+        
+        with open(self.script_path, "r") as script_file:
+            user_script = script_file.read()
         
         profile_file_path = mltprofiles.get_profile_file_path(self.profile_desc)
 
@@ -166,7 +166,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         _frame_range_update_thread.start()
         
         proc_fctx_dict = fluxity.render_frame_sequence(   user_script,
-                                                          script_file,
+                                                          self.script_path,
                                                           self.generator_length,
                                                           self.range_in, 
                                                           self.range_out, 

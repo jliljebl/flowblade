@@ -20,5 +20,5 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-
+print("This will show up immediately!", flush=True)
 scripttool.main(os.path.dirname(modules_path))
