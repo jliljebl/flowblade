@@ -15,86 +15,101 @@
 <div id="toccontent">
 
 <div class="subject-header">Rendering</div>
-<p>
-In Flowblade there are two ways to render output:
-</p>
-<ul>
-<li> <b>Render Panel</b> in the top left notebook in the main window.</li>
-<li> <b>Batch Render Queue</b> application that can launched from Render menu.</li>
-</ul>
 
-<p>
-Almost all the encodings available for FLOSS applications can used in Flowblade.
-</p>
 
 <div id="toc"></div>
+
+<p>Flowblade provides two ways to render video output:</p>
+
+<ul>
+    <li>Launch individual renders from the <b>Render Panel</b> in the main window.</li>
+    <li>Add render items to the <b>Batch Render Queue</b> application for rendering later. See the chapter <a href="usingtimeline.html">Batch Rendering</a> for more information.</li>
+</ul>
+
 
 <h3>Render Panel</h3>
 
 <img style="padding: 24px 12px 12px 0px" src="renderpanel.png">
 
-<p><b>[1] Folder</b> select button. Select folder to place the output file in.</p>
-<p><b>[2] File Name</b> text entry widget. Set the name of the output file.</p>
-<p><b>[3] Render Profile</b> section.
+<p><b>[1] Folder</b> select button. Select the folder where the output file will be saved.</p>
+
+<p><b>[2] File Name</b> text entry widget. Enter the name of the output file.</p>
+
+<p><b>[3] Render Profile</b> section.</p>
+
 <ul>
-<li><b>Use Project Profile</b> check button. Uncheck to select some other then project profile to be used for rendered video.</li>
-<li><b>Project Select</b> drop down menu. Select project profile for rendering.</li>
-<li><b>Project Info</b>. Dimensions, frames per second, pixel aspect, colorspace.</li>
+    <li><b>Use Project Profile</b> check button. When unchecked, allows you to select a different profile for the rendered video.</li>
+    <li><b>Profile Select</b> drop-down menu. Select the profile to use for rendering.</li>
+    <li><b>Project Info</b>. Displays the project's dimensions, frame rate, pixel aspect ratio and colorspace.</li>
 </ul>
-</p>
-<p><b>[4] Encoding Format</b> section.
+
+<p><b>[4] Encoding Format</b> section.</p>
+
 <ul>
-<li><b>Encoding / File Type</b> drop down menu. Select encoding and container format for rendering.</li>
-<li><b>Bitrate</b> drop down menu. Select bitrate for rendering. No selections available for some encodings.</li>
-<li><b>Sample Rate</b> drop down menu.  Select audio sample rate for rendering. No selections available for some encodings</li>
+    <li><b>Encoding / File Type</b> drop-down menu. Select the video encoding and container format to use for rendering.</li>
+    <li><b>Bitrate</b> drop-down menu. Select the bitrate to use for rendering. This option is not available for all encodings.</li>
+    <li><b>Sample Rate</b> drop-down menu. Select the audio sample rate to use for rendering. This option is not available for all encodings.</li>
 </ul>
-</p>
 
 <p><b>[5] Render Using Args</b> row.</p>
+
 <ul>
-<li><b>Render Using Args</b> checkbox. Activating makes rendering use list of defined arguments instead of preset options selected in Encoding Format section.</li>
-<li><b>Args Info</b> text. Only visible when args rendering activated.</li>
-<li><b>Set Args</b> popup launcher. becomes active when args rendering activated.</li>
+    <li><b>Render Using Args</b> check box. When activated, rendering uses a list of user-defined arguments instead of the preset options selected in the Encoding Format section.</li>
+    <li><b>Args Info</b> text. Displays information about the arguments currently being used. Only visible when Render Using Args is activated.</li>
+    <li><b>Set Args</b> pop-up launcher. Opens the argument editor. Only active when Render Using Args is activated.</li>
 </ul>
 
-<p><b>[6] Range</b> defines output render range, either the full Sequence length or the area between Timeline Mark In and Mark Out.</p>
-<p><b>[7] Performance and Quality</b> settings launcher. Displays Preferences dialog Performance panel with some rendering related options.</p>
-<p><b>[8] To Queue</b> button. Creates a render item with current render settings and Sequence state. Opens Batch Render application to display the newly created render item.</p>
-<p><b>[9] Render</b> button. Launcher rendering of current Sequence with selected render options.</p>
+<p><b>[6] Range</b> defines the rendering range. You can render either the entire Sequence or the area between the Timeline Mark In and Mark Out points.</p>
 
-<h3>Rendering output</h3>
+<p><b>[7] Performance and Quality</b> settings launcher. Opens the Performance panel in the Preferences dialog, which contains additional rendering-related settings.</p>
+
+<p><b>[8] To Queue</b> button. Creates a render item using the current render settings and Sequence state. The Batch Render application opens and displays the newly created item in the queue.</p>
+
+<p><b>[9] Render</b> button. Starts rendering the current Sequence using the selected render options.</p>
+
+<h3>Workflows</h3>
+
+<h4>Export rendering workflow</h4>
+
 <ol>
-<li> Press <b>Render</b> Button to begin rendering.</li>
-<li> A Render Window will open displaying information on file path of render file, estimated time left, render time and a Progress bar widget.</li>
-<li> After rendering is complete, Render Window will close automatically.</li>
+    <li>Select the destination folder using the <b>[1] Folder</b> button and enter the output file name in the <b>[2] File Name</b> field.</li>
+    <li>Select the output video profile using the controls in the <b>[3] Render Profile</b> section. In most cases, using the project profile is recommended.</li>
+    <li>Use the controls in the <b>[4] Encoding Format</b> section to select the encoding, container format, bitrate and audio sample rate.</li>
+    <li>Press the <b>[9] Render</b> button to start rendering.</li>
+    <li>A window will open displaying the output file path, estimated remaining time, elapsed rendering time and a progress bar.</li>
+    <li>The window closes automatically when rendering is complete.</li>
 </ol>
 
-<h3>Rendering behind the scenes: MLT and libavformat(FFMpeg)</h3>
-<p>
-Flowblade Movie Editor is a Python application interfacing to MLT multitrack media framework.
-Other video editing applications build on top of MLT include OpenShot and Kdenlive.
-</p>
-<p>
-MLT uses C-library libavformat(FFMpeg) to render output files, and rendering is defined by setting FFMpeg encoding parameters.
-These parameters are delivered from Flowblade Movie Editor to MLT by creating a "avformat" Consumer object for
-a  given Render Profile, and then setting its Rendering Args.
-These latter arguments are exactly the same which are used when using FFmpeg to encode video files.
-</p>
-<p>
-Rendering arguments for encoding different types of video files are pre-packed and can be selected using
-Encocing / Format and Quality Drop Down Menus. Arguments can be refined
-by checking Render with args Checkbox and changing args values and/or adding/removing args.
-</p>
-<p>
-Any kind of video files supported by the installed version of MLT can be encoded by creating a user defined
-Render Profile and setting its Rendering Args. Google for FFMpeg encoding to find Args combinations for different video files.
-</p>
-<p>
-Search web for information on encoding files with FFMpeg to get examples of Rendering Args that can be used.
-</p>
-<h3>Flowblade rendering pipeline</h3>
+<h4>Creating a Render Item for the Batch Render Queue</h4>
 
-<img src="encoding.png">
+<ol>
+    <li>Select the destination file, encoding and profile as described above.</li>
+    <li>Press the <b>[8] To Queue</b> button. This creates a render item using the current render settings and Sequence state.</li>
+    <li>The Batch Render application opens with the newly created render item added to the queue.</li>
+    <li>See the chapter <i>Batch Rendering</i> for instructions on how to continue.</li>
+</ol>
+
+<h4>Rendering using args</h4>
+
+<ol>
+    <li>Select the destination file and rendering profile as described above.</li>
+    <li>Activate the <b>[5] Render Using Args</b> check box. A popover will open with an editable list of rendering arguments.</li>
+    <li>Edit the arguments in the text area. Each line must contain a single key/argument pair.</li>
+    <li>To use a preset encoding as a starting point, close the popover and select the desired encoding preset. Open the popover again and press the <b>Load Args From Current Encoding</b> button. The arguments for the selected encoding will be loaded into the editing area.</li>
+    <li>Close the popover. An information message will appear in the <b>[5] Render Using Args</b> row.</li>
+    <li>Rendering will now use the specified arguments instead of the selected encoding preset.</li>
+    <li>Deactivating the <b>Render Using Args</b> check box switches rendering back to the selected encoding preset.</li>
+</ol>
+
+<h4>Additional Information on Rendering with Args: MLT and FFmpeg</h4>
+
+<ul>
+    <li>Flowblade Movie Editor is a Python application that uses the MLT multitrack media framework.</li>
+    <li>MLT uses FFmpeg libraries, including libavformat and libavcodec, to render output files. Video encoding is controlled by setting FFmpeg encoding parameters.</li>
+    <li>With the <b>Render Using Args</b> feature, you can use the same arguments that would be used when rendering video directly with FFmpeg.</li>
+    <li>Almost all encodings available through FFmpeg can also be used in Flowblade.</li>
+</ul>
+
 
 </div>
 </div>

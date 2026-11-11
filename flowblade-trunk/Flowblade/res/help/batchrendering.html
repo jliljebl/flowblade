@@ -19,60 +19,70 @@
 <div id="toccontent">
 
 
+<p>Flowblade provides a dedicated Batch Render Queue application. It runs as a separate process from Flowblade, allowing you to close Flowblade without affecting ongoing renders.</p>
+
+<p>The render queue is stored on disk and persists between application sessions. Each render item consists of a Project file and its associated render settings. You can add items to the queue and then render the entire queue without further user interaction.</p>
+
+
+<h2> Batch Render Window</h2>
+
 <img style="padding: 24px 12px 12px 0px" src="batchrenderwindow.png">
 
-<p><b>[1]  Current Active Render Info</b>.</p>
+<p><b>[1] Current Active Render Info</b></p>
+
 <ul>
-<li><b>Current Render</b> shows the Project and Sequence being rendered.</li>
-<li><b>Estimated Left</b> uses percentage of Sequence length and elapsed time to create the estimation.</li>
-<li><b>File Size Est./Free Disk</b>. File size estimation is only displayed after 25% of Sequence is rendered to achieve as accurate as possible results. Displays warning if estimated size exeeds 90% of free disk space</li>
-</ul>
-<p><b>[2] Render Progress Bar</b>.</p>
-<p><b>[3] Delete</b> buttons. Buttons to remove selected or finished render items from render queue.</p>
-<p><b>[4] Render</b> buttons. Buttons to start and stot queue rendering.</p>
-<p><b>[5] Render Items</b> table.</p>
-<ul>
-<li><b>Render</b> checkbox. Only active items will rendered when queue is being ran, non-active items will be skipped.</li>
-<li><b>Projecr/Sequence info Info</b> text. Only visible when args rendering activated.</li>
-<li><b>Status</b>. Either Rendering, Queued or Finished.</li>
-<li><b>Render File</b>. Full path of the target file.</li>
-<li><b>Render Time</b>. The time the rendering of the item took to complete.</li>
-</ul>
-</p>
-<p><b>[6] Current Render Run Info</b>. Information on how many items were rendered since rendering was last started and when rendering started.<</p>
-
-
-<h3> Batch Render Queue </h3>
-
-<p>
-Flowblade offers a dedicated Batch Render Queue application. Batch Render Queue is a separate application to Flowblade and runs on different process, so it is possible to close Flowblade without affecting ongoing renders.
-</p>
-<p>
-Render queue is a persistent data structure of render items on disk. Each item consists of a Project file and saved render parameters. Users can add render items to render queue and then render the whole queue without any further user input.
-</p>
-
-<h4>Adding Items to Batch Render Queue</h4>
-<ul>
-<li> Press <b>To Queue</b> button in <b>Render</b> tab.</li>
-<li> Select <b>Render->Add to Batch Render Queue...</b> item from menu</li>
+    <li><b>Current Render.</b> Displays the Project and Sequence currently being rendered.</li>
+    <li><b>Estimated Left.</b> Estimates the remaining rendering time based on the percentage of the Sequence already rendered and the elapsed time.</li>
+    <li><b>File Size Est./Free Disk.</b> The estimated file size is displayed after 25% of the Sequence has been rendered, allowing for a more accurate estimation. A warning is displayed if the estimated file size exceeds 90% of the available free disk space.</li>
 </ul>
 
-<h4>Using Batch Render Queue application</h4>
+<p><b>[2] Render Progress Bar.</b></p>
+
+<p><b>[3] Delete Buttons.</b> Buttons for removing selected render items or all finished items from the queue.</p>
+
+<p><b>[4] Render Buttons.</b> Buttons for starting and stopping queue rendering.</p>
+
+<p><b>[5] Render Items Table.</b></p>
+
+<ul>
+    <li><b>Render checkbox.</b> Only active items are rendered when the queue is processed. Inactive items are skipped.</li>
+    <li><b>Project/Sequence Info.</b> Only visible when rendering arguments are enabled.</li>
+    <li><b>Status.</b> Indicates the current status of the render item: Rendering, Queued or Finished.</li>
+    <li><b>Render File.</b> Displays the full path of the rendered file.</li>
+    <li><b>Render Time.</b> Displays the time taken to render the item.</li>
+</ul>
+
+<p><b>[6] Current Render Run Info.</b> Displays the number of items rendered during the current render session and the time when rendering started.</p>
+
+<h2 id="Workflow">Workflow</h2>
+
+<h4 id="Adding_Items_to_Batch_Render_Queue">Adding Items to Batch Render Queue</h4>
+
+<ul>
+    <li>Use the <b>Render Panel</b> to configure the encoding, format and other render properties. See the <a href="rendering.html">Rendering</a> chapter for more information.</li>
+    <li>Press the <b>To Queue</b> button in the <b>Render Panel</b> to add a new item to the render queue and launch the Batch Render Queue application.</li>
+    <li>Alternatively, select <b>Render &gt; Add to Batch Render Queue...</b> from the application menu.</li>
+</ul>
+
+<h4 id="Using_Batch_Render_Queue_application">Using Batch Render Queue Application</h4>
+
 <ol>
-<li> Open Batch Render Queue application by selecting <b>Render->Batch Render Queue</b> from menu.</li>
-<li> Press <b>Reload Queue</b> button to display render items that have been added to render queue since it was opened.</li>
-<li> Use <b>Delete Selected</b> and <b>Delete Finished</b> buttons to remove items from queue.</li>
-<li> Use checkbox widget in the Render column to select which items will be rendered.</li>
-<li> Press <b>Render</b> button to begin rendering.</li>
+    <li>Open the Batch Render Queue application by selecting <b>Render &gt; Batch Render Queue</b> from the application menu.</li>
+    <li>Prepare the render queue:
+        <ul>
+            <li>Use the <b>Delete Selected</b> and <b>Delete Finished</b> buttons to remove items from the queue that are no longer needed.</li>
+            <li>Use the checkboxes in the <b>Render</b> column to select which items will be rendered.</li>
+        </ul>
+    </li>
+    <li>Press the <b>Render</b> button to start processing the queue.</li>
 </ol>
-<p>
-UI actions:
-</p>
+
+<h4 id="Render_Item_Context_Menu_Actions">Render Item Context Menu Actions</h4>
+
 <ul>
-<li> <b>Right Mouse Click</b> render item to show render item context menu.</li>
-<li> <b>Save Item Project As...</b> allows th user to save the Project file of the render item into same other location</li>
-<li> <b>Render Properties</b> displays the render properties that were set when the item was added to render queue.</li>
-<li> <b>Delete</b> deletes the item from queue</li>
+    <li><b>Save Item Project As...</b> Saves the Project file associated with the render item under a new file name.</li>
+    <li><b>Render Properties</b> Displays the render settings that were saved when the item was added to the queue.</li>
+    <li><b>Delete</b> Removes the render item from the queue.</li>
 </ul>
 
 </div>

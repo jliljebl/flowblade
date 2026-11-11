@@ -18,167 +18,125 @@
 
 <div id="toccontent">
 
-
 <h2>Motion Tracking</h2>
-<p>
-    When creating a motion tracking effect we are usually dealing with two image sources: one that contains the image element that is being tracked, and an another image that follows the tracked image element. 
-</p>
-<p>
-When using motion tracking to create a tracking filter mask, then both tracking data source clip and the clip that has the masked filter applied are usually the same clip. 
-</p>
-<p>
-    Flowblade implements motion tracking by providing two filters and a filter mask. Filters are:
-</p>
+
+<p>When creating a motion tracking effect, we usually work with two image sources: one containing the image element to be tracked, and another containing the image that will follow the tracked element.</p>
+
+<p>When using motion tracking to create a filter mask, the clip used as the tracking data source and the clip to which the mask is applied are usually the same.</p>
+
+<p>Flowblade implements motion tracking using two filters and one filter mask:</p>
+
 <ul>
-<li> <b>Motion Tracking Create</b> This filter creates the tracking data based on region of image and algorithm selected by the user.</li>
-<li> <b>Motion Tracking Apply</b> This filter applies tracking data on another image to follow the image element that was the source of the tracking data.
+    <li><b>Motion Tracking Create</b> This filter creates tracking data based on an image region and the algorithm selected by the user.</li>
+    <li><b>Motion Tracking Apply</b> This filter applies tracking data to another image, making it follow the image element from which the tracking data was created.</li>
 </ul>
-<p>
-    Motion tracked masked filtering uses <b>Filter Mask: Alpha Shape Motion Tracked</b>, see below.
-</p>
+
+<p>Motion-tracked masked filtering uses <b>Filter Mask: Alpha Shape Motion Tracked</b>, see below.</p>
 
 <h3>Filter: Motion Tracking Create</h3>
-<p>
-    Add this filter to clip that contains the image element you wish to track.
-</p>
+
+<p>Add this filter to the clip containing the image element you want to track.</p>
+
 <h4>Parameters</h4>
-<p>
-    <b>Rectancle GUI Editor</b> Set the red rectangle on the image element you wish to track. 
-</p>
-<p>
-    Tracking always starts from first frame of clip, so use the first frame to position the rectangle.
-</p>
-<p>
-    If you like tracking to start in the middle of a clip, then cut clip at that point to create a new clip that has the first frame at the position you wish the tracking to start.
-</p>
-<p>
-    <b>Keyframe Step</b> This sets the interval in frames between keyframes in the created tracking data. So e.g. value 5 creates a keyframe every 5 frames.
-</p>
-<p>
-    <b>Algorithm</b> Algorithm used to create the tracking data.
-</p>
+
+<p><b>Rectangle GUI Editor</b> Position the red rectangle over the image element you want to track.</p>
+
+<p>Tracking always starts from the first frame of the clip. Use this frame to position the rectangle.</p>
+
+<p>If you want tracking to start in the middle of a clip, cut the clip at that point to create a new clip whose first frame is the desired tracking start point.</p>
+
+<p><b>Keyframe Step</b> Sets the interval, in frames, between keyframes in the generated tracking data. For example, a value of 5 creates a keyframe every 5 frames.</p>
+
+<p><b>Algorithm</b> Algorithm used to create the tracking data.</p>
 
 <ul>
-<li>
-<b>KCF - Kernelized Correlation Filters</b> Accuracy and speed better than MIL. This also reports tracking failure better than MIL. Does not recover from full occlusion.
-</li>
-<li>
-<b>MIL - Multiple Instance Learning</b> Performance is quite good, can work when presented with partial occlusion. Tracking failure not reported reliably. Does not recover from full occlusion.
-</li>
-<li>
-<b>MEDIANFLOW</b> 
-Excellent tracking failure reporting. Works very well when the motion is predictable and there is no occlusion. Fails under large motion.
-</li>
-<li>
-<b>MOSSE - Minimum Output Sum of Squared Error</b> MOSSE tracker is robust to variations in lighting, scale, pose, and non-rigid deformations. It also detects occlusion and can pause and resume where it left off when the object reappears.
-</li>
-<li>
-<b>CSRT</b> Among these algorithms CSRT often shows comparatively better accuracy and resistance to overlapping by other objects. Speed is quite low, and operation is unstable when the object is lost.
-</li>
+    <li><b>KCF - Kernelized Correlation Filters</b> Offers better accuracy and speed than MIL. It also detects tracking failures more reliably than MIL. Does not recover from full occlusion.</li>
+    <li><b>MIL - Multiple Instance Learning</b> Provides good tracking performance and can handle partial occlusion. However, tracking failures are not reported reliably. Does not recover from full occlusion.</li>
+    <li><b>MEDIANFLOW</b> Reports tracking failures very reliably. Works well when motion is predictable and there is no occlusion, but fails when the tracked object moves too far between frames.</li>
+    <li><b>MOSSE - Minimum Output Sum of Squared Error</b> Is robust to variations in lighting, scale, pose, and non-rigid deformations. It can also detect occlusion and pause tracking until the object reappears, then resume tracking.</li>
+    <li><b>CSRT</b> Often provides better accuracy and resistance to overlap from other objects than the other algorithms. However, it is relatively slow and can behave unstably when the tracked object is lost.</li>
 </ul>
-<p>
-    <b>Create Motion Tracking Data</b> Pressing this button creates a motion tracking data labeled with name given in the text entry box above. After creation data can be used with <b>Motion Tracking Apply</b> filter or <b>Filter Mask: Alpha Shape Motion Tracked</b>.
-</p>
+
+<p><b>Create Motion Tracking Data</b> Pressing this button creates motion tracking data using the name entered in the text entry box above. Once created, the data can be used with the <b>Motion Tracking Apply</b> filter or the <b>Filter Mask: Alpha Shape Motion Tracked</b>.</p>
 
 <h4>Workflow</h4>
+
 <ol>
-<li>Make sure playhead is on the first frame of the tracked clip.</li>
-<li>Place red rectangle on top of the tracked image element.</li>
-<li>Set parameters and give the data to be created an identifying name.</li>
-<li>Press <b>Create Motion Tracking Data</b> and wait for the data render to complete.</li>
-<li>Check results by moving the playhead around.</li>
-<li>Press <b>Clear Data</b> button if you wish to try again with different parameters or tracking area definition.</li>
+    <li>Make sure the playhead is on the first frame of the tracked clip.</li>
+    <li>Position the red rectangle over the image element to be tracked.</li>
+    <li>Set the parameters and give the tracking data an identifying name.</li>
+    <li>Press <b>Create Motion Tracking Data</b> and wait for the tracking data generation to complete.</li>
+    <li>Check the results by moving the playhead through the clip.</li>
+    <li>Press the <b>Clear Data</b> button if you want to try again with different parameters or a different tracking area.</li>
 </ol>
 
 <h3>Filter: Motion Tracking Apply</h3>
-<p>
-    Add this filter to the clip that contains the image that you wish to make follow the tracked image element.
-</p>
-<p>
-    Place the clip with tracking image on top of the clip with tracked image and apply cropping if necessary.
-</p>
+
+<p>Add this filter to the clip containing the image you want to make follow the tracked image element.</p>
+
+<p>Place the clip containing the image to be tracked on a track above the clip containing the tracked image element. Apply cropping if necessary.</p>
 
 <h4>Parameters</h4>
-<p>
-    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
-</p>
-<p>
-    Tracking always starts from first frame of clip.
-</p>
-<p>
-    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
-</p>
-<p>
-    <b>Tracking Coords Interpretation</b> 
-</p>
-<ul>
-<li>
-<b>Absolute</b> Places the top left corner of the image to the top left corner of the tracking data box.
-</li>
-<li>
-<b>Top Left Justified</b> Places the top left corner of image to the top left corner of screen in the first frame of tracking, and then moves image relatively as specified by tracking data. This is useful e.g. when making a text created in <b>Titler</b> (that is placed initially correctly) keep position when tracking data is applied.
-</ul>
-<p>
-    <b>X Offset</b> Moves image in the horizontal direction in relation to the position defined by tracking data.
-</p>
-<p>
-    <b>Y Offset</b> Moves image in the vertical direction in relation to the position defined by tracking data.
-</p>
-<p>
-    <b>Size</b> If set to <b>Scale To Box</b> image is scaled to fit the box defined by tracking data.
-</p>
-<p>
-    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as motion of the clip.
-</p>
 
+<p><b>Select Motion Tracking Data</b> Select the tracking data created for the image element you want to track.</p>
+
+<p>Tracking always starts from the first frame of the clip.</p>
+
+<p>If you want tracking to start in the middle of a clip, cut the clip at that point to create a new clip whose first frame is the desired tracking start point.</p>
+
+<p><b>Tracking Coords Interpretation</b></p>
+
+<ul>
+    <li><b>Absolute</b> Aligns the top-left corner of the image with the top-left corner of the tracking data box.</li>
+    <li><b>Top Left Justified</b> Aligns the top-left corner of the image with the top-left corner of the screen in the first frame of tracking. Subsequent image movement is then determined by the relative movement recorded in the tracking data. This is useful, for example, when applying tracking data to text created in <b>Titler</b>. The text retains its initial position while following the movement recorded in the tracking data.</li>
+</ul>
+
+<p><b>X Offset</b> Moves the image horizontally relative to the position defined by the tracking data.</p>
+
+<p><b>Y Offset</b> Moves the image vertically relative to the position defined by the tracking data.</p>
+
+<p><b>Size</b> When set to <b>Scale To Box</b>, the image is scaled to fit the box defined by the tracking data.</p>
+
+<p><b>Apply Motion Tracking Data</b> Applies the selected tracking data to control the movement of the clip image, using the specified parameters.</p>
 
 <h4>Workflow</h4>
+
 <ol>
-<li>Use <b>Select Motion Tracking Data</b> dropdown menu to select which tracking data to apply.</li>
-<li>Set parameters to fine tune tracked motion.</li>
-<li>Press <b>Apply Motion Tracking Data</b> button to make clip image follow tracked motion.</li>
-<li>If needed, change parameters and press <b>Apply Motion Tracking Data</b> button again to get changed motion.</li>
+    <li>Use the <b>Select Motion Tracking Data</b> dropdown menu to select which tracking data to apply.</li>
+    <li>Set the parameters to fine-tune the tracked motion.</li>
+    <li>Press the <b>Apply Motion Tracking Data</b> button to make the clip image follow the tracked motion.</li>
+    <li>If necessary, change the parameters and press the <b>Apply Motion Tracking Data</b> button again to apply the modified motion.</li>
 </ol>
 
 <h3>Filter Mask: Alpha Shape Motion Tracked</h3>
-<p>
-Add this Filter Mask to clip that contains the image element you wish to apply masked filtering on.
-</p>
 
-<p>
-A typical use would be to e.g. blur a person's face to make them unrecognizable.
-</p>
+<p>Add this filter mask to the clip containing the image element to which you want to apply the filter.</p>
+
+<p>A typical use is blurring a person's face to make them unrecognizable.</p>
 
 <h4>Parameters</h4>
-<p>
-    <b>Select Motion Tracking Data</b> Select the labeled tracking data created from tracking image element you wish to track.
-</p>
-<p>
-    Tracking always starts from first frame of clip.
-</p>
-<p>
-    If you like tracking to start in the middle of a clip, then cut that clip at that point to create a new clip that has the first frame at the position you wish tracking to start.
-</p>
-<p>
-    <b>X Offset</b> Moves filtered area in the horizontal direction in relation to the position defined by tracking data.
-</p>
-<p>
-    <b>Y Offset</b> Moves filtered area in the vertical direction in relation to the position defined by tracking data.
-</p>
-<p>
-    <b>Scale</b> Makes filtered area smaller or larger.
-</p>
-<p>
-    <b>Apply Motion Tracking Data</b> Applies selected tracking data with user specified parameters as a Filter Mask.
-</p>
+
+<p><b>Select Motion Tracking Data</b> Select the tracking data created for the image element you want to track.</p>
+
+<p>Tracking always starts from the first frame of the clip.</p>
+
+<p>If you want tracking to start in the middle of a clip, cut the clip at that point to create a new clip whose first frame is the desired tracking start point.</p>
+
+<p><b>X Offset</b> Moves the filtered area horizontally relative to the position defined by the tracking data.</p>
+
+<p><b>Y Offset</b> Moves the filtered area vertically relative to the position defined by the tracking data.</p>
+
+<p><b>Scale</b> Adjusts the size of the filtered area.</p>
+
+<p><b>Apply Motion Tracking Data</b> Applies the selected tracking data to control the position and movement of the filter mask, using the specified parameters.</p>
 
 <h4>Workflow</h4>
-<ol>
-<li>See above how to <a href="#filtermasking">add a Filter Mask</a>. Select Filter Mask <b>Alpha Shape Motion Tracked</b>.</li>
-<li>Set mask parameters.</li>
-<li>Press <b>Apply Motion Tracking Data</b> to create a motion tracked filter mask.</li>
-</ol>
 
+<ol>
+    <li>See above how to add a filter mask. Select the <b>Alpha Shape Motion Tracked</b> filter mask.</li>
+    <li>Set the mask parameters.</li>
+    <li>Press <b>Apply Motion Tracking Data</b> to create a motion-tracked filter mask.</li>
+</ol>
 
 
 </div>
