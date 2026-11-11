@@ -93,6 +93,7 @@ _script_length = fluxity.DEFAULT_LENGTH
 _mark_in = -1
 _mark_out = -1
 
+_profile = None
 _current_profile_name = None
 _current_profile_index = None # We necessarily would not need this too.
 
@@ -241,6 +242,9 @@ def _init_frames_dirs():
 def _init_player_and_profile_data(profile_name):
     gmicplayer.set_current_profile_for_profile_name(profile_name)
     new_profile = mltprofiles.get_profile(profile_name)
+    
+    global _profile
+    _profile = new_profile
 
     global _current_dimensions, _current_fps, _current_profile_index
     _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
@@ -274,8 +278,7 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
     # Create tractor and tracks, in_frame
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
-    profile = mltprofiles.get_profile(_current_profile_name)
-    track0 = mlt.Playlist(profile)
+    track0 = mlt.Playlist(_profile)
     multitrack.connect(track0, 0)
 
     bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
@@ -283,21 +286,21 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
     
     # If no producer provided, create producer displaying bg image with plugin icon.
     if range_frame_res_str == None:
-        bg_clip = mlt.Producer(profile, str(bg_path))
+        bg_clip = mlt.Producer(_profile, str(bg_path))
         track0.insert(bg_clip, 0, 0, length - 1)
     else:  # Create producer displaying rendered frame sequence.
         indx = 0
         if in_frame > 0:
-            bg_clip1 = mlt.Producer(profile, str(bg_path))
+            bg_clip1 = mlt.Producer(_profile, str(bg_path))
             track0.insert(bg_clip1, indx, 0, in_frame - 1)
             indx += 1
         
-        range_producer = mlt.Producer(profile, range_frame_res_str)
+        range_producer = mlt.Producer(_profile, range_frame_res_str)
         track0.insert(range_producer, indx, 0, out_frame - in_frame)
         indx += 1
         
         if out_frame < length - 1:
-            bg_clip2 = mlt.Producer(profile, str(bg_path))
+            bg_clip2 = mlt.Producer(_profile, str(bg_path))
             track0.insert(bg_clip2, indx, out_frame + 1, length - 1)
                     
     return tractor
@@ -525,9 +528,8 @@ def render_preview_frame():
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
     _profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
-    profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
-    _current_dimensions = (profile.width(), profile.height(), 1.0)
+    _current_dimensions = (_profile.width(), _profile.height(), 1.0)
     frame = _player.current_frame()
     
     _window.out_view.get_buffer().set_text("Rendering...")
@@ -580,9 +582,8 @@ def render_preview_range():
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
     profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
-    profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
-    _current_dimensions = (profile.width(), profile.height(), 1.0)
+    _current_dimensions = (_profile.width(), _profile.height(), 1.0)
 
     _window.out_view.get_buffer().set_text("Rendering...")
 
@@ -1627,8 +1628,7 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, g
             
     # We need data to be available for render process, 
     # create video_render_data object with default values if not available.
-    profile = mltprofiles.get_profile(_current_profile_name)
-    render_data = toolsencoding.create_container_clip_default_render_data_object(profile)
+    render_data = toolsencoding.create_container_clip_default_render_data_object(_profile)
 
     render_data.do_video_render = False 
 

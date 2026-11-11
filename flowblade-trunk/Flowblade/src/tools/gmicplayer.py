@@ -105,7 +105,6 @@ class GmicPlayer:
         else:
             producer.mark_in = -1
             producer.mark_out = -1
-
         self.producer = producer
             
         new_length = self.get_active_length()
@@ -114,9 +113,8 @@ class GmicPlayer:
         if new_length <= self.producer.mark_out:
             self.producer.mark_in = -1
             self.producer.mark_out = -1
-    
         self.connect_and_start()
-
+        
     def set_display_widget(self, display_widget):
         self.display_widget = display_widget
         self.window_xid = display_widget.get_window().get_xid()
@@ -128,7 +126,7 @@ class GmicPlayer:
         # Create consumer and set params
         # Create consumer and set params
         if _sdl_consumer_version == SDL_2:
-            print("Create SDL2 consumer...")
+            print("Create G'Mic SDL2 consumer...")
             self.consumer = mlt.Consumer(_current_profile, "sdl2")
             self.consumer.set("window_id", self.window_xid)
             w = self.display_widget.get_allocated_width()
