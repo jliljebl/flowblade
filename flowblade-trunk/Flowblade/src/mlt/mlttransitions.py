@@ -602,9 +602,9 @@ def get_rendered_transition_tractor(current_sequence,
     kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=1.0"
     transition = mlt.Transition(current_sequence.profile, "frei0r.cairoblend")
     if transition_type == RENDERED_WIPE:
-        transition.set("0", "1.0") # opacity
+        transition.set("0", "1.0") # opacity does changw, filter handles wipe.
     else:
-        transition.set("0", str(kf_str)) # opacity
+        transition.set("0", str(kf_str)) # opacity change does dissolve.
     transition.set("1", "normal") # blend mode
     transition.set("in", 0)
     transition.set("out", int(tractor.get_length() - 1))
@@ -613,8 +613,14 @@ def get_rendered_transition_tractor(current_sequence,
 
     # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
-        kf_str = "0=0;"+ str(tractor.get_length() - 1) + "=100"
+        #kf_str = "0=0;"+ str(tractor.get_length() - 1) + "=100"
+        kf_str = str(to_in) + "=0.0;"+  str(to_out) + "=100.0"
+        if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
+            kf_str = "0=0.0;" +  str(to_out - to_in) + "=100.0"
+            print(kf_str)
+        
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
+
         filter_object = mltfilters.FilterObject(mltfilters._shape_filter_info)
         filter_object.create_mlt_filter(current_sequence.profile)
         filter_object.mlt_filter.set(str("resource"), str(wipe_resource_path))
@@ -624,6 +630,7 @@ def get_rendered_transition_tractor(current_sequence,
         filter_object.mlt_filter.set(str("use_mix"), str(1))
         filter_object.mlt_filter.set(str("use_luminance"), str(1))
         filter_object.mlt_filter.set(str("audio_match"), str(0))
+
         to_clip.attach(filter_object.mlt_filter)
 
     # Add transition

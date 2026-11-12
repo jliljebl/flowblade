@@ -308,6 +308,10 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     window_text, type_id = mlttransitions.rendered_transitions[transition_type_selection_index]
     window_text = _("Rendering ") + window_text
 
+    # uncomment to get xml of producer_tractor
+    #global _debug_tractor
+    #_debug_tractor = producer_tractor
+
     render.render_single_track_transition_clip( producer_tractor,
                                                 encoding_option_index,
                                                 quality_option_index, 
@@ -316,6 +320,9 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                 window_text)
 
 def _transition_render_complete(clip_path):
+    # uncomment to get xml of producer_tractor
+    #debug_render = renderconsumer.XMLTracktorRenderPlayer(os.path.expanduser("~") + "/wipedebug.xml", _debug_tractor, current_sequence().profile, _debug_render_done)
+    #debug_render.start()
 
     global transition_render_data
     transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
@@ -333,6 +340,9 @@ def _transition_render_complete(clip_path):
 
     action = edit.add_centered_transition_action(data)
     action.do_edit()
+
+def _debug_render_done():
+    print("debug render done")
 
 def re_render_transition(data):
     clip, track, msg, x = data
