@@ -617,8 +617,7 @@ def get_rendered_transition_tractor(current_sequence,
         kf_str = str(to_in) + "=0.0;"+  str(to_out) + "=100.0"
         if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
             kf_str = "0=0.0;" +  str(to_out - to_in) + "=100.0"
-            print(kf_str)
-        
+
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
 
         filter_object = mltfilters.FilterObject(mltfilters._shape_filter_info)
