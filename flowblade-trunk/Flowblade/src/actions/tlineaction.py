@@ -167,7 +167,12 @@ def cut_all_pressed():
     tline_frame = PLAYER().current_frame()
     movemodes.clear_selected_clips()
     cutmode.cut_all_tracks(tline_frame)
-    
+
+def cut_selected_pressed():
+    tline_frame = PLAYER().current_frame()
+    cutmode.cut_selected(tline_frame, movemodes.selected_track, movemodes.selected_range_in, movemodes.selected_range_out, boxmove.box_selection_data)
+    movemodes.clear_selected_clips()
+
 def _can_do_cut():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
         return False

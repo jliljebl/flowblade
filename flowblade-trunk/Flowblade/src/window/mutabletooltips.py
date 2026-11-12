@@ -68,7 +68,7 @@ def _middlebar_monitor_insert(widget, tooltip_runner):
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_edit(widget, tooltip_runner):
-    tooltips = [_("Add Rendered Transition with 2 clips selected - ") + _kb_str("add_dissolve"), _("Cut Active Tracks - ") +  _kb_str("cut") + _("\nCut All Tracks - ") + _kb_str("cut_all")]
+    tooltips = [_("Add Rendered Transition with 2 clips selected - ") + _kb_str("add_dissolve"), _("Cut Active Tracks - ") +  _kb_str("cut") + _("\nCut All Tracks - ") + _kb_str("cut_all") +  _("\nCut Selected Clips - ") + _kb_str("cut_selected") ]
     tooltip_runner.tooltips = tooltips
 
 def _middlebar_split_sync(widget, tooltip_runner):

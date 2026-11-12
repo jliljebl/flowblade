@@ -338,7 +338,29 @@ class BoxMoveData:
             else:
                 return current_track
                 
+    def get_clips_on_tracks_at_frame(self, frame):
+        if frame < self.topleft_frame:
+            return None
         
+        tracks_and_clips = []
+        for ts in self.track_selections:
+            if ts.selected_range_in == -1:
+                continue
+
+            clip_start = ts.range_frame_in
+            i = 0
+            for clip_length in ts.clip_lengths:
+                if frame >= clip_start + 1 and frame <=  clip_start + clip_length - 1:
+                    tracks_and_clips.append((ts.track_id, ts.selected_range_in + i))
+                    break
+            
+                i += 1
+                clip_start = clip_start + clip_length
+                
+        if len(tracks_and_clips) == 0:
+            return None
+        
+        return tracks_and_clips
 
 class BoxTrackSelection:
     """

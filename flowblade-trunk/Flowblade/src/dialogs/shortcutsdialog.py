@@ -155,6 +155,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox = Gtk.VBox()
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut_all"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut_selected"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "trim_start"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "trim_end"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "set_length"), False, False, 0)

@@ -127,6 +127,7 @@ def init():
     _create_action("add_marker", tlineaction.add_marker, TLINE_MONITOR_ALL)
     _create_action("cut", tlineaction.cut_pressed, TLINE_ALL)
     _create_action("cut_all", tlineaction.cut_all_pressed, TLINE_ALL)
+    _create_action("cut_selected", tlineaction.cut_selected_pressed, TLINE_ALL)
     _create_action("add_dissolve", singletracktransition.add_transition_pressed, TLINE_ALL)
     _create_action("log_range", medialog.log_range_clicked, TLINE_MONITOR_ALL)
     _create_action("set_length", tlineaction.set_length_from_keyevent, TLINE_ALL)

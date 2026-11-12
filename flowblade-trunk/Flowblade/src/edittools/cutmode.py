@@ -91,6 +91,42 @@ def cut_all_tracks(frame):
 
     updater.repaint_tline()
 
+def cut_selected(frame, selected_track, selected_range_in, selected_range_out, box_selection_data):
+    tracks_cut_data = []
+
+    if box_selection_data == None:
+
+        for i in range(1, len(current_sequence().tracks) - 1):
+            if current_sequence().tracks[i].edit_freedom == appconsts.LOCKED:
+                tracks_cut_data.append(None) # Don't cut locked tracks.
+            else:
+                if i == selected_track:
+                    cut_data = get_cut_data(current_sequence().tracks[i], frame)
+                    if cut_data["index"] >= selected_range_in and cut_data["index"] <= selected_range_out: 
+                        tracks_cut_data.append(cut_data)
+    else:
+        tracks_and_clips = box_selection_data.get_clips_on_tracks_at_frame(frame)
+        if tracks_and_clips == None:
+            return
+             
+        for track_id, index in tracks_and_clips:
+            track = current_sequence().tracks[track_id]
+            clip = track.clips[index]
+            clip_start_in_tline = track.clip_start(index)
+            clip_frame = frame - clip_start_in_tline + clip.clip_in
+    
+            data = {"track":track,
+                    "index":index,
+                    "clip":clip,
+                    "clip_cut_frame":clip_frame}
+            tracks_cut_data.append(data)
+    
+    data = {"tracks_cut_data":tracks_cut_data}
+    action = edit.cut_all_action(data)
+    action.do_edit()
+
+    updater.repaint_tline()
+    
 def get_cut_data(track, frame):
     # Get index and clip
     index = track.get_clip_index_at(int(frame))

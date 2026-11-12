@@ -495,6 +495,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['toggle_ripple'] = _("Trim Tool Ripple Mode On/Off")
     _keyboard_action_names['cut'] = _("Cut Active Tracks")
     _keyboard_action_names['cut_all'] = _("Cut All Tracks")
+    _keyboard_action_names['cut_selected'] = _("Cut Selected Clips")
     _keyboard_action_names['edit_mode_insert'] = _("Insert")
     _keyboard_action_names['edit_mode_overwrite'] = _("Overwrite")
     _keyboard_action_names['edit_mode_trim'] =  _("Trim")

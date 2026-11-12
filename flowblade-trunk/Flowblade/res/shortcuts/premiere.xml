@@ -97,6 +97,7 @@
     <event code='overwrite_range' name='Overwrite Range'>r</event>
     <event code='cut' name='Cut Active Tracks'>x</event>
     <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
+    <event code='cut_selected' name='Cut Selected Clips at Playhead'>z</event>
     <event code='add_dissolve' name='Add Rendered Transition' modifiers='ALT'>d</event>
     <event code='zoom_out' name='Zoom Out'>minus</event>
     <event code='zoom_in' name='Zoom In'>equal</event>
