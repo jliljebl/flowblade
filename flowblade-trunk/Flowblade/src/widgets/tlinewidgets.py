@@ -498,14 +498,17 @@ def set_ref_line_y(allocation):
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
-    allocation = canvas_widget.widget.get_allocation()
-    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-    frames_in_panel = w / pix_per_frame
+    frames_in_panel = get_frames_in_panel()
 
     if current_frame < (frames_in_panel / 2.0):
         return 0
     else:
         return current_frame - (frames_in_panel / 2)
+
+def get_frames_in_panel():
+    allocation = canvas_widget.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    return int(w / pix_per_frame)
 
 def get_mouse_pos_frame():
     return get_frame(zoom_mouse_x)
@@ -518,6 +521,14 @@ def get_pos_for_tline_centered_to_mouse_frame(mouse_pos_frame_pre_zoom):
         return 0
     else:
         return new_pos
+
+def get_page_size_position_and_current_zoom_level(pos):
+    allocation = canvas_widget.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    frames_in_panel = w / pix_per_frame
+    last_frame = pos + frames_in_panel
+    page_size = float(frames_in_panel) / float(last_frame)
+    return page_size
 
 def get_last_tline_view_frame():
     allocation = canvas_widget.widget.get_allocation()
@@ -1338,8 +1349,6 @@ def draw_transion_length_drag_overlay(cr, data):
     center_frame = data["center_frame"]
     center_frame_x = _get_frame_x(center_frame)
 
-    #print("center_frame", center_frame)
-
     cr.set_line_width(2.0)
     cr.set_source_rgb(*OVERLAY_TRIM_OVERWRITE_COLOR)
     cr.move_to(center_frame_x, track_y - 6.5)
@@ -1347,10 +1356,8 @@ def draw_transion_length_drag_overlay(cr, data):
     cr.stroke()
 
     side_length_frames = abs(center_frame - data["press_frame"])
-    #print("side_length_frames", side_length_frames)
     from_frame_x = _get_frame_x(center_frame - side_length_frames)
     to_frame_x = _get_frame_x(center_frame + side_length_frames)
-    #print("press_frame", data["press_frame"])
 
     cr.move_to(from_frame_x, track_y)
     cr.line_to(to_frame_x, track_y)

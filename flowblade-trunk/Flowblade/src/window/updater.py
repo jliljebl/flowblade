@@ -181,6 +181,11 @@ def update_tline_scrollbar():
     except Exception:
         pos = 0.0
 
+    if pos > 0.0 and page_size == 100.0:
+        frames_in_panel = tlinewidgets.get_frames_in_panel()
+        last_frame = tlinewidgets.pos + frames_in_panel
+        page_size = frames_in_panel / last_frame
+
     # Create and set adjustment
     page_size_in = page_size
     adjustment = Gtk.Adjustment(value=pos, lower=0.0, upper=100.0,
@@ -220,7 +225,11 @@ def center_tline_to_current_frame():
     """
     Sets scroll widget adjustment to place current frame in the middle of display.
     """
-    pos = tlinewidgets.get_pos_for_tline_centered_to_current_frame()
+    pos = int(tlinewidgets.get_pos_for_tline_centered_to_current_frame())
+    
+    if pos != 0 and gui.tline_scroll.get_adjustment().get_page_size() == 100.0:
+        page_size = tlinewidgets.get_page_size_position_and_current_zoom_level(pos)
+
     gui.tline_scroll.get_adjustment().set_value((float(pos) / float(current_sequence().get_length())) * 100.0)
 
 def center_tline_to_mouse_pos(mouse_pos_frame_pre_zoom):
@@ -276,9 +285,10 @@ def zoom_in(event=None):
     if tlinewidgets.pix_per_frame > PIX_PER_FRAME_MAX:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
 
-    repaint_tline()
+
     update_tline_scrollbar()
-    
+    repaint_tline()
+        
     # Revese playhead/cursor if ALT key pressed
     use_pref = True
     if event != None:
@@ -299,8 +309,9 @@ def zoom_out(event=None):
     tlinewidgets.pix_per_frame *= SCALE_MULTIPLIER
     if tlinewidgets.pix_per_frame < PIX_PER_FRAME_MIN:
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
-    repaint_tline()
+
     update_tline_scrollbar()
+    repaint_tline()
 
     # Revese playhead/cursor if ALT key pressed
     use_pref = True
@@ -328,8 +339,9 @@ def zoom_project_length():
     tlinewidgets.pos = 0
     update_pix_per_frame_full_view()
     init_tline_scale()
-    repaint_tline()
+    gui.tline_scroll.get_adjustment().set_value(0.0)
     update_tline_scrollbar()
+    repaint_tline()
 
 def init_tline_view():
     zoom_project_length()
