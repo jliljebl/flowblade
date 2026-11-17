@@ -40,12 +40,17 @@ entered_from_overwrite = False
 def clear_data():
     # These need to cleared when box tool is activated
     global box_selection_data, edit_data
+    if box_selection_data != None:
+        box_selection_data.set_clips_selected(False)
+    
     box_selection_data = None
     edit_data = None
 
 def clear_data_and_tline_data():
     # These need to cleared when box tool is activated
     global box_selection_data, edit_data
+    if box_selection_data != None:
+        box_selection_data.set_clips_selected(False)
     box_selection_data = None
     edit_data = None
 
@@ -72,6 +77,7 @@ def mouse_press_with_coords(ex, ey, frame):
         if box_selection_data.is_hit(ex, ey) == False:
             # Back to start state if selection box missed
             edit_data = None
+            box_selection_data.set_clips_selected(False)
             box_selection_data = None
         else:
             edit_data = {"action_on":True,
@@ -130,7 +136,10 @@ def mouse_release(x, y, frame):
                              "press_frame":frame,
                              "delta":0,
                              "box_selection_data":box_selection_data}
+
+            box_selection_data.set_clips_selected(True)
         else:
+            box_selection_data.set_clips_selected(False)
             box_selection_data = None
             edit_data = {"action_on":False,
                          "press_frame":-1,
@@ -147,6 +156,7 @@ def mouse_release(x, y, frame):
         if locked_track != None:
             dialogutils.track_lock_check_and_user_info(locked_track)
             edit_data = None
+            box_selection_data.set_clips_selected(False)
             box_selection_data = None
             tlinewidgets.set_edit_mode_data(edit_data)
             updater.repaint_tline()
@@ -160,6 +170,7 @@ def mouse_release(x, y, frame):
         edit_data["delta"] = delta
 
         # Do edit
+        box_selection_data.set_clips_selected(False)
         data = {"box_selection_data":box_selection_data,
                 "delta":delta}
         action = edit.box_overwrite_move_action(data)
@@ -361,6 +372,10 @@ class BoxMoveData:
             return None
         
         return tracks_and_clips
+    
+    def set_clips_selected(self, selected):
+        for ts in self.track_selections:
+            ts.set_clips_selected(selected)
 
 class BoxTrackSelection:
     """
@@ -448,11 +463,16 @@ class BoxTrackSelection:
         return False
 
     def clip_in_selection(self, clip):
-        clip_index =  current_sequence().tracks[self.track_id].clips.index(clip)
+        clip_index = current_sequence().tracks[self.track_id].clips.index(clip)
         if clip_index >= self.selected_range_in and clip_index <= self.selected_range_out:
             return True
         
         return False
+    
+    def set_clips_selected(self, selected):
+        if self.selected_range_in  != -1:
+            for i in range(self.selected_range_in, self.selected_range_out + 1):
+                current_sequence().tracks[self.track_id].clips[i].selected = selected
 
 def box_selection_splice_out():
     global box_selection_data, edit_data
@@ -464,6 +484,7 @@ def box_selection_splice_out():
 
     # Back to start state
     edit_data = None
+    box_selection_data.set_clips_selected(False)
     box_selection_data = None
     
     # Exit box mode if entered from overwrite with empty selection
@@ -481,6 +502,7 @@ def box_selection_lift():
 
     # Back to start state
     edit_data = None
+    box_selection_data.set_clips_selected(False)
     box_selection_data = None
     
     # Exit box mode if entered from overwrite with empty selection
