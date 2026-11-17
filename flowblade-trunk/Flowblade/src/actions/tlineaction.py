@@ -772,43 +772,105 @@ def delete_range_button_pressed():
     PLAYER().seek_frame(mark_in_frame)
 
 def trim_start_pressed():
-    clip, track, index = _get_kb_quick_trim_target_clip()
-    if clip == None:
-        return
+    if boxmove.box_selection_data == None:
+        clip, track, index = _get_kb_quick_trim_target_clip()
+        if clip == None:
+            return
+    else:
+        clip = None
 
     current_frame = PLAYER().current_frame()
-    clip_start_in_tline = track.clip_start(index)
-    delta = current_frame - clip_start_in_tline
 
-    data = {"track":track,
-            "clip":clip,
-            "index":index,
-            "delta":delta,
-            "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
-            "first_do":False}
-                            
-    action = edit.trim_start_action(data)
-    action.do_edit()
+    if clip != None:
+        # Working with single track selection or active track.
+        clip_start_in_tline = track.clip_start(index)
+        delta = current_frame - clip_start_in_tline
+        data = {"track":track,
+                "clip":clip,
+                "index":index,
+                "delta":delta,
+                "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                "first_do":False}
+                                
+        action = edit.trim_start_action(data)
+        action.do_edit()
+    else:
+        # Working with box selection.
+        tracks_and_clips =  boxmove.box_selection_data.get_clips_on_tracks_at_frame(current_frame)
+        if tracks_and_clips == None:
+            return
+        
+        edit_actions = []
+        for track_id, index in tracks_and_clips:
+            track = current_sequence().tracks[track_id]
+            clip = track.clips[index]
+            clip_start_in_tline = track.clip_start(index)
+            delta = current_frame - clip_start_in_tline
+
+            data = {"track":track,
+                    "clip":clip,
+                    "index":index,
+                    "delta":delta,
+                    "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                    "first_do":False}
+                                    
+            action = edit.trim_start_action(data)
+            edit_actions.append(action)
+
+        consolidated_action = edit.ConsolidatedEditAction(edit_actions)
+        consolidated_action.do_consolidated_edit()
+                    
 
 def trim_end_pressed():
-    clip, track, index = _get_kb_quick_trim_target_clip()
-    if clip == None:
-        return
+    if boxmove.box_selection_data == None:
+        clip, track, index = _get_kb_quick_trim_target_clip()
+        if clip == None:
+            return
+    else:
+        clip = None
 
     current_frame = PLAYER().current_frame()
-    clip_end_in_tline = track.clip_start(index) + clip.clip_out - clip.clip_in
-    delta = current_frame - clip_end_in_tline
 
-    data = {"track":track,
-            "clip":clip,
-            "index":index,
-            "delta":delta,
-            "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
-            "first_do":False}
-                            
-    action = edit.trim_end_action(data)
-    action.do_edit()
-    
+    if clip != None:
+        # Working with single track selection or active track.
+        clip_end_in_tline = track.clip_start(index) + clip.clip_out - clip.clip_in
+        delta = current_frame - clip_end_in_tline
+
+        data = {"track":track,
+                "clip":clip,
+                "index":index,
+                "delta":delta,
+                "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                "first_do":False}
+                                
+        action = edit.trim_end_action(data)
+        action.do_edit()
+    else:
+        # Working with box selection.
+        tracks_and_clips =  boxmove.box_selection_data.get_clips_on_tracks_at_frame(current_frame)
+        if tracks_and_clips == None:
+            return
+        
+        edit_actions = []
+        for track_id, index in tracks_and_clips:
+            track = current_sequence().tracks[track_id]
+            clip = track.clips[index]
+            clip_end_in_tline = track.clip_start(index) + clip.clip_out - clip.clip_in
+            delta = current_frame - clip_end_in_tline
+
+            data = {"track":track,
+                    "clip":clip,
+                    "index":index,
+                    "delta":delta,
+                    "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                    "first_do":False}
+                                    
+            action = edit.trim_end_action(data)
+            edit_actions.append(action)
+
+        consolidated_action = edit.ConsolidatedEditAction(edit_actions)
+        consolidated_action.do_consolidated_edit()
+
 def _get_kb_quick_trim_target_clip():
     current_frame = PLAYER().current_frame()
     if movemodes.selected_track != -1:
