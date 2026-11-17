@@ -478,13 +478,13 @@ def box_selection_splice_out():
     global box_selection_data, edit_data
     
     # Do edit
+    box_selection_data.set_clips_selected(False)
     data = {"box_selection_data":box_selection_data}
     action = edit.box_splice_out_action(data)
     action.do_edit()
 
     # Back to start state
     edit_data = None
-    box_selection_data.set_clips_selected(False)
     box_selection_data = None
     
     # Exit box mode if entered from overwrite with empty selection
@@ -496,13 +496,13 @@ def box_selection_lift():
     global box_selection_data, edit_data
     
     # Do edit
+    box_selection_data.set_clips_selected(False)
     data = {"box_selection_data":box_selection_data}
     action = edit.box_lift_action(data)
     action.do_edit()
 
     # Back to start state
     edit_data = None
-    box_selection_data.set_clips_selected(False)
     box_selection_data = None
     
     # Exit box mode if entered from overwrite with empty selection
