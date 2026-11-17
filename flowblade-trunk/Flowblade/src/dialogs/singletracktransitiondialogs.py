@@ -168,8 +168,13 @@ class ReRenderderAllWindow:
             self._render_transition(clip, track, consumer, self.write_file)
 
     def _render_transition(self, clip, track, consumer, write_file):
-        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-        sorted_wipe_luma_index = clip.creation_data
+        try:
+            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+            sorted_wipe_luma_index, softhess = clip.creation_data
+        except ValueError:
+            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+            sorted_wipe_luma_index  = clip.creation_data
+            softhess = 0.0
 
         from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
         to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
@@ -182,12 +187,13 @@ class ReRenderderAllWindow:
                                                                             to_out,
                                                                             to_in,
                                                                             transition_type_selection_index,
-                                                                            sorted_wipe_luma_index)
+                                                                            sorted_wipe_luma_index,
+                                                                            softhess)
         
         # start and end frames
         start_frame = 0
         end_frame = producer_tractor.get_length() - 1
-        
+
         # Launch render
         self.renderer = renderconsumer.FileRenderPlayer(write_file, producer_tractor, consumer, start_frame, end_frame)
         self.renderer.start()
@@ -290,8 +296,8 @@ def transition_edit_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, encodings = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, encodings)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, wipe_softness_spin, encodings = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, wipe_softness_spin, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)

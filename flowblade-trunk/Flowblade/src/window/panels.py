@@ -319,11 +319,18 @@ def get_transition_panel(trans_data):
     wipe_label = Gtk.Label(label=_("Wipe Pattern:"))
     wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
-
     wipe_luma_combo_box.set_sensitive(False)
     wipe_label.set_sensitive(False)
+
+    wipe_softness_spin = Gtk.SpinButton.new_with_range(0, 1.0, 0.1)
+    wipe_softhess_label = Gtk.Label(label=_("Wipe Softness:"))
+    wipe_softhess_row = get_two_column_box(wipe_softhess_label, 
+                                 wipe_softness_spin)
+    wipe_softness_spin.set_sensitive(False)
+    wipe_softhess_label.set_sensitive(False)
     
-    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, wipe_label)
+    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, wipe_label, wipe_softness_spin, wipe_softhess_label)
+
     type_combo_box.connect("changed", 
                               lambda w,e: _transition_type_changed(transition_type_widgets), 
                               None)
@@ -374,6 +381,7 @@ def get_transition_panel(trans_data):
     edit_vbox.pack_start(type_row, False, False, 0)
     edit_vbox.pack_start(length_row, False, False, 0)
     edit_vbox.pack_start(wipe_row, False, False, 0)
+    edit_vbox.pack_start(wipe_softhess_row, False, False, 0)
 
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
@@ -392,7 +400,7 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, encodings)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, wipe_softness_spin, encodings)
 
 def _get_encodings_widget_and_list():
     # We have an unexplained issue with rendering using libx264 vcodec
@@ -528,14 +536,18 @@ def _set_saved_encoding(transition_widgets):
         quality_cb.set_active(quality_index)
     
 def _transition_type_changed(transition_type_widgets):
-    type_combo_box, wipe_luma_combo_box, wipe_label = transition_type_widgets
+    type_combo_box, wipe_luma_combo_box, wipe_label,  wipe_softness_spin, wipe_softhess_label = transition_type_widgets
     if type_combo_box.get_active() == 0:
         wipe_luma_combo_box.set_sensitive(False)
         wipe_label.set_sensitive(False)
+        wipe_softness_spin.set_sensitive(False)
+        wipe_softhess_label.set_sensitive(False)
     elif type_combo_box.get_active() == 1:
         wipe_luma_combo_box.set_sensitive(True)
         wipe_label.set_sensitive(True)
-    
+        wipe_softness_spin.set_sensitive(True)
+        wipe_softhess_label.set_sensitive(True)
+        
 def get_effect_selection_panel(double_click_cb):
     effects_list_view = guicomponents.FilterListView(None)
     group_combo_box = Gtk.ComboBoxText()

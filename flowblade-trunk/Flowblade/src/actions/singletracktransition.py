@@ -202,7 +202,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
             return
 
         # Get input data
-        type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, encodings = selection_widgets
+        type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, wipe_softness_spin, encodings = selection_widgets
         transition_type_selection_index = type_combo.get_active()
 
         quality_option_index = quality_combo.get_active()
@@ -215,7 +215,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         
         extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
         sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
-
+        softness = wipe_softness_spin.get_value()
+    
         try:
             length = int(length_entry.get_text())
         except Exception as e:
@@ -227,7 +228,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         
         from_clip_index = movemodes.selected_range_in    
     else:
-        # Create data to match what we get from dialog when we caome here from 
+        # Create data to match what we get from dialog when we came here from dnd.
         length = 30
         transition_type_selection_index = 0
         sorted_wipe_luma_index = 0
@@ -252,12 +253,13 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
         from_clip_index = transition_data["dnd_from_clip_index"] 
+        softness = 0.0
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
     
     from_handle = transition_data["from_handle"]
-    to_hjandle = transition_data["to_handle"]
+    to_handle = transition_data["to_handle"]
 
 
     # Get required lengths and parts
@@ -291,7 +293,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index)
+                                                                        sorted_wipe_luma_index,
+                                                                        softness)
 
     creation_data = (   from_clip.id,
                         to_clip.id,
@@ -300,7 +303,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                         to_out,
                         to_in,
                         transition_type_selection_index,
-                        sorted_wipe_luma_index)
+                        sorted_wipe_luma_index,
+                        softness)
                                                 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
@@ -349,9 +353,14 @@ def re_render_transition(data):
     if not hasattr(clip, "creation_data"):
         singletracktransitiondialogs.no_creation_data_dialog()
         return
-    
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index = clip.creation_data
+
+    try:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index, wipe_softhess  = clip.creation_data
+    except ValueError:
+        # We added wipe_softhess for 2.26
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index = clip.creation_data
     
     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
     to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
@@ -386,11 +395,16 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
 
     clip = transition_data["clip"]
     track =  transition_data["track"]
-    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index = clip.creation_data
+
+    try:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index, softhess = clip.creation_data
+    except ValueError:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index = clip.creation_data
+        softhess = 0.0
     
     trans_index = track.clips.index(clip)
-
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         transition_data["from_clip"],
                                                                         transition_data["to_clip"],
@@ -399,7 +413,8 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index)
+                                                                        sorted_wipe_luma_index,
+                                                                        softhess)
     
 
     # Save transition data into global variable to be available at render complete callback
@@ -436,7 +451,7 @@ def create_length_changed_transition(track, index, new_length):
     old_transition_clip = track.clips[index]
     # We need transition type and possible wipe luma from old transition.
     old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index = old_transition_clip.creation_data
+    sorted_wipe_luma_index, softhess = old_transition_clip.creation_data
 
     old_from_req, old_to_req, old_from_part, old_to_part = get_parts_and_reqs_for_length(old_transition_clip.clip_length())
 
@@ -467,7 +482,7 @@ def create_length_changed_transition(track, index, new_length):
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index)
+                                                                        sorted_wipe_luma_index, softhess)
 
     creation_data = (   from_clip.id,
                         to_clip.id,
@@ -476,7 +491,8 @@ def create_length_changed_transition(track, index, new_length):
                         to_out,
                         to_in,
                         transition_type_selection_index,
-                        sorted_wipe_luma_index)
+                        sorted_wipe_luma_index, 
+                        softhess)
 
     encoding_option_index, quality_option_index = PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
@@ -527,8 +543,13 @@ def rerender_all_rendered_transitions():
             clip = track.clips[j]
             if hasattr(clip, "rendered_type"):
                 if hasattr(clip, "creation_data"):
-                    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
-                    transition_type_selection_index, sorted_wipe_luma_index = clip.creation_data
+                    try:
+                        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
+                        transition_type_selection_index, sorted_wipe_luma_index, softness = clip.creation_data
+                    except ValueError:
+                        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
+                        transition_type_selection_index, sorted_wipe_luma_index = clip.creation_data
+                    
                     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
                     to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
                     # transition

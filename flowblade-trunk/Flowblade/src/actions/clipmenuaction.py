@@ -466,14 +466,14 @@ def _title_edit_callback(clip, track, new_title_path, new_titler_data):
 def _re_render_transition_or_fade(data):
     clip, track, item_id, item_data = data
 
-    # Fix for changed number of creation data params
+    # Fix for changed number of creation data params for 2.26
     try:
-        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, color_str = clip.creation_data
-    except:
-        print("except")
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softness = clip.creation_data
+    except ValueError:
         from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
+        softhess = 0.0
 
-    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index)
+    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softhess)
 
     name, type_id = mlttransitions.rendered_transitions[transition_type_index]
     if type_id < appconsts.RENDERED_FADE_IN:

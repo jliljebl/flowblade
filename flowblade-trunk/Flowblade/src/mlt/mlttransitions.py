@@ -554,7 +554,8 @@ def get_rendered_transition_tractor(current_sequence,
                                     to_out,
                                     to_in,
                                     transition_type_selection_index,
-                                    wipe_luma_sorted_keys_index):
+                                    wipe_luma_sorted_keys_index,
+                                    softness):
 
     name, transition_type = rendered_transitions[transition_type_selection_index]
 
@@ -613,7 +614,6 @@ def get_rendered_transition_tractor(current_sequence,
 
     # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
-        #kf_str = "0=0;"+ str(tractor.get_length() - 1) + "=100"
         kf_str = str(to_in) + "=0.0;"+  str(to_out) + "=100.0"
         if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
             kf_str = "0=0.0;" +  str(to_out - to_in) + "=100.0"
@@ -624,7 +624,7 @@ def get_rendered_transition_tractor(current_sequence,
         filter_object.create_mlt_filter(current_sequence.profile)
         filter_object.mlt_filter.set(str("resource"), str(wipe_resource_path))
         filter_object.mlt_filter.set(str("mix"), str(kf_str))
-        filter_object.mlt_filter.set(str("softness"), str(0))
+        filter_object.mlt_filter.set(str("softness"), str(softness))
         filter_object.mlt_filter.set(str("invert"), str(0))
         filter_object.mlt_filter.set(str("use_mix"), str(1))
         filter_object.mlt_filter.set(str("use_luminance"), str(1))
