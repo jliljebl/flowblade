@@ -2006,8 +2006,11 @@ class TimeLineCanvas:
                 right_half = scale_in + 2.5 + ((scale_length - 6.0) / 2.0)
                 down = y + 2.5 + track_height - 6.0
                 down_half = y + 2.5 + ((track_height - 6.0) / 2.0)
-                cr.set_source_rgb(0, 0, 0)
-                
+                if not clip.selected:
+                    cr.set_source_rgb(0, 0, 0)
+                else:
+                    cr.set_source_rgb(0.2, 0.2, 0.2)
+
                 if clip.rendered_type == appconsts.RENDERED_DISSOLVE:
                     cr.move_to(right, y + 4.5)
                     cr.line_to(right, down)
@@ -2015,51 +2018,17 @@ class TimeLineCanvas:
                     cr.close_path()
                     cr.fill()
                 elif clip.rendered_type == appconsts.RENDERED_WIPE:
-                    cr.rectangle(scale_in + 2.0, y + 2.0, scale_length - 4.0, track_height - 4.0)
-                    cr.fill()
-                    if not clip.selected:
-                        cr.set_source_rgb(1.0, 1.0, 1.0)
-                    else:
-                        cr.set_source_rgb(*SINGLE_TRACK_TRANSITION_SELECTED)
                     cr.move_to(right_half, y + 3.0 + 2.0)
                     cr.line_to(right - 2.0, down_half)
                     cr.line_to(right_half, down - 2.0)
                     cr.line_to(scale_in + 2.0 + 4.0, down_half)
                     cr.close_path()
                     cr.fill()
-                elif clip.rendered_type == appconsts.RENDERED_COLOR_DIP:
-                    cr.move_to(scale_in + 4.5, y + 4.5)
-                    cr.line_to(right, y + 4.5)
-                    cr.line_to(right_half, down)
-                    cr.close_path()
-                    cr.fill()       
-                elif clip.rendered_type == appconsts.RENDERED_FADE_IN:
-                    cr.move_to(scale_in + 4.5, y + 4.5)
-                    cr.line_to(right, y + 4.5)
-                    cr.line_to(scale_in + 4.5, down_half)
-                    cr.close_path()
-                    cr.fill()
-                    cr.move_to(scale_in + 4.5, down_half)
-                    cr.line_to(right, down)
-                    cr.line_to(scale_in + 4.5, down)
-                    cr.close_path()
-                    cr.fill()
-                else: # clip.rendered_type == appconsts.RENDERED_FADE_OUT:
-                    cr.move_to(scale_in + 4.5, y + 4.5)
-                    cr.line_to(right, y + 4.5)
-                    cr.line_to(right, down_half)
-                    cr.close_path()
-                    cr.fill()
-                    cr.move_to(right, down_half)
-                    cr.line_to(right, down)
-                    cr.line_to(scale_in + 4.5, down)
-                    cr.close_path()
-                    cr.fill()
 
             # Draw video clip icon.
             text_x_add = 0
             if scale_length > TEXT_MIN and editorstate.display_clip_media_thumbnails:
-                if clip.is_blanck_clip == False and track.type == appconsts.VIDEO and \
+                if clip.is_blanck_clip == False and hasattr(clip, "rendered_type") == False and track.type == appconsts.VIDEO and \
                     (clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.IMAGE 
                         or clip.media_type == appconsts.IMAGE_SEQUENCE):
                         
