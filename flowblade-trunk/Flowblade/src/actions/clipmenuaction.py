@@ -471,16 +471,50 @@ def _re_render_transition_or_fade(data):
         from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softness = clip.creation_data
     except ValueError:
         from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
-        softhess = 0.0
+        softness = 0.0
 
-    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softhess)
+    clip.creation_data = (from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softness)
 
     name, type_id = mlttransitions.rendered_transitions[transition_type_index]
     if type_id < appconsts.RENDERED_FADE_IN:
         singletracktransition.re_render_transition(data)
     else:
         tlineaction.re_render_fade(data)
+
+def _set_wipe_softness(data):
+    clip, track, item_id, item_data = data
+
+    # Fix for changed number of creation data params for 2.26
+    try:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softness = clip.creation_data
+    except ValueError:
+        from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
+        softhess = 0.0
+
+    dialogs.set_wipe_softness(data, softness, _set_softness_callback)
+
+def _set_softness_callback(dialog, response_id, wipe_data):
+    data, wipe_softness_spin = wipe_data
+    if response_id ==  Gtk.ResponseType.ACCEPT:
+        clip, track, item_id, item_data = data
+            
+        try:
+            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, softness = clip.creation_data
+        except ValueError:
+            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index = clip.creation_data
         
+        new_softness = wipe_softness_spin.get_value()
+        clip.creation_data = from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, sorted_wipe_luma_index, new_softness
+
+        index = track.clips.index(clip)
+        length = clip.clip_out - clip.clip_in + 1 # +1 clip_out inclusive
+
+        dialog.destroy()
+    
+        singletracktransition.create_length_changed_transition(track, index, length)
+    else:
+        dialog.destroy()
+
 def _mute_clip(data):
     clip, track, item_id, item_data = data
     tlineaction.do_mute_clip(clip, item_data)
@@ -1216,4 +1250,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "edit_title":_edit_title,
                   "slowfast":_tline_clip_slowfast,
                   "revert":_revert_to_original_clip_from_slowmo_clip,
-                  "reverse":_tline_clip_reverse}
+                  "reverse":_tline_clip_reverse,
+                  "set_softness":_set_wipe_softness}

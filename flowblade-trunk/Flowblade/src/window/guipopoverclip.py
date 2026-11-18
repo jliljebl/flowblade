@@ -78,6 +78,7 @@ _compositor_menu = None
 _transition_popover = None
 _transition_menu = None
 _transition_audio_mute_menu = None 
+_transition_softness_menu = None
  
 _kftool_popover = None
 _kftool_menu = None
@@ -400,7 +401,7 @@ def compositor_popover_menu_show(widget, x, y, compositor, callback):
     _compositor_popover = guipopover.new_mouse_popover(widget, _compositor_menu, rect, Gtk.PositionType.TOP)
 
 def transition_popover_menu_show(widget, clip, track, x, y, callback):
-    global _transition_popover, _transition_menu, _transition_audio_mute_menu
+    global _transition_popover, _transition_menu, _transition_audio_mute_menu, _transition_softness_menu
 
     if _transition_menu == None:
         _transition_menu = guipopover.menu_clear_or_create(_transition_menu)
@@ -416,6 +417,10 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
         mute_section.append_submenu(_("Mute"), _transition_audio_mute_menu)
         _transition_menu.append_section(None, mute_section)
 
+        _transition_softness_menu = Gio.Menu.new()
+        _fill_softness_menu(_transition_softness_menu, clip, callback)
+        _transition_menu.append_section(None, _transition_softness_menu)
+        
         filters_section = Gio.Menu.new()
         add_filter_menu = Gio.Menu.new()
         _fill_filters_menus(add_filter_menu, callback, "add_filter", "transitionclipmenu.addfilter.")
@@ -430,9 +435,15 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
     else: # Menu items with possible state changes need to recreated.
         guipopover.menu_clear_or_create(_transition_audio_mute_menu)
         _fill_audio_mute_menu(_transition_audio_mute_menu, clip, callback, "transitionclipmenu.")
+        guipopover.menu_clear_or_create(_transition_softness_menu)
+        _fill_softness_menu(_transition_softness_menu, clip, callback)
 
     rect = guipopover.create_rect(x, y)
     _transition_popover = guipopover.new_mouse_popover(widget, _transition_menu, rect, Gtk.PositionType.TOP)
+
+def _fill_softness_menu(softness_menu, clip, callback):
+    active = (clip.rendered_type == appconsts.RENDERED_WIPE)
+    add_menu_action(softness_menu, _("Set Wipe Softness"), "transitionclipmenu.softness", ("set_softness", False), callback, active, None) 
 
 def _fill_clip_monitor_section(clip_monitor_section, clip, track, callback):
     active = True

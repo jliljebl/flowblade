@@ -2070,4 +2070,22 @@ def replace_clip_not_enough_material_info():
     primary_txt = _("Cannot replace the clip!")
     secondary_txt = _("The clip being replaced is longer then the clip being added.")
     dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+
+def set_wipe_softness(data, softness, callback):
+    title = _("Set WipeSoftness")
+    accept_text = _("Set")
+
+    wipe_softness_spin = Gtk.SpinButton.new_with_range(0, 1.0, 0.1)
+    wipe_softness_spin.set_value (softness)
+
+    wipe_softhess_label = Gtk.Label(label=_("Wipe Softness:"))
+
+    row = guiutils.get_two_column_box(wipe_softhess_label, wipe_softness_spin, 200)
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(row, False, False, 0)
+
+    panel = dialogutils.get_alignment2(hbox)
+
+    dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (data, wipe_softness_spin))
     

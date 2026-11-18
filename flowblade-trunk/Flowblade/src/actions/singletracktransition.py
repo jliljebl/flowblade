@@ -450,8 +450,13 @@ def create_length_changed_transition(track, index, new_length):
     # Get old transition data.
     old_transition_clip = track.clips[index]
     # We need transition type and possible wipe luma from old transition.
-    old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
-    sorted_wipe_luma_index, softhess = old_transition_clip.creation_data
+    try:
+        old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index, softhess = old_transition_clip.creation_data
+    except ValueError:
+        old_from_clip_id, old_to_clip_id, old_from_out, old_from_in, old_to_out, old_to_in, transition_type_selection_index, \
+        sorted_wipe_luma_index  = old_transition_clip.creation_data
+        softhess = 0.0
 
     old_from_req, old_to_req, old_from_part, old_to_part = get_parts_and_reqs_for_length(old_transition_clip.clip_length())
 
