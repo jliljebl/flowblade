@@ -221,13 +221,16 @@ class ReRenderderAllWindow:
     def exit_shutdown(self):       
         for render_item in self.rendered_items:
             orig_clip, track, new_clip_path = render_item
-            
-            from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
-            sorted_wipe_luma_index = orig_clip.creation_data
+
+            try:
+                from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
+                sorted_wipe_luma_index, softness = orig_clip.creation_data
+            except ValueError:
+                from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
+                sorted_wipe_luma_index = orig_clip.creation_data
         
             clip_index = track.clips.index(orig_clip)
-                        
-    
+
             transition_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
             transition_clip.creation_data = orig_clip.creation_data
             transition_clip.clip_in = orig_clip.clip_in
