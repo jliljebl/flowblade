@@ -193,7 +193,6 @@ def main(root_path):
     mltinit.init_with_translations()
     
     profile_desc = sys.argv[2]
-    profile = mltprofiles.get_profile(profile_desc) # not used, but will provide useful info if crashes.
         
     files_paths = sys.argv[1]
     files_paths = files_paths.lstrip(FILE_SEPARATOR)
@@ -210,9 +209,9 @@ class WaveformCreator(threading.Thread):
     def __init__(self, clip_path, profile_desc):
         threading.Thread.__init__(self)
         self.clip_path = clip_path
-        profile = mltprofiles.get_profile(profile_desc)
-        self.temp_clip = self._get_temp_producer(clip_path, profile)
-        self.file_cache_path =_get_levels_file_path(clip_path, profile)
+        self.profile = mltprofiles.get_profile(profile_desc)
+        self.temp_clip = self._get_temp_producer(clip_path, self.profile)
+        self.file_cache_path =_get_levels_file_path(clip_path, self.profile)
         self.last_rendered_frame = 0
 
     def run(self):
@@ -226,7 +225,7 @@ class WaveformCreator(threading.Thread):
                 val = 0.0
             frame_levels[frame] = float(val)
             self.last_rendered_frame = frame
-
+        
         with atomicfile.AtomicFileWriter(self.file_cache_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(frame_levels, write_file)
