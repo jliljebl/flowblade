@@ -102,7 +102,7 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
 
         args_vals_list = toolsencoding.get_args_vals_list_for_render_data(self.render_data)
         profile = mltprofiles.get_profile_for_index(self.render_data.profile_index)
-        
+                    
         producer = mlt.Producer(profile, str(self.xml_file_path))
 
         # Video clip consumer
@@ -122,14 +122,13 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
             ccrutils.delete_rendered_frames() # in case we switched from img seq consumer we can now delete those frames to save space
         # img seq consumer
         else:
-            # Image sequence gets project profile
-            project_profile = mltprofiles.get_profile(self.profile_desc)
+            project_profile = profile
             if self.render_data.save_internally == True:
                 frame_name = "frame"            
             else:
                 frame_name = self.render_data.frame_name
 
-            render_path = ccrutils.rendered_frames_folder() + frame_name + "_%04d." + "png"
+            render_path = ccrutils.rendered_frames_folder() + "/" + frame_name + "_%04d." + "png"
 
             consumer = mlt.Consumer(project_profile, "avformat", str(render_path))
             consumer.set("real_time", -1)
@@ -149,7 +148,6 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
                 return
             
             fraction = self.render_player.get_render_fraction()
-
             self.render_update_callback(fraction)
             
             time.sleep(0.3)

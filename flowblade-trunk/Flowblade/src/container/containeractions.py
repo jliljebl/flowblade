@@ -1005,7 +1005,9 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 fraction, elapsed = status
 
                 if self.container_data.render_data.do_video_render == True:
-                    msg = _("Video for Selection Clip: ") + self.clip.name 
+                    msg = _("Video for Selection Clip: ") + self.clip.name
+                else:
+                    msg = _("Image Sequence for Selection Clip: ") + self.clip.name
 
                 job_msg = self.get_job_queue_message()
                 job_msg.progress = float(fraction)
