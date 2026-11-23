@@ -98,7 +98,25 @@ def get_waveform_data(clip):
         _queued_waveform_renders.append(clip.path)
 
         return None
-    
+
+def clear_waveform(clip_path):
+    waveform_data_file_path = _get_levels_file_path(clip_path, editorstate.PROJECT().profile)
+        
+    try:
+        os.remove(waveform_data_file_path)
+    except FileNotFoundError:
+        pass
+        
+    try:
+        _waveforms.pop(clip_path)
+    except:
+        pass
+
+    try:
+        _render_already_requested.remove(clip_path)
+    except:
+        pass
+
 # ------------------------------------------------- launching render
 def launch_queued_renders():
     # Render files that were not found when timeline was displayed
@@ -110,7 +128,6 @@ def launch_queued_renders():
     _queued_waveform_renders = []
 
 def launch_audio_levels_rendering(file_names):
-
     # Only render audio levels for media that does not have existing levels file
     rendered_media = ""
 

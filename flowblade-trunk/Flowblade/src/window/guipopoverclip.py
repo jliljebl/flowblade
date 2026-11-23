@@ -63,6 +63,7 @@ _sync_section = None
 _audio_mute_menu = None 
 _audio_markers_submenu = None
 _audio_markers_submenu_static_items = None
+_audio_reload_section = None
 
 _blank_clip_popover = None
 _blank_clip_menu = None
@@ -236,7 +237,7 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         blank_clip_popover_menu_show(widget, clip, track, x, y, callback)
         return
         
-    global _audio_clip_popover, _audio_clip_menu, _sync_section, _audio_mute_menu, \
+    global _audio_clip_popover, _audio_clip_menu, _sync_section, _audio_mute_menu, _audio_reload_section,\
     _audio_markers_submenu, _audio_markers_submenu_static_items, _audio_clip_monitor_section
 
     if _audio_clip_menu == None:
@@ -267,6 +268,10 @@ def audio_clip_popover_menu_show(widget, clip, track, x, y, callback):
         markers_section_all.append_section(None, _audio_markers_submenu_static_items)
         clip_data_section.append_submenu(_("Markers"), markers_section_all)
         _audio_clip_menu.append_section(None, clip_data_section)
+
+        _audio_reload_section = Gio.Menu.new()
+        _fill_reload_section(_audio_reload_section, clip, callback)
+        _audio_clip_menu.append_section(None, _audio_reload_section)
         
         edit_section = Gio.Menu.new()
         select_menu = Gio.Menu.new()

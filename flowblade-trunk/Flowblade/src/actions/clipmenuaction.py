@@ -34,6 +34,7 @@ import time
 import hashlib
 
 import audiosync
+import audiowaveformrenderer
 import appconsts
 import clipeffectseditor
 import compositeeditor
@@ -1003,7 +1004,11 @@ def _reload_clip_media(data):
     
     clip_index = track.clips.index(clip)
     new_clip = current_sequence().create_clone_clip(clip)
-    
+
+    # Force waveform recreation.
+    new_clip.waveform_data = None
+    audiowaveformrenderer.clear_waveform(clip.path)
+
     data = {"old_clip":clip,
             "new_clip":new_clip,
             "track":track,
