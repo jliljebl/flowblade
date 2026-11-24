@@ -214,7 +214,6 @@ def _on_transitions_drag_begin(widget, context, drag_begin_listener):
     drag_begin_listener(context)
 
 def _transitions_drag_data_get(treeview, context, selection, target_id, timestamp):
-    print("_transitions_drag_data_get")
     _save_treeview_selection(treeview)
     global drag_source
     drag_source = SOURCE_TRANSITIONS_TREE

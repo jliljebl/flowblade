@@ -2073,7 +2073,7 @@ def replace_clip_not_enough_material_info():
 
 
 def set_wipe_softness(data, softness, callback):
-    title = _("Set WipeSoftness")
+    title = _("Set Wipe Softness")
     accept_text = _("Set")
 
     wipe_softness_spin = Gtk.SpinButton.new_with_range(0, 1.0, 0.1)
@@ -2088,4 +2088,22 @@ def set_wipe_softness(data, softness, callback):
     panel = dialogutils.get_alignment2(hbox)
 
     dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (data, wipe_softness_spin))
-    
+
+def set_transition_length(data, current_length, max_length, callback):
+    title = _("Set Transition Length")
+    accept_text = _("Set")
+
+    print(current_length, max_length)
+
+    length_spin = Gtk.SpinButton.new_with_range(3, max_length, 1)
+    length_spin.set_value (current_length)
+
+    label = Gtk.Label(label=_("Transition Length:"))
+
+    row = guiutils.get_two_column_box(label, length_spin, 200)
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(row, False, False, 0)
+
+    panel = dialogutils.get_alignment2(hbox)
+
+    dialogutils.panel_ok_cancel_dialog(title, panel, accept_text, callback, (data, length_spin))

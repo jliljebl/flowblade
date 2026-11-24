@@ -449,7 +449,8 @@ def transition_popover_menu_show(widget, clip, track, x, y, callback):
 def _fill_softness_menu(softness_menu, clip, callback):
     active = (clip.rendered_type == appconsts.RENDERED_WIPE)
     add_menu_action(softness_menu, _("Set Wipe Softness"), "transitionclipmenu.softness", ("set_softness", False), callback, active, None) 
-
+    add_menu_action(softness_menu, _("Set Transition Length"), "transitionclipmenu.length", ("set_transition_length", False), callback, True, None) 
+    
 def _fill_clip_monitor_section(clip_monitor_section, clip, track, callback):
     active = True
     if hasattr(clip, "create_data"):

@@ -516,6 +516,26 @@ def _set_softness_callback(dialog, response_id, wipe_data):
     else:
         dialog.destroy()
 
+def _set_transition_length(data):
+    clip, track, item_id, item_data = data
+    current_length = clip.get_length() - 2
+    transition_data = singletracktransition.get_transition_drag_data(track, track.clips.index(clip))
+    max_length = transition_data["max_handle_from_center"] * 2
+
+    dialogs.set_transition_length(data, current_length, max_length, _set_transition_length_callback)
+
+def _set_transition_length_callback(dialog, response_id, transition_data):
+    data, length_spin = transition_data
+    if response_id ==  Gtk.ResponseType.ACCEPT:
+        clip, track, item_id, item_data = data
+        new_length = int(length_spin.get_value())
+        dialog.destroy()
+        
+        singletracktransition.create_length_changed_transition(track, track.clips.index(clip), new_length)
+
+    else:
+        dialog.destroy()
+
 def _mute_clip(data):
     clip, track, item_id, item_data = data
     tlineaction.do_mute_clip(clip, item_data)
@@ -1256,4 +1276,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "slowfast":_tline_clip_slowfast,
                   "revert":_revert_to_original_clip_from_slowmo_clip,
                   "reverse":_tline_clip_reverse,
-                  "set_softness":_set_wipe_softness}
+                  "set_softness":_set_wipe_softness,
+                  "set_transition_length": _set_transition_length}
