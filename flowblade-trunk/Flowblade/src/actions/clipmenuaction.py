@@ -1007,7 +1007,7 @@ def _reload_clip_media(data):
 
     # Force waveform recreation.
     new_clip.waveform_data = None
-    audiowaveformrenderer.clear_waveform(clip.path)
+    audiowaveformrenderer.destroy_clip_waveform_data(clip.path, PROJECT())
 
     data = {"old_clip":clip,
             "new_clip":new_clip,

@@ -547,7 +547,9 @@ def _not_matching_media_info_callback(dialog, response_id, media_file, to_be_tra
         # Save this in case project was saved before first video loaded
         global first_video_load_project_save_path
         first_video_load_project_save_path = PROJECT().last_save_path
-        
+
+        audiowaveformrenderer.destroy_all_audio_levels(PROJECT(), True)
+
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
         if len(to_be_transcoded) > 0:
@@ -770,9 +772,10 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
         old_name = PROJECT().name
         PROJECT().name  = name
-        
+
+        audiowaveformrenderer.destroy_all_audio_levels(PROJECT())
+
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
-        print("_change_project_profile_callback")
             
         project_event = projectdata.ProjectEvent(projectdata.EVENT_PROFILE_CHANGED_SAVE, str(profile.description()))
         PROJECT().events.append(project_event)

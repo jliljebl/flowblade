@@ -787,6 +787,7 @@ def open_project(new_project):
 
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
+        audiowaveformrenderer.destroy_all_audio_levels(new_project, True)
 
     gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     editorstate.trim_mode_ripple = False

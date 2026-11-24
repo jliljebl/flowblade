@@ -99,9 +99,9 @@ def get_waveform_data(clip):
 
         return None
 
-def clear_waveform(clip_path):
-    waveform_data_file_path = _get_levels_file_path(clip_path, editorstate.PROJECT().profile)
-        
+def destroy_clip_waveform_data(clip_path, project):
+    waveform_data_file_path = _get_levels_file_path(clip_path, project.profile)
+    
     try:
         os.remove(waveform_data_file_path)
     except FileNotFoundError:
@@ -116,6 +116,15 @@ def clear_waveform(clip_path):
         _render_already_requested.remove(clip_path)
     except:
         pass
+
+def destroy_all_audio_levels(project, clear_active_data = False):
+    for seq in project.sequences:
+        for track in seq.tracks:
+            for clip in track.clips:
+                if clip.is_blanck_clip == False and clip.path != "":
+                    destroy_clip_waveform_data(clip.path, project)
+                    if clear_active_data == True:
+                        clip.waveform_data = None
 
 # ------------------------------------------------- launching render
 def launch_queued_renders():
@@ -180,13 +189,9 @@ class AudioRenderLaunchThread(threading.Thread):
 
 def _repaint():
     callbackbridge.updater_repaint_tline()
-    #try:
-    #    gui.monitor_waveform_display.widget.queue_draw()
-    #except:
-    #    pass # We might not have a producer set in monitor to draw.
 
     return False
-    
+
 # --------------------------------------------------------- rendering
 def main(root_path):
      # Set paths.
