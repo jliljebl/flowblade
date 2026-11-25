@@ -480,6 +480,7 @@ class FlowbladeApplication(Gtk.Application):
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             self.add_window(gui.editor_window.window2)
 
+        
 # --------------------------------------- display
 def _create_sdl_2_consumer():
     launch_player()
@@ -630,6 +631,8 @@ def launch_player():
     # Start player.
     editorstate.player.connect_and_start()
 
+    gui.editor_window.top_paned.set_position(editorpersistance.prefs.top_paned_position)
+        
 def init_project_gui():
     """
     Called after project load to initialize interface
@@ -1190,7 +1193,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     except: 
         pass
     editorpersistance.save()
-
+        
     # Block reconnecting consumer before setting window not visible
     updater.player_refresh_enabled = False
     gui.editor_window.window.set_visible(False)

@@ -204,9 +204,8 @@ class EditorWindow:
         if editorlayout.top_level_project_panel() == False:
             self.mm_paned.set_position(bin_w)
 
-        self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
-
+        
     def _get_app_pane(self): 
         # VPaned top row / timeline
         self.app_v_paned = gtkbuilder.VPaned()
