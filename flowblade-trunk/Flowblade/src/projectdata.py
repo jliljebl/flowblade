@@ -69,7 +69,8 @@ _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:Fal
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
                                       appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last rendered transition render selections data
                                       appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10, 
-                                      appconsts.P_PROP_PLAYBACK_INTERPOLATION: "nearest"}  
+                                      appconsts.P_PROP_PLAYBACK_INTERPOLATION: "nearest",
+                                      appconsts.P_PROP_CREATE_PROXY_ON_LOAD: False}  
 
 # Flag used to decide if user should be prompt to save project on project exit.
 media_files_changed_since_last_save = False
@@ -459,7 +460,7 @@ class Project:
             try:
                 return _project_properties_default_values[property_name]
             except:
-                return None # No default values for all properties exist, action value decided at callsite in that case
+                return None # No default values for all properties exist, action value decided at callsite in that case.
 
     def set_project_property(self, property_name, value):
         self.project_properties[property_name] = value

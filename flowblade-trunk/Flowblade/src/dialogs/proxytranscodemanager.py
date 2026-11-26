@@ -142,7 +142,18 @@ class ProxyManagerDialog:
                                 lambda w,e: self.size_changed(w.get_active()), 
                                 None)
 
+        self.ancode_on_load_check = Gtk.CheckButton()
+        self.ancode_on_load_check.set_active(editorstate.PROJECT().get_project_property(appconsts.P_PROP_CREATE_PROXY_ON_LOAD))
+        self.ancode_on_load_check.set_margin_right(4)
+        self.ancode_on_load_check.connect("toggled", self.create_on_load_toggled)
+        
+        
+        proxy_on_load_label = Gtk.Label(label =_("Create Proxy File On Media Load"))
+        row_create = guiutils.get_left_justified_box([self.ancode_on_load_check, proxy_on_load_label]) 
+        row_create.set_margin_top(24)
+
         row_enc = Gtk.HBox(False, 2)
+        row_enc.set_margin_top(24)
         row_enc.pack_start(Gtk.Label(), True, True, 0)
         row_enc.pack_start(self.enc_select, False, False, 0)
         row_enc.pack_start(self.size_select, False, False, 0)
@@ -150,6 +161,7 @@ class ProxyManagerDialog:
         
         vbox_enc = Gtk.VBox(False, 2)
         vbox_enc.pack_start(row_enc, False, False, 0)
+        vbox_enc.pack_start(row_create, False, False, 0)
         vbox_enc.pack_start(guiutils.pad_label(8, 12), False, False, 0)
         
         panel_encoding = guiutils.get_named_frame(_("Proxy Encoding"), vbox_enc)
@@ -246,6 +258,10 @@ class ProxyManagerDialog:
         self.set_mode_display_value()
         self.convert_progress_bar.set_fraction(0.0)
 
+    def create_on_load_toggled(self, create_on_load_check):
+        print(create_on_load_check.get_active())
+        
+        editorstate.PROJECT().set_project_property(appconsts.P_PROP_CREATE_PROXY_ON_LOAD, create_on_load_check.get_active())
 
 
 class TranscodeManagerDialog:
