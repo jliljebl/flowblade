@@ -227,8 +227,8 @@ SYNC_OK_COLOR = (0.18, 0.55, 0.18)
 SYNC_OFF_COLOR = (0.77, 0.20, 0.3)
 SYNC_GONE_COLOR = (0.4, 0.4, 0.4)
 
-PROXY_STRIP_COLOR = (0.40, 0.60, 0.82)
-PROXY_STRIP_COLOR_SELECTED = (0.52, 0.72, 0.96)
+PROXY_STRIP_COLOR = (0.40, 0.60, 0.82, 0.5)
+PROXY_STRIP_COLOR_SELECTED = (0.52, 0.72, 0.96, 0.5)
 
 MARK_COLOR = (0.1, 0.1, 0.1)
 DARK_MARK_COLOR = (0.75, 0.75, 0.75)
@@ -2159,11 +2159,11 @@ class TimeLineCanvas:
             if scale_length > FILL_MIN:
                 if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
                     if clip.selected:
-                        cr.set_source_rgb(*PROXY_STRIP_COLOR_SELECTED)
+                        cr.set_source_rgba(*PROXY_STRIP_COLOR_SELECTED)
                     else:
-                        cr.set_source_rgb(*PROXY_STRIP_COLOR)
+                        cr.set_source_rgba(*PROXY_STRIP_COLOR)
 
-                    cr.rectangle(scale_in, y, scale_length, 8)
+                    cr.rectangle(scale_in, y, scale_length, 6)
                     cr.fill()
 
             # Draw text and filter, sync icons.
