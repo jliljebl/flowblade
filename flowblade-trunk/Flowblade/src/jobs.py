@@ -90,6 +90,8 @@ _jobs_render_progress_window = None
  # _transcode_multi_replace: old_media_path->replace_media_path
 _transcode_multi_replace = {}
 
+# WE're using trhis to not show jobs panel for media add proxy renders.
+_show_panel_temp_blocked = False
 
 class JobProxy: # This object represents a job in the job queue. 
 
@@ -152,7 +154,7 @@ def add_job(job_proxy):
     global _jobs, _jobs_list_view 
     _jobs.append(job_proxy)
     _jobs_list_view.fill_data_model(_jobs)
-    if editorpersistance.prefs.open_jobs_panel_on_add == True:
+    if editorpersistance.prefs.open_jobs_panel_on_add == True and _show_panel_temp_blocked == False:
         editorlayout.show_panel(appconsts.PANEL_JOBS)
     
     if editorpersistance.prefs.render_jobs_sequentially == False: # Feature not active for first release 2.6.
@@ -258,7 +260,9 @@ def get_jobs_panel():
 def get_active_jobs_count():
     return len(_jobs)
 
-
+def set_show_panel_temp_block(value):
+    global _show_panel_temp_blocked
+    _show_panel_temp_blocked = value
 
 # ------------------------------------------------------------- module functions
 def _menu_action_pressed(launcher, widget, event, data):

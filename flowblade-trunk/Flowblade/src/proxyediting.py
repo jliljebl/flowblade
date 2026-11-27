@@ -142,6 +142,9 @@ class ProxyRenderRunnerThread(threading.Thread):
             job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
             job_queue_object.add_to_queue()
 
+        # When launcjing proxy renders for madia add this gets set to True to not 
+        # show jobs panel, now we cancel the possible temp block.
+        jobs.set_show_panel_temp_block(False)
 
 # ------------------------------------------------------------- event interface
 def create_proxy_files_pressed(render_all=False):
@@ -165,7 +168,10 @@ def create_proxy_menu_item_selected(media_file):
 
     _do_create_proxy_files(media_files)
 
-def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
+def render_proxy_files_on_media_add(media_files):
+    _do_create_proxy_files(media_files, False, False)
+
+def _do_create_proxy_files(media_files, retry_from_render_folder_select=False, show_proxy_issues_window=True):
     proxy_w, proxy_h =  _get_proxy_dimensions(editorstate.PROJECT())
     proxy_file_extension = _get_proxy_encoding().extension
 
@@ -207,11 +213,12 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
             
         files_to_render.append(f)
 
-    if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
-        callbackbridge.proxytranscodemanager_show_proxy_issues_window( files_to_render, already_have_proxies, 
-                                                                    not_video_files, is_proxy_file, other_project_proxies,
-                                                                    proxy_w, proxy_h, proxy_file_extension, _create_proxy_files)
-        return
+    if show_proxy_issues_window == True:
+        if  len(already_have_proxies) > 0 or len(other_project_proxies) > 0 or not_video_files > 0 or is_proxy_file > 0 or len(files_to_render) == 0:
+            callbackbridge.proxytranscodemanager_show_proxy_issues_window( files_to_render, already_have_proxies, 
+                                                                        not_video_files, is_proxy_file, other_project_proxies,
+                                                                        proxy_w, proxy_h, proxy_file_extension, _create_proxy_files)
+            return
 
     _create_proxy_files(files_to_render)
     

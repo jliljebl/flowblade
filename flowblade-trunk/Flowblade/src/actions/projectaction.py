@@ -119,6 +119,14 @@ _media_panel_double_click_counter = 0
 
 _popover_media_file = None
 
+
+# Media post actions threads. There could be multiple running.
+# Object id -> thread object
+_media_add_post_action_threads = []
+# Current add action data. THere is only one of these at a time since creteion/destoyin is 
+# determined by sequential user action.
+_media_add_post_context = None
+
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
@@ -128,15 +136,15 @@ class LoadThread(threading.Thread):
         self.is_first_video_load = is_first_video_load
         self.is_autosave_load = is_autosave_load
         self.replace_media_file_path = None
-        self.transcode_info = None
+        self.do_post_media_add_actions = False
 
         threading.Thread.__init__(self)
 
     def set_replace_media_path(self, replace_media_file_path):
         self.replace_media_file_path = replace_media_file_path
 
-    def set_transcode_info(self, transcode_info):
-        self.transcode_info = transcode_info
+    def set_do_post_media_add_actions(self, value):
+        self.do_post_media_add_actions = value
         
     def run(self):
         FLOG = open(userfolders.get_cache_dir() + "log_load_dialog", 'w')
@@ -181,6 +189,9 @@ class LoadThread(threading.Thread):
             projectdata.media_files_changed_since_last_save = True
             project.last_save_path = first_video_load_project_save_path # This gets set to the temp file saved to change profile which is not correct.
             GLib.idle_add(_enable_save) # Enable save if project saved before video project load.
+        
+        if self.do_post_media_add_actions == True:
+            _launch_post_media_add_actions_thread()
 
     def _do_project_open(self, project):
         
@@ -232,6 +243,7 @@ class LoadThread(threading.Thread):
             updater.repaint_tline()
     
         # Update icons for media add transcoded files.
+        """
         if self.transcode_info != None:
             print("update transcoded", self.transcode_info)
             for old_media_file in self.transcode_info:
@@ -241,7 +253,8 @@ class LoadThread(threading.Thread):
                 delattr(media_file, "transcode_source_icon_path")    
             
             gui.media_list_view.widget.queue_draw()
-                
+        """
+
     def _exit_on_file_not_found_error(self, e):
         loaddialog.write_message(loaddialog.SHUTDOWN)
         
@@ -300,6 +313,8 @@ class AddMediaFilesThread(threading.Thread):
     def run(self): 
         GLib.idle_add(self._change_cursor_watch)
 
+        global _media_add_post_action_threads, _media_add_post_context
+
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
         anim_gif_name = None
@@ -332,21 +347,17 @@ class AddMediaFilesThread(threading.Thread):
             if PROJECT().media_file_exists(new_file):
                 duplicates.append(file_name)
             else:
-                was_transcode_target_file = False 
-                
-                # See if file to be transcoded on add.
-                if PROJECT().ingest_data != None and PROJECT().ingest_data.get_action() == appconsts.INGEST_ACTION_TRANSCODE_ALL:
-                    if media_type == appconsts.VIDEO or media_type == appconsts.IMAGE_SEQUENCE:
-                        was_transcode_target_file = True
-                if PROJECT().ingest_data != None and PROJECT().ingest_data.get_action() == appconsts.INGEST_ACTION_TRANSCODE_SELECTED:
-                    producer = mlt.Producer(PROJECT().profile, new_file)
-                    if producer.is_valid() == True:
-                        producer.probe()
-                        info = utils.get_file_producer_info(producer)
-                        if media_type == appconsts.VIDEO and info["progressive"] ==False:
-                            was_transcode_target_file = True
+                is_transcode_target_file = self._file_is_transcode_target_file(new_file, media_type)
 
-                if was_transcode_target_file == True:
+                if is_transcode_target_file == False:
+                    # Main case, no transcode.
+                    try:
+                        PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
+                        audio_levels_render_files.append(new_file)
+                        succes_new_file = new_file
+                    except projectdata.ProducerNotValidError as err:
+                        GLib.idle_add(self._not_valid_producer, err)
+                else:
                     try:
                         transcode_media_object = PROJECT().add_transcode_target_media_file(new_file, None, target_bin)
                         to_be_transcoded.append(transcode_media_object)
@@ -355,15 +366,6 @@ class AddMediaFilesThread(threading.Thread):
                     except projectdata.ProducerNotValidError as err:
                         GLib.idle_add(self._not_valid_producer, err)
                         
-                if was_transcode_target_file == False:
-                    # Main case, no transcode.
-                    try:
-                        PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
-                        audio_levels_render_files.append(new_file)
-                        succes_new_file = new_file
-                    except projectdata.ProducerNotValidError as err:
-                        GLib.idle_add(self._not_valid_producer, err)
-
             self.list_view_update_done = False
             GLib.idle_add(self._list_view_update)
             while self.list_view_update_done == False:
@@ -385,14 +387,14 @@ class AddMediaFilesThread(threading.Thread):
         if len(duplicates) > 0:
             GLib.timeout_add(10, _duplicates_info, duplicates)
 
+        # Save media load context to created audio levels, proxies and do transcodes after media load is complete.
+        _media_add_post_context = MediaAddPostContext(filenames, to_be_transcoded, audio_levels_render_files)
+
         if is_first_video_load:
-            GLib.timeout_add(10, _first_load_profile_check, self, to_be_transcoded)
-        
-        if len(to_be_transcoded) == 0:
-            audiowaveformrenderer.launch_audio_levels_rendering(audio_levels_render_files)
+            GLib.timeout_add(10, _first_load_profile_check)
         elif is_first_video_load == False:
-            GLib.idle_add(self._start_media_add_transcode, to_be_transcoded)
-            #audiowaveformrenderer.launch_audio_levels_rendering(audio_levels_render_files)
+            # Not first video load so media is load complete, launch post actions.
+            _launch_post_media_add_actions_thread()
 
     def _list_view_update(self):
         gui.media_list_view.fill_data_model()
@@ -430,7 +432,22 @@ class AddMediaFilesThread(threading.Thread):
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
         self.post_load_update_done = True
-        
+
+    def _file_is_transcode_target_file(self, new_file, media_type):
+        is_transcode_target_file = False
+        # See if file to be transcoded on add.
+        if PROJECT().ingest_data != None and PROJECT().ingest_data.get_action() == appconsts.INGEST_ACTION_TRANSCODE_ALL:
+            if media_type == appconsts.VIDEO or media_type == appconsts.IMAGE_SEQUENCE:
+                is_transcode_target_file = True
+        if PROJECT().ingest_data != None and PROJECT().ingest_data.get_action() == appconsts.INGEST_ACTION_TRANSCODE_SELECTED:
+            producer = mlt.Producer(PROJECT().profile, new_file)
+            if producer.is_valid() == True:
+                producer.probe()
+                info = utils.get_file_producer_info(producer)
+                if media_type == appconsts.VIDEO and info["progressive"] == False:
+                    is_transcode_target_file = True
+        return is_transcode_target_file
+                        
     def _change_cursor_watch(self):
         watch = Gdk.Cursor.new_for_display(Gdk.Display.get_default(), Gdk.CursorType.WATCH)
         gui.editor_window.window.get_window().set_cursor(watch)
@@ -438,8 +455,73 @@ class AddMediaFilesThread(threading.Thread):
     def _not_valid_producer(self, err):
         dialogs.not_valid_producer_dialog(err, gui.editor_window.window)
 
-    def _start_media_add_transcode(self, media_items):
-        proxytranscodemanager.show_transcode_dialog(media_items, True)
+    #def _start_media_add_transcode(self, media_items):
+    #    proxytranscodemanager.show_transcode_dialog(media_items, True)
+
+
+class MediaAddPostContext:
+    
+    def __init__(self, filenames, to_be_transcoded, audio_levels_render_files):
+        self.filenames = filenames
+        self.to_be_transcoded = to_be_transcoded
+        self.audio_levels_render_files = audio_levels_render_files
+
+    def do_transcode(self):
+        if len(self.to_be_transcoded) > 0:
+            return True
+        else:
+            return False
+ 
+    def do_audio_levels_rendering(self):
+        if len(self.audio_levels_render_files) > 0:
+            return True
+        else:
+            return False
+
+    def do_proxy_creation(self):
+        return editorstate.PROJECT().get_project_property(appconsts.P_PROP_CREATE_PROXY_ON_LOAD)
+           
+
+def _launch_post_media_add_actions_thread():
+    global _media_add_post_action_threads, _media_add_post_context
+    t = PostMediaAddActionsThread(_media_add_post_context)
+
+    _media_add_post_context = None    
+    _media_add_post_action_threads.append(t)
+    t.start()
+
+
+class PostMediaAddActionsThread(threading.Thread):
+    def __init__(self, post_context):
+        threading.Thread.__init__(self)
+
+        self.post_context = post_context
+
+    def run(self): 
+
+        if self.post_context.do_transcode() == False and \
+            self.post_context.do_proxy_creation() == False:
+            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+        elif self.post_context.do_transcode() == False and \
+            self.post_context.do_proxy_creation() == True:
+                audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+            
+                self.do_create_proxy_files()
+        
+        global _media_add_post_action_threads
+        _media_add_post_action_threads.remove(self)
+    
+    def do_create_proxy_files(self):
+        proxy_creation_targets = []
+        for f in self.post_context.filenames:
+            media_type = utils.get_media_type(f)
+            if media_type == appconsts.VIDEO or media_type == appconsts.IMAGE_SEQUENCE:
+                media_file = PROJECT().get_media_file_for_path(f)
+                proxy_creation_targets.append(media_file)
+        
+        if len(proxy_creation_targets) > 0:
+            jobs.set_show_panel_temp_block(True)
+            proxyediting.render_proxy_files_on_media_add(proxy_creation_targets)
 
 
 class AddTitleItemThread(threading.Thread):
@@ -517,24 +599,24 @@ def _duplicates_info(duplicates):
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
     return False
 
-def _first_load_profile_check(media_add_thread, to_be_transcoded):
-    profile_matched = True
+def _first_load_profile_check():
     for uid, media_file in PROJECT().media_files.items():
         if media_file.type == appconsts.VIDEO:
             if media_file.matches_project_profile() == False:
-                profile_matched = False
-                dialogs.not_matching_media_info_dialog(PROJECT(), media_file, to_be_transcoded, _not_matching_media_info_callback)
-                break
+                dialogs.not_matching_media_info_dialog(PROJECT(), media_file, _not_matching_media_info_callback)
+                return
 
-    if profile_matched == True and len(to_be_transcoded) > 0:
-        GLib.idle_add(media_add_thread._start_media_add_transcode, to_be_transcoded)
+    # Profile matched so media load is complete, launch post actions.
+    _launch_post_media_add_actions_thread()
 
-def _not_matching_media_info_callback(dialog, response_id, media_file, to_be_transcoded):
+def _not_matching_media_info_callback(dialog, response_id, media_file):
     dialog.destroy()
     
     match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
     profile = mltprofiles.get_profile_for_index(match_profile_index)
-        
+
+    global _media_add_post_context
+
     if response_id == Gtk.ResponseType.ACCEPT:
         if EDIT_MODE() == editorstate.KF_TOOL:
             kftoolmode.exit_tool()
@@ -548,18 +630,29 @@ def _not_matching_media_info_callback(dialog, response_id, media_file, to_be_tra
         global first_video_load_project_save_path
         first_video_load_project_save_path = PROJECT().last_save_path
 
-        audiowaveformrenderer.destroy_all_audio_levels(PROJECT(), True)
-
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
-        if len(to_be_transcoded) > 0:
+        """
+        if _media_add_post_context.do_transcode() == True:
             transcode_update_load_project(path, to_be_transcoded)
         else:
+            
+            
             actually_load_project(path, False, True)
-    else:
-        if len(to_be_transcoded) > 0:
-            proxytranscodemanager.show_transcode_dialog(to_be_transcoded, True)
+        """
+        
+        gui.tline_canvas.disconnect_mouse_events() # mouse events during load cause crashes because there is no data to handle
+        updater.set_info_icon("document-open")
 
+        load_launch = LoadThread(path, False, True)
+        load_launch.set_do_post_media_add_actions(True)
+        load_launch.start()
+    
+    else:
+        # Profile change not requested so media load is complete, launch post actions.
+        _launch_post_media_add_actions_thread()
+
+            
 def _enable_save():
     if PROJECT().last_save_path != None:
         gui.editor_window.enable_save()

@@ -1738,7 +1738,7 @@ def save_snaphot_progess(media_copy_txt, project_txt):
 
     return dialog
 
-def not_matching_media_info_dialog(project, media_file, to_be_transcoded, callback):
+def not_matching_media_info_dialog(project, media_file, callback):
     dialog = Gtk.Dialog(_("Loaded Media Profile Mismatch"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Keep Current Profile"), Gtk.ResponseType.REJECT,
@@ -1771,7 +1771,7 @@ def not_matching_media_info_dialog(project, media_file, to_be_transcoded, callba
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, media_file, to_be_transcoded)
+    dialog.connect('response', callback, media_file)
     dialog.show_all()
     
     

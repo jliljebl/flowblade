@@ -32,11 +32,12 @@ import hashlib
 import os
 import shutil
 
-from gi.repository import GdkPixbuf
+from gi.repository import GdkPixbuf, GLib
 
 import appconsts
 import editorpersistance
 from editorstate import PROJECT
+import gui
 import mltprofiles
 import patternproducer
 import miscdataobjects
@@ -575,6 +576,8 @@ class MediaFile:
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
         self.second_file_path = proxy_path
+
+        GLib.idle_add(gui.media_list_view.widget.queue_draw)
 
     def add_existing_proxy_file(self, proxy_width, proxy_height, file_extesion):
         proxy_path = self.create_proxy_path(proxy_width, proxy_height, file_extesion)
