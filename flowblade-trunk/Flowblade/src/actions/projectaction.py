@@ -496,24 +496,31 @@ class PostMediaAddActionsThread(threading.Thread):
         threading.Thread.__init__(self)
 
         self.post_context = post_context
-
+        self.transcode_completed = False
+        
     def run(self): 
 
         if self.post_context.do_transcode() == False and \
-            self.post_context.do_proxy_creation() == False:
-            # No Proxies or transcode.
+            self.post_context.do_proxy_creation() == False:             # No Proxies or transcode.
             audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
         elif self.post_context.do_transcode() == False and \
-            self.post_context.do_proxy_creation() == True:
-            # Proxies only.
+            self.post_context.do_proxy_creation() == True:             # Proxies only.
             audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
             self.do_create_proxy_files()
         elif self.post_context.do_transcode() == True and \
-            self.post_context.do_proxy_creation() == False:
-            # Transcode only.
-            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+            self.post_context.do_proxy_creation() == False:             # Transcode only.
+            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_evels_render_files)
             self.do_transcode()
-                                    
+        elif self.post_context.do_transcode() == True and \
+            self.post_context.do_proxy_creation() == True:             # Transcode and proxies.
+            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+            jobs.add_transcoding_completed_listerner(self)
+            self.do_transcode()
+            while self.transcode_completed == False:
+                time.sleep(0.1)
+            jobs.remove_transcoding_completed_listerner(self)
+            self.do_create_proxy_files()
+            
         global _media_add_post_action_threads
         _media_add_post_action_threads.remove(self)
     
@@ -529,9 +536,21 @@ class PostMediaAddActionsThread(threading.Thread):
             jobs.set_show_panel_temp_block(True)
             proxyediting.render_proxy_files_on_media_add(proxy_creation_targets)
 
+
     def do_transcode(self):
         if self.post_context.do_transcode() == True:
             GLib.idle_add(lambda: proxytranscodemanager.show_transcode_dialog(self.post_context.to_be_transcoded, True))
+        else:
+            self.transcode_completed = True
+    
+    def notify_transcode_completed(self, transcode_items):
+        new_file_names = []
+        for source_media_path, transcoded_media_path in transcode_items.items():
+            new_file_names.append(transcoded_media_path)
+        
+        self.post_context.filenames = new_file_names
+
+        self.transcode_completed = True
 
             
         # Update icons for media add transcoded files.

@@ -92,6 +92,9 @@ _transcode_multi_replace = {}
 
 # WE're using trhis to not show jobs panel for media add proxy renders.
 _show_panel_temp_blocked = False
+# If we are creating proxies on load and trnascoding on load we need to do proxies after transcoding completed.
+_transcoding_completed_listeners = []
+
 
 class JobProxy: # This object represents a job in the job queue. 
 
@@ -984,9 +987,24 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                             media_file.create_icon()
                             delattr(media_file, "transcode_source_icon_path")    
 
+                    _notify_remove_transcoding_completed_listerners()
+
                     _transcode_multi_replace = {}
                     print("DO MULTI REPLACE")
                     gui.media_list_view.widget.queue_draw()
+
+def add_transcoding_completed_listerner(listener):
+    global _transcoding_completed_listeners
+    _transcoding_completed_listeners.append(listener)
+
+def remove_transcoding_completed_listerner(listener):
+    global _transcoding_completed_listeners
+    _transcoding_completed_listeners.remove(listener)
+
+def _notify_remove_transcoding_completed_listerners():
+    for listener in _transcoding_completed_listeners:
+        listener.notify_transcode_completed(_transcode_multi_replace)
+
 
 class FFmpegRenderThread(threading.Thread):
     
