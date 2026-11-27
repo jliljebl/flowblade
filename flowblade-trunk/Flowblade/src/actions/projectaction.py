@@ -501,13 +501,19 @@ class PostMediaAddActionsThread(threading.Thread):
 
         if self.post_context.do_transcode() == False and \
             self.post_context.do_proxy_creation() == False:
+            # No Proxies or transcode.
             audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
         elif self.post_context.do_transcode() == False and \
             self.post_context.do_proxy_creation() == True:
-                audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
-            
-                self.do_create_proxy_files()
-        
+            # Proxies only.
+            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+            self.do_create_proxy_files()
+        elif self.post_context.do_transcode() == True and \
+            self.post_context.do_proxy_creation() == False:
+            # Transcode only.
+            audiowaveformrenderer.launch_audio_levels_rendering(self.post_context.audio_levels_render_files)
+            self.do_transcode()
+                                    
         global _media_add_post_action_threads
         _media_add_post_action_threads.remove(self)
     
@@ -523,6 +529,19 @@ class PostMediaAddActionsThread(threading.Thread):
             jobs.set_show_panel_temp_block(True)
             proxyediting.render_proxy_files_on_media_add(proxy_creation_targets)
 
+    def do_transcode(self):
+        # Update icons for media add transcoded files.
+        """
+        if self.transcode_info != None:
+            print("update transcoded", self.transcode_info)
+            for old_media_file in self.transcode_info:
+                media_file = PROJECT().get_media_file_for_path(old_media_file.path)
+                media_file.icon_path = media_file.transcode_source_icon_path
+                media_file.create_icon()
+                delattr(media_file, "transcode_source_icon_path")    
+            
+            gui.media_list_view.widget.queue_draw()
+        """
 
 class AddTitleItemThread(threading.Thread):
     
