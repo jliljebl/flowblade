@@ -530,6 +530,10 @@ class PostMediaAddActionsThread(threading.Thread):
             proxyediting.render_proxy_files_on_media_add(proxy_creation_targets)
 
     def do_transcode(self):
+        if self.post_context.do_transcode() == True:
+            GLib.idle_add(lambda: proxytranscodemanager.show_transcode_dialog(self.post_context.to_be_transcoded, True))
+
+            
         # Update icons for media add transcoded files.
         """
         if self.transcode_info != None:

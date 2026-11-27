@@ -985,7 +985,8 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                             delattr(media_file, "transcode_source_icon_path")    
 
                     _transcode_multi_replace = {}
-        
+                    print("DO MULTI REPLACE")
+                    gui.media_list_view.widget.queue_draw()
 
 class FFmpegRenderThread(threading.Thread):
     
